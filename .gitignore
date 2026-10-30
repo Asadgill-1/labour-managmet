@@ -37,6 +37,9 @@ out/
 supabase/.branches/
 supabase/.temp/
 
+# Graphify output, rebuilt with /graphify
+graphify-out/
+
 # Editors and OS
 .idea/
 .vscode/
