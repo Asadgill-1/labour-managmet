@@ -8,7 +8,7 @@ Type: `domain` (`dart test`), `app` (`flutter test`), `backend` (`supabase test 
 | --- | --- | --- | --- | --- | --- | --- |
 | TC-001 | P2 | PAY-02, PAY-03 | September net 1,000, paid 500. October net 1,000, paid 0 | October total payable 1,500, closing 1,500, no duplicate wage expense | domain | NOT_STARTED |
 | TC-002 | P2 | PAY-05 | Advance 300 issued, payroll recovers 100 | Advance outstanding 200, salary balance correct, neither is wage expense | domain | NOT_STARTED |
-| TC-003 | P1 | CALC-02 | 10 workers, 12 clock hours, client and payroll breaks set independently | Client and payroll minutes differ as configured, PRD examples exact | domain | NOT_STARTED |
+| TC-003 | P1 | CALC-02 | 10 workers, 12 clock hours, client and payroll breaks set independently | Client and payroll minutes differ as configured, PRD examples exact | domain | VERIFIED |
 | TC-004 | P3 | TS-05, INV-06, MODEL-04 | Repeat the invoice action on already billed work | Same work is not charged twice | app | NOT_STARTED |
 | TC-005 | P3 | INV-04, INV-05 | AED 1,100 at 5% VAT, then receipt of 500 | VAT 55, total 1,155, outstanding 655 | domain | NOT_STARTED |
 | TC-006 | P4 | AUTH-02, AUTH-05 | Tenant A tries tenant B data through login, API, storage and restore | Every attempt denied | backend | NOT_STARTED |
@@ -21,19 +21,19 @@ Type: `domain` (`dart test`), `app` (`flutter test`), `backend` (`supabase test 
 | TC-013 | P7 | QA-01 | Signup, company, 2 clients, mixed-pay workers, attendance, payroll, partial payment, timesheet, VAT invoice, partial receipt, PDF share, backup, restore | Full flow completes with correct totals | manual | NOT_STARTED |
 | TC-014 | P0 | ARCH-01, DATA-01, AUTH-04 | Open tenant databases with real and wrong keys, inspect the raw file | No plaintext header or marker, wrong key and other tenant's key rejected, plain SQLite build refused | app | IN_PROGRESS |
 | TC-015 | P0 | CALC-01 | Round values below, at and above half, and their negatives | Half-up on magnitude, a reversal is the exact negative | domain | VERIFIED |
-| TC-016 | P1 | CALC-02 | 10 workers, 660 minutes, client AED 10 and payroll AED 8 per hour | 1,100 billed, 880 wage, 220 contribution | domain | NOT_STARTED |
-| TC-017 | P1 | CALC-03 | Same client charge, worker on agreed full shift AED 70 | 700 wage, 400 contribution, fee not multiplied by hours | domain | NOT_STARTED |
-| TC-018 | P1 | ATT-06 | Shift 20:00 to next-day 08:00, break longer than shift | 720 minutes, oversized break rejected | domain | NOT_STARTED |
-| TC-019 | P1 | CALC-04 | Monthly worker with 26 attendance rows, then a mid-month joiner | Salary counted once per period. Partial period uses the contract's method and stops if none is set | domain | NOT_STARTED |
-| TC-020 | P1 | CALC-05, TS-08 | Fixed monthly client contract with 10 workers attending | One fee, not multiplied by worker rows | domain | NOT_STARTED |
-| TC-021 | P1 | CALC-06 | Rate lookup with override, assignment, contract and no rate. Contract changes after approval | Priority order holds, missing rate stops for review, approved row keeps its snapshot | domain | NOT_STARTED |
-| TC-022 | P1 | CALC-07 | Extra hours on contracts with and without an overtime multiplier | Regular and overtime separate, multiplier only where contracted | domain | NOT_STARTED |
+| TC-016 | P1 | CALC-02 | 10 workers, 660 minutes, client AED 10 and payroll AED 8 per hour | 1,100 billed, 880 wage, 220 contribution | domain | VERIFIED |
+| TC-017 | P1 | CALC-03 | Same client charge, worker on agreed full shift AED 70 | 700 wage, 400 contribution, fee not multiplied by hours | domain | VERIFIED |
+| TC-018 | P1 | ATT-06 | Shift 20:00 to next-day 08:00, break longer than shift | 720 minutes, oversized break rejected | domain | VERIFIED |
+| TC-019 | P1 | CALC-04 | Monthly worker with 26 attendance rows, then a mid-month joiner | Salary counted once per period. Partial period uses the contract's method and stops if none is set | domain | VERIFIED |
+| TC-020 | P1 | CALC-05, TS-08 | Fixed monthly client contract with 10 workers attending | One fee, not multiplied by worker rows | domain | VERIFIED |
+| TC-021 | P1 | CALC-06 | Rate lookup with override, assignment, contract and no rate. Contract changes after approval | Priority order holds, missing rate stops for review, approved row keeps its snapshot | domain | VERIFIED |
+| TC-022 | P1 | CALC-07 | Extra hours on contracts with and without an overtime multiplier | Regular and overtime separate, multiplier only where contracted | domain | VERIFIED |
 | TC-023 | P1 | ATT-03 | Group rate applied to mixed hourly and monthly workers | Billing rate applies, worker pay stays from each contract, no silent conversion | app | NOT_STARTED |
 | TC-024 | P1 | ATT-04 | Batch of 10 with one invalid row, and a crash mid-save | Nothing half-saved, row error shown, no false success | app | NOT_STARTED |
 | TC-025 | P1 | ATT-05 | Overlapping time at two sites, then two non-overlapping shifts on one day | Overlap needs an approval reason, valid second job allowed | app | NOT_STARTED |
 | TC-026 | P1 | UX-05 | Copy yesterday's team | New entries are unapproved until the owner reviews them | app | NOT_STARTED |
 | TC-027 | P1 | ATT-08 | Correct a posted entry that was on a shared timesheet | Original kept, revision trail exists, shared version preserved | app | NOT_STARTED |
-| TC-028 | P1 | ATT-09 | One worker on two shifts in a day | Unique workers 1, shifts 2, not an amount input | domain | NOT_STARTED |
+| TC-028 | P1 | ATT-09 | One worker on two shifts in a day | Unique workers 1, shifts 2, not an amount input | domain | VERIFIED |
 | TC-029 | P1 | MASTER-07 | Archive a worker with a balance, rehire with the same name | Balance and payslips stay available, no hard delete, no auto-merge | app | NOT_STARTED |
 | TC-030 | P1 | MASTER-05 | Enter opening salary owed, opening advance and client receivable | Kept separate with source date, salary balance is not a wage expense | app | NOT_STARTED |
 | TC-031 | P1 | UX-06 | 5 non-technical users enter 10 same-rate workers after setup | Under 60 seconds, at least 4 of 5 without a trainer | manual | NOT_STARTED |

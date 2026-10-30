@@ -39,12 +39,12 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | ATT-08 | 05 | Correction | T10 | NOT_STARTED | TC-027 | - |
 | ATT-09 | 05 | Maaloomati summary | T10 | NOT_STARTED | TC-028 | - |
 | CALC-01 | 06 | Duration integer minutes mein; amounts integer fils ya exact | T04, T09 | IN_PROGRESS | TC-015 | - |
-| CALC-02 | 06 | Hourly | T09 | NOT_STARTED | TC-003, TC-016 | - |
-| CALC-03 | 06 | Shift/day | T09 | NOT_STARTED | TC-017 | - |
-| CALC-04 | 06 | Monthly | T09 | NOT_STARTED | TC-019 | - |
-| CALC-05 | 06 | Monthly client billing | T09 | NOT_STARTED | TC-020 | - |
-| CALC-06 | 06 | Rate priority | T09 | NOT_STARTED | TC-021 | - |
-| CALC-07 | 06 | Overtime | T09 | NOT_STARTED | TC-022 | - |
+| CALC-02 | 06 | Hourly | T09 | IMPLEMENTED_UNVERIFIED | TC-003, TC-016 | - |
+| CALC-03 | 06 | Shift/day | T09 | IMPLEMENTED_UNVERIFIED | TC-017 | - |
+| CALC-04 | 06 | Monthly | T09 | IMPLEMENTED_UNVERIFIED | TC-019 | - |
+| CALC-05 | 06 | Monthly client billing | T09 | IMPLEMENTED_UNVERIFIED | TC-020 | - |
+| CALC-06 | 06 | Rate priority | T09 | IMPLEMENTED_UNVERIFIED | TC-021 | - |
+| CALC-07 | 06 | Overtime | T09 | IMPLEMENTED_UNVERIFIED | TC-022 | - |
 | PAY-01 | 07 | Payroll cycle | T11 | NOT_STARTED | TC-036 | - |
 | PAY-02 | 07 | Do alag concepts | T11 | NOT_STARTED | TC-001 | - |
 | PAY-03 | 07 | User ki misal | T11 | NOT_STARTED | TC-001 | - |
