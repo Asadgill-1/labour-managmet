@@ -1,6 +1,6 @@
 # Decisions
 
-Status: ACCEPTED (owner approved the plan on 2026-10-31), or PROPOSED (waiting for sign-off). New decisions go at the bottom. Never rewrite an old one; supersede it.
+Status: ACCEPTED (owner approved), or PROPOSED (waiting for sign-off). New decisions go at the bottom of their table. Never rewrite an old one; supersede it.
 
 | ID | Status | Decision | Why |
 | --- | --- | --- | --- |
@@ -24,9 +24,9 @@ Status: ACCEPTED (owner approved the plan on 2026-10-31), or PROPOSED (waiting f
 | D-018 | ACCEPTED | App opens the database only if `PRAGMA cipher` responds, and throws otherwise, in release builds too | A build without the cipher must never write payroll data in plaintext. T03 proved plain SQLite is rejected |
 | D-019 | ACCEPTED | `android:allowBackup="false"` | Keeps the database out of Google Drive backups and avoids the Keystore unwrap failure `flutter_secure_storage` warns about. Disaster recovery is the encrypted backup in T20 (DATA-04) |
 
-## Policy defaults (PROPOSED, sign-off at the P0 gate)
+## Policy defaults (ACCEPTED by the owner on 2026-10-31)
 
-An accountant must review these before production. None of them is a legal opinion.
+An accountant must still review these before production. None of them is a legal opinion.
 
 | ID | Topic | Default | Req |
 | --- | --- | --- | --- |

@@ -16,11 +16,13 @@ Test APK: `apps/mobile/build/app/outputs/flutter-apk/app-release.apk`
 
 Yeh tajweez hain, qanooni rai nahin. Production se pehle accountant bhi inhein dekhega. Har aik par haan ya tabdeeli batayein.
 
-- [ ] **Rounding:** Har hazri line par fils tak half-up. VAT har invoice line par, aur document ka total lines ka majmua.
-- [ ] **Mahine ka adhoora hisaab:** Koi default nahin. Har contract mein calendar days ya fixed divisor chunna lazmi.
-- [ ] **Raat ki shift:** Work date shift shuru hone ki tareekh, contract is ko badal sakta hai.
-- [ ] **Current wage manfi ho:** Posting rok kar review, khud-ba-khud qarz nahin banega.
-- [ ] **Mahine ke aakhir mein renewal:** Asal tareekh yaad rahe, chhote mahine mein aakhri din.
+Asad ne 31-10-2026 ko yeh paanchon manzoor kiye.
+
+- [x] **Rounding:** Har hazri line par fils tak half-up. VAT har invoice line par, aur document ka total lines ka majmua.
+- [x] **Mahine ka adhoora hisaab:** Koi default nahin. Har contract mein calendar days ya fixed divisor chunna lazmi.
+- [x] **Raat ki shift:** Work date shift shuru hone ki tareekh, contract is ko badal sakta hai.
+- [x] **Current wage manfi ho:** Posting rok kar review, khud-ba-khud qarz nahin banega.
+- [x] **Mahine ke aakhir mein renewal:** Asal tareekh yaad rahe, chhote mahine mein aakhri din.
 
 ## 3. Aap ke karne ke kaam
 
