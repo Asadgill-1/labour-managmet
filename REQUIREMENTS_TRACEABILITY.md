@@ -102,7 +102,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | BILL-07 | 13 | Play Store policy | T26 | NOT_STARTED | - | - |
 | BILL-08 | 13 | Distribution decision | T26 | NOT_STARTED | - | - |
 | BILL-09 | 13 | Business licensing, invoice/tax treatment aur receiving bank-account permissions user | T26 | NOT_STARTED | - | - |
-| ARCH-01 | 14 | Mobile | T03 | NOT_STARTED | - | - |
+| ARCH-01 | 14 | Mobile | T03 | IMPLEMENTED_UNVERIFIED | - | - |
 | ARCH-02 | 14 | Chhota control backend | T19 | NOT_STARTED | - | - |
 | ARCH-03 | 14 | App malik web | T22 | NOT_STARTED | - | - |
 | ARCH-04 | 14 | Paid Team | T25 | NOT_STARTED | - | - |
@@ -118,7 +118,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | TEAM-06 | 15 | Revocation | T25 | NOT_STARTED | - | - |
 | TEAM-07 | 15 | Team downgrade | T25 | NOT_STARTED | - | - |
 | TEAM-08 | 15 | Pilot safety | T25 | NOT_STARTED | - | - |
-| DATA-01 | 16 | Local database encryption key Android platform ke protected key | T03 | NOT_STARTED | - | - |
+| DATA-01 | 16 | Local database encryption key Android platform ke protected key | T03 | IN_PROGRESS | - | - |
 | DATA-02 | 16 | Backup bundle | T20 | NOT_STARTED | - | - |
 | DATA-03 | 16 | Owner warning | T20 | NOT_STARTED | - | - |
 | DATA-04 | 16 | Local backup | T20 | NOT_STARTED | - | - |

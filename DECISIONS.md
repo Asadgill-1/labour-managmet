@@ -19,6 +19,10 @@ Status: ACCEPTED (owner approved the plan on 2026-10-31), or PROPOSED (waiting f
 | D-013 | ACCEPTED | Plan approval allows commits and pushes to feature branches, PRs merged after CI. Play uploads, production deploys, customer messages and visibility changes each need a separate yes | Owner approval gate |
 | D-014 | ACCEPTED | One `.gitignore`-only commit went directly to `main` on 2026-10-31 | The remote was empty and PRs need a base branch. This exceeded D-013's wording and was reported to the owner |
 | D-015 | ACCEPTED | Use the Graphify and Ponytail skills throughout. `graphify-out/` is gitignored and rebuilt on demand | Owner instruction on 2026-10-31 |
+| D-016 | ACCEPTED | Supersedes D-001's SQLCipher: encrypt with SQLite3MultipleCiphers through the `sqlite3` package hook (`source: sqlite3mc`). `sqlcipher_flutter_libs` is not used | Drift's docs recommend this for new apps and no longer offer a straightforward SQLCipher setup. T03 confirmed drift 2.35.3 and sqlite3 3.5.2 are maintained (latest releases 2026-10-23) and MIT licensed, as is SQLite3MultipleCiphers. Same intent as ARCH-01, so this is an implementation change, not a scope change |
+| D-017 | ACCEPTED | `dev.labourapp.labour_app` is a placeholder application ID. The owner picks the final one before the first pilot APK | The ID cannot change later without customers reinstalling. PRD lists branding as still open |
+| D-018 | ACCEPTED | App opens the database only if `PRAGMA cipher` responds, and throws otherwise, in release builds too | A build without the cipher must never write payroll data in plaintext. T03 proved plain SQLite is rejected |
+| D-019 | ACCEPTED | `android:allowBackup="false"` | Keeps the database out of Google Drive backups and avoids the Keystore unwrap failure `flutter_secure_storage` warns about. Disaster recovery is the encrypted backup in T20 (DATA-04) |
 
 ## Policy defaults (PROPOSED, sign-off at the P0 gate)
 
