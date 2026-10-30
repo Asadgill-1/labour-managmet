@@ -1,3 +1,4 @@
+import 'package:domain/calc.dart';
 import 'package:drift/drift.dart';
 
 import 'tenant_database.dart';
@@ -57,6 +58,33 @@ extension Masters on TenantDatabase {
       },
     );
     return rowId;
+  }
+
+  /// True if another pay contract with the same scope covers any of these dates, which would make the rate ambiguous.
+  Future<bool> payContractOverlaps({
+    required String workerId,
+    required String? siteId,
+    required String from,
+    required String? to,
+    String? exceptId,
+  }) async {
+    final rows = await (select(payContracts)..where((c) => c.workerId.equals(workerId))).get();
+    return rows.any((c) => c.id != exceptId && c.siteId == siteId && datesOverlap(c.effectiveFrom, c.effectiveTo, from, to));
+  }
+
+  /// The same check for a client's billing contracts.
+  Future<bool> billingContractOverlaps({
+    required String clientId,
+    required String? siteId,
+    required String? workerId,
+    required String from,
+    required String? to,
+    String? exceptId,
+  }) async {
+    final rows = await (select(billingContracts)..where((c) => c.clientId.equals(clientId))).get();
+    return rows.any(
+      (c) => c.id != exceptId && c.siteId == siteId && c.workerId == workerId && datesOverlap(c.effectiveFrom, c.effectiveTo, from, to),
+    );
   }
 
   /// Suggestion only. The owner can type any code, and uniqueness is still checked on save.

@@ -75,5 +75,72 @@
   "trade": "Trade",
   "joiningDate": "Joining date",
   "roomCharge": "Room charge per month (AED)",
-  "roomChargeNote": "Room charge agreement note"
+  "roomChargeNote": "Room charge agreement note",
+  "addPayContract": "Add pay rate",
+  "editPayContract": "Edit pay rate",
+  "addBillingContract": "Add client rate",
+  "editBillingContract": "Edit client rate",
+  "payContractsHeading": "Pay rates",
+  "billingContractsHeading": "Client rates",
+  "noPayContract": "No pay rate yet. Attendance for this worker will stop for review.",
+  "noBillingContract": "No client rate yet. Attendance for this client will stop for review.",
+  "rateBasis": "Paid by",
+  "rateAmount": "Rate (AED)",
+  "effectiveFrom": "Starts on",
+  "effectiveTo": "Ends on",
+  "appliesToSite": "Applies to site",
+  "allSites": "All sites",
+  "appliesToWorker": "Applies to worker",
+  "allWorkers": "All workers",
+  "breakIsPaid": "Break is paid",
+  "halfAmount": "Half-day amount (AED)",
+  "halfAmountHelp": "Leave empty if there is no agreed half amount. A half day then stops for review.",
+  "partialMethod": "Part-month calculation",
+  "partialMethodHelp": "Used when a worker joins or leaves mid-month. Choose what your contract says.",
+  "partialCalendarDays": "Actual days in the month",
+  "partialFixedDivisor": "Fixed number of days",
+  "partialDivisor": "Number of days",
+  "includedMinutes": "Minutes included before overtime",
+  "includedMinutesHelp": "Leave empty if there is no overtime on this rate.",
+  "overtimeRate": "Overtime rate per hour (AED)",
+  "overtimeRateHelp": "Only what your contract states. The app never applies a multiplier by itself.",
+  "basisHour": "Per hour",
+  "basisDay": "Per day",
+  "basisShift": "Per shift",
+  "basisMonth": "Per month",
+  "basisMonthPerWorker": "Per month, each worker",
+  "basisMonthFixed": "Per month, fixed contract",
+  "endBeforeStart": "The end date is before the start date",
+  "contractOverlap": "Another rate already covers these dates for the same site and worker. End that rate first.",
+  "openingHeading": "Carried over from before",
+  "openingSalaryOwed": "Old salary still owed to this worker",
+  "openingAdvance": "Old advance to recover from this worker",
+  "openingReceivable": "Old amount this company still owes",
+  "openingHelp": "Enter what was already due on the date you start using this app. It carries forward as a balance and is not counted as this month's expense or income.",
+  "amountAed": "Amount (AED)",
+  "asOfDate": "As of date",
+  "sourceNote": "Where this figure comes from",
+  "sourceNoteHelp": "For example: old register, page 12",
+  "openingConfirm": "I have checked this figure",
+  "confirmRequired": "Please confirm you have checked this figure",
+  "notEntered": "Not entered",
+  "dateFrom": "From {date}",
+  "@dateFrom": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "dateFromTo": "{from} to {to}",
+  "@dateFromTo": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  }
 }

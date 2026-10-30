@@ -66,6 +66,20 @@ class MainActionBar extends StatelessWidget {
   }
 }
 
+/// A problem with the form as a whole. Floats above the action bar, so it shows wherever the form is scrolled.
+void showFormError(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 84),
+        backgroundColor: due,
+        content: Text(message),
+      ),
+    );
+}
+
 /// Tells the user the write reached local storage (UX-04, UX-07).
 void showSavedOnPhone(BuildContext context, String message) {
   ScaffoldMessenger.of(context)

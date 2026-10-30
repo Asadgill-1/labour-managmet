@@ -38,7 +38,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
   late String? _vatFrom = widget.profile?.vatEffectiveFrom;
 
   Future<void> _save() async {
-    if (!_form.currentState!.validate()) return;
+    if (!validateAndReveal(_form)) return;
     final l10n = AppLocalizations.of(context);
     final db = ref.read(dbProvider);
     await db.saveRow(
@@ -74,8 +74,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
       bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _save),
       body: Form(
         key: _form,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
+        child: FormBody(
           children: [
             if (firstRun) ...[Text(l10n.welcomeBody), fieldGap],
             Field(l10n.legalName, _legal, validator: (v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null),

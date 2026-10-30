@@ -25,8 +25,8 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | MASTER-02 | 04 | Client | T07 | IN_PROGRESS | - | - |
 | MASTER-03 | 04 | Sites | T07 | IN_PROGRESS | - | - |
 | MASTER-04 | 04 | Worker | T07 | IN_PROGRESS | - | - |
-| MASTER-05 | 04 | Opening balances | T08 | NOT_STARTED | TC-030 | - |
-| MASTER-06 | 04 | Rate cards | T08 | NOT_STARTED | - | - |
+| MASTER-05 | 04 | Opening balances | T08 | IN_PROGRESS | TC-030 | - |
+| MASTER-06 | 04 | Rate cards | T08 | IN_PROGRESS | - | - |
 | MASTER-07 | 04 | Archive | T07 | IN_PROGRESS | TC-029 | - |
 | MASTER-08 | 04 | Import | T18 | NOT_STARTED | - | - |
 | ATT-01 | 05 | Flow | T10 | NOT_STARTED | - | - |

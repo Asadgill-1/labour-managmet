@@ -46,7 +46,7 @@ class _WorkerFormScreenState extends ConsumerState<WorkerFormScreen> {
 
   Future<void> _save() async {
     setState(() => _codeError = null);
-    if (!_form.currentState!.validate()) return;
+    if (!validateAndReveal(_form)) return;
     final l10n = AppLocalizations.of(context);
     final db = ref.read(dbProvider);
     final code = _code.text.trim();
@@ -81,8 +81,7 @@ class _WorkerFormScreenState extends ConsumerState<WorkerFormScreen> {
       bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _save),
       body: Form(
         key: _form,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
+        child: FormBody(
           children: [
             TextFormField(
               controller: _code,

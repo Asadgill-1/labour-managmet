@@ -552,6 +552,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Room charge agreement note'**
   String get roomChargeNote;
+
+  /// No description provided for @addPayContract.
+  ///
+  /// In en, this message translates to:
+  /// **'Add pay rate'**
+  String get addPayContract;
+
+  /// No description provided for @editPayContract.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit pay rate'**
+  String get editPayContract;
+
+  /// No description provided for @addBillingContract.
+  ///
+  /// In en, this message translates to:
+  /// **'Add client rate'**
+  String get addBillingContract;
+
+  /// No description provided for @editBillingContract.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit client rate'**
+  String get editBillingContract;
+
+  /// No description provided for @payContractsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay rates'**
+  String get payContractsHeading;
+
+  /// No description provided for @billingContractsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Client rates'**
+  String get billingContractsHeading;
+
+  /// No description provided for @noPayContract.
+  ///
+  /// In en, this message translates to:
+  /// **'No pay rate yet. Attendance for this worker will stop for review.'**
+  String get noPayContract;
+
+  /// No description provided for @noBillingContract.
+  ///
+  /// In en, this message translates to:
+  /// **'No client rate yet. Attendance for this client will stop for review.'**
+  String get noBillingContract;
+
+  /// No description provided for @rateBasis.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid by'**
+  String get rateBasis;
+
+  /// No description provided for @rateAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate (AED)'**
+  String get rateAmount;
+
+  /// No description provided for @effectiveFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts on'**
+  String get effectiveFrom;
+
+  /// No description provided for @effectiveTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends on'**
+  String get effectiveTo;
+
+  /// No description provided for @appliesToSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies to site'**
+  String get appliesToSite;
+
+  /// No description provided for @allSites.
+  ///
+  /// In en, this message translates to:
+  /// **'All sites'**
+  String get allSites;
+
+  /// No description provided for @appliesToWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies to worker'**
+  String get appliesToWorker;
+
+  /// No description provided for @allWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'All workers'**
+  String get allWorkers;
+
+  /// No description provided for @breakIsPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Break is paid'**
+  String get breakIsPaid;
+
+  /// No description provided for @halfAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Half-day amount (AED)'**
+  String get halfAmount;
+
+  /// No description provided for @halfAmountHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty if there is no agreed half amount. A half day then stops for review.'**
+  String get halfAmountHelp;
+
+  /// No description provided for @partialMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Part-month calculation'**
+  String get partialMethod;
+
+  /// No description provided for @partialMethodHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Used when a worker joins or leaves mid-month. Choose what your contract says.'**
+  String get partialMethodHelp;
+
+  /// No description provided for @partialCalendarDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Actual days in the month'**
+  String get partialCalendarDays;
+
+  /// No description provided for @partialFixedDivisor.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed number of days'**
+  String get partialFixedDivisor;
+
+  /// No description provided for @partialDivisor.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of days'**
+  String get partialDivisor;
+
+  /// No description provided for @includedMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes included before overtime'**
+  String get includedMinutes;
+
+  /// No description provided for @includedMinutesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty if there is no overtime on this rate.'**
+  String get includedMinutesHelp;
+
+  /// No description provided for @overtimeRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime rate per hour (AED)'**
+  String get overtimeRate;
+
+  /// No description provided for @overtimeRateHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Only what your contract states. The app never applies a multiplier by itself.'**
+  String get overtimeRateHelp;
+
+  /// No description provided for @basisHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Per hour'**
+  String get basisHour;
+
+  /// No description provided for @basisDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Per day'**
+  String get basisDay;
+
+  /// No description provided for @basisShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Per shift'**
+  String get basisShift;
+
+  /// No description provided for @basisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Per month'**
+  String get basisMonth;
+
+  /// No description provided for @basisMonthPerWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Per month, each worker'**
+  String get basisMonthPerWorker;
+
+  /// No description provided for @basisMonthFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Per month, fixed contract'**
+  String get basisMonthFixed;
+
+  /// No description provided for @endBeforeStart.
+  ///
+  /// In en, this message translates to:
+  /// **'The end date is before the start date'**
+  String get endBeforeStart;
+
+  /// No description provided for @contractOverlap.
+  ///
+  /// In en, this message translates to:
+  /// **'Another rate already covers these dates for the same site and worker. End that rate first.'**
+  String get contractOverlap;
+
+  /// No description provided for @openingHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Carried over from before'**
+  String get openingHeading;
+
+  /// No description provided for @openingSalaryOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'Old salary still owed to this worker'**
+  String get openingSalaryOwed;
+
+  /// No description provided for @openingAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Old advance to recover from this worker'**
+  String get openingAdvance;
+
+  /// No description provided for @openingReceivable.
+  ///
+  /// In en, this message translates to:
+  /// **'Old amount this company still owes'**
+  String get openingReceivable;
+
+  /// No description provided for @openingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter what was already due on the date you start using this app. It carries forward as a balance and is not counted as this month\'s expense or income.'**
+  String get openingHelp;
+
+  /// No description provided for @amountAed.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount (AED)'**
+  String get amountAed;
+
+  /// No description provided for @asOfDate.
+  ///
+  /// In en, this message translates to:
+  /// **'As of date'**
+  String get asOfDate;
+
+  /// No description provided for @sourceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Where this figure comes from'**
+  String get sourceNote;
+
+  /// No description provided for @sourceNoteHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For example: old register, page 12'**
+  String get sourceNoteHelp;
+
+  /// No description provided for @openingConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'I have checked this figure'**
+  String get openingConfirm;
+
+  /// No description provided for @confirmRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm you have checked this figure'**
+  String get confirmRequired;
+
+  /// No description provided for @notEntered.
+  ///
+  /// In en, this message translates to:
+  /// **'Not entered'**
+  String get notEntered;
+
+  /// No description provided for @dateFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From {date}'**
+  String dateFrom(String date);
+
+  /// No description provided for @dateFromTo.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} to {to}'**
+  String dateFromTo(String from, String to);
 }
 
 class _AppLocalizationsDelegate

@@ -33,7 +33,7 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
   late bool _active = widget.site?.active ?? true;
 
   Future<void> _save() async {
-    if (!_form.currentState!.validate()) return;
+    if (!validateAndReveal(_form)) return;
     final l10n = AppLocalizations.of(context);
     final db = ref.read(dbProvider);
     await db.saveRow(
@@ -66,8 +66,7 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
       bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _save),
       body: Form(
         key: _form,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
+        child: FormBody(
           children: [
             Field(l10n.siteName, _name, validator: (v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null),
             fieldGap,

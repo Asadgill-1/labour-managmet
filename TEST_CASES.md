@@ -35,7 +35,7 @@ Type: `domain` (`dart test`), `app` (`flutter test`), `backend` (`supabase test 
 | TC-027 | P1 | ATT-08 | Correct a posted entry that was on a shared timesheet | Original kept, revision trail exists, shared version preserved | app | NOT_STARTED |
 | TC-028 | P1 | ATT-09 | One worker on two shifts in a day | Unique workers 1, shifts 2, not an amount input | domain | VERIFIED |
 | TC-029 | P1 | MASTER-07 | Archive a worker with a balance, rehire with the same name | Balance and payslips stay available, no hard delete, no auto-merge | app | NOT_STARTED |
-| TC-030 | P1 | MASTER-05 | Enter opening salary owed, opening advance and client receivable | Kept separate with source date, salary balance is not a wage expense | app | NOT_STARTED |
+| TC-030 | P1 | MASTER-05 | Enter opening salary owed, opening advance and client receivable | Kept separate with source date, salary balance is not a wage expense | app | VERIFIED |
 | TC-031 | P1 | UX-06 | 5 non-technical users enter 10 same-rate workers after setup | Under 60 seconds, at least 4 of 5 without a trainer | manual | NOT_STARTED |
 | TC-032 | P2 | PAY-04 | Opening 500, gross 1,000, room 200, recovery 100, paid 600 | Total payable 1,200, closing 600 | domain | NOT_STARTED |
 | TC-033 | P2 | PAY-07 | Deductions exceed gross, deduction without authorization | Posting blocked for review, no debt carried automatically | domain | NOT_STARTED |

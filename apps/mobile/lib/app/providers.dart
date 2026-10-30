@@ -21,6 +21,32 @@ final workersProvider = StreamProvider((ref) {
   return (db.select(db.workers)..orderBy([(w) => OrderingTerm.asc(w.name)])).watch();
 });
 
+final allSitesProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.sites)..orderBy([(s) => OrderingTerm.asc(s.name)])).watch();
+});
+
+final payContractsProvider = StreamProvider.family<List<PayContract>, String>((ref, workerId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.payContracts)
+        ..where((c) => c.workerId.equals(workerId))
+        ..orderBy([(c) => OrderingTerm.desc(c.effectiveFrom)]))
+      .watch();
+});
+
+final billingContractsProvider = StreamProvider.family<List<BillingContract>, String>((ref, clientId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.billingContracts)
+        ..where((c) => c.clientId.equals(clientId))
+        ..orderBy([(c) => OrderingTerm.desc(c.effectiveFrom)]))
+      .watch();
+});
+
+final openingBalancesProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return db.select(db.openingBalances).watch();
+});
+
 final sitesOfClientProvider = StreamProvider.family<List<Site>, String>((ref, clientId) {
   final db = ref.watch(dbProvider);
   return (db.select(db.sites)

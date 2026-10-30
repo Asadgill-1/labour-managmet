@@ -9,6 +9,7 @@ import '../../app/providers.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../rates/rate_sections.dart';
 import 'client_form_screen.dart';
 import 'site_form_screen.dart';
 
@@ -59,6 +60,7 @@ class ClientDetailScreen extends ConsumerWidget {
             ),
             const Divider(),
           ],
+          ClientRateSections(clientId: clientId),
           fieldGap,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),

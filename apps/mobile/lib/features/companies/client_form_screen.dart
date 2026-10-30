@@ -35,7 +35,7 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
   late bool _vat = widget.client?.vatRegistered ?? false;
 
   Future<void> _save() async {
-    if (!_form.currentState!.validate()) return;
+    if (!validateAndReveal(_form)) return;
     final l10n = AppLocalizations.of(context);
     final db = ref.read(dbProvider);
     await db.saveRow(
@@ -69,8 +69,7 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
       bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _save),
       body: Form(
         key: _form,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
+        child: FormBody(
           children: [
             Field(l10n.clientName, _name, validator: (v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null),
             fieldGap,

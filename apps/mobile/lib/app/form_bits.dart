@@ -13,6 +13,30 @@ Value<String?> optionalText(TextEditingController c) {
 /// Gap between form rows, used by every form.
 const fieldGap = SizedBox(height: 14);
 
+/// Scrollable form content. Not a ListView: a lazy list drops off-screen fields, and a field that
+/// isn't built never gets validated, so a required value could be skipped.
+class FormBody extends StatelessWidget {
+  const FormBody({required this.children, super.key});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children),
+    );
+  }
+}
+
+/// Validates the form and scrolls to the first bad field, so the error is never out of sight (UX-04).
+bool validateAndReveal(GlobalKey<FormState> form) {
+  final invalid = form.currentState!.validateGranularly();
+  if (invalid.isEmpty) return true;
+  Scrollable.ensureVisible(invalid.first.context, alignment: 0.2, duration: const Duration(milliseconds: 200));
+  return false;
+}
+
 class Field extends StatelessWidget {
   const Field(this.label, this.controller, {this.validator, this.keyboardType, this.helper, this.lines = 1, super.key});
 
@@ -122,7 +146,7 @@ class SectionHeader extends StatelessWidget {
       child: Row(
         children: [
           Expanded(child: Text(title, style: Theme.of(context).textTheme.titleMedium)),
-          ?action,
+          if (action != null) Flexible(child: action!),
         ],
       ),
     );

@@ -30,7 +30,8 @@ Future<T> real<T>(WidgetTester tester, Future<T> Function() work) async => (awai
 
 Future<void> pumpApp(WidgetTester tester, TenantDatabase db) async {
   FlutterSecureStorage.setMockInitialValues({});
-  tester.view.physicalSize = const Size(1080, 2400);
+  // Narrow as a real phone, tall enough that detail screens need no scrolling in tests.
+  tester.view.physicalSize = const Size(1080, 4800);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(

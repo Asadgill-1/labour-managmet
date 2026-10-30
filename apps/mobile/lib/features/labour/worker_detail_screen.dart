@@ -11,6 +11,7 @@ import '../../app/providers.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../rates/rate_sections.dart';
 import 'worker_form_screen.dart';
 
 class WorkerDetailScreen extends ConsumerWidget {
@@ -51,6 +52,7 @@ class WorkerDetailScreen extends ConsumerWidget {
             ListTile(title: Text(l10n.roomCharge), trailing: Text(formatAed(worker.roomChargeFils!))),
             const Divider(),
           ],
+          WorkerRateSections(workerId: workerId),
           fieldGap,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
