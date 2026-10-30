@@ -19,7 +19,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 
 | Task | Title | Requirements | Status | Branch / PR |
 | --- | --- | --- | --- | --- |
-| T05 | Five-tab shell, l10n, readable UI, save statuses | UX-01..04, UX-07 | NOT_STARTED | - |
+| T05 | Five-tab shell, l10n, readable UI, save statuses | UX-01..04, UX-07 | IMPLEMENTED_UNVERIFIED | `p1/t05-shell` |
 | T06 | Schema v1, migrations harness, outbox, audit, local tenant | MODEL-01, MODEL-03, MODEL-04, MODEL-08 | NOT_STARTED | - |
 | T07 | Company, clients, sites, workers, archive | MASTER-01..04, MASTER-07 | NOT_STARTED | - |
 | T08 | Rate cards and opening balances | MASTER-05, MASTER-06 | NOT_STARTED | - |

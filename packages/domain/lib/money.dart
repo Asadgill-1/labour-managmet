@@ -8,3 +8,22 @@ int divRoundHalfUp(int numerator, int denominator) {
   final magnitude = (numerator.abs() + denominator ~/ 2) ~/ denominator;
   return numerator < 0 ? -magnitude : magnitude;
 }
+
+/// 110050 -> "AED 1,100.50". Amounts always show AED (UX-04).
+String formatAed(int fils) {
+  final sign = fils < 0 ? '-' : '';
+  final digits = (fils.abs() ~/ 100).toString();
+  final grouped = digits.replaceAllMapped(RegExp(r'\B(?=(\d{3})+$)'), (_) => ',');
+  final decimals = (fils.abs() % 100).toString().padLeft(2, '0');
+  return '${sign}AED $grouped.$decimals';
+}
+
+final _amount = RegExp(r'^(\d+)(?:\.(\d{1,2}))?$');
+
+/// "1,100.5" -> 110050. Returns null for anything that is not a non-negative AED amount.
+int? parseAed(String input) {
+  final match = _amount.firstMatch(input.trim().replaceAll(',', ''));
+  if (match == null) return null;
+  final decimals = (match[2] ?? '').padRight(2, '0');
+  return int.parse(match[1]!) * 100 + int.parse(decimals);
+}

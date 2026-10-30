@@ -8,11 +8,11 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | --- | --- | --- | --- | --- | --- | --- |
 | UX-01 | 02 | Paanch bottom tabs | T04, T05 | IN_PROGRESS | - | - |
 | UX-02 | 02 | Onboarding | T05, T19 | NOT_STARTED | - | - |
-| UX-03 | 02 | Saaf labels | T05 | NOT_STARTED | - | - |
-| UX-04 | 02 | Readability | T05 | NOT_STARTED | - | - |
+| UX-03 | 02 | Saaf labels | T05 | IN_PROGRESS | - | - |
+| UX-04 | 02 | Readability | T05 | IN_PROGRESS | - | - |
 | UX-05 | 02 | Kam typing | T10 | NOT_STARTED | TC-026 | - |
 | UX-06 | 02 | Measurable usability test | T10 | NOT_STARTED | TC-031 | - |
-| UX-07 | 02 | Save ki imaandari | T05 | NOT_STARTED | TC-008 | - |
+| UX-07 | 02 | Save ki imaandari | T05 | IN_PROGRESS | TC-008 | - |
 | AUTH-01 | 03 | Email/password primary login ho. Email verification, forgot-password, safe password | T19 | NOT_STARTED | - | - |
 | AUTH-02 | 03 | Signup par immutable tenant ID bane. Naam, phone number | T19 | NOT_STARTED | TC-006 | - |
 | AUTH-03 | 03 | Pehla signup, naya device login, password reset aur invite | T19 | NOT_STARTED | - | - |

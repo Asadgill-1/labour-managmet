@@ -1,0 +1,20 @@
+{
+  "@@locale": "en_PK",
+  "tabToday": "Aaj",
+  "tabCompanies": "Companies",
+  "tabLabour": "Labour",
+  "tabAccounts": "Hisaab",
+  "tabMore": "Aur",
+  "todayEmpty": "Aaj koi hazri darj nahin hui.",
+  "companiesEmpty": "Abhi koi client company nahin.",
+  "labourEmpty": "Abhi koi mazdoor nahin.",
+  "accountsComingLater": "Tankhwah, invoices, paisay mile, paisay diye aur closing aglay builds mein aayenge.",
+  "settingsLanguage": "Zaban",
+  "languageEnglish": "English",
+  "languageRomanUrdu": "Roman Urdu",
+  "settingsLargeText": "Bara text",
+  "dbCheckTitle": "Data encryption ki jaanch",
+  "dbCheckAllPassed": "Sab theek",
+  "dbCheckSomeFailed": "Kuch fail",
+  "savedOnPhone": "Mobile par save"
+}

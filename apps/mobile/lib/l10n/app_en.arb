@@ -1,0 +1,20 @@
+{
+  "@@locale": "en",
+  "tabToday": "Today",
+  "tabCompanies": "Companies",
+  "tabLabour": "Labour",
+  "tabAccounts": "Accounts",
+  "tabMore": "More",
+  "todayEmpty": "No attendance recorded today.",
+  "companiesEmpty": "No client companies yet.",
+  "labourEmpty": "No workers yet.",
+  "accountsComingLater": "Payroll, invoices, money received, money paid and closing arrive in the next builds.",
+  "settingsLanguage": "Language",
+  "languageEnglish": "English",
+  "languageRomanUrdu": "Roman Urdu",
+  "settingsLargeText": "Large text",
+  "dbCheckTitle": "Data encryption check",
+  "dbCheckAllPassed": "All passed",
+  "dbCheckSomeFailed": "Some failed",
+  "savedOnPhone": "Saved on phone"
+}

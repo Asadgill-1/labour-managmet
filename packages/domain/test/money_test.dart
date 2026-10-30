@@ -33,4 +33,22 @@ void main() {
       expect(10 * divRoundHalfUp(660 * 800, 60), 88000);
     });
   });
+
+  test('formatAed groups thousands and always shows AED', () {
+    expect(formatAed(0), 'AED 0.00');
+    expect(formatAed(5), 'AED 0.05');
+    expect(formatAed(110050), 'AED 1,100.50');
+    expect(formatAed(123456789), 'AED 1,234,567.89');
+    expect(formatAed(-50000), '-AED 500.00');
+  });
+
+  test('parseAed reads exact fils and rejects bad input', () {
+    expect(parseAed('1,100.5'), 110050);
+    expect(parseAed(' 10 '), 1000);
+    expect(parseAed('0.05'), 5);
+    expect(parseAed('19.99'), 1999);
+    for (final bad in ['', 'abc', '-5', '1.234', '1.2.3', '.5']) {
+      expect(parseAed(bad), isNull, reason: bad);
+    }
+  });
 }
