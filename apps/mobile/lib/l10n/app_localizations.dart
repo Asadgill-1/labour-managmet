@@ -136,13 +136,13 @@ abstract class AppLocalizations {
   /// No description provided for @companiesEmpty.
   ///
   /// In en, this message translates to:
-  /// **'No client companies yet.'**
+  /// **'No client companies yet. Add your first one.'**
   String get companiesEmpty;
 
   /// No description provided for @labourEmpty.
   ///
   /// In en, this message translates to:
-  /// **'No workers yet.'**
+  /// **'No workers yet. Add your first one.'**
   String get labourEmpty;
 
   /// No description provided for @accountsComingLater.
@@ -198,6 +198,360 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saved on phone'**
   String get savedOnPhone;
+
+  /// No description provided for @databaseError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data could not be opened. Nothing was deleted. Close the app and open it again. If this repeats, contact support.'**
+  String get databaseError;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @clearValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clearValue;
+
+  /// No description provided for @fieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This is required'**
+  String get fieldRequired;
+
+  /// No description provided for @wholeNumberRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a whole number'**
+  String get wholeNumberRequired;
+
+  /// No description provided for @amountInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount like 1100.50'**
+  String get amountInvalid;
+
+  /// No description provided for @showArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Show archived'**
+  String get showArchived;
+
+  /// No description provided for @showActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Show active'**
+  String get showActive;
+
+  /// No description provided for @archive.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archive;
+
+  /// No description provided for @reactivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Make active again'**
+  String get reactivate;
+
+  /// No description provided for @archivedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get archivedLabel;
+
+  /// No description provided for @activeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get activeLabel;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your company'**
+  String get welcomeTitle;
+
+  /// No description provided for @welcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with your company\'s name. You can add the rest later.'**
+  String get welcomeBody;
+
+  /// No description provided for @myCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'My company'**
+  String get myCompany;
+
+  /// No description provided for @legalName.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal company name'**
+  String get legalName;
+
+  /// No description provided for @tradingName.
+  ///
+  /// In en, this message translates to:
+  /// **'Trading name'**
+  String get tradingName;
+
+  /// No description provided for @address.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone or WhatsApp'**
+  String get phone;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @vatRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'My company is VAT registered'**
+  String get vatRegistered;
+
+  /// No description provided for @vatEffectiveFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT registered from'**
+  String get vatEffectiveFrom;
+
+  /// No description provided for @trn.
+  ///
+  /// In en, this message translates to:
+  /// **'TRN'**
+  String get trn;
+
+  /// No description provided for @trnFormatOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'This only checks the format. It is not verified with the FTA.'**
+  String get trnFormatOnly;
+
+  /// No description provided for @trnFormatError.
+  ///
+  /// In en, this message translates to:
+  /// **'A TRN has 15 digits'**
+  String get trnFormatError;
+
+  /// No description provided for @invoicePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice number prefix'**
+  String get invoicePrefix;
+
+  /// No description provided for @paymentTermsDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment terms in days'**
+  String get paymentTermsDays;
+
+  /// No description provided for @bankDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank details'**
+  String get bankDetails;
+
+  /// No description provided for @documentFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Document footer'**
+  String get documentFooter;
+
+  /// No description provided for @addClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Add company'**
+  String get addClient;
+
+  /// No description provided for @editClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit company'**
+  String get editClient;
+
+  /// No description provided for @clientName.
+  ///
+  /// In en, this message translates to:
+  /// **'Company name'**
+  String get clientName;
+
+  /// No description provided for @contactPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact person'**
+  String get contactPerson;
+
+  /// No description provided for @clientVatRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'This company is VAT registered'**
+  String get clientVatRegistered;
+
+  /// No description provided for @invoiceAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice address'**
+  String get invoiceAddress;
+
+  /// No description provided for @dueDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment due after how many days'**
+  String get dueDays;
+
+  /// No description provided for @poReference.
+  ///
+  /// In en, this message translates to:
+  /// **'PO or reference'**
+  String get poReference;
+
+  /// No description provided for @note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get note;
+
+  /// No description provided for @sitesHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Sites'**
+  String get sitesHeading;
+
+  /// No description provided for @sitesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No sites yet.'**
+  String get sitesEmpty;
+
+  /// No description provided for @addSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Add site'**
+  String get addSite;
+
+  /// No description provided for @editSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit site'**
+  String get editSite;
+
+  /// No description provided for @siteName.
+  ///
+  /// In en, this message translates to:
+  /// **'Site or project name'**
+  String get siteName;
+
+  /// No description provided for @siteLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get siteLocation;
+
+  /// No description provided for @defaultStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Usual start'**
+  String get defaultStart;
+
+  /// No description provided for @defaultEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Usual end'**
+  String get defaultEnd;
+
+  /// No description provided for @defaultBreakMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Usual break in minutes'**
+  String get defaultBreakMinutes;
+
+  /// No description provided for @activeFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Active from'**
+  String get activeFrom;
+
+  /// No description provided for @activeTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Active until'**
+  String get activeTo;
+
+  /// No description provided for @addWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Add worker'**
+  String get addWorker;
+
+  /// No description provided for @editWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit worker'**
+  String get editWorker;
+
+  /// No description provided for @workerCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker code'**
+  String get workerCode;
+
+  /// No description provided for @workerCodeTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'This code is already used by another worker'**
+  String get workerCodeTaken;
+
+  /// No description provided for @workerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker name'**
+  String get workerName;
+
+  /// No description provided for @trade.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade'**
+  String get trade;
+
+  /// No description provided for @joiningDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Joining date'**
+  String get joiningDate;
+
+  /// No description provided for @roomCharge.
+  ///
+  /// In en, this message translates to:
+  /// **'Room charge per month (AED)'**
+  String get roomCharge;
+
+  /// No description provided for @roomChargeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Room charge agreement note'**
+  String get roomChargeNote;
 }
 
 class _AppLocalizationsDelegate

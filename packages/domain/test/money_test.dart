@@ -42,6 +42,12 @@ void main() {
     expect(formatAed(-50000), '-AED 500.00');
   });
 
+  test('plainAmount round-trips through parseAed', () {
+    for (final fils in [0, 5, 100, 110050]) {
+      expect(parseAed(plainAmount(fils)), fils);
+    }
+  });
+
   test('parseAed reads exact fils and rejects bad input', () {
     expect(parseAed('1,100.5'), 110050);
     expect(parseAed(' 10 '), 1000);

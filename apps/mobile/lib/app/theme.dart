@@ -72,6 +72,10 @@ void showSavedOnPhone(BuildContext context, String message) {
     ..hideCurrentSnackBar()
     ..showSnackBar(
       SnackBar(
+        // Floats above the main action bar, so entering several records in a row never misses a tap.
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 84),
+        duration: const Duration(seconds: 2),
         content: Row(
           children: [
             const Icon(Icons.check_circle, color: Colors.white),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/providers.dart';
 import '../../app/settings.dart';
 import '../../l10n/app_localizations.dart';
 import 'db_check_screen.dart';
+import 'profile_form_screen.dart';
 
 class MoreScreen extends ConsumerWidget {
   const MoreScreen({super.key});
@@ -17,6 +19,14 @@ class MoreScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.tabMore)),
       body: ListView(
         children: [
+          ListTile(
+            title: Text(l10n.myCompany),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => ProfileFormScreen(profile: ref.read(profileProvider).value)),
+            ),
+          ),
+          const Divider(),
           ListTile(
             title: Text(l10n.settingsLanguage),
             trailing: DropdownButton<Locale>(

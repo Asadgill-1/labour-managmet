@@ -21,7 +21,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 | --- | --- | --- | --- | --- |
 | T05 | Five-tab shell, l10n, readable UI, save statuses | UX-01..04, UX-07 | IMPLEMENTED_UNVERIFIED | `p1/t05-shell` |
 | T06 | Schema v1, migrations harness, outbox, audit, local tenant | MODEL-01, MODEL-03, MODEL-04, MODEL-08 | IMPLEMENTED_UNVERIFIED | `p1/t06-schema` |
-| T07 | Company, clients, sites, workers, archive | MASTER-01..04, MASTER-07 | NOT_STARTED | - |
+| T07 | Company, clients, sites, workers, archive | MASTER-01..04, MASTER-07 | IMPLEMENTED_UNVERIFIED | `p1/t07-masters` |
 | T08 | Rate cards and opening balances | MASTER-05, MASTER-06 | NOT_STARTED | - |
 | T09 | Calculation engine with PRD fixtures | CALC-01..07 | NOT_STARTED | - |
 | T10 | Bulk attendance, exceptions, duplicates, midnight shift, corrections | ATT-01..09, UX-05, UX-06 | NOT_STARTED | - |

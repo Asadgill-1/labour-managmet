@@ -7,7 +7,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | ID | Ch | Summary | Tasks | Status | Tests | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
 | UX-01 | 02 | Paanch bottom tabs | T04, T05 | IN_PROGRESS | - | - |
-| UX-02 | 02 | Onboarding | T05, T19 | NOT_STARTED | - | - |
+| UX-02 | 02 | Onboarding | T05, T19 | IN_PROGRESS | - | - |
 | UX-03 | 02 | Saaf labels | T05 | IN_PROGRESS | - | - |
 | UX-04 | 02 | Readability | T05 | IN_PROGRESS | - | - |
 | UX-05 | 02 | Kam typing | T10 | NOT_STARTED | TC-026 | - |
@@ -21,13 +21,13 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | AUTH-06 | 03 | App malik ke admin account par MFA lazmi ho | T19 | NOT_STARTED | - | - |
 | AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | NOT_STARTED | - | - |
 | AUTH-08 | 03 | Production email login ke liye real SMTP/domain configuration aur | T19 | NOT_STARTED | - | - |
-| MASTER-01 | 04 | Apni company | T07 | NOT_STARTED | - | - |
-| MASTER-02 | 04 | Client | T07 | NOT_STARTED | - | - |
-| MASTER-03 | 04 | Sites | T07 | NOT_STARTED | - | - |
-| MASTER-04 | 04 | Worker | T07 | NOT_STARTED | - | - |
+| MASTER-01 | 04 | Apni company | T07 | IN_PROGRESS | - | - |
+| MASTER-02 | 04 | Client | T07 | IN_PROGRESS | - | - |
+| MASTER-03 | 04 | Sites | T07 | IN_PROGRESS | - | - |
+| MASTER-04 | 04 | Worker | T07 | IN_PROGRESS | - | - |
 | MASTER-05 | 04 | Opening balances | T08 | NOT_STARTED | TC-030 | - |
 | MASTER-06 | 04 | Rate cards | T08 | NOT_STARTED | - | - |
-| MASTER-07 | 04 | Archive | T07 | NOT_STARTED | TC-029 | - |
+| MASTER-07 | 04 | Archive | T07 | IN_PROGRESS | TC-029 | - |
 | MASTER-08 | 04 | Import | T18 | NOT_STARTED | - | - |
 | ATT-01 | 05 | Flow | T10 | NOT_STARTED | - | - |
 | ATT-02 | 05 | Entry fields | T10 | NOT_STARTED | - | - |

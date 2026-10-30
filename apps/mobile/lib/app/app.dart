@@ -6,8 +6,10 @@ import '../features/accounts/accounts_screen.dart';
 import '../features/companies/companies_screen.dart';
 import '../features/labour/labour_screen.dart';
 import '../features/more/more_screen.dart';
+import '../features/more/profile_form_screen.dart';
 import '../features/today/today_screen.dart';
 import '../l10n/app_localizations.dart';
+import 'providers.dart';
 import 'settings.dart';
 import 'theme.dart';
 
@@ -58,14 +60,24 @@ class LabourApp extends ConsumerWidget {
   }
 }
 
-class _TabShell extends StatelessWidget {
+class _TabShell extends ConsumerWidget {
   const _TabShell(this.shell);
 
   final StatefulNavigationShell shell;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final profile = ref.watch(profileProvider);
+    if (profile.hasError) {
+      return Scaffold(
+        body: SafeArea(
+          child: Padding(padding: const EdgeInsets.all(16), child: Text(l10n.databaseError)),
+        ),
+      );
+    }
+    if (!profile.hasValue) return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    if (profile.value == null) return const ProfileFormScreen();
     return Scaffold(
       body: shell,
       bottomNavigationBar: NavigationBar(

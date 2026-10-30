@@ -26,6 +26,7 @@ Status: ACCEPTED (owner approved), or PROPOSED (waiting for sign-off). New decis
 | D-020 | ACCEPTED | No separate `assignments` table. A contract row with a `site_id` or `worker_id` is the assignment-level rate that beats the general one | Covers CALC-06's priority order with one mechanism. "Copy yesterday's team" covers team memory. Add the table only if assignments need data of their own |
 | D-021 | ACCEPTED | All writes go through `applyOperation`, and the outbox primary key is the idempotency key. No per-table unique index on `source_operation_id` | One guard covers every caller. A batch shares one operation across many rows, which a per-table index would reject |
 | D-022 | ACCEPTED | Overtime on a contract is an explicit per-hour rate, not a multiplier | Works for hourly, shift and monthly bases alike, and nothing is implied about a legal multiplier (CALC-07) |
+| D-023 | PROPOSED | Company logo (MASTER-01) and worker photo (MASTER-04) move to T14, with the image handling and validation of DOC-04 | Nothing uses them before documents exist, and uploads need one validated path. The fields are hidden until then. Owner to confirm at the P1 gate (AI-07) |
 
 ## Policy defaults (ACCEPTED by the owner on 2026-10-31)
 

@@ -18,6 +18,9 @@ String formatAed(int fils) {
   return '${sign}AED $grouped.$decimals';
 }
 
+/// 110050 -> "1100.50", for prefilling an amount field that [parseAed] reads back.
+String plainAmount(int fils) => '${fils ~/ 100}.${(fils % 100).toString().padLeft(2, '0')}';
+
 final _amount = RegExp(r'^(\d+)(?:\.(\d{1,2}))?$');
 
 /// "1,100.5" -> 110050. Returns null for anything that is not a non-negative AED amount.
