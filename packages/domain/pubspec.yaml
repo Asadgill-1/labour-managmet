@@ -1,0 +1,8 @@
+name: domain
+description: Pure Dart business rules for attendance, payroll and billing. No Flutter imports.
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+dev_dependencies:
+  test: ^1.33.0

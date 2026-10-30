@@ -167,8 +167,8 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | AI-02 | 22 | Work discipline | T01 | IN_PROGRESS | - | - |
 | AI-03 | 22 | Done ka matlab | T01 | IN_PROGRESS | - | - |
 | AI-04 | 22 | Session handover | T01 | IN_PROGRESS | - | - |
-| AI-05 | 22 | GitHub | T02 | NOT_STARTED | - | - |
-| AI-06 | 22 | CI gates | T02 | NOT_STARTED | - | - |
+| AI-05 | 22 | GitHub | T02 | IN_PROGRESS | - | - |
+| AI-06 | 22 | CI gates | T02 | IMPLEMENTED_UNVERIFIED | - | - |
 | AI-07 | 22 | No silent changes | T01 | IN_PROGRESS | - | - |
 | AI-08 | 22 | Full ownership | T01 | IN_PROGRESS | - | - |
 | QA-01 | 23 | Aik complete end-to-end test: signup > apni company > | T26 | NOT_STARTED | - | - |

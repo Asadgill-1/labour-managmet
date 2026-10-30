@@ -9,7 +9,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 | Task | Title | Requirements | Status | Branch / PR |
 | --- | --- | --- | --- | --- |
 | T01 | Repo, PRD Markdown, AI-01 docs, traceability matrix | AI-01..04, AI-07, AI-08, ARCH-08, BUILD-03 | IMPLEMENTED_UNVERIFIED | `p0/t01-repo-docs` |
-| T02 | GitHub Actions, secret scanning, lockfiles, gitignore | AI-05, AI-06 | NOT_STARTED | - |
+| T02 | GitHub Actions, secret scanning, lockfiles, gitignore | AI-05, AI-06 | IMPLEMENTED_UNVERIFIED | `p0/t02-ci` |
 | T03 | Spike on a real phone: Flutter shell, encrypted per-tenant DB, Keystore key | ARCH-01, DATA-01 | NOT_STARTED | - |
 | T04 | Calculation spec, data model, screen flow, ADRs, full test scenarios | UX-01, CALC-01, MODEL-01, MODEL-03, MODEL-04, BUILD-01 | NOT_STARTED | - |
 
