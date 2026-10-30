@@ -1,0 +1,10 @@
+# Generated code would drown the real structure in the graph
+**/*.g.dart
+apps/mobile/lib/l10n/app_localizations*.dart
+apps/mobile/test/drift/tenant/generated/
+apps/mobile/build/
+apps/mobile/android/
+apps/mobile/.dart_tool/
+packages/domain/.dart_tool/
+drift_schemas/
+Labour_Management_PRD_Roman_Urdu.docx

@@ -43,3 +43,4 @@ Details in `docs/owner/P1_CHECKLIST.md`.
 - In a widget test, database work must run on the real clock (`real()` in `test/support.dart`), or the test hangs.
 - Never chain a commit after a test run in one command unless it is gated on the result. It happened once in T06.
 - Forms must not sit in a lazy list. Off-screen fields skip validation. Use `FormBody`.
+- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Current graph: 1,219 nodes, 1,898 edges, 62 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.

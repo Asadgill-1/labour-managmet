@@ -29,7 +29,7 @@ source /c/dev/env.sh
 
 - One small task at a time: requirement ID, issue, branch `pN/tNN-name`, test, evidence, PR (AI-02).
 - Task states: NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED, VERIFIED, OWNER_ACCEPTED. Never VERIFIED without an actual test run (AI-03).
-- Update `PROGRESS.md`, `TASKS.md` and `REQUIREMENTS_TRACEABILITY.md` in the same PR. Rebuild the graph with `/graphify . --update` when a task changes the docs or code.
+- Update `PROGRESS.md`, `TASKS.md` and `REQUIREMENTS_TRACEABILITY.md` in the same PR. Refresh the graph with the skill's `/graphify . --update` when a task changes the docs or code. Never run the bare `graphify update` CLI: it re-reads the PRD with a headings-only parser and drops its 278-node map to 27 nodes (backups are in `graphify-out/<date>/`). `.graphifyignore` keeps generated code out.
 - Log scope, price, payroll formula, permission, retention and billing changes in `DECISIONS.md` (AI-07). Missing feature: hide it or show it as unavailable, never fake it.
 - Missing integration credentials: mark BLOCKED. A skip is not a pass (AI-06).
 
