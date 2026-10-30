@@ -35,8 +35,9 @@ Details in `docs/owner/P1_CHECKLIST.md`.
 ## Known risks
 
 - E-invoicing, see `DECISIONS.md` D-011.
-- Disk is about 94% full. Docker for P4 needs more, so free space before then.
-- Release APK builds take about 11 minutes here. Use debug builds while developing.
+- Disk is 91% full with 22 GB free. Docker for P4 needs more, so free space before then.
+- Release APK builds take 3 to 11 minutes here, depending on the Gradle cache. Use debug builds while developing.
+- The P1 release build warns that `CupertinoIcons` has no bundled font. No screen reviewed so far shows one. Check on the phone test.
 
 ## Lessons
 
