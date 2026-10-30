@@ -5,11 +5,10 @@ import 'package:labour_app/data/tenant_database.dart';
 import 'generated/schema.dart';
 
 void main() {
-  test('schema matches the saved snapshot, so a table change without a migration fails', () async {
+  test('Dart tables match the saved snapshot, so a table change without a migration fails', () async {
     final verifier = SchemaVerifier(GeneratedHelper());
-    final connection = await verifier.startAt(1);
-    final db = TenantDatabase(connection, tenantId: 'tenant', deviceId: 'device');
+    final db = TenantDatabase(await verifier.startAt(1), tenantId: 'tenant', deviceId: 'device');
     addTearDown(db.close);
-    await verifier.migrateAndValidate(db, 1);
+    await db.validateDatabaseSchema();
   });
 }
