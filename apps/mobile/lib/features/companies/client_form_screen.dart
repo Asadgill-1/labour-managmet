@@ -38,7 +38,7 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
     if (!validateAndReveal(_form)) return;
     final l10n = AppLocalizations.of(context);
     final db = ref.read(dbProvider);
-    await db.saveRow(
+    final saved = await saveOrExplain(context, () => db.saveRow(
       db.clients,
       id: widget.client?.id,
       operationId: _operationId,
@@ -55,8 +55,8 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
         poReference: optionalText(_po),
         note: optionalText(_note),
       ),
-    );
-    if (!mounted) return;
+    ));
+    if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();
   }

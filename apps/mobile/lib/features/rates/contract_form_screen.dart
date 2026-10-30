@@ -16,9 +16,19 @@ import 'rate_labels.dart';
 /// One form for both sides of a rate (MASTER-06). Set [workerId] for what a worker is paid,
 /// or [clientId] for what a client is charged. The two are always separate rows.
 class ContractFormScreen extends ConsumerStatefulWidget {
-  const ContractFormScreen.pay({required String this.workerId, this.pay, super.key}) : clientId = null, billing = null;
+  const ContractFormScreen.pay({
+    required String this.workerId,
+    this.pay,
+    super.key,
+  }) : clientId = null,
+       billing = null;
 
-  const ContractFormScreen.billing({required String this.clientId, this.billing, super.key}) : workerId = null, pay = null;
+  const ContractFormScreen.billing({
+    required String this.clientId,
+    this.billing,
+    super.key,
+  }) : workerId = null,
+       pay = null;
 
   final String? workerId;
   final String? clientId;
@@ -35,18 +45,39 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
 
   bool get _isPay => widget.workerId != null;
 
-  late RateBasis _basis = RateBasis.values.byName(widget.pay?.basis ?? widget.billing?.basis ?? 'hour');
-  late final _rate = TextEditingController(text: _plain(widget.pay?.rateFils ?? widget.billing?.rateFils));
-  late final _half = TextEditingController(text: _plain(widget.pay?.halfAmountFils ?? widget.billing?.halfAmountFils));
-  late final _overtime = TextEditingController(text: _plain(widget.pay?.overtimeRateFils ?? widget.billing?.overtimeRateFils));
-  late final _included = TextEditingController(text: (widget.pay?.includedMinutes ?? widget.billing?.includedMinutes)?.toString());
-  late final _divisor = TextEditingController(text: widget.pay?.partialDivisor?.toString());
-  late String? _from = widget.pay?.effectiveFrom ?? widget.billing?.effectiveFrom ?? dubaiToday(DateTime.now());
+  late RateBasis _basis = RateBasis.values.byName(
+    widget.pay?.basis ?? widget.billing?.basis ?? 'hour',
+  );
+  late final _rate = TextEditingController(
+    text: _plain(widget.pay?.rateFils ?? widget.billing?.rateFils),
+  );
+  late final _half = TextEditingController(
+    text: _plain(widget.pay?.halfAmountFils ?? widget.billing?.halfAmountFils),
+  );
+  late final _overtime = TextEditingController(
+    text: _plain(
+      widget.pay?.overtimeRateFils ?? widget.billing?.overtimeRateFils,
+    ),
+  );
+  late final _included = TextEditingController(
+    text: (widget.pay?.includedMinutes ?? widget.billing?.includedMinutes)
+        ?.toString(),
+  );
+  late final _divisor = TextEditingController(
+    text: widget.pay?.partialDivisor?.toString(),
+  );
+  late String? _from =
+      widget.pay?.effectiveFrom ??
+      widget.billing?.effectiveFrom ??
+      dubaiToday(DateTime.now());
   late String? _to = widget.pay?.effectiveTo ?? widget.billing?.effectiveTo;
-  late bool _breakPaid = widget.pay?.breakPaid ?? widget.billing?.breakPaid ?? false;
+  late bool _breakPaid =
+      widget.pay?.breakPaid ?? widget.billing?.breakPaid ?? false;
   late String? _siteId = widget.pay?.siteId ?? widget.billing?.siteId;
   late String? _scopeWorkerId = widget.billing?.workerId;
-  late PartialMethod? _partial = widget.pay?.partialMethod == null ? null : PartialMethod.values.byName(widget.pay!.partialMethod!);
+  late PartialMethod? _partial = widget.pay?.partialMethod == null
+      ? null
+      : PartialMethod.values.byName(widget.pay!.partialMethod!);
 
   static String _plain(int? fils) => fils == null ? '' : plainAmount(fils);
 
@@ -64,7 +95,13 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
     final included = Value(int.tryParse(_included.text.trim()));
     final bool overlaps;
     if (_isPay) {
-      overlaps = await db.payContractOverlaps(workerId: widget.workerId!, siteId: _siteId, from: _from!, to: _to, exceptId: widget.pay?.id);
+      overlaps = await db.payContractOverlaps(
+        workerId: widget.workerId!,
+        siteId: _siteId,
+        from: _from!,
+        to: _to,
+        exceptId: widget.pay?.id,
+      );
     } else {
       overlaps = await db.billingContractOverlaps(
         clientId: widget.clientId!,
@@ -79,66 +116,89 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
       if (mounted) showFormError(context, l10n.contractOverlap);
       return;
     }
-    if (_isPay) {
-      final monthly = _basis == RateBasis.month;
-      await db.saveRow(
-        db.payContracts,
-        id: widget.pay?.id,
-        operationId: _operationId,
-        fields: PayContractsCompanion(
-          workerId: Value(widget.workerId!),
-          siteId: Value(_siteId),
-          basis: Value(_basis.name),
-          rateFils: rate,
-          effectiveFrom: Value(_from!),
-          effectiveTo: Value(_to),
-          breakPaid: Value(_breakPaid),
-          halfAmountFils: half,
-          includedMinutes: included,
-          overtimeRateFils: overtime,
-          partialMethod: Value(monthly ? _partial?.name : null),
-          partialDivisor: Value(monthly && _partial == PartialMethod.fixedDivisor ? int.parse(_divisor.text.trim()) : null),
-        ),
-      );
-    } else {
-      await db.saveRow(
-        db.billingContracts,
-        id: widget.billing?.id,
-        operationId: _operationId,
-        fields: BillingContractsCompanion(
-          clientId: Value(widget.clientId!),
-          siteId: Value(_siteId),
-          workerId: Value(_scopeWorkerId),
-          basis: Value(_basis.name),
-          rateFils: rate,
-          effectiveFrom: Value(_from!),
-          effectiveTo: Value(_to),
-          breakPaid: Value(_breakPaid),
-          halfAmountFils: half,
-          includedMinutes: included,
-          overtimeRateFils: overtime,
-        ),
-      );
-    }
     if (!mounted) return;
+    final saved = await saveOrExplain(context, () async {
+      if (_isPay) {
+        final monthly = _basis == RateBasis.month;
+        await db.saveRow(
+          db.payContracts,
+          id: widget.pay?.id,
+          operationId: _operationId,
+          fields: PayContractsCompanion(
+            workerId: Value(widget.workerId!),
+            siteId: Value(_siteId),
+            basis: Value(_basis.name),
+            rateFils: rate,
+            effectiveFrom: Value(_from!),
+            effectiveTo: Value(_to),
+            breakPaid: Value(_breakPaid),
+            halfAmountFils: half,
+            includedMinutes: included,
+            overtimeRateFils: overtime,
+            partialMethod: Value(monthly ? _partial?.name : null),
+            partialDivisor: Value(
+              monthly && _partial == PartialMethod.fixedDivisor
+                  ? int.parse(_divisor.text.trim())
+                  : null,
+            ),
+          ),
+        );
+      } else {
+        await db.saveRow(
+          db.billingContracts,
+          id: widget.billing?.id,
+          operationId: _operationId,
+          fields: BillingContractsCompanion(
+            clientId: Value(widget.clientId!),
+            siteId: Value(_siteId),
+            workerId: Value(_scopeWorkerId),
+            basis: Value(_basis.name),
+            rateFils: rate,
+            effectiveFrom: Value(_from!),
+            effectiveTo: Value(_to),
+            breakPaid: Value(_breakPaid),
+            halfAmountFils: half,
+            includedMinutes: included,
+            overtimeRateFils: overtime,
+          ),
+        );
+      }
+    });
+    if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();
   }
 
   String? _optionalAmount(String? v, AppLocalizations l10n) {
-    return (v ?? '').trim().isNotEmpty && parseAed(v!) == null ? l10n.amountInvalid : null;
+    return (v ?? '').trim().isNotEmpty && parseAed(v!) == null
+        ? l10n.amountInvalid
+        : null;
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final bases = _isPay
-        ? const [RateBasis.hour, RateBasis.day, RateBasis.shift, RateBasis.month]
-        : const [RateBasis.hour, RateBasis.day, RateBasis.shift, RateBasis.monthPerWorker, RateBasis.monthFixed];
+        ? const [
+            RateBasis.hour,
+            RateBasis.day,
+            RateBasis.shift,
+            RateBasis.month,
+          ]
+        : const [
+            RateBasis.hour,
+            RateBasis.day,
+            RateBasis.shift,
+            RateBasis.monthPerWorker,
+            RateBasis.monthFixed,
+          ];
     final sites = _isPay
         ? ref.watch(allSitesProvider).value ?? const <Site>[]
-        : ref.watch(sitesOfClientProvider(widget.clientId!)).value ?? const <Site>[];
-    final workers = _isPay ? const <Worker>[] : ref.watch(workersProvider).value ?? const <Worker>[];
+        : ref.watch(sitesOfClientProvider(widget.clientId!)).value ??
+              const <Site>[];
+    final workers = _isPay
+        ? const <Worker>[]
+        : ref.watch(workersProvider).value ?? const <Worker>[];
     final editing = widget.pay != null || widget.billing != null;
     return Scaffold(
       appBar: AppBar(
@@ -158,20 +218,35 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
               isExpanded: true,
               initialValue: _basis,
               decoration: InputDecoration(labelText: l10n.rateBasis),
-              items: [for (final b in bases) DropdownMenuItem(value: b, child: Text(basisLabel(l10n, b)))],
+              items: [
+                for (final b in bases)
+                  DropdownMenuItem(value: b, child: Text(basisLabel(l10n, b))),
+              ],
               onChanged: (b) => setState(() => _basis = b!),
             ),
             fieldGap,
             Field(
               l10n.rateAmount,
               _rate,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              validator: (v) => parseAed(v ?? '') == null ? l10n.amountInvalid : null,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              validator: (v) =>
+                  parseAed(v ?? '') == null ? l10n.amountInvalid : null,
             ),
             fieldGap,
-            DateField(l10n.effectiveFrom, value: _from, onChanged: (v) => setState(() => _from = v), required: true),
+            DateField(
+              l10n.effectiveFrom,
+              value: _from,
+              onChanged: (v) => setState(() => _from = v),
+              required: true,
+            ),
             fieldGap,
-            DateField(l10n.effectiveTo, value: _to, onChanged: (v) => setState(() => _to = v)),
+            DateField(
+              l10n.effectiveTo,
+              value: _to,
+              onChanged: (v) => setState(() => _to = v),
+            ),
             fieldGap,
             DropdownButtonFormField<String?>(
               isExpanded: true,
@@ -179,7 +254,8 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
               decoration: InputDecoration(labelText: l10n.appliesToSite),
               items: [
                 DropdownMenuItem(child: Text(l10n.allSites)),
-                for (final s in sites) DropdownMenuItem(value: s.id, child: Text(s.name)),
+                for (final s in sites)
+                  DropdownMenuItem(value: s.id, child: Text(s.name)),
               ],
               onChanged: (v) => setState(() => _siteId = v),
             ),
@@ -191,7 +267,11 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
                 decoration: InputDecoration(labelText: l10n.appliesToWorker),
                 items: [
                   DropdownMenuItem(child: Text(l10n.allWorkers)),
-                  for (final w in workers) DropdownMenuItem(value: w.id, child: Text('${w.name} (${w.code})')),
+                  for (final w in workers)
+                    DropdownMenuItem(
+                      value: w.id,
+                      child: Text('${w.name} (${w.code})'),
+                    ),
                 ],
                 onChanged: (v) => setState(() => _scopeWorkerId = v),
               ),
@@ -206,7 +286,9 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
               Field(
                 l10n.halfAmount,
                 _half,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 helper: l10n.halfAmountHelp,
                 validator: (v) => _optionalAmount(v, l10n),
               ),
@@ -216,11 +298,21 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
               DropdownButtonFormField<PartialMethod>(
                 isExpanded: true,
                 initialValue: _partial,
-                decoration: InputDecoration(labelText: l10n.partialMethod, helperText: l10n.partialMethodHelp, helperMaxLines: 2),
+                decoration: InputDecoration(
+                  labelText: l10n.partialMethod,
+                  helperText: l10n.partialMethodHelp,
+                  helperMaxLines: 2,
+                ),
                 validator: (v) => v == null ? l10n.fieldRequired : null,
                 items: [
-                  DropdownMenuItem(value: PartialMethod.calendarDays, child: Text(l10n.partialCalendarDays)),
-                  DropdownMenuItem(value: PartialMethod.fixedDivisor, child: Text(l10n.partialFixedDivisor)),
+                  DropdownMenuItem(
+                    value: PartialMethod.calendarDays,
+                    child: Text(l10n.partialCalendarDays),
+                  ),
+                  DropdownMenuItem(
+                    value: PartialMethod.fixedDivisor,
+                    child: Text(l10n.partialFixedDivisor),
+                  ),
                 ],
                 onChanged: (v) => setState(() => _partial = v),
               ),
@@ -230,7 +322,9 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
                   l10n.partialDivisor,
                   _divisor,
                   keyboardType: TextInputType.number,
-                  validator: (v) => (int.tryParse((v ?? '').trim()) ?? 0) <= 0 ? l10n.wholeNumberRequired : null,
+                  validator: (v) => (int.tryParse((v ?? '').trim()) ?? 0) <= 0
+                      ? l10n.wholeNumberRequired
+                      : null,
                 ),
                 fieldGap,
               ],
@@ -240,13 +334,19 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
               _included,
               keyboardType: TextInputType.number,
               helper: l10n.includedMinutesHelp,
-              validator: (v) => (v ?? '').trim().isNotEmpty && (int.tryParse(v!.trim()) ?? -1) < 0 ? l10n.wholeNumberRequired : null,
+              validator: (v) =>
+                  (v ?? '').trim().isNotEmpty &&
+                      (int.tryParse(v!.trim()) ?? -1) < 0
+                  ? l10n.wholeNumberRequired
+                  : null,
             ),
             fieldGap,
             Field(
               l10n.overtimeRate,
               _overtime,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               helper: l10n.overtimeRateHelp,
               validator: (v) => _optionalAmount(v, l10n),
             ),

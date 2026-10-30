@@ -128,6 +128,7 @@ class OpeningBalances extends Table with Common {
   ];
 }
 
+@DataClassName('AttendanceBatch')
 class AttendanceBatches extends Table with Common {
   TextColumn get workDate => text()();
   TextColumn get clientId => text().references(Clients, #id)();
@@ -170,6 +171,10 @@ class AttendanceEntries extends Table with Common {
   TextColumn get workerBasis => text().nullable()();
   IntColumn get workerRateFils => integer().nullable()();
   IntColumn get workerAmountFils => integer().nullable()();
+
+  /// Kept apart from the snapshot, so approving a row can re-price it without losing the override.
+  IntColumn get clientRateOverrideFils => integer().nullable()();
+  IntColumn get workerRateOverrideFils => integer().nullable()();
   TextColumn get overrideReason => text().nullable()();
   TextColumn get overlapReason => text().nullable()();
   TextColumn get notes => text().nullable()();

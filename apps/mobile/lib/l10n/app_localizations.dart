@@ -852,6 +852,372 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{from} to {to}'**
   String dateFromTo(String from, String to);
+
+  /// No description provided for @markAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark attendance'**
+  String get markAttendance;
+
+  /// No description provided for @workDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get workDate;
+
+  /// No description provided for @chooseClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Company'**
+  String get chooseClient;
+
+  /// No description provided for @chooseSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Site'**
+  String get chooseSite;
+
+  /// No description provided for @shiftStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get shiftStart;
+
+  /// No description provided for @shiftEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get shiftEnd;
+
+  /// No description provided for @breakMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Break in minutes'**
+  String get breakMinutes;
+
+  /// No description provided for @selectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get selectAll;
+
+  /// No description provided for @clearSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear selection'**
+  String get clearSelection;
+
+  /// No description provided for @copyLastTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Last team'**
+  String get copyLastTeam;
+
+  /// No description provided for @noLastTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'No earlier team found for this site.'**
+  String get noLastTeam;
+
+  /// No description provided for @needSetupFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a company, a site and a worker first.'**
+  String get needSetupFirst;
+
+  /// No description provided for @timesRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the start and end time.'**
+  String get timesRequired;
+
+  /// No description provided for @reviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review attendance'**
+  String get reviewTitle;
+
+  /// No description provided for @totalClient.
+  ///
+  /// In en, this message translates to:
+  /// **'To collect from company'**
+  String get totalClient;
+
+  /// No description provided for @totalWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'To pay workers'**
+  String get totalWorker;
+
+  /// No description provided for @monthlyNotInTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers on a monthly rate are not in this total. They are calculated per month.'**
+  String get monthlyNotInTotal;
+
+  /// No description provided for @groupRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Change today\'s company rate'**
+  String get groupRate;
+
+  /// No description provided for @groupRateAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Company rate for this group (AED)'**
+  String get groupRateAmount;
+
+  /// No description provided for @issueClientRate.
+  ///
+  /// In en, this message translates to:
+  /// **'No company rate found'**
+  String get issueClientRate;
+
+  /// No description provided for @issueWorkerRate.
+  ///
+  /// In en, this message translates to:
+  /// **'No worker rate found'**
+  String get issueWorkerRate;
+
+  /// No description provided for @issueHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'No half-day amount agreed'**
+  String get issueHalf;
+
+  /// No description provided for @issueOvertime.
+  ///
+  /// In en, this message translates to:
+  /// **'No overtime rate agreed'**
+  String get issueOvertime;
+
+  /// No description provided for @issueOverlap.
+  ///
+  /// In en, this message translates to:
+  /// **'This worker already has attendance at this time. Write a reason.'**
+  String get issueOverlap;
+
+  /// No description provided for @issueBreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Break is longer than the shift'**
+  String get issueBreak;
+
+  /// No description provided for @issueOverrideReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Write why the rate changed'**
+  String get issueOverrideReason;
+
+  /// No description provided for @rowsNeedFix.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix the rows marked in red, then save.'**
+  String get rowsNeedFix;
+
+  /// No description provided for @savesAsDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Rows with a missing rate save as drafts until a rate is added.'**
+  String get savesAsDraft;
+
+  /// No description provided for @statusPresent.
+  ///
+  /// In en, this message translates to:
+  /// **'Present'**
+  String get statusPresent;
+
+  /// No description provided for @statusHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Half day'**
+  String get statusHalf;
+
+  /// No description provided for @statusAbsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Absent'**
+  String get statusAbsent;
+
+  /// No description provided for @clientBreakPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Break paid on company side'**
+  String get clientBreakPaid;
+
+  /// No description provided for @workerBreakPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Break paid on worker side'**
+  String get workerBreakPaid;
+
+  /// No description provided for @overtimeApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime approved'**
+  String get overtimeApproved;
+
+  /// No description provided for @clientOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Company rate for this row (AED)'**
+  String get clientOverride;
+
+  /// No description provided for @workerOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker rate for this row (AED)'**
+  String get workerOverride;
+
+  /// No description provided for @overrideHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty to use the contract. Changing a rate needs the owner\'s approval and a reason.'**
+  String get overrideHelp;
+
+  /// No description provided for @overrideReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why the rate changed'**
+  String get overrideReason;
+
+  /// No description provided for @overlapReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why two entries overlap'**
+  String get overlapReason;
+
+  /// No description provided for @correctionReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why this is being corrected'**
+  String get correctionReason;
+
+  /// No description provided for @correctionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The original entry is kept. This creates a corrected entry.'**
+  String get correctionHelp;
+
+  /// No description provided for @deleteRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this entry'**
+  String get deleteRow;
+
+  /// No description provided for @applyChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyChanges;
+
+  /// No description provided for @stateDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get stateDraft;
+
+  /// No description provided for @stateSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs review'**
+  String get stateSubmitted;
+
+  /// No description provided for @stateApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get stateApproved;
+
+  /// No description provided for @stateLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'In accounts'**
+  String get stateLinked;
+
+  /// No description provided for @correctedTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Corrected'**
+  String get correctedTag;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @localOnlyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This data is only on this phone.'**
+  String get localOnlyNote;
+
+  /// No description provided for @nextWithCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Next ({count} workers)'**
+  String nextWithCount(int count);
+
+  /// No description provided for @approveAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve all ({count})'**
+  String approveAll(int count);
+
+  /// No description provided for @approvedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} entries approved'**
+  String approvedCount(int count);
+
+  /// No description provided for @countsLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{workers} workers, {shifts} shifts, {days} worker-days'**
+  String countsLine(int workers, int shifts, int days);
+
+  /// No description provided for @missingWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers have no attendance: {names}'**
+  String missingWorkers(int count, String names);
+
+  /// No description provided for @hoursPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} hours'**
+  String hoursPaid(String duration);
+
+  /// No description provided for @previousDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous day'**
+  String get previousDay;
+
+  /// No description provided for @nextDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Next day'**
+  String get nextDay;
+
+  /// No description provided for @saveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save. Nothing was changed. Try again.'**
+  String get saveFailed;
+
+  /// No description provided for @rowCollect.
+  ///
+  /// In en, this message translates to:
+  /// **'Collect {amount}'**
+  String rowCollect(String amount);
+
+  /// No description provided for @rowPay.
+  ///
+  /// In en, this message translates to:
+  /// **'pay {amount}'**
+  String rowPay(String amount);
 }
 
 class _AppLocalizationsDelegate

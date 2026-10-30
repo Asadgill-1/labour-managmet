@@ -142,5 +142,131 @@
         "type": "String"
       }
     }
+  },
+  "markAttendance": "Mark attendance",
+  "workDate": "Date",
+  "chooseClient": "Company",
+  "chooseSite": "Site",
+  "shiftStart": "Start",
+  "shiftEnd": "End",
+  "breakMinutes": "Break in minutes",
+  "selectAll": "Select all",
+  "clearSelection": "Clear selection",
+  "copyLastTeam": "Last team",
+  "noLastTeam": "No earlier team found for this site.",
+  "needSetupFirst": "Add a company, a site and a worker first.",
+  "timesRequired": "Choose the start and end time.",
+  "reviewTitle": "Review attendance",
+  "totalClient": "To collect from company",
+  "totalWorker": "To pay workers",
+  "monthlyNotInTotal": "Workers on a monthly rate are not in this total. They are calculated per month.",
+  "groupRate": "Change today's company rate",
+  "groupRateAmount": "Company rate for this group (AED)",
+  "issueClientRate": "No company rate found",
+  "issueWorkerRate": "No worker rate found",
+  "issueHalf": "No half-day amount agreed",
+  "issueOvertime": "No overtime rate agreed",
+  "issueOverlap": "This worker already has attendance at this time. Write a reason.",
+  "issueBreak": "Break is longer than the shift",
+  "issueOverrideReason": "Write why the rate changed",
+  "rowsNeedFix": "Fix the rows marked in red, then save.",
+  "savesAsDraft": "Rows with a missing rate save as drafts until a rate is added.",
+  "statusPresent": "Present",
+  "statusHalf": "Half day",
+  "statusAbsent": "Absent",
+  "clientBreakPaid": "Break paid on company side",
+  "workerBreakPaid": "Break paid on worker side",
+  "overtimeApproved": "Overtime approved",
+  "clientOverride": "Company rate for this row (AED)",
+  "workerOverride": "Worker rate for this row (AED)",
+  "overrideHelp": "Leave empty to use the contract. Changing a rate needs the owner's approval and a reason.",
+  "overrideReason": "Why the rate changed",
+  "overlapReason": "Why two entries overlap",
+  "correctionReason": "Why this is being corrected",
+  "correctionHelp": "The original entry is kept. This creates a corrected entry.",
+  "deleteRow": "Remove this entry",
+  "applyChanges": "Apply",
+  "stateDraft": "Draft",
+  "stateSubmitted": "Needs review",
+  "stateApproved": "Approved",
+  "stateLinked": "In accounts",
+  "correctedTag": "Corrected",
+  "cancel": "Cancel",
+  "localOnlyNote": "This data is only on this phone.",
+  "nextWithCount": "Next ({count} workers)",
+  "approveAll": "Approve all ({count})",
+  "approvedCount": "{count} entries approved",
+  "countsLine": "{workers} workers, {shifts} shifts, {days} worker-days",
+  "missingWorkers": "{count} workers have no attendance: {names}",
+  "hoursPaid": "{duration} hours",
+  "@nextWithCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@approveAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@approvedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@countsLine": {
+    "placeholders": {
+      "workers": {
+        "type": "int"
+      },
+      "shifts": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "@missingWorkers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "@hoursPaid": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "previousDay": "Previous day",
+  "nextDay": "Next day",
+  "saveFailed": "Could not save. Nothing was changed. Try again.",
+  "rowCollect": "Collect {amount}",
+  "rowPay": "pay {amount}",
+  "@rowCollect": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@rowPay": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -2673,7 +2673,7 @@ class SitesCompanion extends UpdateCompanion<Site> {
 }
 
 class $AttendanceBatchesTable extends AttendanceBatches
-    with TableInfo<$AttendanceBatchesTable, AttendanceBatche> {
+    with TableInfo<$AttendanceBatchesTable, AttendanceBatch> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2822,7 +2822,7 @@ class $AttendanceBatchesTable extends AttendanceBatches
   static const String $name = 'attendance_batches';
   @override
   VerificationContext validateIntegrity(
-    Insertable<AttendanceBatche> instance, {
+    Insertable<AttendanceBatch> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2923,9 +2923,9 @@ class $AttendanceBatchesTable extends AttendanceBatches
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  AttendanceBatche map(Map<String, dynamic> data, {String? tablePrefix}) {
+  AttendanceBatch map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AttendanceBatche(
+    return AttendanceBatch(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
@@ -2979,8 +2979,7 @@ class $AttendanceBatchesTable extends AttendanceBatches
   }
 }
 
-class AttendanceBatche extends DataClass
-    implements Insertable<AttendanceBatche> {
+class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
   final String id;
   final String tenantId;
   final DateTime createdAtUtc;
@@ -2992,7 +2991,7 @@ class AttendanceBatche extends DataClass
   final String clientId;
   final String siteId;
   final String? note;
-  const AttendanceBatche({
+  const AttendanceBatch({
     required this.id,
     required this.tenantId,
     required this.createdAtUtc,
@@ -3040,12 +3039,12 @@ class AttendanceBatche extends DataClass
     );
   }
 
-  factory AttendanceBatche.fromJson(
+  factory AttendanceBatch.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AttendanceBatche(
+    return AttendanceBatch(
       id: serializer.fromJson<String>(json['id']),
       tenantId: serializer.fromJson<String>(json['tenantId']),
       createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
@@ -3077,7 +3076,7 @@ class AttendanceBatche extends DataClass
     };
   }
 
-  AttendanceBatche copyWith({
+  AttendanceBatch copyWith({
     String? id,
     String? tenantId,
     DateTime? createdAtUtc,
@@ -3089,7 +3088,7 @@ class AttendanceBatche extends DataClass
     String? clientId,
     String? siteId,
     Value<String?> note = const Value.absent(),
-  }) => AttendanceBatche(
+  }) => AttendanceBatch(
     id: id ?? this.id,
     tenantId: tenantId ?? this.tenantId,
     createdAtUtc: createdAtUtc ?? this.createdAtUtc,
@@ -3102,8 +3101,8 @@ class AttendanceBatche extends DataClass
     siteId: siteId ?? this.siteId,
     note: note.present ? note.value : this.note,
   );
-  AttendanceBatche copyWithCompanion(AttendanceBatchesCompanion data) {
-    return AttendanceBatche(
+  AttendanceBatch copyWithCompanion(AttendanceBatchesCompanion data) {
+    return AttendanceBatch(
       id: data.id.present ? data.id.value : this.id,
       tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
       createdAtUtc: data.createdAtUtc.present
@@ -3126,7 +3125,7 @@ class AttendanceBatche extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('AttendanceBatche(')
+    return (StringBuffer('AttendanceBatch(')
           ..write('id: $id, ')
           ..write('tenantId: $tenantId, ')
           ..write('createdAtUtc: $createdAtUtc, ')
@@ -3159,7 +3158,7 @@ class AttendanceBatche extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is AttendanceBatche &&
+      (other is AttendanceBatch &&
           other.id == this.id &&
           other.tenantId == this.tenantId &&
           other.createdAtUtc == this.createdAtUtc &&
@@ -3173,7 +3172,7 @@ class AttendanceBatche extends DataClass
           other.note == this.note);
 }
 
-class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatche> {
+class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatch> {
   final Value<String> id;
   final Value<String> tenantId;
   final Value<DateTime> createdAtUtc;
@@ -3222,7 +3221,7 @@ class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatche> {
        workDate = Value(workDate),
        clientId = Value(clientId),
        siteId = Value(siteId);
-  static Insertable<AttendanceBatche> custom({
+  static Insertable<AttendanceBatch> custom({
     Expression<String>? id,
     Expression<String>? tenantId,
     Expression<DateTime>? createdAtUtc,
@@ -4590,6 +4589,26 @@ class $AttendanceEntriesTable extends AttendanceEntries
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _clientRateOverrideFilsMeta =
+      const VerificationMeta('clientRateOverrideFils');
+  @override
+  late final GeneratedColumn<int> clientRateOverrideFils = GeneratedColumn<int>(
+    'client_rate_override_fils',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _workerRateOverrideFilsMeta =
+      const VerificationMeta('workerRateOverrideFils');
+  @override
+  late final GeneratedColumn<int> workerRateOverrideFils = GeneratedColumn<int>(
+    'worker_rate_override_fils',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _overrideReasonMeta = const VerificationMeta(
     'overrideReason',
   );
@@ -4683,6 +4702,8 @@ class $AttendanceEntriesTable extends AttendanceEntries
     workerBasis,
     workerRateFils,
     workerAmountFils,
+    clientRateOverrideFils,
+    workerRateOverrideFils,
     overrideReason,
     overlapReason,
     notes,
@@ -4974,6 +4995,24 @@ class $AttendanceEntriesTable extends AttendanceEntries
         ),
       );
     }
+    if (data.containsKey('client_rate_override_fils')) {
+      context.handle(
+        _clientRateOverrideFilsMeta,
+        clientRateOverrideFils.isAcceptableOrUnknown(
+          data['client_rate_override_fils']!,
+          _clientRateOverrideFilsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('worker_rate_override_fils')) {
+      context.handle(
+        _workerRateOverrideFilsMeta,
+        workerRateOverrideFils.isAcceptableOrUnknown(
+          data['worker_rate_override_fils']!,
+          _workerRateOverrideFilsMeta,
+        ),
+      );
+    }
     if (data.containsKey('override_reason')) {
       context.handle(
         _overrideReasonMeta,
@@ -5146,6 +5185,14 @@ class $AttendanceEntriesTable extends AttendanceEntries
         DriftSqlType.int,
         data['${effectivePrefix}worker_amount_fils'],
       ),
+      clientRateOverrideFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}client_rate_override_fils'],
+      ),
+      workerRateOverrideFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}worker_rate_override_fils'],
+      ),
       overrideReason: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}override_reason'],
@@ -5215,6 +5262,10 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
   final String? workerBasis;
   final int? workerRateFils;
   final int? workerAmountFils;
+
+  /// Kept apart from the snapshot, so approving a row can re-price it without losing the override.
+  final int? clientRateOverrideFils;
+  final int? workerRateOverrideFils;
   final String? overrideReason;
   final String? overlapReason;
   final String? notes;
@@ -5254,6 +5305,8 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     this.workerBasis,
     this.workerRateFils,
     this.workerAmountFils,
+    this.clientRateOverrideFils,
+    this.workerRateOverrideFils,
     this.overrideReason,
     this.overlapReason,
     this.notes,
@@ -5309,6 +5362,12 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     }
     if (!nullToAbsent || workerAmountFils != null) {
       map['worker_amount_fils'] = Variable<int>(workerAmountFils);
+    }
+    if (!nullToAbsent || clientRateOverrideFils != null) {
+      map['client_rate_override_fils'] = Variable<int>(clientRateOverrideFils);
+    }
+    if (!nullToAbsent || workerRateOverrideFils != null) {
+      map['worker_rate_override_fils'] = Variable<int>(workerRateOverrideFils);
     }
     if (!nullToAbsent || overrideReason != null) {
       map['override_reason'] = Variable<String>(overrideReason);
@@ -5375,6 +5434,12 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
       workerAmountFils: workerAmountFils == null && nullToAbsent
           ? const Value.absent()
           : Value(workerAmountFils),
+      clientRateOverrideFils: clientRateOverrideFils == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientRateOverrideFils),
+      workerRateOverrideFils: workerRateOverrideFils == null && nullToAbsent
+          ? const Value.absent()
+          : Value(workerRateOverrideFils),
       overrideReason: overrideReason == null && nullToAbsent
           ? const Value.absent()
           : Value(overrideReason),
@@ -5432,6 +5497,12 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
       workerBasis: serializer.fromJson<String?>(json['workerBasis']),
       workerRateFils: serializer.fromJson<int?>(json['workerRateFils']),
       workerAmountFils: serializer.fromJson<int?>(json['workerAmountFils']),
+      clientRateOverrideFils: serializer.fromJson<int?>(
+        json['clientRateOverrideFils'],
+      ),
+      workerRateOverrideFils: serializer.fromJson<int?>(
+        json['workerRateOverrideFils'],
+      ),
       overrideReason: serializer.fromJson<String?>(json['overrideReason']),
       overlapReason: serializer.fromJson<String?>(json['overlapReason']),
       notes: serializer.fromJson<String?>(json['notes']),
@@ -5474,6 +5545,8 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
       'workerBasis': serializer.toJson<String?>(workerBasis),
       'workerRateFils': serializer.toJson<int?>(workerRateFils),
       'workerAmountFils': serializer.toJson<int?>(workerAmountFils),
+      'clientRateOverrideFils': serializer.toJson<int?>(clientRateOverrideFils),
+      'workerRateOverrideFils': serializer.toJson<int?>(workerRateOverrideFils),
       'overrideReason': serializer.toJson<String?>(overrideReason),
       'overlapReason': serializer.toJson<String?>(overlapReason),
       'notes': serializer.toJson<String?>(notes),
@@ -5514,6 +5587,8 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     Value<String?> workerBasis = const Value.absent(),
     Value<int?> workerRateFils = const Value.absent(),
     Value<int?> workerAmountFils = const Value.absent(),
+    Value<int?> clientRateOverrideFils = const Value.absent(),
+    Value<int?> workerRateOverrideFils = const Value.absent(),
     Value<String?> overrideReason = const Value.absent(),
     Value<String?> overlapReason = const Value.absent(),
     Value<String?> notes = const Value.absent(),
@@ -5559,6 +5634,12 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     workerAmountFils: workerAmountFils.present
         ? workerAmountFils.value
         : this.workerAmountFils,
+    clientRateOverrideFils: clientRateOverrideFils.present
+        ? clientRateOverrideFils.value
+        : this.clientRateOverrideFils,
+    workerRateOverrideFils: workerRateOverrideFils.present
+        ? workerRateOverrideFils.value
+        : this.workerRateOverrideFils,
     overrideReason: overrideReason.present
         ? overrideReason.value
         : this.overrideReason,
@@ -5640,6 +5721,12 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
       workerAmountFils: data.workerAmountFils.present
           ? data.workerAmountFils.value
           : this.workerAmountFils,
+      clientRateOverrideFils: data.clientRateOverrideFils.present
+          ? data.clientRateOverrideFils.value
+          : this.clientRateOverrideFils,
+      workerRateOverrideFils: data.workerRateOverrideFils.present
+          ? data.workerRateOverrideFils.value
+          : this.workerRateOverrideFils,
       overrideReason: data.overrideReason.present
           ? data.overrideReason.value
           : this.overrideReason,
@@ -5690,6 +5777,8 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
           ..write('workerBasis: $workerBasis, ')
           ..write('workerRateFils: $workerRateFils, ')
           ..write('workerAmountFils: $workerAmountFils, ')
+          ..write('clientRateOverrideFils: $clientRateOverrideFils, ')
+          ..write('workerRateOverrideFils: $workerRateOverrideFils, ')
           ..write('overrideReason: $overrideReason, ')
           ..write('overlapReason: $overlapReason, ')
           ..write('notes: $notes, ')
@@ -5732,6 +5821,8 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     workerBasis,
     workerRateFils,
     workerAmountFils,
+    clientRateOverrideFils,
+    workerRateOverrideFils,
     overrideReason,
     overlapReason,
     notes,
@@ -5773,6 +5864,8 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
           other.workerBasis == this.workerBasis &&
           other.workerRateFils == this.workerRateFils &&
           other.workerAmountFils == this.workerAmountFils &&
+          other.clientRateOverrideFils == this.clientRateOverrideFils &&
+          other.workerRateOverrideFils == this.workerRateOverrideFils &&
           other.overrideReason == this.overrideReason &&
           other.overlapReason == this.overlapReason &&
           other.notes == this.notes &&
@@ -5812,6 +5905,8 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
   final Value<String?> workerBasis;
   final Value<int?> workerRateFils;
   final Value<int?> workerAmountFils;
+  final Value<int?> clientRateOverrideFils;
+  final Value<int?> workerRateOverrideFils;
   final Value<String?> overrideReason;
   final Value<String?> overlapReason;
   final Value<String?> notes;
@@ -5850,6 +5945,8 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     this.workerBasis = const Value.absent(),
     this.workerRateFils = const Value.absent(),
     this.workerAmountFils = const Value.absent(),
+    this.clientRateOverrideFils = const Value.absent(),
+    this.workerRateOverrideFils = const Value.absent(),
     this.overrideReason = const Value.absent(),
     this.overlapReason = const Value.absent(),
     this.notes = const Value.absent(),
@@ -5889,6 +5986,8 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     this.workerBasis = const Value.absent(),
     this.workerRateFils = const Value.absent(),
     this.workerAmountFils = const Value.absent(),
+    this.clientRateOverrideFils = const Value.absent(),
+    this.workerRateOverrideFils = const Value.absent(),
     this.overrideReason = const Value.absent(),
     this.overlapReason = const Value.absent(),
     this.notes = const Value.absent(),
@@ -5945,6 +6044,8 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     Expression<String>? workerBasis,
     Expression<int>? workerRateFils,
     Expression<int>? workerAmountFils,
+    Expression<int>? clientRateOverrideFils,
+    Expression<int>? workerRateOverrideFils,
     Expression<String>? overrideReason,
     Expression<String>? overlapReason,
     Expression<String>? notes,
@@ -5986,6 +6087,10 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
       if (workerBasis != null) 'worker_basis': workerBasis,
       if (workerRateFils != null) 'worker_rate_fils': workerRateFils,
       if (workerAmountFils != null) 'worker_amount_fils': workerAmountFils,
+      if (clientRateOverrideFils != null)
+        'client_rate_override_fils': clientRateOverrideFils,
+      if (workerRateOverrideFils != null)
+        'worker_rate_override_fils': workerRateOverrideFils,
       if (overrideReason != null) 'override_reason': overrideReason,
       if (overlapReason != null) 'overlap_reason': overlapReason,
       if (notes != null) 'notes': notes,
@@ -6027,6 +6132,8 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     Value<String?>? workerBasis,
     Value<int?>? workerRateFils,
     Value<int?>? workerAmountFils,
+    Value<int?>? clientRateOverrideFils,
+    Value<int?>? workerRateOverrideFils,
     Value<String?>? overrideReason,
     Value<String?>? overlapReason,
     Value<String?>? notes,
@@ -6067,6 +6174,10 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
       workerBasis: workerBasis ?? this.workerBasis,
       workerRateFils: workerRateFils ?? this.workerRateFils,
       workerAmountFils: workerAmountFils ?? this.workerAmountFils,
+      clientRateOverrideFils:
+          clientRateOverrideFils ?? this.clientRateOverrideFils,
+      workerRateOverrideFils:
+          workerRateOverrideFils ?? this.workerRateOverrideFils,
       overrideReason: overrideReason ?? this.overrideReason,
       overlapReason: overlapReason ?? this.overlapReason,
       notes: notes ?? this.notes,
@@ -6174,6 +6285,16 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     if (workerAmountFils.present) {
       map['worker_amount_fils'] = Variable<int>(workerAmountFils.value);
     }
+    if (clientRateOverrideFils.present) {
+      map['client_rate_override_fils'] = Variable<int>(
+        clientRateOverrideFils.value,
+      );
+    }
+    if (workerRateOverrideFils.present) {
+      map['worker_rate_override_fils'] = Variable<int>(
+        workerRateOverrideFils.value,
+      );
+    }
     if (overrideReason.present) {
       map['override_reason'] = Variable<String>(overrideReason.value);
     }
@@ -6229,6 +6350,8 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
           ..write('workerBasis: $workerBasis, ')
           ..write('workerRateFils: $workerRateFils, ')
           ..write('workerAmountFils: $workerAmountFils, ')
+          ..write('clientRateOverrideFils: $clientRateOverrideFils, ')
+          ..write('workerRateOverrideFils: $workerRateOverrideFils, ')
           ..write('overrideReason: $overrideReason, ')
           ..write('overlapReason: $overlapReason, ')
           ..write('notes: $notes, ')
@@ -10929,12 +11052,16 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
   late final $WorkersTable workers = $WorkersTable(this);
   late final $AttendanceEntriesTable attendanceEntries =
       $AttendanceEntriesTable(this);
-  late final Trigger linkedEntryNoEdit = Trigger(
-    'CREATE TRIGGER linked_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN OLD.state = \'linked\' AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.state <> OLD.state)BEGIN SELECT RAISE (ABORT, \'linked attendance is immutable\');END',
-    'linked_entry_no_edit',
+  late final Trigger approvedEntryNoEdit = Trigger(
+    'CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN OLD.state IN (\'approved\', \'linked\') AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes OR NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)BEGIN SELECT RAISE (ABORT, \'approved attendance is immutable\');END',
+    'approved_entry_no_edit',
+  );
+  late final Trigger linkedEntryKeepsState = Trigger(
+    'CREATE TRIGGER linked_entry_keeps_state BEFORE UPDATE ON attendance_entries WHEN OLD.state = \'linked\' AND NEW.state <> \'linked\' BEGIN SELECT RAISE (ABORT, \'linked attendance is immutable\');END',
+    'linked_entry_keeps_state',
   );
   late final Trigger entryNoDelete = Trigger(
-    'CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.state <> \'draft\' BEGIN SELECT RAISE (ABORT, \'only draft attendance can be deleted\');END',
+    'CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.state NOT IN (\'draft\', \'submitted\') BEGIN SELECT RAISE (ABORT, \'approved attendance cannot be deleted\');END',
     'entry_no_delete',
   );
   late final $TenantProfilesTable tenantProfiles = $TenantProfilesTable(this);
@@ -10967,7 +11094,8 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     attendanceBatches,
     workers,
     attendanceEntries,
-    linkedEntryNoEdit,
+    approvedEntryNoEdit,
+    linkedEntryKeepsState,
     entryNoDelete,
     tenantProfiles,
     payContracts,
@@ -10990,6 +11118,13 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
       on: TableUpdateQuery.onTableName(
         'audit_events',
         limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'attendance_entries',
+        limitUpdateKind: UpdateKind.update,
       ),
       result: [],
     ),
@@ -11386,7 +11521,7 @@ final class $$ClientsTableReferences
     );
   }
 
-  static MultiTypedResultKey<$AttendanceBatchesTable, List<AttendanceBatche>>
+  static MultiTypedResultKey<$AttendanceBatchesTable, List<AttendanceBatch>>
   _attendanceBatchesRefsTable(_$TenantDatabase db) =>
       MultiTypedResultKey.fromTable(
         db.attendanceBatches,
@@ -12182,7 +12317,7 @@ class $$ClientsTableTableManager
                         await $_getPrefetchedDataByColumns<
                           Client,
                           $ClientsTable,
-                          AttendanceBatche,
+                          AttendanceBatch,
                           $AttendanceBatchesTable
                         >(
                           currentTable: table,
@@ -12348,7 +12483,7 @@ final class $$SitesTableReferences
     );
   }
 
-  static MultiTypedResultKey<$AttendanceBatchesTable, List<AttendanceBatche>>
+  static MultiTypedResultKey<$AttendanceBatchesTable, List<AttendanceBatch>>
   _attendanceBatchesRefsTable(_$TenantDatabase db) =>
       MultiTypedResultKey.fromTable(
         db.attendanceBatches,
@@ -13125,7 +13260,7 @@ class $$SitesTableTableManager
                         await $_getPrefetchedDataByColumns<
                           Site,
                           $SitesTable,
-                          AttendanceBatche,
+                          AttendanceBatch,
                           $AttendanceBatchesTable
                         >(
                           currentTable: table,
@@ -13265,7 +13400,7 @@ final class $$AttendanceBatchesTableReferences
         BaseReferences<
           _$TenantDatabase,
           $AttendanceBatchesTable,
-          AttendanceBatche
+          AttendanceBatch
         > {
   $$AttendanceBatchesTableReferences(
     super.$_db,
@@ -13676,14 +13811,14 @@ class $$AttendanceBatchesTableTableManager
         RootTableManager<
           _$TenantDatabase,
           $AttendanceBatchesTable,
-          AttendanceBatche,
+          AttendanceBatch,
           $$AttendanceBatchesTableFilterComposer,
           $$AttendanceBatchesTableOrderingComposer,
           $$AttendanceBatchesTableAnnotationComposer,
           $$AttendanceBatchesTableCreateCompanionBuilder,
           $$AttendanceBatchesTableUpdateCompanionBuilder,
-          (AttendanceBatche, $$AttendanceBatchesTableReferences),
-          AttendanceBatche,
+          (AttendanceBatch, $$AttendanceBatchesTableReferences),
+          AttendanceBatch,
           PrefetchHooks Function({
             bool clientId,
             bool siteId,
@@ -13765,7 +13900,7 @@ class $$AttendanceBatchesTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable<$AttendanceBatchesTable, AttendanceBatche>(table),
+                  e.readTable<$AttendanceBatchesTable, AttendanceBatch>(table),
                   $$AttendanceBatchesTableReferences(db, table, e),
                 ),
               )
@@ -13826,7 +13961,7 @@ class $$AttendanceBatchesTableTableManager
                     return [
                       if (attendanceEntriesRefs)
                         await $_getPrefetchedDataByColumns<
-                          AttendanceBatche,
+                          AttendanceBatch,
                           $AttendanceBatchesTable,
                           AttendanceEntry,
                           $AttendanceEntriesTable
@@ -13856,14 +13991,14 @@ typedef $$AttendanceBatchesTableProcessedTableManager =
     ProcessedTableManager<
       _$TenantDatabase,
       $AttendanceBatchesTable,
-      AttendanceBatche,
+      AttendanceBatch,
       $$AttendanceBatchesTableFilterComposer,
       $$AttendanceBatchesTableOrderingComposer,
       $$AttendanceBatchesTableAnnotationComposer,
       $$AttendanceBatchesTableCreateCompanionBuilder,
       $$AttendanceBatchesTableUpdateCompanionBuilder,
-      (AttendanceBatche, $$AttendanceBatchesTableReferences),
-      AttendanceBatche,
+      (AttendanceBatch, $$AttendanceBatchesTableReferences),
+      AttendanceBatch,
       PrefetchHooks Function({
         bool clientId,
         bool siteId,
@@ -14700,6 +14835,8 @@ typedef $$AttendanceEntriesTableCreateCompanionBuilder =
       Value<String?> workerBasis,
       Value<int?> workerRateFils,
       Value<int?> workerAmountFils,
+      Value<int?> clientRateOverrideFils,
+      Value<int?> workerRateOverrideFils,
       Value<String?> overrideReason,
       Value<String?> overlapReason,
       Value<String?> notes,
@@ -14740,6 +14877,8 @@ typedef $$AttendanceEntriesTableUpdateCompanionBuilder =
       Value<String?> workerBasis,
       Value<int?> workerRateFils,
       Value<int?> workerAmountFils,
+      Value<int?> clientRateOverrideFils,
+      Value<int?> workerRateOverrideFils,
       Value<String?> overrideReason,
       Value<String?> overlapReason,
       Value<String?> notes,
@@ -14991,6 +15130,16 @@ class $$AttendanceEntriesTableFilterComposer
 
   ColumnFilters<int> get workerAmountFils => $composableBuilder(
     column: $table.workerAmountFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get clientRateOverrideFils => $composableBuilder(
+    column: $table.clientRateOverrideFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get workerRateOverrideFils => $composableBuilder(
+    column: $table.workerRateOverrideFils,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -15274,6 +15423,16 @@ class $$AttendanceEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get clientRateOverrideFils => $composableBuilder(
+    column: $table.clientRateOverrideFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get workerRateOverrideFils => $composableBuilder(
+    column: $table.workerRateOverrideFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get overrideReason => $composableBuilder(
     column: $table.overrideReason,
     builder: (column) => ColumnOrderings(column),
@@ -15536,6 +15695,16 @@ class $$AttendanceEntriesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get clientRateOverrideFils => $composableBuilder(
+    column: $table.clientRateOverrideFils,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get workerRateOverrideFils => $composableBuilder(
+    column: $table.workerRateOverrideFils,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get overrideReason => $composableBuilder(
     column: $table.overrideReason,
     builder: (column) => column,
@@ -15742,6 +15911,8 @@ class $$AttendanceEntriesTableTableManager
                 Value<String?> workerBasis = const Value.absent(),
                 Value<int?> workerRateFils = const Value.absent(),
                 Value<int?> workerAmountFils = const Value.absent(),
+                Value<int?> clientRateOverrideFils = const Value.absent(),
+                Value<int?> workerRateOverrideFils = const Value.absent(),
                 Value<String?> overrideReason = const Value.absent(),
                 Value<String?> overlapReason = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
@@ -15780,6 +15951,8 @@ class $$AttendanceEntriesTableTableManager
                 workerBasis: workerBasis,
                 workerRateFils: workerRateFils,
                 workerAmountFils: workerAmountFils,
+                clientRateOverrideFils: clientRateOverrideFils,
+                workerRateOverrideFils: workerRateOverrideFils,
                 overrideReason: overrideReason,
                 overlapReason: overlapReason,
                 notes: notes,
@@ -15820,6 +15993,8 @@ class $$AttendanceEntriesTableTableManager
                 Value<String?> workerBasis = const Value.absent(),
                 Value<int?> workerRateFils = const Value.absent(),
                 Value<int?> workerAmountFils = const Value.absent(),
+                Value<int?> clientRateOverrideFils = const Value.absent(),
+                Value<int?> workerRateOverrideFils = const Value.absent(),
                 Value<String?> overrideReason = const Value.absent(),
                 Value<String?> overlapReason = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
@@ -15858,6 +16033,8 @@ class $$AttendanceEntriesTableTableManager
                 workerBasis: workerBasis,
                 workerRateFils: workerRateFils,
                 workerAmountFils: workerAmountFils,
+                clientRateOverrideFils: clientRateOverrideFils,
+                workerRateOverrideFils: workerRateOverrideFils,
                 overrideReason: overrideReason,
                 overlapReason: overlapReason,
                 notes: notes,

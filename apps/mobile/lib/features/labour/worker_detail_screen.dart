@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/form_bits.dart';
 import '../../app/providers.dart';
+import '../../app/theme.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
@@ -59,11 +60,14 @@ class WorkerDetailScreen extends ConsumerWidget {
             child: OutlinedButton(
               onPressed: () {
                 final db = ref.read(dbProvider);
-                db.saveRow(
-                  db.workers,
-                  id: workerId,
-                  operationId: newUuid(),
-                  fields: WorkersCompanion(active: Value(!worker.active)),
+                saveOrExplain(
+                  context,
+                  () => db.saveRow(
+                    db.workers,
+                    id: workerId,
+                    operationId: newUuid(),
+                    fields: WorkersCompanion(active: Value(!worker.active)),
+                  ),
                 );
               },
               child: Text(worker.active ? l10n.archive : l10n.reactivate),

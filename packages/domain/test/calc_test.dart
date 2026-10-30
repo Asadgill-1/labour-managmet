@@ -212,4 +212,64 @@ void main() {
       expect(datesOverlap('2026-01-01', '2026-06-01', '2026-06-01', null), isTrue);
     });
   });
+
+  group('priceShift', () {
+    final client = hourly(1000);
+    final worker = hourly(800);
+
+    test('the PRD shift: 12 clock hours, 1 unpaid break, both sides', () {
+      final shift = priceShift('2026-11-01', const ShiftInput(startMinute: 480, endMinute: 1200, breakMinutes: 60), client: client, worker: worker);
+      expect(shift.clockMinutes, 720);
+      expect(shift.clientMinutes, 660);
+      expect(shift.client.amountFils, 11000);
+      expect(shift.worker.amountFils, 8800);
+      expect(shift.hasPricingIssue, isFalse);
+    });
+
+    test('a break paid on one side only changes that side', () {
+      final shift = priceShift(
+        '2026-11-01',
+        const ShiftInput(startMinute: 480, endMinute: 1200, breakMinutes: 60, breakPaidClient: true),
+        client: client,
+        worker: worker,
+      );
+      expect(shift.clientMinutes, 720);
+      expect(shift.workerMinutes, 660);
+    });
+
+    test('an oversized break is invalid and pays nothing', () {
+      final shift = priceShift('2026-11-01', const ShiftInput(startMinute: 480, endMinute: 540, breakMinutes: 61), client: client, worker: worker);
+      expect(shift.breakValid, isFalse);
+      expect(shift.client.amountFils, 0);
+    });
+
+    test('absent has no times and no amounts', () {
+      final shift = priceShift('2026-11-01', const ShiftInput(status: absent, startMinute: 480, endMinute: 1200, breakMinutes: 60), client: client, worker: worker);
+      expect(shift.startUtc, isNull);
+      expect(shift.clockMinutes, 0);
+      expect(shift.breakValid, isTrue);
+      expect(shift.worker.amountFils, 0);
+    });
+
+    test('an override changes the rate and keeps the basis (ATT-03)', () {
+      const monthly = RateTerms(basis: RateBasis.month, rateFils: 200000, effectiveFrom: '2026-01-01');
+      final shift = priceShift(
+        '2026-11-01',
+        const ShiftInput(startMinute: 480, endMinute: 1200, clientOverrideFils: 1200, workerOverrideFils: 250000),
+        client: client,
+        worker: monthly,
+      );
+      expect(shift.clientRateFils, 1200);
+      expect(shift.client.amountFils, 14400);
+      expect(shift.workerBasis, RateBasis.month);
+      expect(shift.worker.amountFils, isNull);
+      expect(shift.hasPricingIssue, isFalse);
+    });
+
+    test('an override with no contract still stops for review', () {
+      final shift = priceShift('2026-11-01', const ShiftInput(startMinute: 480, endMinute: 1200, workerOverrideFils: 800), client: client);
+      expect(shift.worker.issue, LineIssue.missingRate);
+      expect(shift.hasPricingIssue, isTrue);
+    });
+  });
 }

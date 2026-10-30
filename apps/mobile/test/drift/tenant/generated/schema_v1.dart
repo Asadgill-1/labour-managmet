@@ -1087,6 +1087,22 @@ class AttendanceEntries extends Table with TableInfo {
     requiredDuringInsert: false,
     $customConstraints: 'NULL',
   );
+  late final GeneratedColumn<int> clientRateOverrideFils = GeneratedColumn<int>(
+    'client_rate_override_fils',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NULL',
+  );
+  late final GeneratedColumn<int> workerRateOverrideFils = GeneratedColumn<int>(
+    'worker_rate_override_fils',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NULL',
+  );
   late final GeneratedColumn<String> overrideReason = GeneratedColumn<String>(
     'override_reason',
     aliasedName,
@@ -1161,6 +1177,8 @@ class AttendanceEntries extends Table with TableInfo {
     workerBasis,
     workerRateFils,
     workerAmountFils,
+    clientRateOverrideFils,
+    workerRateOverrideFils,
     overrideReason,
     overlapReason,
     notes,
@@ -2098,12 +2116,16 @@ class DatabaseAtV1 extends GeneratedDatabase {
   late final AttendanceBatches attendanceBatches = AttendanceBatches(this);
   late final Workers workers = Workers(this);
   late final AttendanceEntries attendanceEntries = AttendanceEntries(this);
-  late final Trigger linkedEntryNoEdit = Trigger(
-    'CREATE TRIGGER linked_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN OLD.state = \'linked\' AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.state <> OLD.state)BEGIN SELECT RAISE (ABORT, \'linked attendance is immutable\');END',
-    'linked_entry_no_edit',
+  late final Trigger approvedEntryNoEdit = Trigger(
+    'CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN OLD.state IN (\'approved\', \'linked\') AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes OR NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)BEGIN SELECT RAISE (ABORT, \'approved attendance is immutable\');END',
+    'approved_entry_no_edit',
+  );
+  late final Trigger linkedEntryKeepsState = Trigger(
+    'CREATE TRIGGER linked_entry_keeps_state BEFORE UPDATE ON attendance_entries WHEN OLD.state = \'linked\' AND NEW.state <> \'linked\' BEGIN SELECT RAISE (ABORT, \'linked attendance is immutable\');END',
+    'linked_entry_keeps_state',
   );
   late final Trigger entryNoDelete = Trigger(
-    'CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.state <> \'draft\' BEGIN SELECT RAISE (ABORT, \'only draft attendance can be deleted\');END',
+    'CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.state NOT IN (\'draft\', \'submitted\') BEGIN SELECT RAISE (ABORT, \'approved attendance cannot be deleted\');END',
     'entry_no_delete',
   );
   late final TenantProfiles tenantProfiles = TenantProfiles(this);
@@ -2132,7 +2154,8 @@ class DatabaseAtV1 extends GeneratedDatabase {
     attendanceBatches,
     workers,
     attendanceEntries,
-    linkedEntryNoEdit,
+    approvedEntryNoEdit,
+    linkedEntryKeepsState,
     entryNoDelete,
     tenantProfiles,
     payContracts,
@@ -2155,6 +2178,13 @@ class DatabaseAtV1 extends GeneratedDatabase {
       on: TableUpdateQuery.onTableName(
         'audit_events',
         limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'attendance_entries',
+        limitUpdateKind: UpdateKind.update,
       ),
       result: [],
     ),

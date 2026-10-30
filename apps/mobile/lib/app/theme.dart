@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+
 const ink = Color(0xFF1F2A7A);
 const paper = Color(0xFFF4F7FB);
 const rule = Color(0xFFD5DCE8);
@@ -8,7 +10,7 @@ const due = Color(0xFFB3261E);
 const settled = Color(0xFF1B6E43);
 
 /// Lines up digits in amount columns.
-const amountStyle = TextStyle(fontFeatures: [FontFeature.tabularFigures()]);
+const amountStyle = TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: ink, fontFeatures: [FontFeature.tabularFigures()]);
 
 final appTheme = ThemeData(
   useMaterial3: true,
@@ -37,6 +39,14 @@ final appTheme = ThemeData(
       minimumSize: const Size.fromHeight(56),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       textStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+    ),
+  ),
+  outlinedButtonTheme: OutlinedButtonThemeData(
+    style: OutlinedButton.styleFrom(
+      foregroundColor: ink,
+      minimumSize: const Size.fromHeight(48),
+      side: const BorderSide(color: ink),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
     ),
   ),
   inputDecorationTheme: const InputDecorationTheme(border: OutlineInputBorder()),
@@ -99,4 +109,17 @@ void showSavedOnPhone(BuildContext context, String message) {
         ),
       ),
     );
+}
+
+/// Runs a save and says so plainly if it fails, so a failed write is never silent (UX-07).
+/// The caller keeps its operation ID, so trying again cannot apply twice.
+Future<bool> saveOrExplain(BuildContext context, Future<void> Function() work) async {
+  final message = AppLocalizations.of(context).saveFailed;
+  try {
+    await work();
+    return true;
+  } catch (_) {
+    if (context.mounted) showFormError(context, message);
+    return false;
+  }
 }

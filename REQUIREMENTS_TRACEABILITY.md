@@ -6,11 +6,11 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 
 | ID | Ch | Summary | Tasks | Status | Tests | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
-| UX-01 | 02 | Paanch bottom tabs | T04, T05 | IN_PROGRESS | - | - |
+| UX-01 | 02 | Paanch bottom tabs | T04, T05 | IMPLEMENTED_UNVERIFIED | - | - |
 | UX-02 | 02 | Onboarding | T05, T19 | IN_PROGRESS | - | - |
-| UX-03 | 02 | Saaf labels | T05 | IN_PROGRESS | - | - |
-| UX-04 | 02 | Readability | T05 | IN_PROGRESS | - | - |
-| UX-05 | 02 | Kam typing | T10 | NOT_STARTED | TC-026 | - |
+| UX-03 | 02 | Saaf labels | T05 | IMPLEMENTED_UNVERIFIED | - | - |
+| UX-04 | 02 | Readability | T05 | IMPLEMENTED_UNVERIFIED | - | - |
+| UX-05 | 02 | Kam typing | T10 | IMPLEMENTED_UNVERIFIED | TC-026 | - |
 | UX-06 | 02 | Measurable usability test | T10 | NOT_STARTED | TC-031 | - |
 | UX-07 | 02 | Save ki imaandari | T05 | IN_PROGRESS | TC-008 | - |
 | AUTH-01 | 03 | Email/password primary login ho. Email verification, forgot-password, safe password | T19 | NOT_STARTED | - | - |
@@ -21,23 +21,23 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | AUTH-06 | 03 | App malik ke admin account par MFA lazmi ho | T19 | NOT_STARTED | - | - |
 | AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | NOT_STARTED | - | - |
 | AUTH-08 | 03 | Production email login ke liye real SMTP/domain configuration aur | T19 | NOT_STARTED | - | - |
-| MASTER-01 | 04 | Apni company | T07 | IN_PROGRESS | - | - |
-| MASTER-02 | 04 | Client | T07 | IN_PROGRESS | - | - |
-| MASTER-03 | 04 | Sites | T07 | IN_PROGRESS | - | - |
-| MASTER-04 | 04 | Worker | T07 | IN_PROGRESS | - | - |
-| MASTER-05 | 04 | Opening balances | T08 | IN_PROGRESS | TC-030 | - |
-| MASTER-06 | 04 | Rate cards | T08 | IN_PROGRESS | - | - |
-| MASTER-07 | 04 | Archive | T07 | IN_PROGRESS | TC-029 | - |
+| MASTER-01 | 04 | Apni company | T07 | IMPLEMENTED_UNVERIFIED | - | - |
+| MASTER-02 | 04 | Client | T07 | IMPLEMENTED_UNVERIFIED | - | - |
+| MASTER-03 | 04 | Sites | T07 | IMPLEMENTED_UNVERIFIED | - | - |
+| MASTER-04 | 04 | Worker | T07 | IMPLEMENTED_UNVERIFIED | - | - |
+| MASTER-05 | 04 | Opening balances | T08 | IMPLEMENTED_UNVERIFIED | TC-030 | - |
+| MASTER-06 | 04 | Rate cards | T08 | IMPLEMENTED_UNVERIFIED | - | - |
+| MASTER-07 | 04 | Archive | T07 | IMPLEMENTED_UNVERIFIED | TC-029 | - |
 | MASTER-08 | 04 | Import | T18 | NOT_STARTED | - | - |
-| ATT-01 | 05 | Flow | T10 | NOT_STARTED | - | - |
-| ATT-02 | 05 | Entry fields | T10 | NOT_STARTED | - | - |
-| ATT-03 | 05 | Bulk apply | T10 | NOT_STARTED | TC-023 | - |
-| ATT-04 | 05 | Exceptions | T10 | NOT_STARTED | TC-024 | - |
-| ATT-05 | 05 | Duplication | T10 | NOT_STARTED | TC-008, TC-025 | - |
-| ATT-06 | 05 | Midnight shift | T10 | NOT_STARTED | TC-018 | - |
-| ATT-07 | 05 | Attendance states | T10 | NOT_STARTED | - | - |
-| ATT-08 | 05 | Correction | T10 | NOT_STARTED | TC-027 | - |
-| ATT-09 | 05 | Maaloomati summary | T10 | NOT_STARTED | TC-028 | - |
+| ATT-01 | 05 | Flow | T10 | IMPLEMENTED_UNVERIFIED | - | - |
+| ATT-02 | 05 | Entry fields | T10 | IMPLEMENTED_UNVERIFIED | - | - |
+| ATT-03 | 05 | Bulk apply | T10 | IMPLEMENTED_UNVERIFIED | TC-023 | - |
+| ATT-04 | 05 | Exceptions | T10 | IMPLEMENTED_UNVERIFIED | TC-024 | - |
+| ATT-05 | 05 | Duplication | T10 | IMPLEMENTED_UNVERIFIED | TC-008, TC-025 | - |
+| ATT-06 | 05 | Midnight shift | T10 | IMPLEMENTED_UNVERIFIED | TC-018 | - |
+| ATT-07 | 05 | Attendance states | T10 | IMPLEMENTED_UNVERIFIED | - | - |
+| ATT-08 | 05 | Correction | T10 | IMPLEMENTED_UNVERIFIED | TC-027 | - |
+| ATT-09 | 05 | Maaloomati summary | T10 | IMPLEMENTED_UNVERIFIED | TC-028 | - |
 | CALC-01 | 06 | Duration integer minutes mein; amounts integer fils ya exact | T04, T09 | IN_PROGRESS | TC-015 | - |
 | CALC-02 | 06 | Hourly | T09 | IMPLEMENTED_UNVERIFIED | TC-003, TC-016 | - |
 | CALC-03 | 06 | Shift/day | T09 | IMPLEMENTED_UNVERIFIED | TC-017 | - |
@@ -149,14 +149,14 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | OPS-06 | 19 | Limits | T23 | NOT_STARTED | - | - |
 | OPS-07 | 19 | Releases | T26 | NOT_STARTED | - | - |
 | OPS-08 | 19 | Availability target | T23 | NOT_STARTED | - | - |
-| MODEL-01 | 20 | Local operational groups | T04, T06 | IN_PROGRESS | - | - |
+| MODEL-01 | 20 | Local operational groups | T04, T06 | IMPLEMENTED_UNVERIFIED | - | - |
 | MODEL-02 | 20 | Cloud control groups | T19 | NOT_STARTED | - | - |
-| MODEL-03 | 20 | Common keys | T04, T06 | IN_PROGRESS | - | - |
-| MODEL-04 | 20 | Constraints | T04, T06 | IN_PROGRESS | TC-004 | - |
+| MODEL-03 | 20 | Common keys | T04, T06 | IMPLEMENTED_UNVERIFIED | - | - |
+| MODEL-04 | 20 | Constraints | T04, T06 | IMPLEMENTED_UNVERIFIED | TC-004 | - |
 | MODEL-05 | 20 | Server-only actions | T19 | NOT_STARTED | TC-047 | - |
 | MODEL-06 | 20 | Conceptual API contracts | T19 | NOT_STARTED | - | - |
 | MODEL-07 | 20 | Financial boundary | T11 | NOT_STARTED | TC-036 | - |
-| MODEL-08 | 20 | Migration | T06 | IN_PROGRESS | - | - |
+| MODEL-08 | 20 | Migration | T06 | IMPLEMENTED_UNVERIFIED | - | - |
 | BUILD-01 | 21 | Auth/tenant models P0 se architecture mein hon; P4 production | T04 | IN_PROGRESS | - | - |
 | BUILD-02 | 21 | Solo pilot P5 ke baad sirf tested scope ke | T26 | NOT_STARTED | - | - |
 | BUILD-03 | 21 | Owner ko test APK, sample documents, 5-minute walkthrough aur | T01 | IN_PROGRESS | - | - |

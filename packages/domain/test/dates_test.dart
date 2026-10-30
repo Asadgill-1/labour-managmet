@@ -30,4 +30,13 @@ void main() {
       expect(isTrnFormat(bad), isFalse, reason: bad);
     }
   });
+
+  test('minute of day reads UAE time from UTC, and days and durations format', () {
+    expect(dubaiMinuteOfDay(DateTime.utc(2026, 11, 1, 16)), 20 * 60);
+    expect(dubaiMinuteOfDay(DateTime.utc(2026, 11, 2, 4)), 8 * 60);
+    expect(addDays('2026-11-01', -1), '2026-10-31');
+    expect(addDays('2026-12-31', 1), '2027-01-01');
+    expect(showDuration(660), '11:00');
+    expect(showDuration(65), '1:05');
+  });
 }

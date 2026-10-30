@@ -1355,6 +1355,26 @@
             "dsl_features": []
           },
           {
+            "name": "client_rate_override_fils",
+            "getter_name": "clientRateOverrideFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "worker_rate_override_fils",
+            "getter_name": "workerRateOverrideFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
             "name": "override_reason",
             "getter_name": "overrideReason",
             "moor_type": "string",
@@ -1446,8 +1466,8 @@
         "references_in_body": [
           7
         ],
-        "name": "linked_entry_no_edit",
-        "sql": "CREATE TRIGGER linked_entry_no_edit BEFORE UPDATE ON attendance_entries\nWHEN OLD.state = 'linked'\n  AND (NEW.clock_minutes <> OLD.clock_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils\n    OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.state <> OLD.state)\nBEGIN\n  SELECT RAISE(ABORT, 'linked attendance is immutable');\nEND;"
+        "name": "approved_entry_no_edit",
+        "sql": "CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries\nWHEN OLD.state IN ('approved', 'linked')\n  AND (NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes\n    OR NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes\n    OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils\n    OR NEW.client_amount_fils IS NOT OLD.client_amount_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils\n    OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)\nBEGIN\n  SELECT RAISE(ABORT, 'approved attendance is immutable');\nEND;"
       }
     },
     {
@@ -1461,12 +1481,27 @@
         "references_in_body": [
           7
         ],
-        "name": "entry_no_delete",
-        "sql": "CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries\nWHEN OLD.state <> 'draft'\nBEGIN\n  SELECT RAISE(ABORT, 'only draft attendance can be deleted');\nEND;"
+        "name": "linked_entry_keeps_state",
+        "sql": "CREATE TRIGGER linked_entry_keeps_state BEFORE UPDATE ON attendance_entries\nWHEN OLD.state = 'linked' AND NEW.state <> 'linked'\nBEGIN\n  SELECT RAISE(ABORT, 'linked attendance is immutable');\nEND;"
       }
     },
     {
       "id": 10,
+      "references": [
+        7
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 7,
+        "references_in_body": [
+          7
+        ],
+        "name": "entry_no_delete",
+        "sql": "CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries\nWHEN OLD.state NOT IN ('draft', 'submitted')\nBEGIN\n  SELECT RAISE(ABORT, 'approved attendance cannot be deleted');\nEND;"
+      }
+    },
+    {
+      "id": 11,
       "references": [],
       "type": "table",
       "data": {
@@ -1687,7 +1722,7 @@
       }
     },
     {
-      "id": 11,
+      "id": 12,
       "references": [
         6,
         4
@@ -1952,7 +1987,7 @@
       }
     },
     {
-      "id": 12,
+      "id": 13,
       "references": [
         3,
         4,
@@ -2224,7 +2259,7 @@
       }
     },
     {
-      "id": 13,
+      "id": 14,
       "references": [
         6,
         3
@@ -2437,7 +2472,7 @@
       }
     },
     {
-      "id": 14,
+      "id": 15,
       "references": [],
       "type": "table",
       "data": {
@@ -2544,7 +2579,7 @@
       }
     },
     {
-      "id": 15,
+      "id": 16,
       "references": [
         7
       ],
@@ -2567,7 +2602,7 @@
       }
     },
     {
-      "id": 16,
+      "id": 17,
       "references": [
         7
       ],
@@ -2655,16 +2690,25 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"attendance_entries\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"batch_id\" TEXT NOT NULL REFERENCES attendance_batches (id), \"worker_id\" TEXT NOT NULL REFERENCES workers (id), \"client_id\" TEXT NOT NULL REFERENCES clients (id), \"site_id\" TEXT NOT NULL REFERENCES sites (id), \"work_date\" TEXT NOT NULL, \"start_utc\" INTEGER NULL, \"end_utc\" INTEGER NULL, \"clock_minutes\" INTEGER NOT NULL CHECK(\"clock_minutes\" >= 0), \"break_minutes\" INTEGER NOT NULL CHECK(\"break_minutes\" >= 0), \"break_paid_client\" INTEGER NOT NULL CHECK (\"break_paid_client\" IN (0, 1)), \"break_paid_worker\" INTEGER NOT NULL CHECK (\"break_paid_worker\" IN (0, 1)), \"client_billable_minutes\" INTEGER NOT NULL, \"worker_payable_minutes\" INTEGER NOT NULL, \"overtime_minutes\" INTEGER NOT NULL DEFAULT 0, \"overtime_approved\" INTEGER NOT NULL DEFAULT 0 CHECK (\"overtime_approved\" IN (0, 1)), \"attendance_status\" TEXT NOT NULL, \"state\" TEXT NOT NULL DEFAULT 'draft', \"client_ack\" TEXT NOT NULL DEFAULT 'none', \"client_basis\" TEXT NULL, \"client_rate_fils\" INTEGER NULL, \"client_amount_fils\" INTEGER NULL, \"worker_basis\" TEXT NULL, \"worker_rate_fils\" INTEGER NULL, \"worker_amount_fils\" INTEGER NULL, \"override_reason\" TEXT NULL, \"overlap_reason\" TEXT NULL, \"notes\" TEXT NULL, \"revises_entry_id\" TEXT NULL REFERENCES attendance_entries (id), \"superseded\" INTEGER NOT NULL DEFAULT 0 CHECK (\"superseded\" IN (0, 1)), PRIMARY KEY (\"id\"), CHECK (break_minutes <= clock_minutes));"
+          "sql": "CREATE TABLE IF NOT EXISTS \"attendance_entries\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"batch_id\" TEXT NOT NULL REFERENCES attendance_batches (id), \"worker_id\" TEXT NOT NULL REFERENCES workers (id), \"client_id\" TEXT NOT NULL REFERENCES clients (id), \"site_id\" TEXT NOT NULL REFERENCES sites (id), \"work_date\" TEXT NOT NULL, \"start_utc\" INTEGER NULL, \"end_utc\" INTEGER NULL, \"clock_minutes\" INTEGER NOT NULL CHECK(\"clock_minutes\" >= 0), \"break_minutes\" INTEGER NOT NULL CHECK(\"break_minutes\" >= 0), \"break_paid_client\" INTEGER NOT NULL CHECK (\"break_paid_client\" IN (0, 1)), \"break_paid_worker\" INTEGER NOT NULL CHECK (\"break_paid_worker\" IN (0, 1)), \"client_billable_minutes\" INTEGER NOT NULL, \"worker_payable_minutes\" INTEGER NOT NULL, \"overtime_minutes\" INTEGER NOT NULL DEFAULT 0, \"overtime_approved\" INTEGER NOT NULL DEFAULT 0 CHECK (\"overtime_approved\" IN (0, 1)), \"attendance_status\" TEXT NOT NULL, \"state\" TEXT NOT NULL DEFAULT 'draft', \"client_ack\" TEXT NOT NULL DEFAULT 'none', \"client_basis\" TEXT NULL, \"client_rate_fils\" INTEGER NULL, \"client_amount_fils\" INTEGER NULL, \"worker_basis\" TEXT NULL, \"worker_rate_fils\" INTEGER NULL, \"worker_amount_fils\" INTEGER NULL, \"client_rate_override_fils\" INTEGER NULL, \"worker_rate_override_fils\" INTEGER NULL, \"override_reason\" TEXT NULL, \"overlap_reason\" TEXT NULL, \"notes\" TEXT NULL, \"revises_entry_id\" TEXT NULL REFERENCES attendance_entries (id), \"superseded\" INTEGER NOT NULL DEFAULT 0 CHECK (\"superseded\" IN (0, 1)), PRIMARY KEY (\"id\"), CHECK (break_minutes <= clock_minutes));"
         }
       ]
     },
     {
-      "name": "linked_entry_no_edit",
+      "name": "approved_entry_no_edit",
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TRIGGER linked_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN OLD.state = 'linked' AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.state <> OLD.state)BEGIN SELECT RAISE (ABORT, 'linked attendance is immutable');END"
+          "sql": "CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN OLD.state IN ('approved', 'linked') AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes OR NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)BEGIN SELECT RAISE (ABORT, 'approved attendance is immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "linked_entry_keeps_state",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER linked_entry_keeps_state BEFORE UPDATE ON attendance_entries WHEN OLD.state = 'linked' AND NEW.state <> 'linked' BEGIN SELECT RAISE (ABORT, 'linked attendance is immutable');END"
         }
       ]
     },
@@ -2673,7 +2717,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.state <> 'draft' BEGIN SELECT RAISE (ABORT, 'only draft attendance can be deleted');END"
+          "sql": "CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.state NOT IN ('draft', 'submitted') BEGIN SELECT RAISE (ABORT, 'approved attendance cannot be deleted');END"
         }
       ]
     },

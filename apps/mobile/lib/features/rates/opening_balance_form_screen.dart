@@ -43,7 +43,7 @@ class _OpeningBalanceFormScreenState extends ConsumerState<OpeningBalanceFormScr
     setState(() => _confirmError = _confirmed ? null : l10n.confirmRequired);
     if (!validateAndReveal(_form) || !_confirmed) return;
     final db = ref.read(dbProvider);
-    await db.saveRow(
+    final saved = await saveOrExplain(context, () => db.saveRow(
       db.openingBalances,
       id: widget.existing?.id,
       operationId: _operationId,
@@ -55,8 +55,8 @@ class _OpeningBalanceFormScreenState extends ConsumerState<OpeningBalanceFormScr
         asOfDate: Value(_asOf!),
         sourceNote: Value(_note.text.trim()),
       ),
-    );
-    if (!mounted) return;
+    ));
+    if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();
   }

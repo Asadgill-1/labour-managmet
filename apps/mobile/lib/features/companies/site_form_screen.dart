@@ -36,7 +36,7 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
     if (!validateAndReveal(_form)) return;
     final l10n = AppLocalizations.of(context);
     final db = ref.read(dbProvider);
-    await db.saveRow(
+    final saved = await saveOrExplain(context, () => db.saveRow(
       db.sites,
       id: widget.site?.id,
       operationId: _operationId,
@@ -52,8 +52,8 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
         defaultBreakMinutes: Value(int.parse(_break.text.trim())),
         active: Value(_active),
       ),
-    );
-    if (!mounted) return;
+    ));
+    if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();
   }

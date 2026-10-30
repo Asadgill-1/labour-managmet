@@ -54,3 +54,12 @@ final sitesOfClientProvider = StreamProvider.family<List<Site>, String>((ref, cl
         ..orderBy([(s) => OrderingTerm.asc(s.name)]))
       .watch();
 });
+
+/// Live entries for one date. Corrected originals stay stored but drop out of this list.
+final entriesOnDateProvider = StreamProvider.family<List<AttendanceEntry>, String>((ref, date) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.attendanceEntries)
+        ..where((e) => e.workDate.equals(date) & e.superseded.equals(false))
+        ..orderBy([(e) => OrderingTerm.asc(e.createdAtUtc)]))
+      .watch();
+});

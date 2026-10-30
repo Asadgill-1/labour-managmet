@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/form_bits.dart';
 import '../../app/providers.dart';
+import '../../app/theme.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
@@ -67,11 +68,14 @@ class ClientDetailScreen extends ConsumerWidget {
             child: OutlinedButton(
               onPressed: () {
                 final db = ref.read(dbProvider);
-                db.saveRow(
-                  db.clients,
-                  id: clientId,
-                  operationId: newUuid(),
-                  fields: ClientsCompanion(active: Value(!client.active)),
+                saveOrExplain(
+                  context,
+                  () => db.saveRow(
+                    db.clients,
+                    id: clientId,
+                    operationId: newUuid(),
+                    fields: ClientsCompanion(active: Value(!client.active)),
+                  ),
                 );
               },
               child: Text(client.active ? l10n.archive : l10n.reactivate),

@@ -13,7 +13,7 @@ Type: `domain` (`dart test`), `app` (`flutter test`), `backend` (`supabase test 
 | TC-005 | P3 | INV-04, INV-05 | AED 1,100 at 5% VAT, then receipt of 500 | VAT 55, total 1,155, outstanding 655 | domain | NOT_STARTED |
 | TC-006 | P4 | AUTH-02, AUTH-05 | Tenant A tries tenant B data through login, API, storage and restore | Every attempt denied | backend | NOT_STARTED |
 | TC-007 | P6 | TEAM-03 | Attendance-only manager requests payroll data | Payroll payload never reaches the response or local DB | backend | NOT_STARTED |
-| TC-008 | P1 | ATT-05, TEAM-04, UX-07 | App restart and repeated retry during a save | Entry neither lost nor duplicated | app | NOT_STARTED |
+| TC-008 | P1 | ATT-05, TEAM-04, UX-07 | App restart and repeated retry during a save | Entry neither lost nor duplicated | app | VERIFIED |
 | TC-009 | P3 | DOC-01, DOC-03 | Export every document type, single and multi page | Correct tenant letterhead on every page | manual | NOT_STARTED |
 | TC-010 | P4 | DATA-05, DATA-06 | Authorized restore on a new device | Totals and invoice history match the source | manual | NOT_STARTED |
 | TC-011 | P5 | ADMIN-04, MET-01 | 1 tenant with 2 users on 2 devices | Counts as 1 customer, not 2 | backend | NOT_STARTED |
@@ -28,13 +28,13 @@ Type: `domain` (`dart test`), `app` (`flutter test`), `backend` (`supabase test 
 | TC-020 | P1 | CALC-05, TS-08 | Fixed monthly client contract with 10 workers attending | One fee, not multiplied by worker rows | domain | VERIFIED |
 | TC-021 | P1 | CALC-06 | Rate lookup with override, assignment, contract and no rate. Contract changes after approval | Priority order holds, missing rate stops for review, approved row keeps its snapshot | domain | VERIFIED |
 | TC-022 | P1 | CALC-07 | Extra hours on contracts with and without an overtime multiplier | Regular and overtime separate, multiplier only where contracted | domain | VERIFIED |
-| TC-023 | P1 | ATT-03 | Group rate applied to mixed hourly and monthly workers | Billing rate applies, worker pay stays from each contract, no silent conversion | app | NOT_STARTED |
-| TC-024 | P1 | ATT-04 | Batch of 10 with one invalid row, and a crash mid-save | Nothing half-saved, row error shown, no false success | app | NOT_STARTED |
-| TC-025 | P1 | ATT-05 | Overlapping time at two sites, then two non-overlapping shifts on one day | Overlap needs an approval reason, valid second job allowed | app | NOT_STARTED |
-| TC-026 | P1 | UX-05 | Copy yesterday's team | New entries are unapproved until the owner reviews them | app | NOT_STARTED |
-| TC-027 | P1 | ATT-08 | Correct a posted entry that was on a shared timesheet | Original kept, revision trail exists, shared version preserved | app | NOT_STARTED |
+| TC-023 | P1 | ATT-03 | Group rate applied to mixed hourly and monthly workers | Billing rate applies, worker pay stays from each contract, no silent conversion | app | VERIFIED |
+| TC-024 | P1 | ATT-04 | Batch of 10 with one invalid row, and a crash mid-save | Nothing half-saved, row error shown, no false success | app | VERIFIED |
+| TC-025 | P1 | ATT-05 | Overlapping time at two sites, then two non-overlapping shifts on one day | Overlap needs an approval reason, valid second job allowed | app | VERIFIED |
+| TC-026 | P1 | UX-05 | Copy yesterday's team | New entries are unapproved until the owner reviews them | app | VERIFIED |
+| TC-027 | P1 | ATT-08 | Correct a posted entry that was on a shared timesheet | Original kept, revision trail exists, shared version preserved | app | VERIFIED |
 | TC-028 | P1 | ATT-09 | One worker on two shifts in a day | Unique workers 1, shifts 2, not an amount input | domain | VERIFIED |
-| TC-029 | P1 | MASTER-07 | Archive a worker with a balance, rehire with the same name | Balance and payslips stay available, no hard delete, no auto-merge | app | NOT_STARTED |
+| TC-029 | P1 | MASTER-07 | Archive a worker with a balance, rehire with the same name | Balance and payslips stay available, no hard delete, no auto-merge | app | VERIFIED |
 | TC-030 | P1 | MASTER-05 | Enter opening salary owed, opening advance and client receivable | Kept separate with source date, salary balance is not a wage expense | app | VERIFIED |
 | TC-031 | P1 | UX-06 | 5 non-technical users enter 10 same-rate workers after setup | Under 60 seconds, at least 4 of 5 without a trainer | manual | NOT_STARTED |
 | TC-032 | P2 | PAY-04 | Opening 500, gross 1,000, room 200, recovery 100, paid 600 | Total payable 1,200, closing 600 | domain | NOT_STARTED |

@@ -41,7 +41,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
     if (!validateAndReveal(_form)) return;
     final l10n = AppLocalizations.of(context);
     final db = ref.read(dbProvider);
-    await db.saveRow(
+    final saved = await saveOrExplain(context, () => db.saveRow(
       db.tenantProfiles,
       id: widget.profile?.id,
       operationId: _operationId,
@@ -59,8 +59,8 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
         bankDetails: optionalText(_bank),
         documentFooter: optionalText(_footer),
       ),
-    );
-    if (!mounted) return;
+    ));
+    if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     if (widget.profile != null) Navigator.of(context).pop();
   }

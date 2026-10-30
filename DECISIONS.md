@@ -27,6 +27,9 @@ Status: ACCEPTED (owner approved), or PROPOSED (waiting for sign-off). New decis
 | D-021 | ACCEPTED | All writes go through `applyOperation`, and the outbox primary key is the idempotency key. No per-table unique index on `source_operation_id` | One guard covers every caller. A batch shares one operation across many rows, which a per-table index would reject |
 | D-022 | ACCEPTED | Overtime on a contract is an explicit per-hour rate, not a multiplier | Works for hourly, shift and monthly bases alike, and nothing is implied about a legal multiplier (CALC-07) |
 | D-023 | PROPOSED | Company logo (MASTER-01) and worker photo (MASTER-04) move to T14, with the image handling and validation of DOC-04 | Nothing uses them before documents exist, and uploads need one validated path. The fields are hidden until then. Owner to confirm at the P1 gate (AI-07) |
+| D-024 | PROPOSED | D-103's "contract can override" the work date is not built. Work date is the date chosen when entering attendance, which defaults to today | The owner can already pick the date by hand. A contract field also raises an open question: which contract decides when the client and worker sides differ. Add it if a real contract needs it. Owner to confirm at the P1 gate |
+| D-025 | ACCEPTED | Until the first pilot APK, schema v1 may be regenerated in place | No device holds real data yet. From the first pilot on, every change needs a version bump and a migration (MODEL-08) |
+| D-026 | ACCEPTED | Rows with a missing rate save as drafts and cannot be approved. Rates are frozen on approval, not on save | A rate added later reaches unapproved rows, and an approved row never changes (CALC-06) |
 
 ## Policy defaults (ACCEPTED by the owner on 2026-10-31)
 

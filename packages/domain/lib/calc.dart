@@ -162,3 +162,114 @@ bool datesOverlap(String fromA, String? toA, String fromB, String? toB) {
     workerDays: worked.map((r) => '${r.workerId}|${r.workDate}').toSet().length,
   );
 }
+
+/// One worker's shift as entered. Null break flags mean "as the contract says".
+class ShiftInput {
+  const ShiftInput({
+    this.status = AttendanceStatus.present,
+    this.startMinute,
+    this.endMinute,
+    this.breakMinutes = 0,
+    this.breakPaidClient,
+    this.breakPaidWorker,
+    this.overtimeApproved = false,
+    this.clientOverrideFils,
+    this.workerOverrideFils,
+  });
+
+  final AttendanceStatus status;
+  final int? startMinute;
+  final int? endMinute;
+  final int breakMinutes;
+  final bool? breakPaidClient;
+  final bool? breakPaidWorker;
+  final bool overtimeApproved;
+  final int? clientOverrideFils;
+  final int? workerOverrideFils;
+}
+
+class PricedShift {
+  const PricedShift({
+    this.startUtc,
+    this.endUtc,
+    required this.clockMinutes,
+    required this.breakValid,
+    required this.breakPaidClient,
+    required this.breakPaidWorker,
+    required this.clientMinutes,
+    required this.workerMinutes,
+    required this.client,
+    required this.worker,
+    this.clientBasis,
+    this.clientRateFils,
+    this.workerBasis,
+    this.workerRateFils,
+  });
+
+  final DateTime? startUtc;
+  final DateTime? endUtc;
+  final int clockMinutes;
+  final bool breakValid;
+  final bool breakPaidClient;
+  final bool breakPaidWorker;
+  final int clientMinutes;
+  final int workerMinutes;
+  final LineAmount client;
+  final LineAmount worker;
+  final RateBasis? clientBasis;
+  final int? clientRateFils;
+  final RateBasis? workerBasis;
+  final int? workerRateFils;
+
+  bool get hasPricingIssue => client.issue != null || worker.issue != null;
+}
+
+/// An override changes the amount and keeps the contract's basis, so mixed pay is never silently converted (ATT-03).
+RateTerms? _withOverride(RateTerms? terms, int? overrideFils) {
+  if (terms == null || overrideFils == null) return terms;
+  return RateTerms(
+    basis: terms.basis,
+    rateFils: overrideFils,
+    effectiveFrom: terms.effectiveFrom,
+    effectiveTo: terms.effectiveTo,
+    breakPaid: terms.breakPaid,
+    halfAmountFils: terms.halfAmountFils,
+    includedMinutes: terms.includedMinutes,
+    overtimeRateFils: terms.overtimeRateFils,
+    siteId: terms.siteId,
+    workerId: terms.workerId,
+  );
+}
+
+/// Prices one shift for both sides, independently (CALC-02, CALC-06).
+PricedShift priceShift(String workDate, ShiftInput input, {RateTerms? client, RateTerms? worker}) {
+  final clientTerms = _withOverride(client, input.clientOverrideFils);
+  final workerTerms = _withOverride(worker, input.workerOverrideFils);
+  final paidClient = input.breakPaidClient ?? client?.breakPaid ?? false;
+  final paidWorker = input.breakPaidWorker ?? worker?.breakPaid ?? false;
+
+  final worked = input.status != AttendanceStatus.absent && input.startMinute != null && input.endMinute != null;
+  final times = worked ? shiftTimes(workDate, input.startMinute!, input.endMinute!) : null;
+  final clock = times == null ? 0 : clockMinutes(times.startUtc, times.endUtc);
+  final breakMinutes = worked ? input.breakMinutes : 0;
+  final breakValid = isValidBreak(breakMinutes, clock);
+  final clientMinutes = breakValid ? countedMinutes(clock, breakMinutes, breakPaid: paidClient) : 0;
+  final workerMinutes = breakValid ? countedMinutes(clock, breakMinutes, breakPaid: paidWorker) : 0;
+
+  return PricedShift(
+    startUtc: times?.startUtc,
+    endUtc: times?.endUtc,
+    clockMinutes: clock,
+    breakValid: breakValid,
+    breakPaidClient: paidClient,
+    breakPaidWorker: paidWorker,
+    clientMinutes: clientMinutes,
+    workerMinutes: workerMinutes,
+    client: priceLine(clientTerms, status: input.status, minutes: clientMinutes, overtimeApproved: input.overtimeApproved),
+    worker: priceLine(workerTerms, status: input.status, minutes: workerMinutes, overtimeApproved: input.overtimeApproved),
+    clientBasis: clientTerms?.basis,
+    clientRateFils: clientTerms?.rateFils,
+    workerBasis: workerTerms?.basis,
+    workerRateFils: workerTerms?.rateFils,
+  );
+}

@@ -402,6 +402,210 @@ class AppLocalizationsEn extends AppLocalizations {
   String dateFromTo(String from, String to) {
     return '$from to $to';
   }
+
+  @override
+  String get markAttendance => 'Mark attendance';
+
+  @override
+  String get workDate => 'Date';
+
+  @override
+  String get chooseClient => 'Company';
+
+  @override
+  String get chooseSite => 'Site';
+
+  @override
+  String get shiftStart => 'Start';
+
+  @override
+  String get shiftEnd => 'End';
+
+  @override
+  String get breakMinutes => 'Break in minutes';
+
+  @override
+  String get selectAll => 'Select all';
+
+  @override
+  String get clearSelection => 'Clear selection';
+
+  @override
+  String get copyLastTeam => 'Last team';
+
+  @override
+  String get noLastTeam => 'No earlier team found for this site.';
+
+  @override
+  String get needSetupFirst => 'Add a company, a site and a worker first.';
+
+  @override
+  String get timesRequired => 'Choose the start and end time.';
+
+  @override
+  String get reviewTitle => 'Review attendance';
+
+  @override
+  String get totalClient => 'To collect from company';
+
+  @override
+  String get totalWorker => 'To pay workers';
+
+  @override
+  String get monthlyNotInTotal =>
+      'Workers on a monthly rate are not in this total. They are calculated per month.';
+
+  @override
+  String get groupRate => 'Change today\'s company rate';
+
+  @override
+  String get groupRateAmount => 'Company rate for this group (AED)';
+
+  @override
+  String get issueClientRate => 'No company rate found';
+
+  @override
+  String get issueWorkerRate => 'No worker rate found';
+
+  @override
+  String get issueHalf => 'No half-day amount agreed';
+
+  @override
+  String get issueOvertime => 'No overtime rate agreed';
+
+  @override
+  String get issueOverlap =>
+      'This worker already has attendance at this time. Write a reason.';
+
+  @override
+  String get issueBreak => 'Break is longer than the shift';
+
+  @override
+  String get issueOverrideReason => 'Write why the rate changed';
+
+  @override
+  String get rowsNeedFix => 'Fix the rows marked in red, then save.';
+
+  @override
+  String get savesAsDraft =>
+      'Rows with a missing rate save as drafts until a rate is added.';
+
+  @override
+  String get statusPresent => 'Present';
+
+  @override
+  String get statusHalf => 'Half day';
+
+  @override
+  String get statusAbsent => 'Absent';
+
+  @override
+  String get clientBreakPaid => 'Break paid on company side';
+
+  @override
+  String get workerBreakPaid => 'Break paid on worker side';
+
+  @override
+  String get overtimeApproved => 'Overtime approved';
+
+  @override
+  String get clientOverride => 'Company rate for this row (AED)';
+
+  @override
+  String get workerOverride => 'Worker rate for this row (AED)';
+
+  @override
+  String get overrideHelp =>
+      'Leave empty to use the contract. Changing a rate needs the owner\'s approval and a reason.';
+
+  @override
+  String get overrideReason => 'Why the rate changed';
+
+  @override
+  String get overlapReason => 'Why two entries overlap';
+
+  @override
+  String get correctionReason => 'Why this is being corrected';
+
+  @override
+  String get correctionHelp =>
+      'The original entry is kept. This creates a corrected entry.';
+
+  @override
+  String get deleteRow => 'Remove this entry';
+
+  @override
+  String get applyChanges => 'Apply';
+
+  @override
+  String get stateDraft => 'Draft';
+
+  @override
+  String get stateSubmitted => 'Needs review';
+
+  @override
+  String get stateApproved => 'Approved';
+
+  @override
+  String get stateLinked => 'In accounts';
+
+  @override
+  String get correctedTag => 'Corrected';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get localOnlyNote => 'This data is only on this phone.';
+
+  @override
+  String nextWithCount(int count) {
+    return 'Next ($count workers)';
+  }
+
+  @override
+  String approveAll(int count) {
+    return 'Approve all ($count)';
+  }
+
+  @override
+  String approvedCount(int count) {
+    return '$count entries approved';
+  }
+
+  @override
+  String countsLine(int workers, int shifts, int days) {
+    return '$workers workers, $shifts shifts, $days worker-days';
+  }
+
+  @override
+  String missingWorkers(int count, String names) {
+    return '$count workers have no attendance: $names';
+  }
+
+  @override
+  String hoursPaid(String duration) {
+    return '$duration hours';
+  }
+
+  @override
+  String get previousDay => 'Previous day';
+
+  @override
+  String get nextDay => 'Next day';
+
+  @override
+  String get saveFailed => 'Could not save. Nothing was changed. Try again.';
+
+  @override
+  String rowCollect(String amount) {
+    return 'Collect $amount';
+  }
+
+  @override
+  String rowPay(String amount) {
+    return 'pay $amount';
+  }
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -801,5 +1005,210 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String dateFromTo(String from, String to) {
     return '$from se $to tak';
+  }
+
+  @override
+  String get markAttendance => 'Hazri lagayein';
+
+  @override
+  String get workDate => 'Tareekh';
+
+  @override
+  String get chooseClient => 'Company';
+
+  @override
+  String get chooseSite => 'Site';
+
+  @override
+  String get shiftStart => 'Shuru';
+
+  @override
+  String get shiftEnd => 'Khatam';
+
+  @override
+  String get breakMinutes => 'Break, minutes mein';
+
+  @override
+  String get selectAll => 'Sab ko select';
+
+  @override
+  String get clearSelection => 'Selection hatayein';
+
+  @override
+  String get copyLastTeam => 'Pichli team';
+
+  @override
+  String get noLastTeam => 'Is site ki pichli team nahin mili.';
+
+  @override
+  String get needSetupFirst => 'Pehle company, site aur mazdoor add karein.';
+
+  @override
+  String get timesRequired => 'Shuru aur khatam ka waqt chunein.';
+
+  @override
+  String get reviewTitle => 'Hazri review karein';
+
+  @override
+  String get totalClient => 'Company se lena hai';
+
+  @override
+  String get totalWorker => 'Mazdoor ko dena hai';
+
+  @override
+  String get monthlyNotInTotal =>
+      'Mahana rate wale mazdoor is total mein nahin. Un ka hisaab mahine par hoga.';
+
+  @override
+  String get groupRate => 'Aaj ka company rate badlein';
+
+  @override
+  String get groupRateAmount => 'Is group ka company rate (AED)';
+
+  @override
+  String get issueClientRate => 'Company ka rate nahin mila';
+
+  @override
+  String get issueWorkerRate => 'Mazdoor ka rate nahin mila';
+
+  @override
+  String get issueHalf => 'Aadhay din ki raqam tay nahin';
+
+  @override
+  String get issueOvertime => 'Overtime rate tay nahin';
+
+  @override
+  String get issueOverlap =>
+      'Is waqt mazdoor ki doosri hazri hai. Wajah likhein.';
+
+  @override
+  String get issueBreak => 'Break shift se lamba hai';
+
+  @override
+  String get issueOverrideReason => 'Rate badalne ki wajah likhein';
+
+  @override
+  String get rowsNeedFix => 'Laal rows theek karein, phir save karein.';
+
+  @override
+  String get savesAsDraft =>
+      'Jin rows ka rate nahin woh rate milne tak draft rahengi.';
+
+  @override
+  String get statusPresent => 'Hazir';
+
+  @override
+  String get statusHalf => 'Aadha din';
+
+  @override
+  String get statusAbsent => 'Ghair hazir';
+
+  @override
+  String get clientBreakPaid => 'Company ke hisaab mein break paid';
+
+  @override
+  String get workerBreakPaid => 'Mazdoor ke hisaab mein break paid';
+
+  @override
+  String get overtimeApproved => 'Overtime manzoor';
+
+  @override
+  String get clientOverride => 'Is row ka company rate (AED)';
+
+  @override
+  String get workerOverride => 'Is row ka mazdoor rate (AED)';
+
+  @override
+  String get overrideHelp =>
+      'Contract ka rate rakhne ke liye khali chhor dein. Rate badalne ke liye maalik ki manzoori aur wajah zaroori hai.';
+
+  @override
+  String get overrideReason => 'Rate badalne ki wajah';
+
+  @override
+  String get overlapReason => 'Do hazriyan ek waqt mein kyun';
+
+  @override
+  String get correctionReason => 'Correction ki wajah';
+
+  @override
+  String get correctionHelp =>
+      'Asal entry mehfooz rahegi. Yeh nayi corrected entry banayega.';
+
+  @override
+  String get deleteRow => 'Yeh entry hatayein';
+
+  @override
+  String get applyChanges => 'Theek hai';
+
+  @override
+  String get stateDraft => 'Draft';
+
+  @override
+  String get stateSubmitted => 'Review baqi';
+
+  @override
+  String get stateApproved => 'Manzoor';
+
+  @override
+  String get stateLinked => 'Hisaab mein shamil';
+
+  @override
+  String get correctedTag => 'Corrected';
+
+  @override
+  String get cancel => 'Wapas';
+
+  @override
+  String get localOnlyNote => 'Yeh data sirf is mobile par hai.';
+
+  @override
+  String nextWithCount(int count) {
+    return 'Aage ($count mazdoor)';
+  }
+
+  @override
+  String approveAll(int count) {
+    return 'Sab manzoor karein ($count)';
+  }
+
+  @override
+  String approvedCount(int count) {
+    return '$count entries manzoor';
+  }
+
+  @override
+  String countsLine(int workers, int shifts, int days) {
+    return '$workers mazdoor, $shifts shifts, $days worker-days';
+  }
+
+  @override
+  String missingWorkers(int count, String names) {
+    return '$count mazdoor ki hazri baqi: $names';
+  }
+
+  @override
+  String hoursPaid(String duration) {
+    return '$duration ghante';
+  }
+
+  @override
+  String get previousDay => 'Pichla din';
+
+  @override
+  String get nextDay => 'Agla din';
+
+  @override
+  String get saveFailed =>
+      'Save nahin hua. Kuch tabdeel nahin hua. Dobara koshish karein.';
+
+  @override
+  String rowCollect(String amount) {
+    return 'Lena $amount';
+  }
+
+  @override
+  String rowPay(String amount) {
+    return 'dena $amount';
   }
 }

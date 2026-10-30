@@ -23,3 +23,18 @@ DateTime dubaiToUtc(String storedDate, int minuteOfDay) {
   final parts = storedDate.split('-').map(int.parse).toList();
   return DateTime.utc(parts[0], parts[1], parts[2]).add(Duration(minutes: minuteOfDay)).subtract(dubaiOffset);
 }
+
+/// A UTC instant as UAE minutes from midnight.
+int dubaiMinuteOfDay(DateTime utc) {
+  final local = utc.toUtc().add(dubaiOffset);
+  return local.hour * 60 + local.minute;
+}
+
+/// A stored date shifted by whole days.
+String addDays(String storedDate, int days) {
+  final parts = storedDate.split('-').map(int.parse).toList();
+  return ymd(DateTime.utc(parts[0], parts[1], parts[2] + days));
+}
+
+/// 660 -> "11:00".
+String showDuration(int minutes) => '${minutes ~/ 60}:${_two(minutes % 60)}';

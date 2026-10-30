@@ -8,17 +8,26 @@ CREATE TRIGGER audit_no_delete BEFORE DELETE ON audit_events BEGIN
   SELECT RAISE(ABORT, 'audit events are append-only');
 END;
 
--- A row is locked once linked to payroll or billing. Only the superseded flag may change (ATT-08).
-CREATE TRIGGER linked_entry_no_edit BEFORE UPDATE ON attendance_entries
-WHEN OLD.state = 'linked'
-  AND (NEW.clock_minutes <> OLD.clock_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils
-    OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.state <> OLD.state)
+-- Approved and linked rows keep their figures. A correction is a new row, and the old one is only flagged (ATT-08).
+CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries
+WHEN OLD.state IN ('approved', 'linked')
+  AND (NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes
+    OR NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes
+    OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils
+    OR NEW.client_amount_fils IS NOT OLD.client_amount_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils
+    OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)
+BEGIN
+  SELECT RAISE(ABORT, 'approved attendance is immutable');
+END;
+
+CREATE TRIGGER linked_entry_keeps_state BEFORE UPDATE ON attendance_entries
+WHEN OLD.state = 'linked' AND NEW.state <> 'linked'
 BEGIN
   SELECT RAISE(ABORT, 'linked attendance is immutable');
 END;
 
 CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries
-WHEN OLD.state <> 'draft'
+WHEN OLD.state NOT IN ('draft', 'submitted')
 BEGIN
-  SELECT RAISE(ABORT, 'only draft attendance can be deleted');
+  SELECT RAISE(ABORT, 'approved attendance cannot be deleted');
 END;

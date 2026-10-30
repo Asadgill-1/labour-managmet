@@ -54,7 +54,8 @@ class _WorkerFormScreenState extends ConsumerState<WorkerFormScreen> {
       setState(() => _codeError = l10n.workerCodeTaken);
       return;
     }
-    await db.saveRow(
+    if (!mounted) return;
+    final saved = await saveOrExplain(context, () => db.saveRow(
       db.workers,
       id: widget.worker?.id,
       operationId: _operationId,
@@ -67,8 +68,8 @@ class _WorkerFormScreenState extends ConsumerState<WorkerFormScreen> {
         roomChargeFils: Value(parseAed(_room.text)),
         roomChargeNote: optionalText(_roomNote),
       ),
-    );
-    if (!mounted) return;
+    ));
+    if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();
   }
