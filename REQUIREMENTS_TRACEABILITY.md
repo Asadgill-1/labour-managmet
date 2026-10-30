@@ -113,7 +113,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | TEAM-01 | 15 | Invite | T24 | NOT_STARTED | - | - |
 | TEAM-02 | 15 | Permission presets | T24 | NOT_STARTED | - | - |
 | TEAM-03 | 15 | Payload isolation | T24 | NOT_STARTED | TC-007 | - |
-| TEAM-04 | 15 | Sync | T25 | NOT_STARTED | TC-008 | - |
+| TEAM-04 | 15 | Sync | T25 | IN_PROGRESS | TC-008 | - |
 | TEAM-05 | 15 | Conflicts | T25 | NOT_STARTED | TC-048 | - |
 | TEAM-06 | 15 | Revocation | T25 | NOT_STARTED | TC-048 | - |
 | TEAM-07 | 15 | Team downgrade | T25 | NOT_STARTED | - | - |
@@ -156,7 +156,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | MODEL-05 | 20 | Server-only actions | T19 | NOT_STARTED | TC-047 | - |
 | MODEL-06 | 20 | Conceptual API contracts | T19 | NOT_STARTED | - | - |
 | MODEL-07 | 20 | Financial boundary | T11 | NOT_STARTED | TC-036 | - |
-| MODEL-08 | 20 | Migration | T06 | NOT_STARTED | - | - |
+| MODEL-08 | 20 | Migration | T06 | IN_PROGRESS | - | - |
 | BUILD-01 | 21 | Auth/tenant models P0 se architecture mein hon; P4 production | T04 | IN_PROGRESS | - | - |
 | BUILD-02 | 21 | Solo pilot P5 ke baad sirf tested scope ke | T26 | NOT_STARTED | - | - |
 | BUILD-03 | 21 | Owner ko test APK, sample documents, 5-minute walkthrough aur | T01 | IN_PROGRESS | - | - |

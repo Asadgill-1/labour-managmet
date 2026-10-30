@@ -21,6 +21,9 @@ source /c/dev/env.sh
 | Domain tests | `cd packages/domain && dart test` |
 | App | `cd apps/mobile && flutter analyze && flutter test` |
 | APK | `cd apps/mobile && flutter build apk` |
+| After editing tables | `cd apps/mobile && dart run build_runner build --delete-conflicting-outputs` |
+| After a schema change | Bump `schemaVersion`, run `dart run drift_dev make-migrations`, fill in the step, add a test (MODEL-08) |
+| After editing strings | `cd apps/mobile && flutter gen-l10n` |
 
 ## Working rules
 

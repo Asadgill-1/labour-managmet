@@ -1,0 +1,24 @@
+import 'tables.dart';
+
+CREATE TRIGGER audit_no_update BEFORE UPDATE ON audit_events BEGIN
+  SELECT RAISE(ABORT, 'audit events are append-only');
+END;
+
+CREATE TRIGGER audit_no_delete BEFORE DELETE ON audit_events BEGIN
+  SELECT RAISE(ABORT, 'audit events are append-only');
+END;
+
+-- A row is locked once linked to payroll or billing. Only the superseded flag may change (ATT-08).
+CREATE TRIGGER linked_entry_no_edit BEFORE UPDATE ON attendance_entries
+WHEN OLD.state = 'linked'
+  AND (NEW.clock_minutes <> OLD.clock_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils
+    OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.state <> OLD.state)
+BEGIN
+  SELECT RAISE(ABORT, 'linked attendance is immutable');
+END;
+
+CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries
+WHEN OLD.state <> 'draft'
+BEGIN
+  SELECT RAISE(ABORT, 'only draft attendance can be deleted');
+END;

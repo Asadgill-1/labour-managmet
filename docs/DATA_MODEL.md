@@ -15,7 +15,7 @@ Money records add `currency` and `posting_date`. An effective date is always sep
 | --- | --- | --- |
 | Identity | `tenant_profile` | VAT status has an effective date (MASTER-01) |
 | Masters | `clients`, `sites`, `workers` | Archive, never hard-delete with history. Worker code unique in tenant. No auto-merge by name (MASTER-07) |
-| Contracts | `pay_contracts`, `billing_contracts`, `assignments` | Effective from and to. Basis, rate in fils, break rule, included minutes, overtime arrangement, partial-period method (MASTER-06) |
+| Contracts | `pay_contracts`, `billing_contracts` | Effective from and to. Basis, rate in fils, break rule, included minutes, overtime rate, partial-period method (MASTER-06). A row scoped to a site or worker acts as the assignment rate (D-020) |
 | Attendance | `attendance_batches`, `attendance_entries` | Rate snapshot on each entry. Client and worker minutes stored separately. Corrections link to the revised entry (ATT-02, ATT-08) |
 | Payroll | `payroll_runs`, `payroll_lines` | Posted lines are immutable. Opening, gross, allowances, deductions, recovery, net, payable, paid and closing all stored (PAY-01) |
 | Worker money | `advance_entries`, `deductions`, `salary_payments`, `salary_payment_allocations` | Advance is its own ledger. Deduction carries reason and authorization (PAY-05, PAY-07) |
@@ -37,7 +37,7 @@ No table stores an editable balance. Current balances derive from posted payroll
 | --- | --- |
 | Worker code unique in tenant | `UNIQUE (tenant_id, worker_code)` |
 | Invoice number unique in tenant | `UNIQUE (tenant_id, invoice_number)`, null while draft |
-| Duplicate operation rejected | `UNIQUE (tenant_id, source_operation_id)` |
+| Duplicate operation rejected | Outbox primary key on `operation_id`, checked by `applyOperation` (D-021) |
 | Break within shift | `CHECK (break_minutes BETWEEN 0 AND clock_minutes)` |
 | Same work not billed twice | Guard over `invoice_source_allocations` per attendance entry and billed unit |
 | Allocation within outstanding | Checked inside the posting transaction |
@@ -50,7 +50,7 @@ Issuing an invoice or posting payroll writes the document, the ledger postings, 
 
 ## Outbox (TEAM-04)
 
-Written from P1, in the same transaction as the change: `operation_id` (UUID), `tenant_id`, `table_name`, `record_id`, `record_version`, `device_id`, `idempotency_key`, `payload`, `created_at_utc`, `acked_at_utc`. Free and Solo never upload it (ARCH-02). It only sends when Team sync is on (T25).
+Written from P1, in the same transaction as the change: `operation_id` (UUID, also the idempotency key), `tenant_id`, `entity`, `record_id`, `record_version`, `device_id`, `payload`, `created_at_utc`, `acked_at_utc`. Free and Solo never upload it (ARCH-02). It only sends when Team sync is on (T25).
 
 ## Local storage (D-005, D-016)
 

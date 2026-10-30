@@ -18,7 +18,7 @@ Future<List<Check>> runSpikeChecks(Directory dir, Future<String> Function(String
   final keyB = await keyFor(_tenantB);
   record('Tenants have different keys', keyA != keyB);
 
-  final dbA = openTenantDatabase(fileA, keyA);
+  final dbA = _open(fileA, keyA);
   final cipher = await dbA.customSelect('PRAGMA cipher;').getSingle();
   record('Encrypted SQLite build', true, cipher.data.values.join());
 
@@ -34,7 +34,7 @@ Future<List<Check>> runSpikeChecks(Directory dir, Future<String> Function(String
   record('10-row batch saved', true, '${watch.elapsedMilliseconds} ms (BUILD-04 target: under 1000 ms)');
   await dbA.close();
 
-  final reopened = openTenantDatabase(fileA, keyA);
+  final reopened = _open(fileA, keyA);
   final after = await _rowCount(reopened);
   await reopened.close();
   record('Data survives reopen', after == before + 10, '$after rows, ${before ~/ 10} earlier launches');
@@ -57,13 +57,15 @@ Future<List<Check>> runSpikeChecks(Directory dir, Future<String> Function(String
   return checks;
 }
 
+TenantDatabase _open(File file, String key) => openTenantDatabase(file, key, tenantId: _tenantA, deviceId: 'spike');
+
 Future<int> _rowCount(TenantDatabase db) async {
   final row = await db.customSelect('SELECT count(*) AS c FROM spike').getSingle();
   return row.read<int>('c');
 }
 
 Future<bool> _rejects(File file, String key) async {
-  final db = openTenantDatabase(file, key);
+  final db = _open(file, key);
   try {
     await _rowCount(db);
     return false;

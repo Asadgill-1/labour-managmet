@@ -23,6 +23,9 @@ Status: ACCEPTED (owner approved), or PROPOSED (waiting for sign-off). New decis
 | D-017 | ACCEPTED | `dev.labourapp.labour_app` is a placeholder application ID. The owner picks the final one before the first pilot APK | The ID cannot change later without customers reinstalling. PRD lists branding as still open |
 | D-018 | ACCEPTED | App opens the database only if `PRAGMA cipher` responds, and throws otherwise, in release builds too | A build without the cipher must never write payroll data in plaintext. T03 proved plain SQLite is rejected |
 | D-019 | ACCEPTED | `android:allowBackup="false"` | Keeps the database out of Google Drive backups and avoids the Keystore unwrap failure `flutter_secure_storage` warns about. Disaster recovery is the encrypted backup in T20 (DATA-04) |
+| D-020 | ACCEPTED | No separate `assignments` table. A contract row with a `site_id` or `worker_id` is the assignment-level rate that beats the general one | Covers CALC-06's priority order with one mechanism. "Copy yesterday's team" covers team memory. Add the table only if assignments need data of their own |
+| D-021 | ACCEPTED | All writes go through `applyOperation`, and the outbox primary key is the idempotency key. No per-table unique index on `source_operation_id` | One guard covers every caller. A batch shares one operation across many rows, which a per-table index would reject |
+| D-022 | ACCEPTED | Overtime on a contract is an explicit per-hour rate, not a multiplier | Works for hourly, shift and monthly bases alike, and nothing is implied about a legal multiplier (CALC-07) |
 
 ## Policy defaults (ACCEPTED by the owner on 2026-10-31)
 
