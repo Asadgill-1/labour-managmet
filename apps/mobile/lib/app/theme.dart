@@ -3,125 +3,213 @@ import 'package:flutter/services.dart';
 
 import '../l10n/app_localizations.dart';
 
-const ink = Color(0xFF14171A);
-const muted = Color(0xFF596068);
-const paper = Color(0xFFF0F1EE);
-const rule = Color(0xFFDADCD7);
-const hiVis = Color(0xFFFFC400);
-const hiVisSoft = Color(0xFFFFF3C4);
-const due = Color(0xFFB3261E);
-const dueSoft = Color(0xFFF9DEDC);
-const settled = Color(0xFF1B6E43);
-const settledSoft = Color(0xFFDDF0E4);
+// ponytail: three colour options until the owner picks one (D-037). Then delete the other two and this line.
+const _palette = String.fromEnvironment('PALETTE', defaultValue: 'a');
 
-/// Narrow and bold like site signage, so long Roman Urdu labels and amounts fit a small phone.
-const headingFont = 'RobotoCondensed';
+/// The header and everything that means "this app".
+const brand = _palette == 'b'
+    ? Color(0xFF0B6B5D)
+    : _palette == 'c'
+    ? Color(0xFF7A1F3D)
+    : Color(0xFF143E8F);
+const brandSoft = _palette == 'b'
+    ? Color(0xFFE0F2EE)
+    : _palette == 'c'
+    ? Color(0xFFF7E8ED)
+    : Color(0xFFE7EDFA);
+
+/// The screen's one main action.
+const action = _palette == 'b'
+    ? Color(0xFFF2B233)
+    : _palette == 'c'
+    ? Color(0xFFE9A92B)
+    : Color(0xFFE8590C);
+const onAction = _palette == 'b'
+    ? Color(0xFF1B2A25)
+    : _palette == 'c'
+    ? Color(0xFF2A1A12)
+    : Colors.white;
+const ink = _palette == 'b'
+    ? Color(0xFF14261F)
+    : _palette == 'c'
+    ? Color(0xFF2A1A20)
+    : Color(0xFF17213A);
+const muted = _palette == 'b'
+    ? Color(0xFF56665F)
+    : _palette == 'c'
+    ? Color(0xFF6F5F66)
+    : Color(0xFF5B667A);
+const paper = _palette == 'b'
+    ? Color(0xFFF1F5F3)
+    : _palette == 'c'
+    ? Color(0xFFF8F4F5)
+    : Color(0xFFF2F4F9);
+const rule = _palette == 'b'
+    ? Color(0xFFDCE5E1)
+    : _palette == 'c'
+    ? Color(0xFFECE3E6)
+    : Color(0xFFE0E5EF);
+const due = Color(0xFFC62828);
+const dueSoft = Color(0xFFFDE7E7);
+const settled = Color(0xFF12804F);
+const settledSoft = Color(0xFFDDF5E8);
+const warn = Color(0xFF9A5B00);
+const warnSoft = Color(0xFFFFF1D6);
+
+/// Named outright and bundled: a style with no family falls back to the phone's own font, which on some phones is a handwriting theme.
+const headingFont = 'Roboto';
 
 const _heading = TextStyle(fontFamily: headingFont, fontWeight: FontWeight.w700, color: ink);
 
 /// Section headings inside a screen.
-const sectionTitleStyle = TextStyle(fontFamily: headingFont, fontSize: 18, fontWeight: FontWeight.w700, color: ink);
-
-/// Named outright: a style with no family falls back to the phone's own font, which on some phones is a handwriting theme.
-const _body = 'Roboto';
+const sectionTitleStyle = TextStyle(fontFamily: headingFont, fontSize: 17, fontWeight: FontWeight.w700, color: ink);
 
 /// Lines up digits in amount columns.
-const amountStyle = TextStyle(fontFamily: headingFont, fontSize: 18, fontWeight: FontWeight.w700, color: ink, fontFeatures: [FontFeature.tabularFigures()]);
+const amountStyle = TextStyle(fontFamily: headingFont, fontSize: 17, fontWeight: FontWeight.w700, color: ink, fontFeatures: [FontFeature.tabularFigures()]);
+
+final _corner12 = BorderRadius.circular(12);
 
 final appTheme = ThemeData(
   useMaterial3: true,
+  fontFamily: headingFont,
   colorScheme: const ColorScheme.light(
-    primary: ink,
+    primary: brand,
     onPrimary: Colors.white,
-    secondary: hiVis,
-    onSecondary: ink,
+    secondary: action,
+    onSecondary: onAction,
     surface: Colors.white,
     onSurface: ink,
     onSurfaceVariant: muted,
     error: due,
-    outline: Color(0xFF8E949A),
+    outline: Color(0xFF9AA3B2),
     outlineVariant: rule,
   ),
   scaffoldBackgroundColor: paper,
   dividerTheme: const DividerThemeData(color: rule, thickness: 1, space: 1),
   appBarTheme: AppBarTheme(
-    backgroundColor: hiVis,
-    foregroundColor: ink,
+    backgroundColor: brand,
+    foregroundColor: Colors.white,
     elevation: 0,
     scrolledUnderElevation: 0,
-    systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
-    titleTextStyle: _heading.copyWith(fontSize: 22),
+    surfaceTintColor: Colors.transparent,
+    systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent),
+    titleTextStyle: _heading.copyWith(fontSize: 20, color: Colors.white),
   ),
-  drawerTheme: const DrawerThemeData(backgroundColor: ink, shape: RoundedRectangleBorder()),
+  drawerTheme: const DrawerThemeData(backgroundColor: Colors.white, surfaceTintColor: Colors.transparent, shape: RoundedRectangleBorder()),
   tabBarTheme: TabBarThemeData(
-    labelColor: ink,
-    unselectedLabelColor: ink.withValues(alpha: 0.7),
-    indicatorColor: ink,
+    labelColor: Colors.white,
+    unselectedLabelColor: Colors.white.withValues(alpha: 0.75),
+    indicatorColor: action,
     dividerColor: Colors.transparent,
-    labelStyle: _heading.copyWith(fontSize: 16),
-    unselectedLabelStyle: _heading.copyWith(fontSize: 16),
+    labelStyle: _heading.copyWith(fontSize: 15),
+    unselectedLabelStyle: _heading.copyWith(fontSize: 15, fontWeight: FontWeight.w500),
   ),
   listTileTheme: ListTileThemeData(
     tileColor: Colors.white,
     iconColor: muted,
-    titleTextStyle: _heading.copyWith(fontSize: 18),
-    subtitleTextStyle: const TextStyle(fontFamily: _body, fontSize: 14, color: muted),
-    leadingAndTrailingTextStyle: const TextStyle(fontFamily: _body, fontSize: 15, color: ink),
+    titleTextStyle: _heading.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+    subtitleTextStyle: const TextStyle(fontFamily: headingFont, fontSize: 13.5, height: 1.35, color: muted),
+    leadingAndTrailingTextStyle: const TextStyle(fontFamily: headingFont, fontSize: 15, color: ink),
   ),
   filledButtonTheme: FilledButtonThemeData(
     style: FilledButton.styleFrom(
-      backgroundColor: ink,
-      foregroundColor: Colors.white,
+      backgroundColor: action,
+      foregroundColor: onAction,
       disabledBackgroundColor: rule,
       disabledForegroundColor: muted,
-      minimumSize: const Size.fromHeight(56),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      textStyle: _heading.copyWith(fontSize: 19),
+      minimumSize: const Size.fromHeight(54),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      textStyle: _heading.copyWith(fontSize: 17),
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
-      foregroundColor: ink,
-      backgroundColor: Colors.white,
+      foregroundColor: brand,
+      backgroundColor: brandSoft,
       minimumSize: const Size.fromHeight(48),
-      side: const BorderSide(color: ink, width: 1.5),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      textStyle: _heading.copyWith(fontSize: 17),
+      side: BorderSide.none,
+      shape: RoundedRectangleBorder(borderRadius: _corner12),
+      textStyle: _heading.copyWith(fontSize: 15.5, fontWeight: FontWeight.w600),
     ),
   ),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      foregroundColor: ink,
+      foregroundColor: brand,
       minimumSize: const Size(48, 48),
-      textStyle: const TextStyle(fontFamily: _body, fontSize: 15, fontWeight: FontWeight.w600, decoration: TextDecoration.underline),
+      textStyle: const TextStyle(fontFamily: headingFont, fontSize: 15, fontWeight: FontWeight.w600),
     ),
   ),
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
     fillColor: Colors.white,
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+    border: OutlineInputBorder(borderRadius: _corner12, borderSide: const BorderSide(color: rule)),
+    enabledBorder: OutlineInputBorder(borderRadius: _corner12, borderSide: const BorderSide(color: Color(0xFFCBD2DE))),
+    focusedBorder: OutlineInputBorder(borderRadius: _corner12, borderSide: const BorderSide(color: brand, width: 2)),
   ),
   chipTheme: ChipThemeData(
     showCheckmark: false,
-    selectedColor: ink,
+    selectedColor: brand,
     backgroundColor: Colors.white,
-    side: const BorderSide(color: Color(0xFF8E949A)),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    side: const BorderSide(color: Color(0xFFCBD2DE)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
     labelStyle: TextStyle(
-      fontFamily: _body,
-      fontSize: 15,
+      fontFamily: headingFont,
+      fontSize: 14.5,
       fontWeight: FontWeight.w600,
       color: WidgetStateColor.resolveWith((states) => states.contains(WidgetState.selected) ? Colors.white : ink),
     ),
   ),
-  dialogTheme: DialogThemeData(titleTextStyle: _heading.copyWith(fontSize: 20)),
-  snackBarTheme: const SnackBarThemeData(backgroundColor: ink, contentTextStyle: TextStyle(fontFamily: _body, fontSize: 15, color: Colors.white)),
+  dialogTheme: DialogThemeData(
+    backgroundColor: Colors.white,
+    surfaceTintColor: Colors.transparent,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    titleTextStyle: _heading.copyWith(fontSize: 19),
+  ),
+  bottomSheetTheme: const BottomSheetThemeData(
+    backgroundColor: Colors.white,
+    surfaceTintColor: Colors.transparent,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(22))),
+  ),
+  snackBarTheme: const SnackBarThemeData(backgroundColor: ink, contentTextStyle: TextStyle(fontFamily: headingFont, fontSize: 15, color: Colors.white)),
   textTheme: const TextTheme(
-    bodyMedium: TextStyle(fontSize: 16),
-    bodyLarge: TextStyle(fontSize: 17),
-    titleMedium: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+    bodyMedium: TextStyle(fontSize: 15),
+    bodyLarge: TextStyle(fontSize: 16),
+    titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
   ),
 );
+
+/// The coloured block under the header that holds a screen's date and main figures.
+class TopBand extends StatelessWidget {
+  const TopBand({required this.child, this.padding = const EdgeInsets.fromLTRB(12, 0, 12, 16), super.key});
+
+  final Widget child;
+  final EdgeInsets padding;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(color: brand, borderRadius: BorderRadius.vertical(bottom: Radius.circular(22))),
+      child: Padding(padding: padding, child: child),
+    );
+  }
+}
+
+/// A text action on the coloured header.
+class BarButton extends StatelessWidget {
+  const BarButton(this.label, {required this.onPressed, super.key});
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      style: TextButton.styleFrom(foregroundColor: Colors.white),
+      onPressed: onPressed,
+      child: Text(label),
+    );
+  }
+}
 
 /// The screen's one main action, at thumb height (UX-03).
 class MainActionBar extends StatelessWidget {
@@ -133,7 +221,7 @@ class MainActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(color: Colors.white, border: Border(top: BorderSide(color: rule))),
+      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Color(0x1417213A), blurRadius: 12, offset: Offset(0, -2))]),
       child: SafeArea(
         top: false,
         child: Padding(

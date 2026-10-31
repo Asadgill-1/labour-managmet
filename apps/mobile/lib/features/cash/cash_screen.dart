@@ -45,8 +45,9 @@ class _CashScreenState extends ConsumerState<CashScreen> {
           alignment: Alignment.centerLeft,
           child: Text('${_date == today ? l10n.tabToday : dayName(l10n, _date)}, ${showDate(_date)}'),
         ),
+        bottom: const SubTabs(Section.cash),
         actions: [
-          if (_date != today) TextButton(onPressed: () => setState(() => _date = today), child: Text(l10n.tabToday)),
+          if (_date != today) BarButton(l10n.tabToday, onPressed: () => setState(() => _date = today)),
           IconButton(tooltip: l10n.pickDate, icon: const Icon(Icons.calendar_month), onPressed: _chooseDate),
         ],
       ),
@@ -56,36 +57,27 @@ class _CashScreenState extends ConsumerState<CashScreen> {
       ),
       body: ListView(
         children: [
-          ColoredBox(
-            color: hiVis,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 14),
-              child: Column(
-                children: [
-                  DayStrip(selected: _date, onPick: (date) => setState(() => _date = date)),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: BandFigure(formatAed(totals.inFils), l10n.moneyIn, size: 19)),
-                        const SizedBox(width: 8),
-                        Expanded(child: BandFigure(formatAed(totals.outFils), l10n.moneyOut, size: 19)),
-                        const SizedBox(width: 8),
-                        Expanded(child: BandFigure(formatAed(totals.inFils - totals.outFils), l10n.cashDifference, size: 19)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+          TopBand(
+            child: Column(
+              children: [
+                DayStrip(selected: _date, onPick: (date) => setState(() => _date = date)),
+                const SizedBox(height: 12),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: BandFigure(formatAed(totals.inFils), l10n.moneyIn, size: 18)),
+                    const SizedBox(width: 8),
+                    Expanded(child: BandFigure(formatAed(totals.outFils), l10n.moneyOut, size: 18)),
+                    const SizedBox(width: 8),
+                    Expanded(child: BandFigure(formatAed(totals.inFils - totals.outFils), l10n.cashDifference, size: 18)),
+                  ],
+                ),
+              ],
             ),
           ),
+          const SizedBox(height: 8),
           if (rows.isEmpty) EmptyState(icon: Icons.receipt_long, text: l10n.cashEmpty),
-          for (final entry in rows) ...[
-            CashEntryRow(entry, undone: undone.contains(entry.id)),
-            const Divider(),
-          ],
+          for (final entry in rows) CashEntryRow(entry, undone: undone.contains(entry.id)),
         ],
       ),
     );

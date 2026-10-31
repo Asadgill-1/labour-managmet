@@ -1135,6 +1135,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String approveMissingRate(int approved, int left) {
     return '$approved approved. $left have no rate: add it under Rates, then approve again.';
   }
+
+  @override
+  String get mainAttendance => 'Attendance';
+
+  @override
+  String get mainVisa => 'Visa';
+
+  @override
+  String get mainMoney => 'Money';
+
+  @override
+  String get tabVisa => 'Visa money';
+
+  @override
+  String get groupSoon => 'Coming soon';
+
+  @override
+  String get regAttendance => 'Attendance register';
+
+  @override
+  String get regWorkers => 'Worker register';
+
+  @override
+  String get regVisa => 'Visa register';
+
+  @override
+  String get regCompanies => 'Company register';
+
+  @override
+  String get regPayroll => 'Pay register';
+
+  @override
+  String get regAdvance => 'Advance register';
+
+  @override
+  String get regCash => 'Money register';
+
+  @override
+  String get regRooms => 'Room register';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -2267,4 +2306,43 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String approveMissingRate(int approved, int left) {
     return '$approved manzoor. $left ka rate nahin: Rates mein likh kar dobara manzoor karein.';
   }
+
+  @override
+  String get mainAttendance => 'Hazri';
+
+  @override
+  String get mainVisa => 'Visa';
+
+  @override
+  String get mainMoney => 'Hisaab';
+
+  @override
+  String get tabVisa => 'Visa ka paisa';
+
+  @override
+  String get groupSoon => 'Jald aa raha hai';
+
+  @override
+  String get regAttendance => 'Hazri register';
+
+  @override
+  String get regWorkers => 'Mazdoor register';
+
+  @override
+  String get regVisa => 'Visa register';
+
+  @override
+  String get regCompanies => 'Company register';
+
+  @override
+  String get regPayroll => 'Tankhwah register';
+
+  @override
+  String get regAdvance => 'Advance register';
+
+  @override
+  String get regCash => 'Hisaab register';
+
+  @override
+  String get regRooms => 'Room register';
 }

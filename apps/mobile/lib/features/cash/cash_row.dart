@@ -76,11 +76,11 @@ class CashEntryRow extends ConsumerWidget {
     final title = onWorkerScreen ? what : (worker?.name ?? room?.name ?? client?.name ?? categoryLabel(l10n, entry.category));
     final signIsPlus = moneyIn != reversal;
     final amount = '${signIsPlus ? '+' : '-'}${formatAed(entry.amountFils)}';
-    return GrowingRow(
+    return RowCard(
       child: ListTile(
         leading: reversal || undone
             ? const RowTag.icon(Icons.undo, fill: paper, color: muted)
-            : (moneyIn ? const RowTag.icon(Icons.south_west, fill: settledSoft, color: settled) : const RowTag.icon(Icons.north_east, fill: hiVisSoft, color: ink)),
+            : (moneyIn ? const RowTag.icon(Icons.south_west, fill: settledSoft, color: settled) : const RowTag.icon(Icons.north_east, fill: warnSoft, color: warn)),
         title: Text(title),
         subtitle: Text(
           [
@@ -97,7 +97,7 @@ class CashEntryRow extends ConsumerWidget {
           amount,
           style: undone
               ? amountStyle.copyWith(color: muted, decoration: TextDecoration.lineThrough)
-              : amountStyle.copyWith(color: reversal ? muted : (moneyIn ? settled : ink)),
+              : amountStyle.copyWith(color: reversal ? muted : (moneyIn ? settled : due)),
         ),
         onTap: reversal || undone ? null : () => _undo(context, ref),
       ),

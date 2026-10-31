@@ -345,5 +345,18 @@
   "roomChargesApplied": "{count} mazdoor par room charge lag gaya",
   "roomChargesPartly": "{added} mazdoor par room charge lag gaya. {left} reh gaye: un ki screen par room charge ka note likhein.",
   "payKindRoom": "Room charge",
-  "approveMissingRate": "{approved} manzoor. {left} ka rate nahin: Rates mein likh kar dobara manzoor karein."
+  "approveMissingRate": "{approved} manzoor. {left} ka rate nahin: Rates mein likh kar dobara manzoor karein.",
+  "mainAttendance": "Hazri",
+  "mainVisa": "Visa",
+  "mainMoney": "Hisaab",
+  "tabVisa": "Visa ka paisa",
+  "groupSoon": "Jald aa raha hai",
+  "regAttendance": "Hazri register",
+  "regWorkers": "Mazdoor register",
+  "regVisa": "Visa register",
+  "regCompanies": "Company register",
+  "regPayroll": "Tankhwah register",
+  "regAdvance": "Advance register",
+  "regCash": "Hisaab register",
+  "regRooms": "Room register"
 }

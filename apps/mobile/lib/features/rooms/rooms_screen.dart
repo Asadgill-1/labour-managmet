@@ -45,12 +45,8 @@ class _RoomsScreenState extends ConsumerState<RoomsScreen> {
       appBar: AppBar(
         leading: const MenuButton(),
         title: Text(l10n.tabRooms),
-        actions: [
-          TextButton(
-            onPressed: () => setState(() => _showArchived = !_showArchived),
-            child: Text(_showArchived ? l10n.showActive : l10n.showArchived),
-          ),
-        ],
+        bottom: const SubTabs(Section.rooms),
+        actions: [BarButton(_showArchived ? l10n.showActive : l10n.showArchived, onPressed: () => setState(() => _showArchived = !_showArchived))],
       ),
       bottomNavigationBar: MainActionBar(
         label: l10n.addRoom,
@@ -58,36 +54,30 @@ class _RoomsScreenState extends ConsumerState<RoomsScreen> {
       ),
       body: ListView(
         children: [
-          ColoredBox(
-            color: hiVis,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 14),
-              child: Column(
-                children: [
-                  MonthSwitcher(month: _month, onChanged: (m) => setState(() => _month = m)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: BandFigure(formatAed(all.receivedFils), l10n.rentIn, size: 19)),
-                        const SizedBox(width: 8),
-                        Expanded(child: BandFigure(formatAed(all.paidFils), l10n.rentOut, size: 19)),
-                        const SizedBox(width: 8),
-                        Expanded(child: BandFigure(formatAed(all.netFils.abs()), all.netFils < 0 ? l10n.roomLossLabel : l10n.roomProfitLabel, size: 19)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+          TopBand(
+            child: Column(
+              children: [
+                MonthSwitcher(month: _month, onChanged: (m) => setState(() => _month = m)),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: BandFigure(formatAed(all.receivedFils), l10n.rentIn, size: 18)),
+                    const SizedBox(width: 8),
+                    Expanded(child: BandFigure(formatAed(all.paidFils), l10n.rentOut, size: 18)),
+                    const SizedBox(width: 8),
+                    Expanded(child: BandFigure(formatAed(all.netFils.abs()), all.netFils < 0 ? l10n.roomLossLabel : l10n.roomProfitLabel, size: 18)),
+                  ],
+                ),
+              ],
             ),
           ),
+          const SizedBox(height: 8),
           if (rooms.isEmpty) EmptyState(icon: Icons.bed, text: l10n.roomsEmpty),
-          for (final room in rooms) ...[
+          for (final room in rooms)
             Builder(
               builder: (context) {
                 final result = roomResult(entries.where((e) => e.roomId == room.id).map(cashLine), deductedFils: deducted(charges.where((i) => i.roomId == room.id)));
-                return GrowingRow(
+                return RowCard(
                   child: ListTile(
                     leading: RowTag(initial(room.name)),
                     title: Text(room.name),
@@ -107,8 +97,6 @@ class _RoomsScreenState extends ConsumerState<RoomsScreen> {
                 );
               },
             ),
-            const Divider(),
-          ],
         ],
       ),
     );

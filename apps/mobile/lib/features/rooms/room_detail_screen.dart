@@ -52,20 +52,17 @@ class RoomDetailScreen extends ConsumerWidget {
       ),
       body: ListView(
         children: [
-          ColoredBox(
-            color: hiVis,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 14),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: BandFigure(formatAed(result.receivedFils), l10n.rentIn, size: 19)),
-                  const SizedBox(width: 8),
-                  Expanded(child: BandFigure(formatAed(result.paidFils), l10n.rentOut, size: 19)),
-                  const SizedBox(width: 8),
-                  Expanded(child: BandFigure(formatAed(result.netFils.abs()), result.netFils < 0 ? l10n.roomLossLabel : l10n.roomProfitLabel, size: 19)),
-                ],
-              ),
+          TopBand(
+            padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: BandFigure(formatAed(result.receivedFils), l10n.rentIn, size: 18)),
+                const SizedBox(width: 8),
+                Expanded(child: BandFigure(formatAed(result.paidFils), l10n.rentOut, size: 18)),
+                const SizedBox(width: 8),
+                Expanded(child: BandFigure(formatAed(result.netFils.abs()), result.netFils < 0 ? l10n.roomLossLabel : l10n.roomProfitLabel, size: 18)),
+              ],
             ),
           ),
           SectionHeader(l10n.residentsHeading),
@@ -82,10 +79,7 @@ class RoomDetailScreen extends ConsumerWidget {
             const Divider(),
           ],
           if (rows.isEmpty) ListTile(subtitle: Text(l10n.cashEmpty)),
-          for (final entry in rows) ...[
-            CashEntryRow(entry, undone: undone.contains(entry.id), showDate: true),
-            const Divider(),
-          ],
+          for (final entry in rows) CashEntryRow(entry, undone: undone.contains(entry.id), showDate: true),
         ],
       ),
     );

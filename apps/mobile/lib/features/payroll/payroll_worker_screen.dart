@@ -69,21 +69,20 @@ class PayrollWorkerScreen extends ConsumerWidget {
           : null,
       body: ListView(
         children: [
-          ColoredBox(
-            color: hiVis,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 14),
+          TopBand(
+            padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
+            child: IntrinsicHeight(
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
                     flex: 2,
                     child: closing < 0
-                        ? BandFigure(formatAed(-closing), l10n.payrollOverpaid)
-                        : BandFigure(formatAed(closing), p.posted ? l10n.payrollClosing : l10n.payrollToPay),
+                        ? BandFigure(formatAed(-closing), l10n.payrollOverpaid, size: 24)
+                        : BandFigure(formatAed(closing), p.posted ? l10n.payrollClosing : l10n.payrollToPay, size: 24),
                   ),
                   const SizedBox(width: 8),
-                  Expanded(child: BandFigure(showMonth(month), p.posted ? l10n.payrollStatePosted : l10n.payrollStateDraft, size: 19)),
+                  Expanded(child: BandFigure(showMonth(month), p.posted ? l10n.payrollStatePosted : l10n.payrollStateDraft, size: 16)),
                 ],
               ),
             ),
@@ -91,7 +90,7 @@ class PayrollWorkerScreen extends ConsumerWidget {
           for (final issue in f.issues)
             ListTile(
               leading: const Icon(Icons.warning_amber, color: due),
-              title: Text(issueText(l10n, issue, p), style: const TextStyle(fontFamily: 'Roboto', fontSize: 15, fontWeight: FontWeight.w600, color: due)),
+              title: Text(issueText(l10n, issue, p), style: const TextStyle(fontFamily: headingFont, fontSize: 15, fontWeight: FontWeight.w600, color: due)),
             ),
           SectionHeader(l10n.payrollEarnedHeading),
           const Divider(),
@@ -189,7 +188,7 @@ class _ItemRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final kind = PayItemKind.values.byName(item.kind);
     final plus = kind == PayItemKind.allowance;
-    return GrowingRow(
+    return RowCard(
       child: ListTile(
         title: Text(item.reason),
         subtitle: item.authorizedBy == null && item.note == null ? null : Text([?item.authorizedBy, ?item.note].join(', ')),

@@ -61,7 +61,7 @@ class BalancesScreen extends ConsumerWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(leading: const MenuButton(), title: Text(l10n.openingHeading)),
+      appBar: AppBar(leading: const MenuButton(), title: Text(l10n.openingHeading), bottom: const SubTabs(Section.balances)),
       bottomNavigationBar: MainActionBar(label: l10n.addBalance, onPressed: add),
       body: rows.isEmpty
           ? EmptyState(icon: Icons.history, text: l10n.balancesEmpty)

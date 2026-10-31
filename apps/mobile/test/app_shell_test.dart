@@ -18,12 +18,22 @@ void main() {
 
     await tester.tap(find.text('Menu'));
     await settle(tester);
-    for (final section in ['Aaj', 'Rozana hisaab', 'Companies', 'Sites', 'Labour', 'Mazdoor group', 'Rooms', 'Rates', 'Pichla baqaya', 'Tankhwah', 'Apni company', 'Settings']) {
-      expect(find.text(section), findsWidgets, reason: section);
+    // Main tabs show first. The open one is the current section's, and the rest open on a tap (D-036).
+    for (final main in ['Hazri', 'Labour', 'Visa', 'Companies', 'Tankhwah', 'Hisaab', 'Rooms', 'Apni company', 'Settings']) {
+      expect(find.text(main), findsWidgets, reason: main);
     }
+    expect(find.text('Aaj').hitTestable(), findsOneWidget);
+    expect(find.text('Pichla baqaya'), findsNothing);
     expect(Directionality.of(tester.element(find.text('Tankhwah'))), TextDirection.ltr);
+    for (final (main, sub) in [('Labour', 'Mazdoor register'), ('Companies', 'Rates'), ('Tankhwah', 'Advance register'), ('Hisaab', 'Pichla baqaya'), ('Rooms', 'Room register')]) {
+      await tester.tap(find.text(main).hitTestable().first);
+      await settle(tester);
+      expect(find.text(sub).hitTestable(), findsOneWidget, reason: sub);
+    }
 
     // Not built yet, so it says so and goes nowhere (AI-07).
+    await tester.tap(find.text('Jald aa raha hai'));
+    await settle(tester);
     expect(find.text('Jald'), findsWidgets);
     await tester.tap(find.text('Timesheet'));
     await settle(tester);

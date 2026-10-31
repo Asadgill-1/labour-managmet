@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/register_screen.dart';
+import '../../app/side_panel.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import 'site_form_screen.dart';
@@ -19,6 +20,7 @@ class SitesScreen extends ConsumerWidget {
     final names = {for (final c in clients) c.id: c.name};
     void open(Widget screen) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
     return RegisterScreen(
+      section: Section.sites,
       title: l10n.sitesHeading,
       emptyIcon: Icons.location_on,
       emptyText: l10n.sitesEmpty,

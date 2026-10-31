@@ -568,5 +568,18 @@
         "type": "int"
       }
     }
-  }
+  },
+  "mainAttendance": "Attendance",
+  "mainVisa": "Visa",
+  "mainMoney": "Money",
+  "tabVisa": "Visa money",
+  "groupSoon": "Coming soon",
+  "regAttendance": "Attendance register",
+  "regWorkers": "Worker register",
+  "regVisa": "Visa register",
+  "regCompanies": "Company register",
+  "regPayroll": "Pay register",
+  "regAdvance": "Advance register",
+  "regCash": "Money register",
+  "regRooms": "Room register"
 }

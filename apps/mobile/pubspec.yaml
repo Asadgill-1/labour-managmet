@@ -13,6 +13,7 @@ environment:
   sdk: ^3.13.5
 
 dependencies:
+  archive: ^4.5.2
   domain:
     path: ../../packages/domain
   drift: ^2.35.3
@@ -25,6 +26,8 @@ dependencies:
   go_router: ^18.1.2
   intl: ^0.20.3
   path_provider: ^2.1.6
+  pdf: ^3.13.1
+  printing: ^5.15.1
 
 dev_dependencies:
   flutter_test:
@@ -38,8 +41,14 @@ flutter:
   uses-material-design: true
   assets:
     - assets/fonts/LICENSE.txt
+    - assets/fonts/Roboto-Regular.ttf
+    - assets/fonts/Roboto-Bold.ttf
   fonts:
-    - family: RobotoCondensed
+    - family: Roboto
       fonts:
-        - asset: assets/fonts/RobotoCondensed-Bold.ttf
+        - asset: assets/fonts/Roboto-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Roboto-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto-Bold.ttf
           weight: 700

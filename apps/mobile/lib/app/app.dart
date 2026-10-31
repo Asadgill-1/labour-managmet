@@ -11,6 +11,7 @@ import '../features/more/profile_form_screen.dart';
 import '../features/more/settings_screen.dart';
 import '../features/payroll/payroll_screen.dart';
 import '../features/rates/balances_screen.dart';
+import '../features/registers/ledger_screen.dart';
 import '../features/rates/rates_screen.dart';
 import '../features/rooms/rooms_screen.dart';
 import '../features/today/today_screen.dart';
@@ -32,6 +33,15 @@ Widget _screen(Section section) => switch (section) {
   Section.balances => const BalancesScreen(),
   Section.payroll => const PayrollScreen(),
   Section.settings => const SettingsScreen(),
+  Section.visa ||
+  Section.attendanceRegister ||
+  Section.workerRegister ||
+  Section.visaRegister ||
+  Section.companyRegister ||
+  Section.payrollRegister ||
+  Section.advanceRegister ||
+  Section.cashRegister ||
+  Section.roomRegister => LedgerScreen(section),
 };
 
 final _routerProvider = Provider(

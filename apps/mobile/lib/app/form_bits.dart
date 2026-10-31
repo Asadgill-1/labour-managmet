@@ -188,7 +188,7 @@ Future<String?> askReason(BuildContext context, {required String title, required
   return yes == true ? reason.text.trim() : null;
 }
 
-/// The month and arrows to change it, on a hi-vis band.
+/// The month and arrows to change it, on the coloured band.
 class MonthSwitcher extends StatelessWidget {
   const MonthSwitcher({required this.month, required this.onChanged, super.key});
 
@@ -202,9 +202,9 @@ class MonthSwitcher extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        IconButton(tooltip: l10n.previousMonth, color: ink, icon: const Icon(Icons.chevron_left), onPressed: () => onChanged(addMonths(month, -1))),
-        Text(showMonth(month), style: sectionTitleStyle),
-        IconButton(tooltip: l10n.nextMonth, color: ink, icon: const Icon(Icons.chevron_right), onPressed: () => onChanged(addMonths(month, 1))),
+        IconButton(tooltip: l10n.previousMonth, color: Colors.white, icon: const Icon(Icons.chevron_left), onPressed: () => onChanged(addMonths(month, -1))),
+        Text(showMonth(month), style: sectionTitleStyle.copyWith(color: Colors.white)),
+        IconButton(tooltip: l10n.nextMonth, color: Colors.white, icon: const Icon(Icons.chevron_right), onPressed: () => onChanged(addMonths(month, 1))),
       ],
     );
   }
@@ -233,41 +233,71 @@ class SearchBox extends StatelessWidget {
   }
 }
 
-/// A row whose text can change after it first shows, because its data arrives a moment later. A tile's white
-/// background is painted on the screen behind the list, which otherwise keeps the old height until something scrolls.
-class GrowingRow extends StatelessWidget {
-  const GrowingRow({required this.child, super.key});
+/// One row of a list, as its own white card.
+class RowCard extends StatelessWidget {
+  const RowCard({required this.child, super.key});
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => SizeChangedLayoutNotifier(child: child);
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [BoxShadow(color: Color(0x0F17213A), blurRadius: 10, offset: Offset(0, 2))],
+        ),
+        child: Material(
+          type: MaterialType.transparency,
+          borderRadius: BorderRadius.circular(16),
+          clipBehavior: Clip.antiAlias,
+          child: ListTileTheme.merge(tileColor: Colors.transparent, child: child),
+        ),
+      ),
+    );
+  }
 }
+
+/// Soft and strong colour pairs, so a list of names is easy to scan. The same name always gets the same colours.
+const _tagColors = [
+  (Color(0xFFE3ECFF), Color(0xFF2450B8)),
+  (Color(0xFFDFF5EF), Color(0xFF0B7A66)),
+  (Color(0xFFFFE8DA), Color(0xFFC2500F)),
+  (Color(0xFFF0E6FF), Color(0xFF6B3FC4)),
+  (Color(0xFFFFE4EC), Color(0xFFC2255C)),
+  (Color(0xFFFFF3CF), Color(0xFF8A6000)),
+  (Color(0xFFDDF3FA), Color(0xFF0B7196)),
+  (Color(0xFFE6F4DC), Color(0xFF3F7D1D)),
+];
 
 /// A name's first letter, for a [RowTag].
 String initial(String name) => name.trim().isEmpty ? '?' : name.trim()[0].toUpperCase();
 
-/// Square mark at the start of a row, like the code column of a paper register.
+/// Rounded mark at the start of a row, tinted by its text.
 class RowTag extends StatelessWidget {
-  const RowTag(String this.text, {this.fill = paper, this.color = ink, super.key}) : icon = null;
-  const RowTag.icon(IconData this.icon, {required this.fill, required this.color, super.key}) : text = null;
+  const RowTag(String this.text, {this.fill, this.color, super.key}) : icon = null;
+  const RowTag.icon(IconData this.icon, {required Color this.fill, required Color this.color, super.key}) : text = null;
 
   final String? text;
   final IconData? icon;
-  final Color fill;
-  final Color color;
+  final Color? fill;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
+    final tint = _tagColors[(text ?? '').codeUnits.fold(0, (total, c) => total + c) % _tagColors.length];
+    final foreground = color ?? tint.$2;
     return Container(
-      width: 48,
-      height: 48,
-      padding: const EdgeInsets.all(4),
+      width: 46,
+      height: 46,
+      padding: const EdgeInsets.all(5),
       alignment: Alignment.center,
-      decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: fill ?? tint.$1, borderRadius: BorderRadius.circular(14)),
       child: icon != null
-          ? Icon(icon, color: color)
-          : FittedBox(fit: BoxFit.scaleDown, child: Text(text!, style: amountStyle.copyWith(fontSize: 17, color: color))),
+          ? Icon(icon, color: foreground)
+          : FittedBox(fit: BoxFit.scaleDown, child: Text(text!, style: amountStyle.copyWith(fontSize: 17, color: foreground))),
     );
   }
 }
@@ -303,7 +333,7 @@ class InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(label, style: const TextStyle(fontFamily: 'Roboto', fontSize: 15, fontWeight: FontWeight.w400, color: muted)),
+      title: Text(label, style: const TextStyle(fontFamily: headingFont, fontSize: 15, fontWeight: FontWeight.w400, color: muted)),
       trailing: RowValue(value),
       onTap: onTap,
     );
@@ -325,7 +355,12 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 56, color: const Color(0xFFA9AEB1)),
+            Container(
+              width: 84,
+              height: 84,
+              decoration: const BoxDecoration(color: brandSoft, shape: BoxShape.circle),
+              child: Icon(icon, size: 40, color: brand),
+            ),
             const SizedBox(height: 12),
             Text(text, textAlign: TextAlign.center, style: const TextStyle(color: muted)),
           ],
@@ -335,9 +370,9 @@ class EmptyState extends StatelessWidget {
   }
 }
 
-/// One big figure with its label, for the yellow band at the top of a screen.
+/// One figure with its label, as a tile on the coloured band at the top of a screen.
 class BandFigure extends StatelessWidget {
-  const BandFigure(this.value, this.label, {this.size = 34, super.key});
+  const BandFigure(this.value, this.label, {this.size = 28, super.key});
 
   final String value;
   final String label;
@@ -345,20 +380,29 @@ class BandFigure extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Fixed height, so a long amount that shrinks doesn't lift its label out of line with the others.
-        SizedBox(
-          height: MediaQuery.textScalerOf(context).scale(size * 1.2),
-          child: FittedBox(
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.13), borderRadius: BorderRadius.circular(14)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Fixed height, so a long amount that shrinks doesn't lift its label out of line with the others.
+          SizedBox(
+            height: MediaQuery.textScalerOf(context).scale(size * 1.2),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(value, style: amountStyle.copyWith(fontSize: size, height: 1.15, color: Colors.white)),
+            ),
+          ),
+          const SizedBox(height: 2),
+          FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(value, style: amountStyle.copyWith(fontSize: size, height: 1.15)),
+            child: Text(label, style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.85))),
           ),
-        ),
-        Text(label, style: const TextStyle(fontSize: 13, color: ink)),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -512,7 +556,7 @@ class DayStrip extends StatelessWidget {
             child: Builder(
               builder: (context) {
                 final date = addDays(selected, offset);
-                final color = offset == 0 ? Colors.white : ink;
+                final color = offset == 0 ? brand : Colors.white;
                 return Semantics(
                   button: true,
                   selected: offset == 0,
@@ -523,7 +567,8 @@ class DayStrip extends StatelessWidget {
                     onTap: () => onPick(date),
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 6),
-                      decoration: BoxDecoration(color: offset == 0 ? ink : null, borderRadius: BorderRadius.circular(8)),
+                      margin: const EdgeInsets.symmetric(horizontal: 2),
+                      decoration: BoxDecoration(color: offset == 0 ? Colors.white : null, borderRadius: BorderRadius.circular(12)),
                       child: Column(
                         children: [
                           // Fixed height, so a long day name that shrinks doesn't lift its number out of line.
@@ -534,7 +579,7 @@ class DayStrip extends StatelessWidget {
                               child: Text(dayName(l10n, date), style: TextStyle(fontSize: 12, color: color)),
                             ),
                           ),
-                          Text(date.substring(8), style: amountStyle.copyWith(fontSize: 20, color: color)),
+                          Text(date.substring(8), style: amountStyle.copyWith(fontSize: 18, color: color)),
                         ],
                       ),
                     ),

@@ -95,36 +95,30 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
     final roomCharges = rows.where((p) => p.needsRoomCharge).length;
     final earned = rows.fold(0, (sum, p) => sum + p.figures.grossFils);
     final cut = rows.fold(0, (sum, p) => sum + p.figures.deductionsFils + p.figures.recoveryFils);
-    final due = rows.fold(0, (sum, p) => sum + (p.closingFils > 0 ? p.closingFils : 0));
+    final toPay = rows.fold(0, (sum, p) => sum + (p.closingFils > 0 ? p.closingFils : 0));
     return Scaffold(
-      appBar: AppBar(leading: const MenuButton(), title: Text(l10n.menuPayroll)),
+      appBar: AppBar(leading: const MenuButton(), title: Text(l10n.menuPayroll), bottom: const SubTabs(Section.payroll)),
       bottomNavigationBar: MainActionBar(label: l10n.payrollPost(ready.length), onPressed: ready.isEmpty ? null : () => _post(ready)),
       body: ListView(
         children: [
-          ColoredBox(
-            color: hiVis,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 14),
-              child: Column(
-                children: [
-                  MonthSwitcher(month: _month, onChanged: (m) => setState(() => _month = m)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: BandFigure(formatAed(earned), l10n.payrollEarned, size: 19)),
-                        const SizedBox(width: 8),
-                        Expanded(child: BandFigure(formatAed(cut), l10n.payrollCut, size: 19)),
-                        const SizedBox(width: 8),
-                        Expanded(child: BandFigure(formatAed(due), l10n.payrollToPay, size: 19)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+          TopBand(
+            child: Column(
+              children: [
+                MonthSwitcher(month: _month, onChanged: (m) => setState(() => _month = m)),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: BandFigure(formatAed(earned), l10n.payrollEarned, size: 18)),
+                    const SizedBox(width: 8),
+                    Expanded(child: BandFigure(formatAed(cut), l10n.payrollCut, size: 18)),
+                    const SizedBox(width: 8),
+                    Expanded(child: BandFigure(formatAed(toPay), l10n.payrollToPay, size: 18)),
+                  ],
+                ),
+              ],
             ),
           ),
+          const SizedBox(height: 8),
           if (unapproved > 0 || roomCharges > 0)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
@@ -138,10 +132,7 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
               ),
             ),
           if (rows.isEmpty) EmptyState(icon: Icons.payments, text: l10n.payrollEmpty),
-          for (final p in rows) ...[
-            _PayrollRow(p, month: _month),
-            const Divider(),
-          ],
+          for (final p in rows) _PayrollRow(p, month: _month),
         ],
       ),
     );
@@ -161,7 +152,7 @@ class _PayrollRow extends StatelessWidget {
     final (state, color) = p.posted
         ? (l10n.payrollStatePosted, settled)
         : (issue != null ? (issueText(l10n, issue, p), due) : (l10n.payrollStateReady, muted));
-    return GrowingRow(
+    return RowCard(
       child: ListTile(
         leading: RowTag(initial(p.worker.name)),
         title: Text(p.worker.name),
@@ -169,7 +160,7 @@ class _PayrollRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(l10n.payrollSplit(formatAed(p.figures.grossFils), formatAed(p.figures.deductionsFils + p.figures.recoveryFils))),
-            Text(state, style: TextStyle(fontFamily: 'Roboto', fontSize: 14, fontWeight: FontWeight.w600, color: color)),
+            Text(state, style: TextStyle(fontFamily: headingFont, fontSize: 14, fontWeight: FontWeight.w600, color: color)),
           ],
         ),
         trailing: RowValue(formatAed(p.closingFils > 0 ? p.closingFils : 0)),

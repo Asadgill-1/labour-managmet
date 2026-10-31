@@ -96,68 +96,69 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
           alignment: Alignment.centerLeft,
           child: Text('${_date == today ? l10n.tabToday : dayName(l10n, _date)}, ${showDate(_date)}'),
         ),
+        bottom: const SubTabs(Section.today),
         actions: [
-          if (_date != today) TextButton(onPressed: () => setState(() => _date = today), child: Text(l10n.tabToday)),
+          if (_date != today) BarButton(l10n.tabToday, onPressed: () => setState(() => _date = today)),
           IconButton(tooltip: l10n.pickDate, icon: const Icon(Icons.calendar_month), onPressed: _chooseDate),
         ],
       ),
       bottomNavigationBar: MainActionBar(label: l10n.markAttendance, onPressed: _markAttendance),
       body: ListView(
         children: [
-          ColoredBox(
-            color: hiVis,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 14),
-              child: Column(
-                children: [
-                  DayStrip(selected: _date, onPick: (date) => setState(() => _date = date)),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Semantics(
-                      label: l10n.countsLine(counts.uniqueWorkers, counts.shifts, counts.workerDays),
-                      excludeSemantics: true,
-                      child: Row(
-                        children: [
-                          Expanded(child: BandFigure('${counts.uniqueWorkers}', l10n.countWorkers)),
-                          Expanded(child: BandFigure('${counts.shifts}', l10n.countShifts)),
-                          Expanded(child: BandFigure('${counts.workerDays}', l10n.countWorkerDays)),
-                        ],
-                      ),
-                    ),
+          TopBand(
+            child: Column(
+              children: [
+                DayStrip(selected: _date, onPick: (date) => setState(() => _date = date)),
+                const SizedBox(height: 12),
+                Semantics(
+                  label: l10n.countsLine(counts.uniqueWorkers, counts.shifts, counts.workerDays),
+                  excludeSemantics: true,
+                  child: Row(
+                    children: [
+                      Expanded(child: BandFigure('${counts.uniqueWorkers}', l10n.countWorkers)),
+                      const SizedBox(width: 8),
+                      Expanded(child: BandFigure('${counts.shifts}', l10n.countShifts)),
+                      const SizedBox(width: 8),
+                      Expanded(child: BandFigure('${counts.workerDays}', l10n.countWorkerDays)),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          if (missing.isNotEmpty) ...[
-            ListTile(
-              tileColor: hiVisSoft,
-              leading: const Icon(Icons.warning_amber, color: ink),
-              title: Text(
-                l10n.missingWorkers(missing.length, missing.take(5).map((w) => w.name).join(', ')),
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: ink),
+          const SizedBox(height: 8),
+          if (missing.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+              child: Material(
+                color: warnSoft,
+                borderRadius: BorderRadius.circular(16),
+                clipBehavior: Clip.antiAlias,
+                child: ListTile(
+                  tileColor: Colors.transparent,
+                  leading: const Icon(Icons.warning_amber, color: warn),
+                  title: Text(
+                    l10n.missingWorkers(missing.length, missing.take(5).map((w) => w.name).join(', ')),
+                    style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: warn),
+                  ),
+                  trailing: const Icon(Icons.chevron_right, color: warn),
+                  onTap: _markAttendance,
+                ),
               ),
-              trailing: const Icon(Icons.chevron_right, color: ink),
-              onTap: _markAttendance,
             ),
-            const Divider(),
-          ],
           if (pending.isNotEmpty)
             Padding(
               padding: const EdgeInsets.all(16),
               child: OutlinedButton(onPressed: () => _approve(pending), child: Text(l10n.approveAll(pending.length))),
             ),
           if (entries.isEmpty) EmptyState(icon: Icons.assignment_outlined, text: l10n.todayEmpty),
-          for (final entry in entries) ...[
+          for (final entry in entries)
             _EntryRow(
               entry: entry,
               worker: workers[entry.workerId],
               site: sites[entry.siteId],
               onTap: () => _openEntry(entry, workers[entry.workerId]?.name ?? ''),
             ),
-            const Divider(),
-          ],
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -190,11 +191,11 @@ class _EntryRow extends StatelessWidget {
       if (entry.state == 'draft' && entry.clientRateFils == null) l10n.issueClientRate,
       if (entry.state == 'draft' && entry.workerRateFils == null) l10n.issueWorkerRate,
     ];
-    return GrowingRow(
+    return RowCard(
       child: ListTile(
         leading: switch (status) {
           AttendanceStatus.present => const RowTag.icon(Icons.check, fill: settledSoft, color: settled),
-          AttendanceStatus.half => const RowTag('½', fill: hiVisSoft),
+          AttendanceStatus.half => const RowTag('½', fill: warnSoft, color: warn),
           AttendanceStatus.absent => const RowTag.icon(Icons.close, fill: dueSoft, color: due),
         },
         title: Text(worker?.name ?? ''),
@@ -232,14 +233,14 @@ class _StateLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final (label, fill, color) = switch (state) {
-      'draft' => (l10n.stateDraft, hiVisSoft, ink),
-      'submitted' => (l10n.stateSubmitted, hiVisSoft, ink),
+      'draft' => (l10n.stateDraft, warnSoft, warn),
+      'submitted' => (l10n.stateSubmitted, warnSoft, warn),
       'approved' => (l10n.stateApproved, settledSoft, settled),
-      _ => (l10n.stateLinked, rule, ink),
+      _ => (l10n.stateLinked, brandSoft, brand),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(6)),
+      decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(20)),
       child: Text(label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: color)),
     );
   }

@@ -31,7 +31,10 @@ class RatesScreen extends ConsumerWidget {
         appBar: AppBar(
           leading: const MenuButton(),
           title: Text(l10n.tabRates),
-          bottom: TabBar(tabs: [Tab(text: l10n.billingContractsHeading), Tab(text: l10n.payContractsHeading)]),
+          bottom: SubTabs(
+            Section.rates,
+            below: TabBar(tabs: [Tab(text: l10n.billingContractsHeading), Tab(text: l10n.payContractsHeading)]),
+          ),
         ),
         body: TabBarView(
           children: [
@@ -106,9 +109,9 @@ class _RateTab extends StatelessWidget {
         Expanded(
           child: rows.isEmpty
               ? EmptyState(icon: Icons.sell, text: emptyText)
-              : ListView.separated(
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   itemCount: rows.length,
-                  separatorBuilder: (_, _) => const Divider(),
                   itemBuilder: (_, i) => rows[i],
                 ),
         ),
@@ -128,12 +131,14 @@ class _RateRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: RowTag(tag),
-      title: Text(name),
-      subtitle: Text(details.join(', ')),
-      trailing: const Icon(Icons.chevron_right),
-      onTap: onTap,
+    return RowCard(
+      child: ListTile(
+        leading: RowTag(tag),
+        title: Text(name),
+        subtitle: Text(details.join(', ')),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: onTap,
+      ),
     );
   }
 }

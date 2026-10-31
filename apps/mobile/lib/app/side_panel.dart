@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../features/more/profile_form_screen.dart';
 import '../l10n/app_localizations.dart';
@@ -7,7 +8,72 @@ import 'providers.dart';
 import 'theme.dart';
 
 /// Every main screen. The index is its branch in the router.
-enum Section { today, cash, companies, sites, labour, groups, rooms, rates, balances, payroll, settings }
+enum Section {
+  today,
+  groups,
+  attendanceRegister,
+  labour,
+  workerRegister,
+  visa,
+  visaRegister,
+  companies,
+  sites,
+  rates,
+  companyRegister,
+  payroll,
+  payrollRegister,
+  advanceRegister,
+  cash,
+  balances,
+  cashRegister,
+  rooms,
+  roomRegister,
+  settings,
+}
+
+String sectionLabel(AppLocalizations l10n, Section section) => switch (section) {
+  Section.today => l10n.tabToday,
+  Section.groups => l10n.tabGroups,
+  Section.attendanceRegister => l10n.regAttendance,
+  Section.labour => l10n.tabLabour,
+  Section.workerRegister => l10n.regWorkers,
+  Section.visa => l10n.tabVisa,
+  Section.visaRegister => l10n.regVisa,
+  Section.companies => l10n.tabCompanies,
+  Section.sites => l10n.sitesHeading,
+  Section.rates => l10n.tabRates,
+  Section.companyRegister => l10n.regCompanies,
+  Section.payroll => l10n.menuPayroll,
+  Section.payrollRegister => l10n.regPayroll,
+  Section.advanceRegister => l10n.regAdvance,
+  Section.cash => l10n.tabCash,
+  Section.balances => l10n.openingHeading,
+  Section.cashRegister => l10n.regCash,
+  Section.rooms => l10n.tabRooms,
+  Section.roomRegister => l10n.regRooms,
+  Section.settings => l10n.tabSettings,
+};
+
+/// A main tab and the sub-tabs under it. Related screens stay together (D-036).
+class MainTab {
+  const MainTab(this.label, this.icon, this.fill, this.color, this.sections);
+
+  final String Function(AppLocalizations) label;
+  final IconData icon;
+  final Color fill;
+  final Color color;
+  final List<Section> sections;
+}
+
+final mainTabs = [
+  MainTab((l) => l.mainAttendance, Icons.how_to_reg, const Color(0xFFE3ECFF), const Color(0xFF2450B8), const [Section.today, Section.groups, Section.attendanceRegister]),
+  MainTab((l) => l.tabLabour, Icons.groups, const Color(0xFFDFF5EF), const Color(0xFF0B7A66), const [Section.labour, Section.workerRegister]),
+  MainTab((l) => l.mainVisa, Icons.badge, const Color(0xFFF0E6FF), const Color(0xFF6B3FC4), const [Section.visa, Section.visaRegister]),
+  MainTab((l) => l.tabCompanies, Icons.apartment, const Color(0xFFDDF3FA), const Color(0xFF0B7196), const [Section.companies, Section.sites, Section.rates, Section.companyRegister]),
+  MainTab((l) => l.menuPayroll, Icons.payments, const Color(0xFFE6F4DC), const Color(0xFF3F7D1D), const [Section.payroll, Section.payrollRegister, Section.advanceRegister]),
+  MainTab((l) => l.mainMoney, Icons.account_balance_wallet, const Color(0xFFFFE8DA), const Color(0xFFC2500F), const [Section.cash, Section.balances, Section.cashRegister]),
+  MainTab((l) => l.tabRooms, Icons.bed, const Color(0xFFFFE4EC), const Color(0xFFC2255C), const [Section.rooms, Section.roomRegister]),
+];
 
 /// The shell's Scaffold. Main screens have their own Scaffold, so they reach the panel through this key.
 final shellKey = GlobalKey<ScaffoldState>();
@@ -26,7 +92,7 @@ class MenuButton extends StatelessWidget {
           const Icon(Icons.menu),
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: Text(AppLocalizations.of(context).menuLabel, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
+            child: Text(AppLocalizations.of(context).menuLabel, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -34,9 +100,101 @@ class MenuButton extends StatelessWidget {
   }
 }
 
-const _dim = Color(0xFF9AA0A7);
+/// The sub-tabs of the current main tab, under the header, so moving between them takes one tap.
+class SubTabs extends StatefulWidget implements PreferredSizeWidget {
+  const SubTabs(this.section, {this.below, super.key});
 
-/// Left panel, hidden until asked for (D-027). Sections not built yet show as "soon" and do nothing (AI-07).
+  final Section section;
+
+  /// A screen's own tabs, shown under these.
+  final PreferredSizeWidget? below;
+
+  @override
+  Size get preferredSize => Size.fromHeight(46 + (below?.preferredSize.height ?? 0));
+
+  @override
+  State<SubTabs> createState() => _SubTabsState();
+}
+
+class _SubTabsState extends State<SubTabs> {
+  final _selected = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = _selected.currentContext;
+      if (context != null && context.mounted) Scrollable.ensureVisible(context, alignment: 0.5);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final siblings = mainTabs.firstWhere((t) => t.sections.contains(widget.section)).sections;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: 46,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.fromLTRB(12, 2, 12, 8),
+            children: [
+              for (final section in siblings)
+                Padding(
+                  key: section == widget.section ? _selected : null,
+                  padding: const EdgeInsets.only(right: 6),
+                  child: _SubTab(
+                    sectionLabel(l10n, section),
+                    selected: section == widget.section,
+                    onTap: () => StatefulNavigationShell.of(context).goBranch(section.index),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        ?widget.below,
+      ],
+    );
+  }
+}
+
+class _SubTab extends StatelessWidget {
+  const _SubTab(this.label, {required this.selected, required this.onTap});
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      selected: selected,
+      child: Material(
+        color: selected ? Colors.white : Colors.white.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(18),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: selected ? null : onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Center(
+              child: Text(
+                label,
+                style: TextStyle(fontFamily: headingFont, fontSize: 14, fontWeight: FontWeight.w600, color: selected ? brand : Colors.white),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Left panel, hidden until asked for (D-027). Main tabs open to show their sub-tabs (D-036).
+/// Sections not built yet show as "soon" and do nothing (AI-07).
 class SidePanel extends ConsumerWidget {
   const SidePanel({required this.current, required this.onSelect, super.key});
 
@@ -49,19 +207,16 @@ class SidePanel extends ConsumerWidget {
     final profile = ref.watch(profileProvider).value;
     final navigator = Navigator.of(context);
 
-    Widget item(Section section, IconData icon, String label) =>
-        _PanelItem(icon, label, selected: section == current, onTap: () => onSelect(section));
-
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ColoredBox(
-            color: hiVis,
+            color: brand,
             child: SafeArea(
               bottom: false,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 4, 14),
+                padding: const EdgeInsets.fromLTRB(16, 12, 4, 16),
                 child: Row(
                   children: [
                     Expanded(
@@ -75,13 +230,13 @@ class SidePanel extends ConsumerWidget {
                             style: Theme.of(context).appBarTheme.titleTextStyle,
                           ),
                           const SizedBox(height: 2),
-                          Text(l10n.localOnlyNote, style: const TextStyle(fontSize: 13, color: ink)),
+                          Text(l10n.localOnlyNote, style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.85))),
                         ],
                       ),
                     ),
                     IconButton(
                       tooltip: l10n.menuClose,
-                      color: ink,
+                      color: Colors.white,
                       icon: const Icon(Icons.chevron_left, size: 30),
                       onPressed: () => shellKey.currentState?.closeDrawer(),
                     ),
@@ -92,42 +247,52 @@ class SidePanel extends ConsumerWidget {
           ),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               children: [
-                _PanelGroup(l10n.groupDaily),
-                item(Section.today, Icons.today, l10n.tabToday),
-                item(Section.cash, Icons.receipt_long, l10n.tabCash),
-                _PanelGroup(l10n.groupRegisters),
-                item(Section.companies, Icons.apartment, l10n.tabCompanies),
-                item(Section.sites, Icons.location_on, l10n.sitesHeading),
-                item(Section.labour, Icons.groups, l10n.tabLabour),
-                item(Section.groups, Icons.diversity_3, l10n.tabGroups),
-                item(Section.rooms, Icons.bed, l10n.tabRooms),
-                item(Section.rates, Icons.sell, l10n.tabRates),
-                item(Section.balances, Icons.history, l10n.openingHeading),
-                _PanelGroup(l10n.groupBilling),
-                item(Section.payroll, Icons.payments, l10n.menuPayroll),
-                _PanelItem(Icons.fact_check, l10n.menuTimesheets),
-                _PanelItem(Icons.request_quote, l10n.menuInvoices),
-                _PanelItem(Icons.move_to_inbox, l10n.menuReceived),
-                _PanelGroup(l10n.groupMore),
-                _PanelItem(Icons.bar_chart, l10n.menuReports),
-                _PanelItem(Icons.folder, l10n.menuDocuments),
-                _PanelItem(Icons.group_add, l10n.menuTeam),
-                _PanelItem(Icons.cloud_upload, l10n.menuBackup),
-                _PanelItem(Icons.workspace_premium, l10n.menuPlan),
-                _PanelItem(Icons.help, l10n.menuHelp),
+                for (final tab in mainTabs)
+                  _MainTabRow(
+                    icon: tab.icon,
+                    fill: tab.fill,
+                    color: tab.color,
+                    label: tab.label(l10n),
+                    open: tab.sections.contains(current),
+                    children: [
+                      for (final section in tab.sections)
+                        _SubRow(sectionLabel(l10n, section), key: ValueKey('sub-${sectionLabel(l10n, section)}'), selected: section == current, onTap: () => onSelect(section)),
+                    ],
+                  ),
+                _MainTabRow(
+                  icon: Icons.schedule,
+                  fill: paper,
+                  color: muted,
+                  label: l10n.groupSoon,
+                  open: false,
+                  children: [
+                    for (final label in [
+                      l10n.menuTimesheets,
+                      l10n.menuInvoices,
+                      l10n.menuReceived,
+                      l10n.menuReports,
+                      l10n.menuDocuments,
+                      l10n.menuTeam,
+                      l10n.menuBackup,
+                      l10n.menuPlan,
+                      l10n.menuHelp,
+                    ])
+                      _SubRow(label),
+                  ],
+                ),
               ],
             ),
           ),
-          const Divider(color: Color(0xFF30353A)),
+          const Divider(),
           SafeArea(
             top: false,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Column(
                 children: [
-                  _PanelItem(
+                  _FooterRow(
                     Icons.business,
                     l10n.myCompany,
                     onTap: () {
@@ -135,7 +300,7 @@ class SidePanel extends ConsumerWidget {
                       navigator.push(MaterialPageRoute<void>(builder: (_) => ProfileFormScreen(profile: profile)));
                     },
                   ),
-                  item(Section.settings, Icons.settings, l10n.tabSettings),
+                  _FooterRow(Icons.settings, l10n.tabSettings, selected: current == Section.settings, onTap: () => onSelect(Section.settings)),
                 ],
               ),
             ),
@@ -146,45 +311,101 @@ class SidePanel extends ConsumerWidget {
   }
 }
 
-class _PanelGroup extends StatelessWidget {
-  const _PanelGroup(this.label);
+class _MainTabRow extends StatelessWidget {
+  const _MainTabRow({required this.icon, required this.fill, required this.color, required this.label, required this.open, required this.children});
 
+  final IconData icon;
+  final Color fill;
+  final Color color;
   final String label;
+  final bool open;
+  final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-      child: Text(label, style: const TextStyle(fontSize: 13, color: _dim)),
+    return ExpansionTile(
+      initiallyExpanded: open,
+      shape: const Border(),
+      collapsedShape: const Border(),
+      tilePadding: const EdgeInsets.symmetric(horizontal: 12),
+      childrenPadding: const EdgeInsets.fromLTRB(32, 0, 12, 6),
+      iconColor: muted,
+      collapsedIconColor: muted,
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(12)),
+        child: Icon(icon, color: color, size: 22),
+      ),
+      title: Text(label, style: sectionTitleStyle.copyWith(fontSize: 16)),
+      children: children,
     );
   }
 }
 
-class _PanelItem extends StatelessWidget {
-  const _PanelItem(this.icon, this.label, {this.selected = false, this.onTap});
+class _SubRow extends StatelessWidget {
+  const _SubRow(this.label, {this.selected = false, this.onTap, super.key});
 
-  final IconData icon;
   final String label;
   final bool selected;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final color = selected ? ink : (onTap == null ? _dim : Colors.white);
+    return Material(
+      color: selected ? brandSoft : Colors.transparent,
+      borderRadius: BorderRadius.circular(12),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 44),
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          alignment: Alignment.centerLeft,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontFamily: headingFont,
+                    fontSize: 15,
+                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                    color: selected ? brand : (onTap == null ? muted : ink),
+                  ),
+                ),
+              ),
+              if (onTap == null) Text(AppLocalizations.of(context).soon, style: const TextStyle(fontSize: 13, color: muted)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FooterRow extends StatelessWidget {
+  const _FooterRow(this.icon, this.label, {this.selected = false, required this.onTap});
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: ListTile(
-        minTileHeight: 48,
+        minTileHeight: 46,
         tileColor: Colors.transparent,
-        selectedTileColor: hiVis,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        selectedTileColor: brandSoft,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 8),
         selected: selected,
-        enabled: onTap != null,
         onTap: onTap,
-        leading: Icon(icon, color: color),
-        title: Text(label, style: TextStyle(fontFamily: headingFont, fontSize: 17, fontWeight: FontWeight.w700, color: color)),
-        trailing: onTap == null ? Text(AppLocalizations.of(context).soon, style: const TextStyle(fontSize: 13, color: _dim)) : null,
+        leading: Icon(icon, color: selected ? brand : muted),
+        title: Text(label, style: TextStyle(fontFamily: headingFont, fontSize: 15, fontWeight: FontWeight.w600, color: selected ? brand : ink)),
       ),
     );
   }

@@ -2172,6 +2172,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{approved} approved. {left} have no rate: add it under Rates, then approve again.'**
   String approveMissingRate(int approved, int left);
+
+  /// No description provided for @mainAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance'**
+  String get mainAttendance;
+
+  /// No description provided for @mainVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa'**
+  String get mainVisa;
+
+  /// No description provided for @mainMoney.
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get mainMoney;
+
+  /// No description provided for @tabVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa money'**
+  String get tabVisa;
+
+  /// No description provided for @groupSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get groupSoon;
+
+  /// No description provided for @regAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance register'**
+  String get regAttendance;
+
+  /// No description provided for @regWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker register'**
+  String get regWorkers;
+
+  /// No description provided for @regVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa register'**
+  String get regVisa;
+
+  /// No description provided for @regCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'Company register'**
+  String get regCompanies;
+
+  /// No description provided for @regPayroll.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay register'**
+  String get regPayroll;
+
+  /// No description provided for @regAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance register'**
+  String get regAdvance;
+
+  /// No description provided for @regCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Money register'**
+  String get regCash;
+
+  /// No description provided for @regRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Room register'**
+  String get regRooms;
 }
 
 class _AppLocalizationsDelegate

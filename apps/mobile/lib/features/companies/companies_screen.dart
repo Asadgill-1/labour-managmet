@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/register_screen.dart';
+import '../../app/side_panel.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import 'client_detail_screen.dart';
@@ -17,6 +18,7 @@ class CompaniesScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     void open(Widget screen) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
     return RegisterScreen(
+      section: Section.companies,
       title: l10n.tabCompanies,
       emptyIcon: Icons.apartment,
       emptyText: l10n.companiesEmpty,

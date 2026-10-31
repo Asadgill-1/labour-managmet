@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/register_screen.dart';
+import '../../app/side_panel.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import 'group_form_screen.dart';
@@ -20,6 +21,7 @@ class GroupsScreen extends ConsumerWidget {
     final members = ref.watch(allGroupMembersProvider).value ?? const <WorkerGroupMember>[];
     void open(Widget screen) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
     return RegisterScreen(
+      section: Section.groups,
       title: l10n.tabGroups,
       emptyIcon: Icons.diversity_3,
       emptyText: l10n.groupsEmpty,

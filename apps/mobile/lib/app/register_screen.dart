@@ -20,6 +20,7 @@ class RegisterRow {
 /// A main screen holding one register: search, archived toggle, rows and its one action (UX-03, UX-05).
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({
+    required this.section,
     required this.title,
     required this.rows,
     required this.emptyIcon,
@@ -29,6 +30,7 @@ class RegisterScreen extends StatefulWidget {
     super.key,
   });
 
+  final Section section;
   final String title;
   final List<RegisterRow> rows;
   final IconData emptyIcon;
@@ -53,25 +55,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(
         leading: const MenuButton(),
         title: Text(widget.title),
-        actions: [
-          TextButton(
-            onPressed: () => setState(() => _showArchived = !_showArchived),
-            child: Text(_showArchived ? l10n.showActive : l10n.showArchived),
-          ),
-        ],
+        bottom: SubTabs(widget.section),
+        actions: [BarButton(_showArchived ? l10n.showActive : l10n.showArchived, onPressed: () => setState(() => _showArchived = !_showArchived))],
       ),
       bottomNavigationBar: MainActionBar(label: widget.addLabel, onPressed: widget.onAdd),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ColoredBox(color: hiVis, child: SearchBox(onChanged: (v) => setState(() => _search = v))),
+          TopBand(padding: EdgeInsets.zero, child: SearchBox(onChanged: (v) => setState(() => _search = v))),
+          const SizedBox(height: 6),
           Expanded(
             child: shown.isEmpty
                 ? EmptyState(icon: widget.emptyIcon, text: widget.emptyText)
-                : ListView.separated(
+                : ListView.builder(
+                    padding: const EdgeInsets.only(bottom: 8),
                     itemCount: shown.length,
-                    separatorBuilder: (_, _) => const Divider(),
-                    itemBuilder: (context, i) => GrowingRow(
+                    itemBuilder: (context, i) => RowCard(
                       child: ListTile(
                         leading: RowTag(shown[i].tag),
                         title: Text(shown[i].title),

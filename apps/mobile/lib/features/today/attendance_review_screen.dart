@@ -190,18 +190,15 @@ class _AttendanceReviewScreenState extends ConsumerState<AttendanceReviewScreen>
       bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _saving ? null : _save),
       body: ListView(
         children: [
-          ColoredBox(
-            color: hiVis,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 14),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: BandFigure(formatAed(clientTotal), l10n.totalClient, size: 26)),
-                  const SizedBox(width: 12),
-                  Expanded(child: BandFigure(formatAed(workerTotal), l10n.totalWorker, size: 26)),
-                ],
-              ),
+          TopBand(
+            padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: BandFigure(formatAed(clientTotal), l10n.totalClient, size: 22)),
+                const SizedBox(width: 8),
+                Expanded(child: BandFigure(formatAed(workerTotal), l10n.totalWorker, size: 22)),
+              ],
             ),
           ),
           if (anyPeriod) ...[ListTile(subtitle: Text(l10n.monthlyNotInTotal)), const Divider()],

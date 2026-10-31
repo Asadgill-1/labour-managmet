@@ -47,7 +47,14 @@ Future<void> pumpApp(WidgetTester tester, TenantDatabase db) async {
 Future<void> goTo(WidgetTester tester, String section) async {
   await tester.tap(find.text('Menu'));
   await settle(tester);
-  await tester.tap(find.text(section).last);
+  // A sub-tab shows once its main tab is open.
+  final sub = find.byKey(ValueKey('sub-$section'));
+  for (final main in const ['Hazri', 'Labour', 'Visa', 'Companies', 'Tankhwah', 'Hisaab', 'Rooms']) {
+    if (sub.evaluate().isNotEmpty) break;
+    await tester.tap(find.text(main).hitTestable().first);
+    await settle(tester);
+  }
+  await tester.tap(sub.evaluate().isNotEmpty ? sub : find.text(section).hitTestable().last);
   await settle(tester);
 }
 
