@@ -471,5 +471,6 @@
   "regByWorker": "Mazdoor ke hisaab se",
   "regBySite": "Company aur site ke hisaab se",
   "regAllWorkers": "Sab mazdoor",
-  "regSummarySheet": "Khulasa"
+  "regSummarySheet": "Khulasa",
+  "colBalance": "Baqi"
 }

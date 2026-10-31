@@ -195,12 +195,13 @@ Future<RegisterData> _attendance(TenantDatabase db, AppLocalizations l10n, _Mast
     note: l10n.regAttendanceNote,
     rollupsOf: (shown) => shown.isEmpty ? const [] : _attendanceRollups(l10n, shown),
     columns: [
-      RegisterColumn(l10n.colDate, kind: CellKind.date),
+      RegisterColumn(l10n.colDate, kind: CellKind.date, flex: 4),
       RegisterColumn(l10n.colWorker, flex: 4),
       RegisterColumn(l10n.colCode, flex: 2, inPdf: false),
       RegisterColumn(l10n.colCompany),
       RegisterColumn(l10n.colSite),
-      RegisterColumn(l10n.colGroup, inPdf: false),
+      // A group's wage comes before the worker's own rate (D-029), so the group explains the rate beside it.
+      RegisterColumn(l10n.colGroup),
       RegisterColumn(l10n.filterStatus),
       RegisterColumn(l10n.colIn, flex: 2),
       RegisterColumn(l10n.colOut, flex: 2),
@@ -430,7 +431,7 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
           overtime: e.overtimeMinutes,
           rate: _rateCell(l10n, e.attendanceStatus, e.workerBasis, e.workerRateFils),
           earned: e.workerAmountFils,
-          note: [if (e.revisesEntryId != null) l10n.correctedTag, ?e.notes].join(', '),
+          note: [?m.groups[e.groupId]?.name, if (e.revisesEntryId != null) l10n.correctedTag, ?e.notes].join(', '),
         ),
       for (final l in lines.where((l) => l.workerId == w.id && l.salaryFils != 0))
         _AccountLine(monthLastDay(l.periodFrom.substring(0, 7)), l.createdAtUtc, l10n.payrollSalary, earned: l.salaryFils, note: showMonth(l.periodFrom.substring(0, 7))),
@@ -557,7 +558,7 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
           RegisterColumn(l10n.colAdvanceVisa, kind: CellKind.money, total: true),
           RegisterColumn(l10n.payKindDeduction, kind: CellKind.money, total: true),
           RegisterColumn(l10n.colPaid, kind: CellKind.money, total: true),
-          RegisterColumn(l10n.colLeft, kind: CellKind.money, total: true),
+          RegisterColumn(l10n.colBalance, kind: CellKind.money, total: true),
         ],
         [
           for (final g in groups)
@@ -603,7 +604,7 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
       RegisterColumn(l10n.colAdvanceVisa, kind: CellKind.money, total: true, tone: CellTone.minus),
       RegisterColumn(l10n.payKindDeduction, kind: CellKind.money, total: true, tone: CellTone.minus),
       RegisterColumn(l10n.colPaid, kind: CellKind.money, total: true, tone: CellTone.minus),
-      RegisterColumn(l10n.colLeft, kind: CellKind.money, closing: true),
+      RegisterColumn(l10n.colBalance, kind: CellKind.money, closing: true),
       RegisterColumn(l10n.note, flex: 4),
     ],
     filters: [

@@ -777,5 +777,6 @@
   "regByWorker": "By worker",
   "regBySite": "By company and site",
   "regAllWorkers": "All workers",
-  "regSummarySheet": "Summary"
+  "regSummarySheet": "Summary",
+  "colBalance": "Balance"
 }

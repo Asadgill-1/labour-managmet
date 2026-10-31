@@ -1551,6 +1551,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get regSummarySheet => 'Summary';
+
+  @override
+  String get colBalance => 'Balance';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -3099,4 +3102,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get regSummarySheet => 'Khulasa';
+
+  @override
+  String get colBalance => 'Baqi';
 }

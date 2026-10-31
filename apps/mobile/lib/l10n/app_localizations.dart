@@ -2928,6 +2928,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Summary'**
   String get regSummarySheet;
+
+  /// No description provided for @colBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get colBalance;
 }
 
 class _AppLocalizationsDelegate

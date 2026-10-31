@@ -242,20 +242,20 @@ void main() {
       expect(worked[l10n.colEarned], 9000);
 
       // Visa 3,000 and advance 200 go out first, so the account starts below zero. Two days' work bring it up.
-      expect(asifRows[0][l10n.colLeft], -300000);
-      expect(asifRows[1][l10n.colLeft], -320000);
-      expect(worked[l10n.colLeft], -311000);
-      expect(asifRows[3][l10n.colLeft], -302000);
+      expect(asifRows[0][l10n.colBalance], -300000);
+      expect(asifRows[1][l10n.colBalance], -320000);
+      expect(worked[l10n.colBalance], -311000);
+      expect(asifRows[3][l10n.colBalance], -302000);
 
       // Taking money back through pay moves nothing, because it counted when it was given.
       final recovered = asifRows.where((r) => r[l10n.colWhat] == l10n.payKindRecovery).single;
-      expect(recovered[l10n.colLeft], -302000);
+      expect(recovered[l10n.colBalance], -302000);
       expect(recovered[l10n.note], contains('AED 50.00'));
       expect(asifRows.last[l10n.colWhat], l10n.kindSalaryPaid);
       expect(asifRows.last[l10n.colPaid], 1000);
-      expect(asifRows.last[l10n.colLeft], -303000);
+      expect(asifRows.last[l10n.colBalance], -303000);
 
-      final column = data.columns.indexWhere((c) => c.label == l10n.colLeft);
+      final column = data.columns.indexWhere((c) => c.label == l10n.colBalance);
       final asifGroup = groupEntries(data.entries).first.rows;
       expect(columnFigure(data.columns, asifGroup, column), -303000);
       expect(columnFigure(data.columns, data.entries, column), -303000 + 7200 + 7200, reason: 'where each worker ended, added up');
@@ -269,7 +269,7 @@ void main() {
       final data = await build(Section.workerRegister);
       final months = await db.payrollFor('2020-10');
       for (final (id, label) in [(asif, 'Asif (W1)'), (imran, 'Imran (W2)')]) {
-        final left = groupEntries(data.entries).singleWhere((g) => g.group == label).rows.last.cells[data.columns.indexWhere((c) => c.label == l10n.colLeft)]! as int;
+        final left = groupEntries(data.entries).singleWhere((g) => g.group == label).rows.last.cells[data.columns.indexWhere((c) => c.label == l10n.colBalance)]! as int;
         // Someone with nothing new in October stands where September left them.
         final owed = months.where((p) => p.worker.id == id).firstOrNull?.payableFils ?? (await db.payrollFor(sep)).singleWhere((p) => p.worker.id == id).closingFils;
         expect(left, owed - await db.advanceLeft(id) - await db.visaLeft(id), reason: label);
@@ -280,13 +280,13 @@ void main() {
       final data = await build(Section.workerRegister, from: '2020-10-01', to: '2020-10-31');
       final asifRows = rowsOf(data, 'Asif');
       expect(asifRows.single[l10n.colWhat], l10n.regBrought);
-      expect(asifRows.single[l10n.colLeft], -303000);
+      expect(asifRows.single[l10n.colBalance], -303000);
       expect(asifRows.single[l10n.colEarned], isNull);
 
       final imranRows = rowsOf(data, 'Imran');
       expect(imranRows.first[l10n.colWhat], l10n.regBrought);
       expect(imranRows.last[l10n.colEarned], 7200);
-      expect(imranRows.last[l10n.colLeft], 14400);
+      expect(imranRows.last[l10n.colBalance], 14400);
 
       final before = await build(Section.workerRegister, from: '2020-01-01', to: '2020-01-31');
       expect(before.entries, isEmpty, reason: 'nothing yet, and nothing owed');
@@ -307,7 +307,7 @@ void main() {
       expect(first[l10n.colEarned], 18000);
       expect(first[l10n.colAdvanceVisa], 320000);
       expect(first[l10n.colPaid], 1000);
-      expect(first[l10n.colLeft], -303000);
+      expect(first[l10n.colBalance], -303000);
     });
 
     test('allowances, deductions and monthly salary all land on the account, and an undone month stays honest', () async {
@@ -316,7 +316,7 @@ void main() {
       var rows = rowsOf(await build(Section.workerRegister), 'Imran');
       expect(rows.singleWhere((r) => r[l10n.colWhat] == l10n.payKindAllowance)[l10n.colEarned], 500);
       expect(rows.singleWhere((r) => r[l10n.colWhat] == l10n.payKindRoom)[l10n.payKindDeduction], 300);
-      expect(rows.last[l10n.colLeft], 7200 + 7200 + 500 - 300);
+      expect(rows.last[l10n.colBalance], 7200 + 7200 + 500 - 300);
 
       await db.saveRow(
         db.payContracts,
