@@ -2370,6 +2370,414 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This is more than the visa money left.'**
   String get issueVisa;
+
+  /// No description provided for @regRows.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 entry} other{{count} entries}}'**
+  String regRows(int count);
+
+  /// No description provided for @regAllDates.
+  ///
+  /// In en, this message translates to:
+  /// **'All dates'**
+  String get regAllDates;
+
+  /// No description provided for @regThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get regThisMonth;
+
+  /// No description provided for @regLastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Last month'**
+  String get regLastMonth;
+
+  /// No description provided for @regAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get regAll;
+
+  /// No description provided for @regClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get regClear;
+
+  /// No description provided for @regExport.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF, Excel or WhatsApp'**
+  String get regExport;
+
+  /// No description provided for @regEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing for these dates and filters.'**
+  String get regEmpty;
+
+  /// No description provided for @regTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get regTotal;
+
+  /// No description provided for @regPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {page} of {pages}'**
+  String regPage(String page, String pages);
+
+  /// No description provided for @regMade.
+  ///
+  /// In en, this message translates to:
+  /// **'Made on {when}'**
+  String regMade(String when);
+
+  /// No description provided for @regFilterDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates: {range}'**
+  String regFilterDates(String range);
+
+  /// No description provided for @regAmountsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Amounts in AED'**
+  String get regAmountsNote;
+
+  /// No description provided for @regCompanyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Wages here are pay marked on attendance. Monthly salaries are not in them.'**
+  String get regCompanyNote;
+
+  /// No description provided for @regPayrollNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted months only.'**
+  String get regPayrollNote;
+
+  /// No description provided for @exportMaking.
+  ///
+  /// In en, this message translates to:
+  /// **'Making the file...'**
+  String get exportMaking;
+
+  /// No description provided for @exportView.
+  ///
+  /// In en, this message translates to:
+  /// **'View or print'**
+  String get exportView;
+
+  /// No description provided for @exportOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get exportOpen;
+
+  /// No description provided for @exportSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save on phone'**
+  String get exportSave;
+
+  /// No description provided for @exportWhatsApp.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp'**
+  String get exportWhatsApp;
+
+  /// No description provided for @exportOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other apps'**
+  String get exportOther;
+
+  /// No description provided for @exportNoWhatsApp.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp not found. Choose another app.'**
+  String get exportNoWhatsApp;
+
+  /// No description provided for @exportNoApp.
+  ///
+  /// In en, this message translates to:
+  /// **'No app on this phone opens this file. Use Other apps to send it.'**
+  String get exportNoApp;
+
+  /// No description provided for @exportSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on the phone.'**
+  String get exportSaved;
+
+  /// No description provided for @exportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not make the file. Try again.'**
+  String get exportFailed;
+
+  /// No description provided for @filterStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance'**
+  String get filterStatus;
+
+  /// No description provided for @filterState.
+  ///
+  /// In en, this message translates to:
+  /// **'State'**
+  String get filterState;
+
+  /// No description provided for @filterKind.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get filterKind;
+
+  /// No description provided for @filterMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash or bank'**
+  String get filterMethod;
+
+  /// No description provided for @filterTrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade'**
+  String get filterTrade;
+
+  /// No description provided for @filterActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get filterActive;
+
+  /// No description provided for @filterOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get filterOwed;
+
+  /// No description provided for @stateActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get stateActive;
+
+  /// No description provided for @stateArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get stateArchived;
+
+  /// No description provided for @owedYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Still owed'**
+  String get owedYes;
+
+  /// No description provided for @owedNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleared'**
+  String get owedNo;
+
+  /// No description provided for @colDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get colDate;
+
+  /// No description provided for @colMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get colMonth;
+
+  /// No description provided for @colWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker'**
+  String get colWorker;
+
+  /// No description provided for @colCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get colCode;
+
+  /// No description provided for @colCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'Company'**
+  String get colCompany;
+
+  /// No description provided for @colSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Site'**
+  String get colSite;
+
+  /// No description provided for @colGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Group'**
+  String get colGroup;
+
+  /// No description provided for @colIn.
+  ///
+  /// In en, this message translates to:
+  /// **'In'**
+  String get colIn;
+
+  /// No description provided for @colOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Out'**
+  String get colOut;
+
+  /// No description provided for @colBreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Break'**
+  String get colBreak;
+
+  /// No description provided for @colCompanyHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Company hours'**
+  String get colCompanyHours;
+
+  /// No description provided for @colWorkerHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker hours'**
+  String get colWorkerHours;
+
+  /// No description provided for @colOvertime.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime'**
+  String get colOvertime;
+
+  /// No description provided for @colCompanyRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Company rate'**
+  String get colCompanyRate;
+
+  /// No description provided for @colBill.
+  ///
+  /// In en, this message translates to:
+  /// **'Company bill'**
+  String get colBill;
+
+  /// No description provided for @colWorkerRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker rate'**
+  String get colWorkerRate;
+
+  /// No description provided for @colPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker pay'**
+  String get colPay;
+
+  /// No description provided for @colWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'What'**
+  String get colWhat;
+
+  /// No description provided for @colWho.
+  ///
+  /// In en, this message translates to:
+  /// **'Who'**
+  String get colWho;
+
+  /// No description provided for @colGiven.
+  ///
+  /// In en, this message translates to:
+  /// **'Given'**
+  String get colGiven;
+
+  /// No description provided for @colBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get colBack;
+
+  /// No description provided for @colLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get colLeft;
+
+  /// No description provided for @colPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get colPhone;
+
+  /// No description provided for @colJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined'**
+  String get colJoined;
+
+  /// No description provided for @colRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get colRoom;
+
+  /// No description provided for @colRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay rate'**
+  String get colRate;
+
+  /// No description provided for @colWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers'**
+  String get colWorkers;
+
+  /// No description provided for @colHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get colHours;
+
+  /// No description provided for @colWages.
+  ///
+  /// In en, this message translates to:
+  /// **'Wages'**
+  String get colWages;
+
+  /// No description provided for @colDifference.
+  ///
+  /// In en, this message translates to:
+  /// **'Difference'**
+  String get colDifference;
+
+  /// No description provided for @colPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Not approved'**
+  String get colPending;
+
+  /// No description provided for @colPostedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted on'**
+  String get colPostedOn;
 }
 
 class _AppLocalizationsDelegate

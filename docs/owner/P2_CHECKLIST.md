@@ -4,6 +4,36 @@ Yeh checklist Asad ke liye hai (BUILD-03). Tankhwah (T11) ban gayi hai. Tankhwah
 
 Test APK: `apps/mobile/build/app/outputs/flutter-apk/app-release.apk`. Yeh test build hai. Asal data na daalein.
 
+## Naya: tabs, rang, Visa aur registers
+
+**Rang aur tabs**
+
+- [ ] Menu kholein. Hazri, Labour, Visa, Companies, Tankhwah, Hisaab aur Rooms alag alag dikhen, aur dabane par sub-tabs khulen.
+- [ ] Kisi screen par header ke neeche sub-tabs se aik tap mein doosri screen par jayen.
+- [ ] Rang pasand aaye? Agar nahin to `colour_options.png` mein se number batayein.
+
+**Visa**
+
+- [ ] **Visa > Visa ka paisa > Visa kharcha likhein**: mazdoor chunein, AED 3,000 save karein. Woh mazdoor list mein aaye, Baqi AED 3,000.00.
+- [ ] Mazdoor par dabayein, **Har mahine ki qist** par AED 300 likhein.
+- [ ] **Tankhwah** par jayen, **Visa qist lagayein** dabayein. Us mazdoor ke net se AED 300 kam ho. Post karein.
+- [ ] Visa par wapas aayen: Wapas aaya AED 300.00, Baqi AED 2,700.00.
+- [ ] Post wapas karne par Baqi phir AED 3,000.00 ho.
+
+**Registers**
+
+- [ ] Har register kholein: Hazri, Mazdoor, Visa, Company, Tankhwah, Advance, Hisaab, Room. Entries date ke neeche hon aur har entry ki poori tafseel saamne ho.
+- [ ] Tareekh badlein, aur **Is mahine**, **Pichla mahina**, **Sab** dabayein. Entries aur totals badlen.
+- [ ] Filter mein do mazdoor chunein, phir company. Sirf wahi entries rahen. **Saaf karein** se sab wapas aayen.
+
+**PDF, Excel, WhatsApp** (yeh sirf phone par check ho sakta hai)
+
+- [ ] **PDF, Excel ya WhatsApp** dabayein. Upar register ka naam, entries aur filter likhe hon.
+- [ ] PDF: **Dekhein ya print** se khule, har page par company ka naam aur Safha number ho.
+- [ ] Excel: **Kholein** ya **Phone mein save**. Excel ya Google Sheets mein khul kar headings upar ruki rahen, filter chalen, aur neeche Total ho.
+- [ ] **WhatsApp** dabayein. WhatsApp khule, aap khud banda chunein aur bhejein. App khud kuch nahin bhejti.
+- [ ] Jis phone par WhatsApp na ho wahan paigham aaye aur share sheet khule.
+
 ## 1. Purana data
 
 - [ ] Naya APK purani app ke upar install karein, uninstall na karein. Companies, mazdoor, hazri aur Rozana hisaab sab wahi rahen.

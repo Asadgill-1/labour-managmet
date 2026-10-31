@@ -71,20 +71,20 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | INV-07 | 09 | Status | T17 | NOT_STARTED | - | - |
 | INV-08 | 09 | Online/offline numbering | T16 | NOT_STARTED | - | - |
 | INV-09 | 09 | e-Invoicing gate | T16 | NOT_STARTED | - | - |
-| DOC-01 | 10 | Aik shared engine | T14 | NOT_STARTED | TC-009 | - |
+| DOC-01 | 10 | Aik shared engine | T14, T18a | IN_PROGRESS | TC-009, TC-058 | - |
 | DOC-02 | 10 | Free basic identity | T14 | NOT_STARTED | - | - |
-| DOC-03 | 10 | Layout | T14 | NOT_STARTED | TC-009 | - |
+| DOC-03 | 10 | Layout | T14, T18a | IN_PROGRESS | TC-058 | - |
 | DOC-04 | 10 | Images | T14 | NOT_STARTED | - | - |
 | DOC-05 | 10 | Revision | T14 | NOT_STARTED | TC-042 | - |
-| DOC-06 | 10 | Actions | T14 | NOT_STARTED | - | - |
-| DOC-07 | 10 | Data safety | T14 | NOT_STARTED | - | - |
-| DOC-08 | 10 | Tests | T14 | NOT_STARTED | TC-043 | - |
-| REP-01 | 11 | Reports | T18 | NOT_STARTED | - | - |
+| DOC-06 | 10 | Actions | T14, T18a | IN_PROGRESS | TC-059 | - |
+| DOC-07 | 10 | Data safety | T14, T18a | IN_PROGRESS | TC-059 | - |
+| DOC-08 | 10 | Tests | T14, T18a | IN_PROGRESS | TC-058 | - |
+| REP-01 | 11 | Reports | T18, T18a | IN_PROGRESS | TC-057, TC-058 | - |
 | REP-02 | 11 | Hisaab ki separation | T18 | NOT_STARTED | TC-044 | - |
 | REP-03 | 11 | Margin | T18 | NOT_STARTED | TC-044 | - |
 | REP-04 | 11 | Closing | T13 | NOT_STARTED | TC-037 | - |
 | REP-05 | 11 | Historical integrity | T13 | NOT_STARTED | - | - |
-| REP-06 | 11 | Backup/export | T18 | NOT_STARTED | - | - |
+| REP-06 | 11 | Backup/export | T18, T18a | IN_PROGRESS | TC-058 | - |
 | REP-07 | 11 | Expenses | T13, T12a | IN_PROGRESS | TC-052 | - |
 | REP-08 | 11 | Ledger design | T11, T12a | IMPLEMENTED_UNVERIFIED | TC-036, TC-051, TC-055 | `apps/mobile/test/payroll_test.dart`, `apps/mobile/test/cash_test.dart` |
 | PLAN-01 | 12 | Trial 14 din; Team feature trial owner ki clear | T24 | NOT_STARTED | - | - |

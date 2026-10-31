@@ -639,5 +639,104 @@
       }
     }
   },
-  "issueVisa": "This is more than the visa money left."
+  "issueVisa": "This is more than the visa money left.",
+  "regRows": "{count, plural, =1{1 entry} other{{count} entries}}",
+  "@regRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "regAllDates": "All dates",
+  "regThisMonth": "This month",
+  "regLastMonth": "Last month",
+  "regAll": "All",
+  "regClear": "Clear",
+  "regExport": "PDF, Excel or WhatsApp",
+  "regEmpty": "Nothing for these dates and filters.",
+  "regTotal": "Total",
+  "regPage": "Page {page} of {pages}",
+  "@regPage": {
+    "placeholders": {
+      "page": {
+        "type": "String"
+      },
+      "pages": {
+        "type": "String"
+      }
+    }
+  },
+  "regMade": "Made on {when}",
+  "@regMade": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "regFilterDates": "Dates: {range}",
+  "@regFilterDates": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "regAmountsNote": "Amounts in AED",
+  "regCompanyNote": "Wages here are pay marked on attendance. Monthly salaries are not in them.",
+  "regPayrollNote": "Posted months only.",
+  "exportMaking": "Making the file...",
+  "exportView": "View or print",
+  "exportOpen": "Open",
+  "exportSave": "Save on phone",
+  "exportWhatsApp": "WhatsApp",
+  "exportOther": "Other apps",
+  "exportNoWhatsApp": "WhatsApp not found. Choose another app.",
+  "exportNoApp": "No app on this phone opens this file. Use Other apps to send it.",
+  "exportSaved": "Saved on the phone.",
+  "exportFailed": "Could not make the file. Try again.",
+  "filterStatus": "Attendance",
+  "filterState": "State",
+  "filterKind": "Type",
+  "filterMethod": "Cash or bank",
+  "filterTrade": "Trade",
+  "filterActive": "Status",
+  "filterOwed": "Balance",
+  "stateActive": "Active",
+  "stateArchived": "Archived",
+  "owedYes": "Still owed",
+  "owedNo": "Cleared",
+  "colDate": "Date",
+  "colMonth": "Month",
+  "colWorker": "Worker",
+  "colCode": "Code",
+  "colCompany": "Company",
+  "colSite": "Site",
+  "colGroup": "Group",
+  "colIn": "In",
+  "colOut": "Out",
+  "colBreak": "Break",
+  "colCompanyHours": "Company hours",
+  "colWorkerHours": "Worker hours",
+  "colOvertime": "Overtime",
+  "colCompanyRate": "Company rate",
+  "colBill": "Company bill",
+  "colWorkerRate": "Worker rate",
+  "colPay": "Worker pay",
+  "colWhat": "What",
+  "colWho": "Who",
+  "colGiven": "Given",
+  "colBack": "Back",
+  "colLeft": "Left",
+  "colPhone": "Phone",
+  "colJoined": "Joined",
+  "colRoom": "Room",
+  "colRate": "Pay rate",
+  "colWorkers": "Workers",
+  "colHours": "Hours",
+  "colWages": "Wages",
+  "colDifference": "Difference",
+  "colPending": "Not approved",
+  "colPostedOn": "Posted on"
 }

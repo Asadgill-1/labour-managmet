@@ -31,6 +31,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const Divider(),
           SwitchListTile(
+            tileColor: Colors.transparent,
             title: Text(l10n.settingsLargeText),
             value: settings.largeText,
             onChanged: controller.setLargeText,

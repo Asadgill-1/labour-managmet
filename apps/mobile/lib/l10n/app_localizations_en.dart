@@ -1247,6 +1247,226 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get issueVisa => 'This is more than the visa money left.';
+
+  @override
+  String regRows(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count entries',
+      one: '1 entry',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get regAllDates => 'All dates';
+
+  @override
+  String get regThisMonth => 'This month';
+
+  @override
+  String get regLastMonth => 'Last month';
+
+  @override
+  String get regAll => 'All';
+
+  @override
+  String get regClear => 'Clear';
+
+  @override
+  String get regExport => 'PDF, Excel or WhatsApp';
+
+  @override
+  String get regEmpty => 'Nothing for these dates and filters.';
+
+  @override
+  String get regTotal => 'Total';
+
+  @override
+  String regPage(String page, String pages) {
+    return 'Page $page of $pages';
+  }
+
+  @override
+  String regMade(String when) {
+    return 'Made on $when';
+  }
+
+  @override
+  String regFilterDates(String range) {
+    return 'Dates: $range';
+  }
+
+  @override
+  String get regAmountsNote => 'Amounts in AED';
+
+  @override
+  String get regCompanyNote =>
+      'Wages here are pay marked on attendance. Monthly salaries are not in them.';
+
+  @override
+  String get regPayrollNote => 'Posted months only.';
+
+  @override
+  String get exportMaking => 'Making the file...';
+
+  @override
+  String get exportView => 'View or print';
+
+  @override
+  String get exportOpen => 'Open';
+
+  @override
+  String get exportSave => 'Save on phone';
+
+  @override
+  String get exportWhatsApp => 'WhatsApp';
+
+  @override
+  String get exportOther => 'Other apps';
+
+  @override
+  String get exportNoWhatsApp => 'WhatsApp not found. Choose another app.';
+
+  @override
+  String get exportNoApp =>
+      'No app on this phone opens this file. Use Other apps to send it.';
+
+  @override
+  String get exportSaved => 'Saved on the phone.';
+
+  @override
+  String get exportFailed => 'Could not make the file. Try again.';
+
+  @override
+  String get filterStatus => 'Attendance';
+
+  @override
+  String get filterState => 'State';
+
+  @override
+  String get filterKind => 'Type';
+
+  @override
+  String get filterMethod => 'Cash or bank';
+
+  @override
+  String get filterTrade => 'Trade';
+
+  @override
+  String get filterActive => 'Status';
+
+  @override
+  String get filterOwed => 'Balance';
+
+  @override
+  String get stateActive => 'Active';
+
+  @override
+  String get stateArchived => 'Archived';
+
+  @override
+  String get owedYes => 'Still owed';
+
+  @override
+  String get owedNo => 'Cleared';
+
+  @override
+  String get colDate => 'Date';
+
+  @override
+  String get colMonth => 'Month';
+
+  @override
+  String get colWorker => 'Worker';
+
+  @override
+  String get colCode => 'Code';
+
+  @override
+  String get colCompany => 'Company';
+
+  @override
+  String get colSite => 'Site';
+
+  @override
+  String get colGroup => 'Group';
+
+  @override
+  String get colIn => 'In';
+
+  @override
+  String get colOut => 'Out';
+
+  @override
+  String get colBreak => 'Break';
+
+  @override
+  String get colCompanyHours => 'Company hours';
+
+  @override
+  String get colWorkerHours => 'Worker hours';
+
+  @override
+  String get colOvertime => 'Overtime';
+
+  @override
+  String get colCompanyRate => 'Company rate';
+
+  @override
+  String get colBill => 'Company bill';
+
+  @override
+  String get colWorkerRate => 'Worker rate';
+
+  @override
+  String get colPay => 'Worker pay';
+
+  @override
+  String get colWhat => 'What';
+
+  @override
+  String get colWho => 'Who';
+
+  @override
+  String get colGiven => 'Given';
+
+  @override
+  String get colBack => 'Back';
+
+  @override
+  String get colLeft => 'Left';
+
+  @override
+  String get colPhone => 'Phone';
+
+  @override
+  String get colJoined => 'Joined';
+
+  @override
+  String get colRoom => 'Room';
+
+  @override
+  String get colRate => 'Pay rate';
+
+  @override
+  String get colWorkers => 'Workers';
+
+  @override
+  String get colHours => 'Hours';
+
+  @override
+  String get colWages => 'Wages';
+
+  @override
+  String get colDifference => 'Difference';
+
+  @override
+  String get colPending => 'Not approved';
+
+  @override
+  String get colPostedOn => 'Posted on';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -2491,4 +2711,224 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get issueVisa => 'Visa ki wapsi baqi rakam se zyada hai.';
+
+  @override
+  String regRows(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count entries',
+      one: '1 entry',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get regAllDates => 'Sab tareekhein';
+
+  @override
+  String get regThisMonth => 'Is mahine';
+
+  @override
+  String get regLastMonth => 'Pichla mahina';
+
+  @override
+  String get regAll => 'Sab';
+
+  @override
+  String get regClear => 'Saaf karein';
+
+  @override
+  String get regExport => 'PDF, Excel ya WhatsApp';
+
+  @override
+  String get regEmpty => 'In tareekhon aur filter mein kuch nahin.';
+
+  @override
+  String get regTotal => 'Total';
+
+  @override
+  String regPage(String page, String pages) {
+    return 'Safha $page / $pages';
+  }
+
+  @override
+  String regMade(String when) {
+    return 'Banaya: $when';
+  }
+
+  @override
+  String regFilterDates(String range) {
+    return 'Tareekh: $range';
+  }
+
+  @override
+  String get regAmountsNote => 'Sab raqam AED mein';
+
+  @override
+  String get regCompanyNote =>
+      'Yahan mazdoori woh hai jo hazri par bani. Mahana tankhwah is mein shamil nahin.';
+
+  @override
+  String get regPayrollNote => 'Sirf post hui tankhwah.';
+
+  @override
+  String get exportMaking => 'File ban rahi hai...';
+
+  @override
+  String get exportView => 'Dekhein ya print';
+
+  @override
+  String get exportOpen => 'Kholein';
+
+  @override
+  String get exportSave => 'Phone mein save';
+
+  @override
+  String get exportWhatsApp => 'WhatsApp';
+
+  @override
+  String get exportOther => 'Aur apps';
+
+  @override
+  String get exportNoWhatsApp => 'WhatsApp nahin mila. Koi aur app chunein.';
+
+  @override
+  String get exportNoApp =>
+      'Is phone par yeh file kholne wali koi app nahin. Aur apps se bhej dein.';
+
+  @override
+  String get exportSaved => 'Phone mein save ho gaya.';
+
+  @override
+  String get exportFailed => 'File nahin bani. Dobara koshish karein.';
+
+  @override
+  String get filterStatus => 'Hazri';
+
+  @override
+  String get filterState => 'Haalat';
+
+  @override
+  String get filterKind => 'Kis cheez ka';
+
+  @override
+  String get filterMethod => 'Cash ya bank';
+
+  @override
+  String get filterTrade => 'Kaam';
+
+  @override
+  String get filterActive => 'Status';
+
+  @override
+  String get filterOwed => 'Baqi';
+
+  @override
+  String get stateActive => 'Active';
+
+  @override
+  String get stateArchived => 'Archived';
+
+  @override
+  String get owedYes => 'Baqi hai';
+
+  @override
+  String get owedNo => 'Saaf hai';
+
+  @override
+  String get colDate => 'Tareekh';
+
+  @override
+  String get colMonth => 'Mahina';
+
+  @override
+  String get colWorker => 'Mazdoor';
+
+  @override
+  String get colCode => 'Code';
+
+  @override
+  String get colCompany => 'Company';
+
+  @override
+  String get colSite => 'Site';
+
+  @override
+  String get colGroup => 'Group';
+
+  @override
+  String get colIn => 'Aaya';
+
+  @override
+  String get colOut => 'Gaya';
+
+  @override
+  String get colBreak => 'Break';
+
+  @override
+  String get colCompanyHours => 'Company ghante';
+
+  @override
+  String get colWorkerHours => 'Mazdoor ghante';
+
+  @override
+  String get colOvertime => 'Overtime';
+
+  @override
+  String get colCompanyRate => 'Company rate';
+
+  @override
+  String get colBill => 'Company bill';
+
+  @override
+  String get colWorkerRate => 'Mazdoor rate';
+
+  @override
+  String get colPay => 'Mazdoor pay';
+
+  @override
+  String get colWhat => 'Kya';
+
+  @override
+  String get colWho => 'Kis ka';
+
+  @override
+  String get colGiven => 'Diya';
+
+  @override
+  String get colBack => 'Wapas';
+
+  @override
+  String get colLeft => 'Baqi';
+
+  @override
+  String get colPhone => 'Phone';
+
+  @override
+  String get colJoined => 'Joining';
+
+  @override
+  String get colRoom => 'Room';
+
+  @override
+  String get colRate => 'Rate';
+
+  @override
+  String get colWorkers => 'Mazdoor';
+
+  @override
+  String get colHours => 'Ghante';
+
+  @override
+  String get colWages => 'Mazdoori';
+
+  @override
+  String get colDifference => 'Farq';
+
+  @override
+  String get colPending => 'Manzoor baqi';
+
+  @override
+  String get colPostedOn => 'Post ki';
 }

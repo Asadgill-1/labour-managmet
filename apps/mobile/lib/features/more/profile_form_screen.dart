@@ -90,6 +90,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
             Field(l10n.email, _email, keyboardType: TextInputType.emailAddress),
             fieldGap,
             SwitchListTile(
+              tileColor: Colors.transparent,
               contentPadding: EdgeInsets.zero,
               title: Text(l10n.vatRegistered),
               value: _vat,

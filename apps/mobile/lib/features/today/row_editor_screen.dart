@@ -123,18 +123,21 @@ class _RowEditorScreenState extends State<RowEditorScreen> {
                 validator: (v) => (int.tryParse((v ?? '').trim()) ?? -1) < 0 ? l10n.wholeNumberRequired : null,
               ),
               SwitchListTile(
+                tileColor: Colors.transparent,
                 contentPadding: EdgeInsets.zero,
                 title: Text(l10n.clientBreakPaid),
                 value: _paidClient ?? false,
                 onChanged: (v) => setState(() => _paidClient = v),
               ),
               SwitchListTile(
+                tileColor: Colors.transparent,
                 contentPadding: EdgeInsets.zero,
                 title: Text(l10n.workerBreakPaid),
                 value: _paidWorker ?? false,
                 onChanged: (v) => setState(() => _paidWorker = v),
               ),
               SwitchListTile(
+                tileColor: Colors.transparent,
                 contentPadding: EdgeInsets.zero,
                 title: Text(l10n.overtimeApproved),
                 value: _overtime,

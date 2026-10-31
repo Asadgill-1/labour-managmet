@@ -94,6 +94,7 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
             DateField(l10n.activeTo, value: _to, onChanged: (v) => setState(() => _to = v)),
             if (widget.site != null)
               SwitchListTile(
+                tileColor: Colors.transparent,
                 contentPadding: EdgeInsets.zero,
                 title: Text(l10n.activeLabel),
                 value: _active,

@@ -73,6 +73,10 @@ outstanding = opening + issued - recovered through posted payroll - returned
 
 Recovery above outstanding is rejected. Neither issue nor recovery is a wage expense.
 
+## Visa money (D-039)
+
+left = paid - returned - recovered through standing payroll lines. A month's net takes off the instalment, kept apart from deductions and advance recovery. It counts toward the company's own deduction limit, and it stops at what is left. Spending it is cash flow, not a wage expense (REP-02).
+
 ## VAT and receivables (INV-03..05)
 
 VAT applies from the supplier's registration and the supply treatment, never from a customer TRN alone. Standard rate is 500 bps in the example; zero-rated, exempt and out-of-scope are separate categories that a tax reviewer confirms.

@@ -2,16 +2,9 @@
 
 Read this first each session (AI-04). Replace it, do not append; git holds the history.
 
-**Phase:** P2. Owner's requests of 2026-10-31 (D-036 to D-039) are half built. The P1 gate's phone checks are still open (D-035)
-**Branch:** `p2/t11c-visa`, stacked on `p2/t11b-look-and-tabs` and `p2/t11-payroll`, none merged
-**Next task:** T18a registers and export (D-038). Eight register sub-tabs show an empty screen until then
-
-## T18a: where it stands
-
-- Uncommitted in the working tree, not compiled into any APK or tested: `lib/features/registers/register_model.dart`, `register_xlsx.dart`, `android/.../MainActivity.kt` (send, open, save channel `labour_app/files`), `AndroidManifest.xml` provider, `res/xml/export_paths.xml`.
-- Still to write: register builders per section, the real `LedgerScreen` (date range, multi-select filters, date groups, every field on the row), `register_pdf.dart` (`pdf` and `printing` are in pubspec; use `TableRow(repeat: true)` and raise `MultiPage.maxPages`), the export sheet, tests. Check the XLSX with openpyxl.
-- Owner has not picked a colour. `docs/owner/colour_options.png` shows the three, and `lib/app/theme.dart` keeps them behind `_palette`. Delete the unused two once picked.
-- Then: docs, graph, APK. No APK has been built since T11.
+**Phase:** P2. The owner's requests of 2026-10-31 (D-036 to D-039) are built. The P1 gate's phone checks are still open (D-035)
+**Branch:** `p2/t18a-registers` (stacked: ... > p2/t11 > p2/t11b > p2/t11c > p2/t18a, none merged)
+**Next task:** Owner's phone test of T11b, T11c and T18a, then T12
 
 ## Done
 
@@ -21,6 +14,7 @@ Read this first each session (AI-04). Replace it, do not append; git holds the h
 | T04 | OWNER_ACCEPTED | Policy defaults D-101 to D-105 approved 2026-10-31 |
 | T05 to T10b, T12a | IMPLEMENTED_UNVERIFIED | CI green. The owner said "Theek hain" on 2026-10-31 to worker groups and the cash book on the phone. The checklist results are not reported yet |
 | T11 | IMPLEMENTED_UNVERIFIED | `dart test`: 82 passing. `flutter test`: 73 passing, including PRD examples, a crash during posting, and one full flow through the screens. `flutter analyze` clean. Owner has not seen it, and D-033 and D-034 are waiting for an answer |
+| T11b, T11c, T18a | IMPLEMENTED_UNVERIFIED | `flutter test` and `dart test` pass, including PRD-style sums for each register. PDFs were drawn with the Windows PDF engine and read by eye: 18 pages, no blank last page. Excel was read back with openpyxl. Never opened in real Excel. The Android send, open and save channel has only been compiled, never run |
 
 Test evidence is host only. Encryption on Android, UX-06 timing and BUILD-04 on a real device are all still open.
 
@@ -28,6 +22,7 @@ Test evidence is host only. Encryption on Android, UX-06 timing and BUILD-04 on 
 
 Details in `docs/owner/P2_CHECKLIST.md`.
 
+0. Which colour: 1 blue and orange, 2 green and gold, 3 maroon and gold (`docs/owner/colour_options.png`). `lib/app/theme.dart` keeps all three behind `_palette` until then. Delete the other two once picked.
 1. Encryption check result, and seconds for the 10-worker entry (D-035).
 2. An answer on D-033 and D-034 after trying Tankhwah on the phone.
 3. Run `gh auth login`. The public repo made CI readable, but PRs and merges still need it.
@@ -40,6 +35,8 @@ Details in `docs/owner/P2_CHECKLIST.md`.
 - The owner's phone holds real test data, so D-025 no longer applies: schema is now v4, and every change needs a version bump and a migration. `migration_test.dart` upgrades v1 data.
 - T12 must let the owner choose which month a payment settles, defaulting oldest first (PAY-06), turn an overpayment into an advance, since a credit only shows as "Zyada ada kiya" for now, and add overdue alerts (PAY-08). Oldest-first needs no new figures on posted lines.
 - T13 must turn `reverseCashEntry` and `reversePayrollLine` into dated adjustments once periods lock (REP-04). T14 builds the payslip from `payroll_lines` and its linked rows (PAY-09). T17 must allocate `clientReceipt` rows to invoices (INV-05). T18 takes wage expense from posted lines, never from payments (REP-02).
+- A client company that pays for a visa and cuts it from an invoice is not covered. Visa money runs against the worker only (D-039). Add when invoices exist (T16) if the owner says that happens.
+- Register PDFs use Roboto, which has Latin letters only, so a name typed in Urdu script prints as boxes. Letterhead uploads, snapshots and payslips are still T14. Margin reports and CSV import are still T18.
 - Rozana hisaab has no running cash-in-hand figure, because no opening cash exists yet. Group wages have no overtime. Payroll periods are calendar months only, though the tables store from and to. Add when asked.
 - UX-02 is local only until T19 adds accounts. UX-07's sync statuses arrive with T25.
 - Worker lists sort by plain text, so "Worker 10" comes before "Worker 2". Real names are fine; revisit if codes are shown as the sort key.
@@ -59,6 +56,8 @@ Details in `docs/owner/P2_CHECKLIST.md`.
 - Forms must not sit in a lazy list. Off-screen fields skip validation. Use `FormBody`.
 - A `ListTile` with `selected: true` paints `selectedTileColor`, not `tileColor`. Golden PNGs caught the panel's active item being invisible, which every widget test missed. Review new screens as images (load real fonts with `FontLoader`, or text shows as blocks).
 - A tile's white background is painted on the Material behind the list. A row that grows after first paint keeps the old background height until something scrolls. Wrap such rows in `GrowingRow`.
+- Render a PDF on this machine with the Windows PDF engine: `Windows.Data.Pdf.PdfDocument` from PowerShell 5.1, through `AsTask`. Edge headless and the browser pane both failed. Python's `/tmp` is not Git Bash's `/tmp`: use `cygpath -w`.
+- A failed widget test that leaves its database open makes `flutter test` hang for minutes, and `flutter_tester` keeps `sqlite3mc.dll` locked. Stop it before the next run.
 - A row with no client rate cannot be approved (D-026), so it also holds that worker's pay. Payroll tests need a billing contract, and the payroll screen says so when it happens.
 - `partial_method` holds a `PartialMethod` name such as `calendarDays`. The old comment on the column said `calendar_days`, and a test had copied it.
-- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Refresh the graph after every task, as the owner asked on 2026-10-31. Current graph: 1,757 nodes, 2,876 edges, 75 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.
+- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Refresh the graph after every task, as the owner asked on 2026-10-31. Current graph: 2,126 nodes, 3,398 edges, 88 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.

@@ -277,6 +277,7 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
               ),
             ],
             SwitchListTile(
+              tileColor: Colors.transparent,
               contentPadding: EdgeInsets.zero,
               title: Text(l10n.breakIsPaid),
               value: _breakPaid,

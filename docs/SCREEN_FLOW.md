@@ -15,6 +15,23 @@ Hidden until the Menu button at the top left of a main screen opens it. The arro
 | Aur | Reports, Documents (P3), Backup, Plan (P4), Help (P5), Team (P6) | Jald |
 | Fixed at the bottom | Apni company, Settings | Built |
 
+## Main tabs and sub-tabs (D-036)
+
+The panel lists main tabs that open to show sub-tabs. The current tab's sub-tabs also show as a strip under the header.
+
+| Main tab | Sub-tabs |
+| --- | --- |
+| Hazri | Aaj, Mazdoor group, Hazri register |
+| Labour | Labour, Mazdoor register |
+| Visa | Visa ka paisa, Visa register |
+| Companies | Companies, Sites, Rates, Company register |
+| Tankhwah | Tankhwah, Tankhwah register, Advance register |
+| Hisaab | Rozana hisaab, Pichla baqaya, Hisaab register |
+| Rooms | Rooms, Room register |
+| Jald aa raha hai | Timesheet, Invoice, Paisay mile, Reports, Documents, Team, Backup, Plan, Help |
+
+A register has a date range with quick choices, filters that take several values, totals on the band, rows under their dates with every field showing, and one export button (D-038).
+
 ## Onboarding (UX-02)
 
 Language > email and password > verify email > company name > optional logo and TRN > first client and site > first worker > first attendance. Optional steps can be skipped. Tax profile is only required before a tax invoice. Before P4 the account steps do not exist, and the app opens on a local dev tenant.

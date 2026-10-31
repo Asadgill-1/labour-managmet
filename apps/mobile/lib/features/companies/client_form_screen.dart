@@ -82,6 +82,7 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
             Field(l10n.address, _address, lines: 2),
             fieldGap,
             SwitchListTile(
+              tileColor: Colors.transparent,
               contentPadding: EdgeInsets.zero,
               title: Text(l10n.clientVatRegistered),
               value: _vat,
