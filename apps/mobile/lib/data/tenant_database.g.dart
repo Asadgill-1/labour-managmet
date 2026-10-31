@@ -614,6 +614,1551 @@ class AuditEventsCompanion extends UpdateCompanion<AuditEvent> {
   }
 }
 
+class $RoomsTable extends Rooms with TableInfo<$RoomsTable, Room> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RoomsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+    'note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _activeMeta = const VerificationMeta('active');
+  @override
+  late final GeneratedColumn<bool> active = GeneratedColumn<bool>(
+    'active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    name,
+    note,
+    active,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'rooms';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Room> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('note')) {
+      context.handle(
+        _noteMeta,
+        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
+      );
+    }
+    if (data.containsKey('active')) {
+      context.handle(
+        _activeMeta,
+        active.isAcceptableOrUnknown(data['active']!, _activeMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Room map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Room(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      note: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note'],
+      ),
+      active: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}active'],
+      )!,
+    );
+  }
+
+  @override
+  $RoomsTable createAlias(String alias) {
+    return $RoomsTable(attachedDatabase, alias);
+  }
+}
+
+class Room extends DataClass implements Insertable<Room> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String name;
+  final String? note;
+  final bool active;
+  const Room({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.name,
+    this.note,
+    required this.active,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || note != null) {
+      map['note'] = Variable<String>(note);
+    }
+    map['active'] = Variable<bool>(active);
+    return map;
+  }
+
+  RoomsCompanion toCompanion(bool nullToAbsent) {
+    return RoomsCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      name: Value(name),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+      active: Value(active),
+    );
+  }
+
+  factory Room.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Room(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      name: serializer.fromJson<String>(json['name']),
+      note: serializer.fromJson<String?>(json['note']),
+      active: serializer.fromJson<bool>(json['active']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'name': serializer.toJson<String>(name),
+      'note': serializer.toJson<String?>(note),
+      'active': serializer.toJson<bool>(active),
+    };
+  }
+
+  Room copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? name,
+    Value<String?> note = const Value.absent(),
+    bool? active,
+  }) => Room(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    name: name ?? this.name,
+    note: note.present ? note.value : this.note,
+    active: active ?? this.active,
+  );
+  Room copyWithCompanion(RoomsCompanion data) {
+    return Room(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      name: data.name.present ? data.name.value : this.name,
+      note: data.note.present ? data.note.value : this.note,
+      active: data.active.present ? data.active.value : this.active,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Room(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('name: $name, ')
+          ..write('note: $note, ')
+          ..write('active: $active')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    name,
+    note,
+    active,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Room &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.name == this.name &&
+          other.note == this.note &&
+          other.active == this.active);
+}
+
+class RoomsCompanion extends UpdateCompanion<Room> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> name;
+  final Value<String?> note;
+  final Value<bool> active;
+  final Value<int> rowid;
+  const RoomsCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.note = const Value.absent(),
+    this.active = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RoomsCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String name,
+    this.note = const Value.absent(),
+    this.active = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       name = Value(name);
+  static Insertable<Room> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? name,
+    Expression<String>? note,
+    Expression<bool>? active,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (name != null) 'name': name,
+      if (note != null) 'note': note,
+      if (active != null) 'active': active,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RoomsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? name,
+    Value<String?>? note,
+    Value<bool>? active,
+    Value<int>? rowid,
+  }) {
+    return RoomsCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      name: name ?? this.name,
+      note: note ?? this.note,
+      active: active ?? this.active,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    if (active.present) {
+      map['active'] = Variable<bool>(active.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RoomsCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('name: $name, ')
+          ..write('note: $note, ')
+          ..write('active: $active, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $WorkersTable extends Workers with TableInfo<$WorkersTable, Worker> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WorkersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _codeMeta = const VerificationMeta('code');
+  @override
+  late final GeneratedColumn<String> code = GeneratedColumn<String>(
+    'code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
+  @override
+  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
+    'phone',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tradeMeta = const VerificationMeta('trade');
+  @override
+  late final GeneratedColumn<String> trade = GeneratedColumn<String>(
+    'trade',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _joiningDateMeta = const VerificationMeta(
+    'joiningDate',
+  );
+  @override
+  late final GeneratedColumn<String> joiningDate = GeneratedColumn<String>(
+    'joining_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _roomChargeFilsMeta = const VerificationMeta(
+    'roomChargeFils',
+  );
+  @override
+  late final GeneratedColumn<int> roomChargeFils = GeneratedColumn<int>(
+    'room_charge_fils',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _roomChargeNoteMeta = const VerificationMeta(
+    'roomChargeNote',
+  );
+  @override
+  late final GeneratedColumn<String> roomChargeNote = GeneratedColumn<String>(
+    'room_charge_note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _roomIdMeta = const VerificationMeta('roomId');
+  @override
+  late final GeneratedColumn<String> roomId = GeneratedColumn<String>(
+    'room_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES rooms (id)',
+    ),
+  );
+  static const VerificationMeta _activeMeta = const VerificationMeta('active');
+  @override
+  late final GeneratedColumn<bool> active = GeneratedColumn<bool>(
+    'active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    code,
+    name,
+    phone,
+    trade,
+    joiningDate,
+    roomChargeFils,
+    roomChargeNote,
+    roomId,
+    active,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'workers';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Worker> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('code')) {
+      context.handle(
+        _codeMeta,
+        code.isAcceptableOrUnknown(data['code']!, _codeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_codeMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('phone')) {
+      context.handle(
+        _phoneMeta,
+        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
+      );
+    }
+    if (data.containsKey('trade')) {
+      context.handle(
+        _tradeMeta,
+        trade.isAcceptableOrUnknown(data['trade']!, _tradeMeta),
+      );
+    }
+    if (data.containsKey('joining_date')) {
+      context.handle(
+        _joiningDateMeta,
+        joiningDate.isAcceptableOrUnknown(
+          data['joining_date']!,
+          _joiningDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('room_charge_fils')) {
+      context.handle(
+        _roomChargeFilsMeta,
+        roomChargeFils.isAcceptableOrUnknown(
+          data['room_charge_fils']!,
+          _roomChargeFilsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('room_charge_note')) {
+      context.handle(
+        _roomChargeNoteMeta,
+        roomChargeNote.isAcceptableOrUnknown(
+          data['room_charge_note']!,
+          _roomChargeNoteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('room_id')) {
+      context.handle(
+        _roomIdMeta,
+        roomId.isAcceptableOrUnknown(data['room_id']!, _roomIdMeta),
+      );
+    }
+    if (data.containsKey('active')) {
+      context.handle(
+        _activeMeta,
+        active.isAcceptableOrUnknown(data['active']!, _activeMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {tenantId, code},
+  ];
+  @override
+  Worker map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Worker(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      code: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}code'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      phone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}phone'],
+      ),
+      trade: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}trade'],
+      ),
+      joiningDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}joining_date'],
+      ),
+      roomChargeFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}room_charge_fils'],
+      ),
+      roomChargeNote: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}room_charge_note'],
+      ),
+      roomId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}room_id'],
+      ),
+      active: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}active'],
+      )!,
+    );
+  }
+
+  @override
+  $WorkersTable createAlias(String alias) {
+    return $WorkersTable(attachedDatabase, alias);
+  }
+}
+
+class Worker extends DataClass implements Insertable<Worker> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String code;
+  final String name;
+  final String? phone;
+  final String? trade;
+  final String? joiningDate;
+  final int? roomChargeFils;
+  final String? roomChargeNote;
+  final String? roomId;
+  final bool active;
+  const Worker({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.code,
+    required this.name,
+    this.phone,
+    this.trade,
+    this.joiningDate,
+    this.roomChargeFils,
+    this.roomChargeNote,
+    this.roomId,
+    required this.active,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['code'] = Variable<String>(code);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || phone != null) {
+      map['phone'] = Variable<String>(phone);
+    }
+    if (!nullToAbsent || trade != null) {
+      map['trade'] = Variable<String>(trade);
+    }
+    if (!nullToAbsent || joiningDate != null) {
+      map['joining_date'] = Variable<String>(joiningDate);
+    }
+    if (!nullToAbsent || roomChargeFils != null) {
+      map['room_charge_fils'] = Variable<int>(roomChargeFils);
+    }
+    if (!nullToAbsent || roomChargeNote != null) {
+      map['room_charge_note'] = Variable<String>(roomChargeNote);
+    }
+    if (!nullToAbsent || roomId != null) {
+      map['room_id'] = Variable<String>(roomId);
+    }
+    map['active'] = Variable<bool>(active);
+    return map;
+  }
+
+  WorkersCompanion toCompanion(bool nullToAbsent) {
+    return WorkersCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      code: Value(code),
+      name: Value(name),
+      phone: phone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(phone),
+      trade: trade == null && nullToAbsent
+          ? const Value.absent()
+          : Value(trade),
+      joiningDate: joiningDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(joiningDate),
+      roomChargeFils: roomChargeFils == null && nullToAbsent
+          ? const Value.absent()
+          : Value(roomChargeFils),
+      roomChargeNote: roomChargeNote == null && nullToAbsent
+          ? const Value.absent()
+          : Value(roomChargeNote),
+      roomId: roomId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(roomId),
+      active: Value(active),
+    );
+  }
+
+  factory Worker.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Worker(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      code: serializer.fromJson<String>(json['code']),
+      name: serializer.fromJson<String>(json['name']),
+      phone: serializer.fromJson<String?>(json['phone']),
+      trade: serializer.fromJson<String?>(json['trade']),
+      joiningDate: serializer.fromJson<String?>(json['joiningDate']),
+      roomChargeFils: serializer.fromJson<int?>(json['roomChargeFils']),
+      roomChargeNote: serializer.fromJson<String?>(json['roomChargeNote']),
+      roomId: serializer.fromJson<String?>(json['roomId']),
+      active: serializer.fromJson<bool>(json['active']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'code': serializer.toJson<String>(code),
+      'name': serializer.toJson<String>(name),
+      'phone': serializer.toJson<String?>(phone),
+      'trade': serializer.toJson<String?>(trade),
+      'joiningDate': serializer.toJson<String?>(joiningDate),
+      'roomChargeFils': serializer.toJson<int?>(roomChargeFils),
+      'roomChargeNote': serializer.toJson<String?>(roomChargeNote),
+      'roomId': serializer.toJson<String?>(roomId),
+      'active': serializer.toJson<bool>(active),
+    };
+  }
+
+  Worker copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? code,
+    String? name,
+    Value<String?> phone = const Value.absent(),
+    Value<String?> trade = const Value.absent(),
+    Value<String?> joiningDate = const Value.absent(),
+    Value<int?> roomChargeFils = const Value.absent(),
+    Value<String?> roomChargeNote = const Value.absent(),
+    Value<String?> roomId = const Value.absent(),
+    bool? active,
+  }) => Worker(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    code: code ?? this.code,
+    name: name ?? this.name,
+    phone: phone.present ? phone.value : this.phone,
+    trade: trade.present ? trade.value : this.trade,
+    joiningDate: joiningDate.present ? joiningDate.value : this.joiningDate,
+    roomChargeFils: roomChargeFils.present
+        ? roomChargeFils.value
+        : this.roomChargeFils,
+    roomChargeNote: roomChargeNote.present
+        ? roomChargeNote.value
+        : this.roomChargeNote,
+    roomId: roomId.present ? roomId.value : this.roomId,
+    active: active ?? this.active,
+  );
+  Worker copyWithCompanion(WorkersCompanion data) {
+    return Worker(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      code: data.code.present ? data.code.value : this.code,
+      name: data.name.present ? data.name.value : this.name,
+      phone: data.phone.present ? data.phone.value : this.phone,
+      trade: data.trade.present ? data.trade.value : this.trade,
+      joiningDate: data.joiningDate.present
+          ? data.joiningDate.value
+          : this.joiningDate,
+      roomChargeFils: data.roomChargeFils.present
+          ? data.roomChargeFils.value
+          : this.roomChargeFils,
+      roomChargeNote: data.roomChargeNote.present
+          ? data.roomChargeNote.value
+          : this.roomChargeNote,
+      roomId: data.roomId.present ? data.roomId.value : this.roomId,
+      active: data.active.present ? data.active.value : this.active,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Worker(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('code: $code, ')
+          ..write('name: $name, ')
+          ..write('phone: $phone, ')
+          ..write('trade: $trade, ')
+          ..write('joiningDate: $joiningDate, ')
+          ..write('roomChargeFils: $roomChargeFils, ')
+          ..write('roomChargeNote: $roomChargeNote, ')
+          ..write('roomId: $roomId, ')
+          ..write('active: $active')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    code,
+    name,
+    phone,
+    trade,
+    joiningDate,
+    roomChargeFils,
+    roomChargeNote,
+    roomId,
+    active,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Worker &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.code == this.code &&
+          other.name == this.name &&
+          other.phone == this.phone &&
+          other.trade == this.trade &&
+          other.joiningDate == this.joiningDate &&
+          other.roomChargeFils == this.roomChargeFils &&
+          other.roomChargeNote == this.roomChargeNote &&
+          other.roomId == this.roomId &&
+          other.active == this.active);
+}
+
+class WorkersCompanion extends UpdateCompanion<Worker> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> code;
+  final Value<String> name;
+  final Value<String?> phone;
+  final Value<String?> trade;
+  final Value<String?> joiningDate;
+  final Value<int?> roomChargeFils;
+  final Value<String?> roomChargeNote;
+  final Value<String?> roomId;
+  final Value<bool> active;
+  final Value<int> rowid;
+  const WorkersCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.code = const Value.absent(),
+    this.name = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.trade = const Value.absent(),
+    this.joiningDate = const Value.absent(),
+    this.roomChargeFils = const Value.absent(),
+    this.roomChargeNote = const Value.absent(),
+    this.roomId = const Value.absent(),
+    this.active = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WorkersCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String code,
+    required String name,
+    this.phone = const Value.absent(),
+    this.trade = const Value.absent(),
+    this.joiningDate = const Value.absent(),
+    this.roomChargeFils = const Value.absent(),
+    this.roomChargeNote = const Value.absent(),
+    this.roomId = const Value.absent(),
+    this.active = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       code = Value(code),
+       name = Value(name);
+  static Insertable<Worker> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? code,
+    Expression<String>? name,
+    Expression<String>? phone,
+    Expression<String>? trade,
+    Expression<String>? joiningDate,
+    Expression<int>? roomChargeFils,
+    Expression<String>? roomChargeNote,
+    Expression<String>? roomId,
+    Expression<bool>? active,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (code != null) 'code': code,
+      if (name != null) 'name': name,
+      if (phone != null) 'phone': phone,
+      if (trade != null) 'trade': trade,
+      if (joiningDate != null) 'joining_date': joiningDate,
+      if (roomChargeFils != null) 'room_charge_fils': roomChargeFils,
+      if (roomChargeNote != null) 'room_charge_note': roomChargeNote,
+      if (roomId != null) 'room_id': roomId,
+      if (active != null) 'active': active,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WorkersCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? code,
+    Value<String>? name,
+    Value<String?>? phone,
+    Value<String?>? trade,
+    Value<String?>? joiningDate,
+    Value<int?>? roomChargeFils,
+    Value<String?>? roomChargeNote,
+    Value<String?>? roomId,
+    Value<bool>? active,
+    Value<int>? rowid,
+  }) {
+    return WorkersCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      code: code ?? this.code,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      trade: trade ?? this.trade,
+      joiningDate: joiningDate ?? this.joiningDate,
+      roomChargeFils: roomChargeFils ?? this.roomChargeFils,
+      roomChargeNote: roomChargeNote ?? this.roomChargeNote,
+      roomId: roomId ?? this.roomId,
+      active: active ?? this.active,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (code.present) {
+      map['code'] = Variable<String>(code.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (phone.present) {
+      map['phone'] = Variable<String>(phone.value);
+    }
+    if (trade.present) {
+      map['trade'] = Variable<String>(trade.value);
+    }
+    if (joiningDate.present) {
+      map['joining_date'] = Variable<String>(joiningDate.value);
+    }
+    if (roomChargeFils.present) {
+      map['room_charge_fils'] = Variable<int>(roomChargeFils.value);
+    }
+    if (roomChargeNote.present) {
+      map['room_charge_note'] = Variable<String>(roomChargeNote.value);
+    }
+    if (roomId.present) {
+      map['room_id'] = Variable<String>(roomId.value);
+    }
+    if (active.present) {
+      map['active'] = Variable<bool>(active.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorkersCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('code: $code, ')
+          ..write('name: $name, ')
+          ..write('phone: $phone, ')
+          ..write('trade: $trade, ')
+          ..write('joiningDate: $joiningDate, ')
+          ..write('roomChargeFils: $roomChargeFils, ')
+          ..write('roomChargeNote: $roomChargeNote, ')
+          ..write('roomId: $roomId, ')
+          ..write('active: $active, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ClientsTable extends Clients with TableInfo<$ClientsTable, Client> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -2672,6 +4217,1082 @@ class SitesCompanion extends UpdateCompanion<Site> {
   }
 }
 
+class $CashEntriesTable extends CashEntries
+    with TableInfo<$CashEntriesTable, CashEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CashEntriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _entryDateMeta = const VerificationMeta(
+    'entryDate',
+  );
+  @override
+  late final GeneratedColumn<String> entryDate = GeneratedColumn<String>(
+    'entry_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountFilsMeta = const VerificationMeta(
+    'amountFils',
+  );
+  @override
+  late final GeneratedColumn<int> amountFils = GeneratedColumn<int>(
+    'amount_fils',
+    aliasedName,
+    false,
+    check: () => ComparableExpr(amountFils).isBiggerThanValue(0),
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyMeta = const VerificationMeta(
+    'currency',
+  );
+  @override
+  late final GeneratedColumn<String> currency = GeneratedColumn<String>(
+    'currency',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('AED'),
+  );
+  static const VerificationMeta _workerIdMeta = const VerificationMeta(
+    'workerId',
+  );
+  @override
+  late final GeneratedColumn<String> workerId = GeneratedColumn<String>(
+    'worker_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES workers (id)',
+    ),
+  );
+  static const VerificationMeta _roomIdMeta = const VerificationMeta('roomId');
+  @override
+  late final GeneratedColumn<String> roomId = GeneratedColumn<String>(
+    'room_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES rooms (id)',
+    ),
+  );
+  static const VerificationMeta _clientIdMeta = const VerificationMeta(
+    'clientId',
+  );
+  @override
+  late final GeneratedColumn<String> clientId = GeneratedColumn<String>(
+    'client_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES clients (id)',
+    ),
+  );
+  static const VerificationMeta _siteIdMeta = const VerificationMeta('siteId');
+  @override
+  late final GeneratedColumn<String> siteId = GeneratedColumn<String>(
+    'site_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES sites (id)',
+    ),
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _methodMeta = const VerificationMeta('method');
+  @override
+  late final GeneratedColumn<String> method = GeneratedColumn<String>(
+    'method',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('cash'),
+  );
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+    'note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reversesEntryIdMeta = const VerificationMeta(
+    'reversesEntryId',
+  );
+  @override
+  late final GeneratedColumn<String> reversesEntryId = GeneratedColumn<String>(
+    'reverses_entry_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'UNIQUE REFERENCES cash_entries (id)',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    entryDate,
+    kind,
+    amountFils,
+    currency,
+    workerId,
+    roomId,
+    clientId,
+    siteId,
+    category,
+    method,
+    note,
+    reversesEntryId,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cash_entries';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CashEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('entry_date')) {
+      context.handle(
+        _entryDateMeta,
+        entryDate.isAcceptableOrUnknown(data['entry_date']!, _entryDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entryDateMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_kindMeta);
+    }
+    if (data.containsKey('amount_fils')) {
+      context.handle(
+        _amountFilsMeta,
+        amountFils.isAcceptableOrUnknown(data['amount_fils']!, _amountFilsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountFilsMeta);
+    }
+    if (data.containsKey('currency')) {
+      context.handle(
+        _currencyMeta,
+        currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta),
+      );
+    }
+    if (data.containsKey('worker_id')) {
+      context.handle(
+        _workerIdMeta,
+        workerId.isAcceptableOrUnknown(data['worker_id']!, _workerIdMeta),
+      );
+    }
+    if (data.containsKey('room_id')) {
+      context.handle(
+        _roomIdMeta,
+        roomId.isAcceptableOrUnknown(data['room_id']!, _roomIdMeta),
+      );
+    }
+    if (data.containsKey('client_id')) {
+      context.handle(
+        _clientIdMeta,
+        clientId.isAcceptableOrUnknown(data['client_id']!, _clientIdMeta),
+      );
+    }
+    if (data.containsKey('site_id')) {
+      context.handle(
+        _siteIdMeta,
+        siteId.isAcceptableOrUnknown(data['site_id']!, _siteIdMeta),
+      );
+    }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    }
+    if (data.containsKey('method')) {
+      context.handle(
+        _methodMeta,
+        method.isAcceptableOrUnknown(data['method']!, _methodMeta),
+      );
+    }
+    if (data.containsKey('note')) {
+      context.handle(
+        _noteMeta,
+        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
+      );
+    }
+    if (data.containsKey('reverses_entry_id')) {
+      context.handle(
+        _reversesEntryIdMeta,
+        reversesEntryId.isAcceptableOrUnknown(
+          data['reverses_entry_id']!,
+          _reversesEntryIdMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CashEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CashEntry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      entryDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entry_date'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      amountFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_fils'],
+      )!,
+      currency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency'],
+      )!,
+      workerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}worker_id'],
+      ),
+      roomId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}room_id'],
+      ),
+      clientId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}client_id'],
+      ),
+      siteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}site_id'],
+      ),
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      ),
+      method: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}method'],
+      )!,
+      note: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note'],
+      ),
+      reversesEntryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reverses_entry_id'],
+      ),
+    );
+  }
+
+  @override
+  $CashEntriesTable createAlias(String alias) {
+    return $CashEntriesTable(attachedDatabase, alias);
+  }
+}
+
+class CashEntry extends DataClass implements Insertable<CashEntry> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String entryDate;
+
+  /// A `CashKind` by name.
+  final String kind;
+  final int amountFils;
+  final String currency;
+  final String? workerId;
+  final String? roomId;
+  final String? clientId;
+  final String? siteId;
+  final String? category;
+
+  /// 'cash' or 'bank'.
+  final String method;
+  final String? note;
+
+  /// Set on a reversal, which carries the original's figures. Unique, so nothing is reversed twice.
+  final String? reversesEntryId;
+  const CashEntry({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.entryDate,
+    required this.kind,
+    required this.amountFils,
+    required this.currency,
+    this.workerId,
+    this.roomId,
+    this.clientId,
+    this.siteId,
+    this.category,
+    required this.method,
+    this.note,
+    this.reversesEntryId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['entry_date'] = Variable<String>(entryDate);
+    map['kind'] = Variable<String>(kind);
+    map['amount_fils'] = Variable<int>(amountFils);
+    map['currency'] = Variable<String>(currency);
+    if (!nullToAbsent || workerId != null) {
+      map['worker_id'] = Variable<String>(workerId);
+    }
+    if (!nullToAbsent || roomId != null) {
+      map['room_id'] = Variable<String>(roomId);
+    }
+    if (!nullToAbsent || clientId != null) {
+      map['client_id'] = Variable<String>(clientId);
+    }
+    if (!nullToAbsent || siteId != null) {
+      map['site_id'] = Variable<String>(siteId);
+    }
+    if (!nullToAbsent || category != null) {
+      map['category'] = Variable<String>(category);
+    }
+    map['method'] = Variable<String>(method);
+    if (!nullToAbsent || note != null) {
+      map['note'] = Variable<String>(note);
+    }
+    if (!nullToAbsent || reversesEntryId != null) {
+      map['reverses_entry_id'] = Variable<String>(reversesEntryId);
+    }
+    return map;
+  }
+
+  CashEntriesCompanion toCompanion(bool nullToAbsent) {
+    return CashEntriesCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      entryDate: Value(entryDate),
+      kind: Value(kind),
+      amountFils: Value(amountFils),
+      currency: Value(currency),
+      workerId: workerId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(workerId),
+      roomId: roomId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(roomId),
+      clientId: clientId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientId),
+      siteId: siteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(siteId),
+      category: category == null && nullToAbsent
+          ? const Value.absent()
+          : Value(category),
+      method: Value(method),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+      reversesEntryId: reversesEntryId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reversesEntryId),
+    );
+  }
+
+  factory CashEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CashEntry(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      entryDate: serializer.fromJson<String>(json['entryDate']),
+      kind: serializer.fromJson<String>(json['kind']),
+      amountFils: serializer.fromJson<int>(json['amountFils']),
+      currency: serializer.fromJson<String>(json['currency']),
+      workerId: serializer.fromJson<String?>(json['workerId']),
+      roomId: serializer.fromJson<String?>(json['roomId']),
+      clientId: serializer.fromJson<String?>(json['clientId']),
+      siteId: serializer.fromJson<String?>(json['siteId']),
+      category: serializer.fromJson<String?>(json['category']),
+      method: serializer.fromJson<String>(json['method']),
+      note: serializer.fromJson<String?>(json['note']),
+      reversesEntryId: serializer.fromJson<String?>(json['reversesEntryId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'entryDate': serializer.toJson<String>(entryDate),
+      'kind': serializer.toJson<String>(kind),
+      'amountFils': serializer.toJson<int>(amountFils),
+      'currency': serializer.toJson<String>(currency),
+      'workerId': serializer.toJson<String?>(workerId),
+      'roomId': serializer.toJson<String?>(roomId),
+      'clientId': serializer.toJson<String?>(clientId),
+      'siteId': serializer.toJson<String?>(siteId),
+      'category': serializer.toJson<String?>(category),
+      'method': serializer.toJson<String>(method),
+      'note': serializer.toJson<String?>(note),
+      'reversesEntryId': serializer.toJson<String?>(reversesEntryId),
+    };
+  }
+
+  CashEntry copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? entryDate,
+    String? kind,
+    int? amountFils,
+    String? currency,
+    Value<String?> workerId = const Value.absent(),
+    Value<String?> roomId = const Value.absent(),
+    Value<String?> clientId = const Value.absent(),
+    Value<String?> siteId = const Value.absent(),
+    Value<String?> category = const Value.absent(),
+    String? method,
+    Value<String?> note = const Value.absent(),
+    Value<String?> reversesEntryId = const Value.absent(),
+  }) => CashEntry(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    entryDate: entryDate ?? this.entryDate,
+    kind: kind ?? this.kind,
+    amountFils: amountFils ?? this.amountFils,
+    currency: currency ?? this.currency,
+    workerId: workerId.present ? workerId.value : this.workerId,
+    roomId: roomId.present ? roomId.value : this.roomId,
+    clientId: clientId.present ? clientId.value : this.clientId,
+    siteId: siteId.present ? siteId.value : this.siteId,
+    category: category.present ? category.value : this.category,
+    method: method ?? this.method,
+    note: note.present ? note.value : this.note,
+    reversesEntryId: reversesEntryId.present
+        ? reversesEntryId.value
+        : this.reversesEntryId,
+  );
+  CashEntry copyWithCompanion(CashEntriesCompanion data) {
+    return CashEntry(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      entryDate: data.entryDate.present ? data.entryDate.value : this.entryDate,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      amountFils: data.amountFils.present
+          ? data.amountFils.value
+          : this.amountFils,
+      currency: data.currency.present ? data.currency.value : this.currency,
+      workerId: data.workerId.present ? data.workerId.value : this.workerId,
+      roomId: data.roomId.present ? data.roomId.value : this.roomId,
+      clientId: data.clientId.present ? data.clientId.value : this.clientId,
+      siteId: data.siteId.present ? data.siteId.value : this.siteId,
+      category: data.category.present ? data.category.value : this.category,
+      method: data.method.present ? data.method.value : this.method,
+      note: data.note.present ? data.note.value : this.note,
+      reversesEntryId: data.reversesEntryId.present
+          ? data.reversesEntryId.value
+          : this.reversesEntryId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashEntry(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('entryDate: $entryDate, ')
+          ..write('kind: $kind, ')
+          ..write('amountFils: $amountFils, ')
+          ..write('currency: $currency, ')
+          ..write('workerId: $workerId, ')
+          ..write('roomId: $roomId, ')
+          ..write('clientId: $clientId, ')
+          ..write('siteId: $siteId, ')
+          ..write('category: $category, ')
+          ..write('method: $method, ')
+          ..write('note: $note, ')
+          ..write('reversesEntryId: $reversesEntryId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    entryDate,
+    kind,
+    amountFils,
+    currency,
+    workerId,
+    roomId,
+    clientId,
+    siteId,
+    category,
+    method,
+    note,
+    reversesEntryId,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CashEntry &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.entryDate == this.entryDate &&
+          other.kind == this.kind &&
+          other.amountFils == this.amountFils &&
+          other.currency == this.currency &&
+          other.workerId == this.workerId &&
+          other.roomId == this.roomId &&
+          other.clientId == this.clientId &&
+          other.siteId == this.siteId &&
+          other.category == this.category &&
+          other.method == this.method &&
+          other.note == this.note &&
+          other.reversesEntryId == this.reversesEntryId);
+}
+
+class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> entryDate;
+  final Value<String> kind;
+  final Value<int> amountFils;
+  final Value<String> currency;
+  final Value<String?> workerId;
+  final Value<String?> roomId;
+  final Value<String?> clientId;
+  final Value<String?> siteId;
+  final Value<String?> category;
+  final Value<String> method;
+  final Value<String?> note;
+  final Value<String?> reversesEntryId;
+  final Value<int> rowid;
+  const CashEntriesCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.entryDate = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.amountFils = const Value.absent(),
+    this.currency = const Value.absent(),
+    this.workerId = const Value.absent(),
+    this.roomId = const Value.absent(),
+    this.clientId = const Value.absent(),
+    this.siteId = const Value.absent(),
+    this.category = const Value.absent(),
+    this.method = const Value.absent(),
+    this.note = const Value.absent(),
+    this.reversesEntryId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CashEntriesCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String entryDate,
+    required String kind,
+    required int amountFils,
+    this.currency = const Value.absent(),
+    this.workerId = const Value.absent(),
+    this.roomId = const Value.absent(),
+    this.clientId = const Value.absent(),
+    this.siteId = const Value.absent(),
+    this.category = const Value.absent(),
+    this.method = const Value.absent(),
+    this.note = const Value.absent(),
+    this.reversesEntryId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       entryDate = Value(entryDate),
+       kind = Value(kind),
+       amountFils = Value(amountFils);
+  static Insertable<CashEntry> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? entryDate,
+    Expression<String>? kind,
+    Expression<int>? amountFils,
+    Expression<String>? currency,
+    Expression<String>? workerId,
+    Expression<String>? roomId,
+    Expression<String>? clientId,
+    Expression<String>? siteId,
+    Expression<String>? category,
+    Expression<String>? method,
+    Expression<String>? note,
+    Expression<String>? reversesEntryId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (entryDate != null) 'entry_date': entryDate,
+      if (kind != null) 'kind': kind,
+      if (amountFils != null) 'amount_fils': amountFils,
+      if (currency != null) 'currency': currency,
+      if (workerId != null) 'worker_id': workerId,
+      if (roomId != null) 'room_id': roomId,
+      if (clientId != null) 'client_id': clientId,
+      if (siteId != null) 'site_id': siteId,
+      if (category != null) 'category': category,
+      if (method != null) 'method': method,
+      if (note != null) 'note': note,
+      if (reversesEntryId != null) 'reverses_entry_id': reversesEntryId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CashEntriesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? entryDate,
+    Value<String>? kind,
+    Value<int>? amountFils,
+    Value<String>? currency,
+    Value<String?>? workerId,
+    Value<String?>? roomId,
+    Value<String?>? clientId,
+    Value<String?>? siteId,
+    Value<String?>? category,
+    Value<String>? method,
+    Value<String?>? note,
+    Value<String?>? reversesEntryId,
+    Value<int>? rowid,
+  }) {
+    return CashEntriesCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      entryDate: entryDate ?? this.entryDate,
+      kind: kind ?? this.kind,
+      amountFils: amountFils ?? this.amountFils,
+      currency: currency ?? this.currency,
+      workerId: workerId ?? this.workerId,
+      roomId: roomId ?? this.roomId,
+      clientId: clientId ?? this.clientId,
+      siteId: siteId ?? this.siteId,
+      category: category ?? this.category,
+      method: method ?? this.method,
+      note: note ?? this.note,
+      reversesEntryId: reversesEntryId ?? this.reversesEntryId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (entryDate.present) {
+      map['entry_date'] = Variable<String>(entryDate.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (amountFils.present) {
+      map['amount_fils'] = Variable<int>(amountFils.value);
+    }
+    if (currency.present) {
+      map['currency'] = Variable<String>(currency.value);
+    }
+    if (workerId.present) {
+      map['worker_id'] = Variable<String>(workerId.value);
+    }
+    if (roomId.present) {
+      map['room_id'] = Variable<String>(roomId.value);
+    }
+    if (clientId.present) {
+      map['client_id'] = Variable<String>(clientId.value);
+    }
+    if (siteId.present) {
+      map['site_id'] = Variable<String>(siteId.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    if (method.present) {
+      map['method'] = Variable<String>(method.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    if (reversesEntryId.present) {
+      map['reverses_entry_id'] = Variable<String>(reversesEntryId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CashEntriesCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('entryDate: $entryDate, ')
+          ..write('kind: $kind, ')
+          ..write('amountFils: $amountFils, ')
+          ..write('currency: $currency, ')
+          ..write('workerId: $workerId, ')
+          ..write('roomId: $roomId, ')
+          ..write('clientId: $clientId, ')
+          ..write('siteId: $siteId, ')
+          ..write('category: $category, ')
+          ..write('method: $method, ')
+          ..write('note: $note, ')
+          ..write('reversesEntryId: $reversesEntryId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $WorkerGroupsTable extends WorkerGroups
     with TableInfo<$WorkerGroupsTable, WorkerGroup> {
   @override
@@ -4331,886 +6952,6 @@ class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatch> {
           ..write('siteId: $siteId, ')
           ..write('groupId: $groupId, ')
           ..write('note: $note, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $WorkersTable extends Workers with TableInfo<$WorkersTable, Worker> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $WorkersTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
-    'tenantId',
-  );
-  @override
-  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
-    'tenant_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
-    'createdAtUtc',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
-    'created_at_utc',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
-    'updatedAtUtc',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
-    'updated_at_utc',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _actorIdMeta = const VerificationMeta(
-    'actorId',
-  );
-  @override
-  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
-    'actor_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _versionMeta = const VerificationMeta(
-    'version',
-  );
-  @override
-  late final GeneratedColumn<int> version = GeneratedColumn<int>(
-    'version',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(1),
-  );
-  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
-    'sourceOperationId',
-  );
-  @override
-  late final GeneratedColumn<String> sourceOperationId =
-      GeneratedColumn<String>(
-        'source_operation_id',
-        aliasedName,
-        false,
-        type: DriftSqlType.string,
-        requiredDuringInsert: true,
-      );
-  static const VerificationMeta _codeMeta = const VerificationMeta('code');
-  @override
-  late final GeneratedColumn<String> code = GeneratedColumn<String>(
-    'code',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
-  @override
-  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
-    'phone',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _tradeMeta = const VerificationMeta('trade');
-  @override
-  late final GeneratedColumn<String> trade = GeneratedColumn<String>(
-    'trade',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _joiningDateMeta = const VerificationMeta(
-    'joiningDate',
-  );
-  @override
-  late final GeneratedColumn<String> joiningDate = GeneratedColumn<String>(
-    'joining_date',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _roomChargeFilsMeta = const VerificationMeta(
-    'roomChargeFils',
-  );
-  @override
-  late final GeneratedColumn<int> roomChargeFils = GeneratedColumn<int>(
-    'room_charge_fils',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _roomChargeNoteMeta = const VerificationMeta(
-    'roomChargeNote',
-  );
-  @override
-  late final GeneratedColumn<String> roomChargeNote = GeneratedColumn<String>(
-    'room_charge_note',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _activeMeta = const VerificationMeta('active');
-  @override
-  late final GeneratedColumn<bool> active = GeneratedColumn<bool>(
-    'active',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("active" IN (0, 1))',
-    ),
-    defaultValue: const Constant(true),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    tenantId,
-    createdAtUtc,
-    updatedAtUtc,
-    actorId,
-    version,
-    sourceOperationId,
-    code,
-    name,
-    phone,
-    trade,
-    joiningDate,
-    roomChargeFils,
-    roomChargeNote,
-    active,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'workers';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<Worker> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('tenant_id')) {
-      context.handle(
-        _tenantIdMeta,
-        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_tenantIdMeta);
-    }
-    if (data.containsKey('created_at_utc')) {
-      context.handle(
-        _createdAtUtcMeta,
-        createdAtUtc.isAcceptableOrUnknown(
-          data['created_at_utc']!,
-          _createdAtUtcMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_createdAtUtcMeta);
-    }
-    if (data.containsKey('updated_at_utc')) {
-      context.handle(
-        _updatedAtUtcMeta,
-        updatedAtUtc.isAcceptableOrUnknown(
-          data['updated_at_utc']!,
-          _updatedAtUtcMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_updatedAtUtcMeta);
-    }
-    if (data.containsKey('actor_id')) {
-      context.handle(
-        _actorIdMeta,
-        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_actorIdMeta);
-    }
-    if (data.containsKey('version')) {
-      context.handle(
-        _versionMeta,
-        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
-      );
-    }
-    if (data.containsKey('source_operation_id')) {
-      context.handle(
-        _sourceOperationIdMeta,
-        sourceOperationId.isAcceptableOrUnknown(
-          data['source_operation_id']!,
-          _sourceOperationIdMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_sourceOperationIdMeta);
-    }
-    if (data.containsKey('code')) {
-      context.handle(
-        _codeMeta,
-        code.isAcceptableOrUnknown(data['code']!, _codeMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_codeMeta);
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('phone')) {
-      context.handle(
-        _phoneMeta,
-        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
-      );
-    }
-    if (data.containsKey('trade')) {
-      context.handle(
-        _tradeMeta,
-        trade.isAcceptableOrUnknown(data['trade']!, _tradeMeta),
-      );
-    }
-    if (data.containsKey('joining_date')) {
-      context.handle(
-        _joiningDateMeta,
-        joiningDate.isAcceptableOrUnknown(
-          data['joining_date']!,
-          _joiningDateMeta,
-        ),
-      );
-    }
-    if (data.containsKey('room_charge_fils')) {
-      context.handle(
-        _roomChargeFilsMeta,
-        roomChargeFils.isAcceptableOrUnknown(
-          data['room_charge_fils']!,
-          _roomChargeFilsMeta,
-        ),
-      );
-    }
-    if (data.containsKey('room_charge_note')) {
-      context.handle(
-        _roomChargeNoteMeta,
-        roomChargeNote.isAcceptableOrUnknown(
-          data['room_charge_note']!,
-          _roomChargeNoteMeta,
-        ),
-      );
-    }
-    if (data.containsKey('active')) {
-      context.handle(
-        _activeMeta,
-        active.isAcceptableOrUnknown(data['active']!, _activeMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {tenantId, code},
-  ];
-  @override
-  Worker map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Worker(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      tenantId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}tenant_id'],
-      )!,
-      createdAtUtc: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at_utc'],
-      )!,
-      updatedAtUtc: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at_utc'],
-      )!,
-      actorId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}actor_id'],
-      )!,
-      version: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}version'],
-      )!,
-      sourceOperationId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}source_operation_id'],
-      )!,
-      code: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}code'],
-      )!,
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      )!,
-      phone: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}phone'],
-      ),
-      trade: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}trade'],
-      ),
-      joiningDate: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}joining_date'],
-      ),
-      roomChargeFils: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}room_charge_fils'],
-      ),
-      roomChargeNote: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}room_charge_note'],
-      ),
-      active: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}active'],
-      )!,
-    );
-  }
-
-  @override
-  $WorkersTable createAlias(String alias) {
-    return $WorkersTable(attachedDatabase, alias);
-  }
-}
-
-class Worker extends DataClass implements Insertable<Worker> {
-  final String id;
-  final String tenantId;
-  final DateTime createdAtUtc;
-  final DateTime updatedAtUtc;
-  final String actorId;
-  final int version;
-  final String sourceOperationId;
-  final String code;
-  final String name;
-  final String? phone;
-  final String? trade;
-  final String? joiningDate;
-  final int? roomChargeFils;
-  final String? roomChargeNote;
-  final bool active;
-  const Worker({
-    required this.id,
-    required this.tenantId,
-    required this.createdAtUtc,
-    required this.updatedAtUtc,
-    required this.actorId,
-    required this.version,
-    required this.sourceOperationId,
-    required this.code,
-    required this.name,
-    this.phone,
-    this.trade,
-    this.joiningDate,
-    this.roomChargeFils,
-    this.roomChargeNote,
-    required this.active,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['tenant_id'] = Variable<String>(tenantId);
-    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
-    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
-    map['actor_id'] = Variable<String>(actorId);
-    map['version'] = Variable<int>(version);
-    map['source_operation_id'] = Variable<String>(sourceOperationId);
-    map['code'] = Variable<String>(code);
-    map['name'] = Variable<String>(name);
-    if (!nullToAbsent || phone != null) {
-      map['phone'] = Variable<String>(phone);
-    }
-    if (!nullToAbsent || trade != null) {
-      map['trade'] = Variable<String>(trade);
-    }
-    if (!nullToAbsent || joiningDate != null) {
-      map['joining_date'] = Variable<String>(joiningDate);
-    }
-    if (!nullToAbsent || roomChargeFils != null) {
-      map['room_charge_fils'] = Variable<int>(roomChargeFils);
-    }
-    if (!nullToAbsent || roomChargeNote != null) {
-      map['room_charge_note'] = Variable<String>(roomChargeNote);
-    }
-    map['active'] = Variable<bool>(active);
-    return map;
-  }
-
-  WorkersCompanion toCompanion(bool nullToAbsent) {
-    return WorkersCompanion(
-      id: Value(id),
-      tenantId: Value(tenantId),
-      createdAtUtc: Value(createdAtUtc),
-      updatedAtUtc: Value(updatedAtUtc),
-      actorId: Value(actorId),
-      version: Value(version),
-      sourceOperationId: Value(sourceOperationId),
-      code: Value(code),
-      name: Value(name),
-      phone: phone == null && nullToAbsent
-          ? const Value.absent()
-          : Value(phone),
-      trade: trade == null && nullToAbsent
-          ? const Value.absent()
-          : Value(trade),
-      joiningDate: joiningDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(joiningDate),
-      roomChargeFils: roomChargeFils == null && nullToAbsent
-          ? const Value.absent()
-          : Value(roomChargeFils),
-      roomChargeNote: roomChargeNote == null && nullToAbsent
-          ? const Value.absent()
-          : Value(roomChargeNote),
-      active: Value(active),
-    );
-  }
-
-  factory Worker.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Worker(
-      id: serializer.fromJson<String>(json['id']),
-      tenantId: serializer.fromJson<String>(json['tenantId']),
-      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
-      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
-      actorId: serializer.fromJson<String>(json['actorId']),
-      version: serializer.fromJson<int>(json['version']),
-      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
-      code: serializer.fromJson<String>(json['code']),
-      name: serializer.fromJson<String>(json['name']),
-      phone: serializer.fromJson<String?>(json['phone']),
-      trade: serializer.fromJson<String?>(json['trade']),
-      joiningDate: serializer.fromJson<String?>(json['joiningDate']),
-      roomChargeFils: serializer.fromJson<int?>(json['roomChargeFils']),
-      roomChargeNote: serializer.fromJson<String?>(json['roomChargeNote']),
-      active: serializer.fromJson<bool>(json['active']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'tenantId': serializer.toJson<String>(tenantId),
-      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
-      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
-      'actorId': serializer.toJson<String>(actorId),
-      'version': serializer.toJson<int>(version),
-      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
-      'code': serializer.toJson<String>(code),
-      'name': serializer.toJson<String>(name),
-      'phone': serializer.toJson<String?>(phone),
-      'trade': serializer.toJson<String?>(trade),
-      'joiningDate': serializer.toJson<String?>(joiningDate),
-      'roomChargeFils': serializer.toJson<int?>(roomChargeFils),
-      'roomChargeNote': serializer.toJson<String?>(roomChargeNote),
-      'active': serializer.toJson<bool>(active),
-    };
-  }
-
-  Worker copyWith({
-    String? id,
-    String? tenantId,
-    DateTime? createdAtUtc,
-    DateTime? updatedAtUtc,
-    String? actorId,
-    int? version,
-    String? sourceOperationId,
-    String? code,
-    String? name,
-    Value<String?> phone = const Value.absent(),
-    Value<String?> trade = const Value.absent(),
-    Value<String?> joiningDate = const Value.absent(),
-    Value<int?> roomChargeFils = const Value.absent(),
-    Value<String?> roomChargeNote = const Value.absent(),
-    bool? active,
-  }) => Worker(
-    id: id ?? this.id,
-    tenantId: tenantId ?? this.tenantId,
-    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
-    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
-    actorId: actorId ?? this.actorId,
-    version: version ?? this.version,
-    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
-    code: code ?? this.code,
-    name: name ?? this.name,
-    phone: phone.present ? phone.value : this.phone,
-    trade: trade.present ? trade.value : this.trade,
-    joiningDate: joiningDate.present ? joiningDate.value : this.joiningDate,
-    roomChargeFils: roomChargeFils.present
-        ? roomChargeFils.value
-        : this.roomChargeFils,
-    roomChargeNote: roomChargeNote.present
-        ? roomChargeNote.value
-        : this.roomChargeNote,
-    active: active ?? this.active,
-  );
-  Worker copyWithCompanion(WorkersCompanion data) {
-    return Worker(
-      id: data.id.present ? data.id.value : this.id,
-      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
-      createdAtUtc: data.createdAtUtc.present
-          ? data.createdAtUtc.value
-          : this.createdAtUtc,
-      updatedAtUtc: data.updatedAtUtc.present
-          ? data.updatedAtUtc.value
-          : this.updatedAtUtc,
-      actorId: data.actorId.present ? data.actorId.value : this.actorId,
-      version: data.version.present ? data.version.value : this.version,
-      sourceOperationId: data.sourceOperationId.present
-          ? data.sourceOperationId.value
-          : this.sourceOperationId,
-      code: data.code.present ? data.code.value : this.code,
-      name: data.name.present ? data.name.value : this.name,
-      phone: data.phone.present ? data.phone.value : this.phone,
-      trade: data.trade.present ? data.trade.value : this.trade,
-      joiningDate: data.joiningDate.present
-          ? data.joiningDate.value
-          : this.joiningDate,
-      roomChargeFils: data.roomChargeFils.present
-          ? data.roomChargeFils.value
-          : this.roomChargeFils,
-      roomChargeNote: data.roomChargeNote.present
-          ? data.roomChargeNote.value
-          : this.roomChargeNote,
-      active: data.active.present ? data.active.value : this.active,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('Worker(')
-          ..write('id: $id, ')
-          ..write('tenantId: $tenantId, ')
-          ..write('createdAtUtc: $createdAtUtc, ')
-          ..write('updatedAtUtc: $updatedAtUtc, ')
-          ..write('actorId: $actorId, ')
-          ..write('version: $version, ')
-          ..write('sourceOperationId: $sourceOperationId, ')
-          ..write('code: $code, ')
-          ..write('name: $name, ')
-          ..write('phone: $phone, ')
-          ..write('trade: $trade, ')
-          ..write('joiningDate: $joiningDate, ')
-          ..write('roomChargeFils: $roomChargeFils, ')
-          ..write('roomChargeNote: $roomChargeNote, ')
-          ..write('active: $active')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    id,
-    tenantId,
-    createdAtUtc,
-    updatedAtUtc,
-    actorId,
-    version,
-    sourceOperationId,
-    code,
-    name,
-    phone,
-    trade,
-    joiningDate,
-    roomChargeFils,
-    roomChargeNote,
-    active,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Worker &&
-          other.id == this.id &&
-          other.tenantId == this.tenantId &&
-          other.createdAtUtc == this.createdAtUtc &&
-          other.updatedAtUtc == this.updatedAtUtc &&
-          other.actorId == this.actorId &&
-          other.version == this.version &&
-          other.sourceOperationId == this.sourceOperationId &&
-          other.code == this.code &&
-          other.name == this.name &&
-          other.phone == this.phone &&
-          other.trade == this.trade &&
-          other.joiningDate == this.joiningDate &&
-          other.roomChargeFils == this.roomChargeFils &&
-          other.roomChargeNote == this.roomChargeNote &&
-          other.active == this.active);
-}
-
-class WorkersCompanion extends UpdateCompanion<Worker> {
-  final Value<String> id;
-  final Value<String> tenantId;
-  final Value<DateTime> createdAtUtc;
-  final Value<DateTime> updatedAtUtc;
-  final Value<String> actorId;
-  final Value<int> version;
-  final Value<String> sourceOperationId;
-  final Value<String> code;
-  final Value<String> name;
-  final Value<String?> phone;
-  final Value<String?> trade;
-  final Value<String?> joiningDate;
-  final Value<int?> roomChargeFils;
-  final Value<String?> roomChargeNote;
-  final Value<bool> active;
-  final Value<int> rowid;
-  const WorkersCompanion({
-    this.id = const Value.absent(),
-    this.tenantId = const Value.absent(),
-    this.createdAtUtc = const Value.absent(),
-    this.updatedAtUtc = const Value.absent(),
-    this.actorId = const Value.absent(),
-    this.version = const Value.absent(),
-    this.sourceOperationId = const Value.absent(),
-    this.code = const Value.absent(),
-    this.name = const Value.absent(),
-    this.phone = const Value.absent(),
-    this.trade = const Value.absent(),
-    this.joiningDate = const Value.absent(),
-    this.roomChargeFils = const Value.absent(),
-    this.roomChargeNote = const Value.absent(),
-    this.active = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  WorkersCompanion.insert({
-    required String id,
-    required String tenantId,
-    required DateTime createdAtUtc,
-    required DateTime updatedAtUtc,
-    required String actorId,
-    this.version = const Value.absent(),
-    required String sourceOperationId,
-    required String code,
-    required String name,
-    this.phone = const Value.absent(),
-    this.trade = const Value.absent(),
-    this.joiningDate = const Value.absent(),
-    this.roomChargeFils = const Value.absent(),
-    this.roomChargeNote = const Value.absent(),
-    this.active = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       tenantId = Value(tenantId),
-       createdAtUtc = Value(createdAtUtc),
-       updatedAtUtc = Value(updatedAtUtc),
-       actorId = Value(actorId),
-       sourceOperationId = Value(sourceOperationId),
-       code = Value(code),
-       name = Value(name);
-  static Insertable<Worker> custom({
-    Expression<String>? id,
-    Expression<String>? tenantId,
-    Expression<DateTime>? createdAtUtc,
-    Expression<DateTime>? updatedAtUtc,
-    Expression<String>? actorId,
-    Expression<int>? version,
-    Expression<String>? sourceOperationId,
-    Expression<String>? code,
-    Expression<String>? name,
-    Expression<String>? phone,
-    Expression<String>? trade,
-    Expression<String>? joiningDate,
-    Expression<int>? roomChargeFils,
-    Expression<String>? roomChargeNote,
-    Expression<bool>? active,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (tenantId != null) 'tenant_id': tenantId,
-      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
-      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
-      if (actorId != null) 'actor_id': actorId,
-      if (version != null) 'version': version,
-      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
-      if (code != null) 'code': code,
-      if (name != null) 'name': name,
-      if (phone != null) 'phone': phone,
-      if (trade != null) 'trade': trade,
-      if (joiningDate != null) 'joining_date': joiningDate,
-      if (roomChargeFils != null) 'room_charge_fils': roomChargeFils,
-      if (roomChargeNote != null) 'room_charge_note': roomChargeNote,
-      if (active != null) 'active': active,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  WorkersCompanion copyWith({
-    Value<String>? id,
-    Value<String>? tenantId,
-    Value<DateTime>? createdAtUtc,
-    Value<DateTime>? updatedAtUtc,
-    Value<String>? actorId,
-    Value<int>? version,
-    Value<String>? sourceOperationId,
-    Value<String>? code,
-    Value<String>? name,
-    Value<String?>? phone,
-    Value<String?>? trade,
-    Value<String?>? joiningDate,
-    Value<int?>? roomChargeFils,
-    Value<String?>? roomChargeNote,
-    Value<bool>? active,
-    Value<int>? rowid,
-  }) {
-    return WorkersCompanion(
-      id: id ?? this.id,
-      tenantId: tenantId ?? this.tenantId,
-      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
-      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
-      actorId: actorId ?? this.actorId,
-      version: version ?? this.version,
-      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
-      code: code ?? this.code,
-      name: name ?? this.name,
-      phone: phone ?? this.phone,
-      trade: trade ?? this.trade,
-      joiningDate: joiningDate ?? this.joiningDate,
-      roomChargeFils: roomChargeFils ?? this.roomChargeFils,
-      roomChargeNote: roomChargeNote ?? this.roomChargeNote,
-      active: active ?? this.active,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (tenantId.present) {
-      map['tenant_id'] = Variable<String>(tenantId.value);
-    }
-    if (createdAtUtc.present) {
-      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
-    }
-    if (updatedAtUtc.present) {
-      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
-    }
-    if (actorId.present) {
-      map['actor_id'] = Variable<String>(actorId.value);
-    }
-    if (version.present) {
-      map['version'] = Variable<int>(version.value);
-    }
-    if (sourceOperationId.present) {
-      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
-    }
-    if (code.present) {
-      map['code'] = Variable<String>(code.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (phone.present) {
-      map['phone'] = Variable<String>(phone.value);
-    }
-    if (trade.present) {
-      map['trade'] = Variable<String>(trade.value);
-    }
-    if (joiningDate.present) {
-      map['joining_date'] = Variable<String>(joiningDate.value);
-    }
-    if (roomChargeFils.present) {
-      map['room_charge_fils'] = Variable<int>(roomChargeFils.value);
-    }
-    if (roomChargeNote.present) {
-      map['room_charge_note'] = Variable<String>(roomChargeNote.value);
-    }
-    if (active.present) {
-      map['active'] = Variable<bool>(active.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('WorkersCompanion(')
-          ..write('id: $id, ')
-          ..write('tenantId: $tenantId, ')
-          ..write('createdAtUtc: $createdAtUtc, ')
-          ..write('updatedAtUtc: $updatedAtUtc, ')
-          ..write('actorId: $actorId, ')
-          ..write('version: $version, ')
-          ..write('sourceOperationId: $sourceOperationId, ')
-          ..write('code: $code, ')
-          ..write('name: $name, ')
-          ..write('phone: $phone, ')
-          ..write('trade: $trade, ')
-          ..write('joiningDate: $joiningDate, ')
-          ..write('roomChargeFils: $roomChargeFils, ')
-          ..write('roomChargeNote: $roomChargeNote, ')
-          ..write('active: $active, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -12737,12 +14478,22 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     'CREATE TRIGGER audit_no_delete BEFORE DELETE ON audit_events BEGIN SELECT RAISE (ABORT, \'audit events are append-only\');END',
     'audit_no_delete',
   );
+  late final $RoomsTable rooms = $RoomsTable(this);
+  late final $WorkersTable workers = $WorkersTable(this);
   late final $ClientsTable clients = $ClientsTable(this);
   late final $SitesTable sites = $SitesTable(this);
+  late final $CashEntriesTable cashEntries = $CashEntriesTable(this);
+  late final Trigger cashNoUpdate = Trigger(
+    'CREATE TRIGGER cash_no_update BEFORE UPDATE ON cash_entries BEGIN SELECT RAISE (ABORT, \'cash entries are append-only\');END',
+    'cash_no_update',
+  );
+  late final Trigger cashNoDelete = Trigger(
+    'CREATE TRIGGER cash_no_delete BEFORE DELETE ON cash_entries BEGIN SELECT RAISE (ABORT, \'cash entries are append-only\');END',
+    'cash_no_delete',
+  );
   late final $WorkerGroupsTable workerGroups = $WorkerGroupsTable(this);
   late final $AttendanceBatchesTable attendanceBatches =
       $AttendanceBatchesTable(this);
-  late final $WorkersTable workers = $WorkersTable(this);
   late final $AttendanceEntriesTable attendanceEntries =
       $AttendanceEntriesTable(this);
   late final Trigger approvedEntryNoEdit = Trigger(
@@ -12768,6 +14519,18 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
   late final $WorkerGroupMembersTable workerGroupMembers =
       $WorkerGroupMembersTable(this);
   late final $OutboxTable outbox = $OutboxTable(this);
+  late final Index idxCashDate = Index(
+    'idx_cash_date',
+    'CREATE INDEX idx_cash_date ON cash_entries (entry_date)',
+  );
+  late final Index idxCashWorker = Index(
+    'idx_cash_worker',
+    'CREATE INDEX idx_cash_worker ON cash_entries (worker_id)',
+  );
+  late final Index idxCashRoom = Index(
+    'idx_cash_room',
+    'CREATE INDEX idx_cash_room ON cash_entries (room_id)',
+  );
   late final Index idxEntriesWorkerDate = Index(
     'idx_entries_worker_date',
     'CREATE INDEX idx_entries_worker_date ON attendance_entries (worker_id, work_date)',
@@ -12784,11 +14547,15 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     auditEvents,
     auditNoUpdate,
     auditNoDelete,
+    rooms,
+    workers,
     clients,
     sites,
+    cashEntries,
+    cashNoUpdate,
+    cashNoDelete,
     workerGroups,
     attendanceBatches,
-    workers,
     attendanceEntries,
     approvedEntryNoEdit,
     linkedEntryKeepsState,
@@ -12799,6 +14566,9 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     openingBalances,
     workerGroupMembers,
     outbox,
+    idxCashDate,
+    idxCashWorker,
+    idxCashRoom,
     idxEntriesWorkerDate,
     idxEntriesDate,
   ];
@@ -12814,6 +14584,20 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     WritePropagation(
       on: TableUpdateQuery.onTableName(
         'audit_events',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'cash_entries',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'cash_entries',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [],
@@ -13150,6 +14934,1605 @@ typedef $$AuditEventsTableProcessedTableManager =
       AuditEvent,
       PrefetchHooks Function()
     >;
+typedef $$RoomsTableCreateCompanionBuilder = RoomsCompanion Function({
+  required String id,
+  required String tenantId,
+  required DateTime createdAtUtc,
+  required DateTime updatedAtUtc,
+  required String actorId,
+  Value<int> version,
+  required String sourceOperationId,
+  required String name,
+  Value<String?> note,
+  Value<bool> active,
+  Value<int> rowid,
+});
+typedef $$RoomsTableUpdateCompanionBuilder = RoomsCompanion Function({
+  Value<String> id,
+  Value<String> tenantId,
+  Value<DateTime> createdAtUtc,
+  Value<DateTime> updatedAtUtc,
+  Value<String> actorId,
+  Value<int> version,
+  Value<String> sourceOperationId,
+  Value<String> name,
+  Value<String?> note,
+  Value<bool> active,
+  Value<int> rowid,
+});
+
+final class $$RoomsTableReferences
+    extends BaseReferences<_$TenantDatabase, $RoomsTable, Room> {
+  $$RoomsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$WorkersTable, List<Worker>> _workersRefsTable(
+    _$TenantDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.workers,
+    aliasName: 'rooms__id__workers__room_id',
+  );
+
+  $$WorkersTableProcessedTableManager get workersRefs {
+    final manager = $$WorkersTableTableManager(
+      $_db,
+      $_db.workers,
+    ).filter((f) => f.roomId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_workersRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$CashEntriesTable, List<CashEntry>>
+  _cashEntriesRefsTable(_$TenantDatabase db) => MultiTypedResultKey.fromTable(
+    db.cashEntries,
+    aliasName: 'rooms__id__cash_entries__room_id',
+  );
+
+  $$CashEntriesTableProcessedTableManager get cashEntriesRefs {
+    final manager = $$CashEntriesTableTableManager(
+      $_db,
+      $_db.cashEntries,
+    ).filter((f) => f.roomId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_cashEntriesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$RoomsTableFilterComposer
+    extends Composer<_$TenantDatabase, $RoomsTable> {
+  $$RoomsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get active => $composableBuilder(
+    column: $table.active,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> workersRefs(
+    Expression<bool> Function($$WorkersTableFilterComposer f) f,
+  ) {
+    final $$WorkersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.roomId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableFilterComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> cashEntriesRefs(
+    Expression<bool> Function($$CashEntriesTableFilterComposer f) f,
+  ) {
+    final $$CashEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.roomId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$RoomsTableOrderingComposer
+    extends Composer<_$TenantDatabase, $RoomsTable> {
+  $$RoomsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get active => $composableBuilder(
+    column: $table.active,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$RoomsTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $RoomsTable> {
+  $$RoomsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumn<bool> get active =>
+      $composableBuilder(column: $table.active, builder: (column) => column);
+
+  Expression<T> workersRefs<T extends Object>(
+    Expression<T> Function($$WorkersTableAnnotationComposer a) f,
+  ) {
+    final $$WorkersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.roomId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> cashEntriesRefs<T extends Object>(
+    Expression<T> Function($$CashEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$CashEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.roomId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$RoomsTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $RoomsTable,
+          Room,
+          $$RoomsTableFilterComposer,
+          $$RoomsTableOrderingComposer,
+          $$RoomsTableAnnotationComposer,
+          $$RoomsTableCreateCompanionBuilder,
+          $$RoomsTableUpdateCompanionBuilder,
+          (Room, $$RoomsTableReferences),
+          Room,
+          PrefetchHooks Function({bool workersRefs, bool cashEntriesRefs})
+        > {
+  $$RoomsTableTableManager(_$TenantDatabase db, $RoomsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RoomsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RoomsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$RoomsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> note = const Value.absent(),
+                Value<bool> active = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RoomsCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                name: name,
+                note: note,
+                active: active,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String name,
+                Value<String?> note = const Value.absent(),
+                Value<bool> active = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RoomsCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                name: name,
+                note: note,
+                active: active,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$RoomsTable, Room>(table),
+                  $$RoomsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({workersRefs = false, cashEntriesRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (workersRefs) db.workers,
+                    if (cashEntriesRefs) db.cashEntries,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (workersRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Room,
+                          $RoomsTable,
+                          Worker,
+                          $WorkersTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$RoomsTableReferences
+                              ._workersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$RoomsTableReferences(db, table, p0).workersRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'room_id',
+                          typedResults: items,
+                        ),
+                      if (cashEntriesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Room,
+                          $RoomsTable,
+                          CashEntry,
+                          $CashEntriesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$RoomsTableReferences
+                              ._cashEntriesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$RoomsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).cashEntriesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'room_id',
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$RoomsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $RoomsTable,
+      Room,
+      $$RoomsTableFilterComposer,
+      $$RoomsTableOrderingComposer,
+      $$RoomsTableAnnotationComposer,
+      $$RoomsTableCreateCompanionBuilder,
+      $$RoomsTableUpdateCompanionBuilder,
+      (Room, $$RoomsTableReferences),
+      Room,
+      PrefetchHooks Function({bool workersRefs, bool cashEntriesRefs})
+    >;
+typedef $$WorkersTableCreateCompanionBuilder = WorkersCompanion Function({
+  required String id,
+  required String tenantId,
+  required DateTime createdAtUtc,
+  required DateTime updatedAtUtc,
+  required String actorId,
+  Value<int> version,
+  required String sourceOperationId,
+  required String code,
+  required String name,
+  Value<String?> phone,
+  Value<String?> trade,
+  Value<String?> joiningDate,
+  Value<int?> roomChargeFils,
+  Value<String?> roomChargeNote,
+  Value<String?> roomId,
+  Value<bool> active,
+  Value<int> rowid,
+});
+typedef $$WorkersTableUpdateCompanionBuilder = WorkersCompanion Function({
+  Value<String> id,
+  Value<String> tenantId,
+  Value<DateTime> createdAtUtc,
+  Value<DateTime> updatedAtUtc,
+  Value<String> actorId,
+  Value<int> version,
+  Value<String> sourceOperationId,
+  Value<String> code,
+  Value<String> name,
+  Value<String?> phone,
+  Value<String?> trade,
+  Value<String?> joiningDate,
+  Value<int?> roomChargeFils,
+  Value<String?> roomChargeNote,
+  Value<String?> roomId,
+  Value<bool> active,
+  Value<int> rowid,
+});
+
+final class $$WorkersTableReferences
+    extends BaseReferences<_$TenantDatabase, $WorkersTable, Worker> {
+  $$WorkersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $RoomsTable _roomIdTable(_$TenantDatabase db) =>
+      db.rooms.createAlias('workers__room_id__rooms__id');
+
+  $$RoomsTableProcessedTableManager? get roomId {
+    final $_column = $_itemColumn<String>('room_id');
+    if ($_column == null) return null;
+    final manager = $$RoomsTableTableManager(
+      $_db,
+      $_db.rooms,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_roomIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$CashEntriesTable, List<CashEntry>>
+  _cashEntriesRefsTable(_$TenantDatabase db) => MultiTypedResultKey.fromTable(
+    db.cashEntries,
+    aliasName: 'workers__id__cash_entries__worker_id',
+  );
+
+  $$CashEntriesTableProcessedTableManager get cashEntriesRefs {
+    final manager = $$CashEntriesTableTableManager(
+      $_db,
+      $_db.cashEntries,
+    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_cashEntriesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$AttendanceEntriesTable, List<AttendanceEntry>>
+  _attendanceEntriesRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.attendanceEntries,
+        aliasName: 'workers__id__attendance_entries__worker_id',
+      );
+
+  $$AttendanceEntriesTableProcessedTableManager get attendanceEntriesRefs {
+    final manager = $$AttendanceEntriesTableTableManager(
+      $_db,
+      $_db.attendanceEntries,
+    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _attendanceEntriesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$PayContractsTable, List<PayContract>>
+  _payContractsRefsTable(_$TenantDatabase db) => MultiTypedResultKey.fromTable(
+    db.payContracts,
+    aliasName: 'workers__id__pay_contracts__worker_id',
+  );
+
+  $$PayContractsTableProcessedTableManager get payContractsRefs {
+    final manager = $$PayContractsTableTableManager(
+      $_db,
+      $_db.payContracts,
+    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_payContractsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$BillingContractsTable, List<BillingContract>>
+  _billingContractsRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.billingContracts,
+        aliasName: 'workers__id__billing_contracts__worker_id',
+      );
+
+  $$BillingContractsTableProcessedTableManager get billingContractsRefs {
+    final manager = $$BillingContractsTableTableManager(
+      $_db,
+      $_db.billingContracts,
+    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _billingContractsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$OpeningBalancesTable, List<OpeningBalance>>
+  _openingBalancesRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.openingBalances,
+        aliasName: 'workers__id__opening_balances__worker_id',
+      );
+
+  $$OpeningBalancesTableProcessedTableManager get openingBalancesRefs {
+    final manager = $$OpeningBalancesTableTableManager(
+      $_db,
+      $_db.openingBalances,
+    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _openingBalancesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WorkerGroupMembersTable, List<WorkerGroupMember>>
+  _workerGroupMembersRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.workerGroupMembers,
+        aliasName: 'workers__id__worker_group_members__worker_id',
+      );
+
+  $$WorkerGroupMembersTableProcessedTableManager get workerGroupMembersRefs {
+    final manager = $$WorkerGroupMembersTableTableManager(
+      $_db,
+      $_db.workerGroupMembers,
+    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _workerGroupMembersRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$WorkersTableFilterComposer
+    extends Composer<_$TenantDatabase, $WorkersTable> {
+  $$WorkersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get code => $composableBuilder(
+    column: $table.code,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get trade => $composableBuilder(
+    column: $table.trade,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get joiningDate => $composableBuilder(
+    column: $table.joiningDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get roomChargeFils => $composableBuilder(
+    column: $table.roomChargeFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get roomChargeNote => $composableBuilder(
+    column: $table.roomChargeNote,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get active => $composableBuilder(
+    column: $table.active,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$RoomsTableFilterComposer get roomId {
+    final $$RoomsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.roomId,
+      referencedTable: $db.rooms,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RoomsTableFilterComposer(
+            $db: $db,
+            $table: $db.rooms,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> cashEntriesRefs(
+    Expression<bool> Function($$CashEntriesTableFilterComposer f) f,
+  ) {
+    final $$CashEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> attendanceEntriesRefs(
+    Expression<bool> Function($$AttendanceEntriesTableFilterComposer f) f,
+  ) {
+    final $$AttendanceEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.attendanceEntries,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttendanceEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.attendanceEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> payContractsRefs(
+    Expression<bool> Function($$PayContractsTableFilterComposer f) f,
+  ) {
+    final $$PayContractsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.payContracts,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PayContractsTableFilterComposer(
+            $db: $db,
+            $table: $db.payContracts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> billingContractsRefs(
+    Expression<bool> Function($$BillingContractsTableFilterComposer f) f,
+  ) {
+    final $$BillingContractsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.billingContracts,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BillingContractsTableFilterComposer(
+            $db: $db,
+            $table: $db.billingContracts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> openingBalancesRefs(
+    Expression<bool> Function($$OpeningBalancesTableFilterComposer f) f,
+  ) {
+    final $$OpeningBalancesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.openingBalances,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$OpeningBalancesTableFilterComposer(
+            $db: $db,
+            $table: $db.openingBalances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> workerGroupMembersRefs(
+    Expression<bool> Function($$WorkerGroupMembersTableFilterComposer f) f,
+  ) {
+    final $$WorkerGroupMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.workerGroupMembers,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.workerGroupMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$WorkersTableOrderingComposer
+    extends Composer<_$TenantDatabase, $WorkersTable> {
+  $$WorkersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get code => $composableBuilder(
+    column: $table.code,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get trade => $composableBuilder(
+    column: $table.trade,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get joiningDate => $composableBuilder(
+    column: $table.joiningDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get roomChargeFils => $composableBuilder(
+    column: $table.roomChargeFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get roomChargeNote => $composableBuilder(
+    column: $table.roomChargeNote,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get active => $composableBuilder(
+    column: $table.active,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$RoomsTableOrderingComposer get roomId {
+    final $$RoomsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.roomId,
+      referencedTable: $db.rooms,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RoomsTableOrderingComposer(
+            $db: $db,
+            $table: $db.rooms,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$WorkersTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $WorkersTable> {
+  $$WorkersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get code =>
+      $composableBuilder(column: $table.code, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get phone =>
+      $composableBuilder(column: $table.phone, builder: (column) => column);
+
+  GeneratedColumn<String> get trade =>
+      $composableBuilder(column: $table.trade, builder: (column) => column);
+
+  GeneratedColumn<String> get joiningDate => $composableBuilder(
+    column: $table.joiningDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get roomChargeFils => $composableBuilder(
+    column: $table.roomChargeFils,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get roomChargeNote => $composableBuilder(
+    column: $table.roomChargeNote,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get active =>
+      $composableBuilder(column: $table.active, builder: (column) => column);
+
+  $$RoomsTableAnnotationComposer get roomId {
+    final $$RoomsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.roomId,
+      referencedTable: $db.rooms,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RoomsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.rooms,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> cashEntriesRefs<T extends Object>(
+    Expression<T> Function($$CashEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$CashEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> attendanceEntriesRefs<T extends Object>(
+    Expression<T> Function($$AttendanceEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$AttendanceEntriesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.attendanceEntries,
+          getReferencedColumn: (t) => t.workerId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$AttendanceEntriesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.attendanceEntries,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> payContractsRefs<T extends Object>(
+    Expression<T> Function($$PayContractsTableAnnotationComposer a) f,
+  ) {
+    final $$PayContractsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.payContracts,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PayContractsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.payContracts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> billingContractsRefs<T extends Object>(
+    Expression<T> Function($$BillingContractsTableAnnotationComposer a) f,
+  ) {
+    final $$BillingContractsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.billingContracts,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BillingContractsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.billingContracts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> openingBalancesRefs<T extends Object>(
+    Expression<T> Function($$OpeningBalancesTableAnnotationComposer a) f,
+  ) {
+    final $$OpeningBalancesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.openingBalances,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$OpeningBalancesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.openingBalances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> workerGroupMembersRefs<T extends Object>(
+    Expression<T> Function($$WorkerGroupMembersTableAnnotationComposer a) f,
+  ) {
+    final $$WorkerGroupMembersTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.workerGroupMembers,
+          getReferencedColumn: (t) => t.workerId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WorkerGroupMembersTableAnnotationComposer(
+                $db: $db,
+                $table: $db.workerGroupMembers,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$WorkersTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $WorkersTable,
+          Worker,
+          $$WorkersTableFilterComposer,
+          $$WorkersTableOrderingComposer,
+          $$WorkersTableAnnotationComposer,
+          $$WorkersTableCreateCompanionBuilder,
+          $$WorkersTableUpdateCompanionBuilder,
+          (Worker, $$WorkersTableReferences),
+          Worker,
+          PrefetchHooks Function({
+            bool roomId,
+            bool cashEntriesRefs,
+            bool attendanceEntriesRefs,
+            bool payContractsRefs,
+            bool billingContractsRefs,
+            bool openingBalancesRefs,
+            bool workerGroupMembersRefs,
+          })
+        > {
+  $$WorkersTableTableManager(_$TenantDatabase db, $WorkersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WorkersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WorkersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WorkersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> code = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> phone = const Value.absent(),
+                Value<String?> trade = const Value.absent(),
+                Value<String?> joiningDate = const Value.absent(),
+                Value<int?> roomChargeFils = const Value.absent(),
+                Value<String?> roomChargeNote = const Value.absent(),
+                Value<String?> roomId = const Value.absent(),
+                Value<bool> active = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WorkersCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                code: code,
+                name: name,
+                phone: phone,
+                trade: trade,
+                joiningDate: joiningDate,
+                roomChargeFils: roomChargeFils,
+                roomChargeNote: roomChargeNote,
+                roomId: roomId,
+                active: active,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String code,
+                required String name,
+                Value<String?> phone = const Value.absent(),
+                Value<String?> trade = const Value.absent(),
+                Value<String?> joiningDate = const Value.absent(),
+                Value<int?> roomChargeFils = const Value.absent(),
+                Value<String?> roomChargeNote = const Value.absent(),
+                Value<String?> roomId = const Value.absent(),
+                Value<bool> active = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WorkersCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                code: code,
+                name: name,
+                phone: phone,
+                trade: trade,
+                joiningDate: joiningDate,
+                roomChargeFils: roomChargeFils,
+                roomChargeNote: roomChargeNote,
+                roomId: roomId,
+                active: active,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$WorkersTable, Worker>(table),
+                  $$WorkersTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                roomId = false,
+                cashEntriesRefs = false,
+                attendanceEntriesRefs = false,
+                payContractsRefs = false,
+                billingContractsRefs = false,
+                openingBalancesRefs = false,
+                workerGroupMembersRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (cashEntriesRefs) db.cashEntries,
+                    if (attendanceEntriesRefs) db.attendanceEntries,
+                    if (payContractsRefs) db.payContracts,
+                    if (billingContractsRefs) db.billingContracts,
+                    if (openingBalancesRefs) db.openingBalances,
+                    if (workerGroupMembersRefs) db.workerGroupMembers,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (roomId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.roomId,
+                            referencedTable: $$WorkersTableReferences
+                                ._roomIdTable(db),
+                            referencedColumn: $$WorkersTableReferences
+                                ._roomIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (cashEntriesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Worker,
+                          $WorkersTable,
+                          CashEntry,
+                          $CashEntriesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkersTableReferences
+                              ._cashEntriesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).cashEntriesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'worker_id',
+                          typedResults: items,
+                        ),
+                      if (attendanceEntriesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Worker,
+                          $WorkersTable,
+                          AttendanceEntry,
+                          $AttendanceEntriesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkersTableReferences
+                              ._attendanceEntriesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).attendanceEntriesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'worker_id',
+                          typedResults: items,
+                        ),
+                      if (payContractsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Worker,
+                          $WorkersTable,
+                          PayContract,
+                          $PayContractsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkersTableReferences
+                              ._payContractsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).payContractsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'worker_id',
+                          typedResults: items,
+                        ),
+                      if (billingContractsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Worker,
+                          $WorkersTable,
+                          BillingContract,
+                          $BillingContractsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkersTableReferences
+                              ._billingContractsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).billingContractsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'worker_id',
+                          typedResults: items,
+                        ),
+                      if (openingBalancesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Worker,
+                          $WorkersTable,
+                          OpeningBalance,
+                          $OpeningBalancesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkersTableReferences
+                              ._openingBalancesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).openingBalancesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'worker_id',
+                          typedResults: items,
+                        ),
+                      if (workerGroupMembersRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Worker,
+                          $WorkersTable,
+                          WorkerGroupMember,
+                          $WorkerGroupMembersTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkersTableReferences
+                              ._workerGroupMembersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).workerGroupMembersRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'worker_id',
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$WorkersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $WorkersTable,
+      Worker,
+      $$WorkersTableFilterComposer,
+      $$WorkersTableOrderingComposer,
+      $$WorkersTableAnnotationComposer,
+      $$WorkersTableCreateCompanionBuilder,
+      $$WorkersTableUpdateCompanionBuilder,
+      (Worker, $$WorkersTableReferences),
+      Worker,
+      PrefetchHooks Function({
+        bool roomId,
+        bool cashEntriesRefs,
+        bool attendanceEntriesRefs,
+        bool payContractsRefs,
+        bool billingContractsRefs,
+        bool openingBalancesRefs,
+        bool workerGroupMembersRefs,
+      })
+    >;
 typedef $$ClientsTableCreateCompanionBuilder = ClientsCompanion Function({
   required String id,
   required String tenantId,
@@ -13213,6 +16596,24 @@ final class $$ClientsTableReferences
     ).filter((f) => f.clientId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_sitesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$CashEntriesTable, List<CashEntry>>
+  _cashEntriesRefsTable(_$TenantDatabase db) => MultiTypedResultKey.fromTable(
+    db.cashEntries,
+    aliasName: 'clients__id__cash_entries__client_id',
+  );
+
+  $$CashEntriesTableProcessedTableManager get cashEntriesRefs {
+    final manager = $$CashEntriesTableTableManager(
+      $_db,
+      $_db.cashEntries,
+    ).filter((f) => f.clientId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_cashEntriesRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -13441,6 +16842,31 @@ class $$ClientsTableFilterComposer
           }) => $$SitesTableFilterComposer(
             $db: $db,
             $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> cashEntriesRefs(
+    Expression<bool> Function($$CashEntriesTableFilterComposer f) f,
+  ) {
+    final $$CashEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.clientId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.cashEntries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -13786,6 +17212,31 @@ class $$ClientsTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> cashEntriesRefs<T extends Object>(
+    Expression<T> Function($$CashEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$CashEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.clientId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> workerGroupsRefs<T extends Object>(
     Expression<T> Function($$WorkerGroupsTableAnnotationComposer a) f,
   ) {
@@ -13929,6 +17380,7 @@ class $$ClientsTableTableManager
           Client,
           PrefetchHooks Function({
             bool sitesRefs,
+            bool cashEntriesRefs,
             bool workerGroupsRefs,
             bool attendanceBatchesRefs,
             bool attendanceEntriesRefs,
@@ -14046,6 +17498,7 @@ class $$ClientsTableTableManager
           prefetchHooksCallback:
               ({
                 sitesRefs = false,
+                cashEntriesRefs = false,
                 workerGroupsRefs = false,
                 attendanceBatchesRefs = false,
                 attendanceEntriesRefs = false,
@@ -14056,6 +17509,7 @@ class $$ClientsTableTableManager
                   db: db,
                   explicitlyWatchedTables: [
                     if (sitesRefs) db.sites,
+                    if (cashEntriesRefs) db.cashEntries,
                     if (workerGroupsRefs) db.workerGroups,
                     if (attendanceBatchesRefs) db.attendanceBatches,
                     if (attendanceEntriesRefs) db.attendanceEntries,
@@ -14077,6 +17531,26 @@ class $$ClientsTableTableManager
                               ._sitesRefsTable(db),
                           managerFromTypedResult: (p0) =>
                               $$ClientsTableReferences(db, table, p0).sitesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'client_id',
+                          typedResults: items,
+                        ),
+                      if (cashEntriesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Client,
+                          $ClientsTable,
+                          CashEntry,
+                          $CashEntriesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ClientsTableReferences
+                              ._cashEntriesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ClientsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).cashEntriesRefs,
                           currentColumn: 'id',
                           referencedColumn: 'client_id',
                           typedResults: items,
@@ -14203,6 +17677,7 @@ typedef $$ClientsTableProcessedTableManager =
       Client,
       PrefetchHooks Function({
         bool sitesRefs,
+        bool cashEntriesRefs,
         bool workerGroupsRefs,
         bool attendanceBatchesRefs,
         bool attendanceEntriesRefs,
@@ -14269,6 +17744,24 @@ final class $$SitesTableReferences
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$CashEntriesTable, List<CashEntry>>
+  _cashEntriesRefsTable(_$TenantDatabase db) => MultiTypedResultKey.fromTable(
+    db.cashEntries,
+    aliasName: 'sites__id__cash_entries__site_id',
+  );
+
+  $$CashEntriesTableProcessedTableManager get cashEntriesRefs {
+    final manager = $$CashEntriesTableTableManager(
+      $_db,
+      $_db.cashEntries,
+    ).filter((f) => f.siteId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_cashEntriesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
@@ -14482,6 +17975,31 @@ class $$SitesTableFilterComposer
           ),
     );
     return composer;
+  }
+
+  Expression<bool> cashEntriesRefs(
+    Expression<bool> Function($$CashEntriesTableFilterComposer f) f,
+  ) {
+    final $$CashEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.siteId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 
   Expression<bool> workerGroupsRefs(
@@ -14817,6 +18335,31 @@ class $$SitesTableAnnotationComposer
     return composer;
   }
 
+  Expression<T> cashEntriesRefs<T extends Object>(
+    Expression<T> Function($$CashEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$CashEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.siteId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> workerGroupsRefs<T extends Object>(
     Expression<T> Function($$WorkerGroupsTableAnnotationComposer a) f,
   ) {
@@ -14960,6 +18503,7 @@ class $$SitesTableTableManager
           Site,
           PrefetchHooks Function({
             bool clientId,
+            bool cashEntriesRefs,
             bool workerGroupsRefs,
             bool attendanceBatchesRefs,
             bool attendanceEntriesRefs,
@@ -15069,6 +18613,7 @@ class $$SitesTableTableManager
           prefetchHooksCallback:
               ({
                 clientId = false,
+                cashEntriesRefs = false,
                 workerGroupsRefs = false,
                 attendanceBatchesRefs = false,
                 attendanceEntriesRefs = false,
@@ -15078,6 +18623,7 @@ class $$SitesTableTableManager
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
+                    if (cashEntriesRefs) db.cashEntries,
                     if (workerGroupsRefs) db.workerGroups,
                     if (attendanceBatchesRefs) db.attendanceBatches,
                     if (attendanceEntriesRefs) db.attendanceEntries,
@@ -15116,6 +18662,26 @@ class $$SitesTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
+                      if (cashEntriesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Site,
+                          $SitesTable,
+                          CashEntry,
+                          $CashEntriesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$SitesTableReferences
+                              ._cashEntriesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$SitesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).cashEntriesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'site_id',
+                          typedResults: items,
+                        ),
                       if (workerGroupsRefs)
                         await $_getPrefetchedDataByColumns<
                           Site,
@@ -15238,11 +18804,957 @@ typedef $$SitesTableProcessedTableManager =
       Site,
       PrefetchHooks Function({
         bool clientId,
+        bool cashEntriesRefs,
         bool workerGroupsRefs,
         bool attendanceBatchesRefs,
         bool attendanceEntriesRefs,
         bool payContractsRefs,
         bool billingContractsRefs,
+      })
+    >;
+typedef $$CashEntriesTableCreateCompanionBuilder =
+    CashEntriesCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      required String entryDate,
+      required String kind,
+      required int amountFils,
+      Value<String> currency,
+      Value<String?> workerId,
+      Value<String?> roomId,
+      Value<String?> clientId,
+      Value<String?> siteId,
+      Value<String?> category,
+      Value<String> method,
+      Value<String?> note,
+      Value<String?> reversesEntryId,
+      Value<int> rowid,
+    });
+typedef $$CashEntriesTableUpdateCompanionBuilder =
+    CashEntriesCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String> entryDate,
+      Value<String> kind,
+      Value<int> amountFils,
+      Value<String> currency,
+      Value<String?> workerId,
+      Value<String?> roomId,
+      Value<String?> clientId,
+      Value<String?> siteId,
+      Value<String?> category,
+      Value<String> method,
+      Value<String?> note,
+      Value<String?> reversesEntryId,
+      Value<int> rowid,
+    });
+
+final class $$CashEntriesTableReferences
+    extends BaseReferences<_$TenantDatabase, $CashEntriesTable, CashEntry> {
+  $$CashEntriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $WorkersTable _workerIdTable(_$TenantDatabase db) =>
+      db.workers.createAlias('cash_entries__worker_id__workers__id');
+
+  $$WorkersTableProcessedTableManager? get workerId {
+    final $_column = $_itemColumn<String>('worker_id');
+    if ($_column == null) return null;
+    final manager = $$WorkersTableTableManager(
+      $_db,
+      $_db.workers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_workerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $RoomsTable _roomIdTable(_$TenantDatabase db) =>
+      db.rooms.createAlias('cash_entries__room_id__rooms__id');
+
+  $$RoomsTableProcessedTableManager? get roomId {
+    final $_column = $_itemColumn<String>('room_id');
+    if ($_column == null) return null;
+    final manager = $$RoomsTableTableManager(
+      $_db,
+      $_db.rooms,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_roomIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $ClientsTable _clientIdTable(_$TenantDatabase db) =>
+      db.clients.createAlias('cash_entries__client_id__clients__id');
+
+  $$ClientsTableProcessedTableManager? get clientId {
+    final $_column = $_itemColumn<String>('client_id');
+    if ($_column == null) return null;
+    final manager = $$ClientsTableTableManager(
+      $_db,
+      $_db.clients,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_clientIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $SitesTable _siteIdTable(_$TenantDatabase db) =>
+      db.sites.createAlias('cash_entries__site_id__sites__id');
+
+  $$SitesTableProcessedTableManager? get siteId {
+    final $_column = $_itemColumn<String>('site_id');
+    if ($_column == null) return null;
+    final manager = $$SitesTableTableManager(
+      $_db,
+      $_db.sites,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_siteIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $CashEntriesTable _reversesEntryIdTable(_$TenantDatabase db) => db
+      .cashEntries
+      .createAlias('cash_entries__reverses_entry_id__cash_entries__id');
+
+  $$CashEntriesTableProcessedTableManager? get reversesEntryId {
+    final $_column = $_itemColumn<String>('reverses_entry_id');
+    if ($_column == null) return null;
+    final manager = $$CashEntriesTableTableManager(
+      $_db,
+      $_db.cashEntries,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_reversesEntryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$CashEntriesTableFilterComposer
+    extends Composer<_$TenantDatabase, $CashEntriesTable> {
+  $$CashEntriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entryDate => $composableBuilder(
+    column: $table.entryDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currency => $composableBuilder(
+    column: $table.currency,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get method => $composableBuilder(
+    column: $table.method,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$WorkersTableFilterComposer get workerId {
+    final $$WorkersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workerId,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableFilterComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$RoomsTableFilterComposer get roomId {
+    final $$RoomsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.roomId,
+      referencedTable: $db.rooms,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RoomsTableFilterComposer(
+            $db: $db,
+            $table: $db.rooms,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ClientsTableFilterComposer get clientId {
+    final $$ClientsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableFilterComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SitesTableFilterComposer get siteId {
+    final $$SitesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.siteId,
+      referencedTable: $db.sites,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SitesTableFilterComposer(
+            $db: $db,
+            $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CashEntriesTableFilterComposer get reversesEntryId {
+    final $$CashEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.reversesEntryId,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CashEntriesTableOrderingComposer
+    extends Composer<_$TenantDatabase, $CashEntriesTable> {
+  $$CashEntriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entryDate => $composableBuilder(
+    column: $table.entryDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currency => $composableBuilder(
+    column: $table.currency,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get method => $composableBuilder(
+    column: $table.method,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$WorkersTableOrderingComposer get workerId {
+    final $$WorkersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workerId,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableOrderingComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$RoomsTableOrderingComposer get roomId {
+    final $$RoomsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.roomId,
+      referencedTable: $db.rooms,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RoomsTableOrderingComposer(
+            $db: $db,
+            $table: $db.rooms,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ClientsTableOrderingComposer get clientId {
+    final $$ClientsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableOrderingComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SitesTableOrderingComposer get siteId {
+    final $$SitesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.siteId,
+      referencedTable: $db.sites,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SitesTableOrderingComposer(
+            $db: $db,
+            $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CashEntriesTableOrderingComposer get reversesEntryId {
+    final $$CashEntriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.reversesEntryId,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CashEntriesTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $CashEntriesTable> {
+  $$CashEntriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get entryDate =>
+      $composableBuilder(column: $table.entryDate, builder: (column) => column);
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => column);
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<String> get method =>
+      $composableBuilder(column: $table.method, builder: (column) => column);
+
+  GeneratedColumn<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => column);
+
+  $$WorkersTableAnnotationComposer get workerId {
+    final $$WorkersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workerId,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$RoomsTableAnnotationComposer get roomId {
+    final $$RoomsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.roomId,
+      referencedTable: $db.rooms,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RoomsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.rooms,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ClientsTableAnnotationComposer get clientId {
+    final $$ClientsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SitesTableAnnotationComposer get siteId {
+    final $$SitesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.siteId,
+      referencedTable: $db.sites,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SitesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CashEntriesTableAnnotationComposer get reversesEntryId {
+    final $$CashEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.reversesEntryId,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CashEntriesTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $CashEntriesTable,
+          CashEntry,
+          $$CashEntriesTableFilterComposer,
+          $$CashEntriesTableOrderingComposer,
+          $$CashEntriesTableAnnotationComposer,
+          $$CashEntriesTableCreateCompanionBuilder,
+          $$CashEntriesTableUpdateCompanionBuilder,
+          (CashEntry, $$CashEntriesTableReferences),
+          CashEntry,
+          PrefetchHooks Function({
+            bool workerId,
+            bool roomId,
+            bool clientId,
+            bool siteId,
+            bool reversesEntryId,
+          })
+        > {
+  $$CashEntriesTableTableManager(_$TenantDatabase db, $CashEntriesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CashEntriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CashEntriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CashEntriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> entryDate = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<int> amountFils = const Value.absent(),
+                Value<String> currency = const Value.absent(),
+                Value<String?> workerId = const Value.absent(),
+                Value<String?> roomId = const Value.absent(),
+                Value<String?> clientId = const Value.absent(),
+                Value<String?> siteId = const Value.absent(),
+                Value<String?> category = const Value.absent(),
+                Value<String> method = const Value.absent(),
+                Value<String?> note = const Value.absent(),
+                Value<String?> reversesEntryId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CashEntriesCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                entryDate: entryDate,
+                kind: kind,
+                amountFils: amountFils,
+                currency: currency,
+                workerId: workerId,
+                roomId: roomId,
+                clientId: clientId,
+                siteId: siteId,
+                category: category,
+                method: method,
+                note: note,
+                reversesEntryId: reversesEntryId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String entryDate,
+                required String kind,
+                required int amountFils,
+                Value<String> currency = const Value.absent(),
+                Value<String?> workerId = const Value.absent(),
+                Value<String?> roomId = const Value.absent(),
+                Value<String?> clientId = const Value.absent(),
+                Value<String?> siteId = const Value.absent(),
+                Value<String?> category = const Value.absent(),
+                Value<String> method = const Value.absent(),
+                Value<String?> note = const Value.absent(),
+                Value<String?> reversesEntryId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CashEntriesCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                entryDate: entryDate,
+                kind: kind,
+                amountFils: amountFils,
+                currency: currency,
+                workerId: workerId,
+                roomId: roomId,
+                clientId: clientId,
+                siteId: siteId,
+                category: category,
+                method: method,
+                note: note,
+                reversesEntryId: reversesEntryId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$CashEntriesTable, CashEntry>(table),
+                  $$CashEntriesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                workerId = false,
+                roomId = false,
+                clientId = false,
+                siteId = false,
+                reversesEntryId = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (workerId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.workerId,
+                            referencedTable: $$CashEntriesTableReferences
+                                ._workerIdTable(db),
+                            referencedColumn: $$CashEntriesTableReferences
+                                ._workerIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (roomId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.roomId,
+                            referencedTable: $$CashEntriesTableReferences
+                                ._roomIdTable(db),
+                            referencedColumn: $$CashEntriesTableReferences
+                                ._roomIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (clientId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.clientId,
+                            referencedTable: $$CashEntriesTableReferences
+                                ._clientIdTable(db),
+                            referencedColumn: $$CashEntriesTableReferences
+                                ._clientIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (siteId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.siteId,
+                            referencedTable: $$CashEntriesTableReferences
+                                ._siteIdTable(db),
+                            referencedColumn: $$CashEntriesTableReferences
+                                ._siteIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (reversesEntryId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.reversesEntryId,
+                            referencedTable: $$CashEntriesTableReferences
+                                ._reversesEntryIdTable(db),
+                            referencedColumn: $$CashEntriesTableReferences
+                                ._reversesEntryIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$CashEntriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $CashEntriesTable,
+      CashEntry,
+      $$CashEntriesTableFilterComposer,
+      $$CashEntriesTableOrderingComposer,
+      $$CashEntriesTableAnnotationComposer,
+      $$CashEntriesTableCreateCompanionBuilder,
+      $$CashEntriesTableUpdateCompanionBuilder,
+      (CashEntry, $$CashEntriesTableReferences),
+      CashEntry,
+      PrefetchHooks Function({
+        bool workerId,
+        bool roomId,
+        bool clientId,
+        bool siteId,
+        bool reversesEntryId,
       })
     >;
 typedef $$WorkerGroupsTableCreateCompanionBuilder =
@@ -16913,899 +21425,6 @@ typedef $$AttendanceBatchesTableProcessedTableManager =
         bool siteId,
         bool groupId,
         bool attendanceEntriesRefs,
-      })
-    >;
-typedef $$WorkersTableCreateCompanionBuilder = WorkersCompanion Function({
-  required String id,
-  required String tenantId,
-  required DateTime createdAtUtc,
-  required DateTime updatedAtUtc,
-  required String actorId,
-  Value<int> version,
-  required String sourceOperationId,
-  required String code,
-  required String name,
-  Value<String?> phone,
-  Value<String?> trade,
-  Value<String?> joiningDate,
-  Value<int?> roomChargeFils,
-  Value<String?> roomChargeNote,
-  Value<bool> active,
-  Value<int> rowid,
-});
-typedef $$WorkersTableUpdateCompanionBuilder = WorkersCompanion Function({
-  Value<String> id,
-  Value<String> tenantId,
-  Value<DateTime> createdAtUtc,
-  Value<DateTime> updatedAtUtc,
-  Value<String> actorId,
-  Value<int> version,
-  Value<String> sourceOperationId,
-  Value<String> code,
-  Value<String> name,
-  Value<String?> phone,
-  Value<String?> trade,
-  Value<String?> joiningDate,
-  Value<int?> roomChargeFils,
-  Value<String?> roomChargeNote,
-  Value<bool> active,
-  Value<int> rowid,
-});
-
-final class $$WorkersTableReferences
-    extends BaseReferences<_$TenantDatabase, $WorkersTable, Worker> {
-  $$WorkersTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$AttendanceEntriesTable, List<AttendanceEntry>>
-  _attendanceEntriesRefsTable(_$TenantDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.attendanceEntries,
-        aliasName: 'workers__id__attendance_entries__worker_id',
-      );
-
-  $$AttendanceEntriesTableProcessedTableManager get attendanceEntriesRefs {
-    final manager = $$AttendanceEntriesTableTableManager(
-      $_db,
-      $_db.attendanceEntries,
-    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _attendanceEntriesRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$PayContractsTable, List<PayContract>>
-  _payContractsRefsTable(_$TenantDatabase db) => MultiTypedResultKey.fromTable(
-    db.payContracts,
-    aliasName: 'workers__id__pay_contracts__worker_id',
-  );
-
-  $$PayContractsTableProcessedTableManager get payContractsRefs {
-    final manager = $$PayContractsTableTableManager(
-      $_db,
-      $_db.payContracts,
-    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_payContractsRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$BillingContractsTable, List<BillingContract>>
-  _billingContractsRefsTable(_$TenantDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.billingContracts,
-        aliasName: 'workers__id__billing_contracts__worker_id',
-      );
-
-  $$BillingContractsTableProcessedTableManager get billingContractsRefs {
-    final manager = $$BillingContractsTableTableManager(
-      $_db,
-      $_db.billingContracts,
-    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _billingContractsRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$OpeningBalancesTable, List<OpeningBalance>>
-  _openingBalancesRefsTable(_$TenantDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.openingBalances,
-        aliasName: 'workers__id__opening_balances__worker_id',
-      );
-
-  $$OpeningBalancesTableProcessedTableManager get openingBalancesRefs {
-    final manager = $$OpeningBalancesTableTableManager(
-      $_db,
-      $_db.openingBalances,
-    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _openingBalancesRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$WorkerGroupMembersTable, List<WorkerGroupMember>>
-  _workerGroupMembersRefsTable(_$TenantDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.workerGroupMembers,
-        aliasName: 'workers__id__worker_group_members__worker_id',
-      );
-
-  $$WorkerGroupMembersTableProcessedTableManager get workerGroupMembersRefs {
-    final manager = $$WorkerGroupMembersTableTableManager(
-      $_db,
-      $_db.workerGroupMembers,
-    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _workerGroupMembersRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
-class $$WorkersTableFilterComposer
-    extends Composer<_$TenantDatabase, $WorkersTable> {
-  $$WorkersTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get tenantId => $composableBuilder(
-    column: $table.tenantId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
-    column: $table.createdAtUtc,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
-    column: $table.updatedAtUtc,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get actorId => $composableBuilder(
-    column: $table.actorId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get version => $composableBuilder(
-    column: $table.version,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get sourceOperationId => $composableBuilder(
-    column: $table.sourceOperationId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get code => $composableBuilder(
-    column: $table.code,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get phone => $composableBuilder(
-    column: $table.phone,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get trade => $composableBuilder(
-    column: $table.trade,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get joiningDate => $composableBuilder(
-    column: $table.joiningDate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get roomChargeFils => $composableBuilder(
-    column: $table.roomChargeFils,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get roomChargeNote => $composableBuilder(
-    column: $table.roomChargeNote,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get active => $composableBuilder(
-    column: $table.active,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  Expression<bool> attendanceEntriesRefs(
-    Expression<bool> Function($$AttendanceEntriesTableFilterComposer f) f,
-  ) {
-    final $$AttendanceEntriesTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.attendanceEntries,
-      getReferencedColumn: (t) => t.workerId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AttendanceEntriesTableFilterComposer(
-            $db: $db,
-            $table: $db.attendanceEntries,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<bool> payContractsRefs(
-    Expression<bool> Function($$PayContractsTableFilterComposer f) f,
-  ) {
-    final $$PayContractsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.payContracts,
-      getReferencedColumn: (t) => t.workerId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PayContractsTableFilterComposer(
-            $db: $db,
-            $table: $db.payContracts,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<bool> billingContractsRefs(
-    Expression<bool> Function($$BillingContractsTableFilterComposer f) f,
-  ) {
-    final $$BillingContractsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.billingContracts,
-      getReferencedColumn: (t) => t.workerId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BillingContractsTableFilterComposer(
-            $db: $db,
-            $table: $db.billingContracts,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<bool> openingBalancesRefs(
-    Expression<bool> Function($$OpeningBalancesTableFilterComposer f) f,
-  ) {
-    final $$OpeningBalancesTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.openingBalances,
-      getReferencedColumn: (t) => t.workerId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$OpeningBalancesTableFilterComposer(
-            $db: $db,
-            $table: $db.openingBalances,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<bool> workerGroupMembersRefs(
-    Expression<bool> Function($$WorkerGroupMembersTableFilterComposer f) f,
-  ) {
-    final $$WorkerGroupMembersTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workerGroupMembers,
-      getReferencedColumn: (t) => t.workerId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorkerGroupMembersTableFilterComposer(
-            $db: $db,
-            $table: $db.workerGroupMembers,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-}
-
-class $$WorkersTableOrderingComposer
-    extends Composer<_$TenantDatabase, $WorkersTable> {
-  $$WorkersTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get tenantId => $composableBuilder(
-    column: $table.tenantId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
-    column: $table.createdAtUtc,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
-    column: $table.updatedAtUtc,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get actorId => $composableBuilder(
-    column: $table.actorId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get version => $composableBuilder(
-    column: $table.version,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
-    column: $table.sourceOperationId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get code => $composableBuilder(
-    column: $table.code,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get phone => $composableBuilder(
-    column: $table.phone,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get trade => $composableBuilder(
-    column: $table.trade,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get joiningDate => $composableBuilder(
-    column: $table.joiningDate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get roomChargeFils => $composableBuilder(
-    column: $table.roomChargeFils,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get roomChargeNote => $composableBuilder(
-    column: $table.roomChargeNote,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get active => $composableBuilder(
-    column: $table.active,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$WorkersTableAnnotationComposer
-    extends Composer<_$TenantDatabase, $WorkersTable> {
-  $$WorkersTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get tenantId =>
-      $composableBuilder(column: $table.tenantId, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
-    column: $table.createdAtUtc,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
-    column: $table.updatedAtUtc,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get actorId =>
-      $composableBuilder(column: $table.actorId, builder: (column) => column);
-
-  GeneratedColumn<int> get version =>
-      $composableBuilder(column: $table.version, builder: (column) => column);
-
-  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
-    column: $table.sourceOperationId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get code =>
-      $composableBuilder(column: $table.code, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<String> get phone =>
-      $composableBuilder(column: $table.phone, builder: (column) => column);
-
-  GeneratedColumn<String> get trade =>
-      $composableBuilder(column: $table.trade, builder: (column) => column);
-
-  GeneratedColumn<String> get joiningDate => $composableBuilder(
-    column: $table.joiningDate,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get roomChargeFils => $composableBuilder(
-    column: $table.roomChargeFils,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get roomChargeNote => $composableBuilder(
-    column: $table.roomChargeNote,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<bool> get active =>
-      $composableBuilder(column: $table.active, builder: (column) => column);
-
-  Expression<T> attendanceEntriesRefs<T extends Object>(
-    Expression<T> Function($$AttendanceEntriesTableAnnotationComposer a) f,
-  ) {
-    final $$AttendanceEntriesTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.attendanceEntries,
-          getReferencedColumn: (t) => t.workerId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$AttendanceEntriesTableAnnotationComposer(
-                $db: $db,
-                $table: $db.attendanceEntries,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-
-  Expression<T> payContractsRefs<T extends Object>(
-    Expression<T> Function($$PayContractsTableAnnotationComposer a) f,
-  ) {
-    final $$PayContractsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.payContracts,
-      getReferencedColumn: (t) => t.workerId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$PayContractsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.payContracts,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<T> billingContractsRefs<T extends Object>(
-    Expression<T> Function($$BillingContractsTableAnnotationComposer a) f,
-  ) {
-    final $$BillingContractsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.billingContracts,
-      getReferencedColumn: (t) => t.workerId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BillingContractsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.billingContracts,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<T> openingBalancesRefs<T extends Object>(
-    Expression<T> Function($$OpeningBalancesTableAnnotationComposer a) f,
-  ) {
-    final $$OpeningBalancesTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.openingBalances,
-      getReferencedColumn: (t) => t.workerId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$OpeningBalancesTableAnnotationComposer(
-            $db: $db,
-            $table: $db.openingBalances,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<T> workerGroupMembersRefs<T extends Object>(
-    Expression<T> Function($$WorkerGroupMembersTableAnnotationComposer a) f,
-  ) {
-    final $$WorkerGroupMembersTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.workerGroupMembers,
-          getReferencedColumn: (t) => t.workerId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$WorkerGroupMembersTableAnnotationComposer(
-                $db: $db,
-                $table: $db.workerGroupMembers,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-}
-
-class $$WorkersTableTableManager
-    extends
-        RootTableManager<
-          _$TenantDatabase,
-          $WorkersTable,
-          Worker,
-          $$WorkersTableFilterComposer,
-          $$WorkersTableOrderingComposer,
-          $$WorkersTableAnnotationComposer,
-          $$WorkersTableCreateCompanionBuilder,
-          $$WorkersTableUpdateCompanionBuilder,
-          (Worker, $$WorkersTableReferences),
-          Worker,
-          PrefetchHooks Function({
-            bool attendanceEntriesRefs,
-            bool payContractsRefs,
-            bool billingContractsRefs,
-            bool openingBalancesRefs,
-            bool workerGroupMembersRefs,
-          })
-        > {
-  $$WorkersTableTableManager(_$TenantDatabase db, $WorkersTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$WorkersTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$WorkersTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$WorkersTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String> tenantId = const Value.absent(),
-                Value<DateTime> createdAtUtc = const Value.absent(),
-                Value<DateTime> updatedAtUtc = const Value.absent(),
-                Value<String> actorId = const Value.absent(),
-                Value<int> version = const Value.absent(),
-                Value<String> sourceOperationId = const Value.absent(),
-                Value<String> code = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String?> phone = const Value.absent(),
-                Value<String?> trade = const Value.absent(),
-                Value<String?> joiningDate = const Value.absent(),
-                Value<int?> roomChargeFils = const Value.absent(),
-                Value<String?> roomChargeNote = const Value.absent(),
-                Value<bool> active = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => WorkersCompanion(
-                id: id,
-                tenantId: tenantId,
-                createdAtUtc: createdAtUtc,
-                updatedAtUtc: updatedAtUtc,
-                actorId: actorId,
-                version: version,
-                sourceOperationId: sourceOperationId,
-                code: code,
-                name: name,
-                phone: phone,
-                trade: trade,
-                joiningDate: joiningDate,
-                roomChargeFils: roomChargeFils,
-                roomChargeNote: roomChargeNote,
-                active: active,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                required String tenantId,
-                required DateTime createdAtUtc,
-                required DateTime updatedAtUtc,
-                required String actorId,
-                Value<int> version = const Value.absent(),
-                required String sourceOperationId,
-                required String code,
-                required String name,
-                Value<String?> phone = const Value.absent(),
-                Value<String?> trade = const Value.absent(),
-                Value<String?> joiningDate = const Value.absent(),
-                Value<int?> roomChargeFils = const Value.absent(),
-                Value<String?> roomChargeNote = const Value.absent(),
-                Value<bool> active = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => WorkersCompanion.insert(
-                id: id,
-                tenantId: tenantId,
-                createdAtUtc: createdAtUtc,
-                updatedAtUtc: updatedAtUtc,
-                actorId: actorId,
-                version: version,
-                sourceOperationId: sourceOperationId,
-                code: code,
-                name: name,
-                phone: phone,
-                trade: trade,
-                joiningDate: joiningDate,
-                roomChargeFils: roomChargeFils,
-                roomChargeNote: roomChargeNote,
-                active: active,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable<$WorkersTable, Worker>(table),
-                  $$WorkersTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback:
-              ({
-                attendanceEntriesRefs = false,
-                payContractsRefs = false,
-                billingContractsRefs = false,
-                openingBalancesRefs = false,
-                workerGroupMembersRefs = false,
-              }) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [
-                    if (attendanceEntriesRefs) db.attendanceEntries,
-                    if (payContractsRefs) db.payContracts,
-                    if (billingContractsRefs) db.billingContracts,
-                    if (openingBalancesRefs) db.openingBalances,
-                    if (workerGroupMembersRefs) db.workerGroupMembers,
-                  ],
-                  addJoins: null,
-                  getPrefetchedDataCallback: (items) async {
-                    return [
-                      if (attendanceEntriesRefs)
-                        await $_getPrefetchedDataByColumns<
-                          Worker,
-                          $WorkersTable,
-                          AttendanceEntry,
-                          $AttendanceEntriesTable
-                        >(
-                          currentTable: table,
-                          referencedTable: $$WorkersTableReferences
-                              ._attendanceEntriesRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$WorkersTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).attendanceEntriesRefs,
-                          currentColumn: 'id',
-                          referencedColumn: 'worker_id',
-                          typedResults: items,
-                        ),
-                      if (payContractsRefs)
-                        await $_getPrefetchedDataByColumns<
-                          Worker,
-                          $WorkersTable,
-                          PayContract,
-                          $PayContractsTable
-                        >(
-                          currentTable: table,
-                          referencedTable: $$WorkersTableReferences
-                              ._payContractsRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$WorkersTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).payContractsRefs,
-                          currentColumn: 'id',
-                          referencedColumn: 'worker_id',
-                          typedResults: items,
-                        ),
-                      if (billingContractsRefs)
-                        await $_getPrefetchedDataByColumns<
-                          Worker,
-                          $WorkersTable,
-                          BillingContract,
-                          $BillingContractsTable
-                        >(
-                          currentTable: table,
-                          referencedTable: $$WorkersTableReferences
-                              ._billingContractsRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$WorkersTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).billingContractsRefs,
-                          currentColumn: 'id',
-                          referencedColumn: 'worker_id',
-                          typedResults: items,
-                        ),
-                      if (openingBalancesRefs)
-                        await $_getPrefetchedDataByColumns<
-                          Worker,
-                          $WorkersTable,
-                          OpeningBalance,
-                          $OpeningBalancesTable
-                        >(
-                          currentTable: table,
-                          referencedTable: $$WorkersTableReferences
-                              ._openingBalancesRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$WorkersTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).openingBalancesRefs,
-                          currentColumn: 'id',
-                          referencedColumn: 'worker_id',
-                          typedResults: items,
-                        ),
-                      if (workerGroupMembersRefs)
-                        await $_getPrefetchedDataByColumns<
-                          Worker,
-                          $WorkersTable,
-                          WorkerGroupMember,
-                          $WorkerGroupMembersTable
-                        >(
-                          currentTable: table,
-                          referencedTable: $$WorkersTableReferences
-                              ._workerGroupMembersRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$WorkersTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).workerGroupMembersRefs,
-                          currentColumn: 'id',
-                          referencedColumn: 'worker_id',
-                          typedResults: items,
-                        ),
-                    ];
-                  },
-                );
-              },
-        ),
-      );
-}
-
-typedef $$WorkersTableProcessedTableManager =
-    ProcessedTableManager<
-      _$TenantDatabase,
-      $WorkersTable,
-      Worker,
-      $$WorkersTableFilterComposer,
-      $$WorkersTableOrderingComposer,
-      $$WorkersTableAnnotationComposer,
-      $$WorkersTableCreateCompanionBuilder,
-      $$WorkersTableUpdateCompanionBuilder,
-      (Worker, $$WorkersTableReferences),
-      Worker,
-      PrefetchHooks Function({
-        bool attendanceEntriesRefs,
-        bool payContractsRefs,
-        bool billingContractsRefs,
-        bool openingBalancesRefs,
-        bool workerGroupMembersRefs,
       })
     >;
 typedef $$AttendanceEntriesTableCreateCompanionBuilder =
@@ -22628,16 +26247,20 @@ class $TenantDatabaseManager {
   $TenantDatabaseManager(this._db);
   $$AuditEventsTableTableManager get auditEvents =>
       $$AuditEventsTableTableManager(_db, _db.auditEvents);
+  $$RoomsTableTableManager get rooms =>
+      $$RoomsTableTableManager(_db, _db.rooms);
+  $$WorkersTableTableManager get workers =>
+      $$WorkersTableTableManager(_db, _db.workers);
   $$ClientsTableTableManager get clients =>
       $$ClientsTableTableManager(_db, _db.clients);
   $$SitesTableTableManager get sites =>
       $$SitesTableTableManager(_db, _db.sites);
+  $$CashEntriesTableTableManager get cashEntries =>
+      $$CashEntriesTableTableManager(_db, _db.cashEntries);
   $$WorkerGroupsTableTableManager get workerGroups =>
       $$WorkerGroupsTableTableManager(_db, _db.workerGroups);
   $$AttendanceBatchesTableTableManager get attendanceBatches =>
       $$AttendanceBatchesTableTableManager(_db, _db.attendanceBatches);
-  $$WorkersTableTableManager get workers =>
-      $$WorkersTableTableManager(_db, _db.workers);
   $$AttendanceEntriesTableTableManager get attendanceEntries =>
       $$AttendanceEntriesTableTableManager(_db, _db.attendanceEntries);
   $$TenantProfilesTableTableManager get tenantProfiles =>

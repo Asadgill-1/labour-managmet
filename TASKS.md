@@ -33,6 +33,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 
 | Task | Title | Requirements | Status | Branch / PR |
 | --- | --- | --- | --- | --- |
+| T12a | Daily cash book, rooms and room profit or loss (owner's request, D-030, D-031). Taken ahead of T11 | PAY-05, PAY-06, REP-07, REP-08 | IMPLEMENTED_UNVERIFIED | `p2/t12a-cash-book` |
 | T11 | Payroll run, posting, carry-forward, deductions | PAY-01..04, PAY-07, REP-08, MODEL-07 | NOT_STARTED | - |
 | T12 | Advance sub-ledger, salary payments and allocations, overdue alerts | PAY-05, PAY-06, PAY-08 | NOT_STARTED | - |
 | T13 | Expenses and period close | REP-04, REP-05, REP-07 | NOT_STARTED | - |

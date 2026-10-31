@@ -49,8 +49,8 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | PAY-02 | 07 | Do alag concepts | T11 | NOT_STARTED | TC-001 | - |
 | PAY-03 | 07 | User ki misal | T11 | NOT_STARTED | TC-001 | - |
 | PAY-04 | 07 | Katoti ki misal | T11 | NOT_STARTED | TC-032 | - |
-| PAY-05 | 07 | Advance sub-ledger | T12 | NOT_STARTED | TC-002, TC-035 | - |
-| PAY-06 | 07 | Salary payments | T12 | NOT_STARTED | TC-034 | - |
+| PAY-05 | 07 | Advance sub-ledger | T12, T12a | IN_PROGRESS | TC-002, TC-035, TC-051 | - |
+| PAY-06 | 07 | Salary payments | T12, T12a | IN_PROGRESS | TC-034, TC-051 | - |
 | PAY-07 | 07 | Deductions | T11 | NOT_STARTED | TC-033 | - |
 | PAY-08 | 07 | Compliance | T12 | NOT_STARTED | - | - |
 | PAY-09 | 07 | Payslip | T14 | NOT_STARTED | - | - |
@@ -85,7 +85,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | REP-04 | 11 | Closing | T13 | NOT_STARTED | TC-037 | - |
 | REP-05 | 11 | Historical integrity | T13 | NOT_STARTED | - | - |
 | REP-06 | 11 | Backup/export | T18 | NOT_STARTED | - | - |
-| REP-07 | 11 | Expenses | T13 | NOT_STARTED | - | - |
+| REP-07 | 11 | Expenses | T13, T12a | IN_PROGRESS | TC-052 | - |
 | REP-08 | 11 | Ledger design | T11 | NOT_STARTED | - | - |
 | PLAN-01 | 12 | Trial 14 din; Team feature trial owner ki clear | T24 | NOT_STARTED | - | - |
 | PLAN-02 | 12 | Manager trial end par paid Team entitlement na ho | T24 | NOT_STARTED | - | - |

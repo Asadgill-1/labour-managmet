@@ -45,7 +45,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dailyWageHelp =>
-      'Optional. It shows beside every worker. To change one worker, tap the amount beside their name.';
+      'Optional. Shows beside every worker. Tap an amount there to change it.';
 
   @override
   String get halfDayIsHalf => 'Half day pays half the daily wage';
@@ -112,10 +112,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get groupRegisters => 'Registers';
 
   @override
-  String get groupPayroll => 'Payroll and money';
-
-  @override
-  String get groupBilling => 'Billing';
+  String get groupBilling => 'Payroll and billing';
 
   @override
   String get groupMore => 'More';
@@ -124,13 +121,190 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuPayroll => 'Payroll';
 
   @override
-  String get menuAdvances => 'Advances';
+  String get tabCash => 'Daily money';
 
   @override
-  String get menuPayments => 'Payments';
+  String get tabRooms => 'Rooms';
 
   @override
-  String get menuExpenses => 'Expenses';
+  String get addCash => 'Add entry';
+
+  @override
+  String get cashEmpty =>
+      'Nothing written for this. Tap Add entry when money comes in or goes out.';
+
+  @override
+  String get moneyOut => 'Money given';
+
+  @override
+  String get moneyIn => 'Money received';
+
+  @override
+  String get cashDifference => 'Difference';
+
+  @override
+  String get kindAdvanceGiven => 'Advance';
+
+  @override
+  String get kindSalaryPaid => 'Salary';
+
+  @override
+  String get kindRoomRentPaid => 'Room rent paid';
+
+  @override
+  String get kindExpense => 'Expense';
+
+  @override
+  String get kindAdvanceReturned => 'Advance returned';
+
+  @override
+  String get kindRoomRentReceived => 'Room rent received';
+
+  @override
+  String get kindClientReceipt => 'From a company';
+
+  @override
+  String get catTransport => 'Transport';
+
+  @override
+  String get catFood => 'Food';
+
+  @override
+  String get catVisa => 'Visa and PRO';
+
+  @override
+  String get catTools => 'Tools';
+
+  @override
+  String get catOffice => 'Office';
+
+  @override
+  String get catOther => 'Other';
+
+  @override
+  String get expenseCategory => 'Expense type';
+
+  @override
+  String get optionalSite => 'Site (optional)';
+
+  @override
+  String get methodCash => 'Cash';
+
+  @override
+  String get methodBank => 'Bank';
+
+  @override
+  String get chooseRoom => 'Room';
+
+  @override
+  String get advanceTooHigh =>
+      'This is more than the advance still to recover.';
+
+  @override
+  String get advanceUndoBlocked =>
+      'Some of this advance has already come back. Undo that entry first.';
+
+  @override
+  String get reverseTitle => 'Undo this entry?';
+
+  @override
+  String get reverseHelp =>
+      'The original stays on record. A reversing entry cancels it.';
+
+  @override
+  String get reverseReason => 'Why it is being undone';
+
+  @override
+  String get reverseConfirm => 'Undo entry';
+
+  @override
+  String get reversedTag => 'Undone';
+
+  @override
+  String get reversalTag => 'Undo of an entry';
+
+  @override
+  String get moneyHeading => 'Money';
+
+  @override
+  String get advanceOutstanding => 'Advance still to recover';
+
+  @override
+  String get salaryPaidTotal => 'Salary paid';
+
+  @override
+  String get workerRentTotal => 'Room rent paid by this worker';
+
+  @override
+  String get roomsEmpty => 'No rooms yet. Add the rooms you rent for workers.';
+
+  @override
+  String get addRoom => 'Add room';
+
+  @override
+  String get editRoom => 'Edit room';
+
+  @override
+  String get roomName => 'Room name';
+
+  @override
+  String get roomNameHelp => 'For example: Sonapur Room 12';
+
+  @override
+  String get rentIn => 'Rent received';
+
+  @override
+  String get rentOut => 'Rent paid';
+
+  @override
+  String get roomProfitLabel => 'Profit';
+
+  @override
+  String get roomLossLabel => 'Loss';
+
+  @override
+  String get roomEven => 'Even';
+
+  @override
+  String get residentsHeading => 'Living here';
+
+  @override
+  String get noResidents =>
+      'Nobody yet. Choose this room on a worker\'s screen.';
+
+  @override
+  String get entriesHeading => 'Entries';
+
+  @override
+  String get previousMonth => 'Previous month';
+
+  @override
+  String get nextMonth => 'Next month';
+
+  @override
+  String advanceBalance(String amount) {
+    return 'Advance still to recover: $amount';
+  }
+
+  @override
+  String savedTo(String name) {
+    return 'Saved on phone, in $name\'s account';
+  }
+
+  @override
+  String roomProfit(String amount) {
+    return 'Profit $amount';
+  }
+
+  @override
+  String roomLoss(String amount) {
+    return 'Loss $amount';
+  }
+
+  @override
+  String rentSplit(String received, String paid) {
+    return 'Received $received, paid $paid';
+  }
 
   @override
   String get menuTimesheets => 'Timesheets';
@@ -810,7 +984,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get dailyWageHelp =>
-      'Zaroori nahin. Yeh har mazdoor ke saamne aa jayegi. Kisi aik ki badalni ho to us ke naam ke saamne raqam par dabayein.';
+      'Zaroori nahin. Har mazdoor ke saamne aa jayegi. Badalne ke liye wahan raqam par dabayein.';
 
   @override
   String get halfDayIsHalf => 'Aadhe din par aadhi dehari';
@@ -876,10 +1050,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get groupRegisters => 'Register';
 
   @override
-  String get groupPayroll => 'Tankhwah aur paisa';
-
-  @override
-  String get groupBilling => 'Billing';
+  String get groupBilling => 'Tankhwah aur billing';
 
   @override
   String get groupMore => 'Aur';
@@ -888,13 +1059,190 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get menuPayroll => 'Tankhwah';
 
   @override
-  String get menuAdvances => 'Advance';
+  String get tabCash => 'Rozana hisaab';
 
   @override
-  String get menuPayments => 'Adaigi';
+  String get tabRooms => 'Rooms';
 
   @override
-  String get menuExpenses => 'Kharche';
+  String get addCash => 'Hisaab likhein';
+
+  @override
+  String get cashEmpty =>
+      'Yahan koi hisaab nahin. Paisay dene ya milne par Hisaab likhein dabayein.';
+
+  @override
+  String get moneyOut => 'Paisay diye';
+
+  @override
+  String get moneyIn => 'Paisay mile';
+
+  @override
+  String get cashDifference => 'Farq';
+
+  @override
+  String get kindAdvanceGiven => 'Advance';
+
+  @override
+  String get kindSalaryPaid => 'Tankhwah';
+
+  @override
+  String get kindRoomRentPaid => 'Room ka kiraya diya';
+
+  @override
+  String get kindExpense => 'Kharcha';
+
+  @override
+  String get kindAdvanceReturned => 'Advance wapas mila';
+
+  @override
+  String get kindRoomRentReceived => 'Room ka kiraya mila';
+
+  @override
+  String get kindClientReceipt => 'Company se mila';
+
+  @override
+  String get catTransport => 'Transport';
+
+  @override
+  String get catFood => 'Khana';
+
+  @override
+  String get catVisa => 'Visa aur PRO';
+
+  @override
+  String get catTools => 'Auzaar';
+
+  @override
+  String get catOffice => 'Office';
+
+  @override
+  String get catOther => 'Doosra';
+
+  @override
+  String get expenseCategory => 'Kharche ki qisam';
+
+  @override
+  String get optionalSite => 'Site (zaroori nahin)';
+
+  @override
+  String get methodCash => 'Cash';
+
+  @override
+  String get methodBank => 'Bank';
+
+  @override
+  String get chooseRoom => 'Room';
+
+  @override
+  String get advanceTooHigh => 'Yeh baqi advance se zyada hai.';
+
+  @override
+  String get advanceUndoBlocked =>
+      'Is advance ka kuch hissa wapas mil chuka hai. Pehle woh entry wapas karein.';
+
+  @override
+  String get reverseTitle => 'Yeh entry wapas karein?';
+
+  @override
+  String get reverseHelp =>
+      'Asal entry mehfooz rahegi. Aik ulti entry isay khatam kar degi.';
+
+  @override
+  String get reverseReason => 'Wapas karne ki wajah';
+
+  @override
+  String get reverseConfirm => 'Wapas karein';
+
+  @override
+  String get reversedTag => 'Wapas ho gayi';
+
+  @override
+  String get reversalTag => 'Wapasi ki entry';
+
+  @override
+  String get moneyHeading => 'Paisay ka hisaab';
+
+  @override
+  String get advanceOutstanding => 'Advance baqi';
+
+  @override
+  String get salaryPaidTotal => 'Tankhwah di';
+
+  @override
+  String get workerRentTotal => 'Is mazdoor se kiraya mila';
+
+  @override
+  String get roomsEmpty =>
+      'Abhi koi room nahin. Mazdooron ke liye liye gaye room add karein.';
+
+  @override
+  String get addRoom => 'Room add karein';
+
+  @override
+  String get editRoom => 'Room badlein';
+
+  @override
+  String get roomName => 'Room ka naam';
+
+  @override
+  String get roomNameHelp => 'Jaise: Sonapur Room 12';
+
+  @override
+  String get rentIn => 'Kiraya mila';
+
+  @override
+  String get rentOut => 'Kiraya diya';
+
+  @override
+  String get roomProfitLabel => 'Nafa';
+
+  @override
+  String get roomLossLabel => 'Nuksan';
+
+  @override
+  String get roomEven => 'Barabar';
+
+  @override
+  String get residentsHeading => 'Is room mein rehne wale';
+
+  @override
+  String get noResidents =>
+      'Abhi koi nahin. Mazdoor ki screen par yeh room chunein.';
+
+  @override
+  String get entriesHeading => 'Entries';
+
+  @override
+  String get previousMonth => 'Pichla mahina';
+
+  @override
+  String get nextMonth => 'Agla mahina';
+
+  @override
+  String advanceBalance(String amount) {
+    return 'Advance baqi: $amount';
+  }
+
+  @override
+  String savedTo(String name) {
+    return 'Mobile par save, $name ke hisaab mein';
+  }
+
+  @override
+  String roomProfit(String amount) {
+    return 'Nafa $amount';
+  }
+
+  @override
+  String roomLoss(String amount) {
+    return 'Nuksan $amount';
+  }
+
+  @override
+  String rentSplit(String received, String paid) {
+    return 'Mila $received, diya $paid';
+  }
 
   @override
   String get menuTimesheets => 'Timesheet';

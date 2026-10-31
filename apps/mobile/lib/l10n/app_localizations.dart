@@ -166,7 +166,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyWageHelp.
   ///
   /// In en, this message translates to:
-  /// **'Optional. It shows beside every worker. To change one worker, tap the amount beside their name.'**
+  /// **'Optional. Shows beside every worker. Tap an amount there to change it.'**
   String get dailyWageHelp;
 
   /// No description provided for @halfDayIsHalf.
@@ -283,16 +283,10 @@ abstract class AppLocalizations {
   /// **'Registers'**
   String get groupRegisters;
 
-  /// No description provided for @groupPayroll.
-  ///
-  /// In en, this message translates to:
-  /// **'Payroll and money'**
-  String get groupPayroll;
-
   /// No description provided for @groupBilling.
   ///
   /// In en, this message translates to:
-  /// **'Billing'**
+  /// **'Payroll and billing'**
   String get groupBilling;
 
   /// No description provided for @groupMore.
@@ -307,23 +301,347 @@ abstract class AppLocalizations {
   /// **'Payroll'**
   String get menuPayroll;
 
-  /// No description provided for @menuAdvances.
+  /// No description provided for @tabCash.
   ///
   /// In en, this message translates to:
-  /// **'Advances'**
-  String get menuAdvances;
+  /// **'Daily money'**
+  String get tabCash;
 
-  /// No description provided for @menuPayments.
+  /// No description provided for @tabRooms.
   ///
   /// In en, this message translates to:
-  /// **'Payments'**
-  String get menuPayments;
+  /// **'Rooms'**
+  String get tabRooms;
 
-  /// No description provided for @menuExpenses.
+  /// No description provided for @addCash.
   ///
   /// In en, this message translates to:
-  /// **'Expenses'**
-  String get menuExpenses;
+  /// **'Add entry'**
+  String get addCash;
+
+  /// No description provided for @cashEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing written for this. Tap Add entry when money comes in or goes out.'**
+  String get cashEmpty;
+
+  /// No description provided for @moneyOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Money given'**
+  String get moneyOut;
+
+  /// No description provided for @moneyIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Money received'**
+  String get moneyIn;
+
+  /// No description provided for @cashDifference.
+  ///
+  /// In en, this message translates to:
+  /// **'Difference'**
+  String get cashDifference;
+
+  /// No description provided for @kindAdvanceGiven.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance'**
+  String get kindAdvanceGiven;
+
+  /// No description provided for @kindSalaryPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary'**
+  String get kindSalaryPaid;
+
+  /// No description provided for @kindRoomRentPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Room rent paid'**
+  String get kindRoomRentPaid;
+
+  /// No description provided for @kindExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense'**
+  String get kindExpense;
+
+  /// No description provided for @kindAdvanceReturned.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance returned'**
+  String get kindAdvanceReturned;
+
+  /// No description provided for @kindRoomRentReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Room rent received'**
+  String get kindRoomRentReceived;
+
+  /// No description provided for @kindClientReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'From a company'**
+  String get kindClientReceipt;
+
+  /// No description provided for @catTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get catTransport;
+
+  /// No description provided for @catFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get catFood;
+
+  /// No description provided for @catVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa and PRO'**
+  String get catVisa;
+
+  /// No description provided for @catTools.
+  ///
+  /// In en, this message translates to:
+  /// **'Tools'**
+  String get catTools;
+
+  /// No description provided for @catOffice.
+  ///
+  /// In en, this message translates to:
+  /// **'Office'**
+  String get catOffice;
+
+  /// No description provided for @catOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get catOther;
+
+  /// No description provided for @expenseCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense type'**
+  String get expenseCategory;
+
+  /// No description provided for @optionalSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Site (optional)'**
+  String get optionalSite;
+
+  /// No description provided for @methodCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get methodCash;
+
+  /// No description provided for @methodBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank'**
+  String get methodBank;
+
+  /// No description provided for @chooseRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get chooseRoom;
+
+  /// No description provided for @advanceTooHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'This is more than the advance still to recover.'**
+  String get advanceTooHigh;
+
+  /// No description provided for @advanceUndoBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Some of this advance has already come back. Undo that entry first.'**
+  String get advanceUndoBlocked;
+
+  /// No description provided for @reverseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo this entry?'**
+  String get reverseTitle;
+
+  /// No description provided for @reverseHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The original stays on record. A reversing entry cancels it.'**
+  String get reverseHelp;
+
+  /// No description provided for @reverseReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it is being undone'**
+  String get reverseReason;
+
+  /// No description provided for @reverseConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo entry'**
+  String get reverseConfirm;
+
+  /// No description provided for @reversedTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Undone'**
+  String get reversedTag;
+
+  /// No description provided for @reversalTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo of an entry'**
+  String get reversalTag;
+
+  /// No description provided for @moneyHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get moneyHeading;
+
+  /// No description provided for @advanceOutstanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance still to recover'**
+  String get advanceOutstanding;
+
+  /// No description provided for @salaryPaidTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary paid'**
+  String get salaryPaidTotal;
+
+  /// No description provided for @workerRentTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Room rent paid by this worker'**
+  String get workerRentTotal;
+
+  /// No description provided for @roomsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No rooms yet. Add the rooms you rent for workers.'**
+  String get roomsEmpty;
+
+  /// No description provided for @addRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Add room'**
+  String get addRoom;
+
+  /// No description provided for @editRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit room'**
+  String get editRoom;
+
+  /// No description provided for @roomName.
+  ///
+  /// In en, this message translates to:
+  /// **'Room name'**
+  String get roomName;
+
+  /// No description provided for @roomNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For example: Sonapur Room 12'**
+  String get roomNameHelp;
+
+  /// No description provided for @rentIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Rent received'**
+  String get rentIn;
+
+  /// No description provided for @rentOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Rent paid'**
+  String get rentOut;
+
+  /// No description provided for @roomProfitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Profit'**
+  String get roomProfitLabel;
+
+  /// No description provided for @roomLossLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Loss'**
+  String get roomLossLabel;
+
+  /// No description provided for @roomEven.
+  ///
+  /// In en, this message translates to:
+  /// **'Even'**
+  String get roomEven;
+
+  /// No description provided for @residentsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Living here'**
+  String get residentsHeading;
+
+  /// No description provided for @noResidents.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody yet. Choose this room on a worker\'s screen.'**
+  String get noResidents;
+
+  /// No description provided for @entriesHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Entries'**
+  String get entriesHeading;
+
+  /// No description provided for @previousMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous month'**
+  String get previousMonth;
+
+  /// No description provided for @nextMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Next month'**
+  String get nextMonth;
+
+  /// No description provided for @advanceBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance still to recover: {amount}'**
+  String advanceBalance(String amount);
+
+  /// No description provided for @savedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on phone, in {name}\'s account'**
+  String savedTo(String name);
+
+  /// No description provided for @roomProfit.
+  ///
+  /// In en, this message translates to:
+  /// **'Profit {amount}'**
+  String roomProfit(String amount);
+
+  /// No description provided for @roomLoss.
+  ///
+  /// In en, this message translates to:
+  /// **'Loss {amount}'**
+  String roomLoss(String amount);
+
+  /// No description provided for @rentSplit.
+  ///
+  /// In en, this message translates to:
+  /// **'Received {received}, paid {paid}'**
+  String rentSplit(String received, String paid);
 
   /// No description provided for @menuTimesheets.
   ///

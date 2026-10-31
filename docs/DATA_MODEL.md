@@ -19,11 +19,13 @@ Money records add `currency` and `posting_date`. An effective date is always sep
 | Groups | `worker_groups`, `worker_group_members` | Optional company, site, daily wage and duty time. A member can have their own wage. Attendance rows keep their own figures, so changing a group never changes approved work (D-029) |
 | Attendance | `attendance_batches`, `attendance_entries` | Rate snapshot on each entry. Client and worker minutes stored separately. Corrections link to the revised entry (ATT-02, ATT-08) |
 | Payroll | `payroll_runs`, `payroll_lines` | Posted lines are immutable. Opening, gross, allowances, deductions, recovery, net, payable, paid and closing all stored (PAY-01) |
-| Worker money | `advance_entries`, `deductions`, `salary_payments`, `salary_payment_allocations` | Advance is its own ledger. Deduction carries reason and authorization (PAY-05, PAY-07) |
+| Cash book | `cash_entries` | One row per amount in or out, with a kind saying where it belongs: advance, salary, room rent paid or received, expense, advance returned, company receipt. Append-only by trigger. A reversal row cancels a mistake (D-030, REP-08) |
+| Rooms | `rooms`, `workers.room_id` | Rent received and paid per room come from the cash book (D-031) |
+| Worker money | `deductions`, `salary_payment_allocations` | Advance outstanding is opening + given - returned, from the cash book, plus payroll recovery from T11. Deduction carries reason and authorization (PAY-05, PAY-07) |
 | Timesheets | `timesheets`, `timesheet_revisions`, `timesheet_lines` | A revision preserves the original (TS-06) |
 | Invoices | `invoices`, `invoice_lines`, `invoice_source_allocations`, `credit_notes` | Draft has no legal number. Stored as structured data for a later e-invoicing export (D-011) |
 | Receipts | `receipts`, `receipt_allocations` | Unapplied credit allowed. Allocation cannot exceed outstanding (INV-05) |
-| Costs | `expenses` | Actual room cost is separate from room charge recovered from a worker (REP-07) |
+| Costs | `cash_entries` | Expenses are cash book rows with a category and optional site. Actual room cost is separate from room charge recovered from a worker (REP-07) |
 | Closing | `period_locks` | Change after lock needs an owner reason and a dated adjustment (REP-04) |
 | Documents | `document_snapshots` | PDF plus data and template snapshot. Later logo changes never alter an issued copy (DOC-05) |
 | System | `audit_events`, `outbox`, `backup_manifests` | See below |

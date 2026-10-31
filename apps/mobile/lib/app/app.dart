@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/cash/cash_screen.dart';
 import '../features/companies/companies_screen.dart';
 import '../features/companies/sites_screen.dart';
 import '../features/groups/groups_screen.dart';
@@ -10,6 +11,7 @@ import '../features/more/profile_form_screen.dart';
 import '../features/more/settings_screen.dart';
 import '../features/rates/balances_screen.dart';
 import '../features/rates/rates_screen.dart';
+import '../features/rooms/rooms_screen.dart';
 import '../features/today/today_screen.dart';
 import '../l10n/app_localizations.dart';
 import 'providers.dart';
@@ -19,6 +21,8 @@ import 'theme.dart';
 
 Widget _screen(Section section) => switch (section) {
   Section.today => const TodayScreen(),
+  Section.cash => const CashScreen(),
+  Section.rooms => const RoomsScreen(),
   Section.companies => const CompaniesScreen(),
   Section.sites => const SitesScreen(),
   Section.labour => const LabourScreen(),

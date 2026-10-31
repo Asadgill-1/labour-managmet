@@ -71,11 +71,52 @@ class Workers extends Table with Common {
   TextColumn get joiningDate => text().nullable()();
   IntColumn get roomChargeFils => integer().nullable()();
   TextColumn get roomChargeNote => text().nullable()();
+  TextColumn get roomId => text().nullable().references(Rooms, #id)();
   BoolColumn get active => boolean().withDefault(const Constant(true))();
 
   @override
   List<Set<Column>> get uniqueKeys => [
     {tenantId, code},
+  ];
+}
+
+/// A room the company rents for its workers (D-031).
+class Rooms extends Table with Common {
+  TextColumn get name => text()();
+  TextColumn get note => text().nullable()();
+  BoolColumn get active => boolean().withDefault(const Constant(true))();
+}
+
+/// Every amount in or out, one row each (D-030). Rows never change: a mistake gets a reversal row, so
+/// balances always come from the rows themselves (REP-08). Triggers enforce this.
+@TableIndex(name: 'idx_cash_date', columns: {#entryDate})
+@TableIndex(name: 'idx_cash_worker', columns: {#workerId})
+@TableIndex(name: 'idx_cash_room', columns: {#roomId})
+class CashEntries extends Table with Common {
+  TextColumn get entryDate => text()();
+
+  /// A `CashKind` by name.
+  TextColumn get kind => text()();
+  IntColumn get amountFils => integer().check(amountFils.isBiggerThanValue(0))();
+  TextColumn get currency => text().withDefault(const Constant('AED'))();
+  TextColumn get workerId => text().nullable().references(Workers, #id)();
+  TextColumn get roomId => text().nullable().references(Rooms, #id)();
+  TextColumn get clientId => text().nullable().references(Clients, #id)();
+  TextColumn get siteId => text().nullable().references(Sites, #id)();
+  TextColumn get category => text().nullable()();
+
+  /// 'cash' or 'bank'.
+  TextColumn get method => text().withDefault(const Constant('cash'))();
+  TextColumn get note => text().nullable()();
+
+  /// Set on a reversal, which carries the original's figures. Unique, so nothing is reversed twice.
+  TextColumn get reversesEntryId => text().nullable().unique().references(CashEntries, #id)();
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (kind NOT IN ('advanceGiven', 'salaryPaid', 'advanceReturned') OR worker_id IS NOT NULL)",
+    "CHECK (kind NOT IN ('roomRentPaid', 'roomRentReceived') OR room_id IS NOT NULL)",
+    "CHECK (kind <> 'clientReceipt' OR client_id IS NOT NULL)",
   ];
 }
 

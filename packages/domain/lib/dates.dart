@@ -36,5 +36,18 @@ String addDays(String storedDate, int days) {
   return ymd(DateTime.utc(parts[0], parts[1], parts[2] + days));
 }
 
+/// A stored month ("2026-10") shifted by whole months.
+String addMonths(String month, int months) {
+  final parts = month.split('-').map(int.parse).toList();
+  final moved = DateTime.utc(parts[0], parts[1] + months);
+  return '${moved.year}-${_two(moved.month)}';
+}
+
+/// "2026-10" -> "10-2026".
+String showMonth(String month) {
+  final parts = month.split('-');
+  return '${parts[1]}-${parts[0]}';
+}
+
 /// 660 -> "11:00".
 String showDuration(int minutes) => '${minutes ~/ 60}:${_two(minutes % 60)}';

@@ -11,7 +11,7 @@
   "groupsEmpty": "No groups yet. Make one for workers who usually go together.",
   "noneChoice": "None",
   "dailyWage": "Daily wage (AED)",
-  "dailyWageHelp": "Optional. It shows beside every worker. To change one worker, tap the amount beside their name.",
+  "dailyWageHelp": "Optional. Shows beside every worker. Tap an amount there to change it.",
   "halfDayIsHalf": "Half day pays half the daily wage",
   "ownWageHelp": "Leave empty to use the group's daily wage.",
   "todayWageHelp": "For this attendance only. The group does not change.",
@@ -52,13 +52,104 @@
   "soon": "Soon",
   "groupDaily": "Daily",
   "groupRegisters": "Registers",
-  "groupPayroll": "Payroll and money",
-  "groupBilling": "Billing",
+  "groupBilling": "Payroll and billing",
   "groupMore": "More",
   "menuPayroll": "Payroll",
-  "menuAdvances": "Advances",
-  "menuPayments": "Payments",
-  "menuExpenses": "Expenses",
+  "tabCash": "Daily money",
+  "tabRooms": "Rooms",
+  "addCash": "Add entry",
+  "cashEmpty": "Nothing written for this. Tap Add entry when money comes in or goes out.",
+  "moneyOut": "Money given",
+  "moneyIn": "Money received",
+  "cashDifference": "Difference",
+  "kindAdvanceGiven": "Advance",
+  "kindSalaryPaid": "Salary",
+  "kindRoomRentPaid": "Room rent paid",
+  "kindExpense": "Expense",
+  "kindAdvanceReturned": "Advance returned",
+  "kindRoomRentReceived": "Room rent received",
+  "kindClientReceipt": "From a company",
+  "catTransport": "Transport",
+  "catFood": "Food",
+  "catVisa": "Visa and PRO",
+  "catTools": "Tools",
+  "catOffice": "Office",
+  "catOther": "Other",
+  "expenseCategory": "Expense type",
+  "optionalSite": "Site (optional)",
+  "methodCash": "Cash",
+  "methodBank": "Bank",
+  "chooseRoom": "Room",
+  "advanceTooHigh": "This is more than the advance still to recover.",
+  "advanceUndoBlocked": "Some of this advance has already come back. Undo that entry first.",
+  "reverseTitle": "Undo this entry?",
+  "reverseHelp": "The original stays on record. A reversing entry cancels it.",
+  "reverseReason": "Why it is being undone",
+  "reverseConfirm": "Undo entry",
+  "reversedTag": "Undone",
+  "reversalTag": "Undo of an entry",
+  "moneyHeading": "Money",
+  "advanceOutstanding": "Advance still to recover",
+  "salaryPaidTotal": "Salary paid",
+  "workerRentTotal": "Room rent paid by this worker",
+  "roomsEmpty": "No rooms yet. Add the rooms you rent for workers.",
+  "addRoom": "Add room",
+  "editRoom": "Edit room",
+  "roomName": "Room name",
+  "roomNameHelp": "For example: Sonapur Room 12",
+  "rentIn": "Rent received",
+  "rentOut": "Rent paid",
+  "roomProfitLabel": "Profit",
+  "roomLossLabel": "Loss",
+  "roomEven": "Even",
+  "residentsHeading": "Living here",
+  "noResidents": "Nobody yet. Choose this room on a worker's screen.",
+  "entriesHeading": "Entries",
+  "previousMonth": "Previous month",
+  "nextMonth": "Next month",
+  "advanceBalance": "Advance still to recover: {amount}",
+  "@advanceBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savedTo": "Saved on phone, in {name}'s account",
+  "@savedTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "roomProfit": "Profit {amount}",
+  "@roomProfit": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "roomLoss": "Loss {amount}",
+  "@roomLoss": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "rentSplit": "Received {received}, paid {paid}",
+  "@rentSplit": {
+    "placeholders": {
+      "received": {
+        "type": "String"
+      },
+      "paid": {
+        "type": "String"
+      }
+    }
+  },
   "menuTimesheets": "Timesheets",
   "menuInvoices": "Invoices",
   "menuReceived": "Money received",

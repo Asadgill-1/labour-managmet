@@ -71,12 +71,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 : ListView.separated(
                     itemCount: shown.length,
                     separatorBuilder: (_, _) => const Divider(),
-                    itemBuilder: (context, i) => ListTile(
-                      leading: RowTag(shown[i].tag),
-                      title: Text(shown[i].title),
-                      subtitle: shown[i].subtitle == null ? null : Text(shown[i].subtitle!),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: shown[i].onTap,
+                    itemBuilder: (context, i) => GrowingRow(
+                      child: ListTile(
+                        leading: RowTag(shown[i].tag),
+                        title: Text(shown[i].title),
+                        subtitle: shown[i].subtitle == null ? null : Text(shown[i].subtitle!),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: shown[i].onTap,
+                      ),
                     ),
                   ),
           ),

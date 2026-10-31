@@ -18,7 +18,7 @@ void main() {
 
     await tester.tap(find.text('Menu'));
     await settle(tester);
-    for (final section in ['Aaj', 'Companies', 'Sites', 'Labour', 'Rates', 'Pichla baqaya', 'Apni company', 'Settings']) {
+    for (final section in ['Aaj', 'Rozana hisaab', 'Companies', 'Sites', 'Labour', 'Mazdoor group', 'Rooms', 'Rates', 'Pichla baqaya', 'Apni company', 'Settings']) {
       expect(find.text(section), findsWidgets, reason: section);
     }
     expect(Directionality.of(tester.element(find.text('Tankhwah'))), TextDirection.ltr);

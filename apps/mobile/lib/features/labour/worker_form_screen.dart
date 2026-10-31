@@ -32,6 +32,7 @@ class _WorkerFormScreenState extends ConsumerState<WorkerFormScreen> {
   );
   late final _roomNote = TextEditingController(text: widget.worker?.roomChargeNote);
   late String? _joined = widget.worker?.joiningDate;
+  late String? _roomId = widget.worker?.roomId;
   String? _codeError;
 
   @override
@@ -67,6 +68,7 @@ class _WorkerFormScreenState extends ConsumerState<WorkerFormScreen> {
         joiningDate: Value(_joined),
         roomChargeFils: Value(parseAed(_room.text)),
         roomChargeNote: optionalText(_roomNote),
+        roomId: Value(_roomId),
       ),
     ));
     if (!saved || !mounted) return;
@@ -77,6 +79,7 @@ class _WorkerFormScreenState extends ConsumerState<WorkerFormScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final rooms = (ref.watch(roomsProvider).value ?? const <Room>[]).where((r) => r.active || r.id == _roomId).toList();
     return Scaffold(
       appBar: AppBar(title: Text(widget.worker == null ? l10n.addWorker : l10n.editWorker)),
       bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _save),
@@ -97,6 +100,18 @@ class _WorkerFormScreenState extends ConsumerState<WorkerFormScreen> {
             Field(l10n.phone, _phone, keyboardType: TextInputType.phone),
             fieldGap,
             DateField(l10n.joiningDate, value: _joined, onChanged: (v) => setState(() => _joined = v)),
+            fieldGap,
+            DropdownButtonFormField<String?>(
+              isExpanded: true,
+              key: ValueKey('room$_roomId'),
+              initialValue: _roomId,
+              decoration: InputDecoration(labelText: l10n.chooseRoom),
+              items: [
+                DropdownMenuItem(child: Text(l10n.noneChoice)),
+                for (final r in rooms) DropdownMenuItem(value: r.id, child: Text(r.name)),
+              ],
+              onChanged: (v) => setState(() => _roomId = v),
+            ),
             fieldGap,
             Field(
               l10n.roomCharge,

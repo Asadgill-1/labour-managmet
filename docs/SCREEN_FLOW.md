@@ -8,10 +8,9 @@ Hidden until the Menu button at the top left of a main screen opens it. The arro
 
 | Group | Section | State |
 | --- | --- | --- |
-| Rozana | Aaj: attendance for any date, bulk entry, copy last team, missing entries | Built |
-| Register | Companies, Sites, Labour, Mazdoor group, Rates, Pichla baqaya | Built |
-| Tankhwah aur paisa | Tankhwah, Advance, Adaigi, Kharche | Jald (P2) |
-| Billing | Timesheet, Invoice, Paisay mile | Jald (P3) |
+| Rozana | Aaj: attendance for any date, by group or by worker, copy last team, missing entries. Rozana hisaab: money in and out for any date | Built |
+| Register | Companies, Sites, Labour, Mazdoor group, Rooms, Rates, Pichla baqaya | Built |
+| Tankhwah aur billing | Tankhwah (P2), Timesheet, Invoice, Paisay mile (P3) | Jald |
 | Aur | Reports, Documents (P3), Backup, Plan (P4), Help (P5), Team (P6) | Jald |
 | Fixed at the bottom | Apni company, Settings | Built |
 
@@ -22,6 +21,10 @@ Language > email and password > verify email > company name > optional logo and 
 ## Main flows
 
 **Daily attendance (ATT-01):** Date > group or single workers > client > site > review shift, times and rates > exceptions > preview > Save. A group ticks its members and fills in its company, site and times. Group and worker have separate searches. Unticking a member, or adding someone new (who is asked for a daily wage, starting from the group's), lasts for that attendance only (D-029). Copying yesterday's team creates a draft that the owner still reviews (UX-05). Save is all or nothing, with row errors shown beside the row (ATT-04).
+
+**Daily money (D-030):** Money given or received > what it was for > worker, room, company or expense type > amount > Save. The line shows on that worker or room by itself. Tapping a line offers to undo it with a reason. The original stays on record.
+
+**Room result (D-031):** Rooms > month > rent received, rent paid, and the difference in words as profit, loss or even.
 
 **Payroll (PAY-01):** Period > review work and contracts > allowances > approved deductions > preview > owner approves > post > record payment.
 

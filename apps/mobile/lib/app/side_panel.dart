@@ -7,7 +7,7 @@ import 'providers.dart';
 import 'theme.dart';
 
 /// Every main screen. The index is its branch in the router.
-enum Section { today, companies, sites, labour, groups, rates, balances, settings }
+enum Section { today, cash, companies, sites, labour, groups, rooms, rates, balances, settings }
 
 /// The shell's Scaffold. Main screens have their own Scaffold, so they reach the panel through this key.
 final shellKey = GlobalKey<ScaffoldState>();
@@ -96,19 +96,17 @@ class SidePanel extends ConsumerWidget {
               children: [
                 _PanelGroup(l10n.groupDaily),
                 item(Section.today, Icons.today, l10n.tabToday),
+                item(Section.cash, Icons.receipt_long, l10n.tabCash),
                 _PanelGroup(l10n.groupRegisters),
                 item(Section.companies, Icons.apartment, l10n.tabCompanies),
                 item(Section.sites, Icons.location_on, l10n.sitesHeading),
                 item(Section.labour, Icons.groups, l10n.tabLabour),
                 item(Section.groups, Icons.diversity_3, l10n.tabGroups),
+                item(Section.rooms, Icons.bed, l10n.tabRooms),
                 item(Section.rates, Icons.sell, l10n.tabRates),
                 item(Section.balances, Icons.history, l10n.openingHeading),
-                _PanelGroup(l10n.groupPayroll),
-                _PanelItem(Icons.payments, l10n.menuPayroll),
-                _PanelItem(Icons.savings, l10n.menuAdvances),
-                _PanelItem(Icons.outbox, l10n.menuPayments),
-                _PanelItem(Icons.shopping_bag, l10n.menuExpenses),
                 _PanelGroup(l10n.groupBilling),
+                _PanelItem(Icons.payments, l10n.menuPayroll),
                 _PanelItem(Icons.fact_check, l10n.menuTimesheets),
                 _PanelItem(Icons.request_quote, l10n.menuInvoices),
                 _PanelItem(Icons.move_to_inbox, l10n.menuReceived),

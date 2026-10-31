@@ -94,7 +94,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
         title: FittedBox(
           fit: BoxFit.scaleDown,
           alignment: Alignment.centerLeft,
-          child: Text('${_date == today ? l10n.tabToday : _dayName(l10n, _date)}, ${showDate(_date)}'),
+          child: Text('${_date == today ? l10n.tabToday : dayName(l10n, _date)}, ${showDate(_date)}'),
         ),
         actions: [
           if (_date != today) TextButton(onPressed: () => setState(() => _date = today), child: Text(l10n.tabToday)),
@@ -110,7 +110,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 14),
               child: Column(
                 children: [
-                  _DayStrip(selected: _date, onPick: (date) => setState(() => _date = date)),
+                  DayStrip(selected: _date, onPick: (date) => setState(() => _date = date)),
                   const SizedBox(height: 12),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -174,62 +174,6 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
   }
 }
 
-/// Monday first, as DateTime.weekday counts.
-String _dayName(AppLocalizations l10n, String date) => l10n.dayNames.split(',')[DateTime.parse(date).weekday - 1];
-
-/// A week around the chosen date, like the date columns of a muster roll. The calendar reaches further.
-class _DayStrip extends StatelessWidget {
-  const _DayStrip({required this.selected, required this.onPick});
-
-  final String selected;
-  final ValueChanged<String> onPick;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return Row(
-      children: [
-        for (var offset = -3; offset <= 3; offset++)
-          Expanded(
-            child: Builder(
-              builder: (context) {
-                final date = addDays(selected, offset);
-                final color = offset == 0 ? Colors.white : ink;
-                return Semantics(
-                  button: true,
-                  selected: offset == 0,
-                  label: showDate(date),
-                  excludeSemantics: true,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () => onPick(date),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                      decoration: BoxDecoration(color: offset == 0 ? ink : null, borderRadius: BorderRadius.circular(8)),
-                      child: Column(
-                        children: [
-                          // Fixed height, so a long day name that shrinks doesn't lift its number out of line.
-                          SizedBox(
-                            height: MediaQuery.textScalerOf(context).scale(16),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(_dayName(l10n, date), style: TextStyle(fontSize: 12, color: color)),
-                            ),
-                          ),
-                          Text(date.substring(8), style: amountStyle.copyWith(fontSize: 20, color: color)),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-      ],
-    );
-  }
-}
-
 class _EntryRow extends StatelessWidget {
   const _EntryRow({required this.entry, required this.worker, required this.site, required this.onTap});
 
@@ -246,32 +190,34 @@ class _EntryRow extends StatelessWidget {
       if (entry.state == 'draft' && entry.clientRateFils == null) l10n.issueClientRate,
       if (entry.state == 'draft' && entry.workerRateFils == null) l10n.issueWorkerRate,
     ];
-    return ListTile(
-      leading: switch (status) {
-        AttendanceStatus.present => const RowTag.icon(Icons.check, fill: settledSoft, color: settled),
-        AttendanceStatus.half => const RowTag('½', fill: hiVisSoft),
-        AttendanceStatus.absent => const RowTag.icon(Icons.close, fill: dueSoft, color: due),
-      },
-      title: Text(worker?.name ?? ''),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            [
-              ?worker?.code,
-              ?site?.name,
-              if (entry.startUtc == null)
-                statusLabel(l10n, status)
-              else
-                '${showMinuteOfDay(dubaiMinuteOfDay(entry.startUtc!))}-${showMinuteOfDay(dubaiMinuteOfDay(entry.endUtc!))}',
-              if (entry.revisesEntryId != null) l10n.correctedTag,
-            ].join(', '),
-          ),
-          if (problems.isNotEmpty) Text(problems.join(', '), style: const TextStyle(color: due)),
-        ],
+    return GrowingRow(
+      child: ListTile(
+        leading: switch (status) {
+          AttendanceStatus.present => const RowTag.icon(Icons.check, fill: settledSoft, color: settled),
+          AttendanceStatus.half => const RowTag('½', fill: hiVisSoft),
+          AttendanceStatus.absent => const RowTag.icon(Icons.close, fill: dueSoft, color: due),
+        },
+        title: Text(worker?.name ?? ''),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              [
+                ?worker?.code,
+                ?site?.name,
+                if (entry.startUtc == null)
+                  statusLabel(l10n, status)
+                else
+                  '${showMinuteOfDay(dubaiMinuteOfDay(entry.startUtc!))}-${showMinuteOfDay(dubaiMinuteOfDay(entry.endUtc!))}',
+                if (entry.revisesEntryId != null) l10n.correctedTag,
+              ].join(', '),
+            ),
+            if (problems.isNotEmpty) Text(problems.join(', '), style: const TextStyle(color: due)),
+          ],
+        ),
+        trailing: _StateLabel(entry.state),
+        onTap: onTap,
       ),
-      trailing: _StateLabel(entry.state),
-      onTap: onTap,
     );
   }
 }

@@ -42,6 +42,36 @@ final billingContractsProvider = StreamProvider.family<List<BillingContract>, St
       .watch();
 });
 
+final roomsProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.rooms)..orderBy([(r) => OrderingTerm.asc(r.name)])).watch();
+});
+
+final cashOnDateProvider = StreamProvider.family<List<CashEntry>, String>((ref, date) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.cashEntries)
+        ..where((c) => c.entryDate.equals(date))
+        ..orderBy([(c) => OrderingTerm.desc(c.createdAtUtc)]))
+      .watch();
+});
+
+/// [month] is YYYY-MM.
+final cashInMonthProvider = StreamProvider.family<List<CashEntry>, String>((ref, month) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.cashEntries)
+        ..where((c) => c.entryDate.like('$month-%'))
+        ..orderBy([(c) => OrderingTerm.desc(c.entryDate), (c) => OrderingTerm.desc(c.createdAtUtc)]))
+      .watch();
+});
+
+final cashOfWorkerProvider = StreamProvider.family<List<CashEntry>, String>((ref, workerId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.cashEntries)
+        ..where((c) => c.workerId.equals(workerId))
+        ..orderBy([(c) => OrderingTerm.desc(c.entryDate), (c) => OrderingTerm.desc(c.createdAtUtc)]))
+      .watch();
+});
+
 final workerGroupsProvider = StreamProvider((ref) {
   final db = ref.watch(dbProvider);
   return (db.select(db.workerGroups)..orderBy([(g) => OrderingTerm.asc(g.name)])).watch();

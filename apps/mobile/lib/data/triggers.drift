@@ -8,6 +8,15 @@ CREATE TRIGGER audit_no_delete BEFORE DELETE ON audit_events BEGIN
   SELECT RAISE(ABORT, 'audit events are append-only');
 END;
 
+-- The cash book only grows. A mistake gets a reversal row (REP-08, D-030).
+CREATE TRIGGER cash_no_update BEFORE UPDATE ON cash_entries BEGIN
+  SELECT RAISE(ABORT, 'cash entries are append-only');
+END;
+
+CREATE TRIGGER cash_no_delete BEFORE DELETE ON cash_entries BEGIN
+  SELECT RAISE(ABORT, 'cash entries are append-only');
+END;
+
 -- Approved and linked rows keep their figures. A correction is a new row, and the old one is only flagged (ATT-08).
 CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries
 WHEN OLD.state IN ('approved', 'linked')

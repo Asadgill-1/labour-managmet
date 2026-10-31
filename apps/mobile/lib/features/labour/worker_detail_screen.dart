@@ -12,6 +12,7 @@ import '../../app/theme.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../cash/worker_money_section.dart';
 import '../rates/rate_sections.dart';
 import 'worker_form_screen.dart';
 
@@ -48,6 +49,7 @@ class WorkerDetailScreen extends ConsumerWidget {
           if (worker.joiningDate != null) ...[InfoRow(l10n.joiningDate, showDate(worker.joiningDate!)), const Divider()],
           if (worker.roomChargeFils != null) ...[InfoRow(l10n.roomCharge, formatAed(worker.roomChargeFils!)), const Divider()],
           WorkerRateSections(workerId: workerId),
+          WorkerMoneySection(workerId: workerId),
           fieldGap,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),

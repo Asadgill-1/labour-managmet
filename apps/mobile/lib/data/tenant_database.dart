@@ -36,6 +36,8 @@ String newUuid() {
     OpeningBalances,
     WorkerGroups,
     WorkerGroupMembers,
+    Rooms,
+    CashEntries,
     AttendanceBatches,
     AttendanceEntries,
     AuditEvents,
@@ -51,7 +53,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -61,6 +63,16 @@ class TenantDatabase extends _$TenantDatabase {
         await m.createTable(schema.workerGroupMembers);
         await m.addColumn(schema.attendanceBatches, schema.attendanceBatches.groupId);
         await m.addColumn(schema.attendanceEntries, schema.attendanceEntries.groupId);
+      },
+      from2To3: (m, schema) async {
+        await m.createTable(schema.rooms);
+        await m.addColumn(schema.workers, schema.workers.roomId);
+        await m.createTable(schema.cashEntries);
+        await m.createIndex(schema.idxCashDate);
+        await m.createIndex(schema.idxCashWorker);
+        await m.createIndex(schema.idxCashRoom);
+        await m.createTrigger(schema.cashNoUpdate);
+        await m.createTrigger(schema.cashNoDelete);
       },
     ),
     beforeOpen: (_) => customStatement('PRAGMA foreign_keys = ON'),

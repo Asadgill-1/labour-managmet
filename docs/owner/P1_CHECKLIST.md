@@ -13,7 +13,7 @@ Test APK: `apps/mobile/build/app/outputs/flutter-apk/app-release.apk`. Yeh test 
 
 - [ ] Pehli baar khulne par sirf company ka naam maanga jaye.
 - [ ] Oopar baen taraf **Menu** dabayein. Baen taraf panel khule. Teer ka nishan dabane par, ya bahar dabane par, panel chhup jaye.
-- [ ] Panel mein yeh sab hon: Aaj, Companies, Sites, Labour, Rates, Pichla baqaya, Apni company, Settings. Jo abhi bane nahin un par **Jald** likha ho aur woh na khulein.
+- [ ] Panel mein yeh sab hon: Aaj, Rozana hisaab, Companies, Sites, Labour, Mazdoor group, Rooms, Rates, Pichla baqaya, Apni company, Settings. Jo abhi bane nahin un par **Jald** likha ho aur woh na khulein.
 - [ ] **Companies** mein aik company add karein, phir us mein site. Site mein aam shuru aur khatam waqt, aur break likhein.
 - [ ] Usi company mein **Company ka rate** add karein: fi ghanta AED 10.
 - [ ] **Labour** mein 10 mazdoor add karein. Har aik mein **Tankhwah ka rate**: fi ghanta AED 8.
@@ -42,6 +42,15 @@ Kitne second lage: ______
 - [ ] **Hazri lagayein** mein group par dabayein. Us ke mazdoor khud tick hon, aur company, site aur waqt khud aa jayen.
 - [ ] Aik mazdoor ka tick hatayein, phir **Mazdoor talash karein** se group ke bahar ka mazdoor chunein. Us ki dehari poochi jaye, aur group ki dehari pehle se likhi ho.
 - [ ] Hazri save karein. Phir **Hazri lagayein** khol kar wahi group dobara chunein. Group poora hona chahiye: hataya hua mazdoor wapas ho, aur naya mazdoor na ho.
+
+## 3c. Rozana hisaab aur Rooms
+
+- [ ] **Menu > Rooms** mein aik room add karein. Phir mazdoor ki screen par **Room** aur room charge chunein.
+- [ ] **Rozana hisaab > Hisaab likhein**: **Paisay diye**, **Advance**, mazdoor chunein, raqam likh kar save karein. Paigham aaye ke yeh us mazdoor ke hisaab mein gaya.
+- [ ] Us mazdoor ki screen kholein. **Paisay ka hisaab** mein **Advance baqi** wahi raqam ho, aur dobara kuch likhna na pare.
+- [ ] **Room ka kiraya diya** likhein, phir **Paisay mile > Room ka kiraya mila** mein mazdoor chunein. Room aur raqam khud aa jayen.
+- [ ] **Rooms** kholein. Kiraya mila, kiraya diya, aur Nafa ya Nuksan sahi hon.
+- [ ] **Rozana hisaab** mein aik entry par dabayein aur wapas karein. Wajah ke baghair na ho. Asal entry nazar aati rahe aur total theek ho jayen.
 
 ## 4. Aap ke faislay
 

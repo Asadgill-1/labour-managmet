@@ -184,6 +184,17 @@ class SearchBox extends StatelessWidget {
   }
 }
 
+/// A row whose text can change after it first shows, because its data arrives a moment later. A tile's white
+/// background is painted on the screen behind the list, which otherwise keeps the old height until something scrolls.
+class GrowingRow extends StatelessWidget {
+  const GrowingRow({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => SizeChangedLayoutNotifier(child: child);
+}
+
 /// A name's first letter, for a [RowTag].
 String initial(String name) => name.trim().isEmpty ? '?' : name.trim()[0].toUpperCase();
 
@@ -214,18 +225,19 @@ class RowTag extends StatelessWidget {
 
 /// A row's value on the right. Shrinks to fit, so a big amount can't squeeze the row's name or get cut off.
 class RowValue extends StatelessWidget {
-  const RowValue(this.text, {super.key});
+  const RowValue(this.text, {this.style = amountStyle, super.key});
 
   final String text;
+  final TextStyle style;
 
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * 0.42),
+      constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * 0.36),
       child: FittedBox(
         fit: BoxFit.scaleDown,
         alignment: Alignment.centerRight,
-        child: Text(text, style: amountStyle),
+        child: Text(text, style: style),
       ),
     );
   }
@@ -287,10 +299,14 @@ class BandFigure extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: Alignment.centerLeft,
-          child: Text(value, style: amountStyle.copyWith(fontSize: size, height: 1.15)),
+        // Fixed height, so a long amount that shrinks doesn't lift its label out of line with the others.
+        SizedBox(
+          height: MediaQuery.textScalerOf(context).scale(size * 1.2),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(value, style: amountStyle.copyWith(fontSize: size, height: 1.15)),
+          ),
         ),
         Text(label, style: const TextStyle(fontSize: 13, color: ink)),
       ],
@@ -337,33 +353,148 @@ bool onMonthlyPay(List<PayContract> contracts, String workerId, String date) {
   );
 }
 
-/// Bottom sheet to pick one option. Skips the question when there is only one answer.
-/// ponytail: no search inside the sheet, add one when a long worker list makes this slow.
-Future<T?> chooseOne<T>(BuildContext context, String title, List<({T value, String label})> options) async {
+/// Bottom sheet to pick one option, with a search once the list is long. Skips the question when there is only one answer.
+Future<T?> chooseOne<T>(BuildContext context, String title, List<({T value, String label})> options, {String? emptyText}) async {
   if (options.isEmpty) {
-    showFormError(context, AppLocalizations.of(context).needSetupFirst);
+    showFormError(context, emptyText ?? AppLocalizations.of(context).needSetupFirst);
     return null;
   }
   if (options.length == 1) return options.single.value;
   return showModalBottomSheet<T>(
     context: context,
-    builder: (sheet) => SafeArea(
-      child: ListView(
-        shrinkWrap: true,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Text(title, style: sectionTitleStyle),
-          ),
-          for (final option in options) ...[
-            const Divider(),
-            ListTile(
-              title: Text(option.label),
-              onTap: () => Navigator.of(sheet).pop(option.value),
-            ),
-          ],
-        ],
-      ),
-    ),
+    isScrollControlled: true,
+    builder: (_) => _ChooseSheet<T>(title: title, options: options),
   );
+}
+
+class _ChooseSheet<T> extends StatefulWidget {
+  const _ChooseSheet({required this.title, required this.options, super.key});
+
+  final String title;
+  final List<({T value, String label})> options;
+
+  @override
+  State<_ChooseSheet<T>> createState() => _ChooseSheetState<T>();
+}
+
+class _ChooseSheetState<T> extends State<_ChooseSheet<T>> {
+  String _search = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final needle = _search.toLowerCase();
+    final media = MediaQuery.of(context);
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: media.viewInsets.bottom),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: media.size.height * 0.7),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                child: Text(widget.title, style: sectionTitleStyle),
+              ),
+              if (widget.options.length > 6) SearchBox(onChanged: (v) => setState(() => _search = v)),
+              for (final option in widget.options.where((o) => o.label.toLowerCase().contains(needle))) ...[
+                const Divider(),
+                ListTile(
+                  title: Text(option.label),
+                  onTap: () => Navigator.of(context).pop(option.value),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A required form field that opens [chooseOne], for lists too long to scroll in a dropdown.
+class PickField extends StatelessWidget {
+  const PickField(this.label, {required this.selected, required this.options, required this.onChanged, this.emptyText, super.key});
+
+  final String label;
+  final String? selected;
+  final List<({String value, String label})> options;
+  final ValueChanged<String> onChanged;
+  final String? emptyText;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return FormField<String>(
+      key: ValueKey('$label$selected'),
+      initialValue: selected,
+      validator: (v) => v == null ? l10n.fieldRequired : null,
+      builder: (state) => InkWell(
+        onTap: () async {
+          final picked = await chooseOne<String>(context, label, options, emptyText: emptyText);
+          if (picked != null) onChanged(picked);
+        },
+        child: InputDecorator(
+          decoration: InputDecoration(labelText: label, errorText: state.errorText, suffixIcon: const Icon(Icons.search)),
+          child: Text(options.where((o) => o.value == selected).map((o) => o.label).firstOrNull ?? ''),
+        ),
+      ),
+    );
+  }
+}
+
+/// Monday first, as DateTime.weekday counts.
+String dayName(AppLocalizations l10n, String date) => l10n.dayNames.split(',')[DateTime.parse(date).weekday - 1];
+
+/// A week around the chosen date, like the date columns of a muster roll. The calendar reaches further.
+class DayStrip extends StatelessWidget {
+  const DayStrip({required this.selected, required this.onPick, super.key});
+
+  final String selected;
+  final ValueChanged<String> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Row(
+      children: [
+        for (var offset = -3; offset <= 3; offset++)
+          Expanded(
+            child: Builder(
+              builder: (context) {
+                final date = addDays(selected, offset);
+                final color = offset == 0 ? Colors.white : ink;
+                return Semantics(
+                  button: true,
+                  selected: offset == 0,
+                  label: showDate(date),
+                  excludeSemantics: true,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () => onPick(date),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      decoration: BoxDecoration(color: offset == 0 ? ink : null, borderRadius: BorderRadius.circular(8)),
+                      child: Column(
+                        children: [
+                          // Fixed height, so a long day name that shrinks doesn't lift its number out of line.
+                          SizedBox(
+                            height: MediaQuery.textScalerOf(context).scale(16),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(dayName(l10n, date), style: TextStyle(fontSize: 12, color: color)),
+                            ),
+                          ),
+                          Text(date.substring(8), style: amountStyle.copyWith(fontSize: 20, color: color)),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+      ],
+    );
+  }
 }
