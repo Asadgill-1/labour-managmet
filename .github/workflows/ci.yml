@@ -58,7 +58,7 @@ jobs:
       - run: flutter analyze
       - run: flutter test
 
-  # Android builds are slow and use private-repo minutes, so only PRs to main run this.
+  # Android builds are slow, so only PRs to main run this.
   android:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
