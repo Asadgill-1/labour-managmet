@@ -25,16 +25,17 @@ int _sum(Iterable<CashLine> lines, Set<CashKind> kinds) {
   return (inFils: moneyIn, outFils: moneyOut);
 }
 
-/// outstanding = opening + issued - returned. Payroll recovery joins this in T11 (PAY-05).
-int advanceOutstanding(int openingFils, Iterable<CashLine> lines) {
-  return openingFils + _sum(lines, const {CashKind.advanceGiven}) - _sum(lines, const {CashKind.advanceReturned});
+/// outstanding = opening + issued - returned - recovered through posted payroll (PAY-05).
+int advanceOutstanding(int openingFils, Iterable<CashLine> lines, {int recoveredFils = 0}) {
+  return openingFils + _sum(lines, const {CashKind.advanceGiven}) - _sum(lines, const {CashKind.advanceReturned}) - recoveredFils;
 }
 
 int salaryPaidTotal(Iterable<CashLine> lines) => _sum(lines, const {CashKind.salaryPaid});
 
 /// Rent received against rent paid. Both stay separate entries and are only netted here, under this label (REP-07).
-({int receivedFils, int paidFils, int netFils}) roomResult(Iterable<CashLine> lines) {
-  final received = _sum(lines, const {CashKind.roomRentReceived});
+/// [deductedFils] is room charge taken through posted payroll, which is rent received without any cash moving (D-031).
+({int receivedFils, int paidFils, int netFils}) roomResult(Iterable<CashLine> lines, {int deductedFils = 0}) {
+  final received = _sum(lines, const {CashKind.roomRentReceived}) + deductedFils;
   final paid = _sum(lines, const {CashKind.roomRentPaid});
   return (receivedFils: received, paidFils: paid, netFils: received - paid);
 }

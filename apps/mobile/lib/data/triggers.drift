@@ -17,6 +17,46 @@ CREATE TRIGGER cash_no_delete BEFORE DELETE ON cash_entries BEGIN
   SELECT RAISE(ABORT, 'cash entries are append-only');
 END;
 
+-- Posted payroll never changes. A wrong posting is only flagged, and the flag never clears (PAY-01, REP-08).
+CREATE TRIGGER payroll_run_no_update BEFORE UPDATE ON payroll_runs BEGIN
+  SELECT RAISE(ABORT, 'posted payroll is immutable');
+END;
+
+CREATE TRIGGER payroll_run_no_delete BEFORE DELETE ON payroll_runs BEGIN
+  SELECT RAISE(ABORT, 'posted payroll is immutable');
+END;
+
+CREATE TRIGGER payroll_line_no_edit BEFORE UPDATE OF run_id, worker_id, period_from, opening_fils, earned_fils, salary_fils,
+  adjustment_fils, allowances_fils, deductions_fils, recovery_fils, net_fils, payable_fils, paid_before_fils ON payroll_lines
+BEGIN
+  SELECT RAISE(ABORT, 'posted payroll is immutable');
+END;
+
+CREATE TRIGGER payroll_line_stays_reversed BEFORE UPDATE OF reversed ON payroll_lines
+WHEN OLD.reversed
+BEGIN
+  SELECT RAISE(ABORT, 'a reversed payroll line stays reversed');
+END;
+
+CREATE TRIGGER payroll_line_no_delete BEFORE DELETE ON payroll_lines BEGIN
+  SELECT RAISE(ABORT, 'posted payroll is immutable');
+END;
+
+CREATE TRIGGER posted_item_no_edit BEFORE UPDATE OF worker_id, period_from, kind, amount_fils, reason, authorized_by, room_id ON payroll_items
+WHEN OLD.line_id IS NOT NULL
+BEGIN
+  SELECT RAISE(ABORT, 'a posted payroll item is immutable');
+END;
+
+CREATE TRIGGER posted_item_no_delete BEFORE DELETE ON payroll_items
+WHEN OLD.line_id IS NOT NULL
+BEGIN
+  SELECT RAISE(ABORT, 'a posted payroll item is immutable');
+END;
+
+-- One worker cannot be paid twice for one month.
+CREATE UNIQUE INDEX one_live_payroll_line ON payroll_lines (worker_id, period_from) WHERE NOT reversed;
+
 -- Approved and linked rows keep their figures. A correction is a new row, and the old one is only flagged (ATT-08).
 CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries
 WHEN OLD.state IN ('approved', 'linked')

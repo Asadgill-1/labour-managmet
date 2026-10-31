@@ -27,7 +27,10 @@ class RoomDetailScreen extends ConsumerWidget {
     final room = (ref.watch(roomsProvider).value ?? const <Room>[]).where((r) => r.id == roomId).firstOrNull;
     if (room == null) return Scaffold(appBar: AppBar());
     final rows = (ref.watch(cashInMonthProvider(month)).value ?? const <CashEntry>[]).where((e) => e.roomId == roomId).toList();
-    final result = roomResult(rows.map(cashLine));
+    final charged = (ref.watch(roomChargesInMonthProvider(month)).value ?? const <PayrollItem>[])
+        .where((i) => i.roomId == roomId)
+        .fold(0, (total, i) => total + i.amountFils);
+    final result = roomResult(rows.map(cashLine), deductedFils: charged);
     final undone = undoneIds(rows);
     final residents = (ref.watch(workersProvider).value ?? const <Worker>[]).where((w) => w.roomId == roomId && w.active).toList();
     return Scaffold(
@@ -74,6 +77,10 @@ class RoomDetailScreen extends ConsumerWidget {
           ],
           SectionHeader(l10n.entriesHeading),
           const Divider(),
+          if (charged > 0) ...[
+            InfoRow(l10n.rentFromPay, formatAed(charged)),
+            const Divider(),
+          ],
           if (rows.isEmpty) ListTile(subtitle: Text(l10n.cashEmpty)),
           for (final entry in rows) ...[
             CashEntryRow(entry, undone: undone.contains(entry.id), showDate: true),

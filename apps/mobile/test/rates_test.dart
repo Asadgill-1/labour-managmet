@@ -138,7 +138,7 @@ void main() {
     await tester.tap(find.text('Save karein'));
     await settle(tester);
 
-    expect(find.text('AED 500.00'), findsOneWidget);
+    expect(find.text('AED 500.00'), findsNWidgets(2), reason: 'the opening salary, and the salary still owed');
     expect(find.text('AED 300.00'), findsNWidgets(2), reason: 'the opening advance, and the advance still to recover');
     final rows = await real(tester, () => db.select(db.openingBalances).get());
     expect({for (final r in rows) r.kind: r.amountFils}, {'worker_salary_owed': 50000, 'worker_advance': 30000});

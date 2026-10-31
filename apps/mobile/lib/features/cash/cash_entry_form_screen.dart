@@ -17,12 +17,13 @@ const _inKinds = [CashKind.roomRentReceived, CashKind.advanceReturned, CashKind.
 
 /// One money entry. The owner says what the money was for and the line goes where it belongs (D-030).
 class CashEntryFormScreen extends ConsumerStatefulWidget {
-  const CashEntryFormScreen({this.date, this.kind, this.workerId, this.roomId, super.key});
+  const CashEntryFormScreen({this.date, this.kind, this.workerId, this.roomId, this.amountFils, super.key});
 
   final String? date;
   final CashKind? kind;
   final String? workerId;
   final String? roomId;
+  final int? amountFils;
 
   @override
   ConsumerState<CashEntryFormScreen> createState() => _CashEntryFormScreenState();
@@ -41,7 +42,7 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
   String? _siteId;
   String _category = 'other';
   String _method = 'cash';
-  final _amount = TextEditingController();
+  late final _amount = TextEditingController(text: widget.amountFils == null ? null : plainAmount(widget.amountFils!));
   final _note = TextEditingController();
 
   bool get _needsWorker => const {CashKind.advanceGiven, CashKind.salaryPaid, CashKind.advanceReturned, CashKind.roomRentReceived}.contains(_kind);
@@ -113,6 +114,9 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
         .where((b) => b.kind == 'worker_advance' && b.workerId == _workerId)
         .fold(0, (total, b) => total + b.amountFils);
     final workerLines = showAdvanceLeft ? (ref.watch(cashOfWorkerProvider(_workerId!)).value ?? const <CashEntry>[]) : const <CashEntry>[];
+    final recovered = showAdvanceLeft
+        ? (ref.watch(linesOfWorkerProvider(_workerId!)).value ?? const <PayrollLine>[]).fold(0, (total, l) => total + l.recoveryFils)
+        : 0;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.addCash)),
@@ -151,7 +155,7 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
               fieldGap,
             ],
             if (showAdvanceLeft) ...[
-              Text(l10n.advanceBalance(formatAed(advanceOutstanding(advanceOpening, workerLines.map(cashLine)))), style: const TextStyle(color: muted)),
+              Text(l10n.advanceBalance(formatAed(advanceOutstanding(advanceOpening, workerLines.map(cashLine), recoveredFils: recovered))), style: const TextStyle(color: muted)),
               fieldGap,
             ],
             if (_needsRoom) ...[

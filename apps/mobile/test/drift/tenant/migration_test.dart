@@ -40,5 +40,6 @@ void main() {
     final entry = await db.select(db.attendanceEntries).getSingle();
     expect(entry.workerPayableMinutes, 660);
     expect(entry.groupId, isNull);
+    expect(entry.payrollLineId, isNull);
   });
 }

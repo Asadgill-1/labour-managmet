@@ -430,5 +430,143 @@
         "type": "String"
       }
     }
+  },
+  "payrollEarned": "This month's earnings",
+  "payrollCut": "Deductions",
+  "payrollToPay": "To pay the worker",
+  "payrollSalary": "Monthly salary",
+  "payrollAdjustment": "Earlier work",
+  "payrollNet": "This month's net",
+  "payrollOpening": "Previous unpaid",
+  "payrollPaidAhead": "Paid ahead",
+  "payrollPayable": "Total payable",
+  "payrollPaid": "Paid since",
+  "payrollClosing": "Still unpaid",
+  "payrollOverpaid": "Paid too much",
+  "payrollEmpty": "Nothing to pay this month. Mark attendance first.",
+  "payrollEarnedHeading": "Earnings",
+  "payrollItemsHeading": "Allowances and deductions",
+  "payrollSumHeading": "Account",
+  "payrollNoItems": "None this month.",
+  "payrollStatePosted": "Posted",
+  "payrollStateReady": "Ready to post",
+  "payrollStateDraft": "Not posted",
+  "payrollPostConfirm": "Post",
+  "payrollPayNow": "Record payment",
+  "payrollUndo": "Undo this posting",
+  "payrollUndoTitle": "Undo this posting?",
+  "payrollUndoHelp": "The month goes back to unposted so you can fix it. The record stays, and money already paid stays on the worker's account.",
+  "payrollUndoLater": "Undo the later month first.",
+  "payKindAllowance": "Allowance",
+  "payKindDeduction": "Deduction",
+  "payKindRecovery": "Advance recovery",
+  "payItemReason": "Reason",
+  "payItemAuthorizedBy": "Agreement or permission",
+  "payItemAuthorizedHelp": "Who agreed, and how. For example: signed paper, 01-10-2026",
+  "payItemDelete": "Remove",
+  "issuePartial": "Choose the part-month method on the contract.",
+  "issueNegative": "Deductions are more than earnings.",
+  "issueRecovery": "Recovery is more than the advance left.",
+  "issueLimit": "Deductions are above your company's limit.",
+  "issueEarlier": "Post the earlier month first.",
+  "issueLater": "A later month is posted. This goes into the next payroll.",
+  "issueNotStarted": "This month has not started.",
+  "salaryOwed": "Salary still owed",
+  "rentFromPay": "Taken from salaries",
+  "deductionLimit": "Deduction limit (%, optional)",
+  "deductionLimitHelp": "Share of earnings. Ask your accountant. Empty means no limit.",
+  "deductionLimitError": "Write a whole number from 1 to 100.",
+  "payrollPost": "Post payroll ({count})",
+  "@payrollPost": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "payrollPostTitle": "Post payroll for {month}?",
+  "@payrollPostTitle": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "payrollPostBody": "{count} workers, {amount} goes onto their accounts. The figures will not change after this. If something is wrong, undo it on that worker.",
+  "@payrollPostBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payrollPosted": "Payroll posted for {count} workers",
+  "@payrollPosted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "payrollSplit": "Earned {earned}, deducted {cut}",
+  "@payrollSplit": {
+    "placeholders": {
+      "earned": {
+        "type": "String"
+      },
+      "cut": {
+        "type": "String"
+      }
+    }
+  },
+  "issueUnapproved": "{count} attendance rows not approved yet.",
+  "@issueUnapproved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "applyRoomCharges": "Add room charge ({count})",
+  "@applyRoomCharges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomChargesApplied": "Room charge added for {count} workers",
+  "@roomChargesApplied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomChargesPartly": "Room charge added for {added} workers. {left} left: write the room charge note on their screen.",
+  "@roomChargesPartly": {
+    "placeholders": {
+      "added": {
+        "type": "int"
+      },
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "payKindRoom": "Room charge",
+  "approveMissingRate": "{approved} approved. {left} have no rate: add it under Rates, then approve again.",
+  "@approveMissingRate": {
+    "placeholders": {
+      "approved": {
+        "type": "int"
+      },
+      "left": {
+        "type": "int"
+      }
+    }
   }
 }

@@ -40,6 +40,9 @@ String newUuid() {
     CashEntries,
     AttendanceBatches,
     AttendanceEntries,
+    PayrollRuns,
+    PayrollLines,
+    PayrollItems,
     AuditEvents,
     Outbox,
   ],
@@ -53,7 +56,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -73,6 +76,23 @@ class TenantDatabase extends _$TenantDatabase {
         await m.createIndex(schema.idxCashRoom);
         await m.createTrigger(schema.cashNoUpdate);
         await m.createTrigger(schema.cashNoDelete);
+      },
+      from3To4: (m, schema) async {
+        await m.addColumn(schema.tenantProfiles, schema.tenantProfiles.deductionLimitBps);
+        await m.createTable(schema.payrollRuns);
+        await m.createTable(schema.payrollLines);
+        await m.createTable(schema.payrollItems);
+        await m.addColumn(schema.attendanceEntries, schema.attendanceEntries.payrollLineId);
+        await m.createIndex(schema.idxPayrollLinesWorker);
+        await m.createIndex(schema.idxPayrollItemsPeriod);
+        await m.createIndex(schema.oneLivePayrollLine);
+        await m.createTrigger(schema.payrollRunNoUpdate);
+        await m.createTrigger(schema.payrollRunNoDelete);
+        await m.createTrigger(schema.payrollLineNoEdit);
+        await m.createTrigger(schema.payrollLineStaysReversed);
+        await m.createTrigger(schema.payrollLineNoDelete);
+        await m.createTrigger(schema.postedItemNoEdit);
+        await m.createTrigger(schema.postedItemNoDelete);
       },
     ),
     beforeOpen: (_) => customStatement('PRAGMA foreign_keys = ON'),

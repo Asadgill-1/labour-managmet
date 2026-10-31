@@ -161,6 +161,55 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
+/// Asks for the reason behind an undo. Null means the owner backed out.
+Future<String?> askReason(BuildContext context, {required String title, required String helper, required String confirm}) async {
+  final l10n = AppLocalizations.of(context);
+  final reason = TextEditingController();
+  final form = GlobalKey<FormState>();
+  final yes = await showDialog<bool>(
+    context: context,
+    builder: (dialog) => AlertDialog(
+      title: Text(title),
+      content: Form(
+        key: form,
+        child: Field(l10n.reverseReason, reason, helper: helper, validator: (v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.of(dialog).pop(false), child: Text(l10n.cancel)),
+        TextButton(
+          onPressed: () {
+            if (form.currentState!.validate()) Navigator.of(dialog).pop(true);
+          },
+          child: Text(confirm),
+        ),
+      ],
+    ),
+  );
+  return yes == true ? reason.text.trim() : null;
+}
+
+/// The month and arrows to change it, on a hi-vis band.
+class MonthSwitcher extends StatelessWidget {
+  const MonthSwitcher({required this.month, required this.onChanged, super.key});
+
+  /// YYYY-MM.
+  final String month;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(tooltip: l10n.previousMonth, color: ink, icon: const Icon(Icons.chevron_left), onPressed: () => onChanged(addMonths(month, -1))),
+        Text(showMonth(month), style: sectionTitleStyle),
+        IconButton(tooltip: l10n.nextMonth, color: ink, icon: const Icon(Icons.chevron_right), onPressed: () => onChanged(addMonths(month, 1))),
+      ],
+    );
+  }
+}
+
 /// Search box above a register list.
 class SearchBox extends StatelessWidget {
   const SearchBox({required this.onChanged, this.hint, super.key});

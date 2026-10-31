@@ -34,6 +34,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
   late final _terms = TextEditingController(text: widget.profile?.paymentTermsDays?.toString());
   late final _bank = TextEditingController(text: widget.profile?.bankDetails);
   late final _footer = TextEditingController(text: widget.profile?.documentFooter);
+  late final _limit = TextEditingController(text: widget.profile?.deductionLimitBps == null ? null : '${widget.profile!.deductionLimitBps! ~/ 100}');
   late bool _vat = widget.profile?.vatRegistered ?? false;
   late String? _vatFrom = widget.profile?.vatEffectiveFrom;
 
@@ -58,6 +59,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
         paymentTermsDays: Value(int.tryParse(_terms.text.trim())),
         bankDetails: optionalText(_bank),
         documentFooter: optionalText(_footer),
+        deductionLimitBps: Value(_limit.text.trim().isEmpty ? null : int.parse(_limit.text.trim()) * 100),
       ),
     ));
     if (!saved || !mounted) return;
@@ -112,6 +114,19 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
             Field(l10n.bankDetails, _bank, lines: 3),
             fieldGap,
             Field(l10n.documentFooter, _footer, lines: 2),
+            fieldGap,
+            Field(
+              l10n.deductionLimit,
+              _limit,
+              keyboardType: TextInputType.number,
+              helper: l10n.deductionLimitHelp,
+              validator: (v) {
+                final text = (v ?? '').trim();
+                if (text.isEmpty) return null;
+                final percent = int.tryParse(text);
+                return percent == null || percent < 1 || percent > 100 ? l10n.deductionLimitError : null;
+              },
+            ),
           ],
         ),
       ),

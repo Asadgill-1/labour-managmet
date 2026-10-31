@@ -41,7 +41,7 @@ class AttendanceInvalid implements Exception {
   String toString() => 'AttendanceInvalid($workerIds)';
 }
 
-RateTerms _payTerms(PayContract c) => RateTerms(
+RateTerms payTerms(PayContract c) => RateTerms(
   basis: RateBasis.values.byName(c.basis),
   rateFils: c.rateFils,
   effectiveFrom: c.effectiveFrom,
@@ -51,6 +51,8 @@ RateTerms _payTerms(PayContract c) => RateTerms(
   includedMinutes: c.includedMinutes,
   overtimeRateFils: c.overtimeRateFils,
   siteId: c.siteId,
+  partialMethod: c.partialMethod == null ? null : PartialMethod.values.byName(c.partialMethod!),
+  partialDivisor: c.partialDivisor,
 );
 
 RateTerms _billingTerms(BillingContract c) => RateTerms(
@@ -95,7 +97,7 @@ extension AttendanceOps on TenantDatabase {
   }) async {
     final billing = await (select(billingContracts)..where((c) => c.clientId.equals(clientId))).get();
     final pay = await (select(payContracts)..where((c) => c.workerId.equals(input.workerId))).get();
-    final contract = pickRate(pay.map(_payTerms), date: workDate, siteId: siteId, workerId: input.workerId);
+    final contract = pickRate(pay.map(payTerms), date: workDate, siteId: siteId, workerId: input.workerId);
     return priceShift(
       workDate,
       input.shift,

@@ -38,7 +38,9 @@ class _RoomsScreenState extends ConsumerState<RoomsScreen> {
     final l10n = AppLocalizations.of(context);
     final rooms = (ref.watch(roomsProvider).value ?? const <Room>[]).where((r) => r.active != _showArchived).toList();
     final entries = ref.watch(cashInMonthProvider(_month)).value ?? const <CashEntry>[];
-    final all = roomResult(entries.map(cashLine));
+    final charges = ref.watch(roomChargesInMonthProvider(_month)).value ?? const <PayrollItem>[];
+    int deducted(Iterable<PayrollItem> items) => items.fold(0, (total, i) => total + i.amountFils);
+    final all = roomResult(entries.map(cashLine), deductedFils: deducted(charges.where((i) => i.roomId != null)));
     return Scaffold(
       appBar: AppBar(
         leading: const MenuButton(),
@@ -62,24 +64,7 @@ class _RoomsScreenState extends ConsumerState<RoomsScreen> {
               padding: const EdgeInsets.fromLTRB(4, 0, 4, 14),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        tooltip: l10n.previousMonth,
-                        color: ink,
-                        icon: const Icon(Icons.chevron_left),
-                        onPressed: () => setState(() => _month = addMonths(_month, -1)),
-                      ),
-                      Text(showMonth(_month), style: sectionTitleStyle),
-                      IconButton(
-                        tooltip: l10n.nextMonth,
-                        color: ink,
-                        icon: const Icon(Icons.chevron_right),
-                        onPressed: () => setState(() => _month = addMonths(_month, 1)),
-                      ),
-                    ],
-                  ),
+                  MonthSwitcher(month: _month, onChanged: (m) => setState(() => _month = m)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Row(
@@ -101,7 +86,7 @@ class _RoomsScreenState extends ConsumerState<RoomsScreen> {
           for (final room in rooms) ...[
             Builder(
               builder: (context) {
-                final result = roomResult(entries.where((e) => e.roomId == room.id).map(cashLine));
+                final result = roomResult(entries.where((e) => e.roomId == room.id).map(cashLine), deductedFils: deducted(charges.where((i) => i.roomId == room.id)));
                 return GrowingRow(
                   child: ListTile(
                     leading: RowTag(initial(room.name)),

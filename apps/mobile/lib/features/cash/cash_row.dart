@@ -50,30 +50,10 @@ class CashEntryRow extends ConsumerWidget {
 
   Future<void> _undo(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
-    final reason = TextEditingController();
-    final form = GlobalKey<FormState>();
-    final yes = await showDialog<bool>(
-      context: context,
-      builder: (dialog) => AlertDialog(
-        title: Text(l10n.reverseTitle),
-        content: Form(
-          key: form,
-          child: Field(l10n.reverseReason, reason, helper: l10n.reverseHelp, validator: (v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(dialog).pop(false), child: Text(l10n.cancel)),
-          TextButton(
-            onPressed: () {
-              if (form.currentState!.validate()) Navigator.of(dialog).pop(true);
-            },
-            child: Text(l10n.reverseConfirm),
-          ),
-        ],
-      ),
-    );
-    if (yes != true || !context.mounted) return;
+    final reason = await askReason(context, title: l10n.reverseTitle, helper: l10n.reverseHelp, confirm: l10n.reverseConfirm);
+    if (reason == null || !context.mounted) return;
     try {
-      await ref.read(dbProvider).reverseCashEntry(entry, reason: reason.text.trim(), operationId: newUuid());
+      await ref.read(dbProvider).reverseCashEntry(entry, reason: reason, operationId: newUuid());
       if (context.mounted) showSavedOnPhone(context, l10n.savedOnPhone);
     } on AdvanceTooHigh {
       if (context.mounted) showFormError(context, l10n.advanceUndoBlocked);

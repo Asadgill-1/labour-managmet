@@ -9,6 +9,7 @@ import '../features/groups/groups_screen.dart';
 import '../features/labour/labour_screen.dart';
 import '../features/more/profile_form_screen.dart';
 import '../features/more/settings_screen.dart';
+import '../features/payroll/payroll_screen.dart';
 import '../features/rates/balances_screen.dart';
 import '../features/rates/rates_screen.dart';
 import '../features/rooms/rooms_screen.dart';
@@ -29,6 +30,7 @@ Widget _screen(Section section) => switch (section) {
   Section.groups => const GroupsScreen(),
   Section.rates => const RatesScreen(),
   Section.balances => const BalancesScreen(),
+  Section.payroll => const PayrollScreen(),
   Section.settings => const SettingsScreen(),
 };
 

@@ -28,6 +28,8 @@ class RateTerms {
     this.overtimeRateFils,
     this.siteId,
     this.workerId,
+    this.partialMethod,
+    this.partialDivisor,
   });
 
   final RateBasis basis;
@@ -40,6 +42,8 @@ class RateTerms {
   final int? overtimeRateFils;
   final String? siteId;
   final String? workerId;
+  final PartialMethod? partialMethod;
+  final int? partialDivisor;
 
   bool coversDate(String date) => effectiveFrom.compareTo(date) <= 0 && (effectiveTo == null || effectiveTo!.compareTo(date) >= 0);
 }
@@ -96,10 +100,12 @@ LineAmount priceLine(RateTerms? terms, {required AttendanceStatus status, requir
   final included = terms.includedMinutes;
   final overtime = included != null && minutes > included ? minutes - included : 0;
   final regular = minutes - overtime;
-  if (isPeriodBasis(terms.basis)) return LineAmount(regularMinutes: regular, overtimeMinutes: overtime);
 
-  int base;
-  if (terms.basis == RateBasis.hour) {
+  // Null on a period basis: the pay itself belongs to the period, and only approved extra time is earned per line.
+  int? base;
+  if (isPeriodBasis(terms.basis)) {
+    base = null;
+  } else if (terms.basis == RateBasis.hour) {
     base = divRoundHalfUp(regular * terms.rateFils, 60);
   } else if (status == AttendanceStatus.half) {
     final half = terms.halfAmountFils;
@@ -117,7 +123,7 @@ LineAmount priceLine(RateTerms? terms, {required AttendanceStatus status, requir
     return LineAmount(regularMinutes: regular, overtimeMinutes: overtime, issue: LineIssue.missingOvertimeRate);
   }
   return LineAmount(
-    amountFils: base + divRoundHalfUp(overtime * overtimeRate, 60),
+    amountFils: (base ?? 0) + divRoundHalfUp(overtime * overtimeRate, 60),
     regularMinutes: regular,
     overtimeMinutes: overtime,
   );
@@ -238,6 +244,8 @@ RateTerms? _withOverride(RateTerms? terms, int? overrideFils) {
     overtimeRateFils: terms.overtimeRateFils,
     siteId: terms.siteId,
     workerId: terms.workerId,
+    partialMethod: terms.partialMethod,
+    partialDivisor: terms.partialDivisor,
   );
 }
 

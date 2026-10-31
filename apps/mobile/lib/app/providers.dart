@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/payroll.dart';
 import '../data/tenant_database.dart';
 
 /// Opened in main. Disposing this scope at logout closes the tenant's data (AUTH-04).
@@ -70,6 +71,26 @@ final cashOfWorkerProvider = StreamProvider.family<List<CashEntry>, String>((ref
         ..where((c) => c.workerId.equals(workerId))
         ..orderBy([(c) => OrderingTerm.desc(c.entryDate), (c) => OrderingTerm.desc(c.createdAtUtc)]))
       .watch();
+});
+
+/// [month] is YYYY-MM.
+final payrollProvider = StreamProvider.family<List<WorkerPayroll>, String>((ref, month) => ref.watch(dbProvider).watchPayroll(month));
+
+/// Posted months that still stand.
+final linesOfWorkerProvider = StreamProvider.family<List<PayrollLine>, String>((ref, workerId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.payrollLines)..where((l) => l.workerId.equals(workerId) & l.reversed.equals(false))).watch();
+});
+
+/// Room charge taken through posted payroll in [month], which counts as rent received (D-031).
+final roomChargesInMonthProvider = StreamProvider.family<List<PayrollItem>, String>((ref, month) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.payrollItems)..where((i) => i.periodFrom.equals('$month-01') & i.kind.equals('roomCharge') & i.lineId.isNotNull())).watch();
+});
+
+final roomChargesOfWorkerProvider = StreamProvider.family<List<PayrollItem>, String>((ref, workerId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.payrollItems)..where((i) => i.workerId.equals(workerId) & i.kind.equals('roomCharge') & i.lineId.isNotNull())).watch();
 });
 
 final workerGroupsProvider = StreamProvider((ref) {

@@ -15,7 +15,9 @@ extension CashOps on TenantDatabase {
   Future<int> advanceLeft(String workerId) async {
     final opening = await (select(openingBalances)..where((b) => b.kind.equals('worker_advance') & b.workerId.equals(workerId))).getSingleOrNull();
     final rows = await (select(cashEntries)..where((c) => c.workerId.equals(workerId))).get();
-    return advanceOutstanding(opening?.amountFils ?? 0, rows.map(cashLine));
+    final lines = await (select(payrollLines)..where((l) => l.workerId.equals(workerId) & l.reversed.equals(false))).get();
+    final recovered = lines.fold(0, (total, l) => total + l.recoveryFils);
+    return advanceOutstanding(opening?.amountFils ?? 0, rows.map(cashLine), recoveredFils: recovered);
   }
 
   /// Writes one line. A retry with the same operation ID changes nothing (TEAM-04).

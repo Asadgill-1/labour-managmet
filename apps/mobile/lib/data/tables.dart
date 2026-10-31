@@ -31,6 +31,9 @@ class TenantProfiles extends Table with Common {
   IntColumn get paymentTermsDays => integer().nullable()();
   TextColumn get bankDetails => text().nullable()();
   TextColumn get documentFooter => text().nullable()();
+
+  /// The company's own limit on deductions, as a share of earnings. Null means none. Never a built-in legal figure (PAY-07).
+  IntColumn get deductionLimitBps => integer().nullable()();
 }
 
 class Clients extends Table with Common {
@@ -137,7 +140,7 @@ class PayContracts extends Table with Common, RateTerms {
   TextColumn get workerId => text().references(Workers, #id)();
   TextColumn get siteId => text().nullable().references(Sites, #id)();
 
-  /// Monthly basis only: 'calendar_days' or 'fixed_divisor'. No default on purpose (D-102).
+  /// Monthly basis only: a `PartialMethod` by name. No default on purpose (D-102).
   TextColumn get partialMethod => text().nullable()();
   IntColumn get partialDivisor => integer().nullable()();
 }
@@ -258,8 +261,67 @@ class AttendanceEntries extends Table with Common {
   TextColumn get revisesEntryId => text().nullable().references(AttendanceEntries, #id)();
   BoolColumn get superseded => boolean().withDefault(const Constant(false))();
 
+  /// The posted payroll that paid this row (ATT-07, MODEL-07). Null means not paid yet.
+  TextColumn get payrollLineId => text().nullable().references(PayrollLines, #id)();
+
   @override
   List<String> get customConstraints => ['CHECK (break_minutes <= clock_minutes)'];
+}
+
+/// One posting: the owner approved these workers' figures for this period (PAY-01).
+class PayrollRuns extends Table with Common {
+  TextColumn get periodFrom => text()();
+  TextColumn get periodTo => text()();
+  TextColumn get postingDate => text()();
+  TextColumn get currency => text().withDefault(const Constant('AED'))();
+}
+
+/// One worker's posted month. Its figures never change. A wrong posting is flagged [reversed], which puts the
+/// work and items back to unpaid, and the month can post again (PAY-01, REP-08). Triggers enforce this.
+/// Paid and closing are not stored, because they grow with later payments and always derive (REP-08).
+@TableIndex(name: 'idx_payroll_lines_worker', columns: {#workerId})
+class PayrollLines extends Table with Common {
+  TextColumn get runId => text().references(PayrollRuns, #id)();
+  TextColumn get workerId => text().references(Workers, #id)();
+  TextColumn get periodFrom => text()();
+
+  /// Owed before this month. Below zero means paid in advance of it.
+  IntColumn get openingFils => integer()();
+  IntColumn get earnedFils => integer()();
+  IntColumn get salaryFils => integer()();
+  IntColumn get adjustmentFils => integer()();
+  IntColumn get allowancesFils => integer()();
+  IntColumn get deductionsFils => integer()();
+  IntColumn get recoveryFils => integer()();
+  IntColumn get netFils => integer()();
+  IntColumn get payableFils => integer()();
+
+  /// All salary paid to this worker before this posting. Payments after it are this line's "paid".
+  IntColumn get paidBeforeFils => integer()();
+  BoolColumn get reversed => boolean().withDefault(const Constant(false))();
+}
+
+/// An allowance or deduction for one worker's month. Free to change until posted (PAY-01).
+@TableIndex(name: 'idx_payroll_items_period', columns: {#periodFrom})
+class PayrollItems extends Table with Common {
+  TextColumn get workerId => text().references(Workers, #id)();
+  TextColumn get periodFrom => text()();
+
+  /// A `PayItemKind` by name.
+  TextColumn get kind => text()();
+  IntColumn get amountFils => integer().check(amountFils.isBiggerThanValue(0))();
+  TextColumn get reason => text()();
+
+  /// Who agreed to this deduction, or the paper it rests on (PAY-07).
+  TextColumn get authorizedBy => text().nullable()();
+  TextColumn get note => text().nullable()();
+
+  /// A room charge counts as rent received for this room once posted (D-031).
+  TextColumn get roomId => text().nullable().references(Rooms, #id)();
+  TextColumn get lineId => text().nullable().references(PayrollLines, #id)();
+
+  @override
+  List<String> get customConstraints => ["CHECK (kind NOT IN ('deduction', 'roomCharge') OR authorized_by IS NOT NULL)"];
 }
 
 @DataClassName('AuditEvent')

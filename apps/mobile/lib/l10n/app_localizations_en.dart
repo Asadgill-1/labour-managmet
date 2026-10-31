@@ -942,6 +942,199 @@ class AppLocalizationsEn extends AppLocalizations {
   String rowPay(String amount) {
     return 'pay $amount';
   }
+
+  @override
+  String get payrollEarned => 'This month\'s earnings';
+
+  @override
+  String get payrollCut => 'Deductions';
+
+  @override
+  String get payrollToPay => 'To pay the worker';
+
+  @override
+  String get payrollSalary => 'Monthly salary';
+
+  @override
+  String get payrollAdjustment => 'Earlier work';
+
+  @override
+  String get payrollNet => 'This month\'s net';
+
+  @override
+  String get payrollOpening => 'Previous unpaid';
+
+  @override
+  String get payrollPaidAhead => 'Paid ahead';
+
+  @override
+  String get payrollPayable => 'Total payable';
+
+  @override
+  String get payrollPaid => 'Paid since';
+
+  @override
+  String get payrollClosing => 'Still unpaid';
+
+  @override
+  String get payrollOverpaid => 'Paid too much';
+
+  @override
+  String get payrollEmpty =>
+      'Nothing to pay this month. Mark attendance first.';
+
+  @override
+  String get payrollEarnedHeading => 'Earnings';
+
+  @override
+  String get payrollItemsHeading => 'Allowances and deductions';
+
+  @override
+  String get payrollSumHeading => 'Account';
+
+  @override
+  String get payrollNoItems => 'None this month.';
+
+  @override
+  String get payrollStatePosted => 'Posted';
+
+  @override
+  String get payrollStateReady => 'Ready to post';
+
+  @override
+  String get payrollStateDraft => 'Not posted';
+
+  @override
+  String get payrollPostConfirm => 'Post';
+
+  @override
+  String get payrollPayNow => 'Record payment';
+
+  @override
+  String get payrollUndo => 'Undo this posting';
+
+  @override
+  String get payrollUndoTitle => 'Undo this posting?';
+
+  @override
+  String get payrollUndoHelp =>
+      'The month goes back to unposted so you can fix it. The record stays, and money already paid stays on the worker\'s account.';
+
+  @override
+  String get payrollUndoLater => 'Undo the later month first.';
+
+  @override
+  String get payKindAllowance => 'Allowance';
+
+  @override
+  String get payKindDeduction => 'Deduction';
+
+  @override
+  String get payKindRecovery => 'Advance recovery';
+
+  @override
+  String get payItemReason => 'Reason';
+
+  @override
+  String get payItemAuthorizedBy => 'Agreement or permission';
+
+  @override
+  String get payItemAuthorizedHelp =>
+      'Who agreed, and how. For example: signed paper, 01-10-2026';
+
+  @override
+  String get payItemDelete => 'Remove';
+
+  @override
+  String get issuePartial => 'Choose the part-month method on the contract.';
+
+  @override
+  String get issueNegative => 'Deductions are more than earnings.';
+
+  @override
+  String get issueRecovery => 'Recovery is more than the advance left.';
+
+  @override
+  String get issueLimit => 'Deductions are above your company\'s limit.';
+
+  @override
+  String get issueEarlier => 'Post the earlier month first.';
+
+  @override
+  String get issueLater =>
+      'A later month is posted. This goes into the next payroll.';
+
+  @override
+  String get issueNotStarted => 'This month has not started.';
+
+  @override
+  String get salaryOwed => 'Salary still owed';
+
+  @override
+  String get rentFromPay => 'Taken from salaries';
+
+  @override
+  String get deductionLimit => 'Deduction limit (%, optional)';
+
+  @override
+  String get deductionLimitHelp =>
+      'Share of earnings. Ask your accountant. Empty means no limit.';
+
+  @override
+  String get deductionLimitError => 'Write a whole number from 1 to 100.';
+
+  @override
+  String payrollPost(int count) {
+    return 'Post payroll ($count)';
+  }
+
+  @override
+  String payrollPostTitle(String month) {
+    return 'Post payroll for $month?';
+  }
+
+  @override
+  String payrollPostBody(int count, String amount) {
+    return '$count workers, $amount goes onto their accounts. The figures will not change after this. If something is wrong, undo it on that worker.';
+  }
+
+  @override
+  String payrollPosted(int count) {
+    return 'Payroll posted for $count workers';
+  }
+
+  @override
+  String payrollSplit(String earned, String cut) {
+    return 'Earned $earned, deducted $cut';
+  }
+
+  @override
+  String issueUnapproved(int count) {
+    return '$count attendance rows not approved yet.';
+  }
+
+  @override
+  String applyRoomCharges(int count) {
+    return 'Add room charge ($count)';
+  }
+
+  @override
+  String roomChargesApplied(int count) {
+    return 'Room charge added for $count workers';
+  }
+
+  @override
+  String roomChargesPartly(int added, int left) {
+    return 'Room charge added for $added workers. $left left: write the room charge note on their screen.';
+  }
+
+  @override
+  String get payKindRoom => 'Room charge';
+
+  @override
+  String approveMissingRate(int approved, int left) {
+    return '$approved approved. $left have no rate: add it under Rates, then approve again.';
+  }
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -1881,5 +2074,197 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String rowPay(String amount) {
     return 'dena $amount';
+  }
+
+  @override
+  String get payrollEarned => 'Is mahine ki kamai';
+
+  @override
+  String get payrollCut => 'Katoti';
+
+  @override
+  String get payrollToPay => 'Mazdoor ko dena hai';
+
+  @override
+  String get payrollSalary => 'Mahana tankhwah';
+
+  @override
+  String get payrollAdjustment => 'Pichli hazri ka hisaab';
+
+  @override
+  String get payrollNet => 'Is mahine ka net';
+
+  @override
+  String get payrollOpening => 'Pichla baqaya';
+
+  @override
+  String get payrollPaidAhead => 'Pehle se ada kiya';
+
+  @override
+  String get payrollPayable => 'Total dena hai';
+
+  @override
+  String get payrollPaid => 'Ab ada kiya';
+
+  @override
+  String get payrollClosing => 'Abhi baqi';
+
+  @override
+  String get payrollOverpaid => 'Zyada ada kiya';
+
+  @override
+  String get payrollEmpty => 'Is mahine kuch dena nahin. Pehle hazri lagayein.';
+
+  @override
+  String get payrollEarnedHeading => 'Kamai';
+
+  @override
+  String get payrollItemsHeading => 'Allowance aur katoti';
+
+  @override
+  String get payrollSumHeading => 'Hisaab';
+
+  @override
+  String get payrollNoItems => 'Is mahine koi nahin.';
+
+  @override
+  String get payrollStatePosted => 'Post ho gayi';
+
+  @override
+  String get payrollStateReady => 'Post ke liye tayyar';
+
+  @override
+  String get payrollStateDraft => 'Abhi post nahin';
+
+  @override
+  String get payrollPostConfirm => 'Post karein';
+
+  @override
+  String get payrollPayNow => 'Adaigi likhein';
+
+  @override
+  String get payrollUndo => 'Post wapas karein';
+
+  @override
+  String get payrollUndoTitle => 'Post wapas karein?';
+
+  @override
+  String get payrollUndoHelp =>
+      'Mahina phir se khul jayega taake theek ho sake. Record mehfooz rahega, aur diye hue paisay mazdoor ke hisaab mein rahenge.';
+
+  @override
+  String get payrollUndoLater => 'Pehle agla mahina wapas karein.';
+
+  @override
+  String get payKindAllowance => 'Allowance';
+
+  @override
+  String get payKindDeduction => 'Katoti';
+
+  @override
+  String get payKindRecovery => 'Advance ki wapsi';
+
+  @override
+  String get payItemReason => 'Wajah';
+
+  @override
+  String get payItemAuthorizedBy => 'Agreement ya ijazat';
+
+  @override
+  String get payItemAuthorizedHelp =>
+      'Kis ne maana aur kaise. Jaise: kaghaz par dastakhat, 01-10-2026';
+
+  @override
+  String get payItemDelete => 'Hatayein';
+
+  @override
+  String get issuePartial => 'Contract mein adhoore mahine ka tareeqa chunein.';
+
+  @override
+  String get issueNegative => 'Katoti kamai se zyada hai.';
+
+  @override
+  String get issueRecovery => 'Wapsi baqi advance se zyada hai.';
+
+  @override
+  String get issueLimit => 'Katoti company ki hadd se zyada hai.';
+
+  @override
+  String get issueEarlier => 'Pehle pichla mahina post karein.';
+
+  @override
+  String get issueLater =>
+      'Agla mahina post ho chuka. Yeh agli tankhwah mein aayega.';
+
+  @override
+  String get issueNotStarted => 'Yeh mahina abhi shuru nahin hua.';
+
+  @override
+  String get salaryOwed => 'Tankhwah baqi';
+
+  @override
+  String get rentFromPay => 'Tankhwah se kata';
+
+  @override
+  String get deductionLimit => 'Katoti ki hadd (%, agar ho)';
+
+  @override
+  String get deductionLimitHelp =>
+      'Kamai ka hissa. Accountant se poochh kar likhein. Khaali ho to koi hadd nahin.';
+
+  @override
+  String get deductionLimitError => '1 se 100 tak poora number likhein.';
+
+  @override
+  String payrollPost(int count) {
+    return 'Tankhwah post karein ($count)';
+  }
+
+  @override
+  String payrollPostTitle(String month) {
+    return '$month ki tankhwah post karein?';
+  }
+
+  @override
+  String payrollPostBody(int count, String amount) {
+    return '$count mazdoor, $amount un ke hisaab mein jayega. Is ke baad rakam nahin badlegi. Galti ho to us mazdoor par wapas karein.';
+  }
+
+  @override
+  String payrollPosted(int count) {
+    return '$count mazdoor ki tankhwah post ho gayi';
+  }
+
+  @override
+  String payrollSplit(String earned, String cut) {
+    return 'Kamai $earned, katoti $cut';
+  }
+
+  @override
+  String issueUnapproved(int count) {
+    return '$count hazri abhi manzoor nahin.';
+  }
+
+  @override
+  String applyRoomCharges(int count) {
+    return 'Room charge lagayein ($count)';
+  }
+
+  @override
+  String roomChargesApplied(int count) {
+    return '$count mazdoor par room charge lag gaya';
+  }
+
+  @override
+  String roomChargesPartly(int added, int left) {
+    return '$added mazdoor par room charge lag gaya. $left reh gaye: un ki screen par room charge ka note likhein.';
+  }
+
+  @override
+  String get payKindRoom => 'Room charge';
+
+  @override
+  String approveMissingRate(int approved, int left) {
+    return '$approved manzoor. $left ka rate nahin: Rates mein likh kar dobara manzoor karein.';
   }
 }

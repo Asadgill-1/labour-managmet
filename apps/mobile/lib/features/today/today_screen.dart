@@ -215,7 +215,7 @@ class _EntryRow extends StatelessWidget {
             if (problems.isNotEmpty) Text(problems.join(', '), style: const TextStyle(color: due)),
           ],
         ),
-        trailing: _StateLabel(entry.state),
+        trailing: _StateLabel(entry.payrollLineId != null ? 'linked' : entry.state),
         onTap: onTap,
       ),
     );

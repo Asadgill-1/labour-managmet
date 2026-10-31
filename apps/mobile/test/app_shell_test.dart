@@ -18,16 +18,16 @@ void main() {
 
     await tester.tap(find.text('Menu'));
     await settle(tester);
-    for (final section in ['Aaj', 'Rozana hisaab', 'Companies', 'Sites', 'Labour', 'Mazdoor group', 'Rooms', 'Rates', 'Pichla baqaya', 'Apni company', 'Settings']) {
+    for (final section in ['Aaj', 'Rozana hisaab', 'Companies', 'Sites', 'Labour', 'Mazdoor group', 'Rooms', 'Rates', 'Pichla baqaya', 'Tankhwah', 'Apni company', 'Settings']) {
       expect(find.text(section), findsWidgets, reason: section);
     }
     expect(Directionality.of(tester.element(find.text('Tankhwah'))), TextDirection.ltr);
 
     // Not built yet, so it says so and goes nowhere (AI-07).
     expect(find.text('Jald'), findsWidgets);
-    await tester.tap(find.text('Tankhwah'));
+    await tester.tap(find.text('Timesheet'));
     await settle(tester);
-    expect(find.text('Tankhwah'), findsOneWidget);
+    expect(find.text('Timesheet'), findsOneWidget);
 
     await tester.tap(find.byTooltip('Menu band karein'));
     await settle(tester);

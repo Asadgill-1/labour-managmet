@@ -43,6 +43,12 @@ String addMonths(String month, int months) {
   return '${moved.year}-${_two(moved.month)}';
 }
 
+/// "2026-10" -> "2026-10-01".
+String monthFirstDay(String month) => '$month-01';
+
+/// "2026-10" -> "2026-10-31".
+String monthLastDay(String month) => addDays(monthFirstDay(addMonths(month, 1)), -1);
+
 /// "2026-10" -> "10-2026".
 String showMonth(String month) {
   final parts = month.split('-');

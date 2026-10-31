@@ -1836,6 +1836,342 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'pay {amount}'**
   String rowPay(String amount);
+
+  /// No description provided for @payrollEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'This month\'s earnings'**
+  String get payrollEarned;
+
+  /// No description provided for @payrollCut.
+  ///
+  /// In en, this message translates to:
+  /// **'Deductions'**
+  String get payrollCut;
+
+  /// No description provided for @payrollToPay.
+  ///
+  /// In en, this message translates to:
+  /// **'To pay the worker'**
+  String get payrollToPay;
+
+  /// No description provided for @payrollSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly salary'**
+  String get payrollSalary;
+
+  /// No description provided for @payrollAdjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier work'**
+  String get payrollAdjustment;
+
+  /// No description provided for @payrollNet.
+  ///
+  /// In en, this message translates to:
+  /// **'This month\'s net'**
+  String get payrollNet;
+
+  /// No description provided for @payrollOpening.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous unpaid'**
+  String get payrollOpening;
+
+  /// No description provided for @payrollPaidAhead.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid ahead'**
+  String get payrollPaidAhead;
+
+  /// No description provided for @payrollPayable.
+  ///
+  /// In en, this message translates to:
+  /// **'Total payable'**
+  String get payrollPayable;
+
+  /// No description provided for @payrollPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid since'**
+  String get payrollPaid;
+
+  /// No description provided for @payrollClosing.
+  ///
+  /// In en, this message translates to:
+  /// **'Still unpaid'**
+  String get payrollClosing;
+
+  /// No description provided for @payrollOverpaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid too much'**
+  String get payrollOverpaid;
+
+  /// No description provided for @payrollEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to pay this month. Mark attendance first.'**
+  String get payrollEmpty;
+
+  /// No description provided for @payrollEarnedHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Earnings'**
+  String get payrollEarnedHeading;
+
+  /// No description provided for @payrollItemsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowances and deductions'**
+  String get payrollItemsHeading;
+
+  /// No description provided for @payrollSumHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get payrollSumHeading;
+
+  /// No description provided for @payrollNoItems.
+  ///
+  /// In en, this message translates to:
+  /// **'None this month.'**
+  String get payrollNoItems;
+
+  /// No description provided for @payrollStatePosted.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted'**
+  String get payrollStatePosted;
+
+  /// No description provided for @payrollStateReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to post'**
+  String get payrollStateReady;
+
+  /// No description provided for @payrollStateDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Not posted'**
+  String get payrollStateDraft;
+
+  /// No description provided for @payrollPostConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Post'**
+  String get payrollPostConfirm;
+
+  /// No description provided for @payrollPayNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Record payment'**
+  String get payrollPayNow;
+
+  /// No description provided for @payrollUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo this posting'**
+  String get payrollUndo;
+
+  /// No description provided for @payrollUndoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo this posting?'**
+  String get payrollUndoTitle;
+
+  /// No description provided for @payrollUndoHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The month goes back to unposted so you can fix it. The record stays, and money already paid stays on the worker\'s account.'**
+  String get payrollUndoHelp;
+
+  /// No description provided for @payrollUndoLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo the later month first.'**
+  String get payrollUndoLater;
+
+  /// No description provided for @payKindAllowance.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowance'**
+  String get payKindAllowance;
+
+  /// No description provided for @payKindDeduction.
+  ///
+  /// In en, this message translates to:
+  /// **'Deduction'**
+  String get payKindDeduction;
+
+  /// No description provided for @payKindRecovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance recovery'**
+  String get payKindRecovery;
+
+  /// No description provided for @payItemReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get payItemReason;
+
+  /// No description provided for @payItemAuthorizedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Agreement or permission'**
+  String get payItemAuthorizedBy;
+
+  /// No description provided for @payItemAuthorizedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Who agreed, and how. For example: signed paper, 01-10-2026'**
+  String get payItemAuthorizedHelp;
+
+  /// No description provided for @payItemDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get payItemDelete;
+
+  /// No description provided for @issuePartial.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the part-month method on the contract.'**
+  String get issuePartial;
+
+  /// No description provided for @issueNegative.
+  ///
+  /// In en, this message translates to:
+  /// **'Deductions are more than earnings.'**
+  String get issueNegative;
+
+  /// No description provided for @issueRecovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery is more than the advance left.'**
+  String get issueRecovery;
+
+  /// No description provided for @issueLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deductions are above your company\'s limit.'**
+  String get issueLimit;
+
+  /// No description provided for @issueEarlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Post the earlier month first.'**
+  String get issueEarlier;
+
+  /// No description provided for @issueLater.
+  ///
+  /// In en, this message translates to:
+  /// **'A later month is posted. This goes into the next payroll.'**
+  String get issueLater;
+
+  /// No description provided for @issueNotStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'This month has not started.'**
+  String get issueNotStarted;
+
+  /// No description provided for @salaryOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary still owed'**
+  String get salaryOwed;
+
+  /// No description provided for @rentFromPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken from salaries'**
+  String get rentFromPay;
+
+  /// No description provided for @deductionLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deduction limit (%, optional)'**
+  String get deductionLimit;
+
+  /// No description provided for @deductionLimitHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Share of earnings. Ask your accountant. Empty means no limit.'**
+  String get deductionLimitHelp;
+
+  /// No description provided for @deductionLimitError.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a whole number from 1 to 100.'**
+  String get deductionLimitError;
+
+  /// No description provided for @payrollPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Post payroll ({count})'**
+  String payrollPost(int count);
+
+  /// No description provided for @payrollPostTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Post payroll for {month}?'**
+  String payrollPostTitle(String month);
+
+  /// No description provided for @payrollPostBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers, {amount} goes onto their accounts. The figures will not change after this. If something is wrong, undo it on that worker.'**
+  String payrollPostBody(int count, String amount);
+
+  /// No description provided for @payrollPosted.
+  ///
+  /// In en, this message translates to:
+  /// **'Payroll posted for {count} workers'**
+  String payrollPosted(int count);
+
+  /// No description provided for @payrollSplit.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned {earned}, deducted {cut}'**
+  String payrollSplit(String earned, String cut);
+
+  /// No description provided for @issueUnapproved.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} attendance rows not approved yet.'**
+  String issueUnapproved(int count);
+
+  /// No description provided for @applyRoomCharges.
+  ///
+  /// In en, this message translates to:
+  /// **'Add room charge ({count})'**
+  String applyRoomCharges(int count);
+
+  /// No description provided for @roomChargesApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Room charge added for {count} workers'**
+  String roomChargesApplied(int count);
+
+  /// No description provided for @roomChargesPartly.
+  ///
+  /// In en, this message translates to:
+  /// **'Room charge added for {added} workers. {left} left: write the room charge note on their screen.'**
+  String roomChargesPartly(int added, int left);
+
+  /// No description provided for @payKindRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Room charge'**
+  String get payKindRoom;
+
+  /// No description provided for @approveMissingRate.
+  ///
+  /// In en, this message translates to:
+  /// **'{approved} approved. {left} have no rate: add it under Rates, then approve again.'**
+  String approveMissingRate(int approved, int left);
 }
 
 class _AppLocalizationsDelegate

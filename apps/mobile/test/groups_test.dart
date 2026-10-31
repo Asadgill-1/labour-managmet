@@ -141,7 +141,7 @@ void main() {
           basis: Value(RateBasis.month.name),
           rateFils: const Value(200000),
           effectiveFrom: const Value('2026-01-01'),
-          partialMethod: const Value('calendar_days'),
+          partialMethod: Value(PartialMethod.calendarDays.name),
         ),
       );
       final id = await saveGroup(db, team, {team.workers[0]: null});
