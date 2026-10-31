@@ -1,6 +1,7 @@
 import 'package:domain/calc.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
+import 'package:flutter/widgets.dart' show Semantics;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/masters.dart';
@@ -385,7 +386,7 @@ void main() {
     await tester.tap(find.text('Save karein'));
     await settle(tester);
 
-    expect(find.text('9 mazdoor, 9 shifts, 9 worker-days'), findsOneWidget);
+    expect(find.byWidgetPredicate((w) => w is Semantics && w.properties.label == '9 mazdoor, 9 shifts, 9 worker-days'), findsOneWidget);
     var rows = await real(tester, world.stored);
     expect(rows, hasLength(10));
     expect(rows.where((r) => r.attendanceStatus == 'absent'), hasLength(1));

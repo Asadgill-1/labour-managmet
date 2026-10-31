@@ -22,8 +22,7 @@ Future<void> openWorker(WidgetTester tester, TenantDatabase db) async {
     await seedWorker(db);
   });
   await pumpApp(tester, db);
-  await tester.tap(find.text('Labour'));
-  await settle(tester);
+  await goTo(tester, 'Labour');
   await tester.tap(find.text('Ali Khan'));
   await settle(tester);
 }
@@ -159,8 +158,7 @@ void main() {
       );
     });
     await pumpApp(tester, db);
-    await tester.tap(find.text('Companies').last);
-    await settle(tester);
+    await goTo(tester, 'Companies');
     await tester.tap(find.text('Emaar'));
     await settle(tester);
     await tester.tap(find.text('Company ka rate add karein'));

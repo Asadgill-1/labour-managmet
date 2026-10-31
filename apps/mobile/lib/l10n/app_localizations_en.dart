@@ -19,23 +19,119 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabLabour => 'Labour';
 
   @override
-  String get tabAccounts => 'Accounts';
+  String get tabRates => 'Rates';
 
   @override
-  String get tabMore => 'More';
+  String get tabSettings => 'Settings';
 
   @override
-  String get todayEmpty => 'No attendance recorded today.';
+  String get menuLabel => 'Menu';
+
+  @override
+  String get menuClose => 'Hide menu';
+
+  @override
+  String get soon => 'Soon';
+
+  @override
+  String get groupDaily => 'Daily';
+
+  @override
+  String get groupRegisters => 'Registers';
+
+  @override
+  String get groupPayroll => 'Payroll and money';
+
+  @override
+  String get groupBilling => 'Billing';
+
+  @override
+  String get groupMore => 'More';
+
+  @override
+  String get menuPayroll => 'Payroll';
+
+  @override
+  String get menuAdvances => 'Advances';
+
+  @override
+  String get menuPayments => 'Payments';
+
+  @override
+  String get menuExpenses => 'Expenses';
+
+  @override
+  String get menuTimesheets => 'Timesheets';
+
+  @override
+  String get menuInvoices => 'Invoices';
+
+  @override
+  String get menuReceived => 'Money received';
+
+  @override
+  String get menuReports => 'Reports';
+
+  @override
+  String get menuDocuments => 'Documents';
+
+  @override
+  String get menuTeam => 'Team';
+
+  @override
+  String get menuBackup => 'Backup';
+
+  @override
+  String get menuPlan => 'Plan';
+
+  @override
+  String get menuHelp => 'Help';
+
+  @override
+  String get countWorkers => 'Workers';
+
+  @override
+  String get countShifts => 'Shifts';
+
+  @override
+  String get countWorkerDays => 'Worker-days';
+
+  @override
+  String get dayNames => 'Mon,Tue,Wed,Thu,Fri,Sat,Sun';
+
+  @override
+  String get pickDate => 'Choose date';
+
+  @override
+  String get chooseWorker => 'Worker';
+
+  @override
+  String get noBillingRates =>
+      'No company rates yet. Add one so attendance can be priced.';
+
+  @override
+  String get noPayRates =>
+      'No pay rates yet. Add one so attendance can be priced.';
+
+  @override
+  String get balancesEmpty =>
+      'Nothing carried over yet. Add what was already due when you started using this app.';
+
+  @override
+  String get addBalance => 'Add carried-over amount';
+
+  @override
+  String get balanceKind => 'What kind of amount?';
+
+  @override
+  String get todayEmpty =>
+      'No attendance on this date. Tap Mark attendance to start.';
 
   @override
   String get companiesEmpty => 'No client companies yet. Add your first one.';
 
   @override
   String get labourEmpty => 'No workers yet. Add your first one.';
-
-  @override
-  String get accountsComingLater =>
-      'Payroll, invoices, money received, money paid and closing arrive in the next builds.';
 
   @override
   String get settingsLanguage => 'Language';
@@ -589,12 +685,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get previousDay => 'Previous day';
-
-  @override
-  String get nextDay => 'Next day';
-
-  @override
   String get saveFailed => 'Could not save. Nothing was changed. Try again.';
 
   @override
@@ -622,13 +712,113 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get tabLabour => 'Labour';
 
   @override
-  String get tabAccounts => 'Hisaab';
+  String get tabRates => 'Rates';
 
   @override
-  String get tabMore => 'Aur';
+  String get tabSettings => 'Settings';
 
   @override
-  String get todayEmpty => 'Aaj koi hazri darj nahin hui.';
+  String get menuLabel => 'Menu';
+
+  @override
+  String get menuClose => 'Menu band karein';
+
+  @override
+  String get soon => 'Jald';
+
+  @override
+  String get groupDaily => 'Rozana';
+
+  @override
+  String get groupRegisters => 'Register';
+
+  @override
+  String get groupPayroll => 'Tankhwah aur paisa';
+
+  @override
+  String get groupBilling => 'Billing';
+
+  @override
+  String get groupMore => 'Aur';
+
+  @override
+  String get menuPayroll => 'Tankhwah';
+
+  @override
+  String get menuAdvances => 'Advance';
+
+  @override
+  String get menuPayments => 'Adaigi';
+
+  @override
+  String get menuExpenses => 'Kharche';
+
+  @override
+  String get menuTimesheets => 'Timesheet';
+
+  @override
+  String get menuInvoices => 'Invoice';
+
+  @override
+  String get menuReceived => 'Paisay mile';
+
+  @override
+  String get menuReports => 'Reports';
+
+  @override
+  String get menuDocuments => 'Documents';
+
+  @override
+  String get menuTeam => 'Team';
+
+  @override
+  String get menuBackup => 'Backup';
+
+  @override
+  String get menuPlan => 'Plan';
+
+  @override
+  String get menuHelp => 'Madad';
+
+  @override
+  String get countWorkers => 'Mazdoor';
+
+  @override
+  String get countShifts => 'Shifts';
+
+  @override
+  String get countWorkerDays => 'Worker-days';
+
+  @override
+  String get dayNames => 'Pir,Mangal,Budh,Jumerat,Juma,Hafta,Itwar';
+
+  @override
+  String get pickDate => 'Tareekh chunein';
+
+  @override
+  String get chooseWorker => 'Mazdoor';
+
+  @override
+  String get noBillingRates =>
+      'Abhi koi company rate nahin. Rate add karein taake hazri ka hisaab ban sake.';
+
+  @override
+  String get noPayRates =>
+      'Abhi koi tankhwah ka rate nahin. Rate add karein taake hazri ka hisaab ban sake.';
+
+  @override
+  String get balancesEmpty =>
+      'Abhi koi pichla baqaya nahin. Jo raqam app shuru karne se pehle baqi thi woh yahan likhein.';
+
+  @override
+  String get addBalance => 'Pichla baqaya add karein';
+
+  @override
+  String get balanceKind => 'Kaunsi raqam?';
+
+  @override
+  String get todayEmpty =>
+      'Is din koi hazri nahin. Shuru karne ke liye Hazri lagayein dabayein.';
 
   @override
   String get companiesEmpty =>
@@ -636,10 +826,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get labourEmpty => 'Abhi koi mazdoor nahin. Pehla mazdoor add karein.';
-
-  @override
-  String get accountsComingLater =>
-      'Tankhwah, invoices, paisay mile, paisay diye aur closing aglay builds mein aayenge.';
 
   @override
   String get settingsLanguage => 'Zaban';
@@ -1191,12 +1377,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String hoursPaid(String duration) {
     return '$duration ghante';
   }
-
-  @override
-  String get previousDay => 'Pichla din';
-
-  @override
-  String get nextDay => 'Agla din';
 
   @override
   String get saveFailed =>

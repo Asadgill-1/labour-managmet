@@ -41,12 +41,12 @@ class WorkerRateSections extends ConsumerWidget {
           ),
         ),
         const Divider(),
-        if (contracts.isEmpty) ListTile(title: Text(l10n.noPayContract)),
+        if (contracts.isEmpty) ListTile(subtitle: Text(l10n.noPayContract)),
         for (final c in contracts) ...[
           ListTile(
             title: Text(rateSummary(l10n, c.basis, c.rateFils), style: amountStyle),
             subtitle: Text([dateRange(l10n, c.effectiveFrom, c.effectiveTo), ?_siteName(sites, c.siteId)].join(', ')),
-            trailing: const Icon(Icons.edit),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () => _open(context, ContractFormScreen.pay(workerId: workerId, pay: c)),
           ),
           const Divider(),
@@ -85,14 +85,14 @@ class ClientRateSections extends ConsumerWidget {
           ),
         ),
         const Divider(),
-        if (contracts.isEmpty) ListTile(title: Text(l10n.noBillingContract)),
+        if (contracts.isEmpty) ListTile(subtitle: Text(l10n.noBillingContract)),
         for (final c in contracts) ...[
           ListTile(
             title: Text(rateSummary(l10n, c.basis, c.rateFils), style: amountStyle),
             subtitle: Text(
               [dateRange(l10n, c.effectiveFrom, c.effectiveTo), ?_siteName(sites, c.siteId), ?workerName(c.workerId)].join(', '),
             ),
-            trailing: const Icon(Icons.edit),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () => _open(context, ContractFormScreen.billing(clientId: clientId, billing: c)),
           ),
           const Divider(),
@@ -118,9 +118,9 @@ class _OpeningTile extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final balances = ref.watch(openingBalancesProvider).value ?? const <OpeningBalance>[];
     final existing = balances.where((b) => b.kind == kind && b.workerId == workerId && b.clientId == clientId).firstOrNull;
-    return ListTile(
-      title: Text(openingLabel(l10n, kind)),
-      trailing: Text(existing == null ? l10n.notEntered : formatAed(existing.amountFils), style: amountStyle),
+    return InfoRow(
+      openingLabel(l10n, kind),
+      existing == null ? l10n.notEntered : formatAed(existing.amountFils),
       onTap: () => _open(
         context,
         OpeningBalanceFormScreen(kind: kind, workerId: workerId, clientId: clientId, existing: existing),

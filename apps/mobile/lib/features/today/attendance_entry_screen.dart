@@ -116,7 +116,7 @@ class _AttendanceEntryScreenState extends ConsumerState<AttendanceEntryScreen> {
       body: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -179,6 +179,7 @@ class _AttendanceEntryScreenState extends ConsumerState<AttendanceEntryScreen> {
           const Divider(),
           for (final w in shown) ...[
             CheckboxListTile(
+              controlAffinity: ListTileControlAffinity.leading,
               title: Text(w.name),
               subtitle: Text([w.code, ?w.trade].join(', ')),
               value: _selected.contains(w.id),

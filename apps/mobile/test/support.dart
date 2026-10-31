@@ -43,6 +43,14 @@ Future<void> pumpApp(WidgetTester tester, TenantDatabase db) async {
   await settle(tester);
 }
 
+/// Shows the side panel and opens a section.
+Future<void> goTo(WidgetTester tester, String section) async {
+  await tester.tap(find.text('Menu'));
+  await settle(tester);
+  await tester.tap(find.text(section).last);
+  await settle(tester);
+}
+
 /// Lets database streams deliver, then lets the UI finish animating.
 Future<void> settle(WidgetTester tester) async {
   await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 30)));

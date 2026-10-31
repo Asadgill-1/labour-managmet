@@ -6,7 +6,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 
 | ID | Ch | Summary | Tasks | Status | Tests | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
-| UX-01 | 02 | Paanch bottom tabs | T04, T05 | IMPLEMENTED_UNVERIFIED | - | - |
+| UX-01 | 02 | Left side panel, replaces bottom tabs (D-027) | T04, T05 | IMPLEMENTED_UNVERIFIED | - | - |
 | UX-02 | 02 | Onboarding | T05, T19 | IN_PROGRESS | - | - |
 | UX-03 | 02 | Saaf labels | T05 | IMPLEMENTED_UNVERIFIED | - | - |
 | UX-04 | 02 | Readability | T05 | IMPLEMENTED_UNVERIFIED | - | - |

@@ -19,7 +19,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 
 | Task | Title | Requirements | Status | Branch / PR |
 | --- | --- | --- | --- | --- |
-| T05 | Five-tab shell, l10n, readable UI, save statuses | UX-01..04, UX-07 | IMPLEMENTED_UNVERIFIED | `p1/t05-shell` |
+| T05 | App shell with left side panel (D-027), l10n, readable UI (D-028), save statuses | UX-01..04, UX-07 | IMPLEMENTED_UNVERIFIED | `p1/t05-shell`, `p1/t05b-side-panel` |
 | T06 | Schema v1, migrations harness, outbox, audit, local tenant | MODEL-01, MODEL-03, MODEL-04, MODEL-08 | IMPLEMENTED_UNVERIFIED | `p1/t06-schema` |
 | T07 | Company, clients, sites, workers, archive | MASTER-01..04, MASTER-07 | IMPLEMENTED_UNVERIFIED | `p1/t07-masters` |
 | T08 | Rate cards and opening balances | MASTER-05, MASTER-06 | IMPLEMENTED_UNVERIFIED | `p1/t08-rates` |

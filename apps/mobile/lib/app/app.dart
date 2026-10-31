@@ -2,34 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/accounts/accounts_screen.dart';
 import '../features/companies/companies_screen.dart';
+import '../features/companies/sites_screen.dart';
 import '../features/labour/labour_screen.dart';
-import '../features/more/more_screen.dart';
 import '../features/more/profile_form_screen.dart';
+import '../features/more/settings_screen.dart';
+import '../features/rates/balances_screen.dart';
+import '../features/rates/rates_screen.dart';
 import '../features/today/today_screen.dart';
 import '../l10n/app_localizations.dart';
 import 'providers.dart';
 import 'settings.dart';
+import 'side_panel.dart';
 import 'theme.dart';
 
-StatefulShellBranch _branch(String path, Widget screen) {
-  return StatefulShellBranch(routes: [GoRoute(path: path, builder: (_, _) => screen)]);
-}
+Widget _screen(Section section) => switch (section) {
+  Section.today => const TodayScreen(),
+  Section.companies => const CompaniesScreen(),
+  Section.sites => const SitesScreen(),
+  Section.labour => const LabourScreen(),
+  Section.rates => const RatesScreen(),
+  Section.balances => const BalancesScreen(),
+  Section.settings => const SettingsScreen(),
+};
 
 final _routerProvider = Provider(
   (ref) => GoRouter(
     initialLocation: '/today',
     routes: [
-      // Detail screens use Navigator.push inside a branch, so the tabs stay visible (UX-01).
+      // Detail screens use Navigator.push inside a branch, so each section keeps its place (D-027).
       StatefulShellRoute.indexedStack(
-        builder: (_, _, shell) => _TabShell(shell),
+        builder: (_, _, shell) => _Shell(shell),
         branches: [
-          _branch('/today', const TodayScreen()),
-          _branch('/companies', const CompaniesScreen()),
-          _branch('/labour', const LabourScreen()),
-          _branch('/accounts', const AccountsScreen()),
-          _branch('/more', const MoreScreen()),
+          for (final section in Section.values)
+            StatefulShellBranch(routes: [GoRoute(path: '/${section.name}', builder: (_, _) => _screen(section))]),
         ],
       ),
     ],
@@ -61,8 +67,8 @@ class LabourApp extends ConsumerWidget {
   }
 }
 
-class _TabShell extends ConsumerWidget {
-  const _TabShell(this.shell);
+class _Shell extends ConsumerWidget {
+  const _Shell(this.shell);
 
   final StatefulNavigationShell shell;
 
@@ -80,18 +86,15 @@ class _TabShell extends ConsumerWidget {
     if (!profile.hasValue) return const Scaffold(body: Center(child: CircularProgressIndicator()));
     if (profile.value == null) return const ProfileFormScreen();
     return Scaffold(
-      body: shell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: shell.currentIndex,
-        onDestinationSelected: (i) => shell.goBranch(i, initialLocation: i == shell.currentIndex),
-        destinations: [
-          NavigationDestination(icon: const Icon(Icons.today), label: l10n.tabToday),
-          NavigationDestination(icon: const Icon(Icons.apartment), label: l10n.tabCompanies),
-          NavigationDestination(icon: const Icon(Icons.groups), label: l10n.tabLabour),
-          NavigationDestination(icon: const Icon(Icons.account_balance_wallet), label: l10n.tabAccounts),
-          NavigationDestination(icon: const Icon(Icons.more_horiz), label: l10n.tabMore),
-        ],
+      key: shellKey,
+      drawer: SidePanel(
+        current: Section.values[shell.currentIndex],
+        onSelect: (section) {
+          shellKey.currentState?.closeDrawer();
+          shell.goBranch(section.index, initialLocation: section.index == shell.currentIndex);
+        },
       ),
+      body: shell,
     );
   }
 }

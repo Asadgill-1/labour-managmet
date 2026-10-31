@@ -189,10 +189,20 @@ class _AttendanceReviewScreenState extends ConsumerState<AttendanceReviewScreen>
       bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _saving ? null : _save),
       body: ListView(
         children: [
-          ListTile(title: Text(l10n.totalClient), trailing: Text(formatAed(clientTotal), style: amountStyle)),
-          const Divider(),
-          ListTile(title: Text(l10n.totalWorker), trailing: Text(formatAed(workerTotal), style: amountStyle)),
-          const Divider(),
+          ColoredBox(
+            color: hiVis,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 14),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: BandFigure(formatAed(clientTotal), l10n.totalClient, size: 26)),
+                  const SizedBox(width: 12),
+                  Expanded(child: BandFigure(formatAed(workerTotal), l10n.totalWorker, size: 26)),
+                ],
+              ),
+            ),
+          ),
           if (anyPeriod) ...[ListTile(subtitle: Text(l10n.monthlyNotInTotal)), const Divider()],
           if (anyDraft) ...[ListTile(subtitle: Text(l10n.savesAsDraft)), const Divider()],
           Align(
@@ -255,7 +265,7 @@ class _ReviewRow extends StatelessWidget {
             ),
         ],
       ),
-      trailing: const Icon(Icons.edit),
+      trailing: const Icon(Icons.chevron_right),
       onTap: onTap,
     );
   }

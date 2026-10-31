@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/providers.dart';
 import '../../app/settings.dart';
+import '../../app/side_panel.dart';
 import '../../l10n/app_localizations.dart';
 import 'db_check_screen.dart';
-import 'profile_form_screen.dart';
 
-class MoreScreen extends ConsumerWidget {
-  const MoreScreen({super.key});
+class SettingsScreen extends ConsumerWidget {
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,17 +15,9 @@ class MoreScreen extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     final controller = ref.read(settingsProvider.notifier);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.tabMore)),
+      appBar: AppBar(leading: const MenuButton(), title: Text(l10n.tabSettings)),
       body: ListView(
         children: [
-          ListTile(
-            title: Text(l10n.myCompany),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => ProfileFormScreen(profile: ref.read(profileProvider).value)),
-            ),
-          ),
-          const Divider(),
           ListTile(
             title: Text(l10n.settingsLanguage),
             trailing: DropdownButton<Locale>(

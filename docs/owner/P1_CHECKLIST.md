@@ -6,16 +6,19 @@ Test APK: `apps/mobile/build/app/outputs/flutter-apk/app-release.apk`. Yeh test 
 
 ## 1. Encryption ka saboot (P0 se baqi)
 
-- [ ] **Aur > Data encryption ki jaanch** kholein. Upar **Sab theek** aana chahiye.
+- [ ] **Menu > Settings > Data encryption ki jaanch** kholein. Upar **Sab theek** aana chahiye.
 - [ ] App poori tarah band kar ke dobara yeh screen kholein. "Data survives reopen" mein rows 10 barh jani chahiye.
 
 ## 2. Setup (5 minute)
 
-- [ ] Pehli baar khulne par sirf company ka naam maanga jaye, phir paanch tabs aayen: Aaj, Companies, Labour, Hisaab, Aur.
+- [ ] Pehli baar khulne par sirf company ka naam maanga jaye.
+- [ ] Oopar baen taraf **Menu** dabayein. Baen taraf panel khule. Teer ka nishan dabane par, ya bahar dabane par, panel chhup jaye.
+- [ ] Panel mein yeh sab hon: Aaj, Companies, Sites, Labour, Rates, Pichla baqaya, Apni company, Settings. Jo abhi bane nahin un par **Jald** likha ho aur woh na khulein.
 - [ ] **Companies** mein aik company add karein, phir us mein site. Site mein aam shuru aur khatam waqt, aur break likhein.
 - [ ] Usi company mein **Company ka rate** add karein: fi ghanta AED 10.
 - [ ] **Labour** mein 10 mazdoor add karein. Har aik mein **Tankhwah ka rate**: fi ghanta AED 8.
 - [ ] Aik mazdoor mein **Pichla baqaya** bhar kar dekhein. Tareekh, wajah aur tasdeeq ke baghair save nahin hona chahiye.
+- [ ] **Sites**, **Rates** aur **Pichla baqaya** kholein. Jo upar add kiya woh sab yahan bhi nazar aaye.
 
 ## 3. Asal test: 10 mazdoor ki hazri
 
@@ -25,7 +28,7 @@ Time note karein. Target 60 second hai.
 - [ ] **Sab ko select** dabayein, phir **Aage**.
 - [ ] 8:00 se 20:00, 60 minute break par yeh aana chahiye: **Company se lena hai AED 1,100.00**, **Mazdoor ko dena hai AED 880.00**.
 - [ ] Aik mazdoor par click kar ke **Ghair hazir** karein. Total AED 990.00 aur AED 792.00 ho jane chahiye.
-- [ ] **Save karein**. **Aaj** par 9 mazdoor, 9 shifts dikhein.
+- [ ] **Save karein**. **Aaj** par 9 Mazdoor, 9 Shifts dikhein.
 - [ ] Wahi mazdoor usi waqt dobara daalein. Wajah ke baghair save nahin hona chahiye.
 - [ ] **Sab manzoor karein** dabayein. Phir aik manzoor shuda row kholein. Ab wajah likhe baghair correction nahin honi chahiye, aur asal row mehfooz rehni chahiye.
 - [ ] Internet band kar ke sab dobara karein. Sab kuch chalna chahiye.

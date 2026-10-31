@@ -72,8 +72,7 @@ void main() {
     final db = memoryDb();
     await real(tester, () => seedProfile(db));
     await pumpApp(tester, db);
-    await tester.tap(find.text('Labour'));
-    await settle(tester);
+    await goTo(tester, 'Labour');
     expect(find.text('Abhi koi mazdoor nahin. Pehla mazdoor add karein.'), findsOneWidget);
 
     Future<void> add(String name) async {
@@ -115,8 +114,7 @@ void main() {
     final db = memoryDb();
     await real(tester, () => seedProfile(db));
     await pumpApp(tester, db);
-    await tester.tap(find.text('Companies').last);
-    await settle(tester);
+    await goTo(tester, 'Companies');
 
     await tester.tap(find.text('Company add karein'));
     await settle(tester);

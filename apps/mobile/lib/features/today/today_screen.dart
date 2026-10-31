@@ -3,7 +3,9 @@ import 'package:domain/dates.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/form_bits.dart';
 import '../../app/providers.dart';
+import '../../app/side_panel.dart';
 import '../../app/theme.dart';
 import '../../data/attendance.dart';
 import '../../data/tenant_database.dart';
@@ -22,12 +24,14 @@ class TodayScreen extends ConsumerStatefulWidget {
 class _TodayScreenState extends ConsumerState<TodayScreen> {
   String _date = dubaiToday(DateTime.now());
 
-  String _stateLabel(AppLocalizations l10n, AttendanceEntry e) => switch (e.state) {
-    'draft' => l10n.stateDraft,
-    'submitted' => l10n.stateSubmitted,
-    'approved' => l10n.stateApproved,
-    _ => l10n.stateLinked,
-  };
+  void _markAttendance() {
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => AttendanceEntryScreen(date: _date)));
+  }
+
+  Future<void> _chooseDate() async {
+    final picked = await pickDate(context, _date);
+    if (picked != null) setState(() => _date = picked);
+  }
 
   Future<void> _approve(List<AttendanceEntry> pending) async {
     final l10n = AppLocalizations.of(context);
@@ -81,45 +85,61 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     );
     final recorded = entries.map((e) => e.workerId).toSet();
     final missing = allWorkers.where((w) => w.active && !recorded.contains(w.id)).toList();
+    final today = dubaiToday(DateTime.now());
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(showDate(_date)),
+        leading: const MenuButton(),
+        // Shrinks rather than cutting the date off on a narrow phone with large text.
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text('${_date == today ? l10n.tabToday : _dayName(l10n, _date)}, ${showDate(_date)}'),
+        ),
         actions: [
-          IconButton(
-            tooltip: l10n.previousDay,
-            icon: const Icon(Icons.chevron_left),
-            onPressed: () => setState(() => _date = addDays(_date, -1)),
-          ),
-          IconButton(
-            tooltip: l10n.nextDay,
-            icon: const Icon(Icons.chevron_right),
-            onPressed: () => setState(() => _date = addDays(_date, 1)),
-          ),
+          if (_date != today) TextButton(onPressed: () => setState(() => _date = today), child: Text(l10n.tabToday)),
+          IconButton(tooltip: l10n.pickDate, icon: const Icon(Icons.calendar_month), onPressed: _chooseDate),
         ],
       ),
-      bottomNavigationBar: MainActionBar(
-        label: l10n.markAttendance,
-        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => AttendanceEntryScreen(date: _date))),
-      ),
+      bottomNavigationBar: MainActionBar(label: l10n.markAttendance, onPressed: _markAttendance),
       body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(l10n.countsLine(counts.uniqueWorkers, counts.shifts, counts.workerDays), style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 4),
-                Text(l10n.localOnlyNote),
-              ],
+          ColoredBox(
+            color: hiVis,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 14),
+              child: Column(
+                children: [
+                  _DayStrip(selected: _date, onPick: (date) => setState(() => _date = date)),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Semantics(
+                      label: l10n.countsLine(counts.uniqueWorkers, counts.shifts, counts.workerDays),
+                      excludeSemantics: true,
+                      child: Row(
+                        children: [
+                          Expanded(child: BandFigure('${counts.uniqueWorkers}', l10n.countWorkers)),
+                          Expanded(child: BandFigure('${counts.shifts}', l10n.countShifts)),
+                          Expanded(child: BandFigure('${counts.workerDays}', l10n.countWorkerDays)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const Divider(),
           if (missing.isNotEmpty) ...[
             ListTile(
-              leading: const Icon(Icons.warning_amber),
-              title: Text(l10n.missingWorkers(missing.length, missing.take(5).map((w) => w.name).join(', '))),
+              tileColor: hiVisSoft,
+              leading: const Icon(Icons.warning_amber, color: ink),
+              title: Text(
+                l10n.missingWorkers(missing.length, missing.take(5).map((w) => w.name).join(', ')),
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: ink),
+              ),
+              trailing: const Icon(Icons.chevron_right, color: ink),
+              onTap: _markAttendance,
             ),
             const Divider(),
           ],
@@ -128,30 +148,153 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               padding: const EdgeInsets.all(16),
               child: OutlinedButton(onPressed: () => _approve(pending), child: Text(l10n.approveAll(pending.length))),
             ),
-          if (entries.isEmpty) Padding(padding: const EdgeInsets.all(16), child: Text(l10n.todayEmpty)),
+          if (entries.isEmpty) EmptyState(icon: Icons.assignment_outlined, text: l10n.todayEmpty),
           for (final entry in entries) ...[
-            ListTile(
-              title: Text(workers[entry.workerId] == null ? '' : '${workers[entry.workerId]!.name} (${workers[entry.workerId]!.code})'),
-              subtitle: Text(
-                [
-                  ?sites[entry.siteId]?.name,
-                  if (entry.startUtc == null)
-                    statusLabel(l10n, AttendanceStatus.absent)
-                  else
-                    '${showMinuteOfDay(dubaiMinuteOfDay(entry.startUtc!))}-${showMinuteOfDay(dubaiMinuteOfDay(entry.endUtc!))}',
-                  _stateLabel(l10n, entry),
-                  if (entry.state == 'draft' && entry.clientRateFils == null) l10n.issueClientRate,
-                  if (entry.state == 'draft' && entry.workerRateFils == null) l10n.issueWorkerRate,
-                  if (entry.revisesEntryId != null) l10n.correctedTag,
-                ].join(', '),
-              ),
-              trailing: const Icon(Icons.edit),
+            _EntryRow(
+              entry: entry,
+              worker: workers[entry.workerId],
+              site: sites[entry.siteId],
               onTap: () => _openEntry(entry, workers[entry.workerId]?.name ?? ''),
             ),
             const Divider(),
           ],
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                const Icon(Icons.smartphone, size: 16, color: muted),
+                const SizedBox(width: 6),
+                Expanded(child: Text(l10n.localOnlyNote, style: const TextStyle(fontSize: 13, color: muted))),
+              ],
+            ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+/// Monday first, as DateTime.weekday counts.
+String _dayName(AppLocalizations l10n, String date) => l10n.dayNames.split(',')[DateTime.parse(date).weekday - 1];
+
+/// A week around the chosen date, like the date columns of a muster roll. The calendar reaches further.
+class _DayStrip extends StatelessWidget {
+  const _DayStrip({required this.selected, required this.onPick});
+
+  final String selected;
+  final ValueChanged<String> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Row(
+      children: [
+        for (var offset = -3; offset <= 3; offset++)
+          Expanded(
+            child: Builder(
+              builder: (context) {
+                final date = addDays(selected, offset);
+                final color = offset == 0 ? Colors.white : ink;
+                return Semantics(
+                  button: true,
+                  selected: offset == 0,
+                  label: showDate(date),
+                  excludeSemantics: true,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () => onPick(date),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      decoration: BoxDecoration(color: offset == 0 ? ink : null, borderRadius: BorderRadius.circular(8)),
+                      child: Column(
+                        children: [
+                          // Fixed height, so a long day name that shrinks doesn't lift its number out of line.
+                          SizedBox(
+                            height: MediaQuery.textScalerOf(context).scale(16),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(_dayName(l10n, date), style: TextStyle(fontSize: 12, color: color)),
+                            ),
+                          ),
+                          Text(date.substring(8), style: amountStyle.copyWith(fontSize: 20, color: color)),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _EntryRow extends StatelessWidget {
+  const _EntryRow({required this.entry, required this.worker, required this.site, required this.onTap});
+
+  final AttendanceEntry entry;
+  final Worker? worker;
+  final Site? site;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final status = AttendanceStatus.values.byName(entry.attendanceStatus);
+    final problems = [
+      if (entry.state == 'draft' && entry.clientRateFils == null) l10n.issueClientRate,
+      if (entry.state == 'draft' && entry.workerRateFils == null) l10n.issueWorkerRate,
+    ];
+    return ListTile(
+      leading: switch (status) {
+        AttendanceStatus.present => const RowTag.icon(Icons.check, fill: settledSoft, color: settled),
+        AttendanceStatus.half => const RowTag('½', fill: hiVisSoft),
+        AttendanceStatus.absent => const RowTag.icon(Icons.close, fill: dueSoft, color: due),
+      },
+      title: Text(worker?.name ?? ''),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            [
+              ?worker?.code,
+              ?site?.name,
+              if (entry.startUtc == null)
+                statusLabel(l10n, status)
+              else
+                '${showMinuteOfDay(dubaiMinuteOfDay(entry.startUtc!))}-${showMinuteOfDay(dubaiMinuteOfDay(entry.endUtc!))}',
+              if (entry.revisesEntryId != null) l10n.correctedTag,
+            ].join(', '),
+          ),
+          if (problems.isNotEmpty) Text(problems.join(', '), style: const TextStyle(color: due)),
+        ],
+      ),
+      trailing: _StateLabel(entry.state),
+      onTap: onTap,
+    );
+  }
+}
+
+/// The row's approval state, in words as well as colour (UX-04).
+class _StateLabel extends StatelessWidget {
+  const _StateLabel(this.state);
+
+  final String state;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final (label, fill, color) = switch (state) {
+      'draft' => (l10n.stateDraft, hiVisSoft, ink),
+      'submitted' => (l10n.stateSubmitted, hiVisSoft, ink),
+      'approved' => (l10n.stateApproved, settledSoft, settled),
+      _ => (l10n.stateLinked, rule, ink),
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(6)),
+      child: Text(label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: color)),
     );
   }
 }

@@ -51,12 +51,13 @@ class ClientDetailScreen extends ConsumerWidget {
             ),
           ),
           const Divider(),
-          if (sites.isEmpty) ListTile(title: Text(l10n.sitesEmpty)),
+          if (sites.isEmpty) ListTile(subtitle: Text(l10n.sitesEmpty)),
           for (final site in sites) ...[
             ListTile(
+              leading: RowTag(initial(site.name)),
               title: Text(site.name),
               subtitle: site.active ? (site.location == null ? null : Text(site.location!)) : Text(l10n.archivedLabel),
-              trailing: const Icon(Icons.edit),
+              trailing: const Icon(Icons.chevron_right),
               onTap: () => _open(context, SiteFormScreen(clientId: clientId, site: site)),
             ),
             const Divider(),

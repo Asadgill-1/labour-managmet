@@ -3,7 +3,7 @@
 Read this first each session (AI-04). Replace it, do not append; git holds the history.
 
 **Phase:** P1, stopped at the gate for the owner's phone demo  
-**Branch:** `p1/t10-attendance` (stacked: p0/t01 > t02 > t03 > t04 > p1/t05 > t06 > t07 > t09 > t08 > t10, none merged)  
+**Branch:** `p1/t05b-side-panel` (stacked: p0/t01 > t02 > t03 > t04 > p1/t05 > t06 > t07 > t09 > t08 > t10 > t05b, none merged)  
 **Next task:** T11 (payroll), after the P1 gate passes
 
 ## Done
@@ -13,6 +13,8 @@ Read this first each session (AI-04). Replace it, do not append; git holds the h
 | T01, T02, T03 | IMPLEMENTED_UNVERIFIED | See git log. CI has never been read, and the database has never run on a phone |
 | T04 | OWNER_ACCEPTED | Policy defaults D-101 to D-105 approved 2026-10-31 |
 | T05 to T10 | IMPLEMENTED_UNVERIFIED | `dart test`: domain passing. `flutter test`: app passing, including one 10-worker flow through the real screens. `flutter analyze` clean. Not yet run on a phone |
+
+The owner installed the first APK on 2026-10-31 and rejected the bottom tabs and the look. `p1/t05b-side-panel` replaces them (D-027, D-028). The owner has not seen the new build yet.
 
 Test evidence is host only. Encryption on Android, UX-06 timing and BUILD-04 on a real device are all still open.
 
@@ -30,6 +32,7 @@ D-023 and D-024 were settled by the owner on 2026-10-31.
 - After login: open the stacked PRs in order, confirm CI is green, merge. These action versions have never run on this repo, so the first run may need fixes.
 - AI-05 wants branch protection. GitHub Free may not offer it on private repos; check after login and record the outcome in `DECISIONS.md`.
 - `db_check_screen.dart` and `spike_checks.dart` are the T03 proof. Delete both once the phone test passes.
+- When a "Jald" section in `lib/app/side_panel.dart` gets built, give it a `Section` value, a screen in `app.dart`, and move it out of the "Jald" list in `docs/SCREEN_FLOW.md`.
 - UX-02 is local only until T19 adds accounts. UX-07's sync statuses arrive with T25.
 - Worker lists sort by plain text, so "Worker 10" comes before "Worker 2". Real names are fine; revisit if codes are shown as the sort key.
 
@@ -45,4 +48,5 @@ D-023 and D-024 were settled by the owner on 2026-10-31.
 - In a widget test, database work must run on the real clock (`real()` in `test/support.dart`), or the test hangs.
 - Never chain a commit after a test run in one command unless it is gated on the result. It happened once in T06.
 - Forms must not sit in a lazy list. Off-screen fields skip validation. Use `FormBody`.
+- A `ListTile` with `selected: true` paints `selectedTileColor`, not `tileColor`. Golden PNGs caught the panel's active item being invisible, which every widget test missed. Review new screens as images (load real fonts with `FontLoader`, or text shows as blocks).
 - Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Current graph: 1,219 nodes, 1,898 edges, 62 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.

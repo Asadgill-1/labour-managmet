@@ -3,6 +3,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import 'theme.dart';
 
 /// The trimmed text as a nullable column value, so a cleared field really clears.
 Value<String?> optionalText(TextEditingController c) {
@@ -59,6 +60,17 @@ class Field extends StatelessWidget {
   }
 }
 
+/// Opens the calendar on a stored date, or today. Returns a stored date, or null if dismissed.
+Future<String?> pickDate(BuildContext context, String? current) async {
+  final picked = await showDatePicker(
+    context: context,
+    initialDate: current == null ? DateTime.now() : DateTime.parse(current),
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2100),
+  );
+  return picked == null ? null : ymd(picked);
+}
+
 /// Date picked from a calendar, shown DD-MM-YYYY and stored YYYY-MM-DD.
 class DateField extends StatelessWidget {
   const DateField(this.label, {required this.value, required this.onChanged, this.required = false, super.key});
@@ -77,14 +89,8 @@ class DateField extends StatelessWidget {
       validator: (v) => required && v == null ? l10n.fieldRequired : null,
       builder: (state) => InkWell(
         onTap: () async {
-          final initial = value == null ? DateTime.now() : DateTime.parse(value!);
-          final picked = await showDatePicker(
-            context: context,
-            initialDate: initial,
-            firstDate: DateTime(2000),
-            lastDate: DateTime(2100),
-          );
-          if (picked != null) onChanged(ymd(picked));
+          final picked = await pickDate(context, value);
+          if (picked != null) onChanged(picked);
         },
         child: InputDecorator(
           decoration: InputDecoration(
@@ -145,7 +151,7 @@ class SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 20, 8, 4),
       child: Row(
         children: [
-          Expanded(child: Text(title, style: Theme.of(context).textTheme.titleMedium)),
+          Expanded(child: Text(title, style: sectionTitleStyle)),
           if (action != null) Flexible(child: action!),
         ],
       ),
@@ -173,4 +179,149 @@ class SearchBox extends StatelessWidget {
       ),
     );
   }
+}
+
+/// A name's first letter, for a [RowTag].
+String initial(String name) => name.trim().isEmpty ? '?' : name.trim()[0].toUpperCase();
+
+/// Square mark at the start of a row, like the code column of a paper register.
+class RowTag extends StatelessWidget {
+  const RowTag(String this.text, {this.fill = paper, this.color = ink, super.key}) : icon = null;
+  const RowTag.icon(IconData this.icon, {required this.fill, required this.color, super.key}) : text = null;
+
+  final String? text;
+  final IconData? icon;
+  final Color fill;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 48,
+      height: 48,
+      padding: const EdgeInsets.all(4),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(8)),
+      child: icon != null
+          ? Icon(icon, color: color)
+          : FittedBox(fit: BoxFit.scaleDown, child: Text(text!, style: amountStyle.copyWith(fontSize: 17, color: color))),
+    );
+  }
+}
+
+/// A row's value on the right. Shrinks to fit, so a big amount can't squeeze the row's name or get cut off.
+class RowValue extends StatelessWidget {
+  const RowValue(this.text, {super.key});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * 0.42),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.centerRight,
+        child: Text(text, style: amountStyle),
+      ),
+    );
+  }
+}
+
+/// A label on the left and its value on the right. The value carries the weight, not the label.
+class InfoRow extends StatelessWidget {
+  const InfoRow(this.label, this.value, {this.onTap, super.key});
+
+  final String label;
+  final String value;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(label, style: const TextStyle(fontFamily: 'Roboto', fontSize: 15, fontWeight: FontWeight.w400, color: muted)),
+      trailing: RowValue(value),
+      onTap: onTap,
+    );
+  }
+}
+
+/// What an empty screen shows: what's missing and what to do about it.
+class EmptyState extends StatelessWidget {
+  const EmptyState({required this.icon, required this.text, super.key});
+
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(32, 48, 32, 48),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 56, color: const Color(0xFFA9AEB1)),
+            const SizedBox(height: 12),
+            Text(text, textAlign: TextAlign.center, style: const TextStyle(color: muted)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// One big figure with its label, for the yellow band at the top of a screen.
+class BandFigure extends StatelessWidget {
+  const BandFigure(this.value, this.label, {this.size = 34, super.key});
+
+  final String value;
+  final String label;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(value, style: amountStyle.copyWith(fontSize: size, height: 1.15)),
+        ),
+        Text(label, style: const TextStyle(fontSize: 13, color: ink)),
+      ],
+    );
+  }
+}
+
+/// Bottom sheet to pick one option. Skips the question when there is only one answer.
+/// ponytail: no search inside the sheet, add one when a long worker list makes this slow.
+Future<T?> chooseOne<T>(BuildContext context, String title, List<({T value, String label})> options) async {
+  if (options.isEmpty) {
+    showFormError(context, AppLocalizations.of(context).needSetupFirst);
+    return null;
+  }
+  if (options.length == 1) return options.single.value;
+  return showModalBottomSheet<T>(
+    context: context,
+    builder: (sheet) => SafeArea(
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Text(title, style: sectionTitleStyle),
+          ),
+          for (final option in options) ...[
+            const Divider(),
+            ListTile(
+              title: Text(option.label),
+              onTap: () => Navigator.of(sheet).pop(option.value),
+            ),
+          ],
+        ],
+      ),
+    ),
+  );
 }

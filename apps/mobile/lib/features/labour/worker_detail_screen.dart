@@ -41,18 +41,12 @@ class WorkerDetailScreen extends ConsumerWidget {
       body: ListView(
         children: [
           if (!worker.active) ListTile(title: Text(l10n.archivedLabel)),
-          ListTile(title: Text(l10n.workerCode), trailing: Text(worker.code)),
+          InfoRow(l10n.workerCode, worker.code),
           const Divider(),
-          if (worker.trade != null) ...[ListTile(title: Text(l10n.trade), trailing: Text(worker.trade!)), const Divider()],
-          if (worker.phone != null) ...[ListTile(title: Text(l10n.phone), trailing: Text(worker.phone!)), const Divider()],
-          if (worker.joiningDate != null) ...[
-            ListTile(title: Text(l10n.joiningDate), trailing: Text(showDate(worker.joiningDate!))),
-            const Divider(),
-          ],
-          if (worker.roomChargeFils != null) ...[
-            ListTile(title: Text(l10n.roomCharge), trailing: Text(formatAed(worker.roomChargeFils!))),
-            const Divider(),
-          ],
+          if (worker.trade != null) ...[InfoRow(l10n.trade, worker.trade!), const Divider()],
+          if (worker.phone != null) ...[InfoRow(l10n.phone, worker.phone!), const Divider()],
+          if (worker.joiningDate != null) ...[InfoRow(l10n.joiningDate, showDate(worker.joiningDate!)), const Divider()],
+          if (worker.roomChargeFils != null) ...[InfoRow(l10n.roomCharge, formatAed(worker.roomChargeFils!)), const Divider()],
           WorkerRateSections(workerId: workerId),
           fieldGap,
           Padding(

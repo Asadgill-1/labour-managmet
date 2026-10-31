@@ -2,17 +2,18 @@
 
 UI strings are Roman Urdu or English (D-004, locale `en_PK`). Dates DD-MM-YYYY, amounts with AED. Each screen has one main action. Touch targets at least 48 logical pixels, and status never relies on colour alone (UX-03, UX-04).
 
-## Bottom tabs (UX-01)
+## Left side panel (D-027, supersedes UX-01's bottom tabs)
 
-Stable on every screen. Setup and daily work share the same data, with no duplicate registers.
+Hidden until the Menu button at the top left of a main screen opens it. The arrow in its header, a tap outside it, or Android back hides it. Setup and daily work share the same data, with no duplicate registers. Sites, Rates and Pichla baqaya list what the company and worker screens hold, using the same forms.
 
-| Tab | Contains |
-| --- | --- |
-| Aaj | Today's attendance, bulk entry, copy yesterday's team, missing entries, offline and sync indicator |
-| Companies | Clients, sites, contracts and rates, timesheets, invoices, client statement |
-| Labour | Workers, pay contract, attendance history, advances, deductions, payslips, balance |
-| Hisaab | Payroll, invoices, money received, money paid, expenses, period close |
-| Aur | Reports, documents, own company, letterhead, team, backup, plan, help, settings |
+| Group | Section | State |
+| --- | --- | --- |
+| Rozana | Aaj: attendance for any date, bulk entry, copy last team, missing entries | Built |
+| Register | Companies, Sites, Labour, Rates, Pichla baqaya | Built |
+| Tankhwah aur paisa | Tankhwah, Advance, Adaigi, Kharche | Jald (P2) |
+| Billing | Timesheet, Invoice, Paisay mile | Jald (P3) |
+| Aur | Reports, Documents (P3), Backup, Plan (P4), Help (P5), Team (P6) | Jald |
+| Fixed at the bottom | Apni company, Settings | Built |
 
 ## Onboarding (UX-02)
 

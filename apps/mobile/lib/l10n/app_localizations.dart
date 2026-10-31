@@ -115,22 +115,214 @@ abstract class AppLocalizations {
   /// **'Labour'**
   String get tabLabour;
 
-  /// No description provided for @tabAccounts.
+  /// No description provided for @tabRates.
   ///
   /// In en, this message translates to:
-  /// **'Accounts'**
-  String get tabAccounts;
+  /// **'Rates'**
+  String get tabRates;
 
-  /// No description provided for @tabMore.
+  /// No description provided for @tabSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get tabSettings;
+
+  /// No description provided for @menuLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get menuLabel;
+
+  /// No description provided for @menuClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide menu'**
+  String get menuClose;
+
+  /// No description provided for @soon.
+  ///
+  /// In en, this message translates to:
+  /// **'Soon'**
+  String get soon;
+
+  /// No description provided for @groupDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get groupDaily;
+
+  /// No description provided for @groupRegisters.
+  ///
+  /// In en, this message translates to:
+  /// **'Registers'**
+  String get groupRegisters;
+
+  /// No description provided for @groupPayroll.
+  ///
+  /// In en, this message translates to:
+  /// **'Payroll and money'**
+  String get groupPayroll;
+
+  /// No description provided for @groupBilling.
+  ///
+  /// In en, this message translates to:
+  /// **'Billing'**
+  String get groupBilling;
+
+  /// No description provided for @groupMore.
   ///
   /// In en, this message translates to:
   /// **'More'**
-  String get tabMore;
+  String get groupMore;
+
+  /// No description provided for @menuPayroll.
+  ///
+  /// In en, this message translates to:
+  /// **'Payroll'**
+  String get menuPayroll;
+
+  /// No description provided for @menuAdvances.
+  ///
+  /// In en, this message translates to:
+  /// **'Advances'**
+  String get menuAdvances;
+
+  /// No description provided for @menuPayments.
+  ///
+  /// In en, this message translates to:
+  /// **'Payments'**
+  String get menuPayments;
+
+  /// No description provided for @menuExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses'**
+  String get menuExpenses;
+
+  /// No description provided for @menuTimesheets.
+  ///
+  /// In en, this message translates to:
+  /// **'Timesheets'**
+  String get menuTimesheets;
+
+  /// No description provided for @menuInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoices'**
+  String get menuInvoices;
+
+  /// No description provided for @menuReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Money received'**
+  String get menuReceived;
+
+  /// No description provided for @menuReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get menuReports;
+
+  /// No description provided for @menuDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get menuDocuments;
+
+  /// No description provided for @menuTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get menuTeam;
+
+  /// No description provided for @menuBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup'**
+  String get menuBackup;
+
+  /// No description provided for @menuPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get menuPlan;
+
+  /// No description provided for @menuHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get menuHelp;
+
+  /// No description provided for @countWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers'**
+  String get countWorkers;
+
+  /// No description provided for @countShifts.
+  ///
+  /// In en, this message translates to:
+  /// **'Shifts'**
+  String get countShifts;
+
+  /// No description provided for @countWorkerDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker-days'**
+  String get countWorkerDays;
+
+  /// No description provided for @dayNames.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon,Tue,Wed,Thu,Fri,Sat,Sun'**
+  String get dayNames;
+
+  /// No description provided for @pickDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose date'**
+  String get pickDate;
+
+  /// No description provided for @chooseWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker'**
+  String get chooseWorker;
+
+  /// No description provided for @noBillingRates.
+  ///
+  /// In en, this message translates to:
+  /// **'No company rates yet. Add one so attendance can be priced.'**
+  String get noBillingRates;
+
+  /// No description provided for @noPayRates.
+  ///
+  /// In en, this message translates to:
+  /// **'No pay rates yet. Add one so attendance can be priced.'**
+  String get noPayRates;
+
+  /// No description provided for @balancesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing carried over yet. Add what was already due when you started using this app.'**
+  String get balancesEmpty;
+
+  /// No description provided for @addBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Add carried-over amount'**
+  String get addBalance;
+
+  /// No description provided for @balanceKind.
+  ///
+  /// In en, this message translates to:
+  /// **'What kind of amount?'**
+  String get balanceKind;
 
   /// No description provided for @todayEmpty.
   ///
   /// In en, this message translates to:
-  /// **'No attendance recorded today.'**
+  /// **'No attendance on this date. Tap Mark attendance to start.'**
   String get todayEmpty;
 
   /// No description provided for @companiesEmpty.
@@ -144,12 +336,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No workers yet. Add your first one.'**
   String get labourEmpty;
-
-  /// No description provided for @accountsComingLater.
-  ///
-  /// In en, this message translates to:
-  /// **'Payroll, invoices, money received, money paid and closing arrive in the next builds.'**
-  String get accountsComingLater;
 
   /// No description provided for @settingsLanguage.
   ///
@@ -1188,18 +1374,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{duration} hours'**
   String hoursPaid(String duration);
-
-  /// No description provided for @previousDay.
-  ///
-  /// In en, this message translates to:
-  /// **'Previous day'**
-  String get previousDay;
-
-  /// No description provided for @nextDay.
-  ///
-  /// In en, this message translates to:
-  /// **'Next day'**
-  String get nextDay;
 
   /// No description provided for @saveFailed.
   ///
