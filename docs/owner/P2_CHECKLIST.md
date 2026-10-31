@@ -10,7 +10,10 @@ Test APK: `apps/mobile/build/app/outputs/flutter-apk/app-release.apk`. Yeh test 
 
 - [ ] Menu kholein. Hazri, Labour, Visa, Companies, Tankhwah, Hisaab aur Rooms alag alag dikhen, aur dabane par sub-tabs khulen.
 - [ ] Kisi screen par header ke neeche sub-tabs se aik tap mein doosri screen par jayen.
-- [ ] Rang pasand aaye? Agar nahin to `colour_options.png` mein se number batayein.
+- [ ] **Menu > Settings > App ke rang**: teeno rang baari baari dabayein. Rang fauran badle aur aap usi screen par rahen.
+- [ ] Doosri screens par ja kar dekhein, sab jagah wahi rang ho.
+- [ ] App poori tarah band kar ke dobara kholein. Chuna hua rang wahi rahe.
+- [ ] Rang badal kar PDF aur Excel nikalein. File ki headings bhi usi rang ki hon.
 
 **Visa**
 

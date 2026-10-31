@@ -2,9 +2,9 @@
 
 Read this first each session (AI-04). Replace it, do not append; git holds the history.
 
-**Phase:** P2. The owner's requests of 2026-10-31 (D-036 to D-039) are built. The P1 gate's phone checks are still open (D-035)
-**Branch:** `p2/t18a-registers` (stacked: ... > p2/t11 > p2/t11b > p2/t11c > p2/t18a, none merged)
-**Next task:** Owner's phone test of T11b, T11c and T18a, then T12
+**Phase:** P2. The owner's requests of 2026-10-31 and 2026-11-01 (D-036 to D-040) are built. The P1 gate's phone checks are still open (D-035)
+**Branch:** `p2/t11d-themes` (stacked: ... > p2/t11 > p2/t11b > p2/t11c > p2/t18a > p2/t11d, none merged)
+**Next task:** Owner's phone test of T11b, T11c, T11d and T18a, then T12
 
 ## Done
 
@@ -14,7 +14,7 @@ Read this first each session (AI-04). Replace it, do not append; git holds the h
 | T04 | OWNER_ACCEPTED | Policy defaults D-101 to D-105 approved 2026-10-31 |
 | T05 to T10b, T12a | IMPLEMENTED_UNVERIFIED | CI green. The owner said "Theek hain" on 2026-10-31 to worker groups and the cash book on the phone. The checklist results are not reported yet |
 | T11 | IMPLEMENTED_UNVERIFIED | `dart test`: 82 passing. `flutter test`: 73 passing, including PRD examples, a crash during posting, and one full flow through the screens. `flutter analyze` clean. Owner has not seen it, and D-033 and D-034 are waiting for an answer |
-| T11b, T11c, T18a | IMPLEMENTED_UNVERIFIED | `flutter test` and `dart test` pass, including PRD-style sums for each register. PDFs were drawn with the Windows PDF engine and read by eye: 18 pages, no blank last page. Excel was read back with openpyxl. Never opened in real Excel. The Android send, open and save channel has only been compiled, never run |
+| T11b, T11c, T11d, T18a | IMPLEMENTED_UNVERIFIED | `flutter test` and `dart test` pass, including PRD-style sums for each register. PDFs were drawn with the Windows PDF engine and read by eye: 18 pages, no blank last page. Excel was read back with openpyxl. Never opened in real Excel. The Android send, open and save channel has only been compiled, never run |
 
 Test evidence is host only. Encryption on Android, UX-06 timing and BUILD-04 on a real device are all still open.
 
@@ -22,7 +22,6 @@ Test evidence is host only. Encryption on Android, UX-06 timing and BUILD-04 on 
 
 Details in `docs/owner/P2_CHECKLIST.md`.
 
-0. Which colour: 1 blue and orange, 2 green and gold, 3 maroon and gold (`docs/owner/colour_options.png`). `lib/app/theme.dart` keeps all three behind `_palette` until then. Delete the other two once picked.
 1. Encryption check result, and seconds for the 10-worker entry (D-035).
 2. An answer on D-033 and D-034 after trying Tankhwah on the phone.
 3. Run `gh auth login`. The public repo made CI readable, but PRs and merges still need it.
@@ -58,6 +57,7 @@ Details in `docs/owner/P2_CHECKLIST.md`.
 - A tile's white background is painted on the Material behind the list. A row that grows after first paint keeps the old background height until something scrolls. Wrap such rows in `GrowingRow`.
 - Render a PDF on this machine with the Windows PDF engine: `Windows.Data.Pdf.PdfDocument` from PowerShell 5.1, through `AsTask`. Edge headless and the browser pane both failed. Python's `/tmp` is not Git Bash's `/tmp`: use `cygpath -w`.
 - A failed widget test that leaves its database open makes `flutter test` hang for minutes, and `flutter_tester` keeps `sqlite3mc.dll` locked. Stop it before the next run.
+- Colours are read from `brand`, `action` and friends while widgets build, so they can't sit in a `const`. `usePalette` marks every element for a rebuild after a change, which reaches `const` screens too. A test covers it.
 - A row with no client rate cannot be approved (D-026), so it also holds that worker's pay. Payroll tests need a billing contract, and the payroll screen says so when it happens.
 - `partial_method` holds a `PartialMethod` name such as `calendarDays`. The old comment on the column said `calendar_days`, and a test had copied it.
-- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Refresh the graph after every task, as the owner asked on 2026-10-31. Current graph: 2,126 nodes, 3,398 edges, 88 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.
+- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Refresh the graph after every task, as the owner asked on 2026-10-31. Current graph: 2,142 nodes, 3,418 edges, 86 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.

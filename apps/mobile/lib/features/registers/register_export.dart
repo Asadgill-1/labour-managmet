@@ -51,7 +51,7 @@ String exportFileName(String title, String? from, String? to, ExportFormat forma
 }
 
 /// Makes the file on a background isolate, so a long register doesn't freeze the screen. 
-Future<Uint8List> makeExportBytes(ExportFormat format, ExportText text, List<RegisterColumn> columns, List<RegisterEntry> newestFirst, {required int brandArgb}) async {
+Future<Uint8List> makeExportBytes(ExportFormat format, ExportText text, List<RegisterColumn> columns, List<RegisterEntry> newestFirst, {required int brandArgb, required int softArgb}) async {
   final entries = oldestFirst(newestFirst);
   if (format == ExportFormat.excel) {
     final brandHex = (brandArgb & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase();
@@ -75,6 +75,7 @@ Future<Uint8List> makeExportBytes(ExportFormat format, ExportText text, List<Reg
       footer: text.footer,
       note: text.note,
       brandArgb: brandArgb,
+      softArgb: softArgb,
       regularFont: regular,
       boldFont: bold,
     ),

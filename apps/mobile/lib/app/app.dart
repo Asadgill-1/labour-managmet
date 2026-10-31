@@ -69,7 +69,7 @@ class LabourApp extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      theme: appTheme,
+      theme: usePalette(settings.palette),
       routerConfig: ref.watch(_routerProvider),
       locale: settings.locale,
       supportedLocales: AppLocalizations.supportedLocales,

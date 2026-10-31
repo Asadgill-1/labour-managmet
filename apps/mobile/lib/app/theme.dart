@@ -3,52 +3,34 @@ import 'package:flutter/services.dart';
 
 import '../l10n/app_localizations.dart';
 
-// ponytail: three colour options until the owner picks one (D-037). Then delete the other two and this line.
-const _palette = String.fromEnvironment('PALETTE', defaultValue: 'a');
+/// The colours a user can choose from in Settings (D-040).
+enum AppPalette {
+  blue(Color(0xFF143E8F), Color(0xFFE7EDFA), Color(0xFFE8590C), Colors.white),
+  green(Color(0xFF0B6B5D), Color(0xFFE0F2EE), Color(0xFFF2B233), Color(0xFF1B2A25)),
+  maroon(Color(0xFF7A1F3D), Color(0xFFF7E8ED), Color(0xFFE9A92B), Color(0xFF2A1A12));
+
+  const AppPalette(this.brand, this.brandSoft, this.action, this.onAction);
+
+  final Color brand;
+  final Color brandSoft;
+  final Color action;
+  final Color onAction;
+}
+
+var _palette = AppPalette.blue;
 
 /// The header and everything that means "this app".
-const brand = _palette == 'b'
-    ? Color(0xFF0B6B5D)
-    : _palette == 'c'
-    ? Color(0xFF7A1F3D)
-    : Color(0xFF143E8F);
-const brandSoft = _palette == 'b'
-    ? Color(0xFFE0F2EE)
-    : _palette == 'c'
-    ? Color(0xFFF7E8ED)
-    : Color(0xFFE7EDFA);
+Color get brand => _palette.brand;
+Color get brandSoft => _palette.brandSoft;
 
 /// The screen's one main action.
-const action = _palette == 'b'
-    ? Color(0xFFF2B233)
-    : _palette == 'c'
-    ? Color(0xFFE9A92B)
-    : Color(0xFFE8590C);
-const onAction = _palette == 'b'
-    ? Color(0xFF1B2A25)
-    : _palette == 'c'
-    ? Color(0xFF2A1A12)
-    : Colors.white;
-const ink = _palette == 'b'
-    ? Color(0xFF14261F)
-    : _palette == 'c'
-    ? Color(0xFF2A1A20)
-    : Color(0xFF17213A);
-const muted = _palette == 'b'
-    ? Color(0xFF56665F)
-    : _palette == 'c'
-    ? Color(0xFF6F5F66)
-    : Color(0xFF5B667A);
-const paper = _palette == 'b'
-    ? Color(0xFFF1F5F3)
-    : _palette == 'c'
-    ? Color(0xFFF8F4F5)
-    : Color(0xFFF2F4F9);
-const rule = _palette == 'b'
-    ? Color(0xFFDCE5E1)
-    : _palette == 'c'
-    ? Color(0xFFECE3E6)
-    : Color(0xFFE0E5EF);
+Color get action => _palette.action;
+Color get onAction => _palette.onAction;
+
+const ink = Color(0xFF1C2433);
+const muted = Color(0xFF5F6878);
+const paper = Color(0xFFF3F4F7);
+const rule = Color(0xFFE2E5EB);
 const due = Color(0xFFC62828);
 const dueSoft = Color(0xFFFDE7E7);
 const settled = Color(0xFF12804F);
@@ -69,10 +51,29 @@ const amountStyle = TextStyle(fontFamily: headingFont, fontSize: 17, fontWeight:
 
 final _corner12 = BorderRadius.circular(12);
 
-final appTheme = ThemeData(
+final _themes = <AppPalette, ThemeData>{};
+
+/// Switches the app's colours. Colours are read while widgets build, so after a change everything builds again,
+/// and the user stays on the same screen with nothing lost.
+ThemeData usePalette(AppPalette palette) {
+  if (palette != _palette) {
+    _palette = palette;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      void mark(Element e) {
+        e.markNeedsBuild();
+        e.visitChildren(mark);
+      }
+
+      WidgetsBinding.instance.rootElement?.visitChildren(mark);
+    });
+  }
+  return _themes[palette] ??= _buildTheme();
+}
+
+ThemeData _buildTheme() => ThemeData(
   useMaterial3: true,
   fontFamily: headingFont,
-  colorScheme: const ColorScheme.light(
+  colorScheme: ColorScheme.light(
     primary: brand,
     onPrimary: Colors.white,
     secondary: action,
@@ -144,7 +145,7 @@ final appTheme = ThemeData(
     fillColor: Colors.white,
     border: OutlineInputBorder(borderRadius: _corner12, borderSide: const BorderSide(color: rule)),
     enabledBorder: OutlineInputBorder(borderRadius: _corner12, borderSide: const BorderSide(color: Color(0xFFCBD2DE))),
-    focusedBorder: OutlineInputBorder(borderRadius: _corner12, borderSide: const BorderSide(color: brand, width: 2)),
+    focusedBorder: OutlineInputBorder(borderRadius: _corner12, borderSide: BorderSide(color: brand, width: 2)),
   ),
   chipTheme: ChipThemeData(
     showCheckmark: false,
@@ -188,7 +189,7 @@ class TopBand extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(color: brand, borderRadius: BorderRadius.vertical(bottom: Radius.circular(22))),
+      decoration: BoxDecoration(color: brand, borderRadius: const BorderRadius.vertical(bottom: Radius.circular(22))),
       child: Padding(padding: padding, child: child),
     );
   }
@@ -221,7 +222,7 @@ class MainActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Color(0x1417213A), blurRadius: 12, offset: Offset(0, -2))]),
+      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Color(0x141C2433), blurRadius: 12, offset: Offset(0, -2))]),
       child: SafeArea(
         top: false,
         child: Padding(

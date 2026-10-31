@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/app/settings.dart';
 import 'package:labour_app/app/side_panel.dart';
+import 'package:labour_app/app/theme.dart';
 import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/tenant_database.dart';
 
@@ -58,6 +59,36 @@ void main() {
 
     expect(find.text('Language'), findsOneWidget);
     expect((await real(tester, () => AppSettings.load(const FlutterSecureStorage()))).locale, english);
+    await shutDown(tester, db);
+  });
+
+  testWidgets('choosing a colour changes every screen at once and survives a restart', (tester) async {
+    final db = memoryDb();
+    await real(tester, () => seedProfile(db));
+    await pumpApp(tester, db);
+    Color? bandOnToday() {
+      final box = tester.widget<DecoratedBox>(find.descendant(of: find.byType(TopBand), matching: find.byType(DecoratedBox)).first);
+      return (box.decoration as BoxDecoration).color;
+    }
+
+    expect(bandOnToday(), AppPalette.blue.brand);
+
+    await goTo(tester, 'Settings');
+    await tester.tap(find.text('Sabz aur sunehra'));
+    await settle(tester);
+    expect(Theme.of(tester.element(find.text('Sabz aur sunehra'))).colorScheme.primary, AppPalette.green.brand);
+    expect((await real(tester, () => AppSettings.load(const FlutterSecureStorage()))).palette, AppPalette.green);
+
+    // The attendance screen was already built, behind this one, and still picks up the change.
+    await goTo(tester, 'Aaj');
+    expect(bandOnToday(), AppPalette.green.brand);
+
+    // Other settings keep the choice.
+    await goTo(tester, 'Settings');
+    await tester.tap(find.text('Bara text'));
+    await settle(tester);
+    expect((await real(tester, () => AppSettings.load(const FlutterSecureStorage()))).palette, AppPalette.green);
+    expect(brand, AppPalette.green.brand);
     await shutDown(tester, db);
   });
 

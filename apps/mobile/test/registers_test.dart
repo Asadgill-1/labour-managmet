@@ -282,6 +282,7 @@ void main() {
         pageLabel: (page, pages) => 'Safha $page / $pages',
         madeLabel: 'Banaya',
         brandArgb: 0xFF143E8F,
+        softArgb: 0xFFE7EDFA,
         regularFont: File('assets/fonts/Roboto-Regular.ttf').readAsBytesSync(),
         boldFont: File('assets/fonts/Roboto-Bold.ttf').readAsBytesSync(),
       );

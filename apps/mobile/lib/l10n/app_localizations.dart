@@ -2778,6 +2778,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Posted on'**
   String get colPostedOn;
+
+  /// No description provided for @settingsColour.
+  ///
+  /// In en, this message translates to:
+  /// **'App colours'**
+  String get settingsColour;
+
+  /// No description provided for @paletteBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue and orange'**
+  String get paletteBlue;
+
+  /// No description provided for @paletteGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Green and gold'**
+  String get paletteGreen;
+
+  /// No description provided for @paletteMaroon.
+  ///
+  /// In en, this message translates to:
+  /// **'Maroon and gold'**
+  String get paletteMaroon;
 }
 
 class _AppLocalizationsDelegate

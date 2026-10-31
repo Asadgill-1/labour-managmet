@@ -32,6 +32,10 @@ The panel lists main tabs that open to show sub-tabs. The current tab's sub-tabs
 
 A register has a date range with quick choices, filters that take several values, totals on the band, rows under their dates with every field showing, and one export button (D-038).
 
+## Colours (D-040)
+
+Settings shows the three themes as small pictures with their names. A tap applies one at once, and the user stays on the same screen.
+
 ## Onboarding (UX-02)
 
 Language > email and password > verify email > company name > optional logo and TRN > first client and site > first worker > first attendance. Optional steps can be skipped. Tax profile is only required before a tax invoice. Before P4 the account steps do not exist, and the app opens on a local dev tenant.

@@ -107,7 +107,7 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
     );
     setState(() => _busy = true);
     try {
-      final bytes = await makeExportBytes(format, text, data.columns, shown, brandArgb: brand.toARGB32());
+      final bytes = await makeExportBytes(format, text, data.columns, shown, brandArgb: brand.toARGB32(), softArgb: brandSoft.toARGB32());
       final file = await writeExportFile(exportFileName(data.title, data.dated ? _from : null, data.dated ? _to : null, format), bytes);
       final result = await runExport(action, format, file, bytes);
       if (!mounted) return;

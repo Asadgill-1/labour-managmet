@@ -36,6 +36,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 | T12a | Daily cash book, rooms and room profit or loss (owner's request, D-030, D-031). Taken ahead of T11 | PAY-05, PAY-06, REP-07, REP-08 | IMPLEMENTED_UNVERIFIED | `p2/t12a-cash-book` |
 | T11 | Payroll run, posting, carry-forward, deductions | PAY-01..04, PAY-07, REP-08, MODEL-07 | IMPLEMENTED_UNVERIFIED | `p2/t11-payroll` |
 | T11b | New colours, main tabs and sub-tabs (owner's request, D-036, D-037) | UX-01, UX-03, UX-04 | IMPLEMENTED_UNVERIFIED | `p2/t11b-look-and-tabs` |
+| T11d | Three colour themes, chosen in Settings (owner's request, D-040) | UX-04 | IMPLEMENTED_UNVERIFIED | `p2/t11d-themes` |
 | T11c | Visa money with monthly instalment through payroll (owner's request, D-039) | PAY-01, REP-08, MODEL-08 | IMPLEMENTED_UNVERIFIED | `p2/t11c-visa` |
 | T18a | Eight registers with filters, and PDF, Excel and WhatsApp export (owner's request, D-038) | REP-01, DOC-01, DOC-03, DOC-06, DOC-07 | IMPLEMENTED_UNVERIFIED | `p2/t18a-registers` |
 | T12 | Advance sub-ledger, salary payments and allocations, overdue alerts | PAY-05, PAY-06, PAY-08 | NOT_STARTED | - |

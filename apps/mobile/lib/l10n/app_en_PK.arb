@@ -446,5 +446,9 @@
   "colWages": "Mazdoori",
   "colDifference": "Farq",
   "colPending": "Manzoor baqi",
-  "colPostedOn": "Post ki"
+  "colPostedOn": "Post ki",
+  "settingsColour": "App ke rang",
+  "paletteBlue": "Neela aur narangi",
+  "paletteGreen": "Sabz aur sunehra",
+  "paletteMaroon": "Maroon aur sunehra"
 }

@@ -10,6 +10,7 @@
 - Calculation engine for hourly, day, shift and monthly contracts.
 - Bulk attendance with exceptions, approval and corrections.
 - New colours and cards, and a side panel of main tabs with sub-tabs.
+- Three colour themes to choose from in Settings.
 - Visa money per worker, with a monthly instalment through payroll.
 - Eight registers with date range and filters, exporting to PDF, Excel and WhatsApp.
 - Left side panel in place of bottom tabs, new Sites, Rates and Pichla baqaya screens, and a new look.

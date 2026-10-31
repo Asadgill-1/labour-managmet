@@ -738,5 +738,9 @@
   "colWages": "Wages",
   "colDifference": "Difference",
   "colPending": "Not approved",
-  "colPostedOn": "Posted on"
+  "colPostedOn": "Posted on",
+  "settingsColour": "App colours",
+  "paletteBlue": "Blue and orange",
+  "paletteGreen": "Green and gold",
+  "paletteMaroon": "Maroon and gold"
 }

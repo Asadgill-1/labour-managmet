@@ -19,6 +19,7 @@ Future<Uint8List> registerPdf({
   required String Function(int page, int pages) pageLabel,
   required String madeLabel,
   required int brandArgb,
+  required int softArgb,
   required Uint8List regularFont,
   required Uint8List boldFont,
   String? footer,
@@ -27,9 +28,9 @@ Future<Uint8List> registerPdf({
   final brand = PdfColor.fromInt(brandArgb);
   const rule = PdfColor.fromInt(0xFFD5DAE3);
   const grey = PdfColor.fromInt(0xFF5B667A);
-  const band = PdfColor.fromInt(0xFFE7EDFA);
+  final band = PdfColor.fromInt(softArgb);
   const zebra = PdfColor.fromInt(0xFFF7F8FB);
-  const totalFill = PdfColor.fromInt(0xFFD9E1F2);
+  const totalFill = PdfColor.fromInt(0xFFE2E5EB);
 
   final kept = [
     for (var i = 0; i < columns.length; i++)

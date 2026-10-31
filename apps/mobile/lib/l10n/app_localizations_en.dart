@@ -1467,6 +1467,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get colPostedOn => 'Posted on';
+
+  @override
+  String get settingsColour => 'App colours';
+
+  @override
+  String get paletteBlue => 'Blue and orange';
+
+  @override
+  String get paletteGreen => 'Green and gold';
+
+  @override
+  String get paletteMaroon => 'Maroon and gold';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -2931,4 +2943,16 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get colPostedOn => 'Post ki';
+
+  @override
+  String get settingsColour => 'App ke rang';
+
+  @override
+  String get paletteBlue => 'Neela aur narangi';
+
+  @override
+  String get paletteGreen => 'Sabz aur sunehra';
+
+  @override
+  String get paletteMaroon => 'Maroon aur sunehra';
 }
