@@ -45,13 +45,13 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | CALC-05 | 06 | Monthly client billing | T09 | IMPLEMENTED_UNVERIFIED | TC-020 | - |
 | CALC-06 | 06 | Rate priority | T09 | IMPLEMENTED_UNVERIFIED | TC-021 | - |
 | CALC-07 | 06 | Overtime | T09 | IMPLEMENTED_UNVERIFIED | TC-022 | - |
-| PAY-01 | 07 | Payroll cycle | T11 | NOT_STARTED | TC-036 | - |
-| PAY-02 | 07 | Do alag concepts | T11 | NOT_STARTED | TC-001 | - |
-| PAY-03 | 07 | User ki misal | T11 | NOT_STARTED | TC-001 | - |
-| PAY-04 | 07 | Katoti ki misal | T11 | NOT_STARTED | TC-032 | - |
-| PAY-05 | 07 | Advance sub-ledger | T12, T12a | IN_PROGRESS | TC-002, TC-035, TC-051 | - |
+| PAY-01 | 07 | Payroll cycle | T11 | IMPLEMENTED_UNVERIFIED | TC-036, TC-055 | `apps/mobile/test/payroll_test.dart` |
+| PAY-02 | 07 | Do alag concepts | T11 | IMPLEMENTED_UNVERIFIED | TC-001, TC-054 | `packages/domain/test/payroll_test.dart` |
+| PAY-03 | 07 | User ki misal | T11 | IMPLEMENTED_UNVERIFIED | TC-001 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
+| PAY-04 | 07 | Katoti ki misal | T11 | IMPLEMENTED_UNVERIFIED | TC-032 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
+| PAY-05 | 07 | Advance sub-ledger | T11, T12, T12a | IN_PROGRESS | TC-002, TC-035, TC-051 | - |
 | PAY-06 | 07 | Salary payments | T12, T12a | IN_PROGRESS | TC-034, TC-051 | - |
-| PAY-07 | 07 | Deductions | T11 | NOT_STARTED | TC-033 | - |
+| PAY-07 | 07 | Deductions | T11 | IMPLEMENTED_UNVERIFIED | TC-033 | `apps/mobile/test/payroll_test.dart` |
 | PAY-08 | 07 | Compliance | T12 | NOT_STARTED | - | - |
 | PAY-09 | 07 | Payslip | T14 | NOT_STARTED | - | - |
 | TS-01 | 08 | Client/date range/site chunein aur approved attendance se timesheet banayein | T15 | NOT_STARTED | - | - |
@@ -86,7 +86,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | REP-05 | 11 | Historical integrity | T13 | NOT_STARTED | - | - |
 | REP-06 | 11 | Backup/export | T18 | NOT_STARTED | - | - |
 | REP-07 | 11 | Expenses | T13, T12a | IN_PROGRESS | TC-052 | - |
-| REP-08 | 11 | Ledger design | T11 | NOT_STARTED | - | - |
+| REP-08 | 11 | Ledger design | T11, T12a | IMPLEMENTED_UNVERIFIED | TC-036, TC-051, TC-055 | `apps/mobile/test/payroll_test.dart`, `apps/mobile/test/cash_test.dart` |
 | PLAN-01 | 12 | Trial 14 din; Team feature trial owner ki clear | T24 | NOT_STARTED | - | - |
 | PLAN-02 | 12 | Manager trial end par paid Team entitlement na ho | T24 | NOT_STARTED | - | - |
 | PLAN-03 | 12 | Expiry par data delete, hidden balance ya mandatory ransom | T21 | NOT_STARTED | TC-012 | - |
@@ -155,7 +155,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | MODEL-04 | 20 | Constraints | T04, T06 | IMPLEMENTED_UNVERIFIED | TC-004 | - |
 | MODEL-05 | 20 | Server-only actions | T19 | NOT_STARTED | TC-047 | - |
 | MODEL-06 | 20 | Conceptual API contracts | T19 | NOT_STARTED | - | - |
-| MODEL-07 | 20 | Financial boundary | T11 | NOT_STARTED | TC-036 | - |
+| MODEL-07 | 20 | Financial boundary | T11 | IMPLEMENTED_UNVERIFIED | TC-036 | `apps/mobile/test/payroll_test.dart` |
 | MODEL-08 | 20 | Migration | T06 | IMPLEMENTED_UNVERIFIED | - | - |
 | BUILD-01 | 21 | Auth/tenant models P0 se architecture mein hon; P4 production | T04 | IN_PROGRESS | - | - |
 | BUILD-02 | 21 | Solo pilot P5 ke baad sirf tested scope ke | T26 | NOT_STARTED | - | - |

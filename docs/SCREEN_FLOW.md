@@ -10,7 +10,8 @@ Hidden until the Menu button at the top left of a main screen opens it. The arro
 | --- | --- | --- |
 | Rozana | Aaj: attendance for any date, by group or by worker, copy last team, missing entries. Rozana hisaab: money in and out for any date | Built |
 | Register | Companies, Sites, Labour, Mazdoor group, Rooms, Rates, Pichla baqaya | Built |
-| Tankhwah aur billing | Tankhwah (P2), Timesheet, Invoice, Paisay mile (P3) | Jald |
+| Tankhwah aur billing | Tankhwah | Built |
+| Tankhwah aur billing | Timesheet, Invoice, Paisay mile (P3) | Jald |
 | Aur | Reports, Documents (P3), Backup, Plan (P4), Help (P5), Team (P6) | Jald |
 | Fixed at the bottom | Apni company, Settings | Built |
 
@@ -26,7 +27,7 @@ Language > email and password > verify email > company name > optional logo and 
 
 **Room result (D-031):** Rooms > month > rent received, rent paid, and the difference in words as profit, loss or even.
 
-**Payroll (PAY-01):** Period > review work and contracts > allowances > approved deductions > preview > owner approves > post > record payment.
+**Payroll (PAY-01, D-033):** Month > everyone with pay or a problem, with what stops them in words > approve waiting attendance or add room charges in one tap > a worker's screen for allowances, deductions and advance recovery > post everyone who is ready, after one confirmation > record the payment, which goes through the cash book. Undo with a reason reopens that worker's month.
 
 **Timesheet (TS-01):** Client > date range > site > daily summary or worker detail > commercial or non-commercial version > approve > share.
 
@@ -46,7 +47,7 @@ Offline never shows a blocking spinner. A financial error is never retried silen
 
 ## Labels (UX-03)
 
-Use "Company se lena hai", "Mazdoor ko dena hai", "Is mahine ki kamai", "Pichla baqaya", "Ab ada kiya". Not debit or credit alone.
+Use "Company se lena hai", "Mazdoor ko dena hai", "Is mahine ki kamai", "Pichla baqaya", "Ab ada kiya". Not debit or credit alone. A credit reads "Pehle se ada kiya" or "Zyada ada kiya", never a negative salary.
 
 ## Usability target (UX-06)
 

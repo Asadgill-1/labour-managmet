@@ -6,8 +6,8 @@ Type: `domain` (`dart test`), `app` (`flutter test`), `backend` (`supabase test 
 
 | TC | Phase | Req | Scenario | Expected | Type | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| TC-001 | P2 | PAY-02, PAY-03 | September net 1,000, paid 500. October net 1,000, paid 0 | October total payable 1,500, closing 1,500, no duplicate wage expense | domain | NOT_STARTED |
-| TC-002 | P2 | PAY-05 | Advance 300 issued, payroll recovers 100 | Advance outstanding 200, salary balance correct, neither is wage expense | domain | NOT_STARTED |
+| TC-001 | P2 | PAY-02, PAY-03 | September net 1,000, paid 500. October net 1,000, paid 0 | October total payable 1,500, closing 1,500, no duplicate wage expense | domain | VERIFIED |
+| TC-002 | P2 | PAY-05 | Advance 300 issued, payroll recovers 100 | Advance outstanding 200, salary balance correct, neither is wage expense | domain | VERIFIED |
 | TC-003 | P1 | CALC-02 | 10 workers, 12 clock hours, client and payroll breaks set independently | Client and payroll minutes differ as configured, PRD examples exact | domain | VERIFIED |
 | TC-004 | P3 | TS-05, INV-06, MODEL-04 | Repeat the invoice action on already billed work | Same work is not charged twice | app | NOT_STARTED |
 | TC-005 | P3 | INV-04, INV-05 | AED 1,100 at 5% VAT, then receipt of 500 | VAT 55, total 1,155, outstanding 655 | domain | NOT_STARTED |
@@ -37,11 +37,11 @@ Type: `domain` (`dart test`), `app` (`flutter test`), `backend` (`supabase test 
 | TC-029 | P1 | MASTER-07 | Archive a worker with a balance, rehire with the same name | Balance and payslips stay available, no hard delete, no auto-merge | app | VERIFIED |
 | TC-030 | P1 | MASTER-05 | Enter opening salary owed, opening advance and client receivable | Kept separate with source date, salary balance is not a wage expense | app | VERIFIED |
 | TC-031 | P1 | UX-06 | 5 non-technical users enter 10 same-rate workers after setup | Under 60 seconds, at least 4 of 5 without a trainer | manual | NOT_STARTED |
-| TC-032 | P2 | PAY-04 | Opening 500, gross 1,000, room 200, recovery 100, paid 600 | Total payable 1,200, closing 600 | domain | NOT_STARTED |
-| TC-033 | P2 | PAY-07 | Deductions exceed gross, deduction without authorization | Posting blocked for review, no debt carried automatically | domain | NOT_STARTED |
+| TC-032 | P2 | PAY-04 | Opening 500, gross 1,000, room 200, recovery 100, paid 600 | Total payable 1,200, closing 600 | domain | VERIFIED |
+| TC-033 | P2 | PAY-07 | Deductions exceed gross, deduction without authorization | Posting blocked for review, no debt carried automatically | domain | VERIFIED |
 | TC-034 | P2 | PAY-06 | Pay more than owed, pay against several open periods | Overpayment becomes advance or credit, allocation oldest first after confirmation | domain | NOT_STARTED |
-| TC-035 | P2 | PAY-05 | Recover more than the outstanding advance | Rejected | domain | NOT_STARTED |
-| TC-036 | P2 | PAY-01, MODEL-07 | Edit posted payroll, crash during posting | Edit refused, posting is all or nothing | app | NOT_STARTED |
+| TC-035 | P2 | PAY-05 | Recover more than the outstanding advance | Rejected | domain | VERIFIED |
+| TC-036 | P2 | PAY-01, MODEL-07 | Edit posted payroll, crash during posting | Edit refused, posting is all or nothing | app | VERIFIED |
 | TC-037 | P2 | REP-04 | Change data in a locked period | Needs owner reason, recorded as a dated adjustment | app | NOT_STARTED |
 | TC-038 | P3 | TS-02 | Generate commercial and non-commercial customer timesheets | Wage rate and salary deductions never appear, rates hidden in non-commercial | app | NOT_STARTED |
 | TC-039 | P3 | TS-03 | Same date and site with different rates and units | Rows not merged into one ambiguous line | app | NOT_STARTED |
@@ -59,3 +59,5 @@ Type: `domain` (`dart test`), `app` (`flutter test`), `backend` (`supabase test 
 | TC-051 | P2 | PAY-05, PAY-06, REP-08 | Advance, return above outstanding, undo, undo twice, direct UPDATE or DELETE on the cash book | Return refused, undo keeps the original and cancels it exactly, second undo refused, direct change refused by trigger | app | IMPLEMENTED_UNVERIFIED |
 | TC-052 | P2 | REP-07 | Rent paid for a room and rent received from a worker in that room | Each entry stays separate. The room shows received, paid and profit or loss, labelled for that room only | app | IMPLEMENTED_UNVERIFIED |
 | TC-053 | P1 | MODEL-08 | Open a database from an earlier schema version holding workers and attendance | Upgrades in place, data kept, schema matches the latest snapshot | app | IMPLEMENTED_UNVERIFIED |
+| TC-054 | P2 | ATT-08, PAY-02 | Correct a paid row twice, and approve a row after its month is posted | Next payroll holds only the difference, or the late amount, outside that month's net. Nothing paid twice or lost | app | VERIFIED |
+| TC-055 | P2 | PAY-01, REP-08 | Undo a posted month, undo an earlier month with a later one posted, post the month again | Line stays on record with the reason, work and items are unpaid again, recovery no longer stands, money paid stays. An earlier month is refused until the later one is undone | app | VERIFIED |

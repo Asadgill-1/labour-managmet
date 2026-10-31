@@ -13,3 +13,5 @@
 - Worker groups with a daily wage and duty time, and attendance by group or by worker.
 - Daily cash book that sends each amount to its worker, room or company, with undo by reversal.
 - Rooms, with rent received, rent paid and profit or loss per month.
+- Monthly payroll: review, allowances and deductions, post, carry-forward of unpaid salary, and undo with a reason.
+- Room charge taken through payroll counts as rent received, and advance recovery comes off the advance.

@@ -48,20 +48,27 @@ Regular and overtime minutes are stored separately. Commercial client charge and
 ## Payroll (PAY-02)
 
 ```text
+gross           = approved attendance dated in the month + monthly salary
 current net     = gross + allowances - approved deductions - advance recovery
-total payable   = opening unpaid + current net + approved adjustments
-closing unpaid  = total payable - allocated salary payments
+adjustment      = approved work dated before the month, less what a corrected row was already paid
+opening         = opening balance + every earlier posted net and adjustment - all salary paid before posting
+total payable   = opening + current net + adjustment
+closing         = total payable - salary paid since posting
+owed now        = opening balance + every posted net and adjustment - all salary paid
 ```
 
 - Opening unpaid is old debt: never new earnings, never a second wage expense.
-- Current net below zero: block posting and send to review, never auto-carry as debt (D-104, PAY-07).
+- Current net below zero, or net plus adjustment below zero: block posting and send to review, never auto-carry as debt (D-104, PAY-07).
+- Monthly salary splits by days when a contract changes mid-month. Each day goes to one contract, so overlapping contracts never pay twice.
+- Approved overtime on a monthly contract is earned per attendance line at the contract's own overtime rate. With no such rate, the row stops for review (CALC-07).
+- A company's optional deduction limit: `(deductions + recovery) * 10000 <= (gross + allowances) * limit_bps`. Above it, posting stops for review. None is built in (D-034).
 - Overpayment: classified as a worker advance or credit, never a negative salary (PAY-06).
 - Payment allocation defaults to oldest unpaid first, with owner confirmation (PAY-06).
 
 ## Advance sub-ledger (PAY-05)
 
 ```text
-outstanding = opening + issued - recovered - refunded or adjusted
+outstanding = opening + issued - recovered through posted payroll - returned
 ```
 
 Recovery above outstanding is rejected. Neither issue nor recovery is a wage expense.
@@ -109,4 +116,4 @@ These must pass exactly in `dart test`. Amounts in AED.
 
 ## For the accountant to confirm
 
-Rounding level (D-101). Partial-period methods offered (D-102). Work-date attribution (D-103). Deduction limits and authorization evidence (PAY-07). Overtime configuration (CALC-07). VAT categories and rounding on Tax Invoices (INV-02..04).
+Rounding level (D-101). Partial-period methods offered (D-102). Work-date attribution (D-103). Deduction limits and authorization evidence (PAY-07). The payroll rules in D-034, above all no automatic absence cut on a monthly salary. Overtime configuration (CALC-07). VAT categories and rounding on Tax Invoices (INV-02..04).

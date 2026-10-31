@@ -18,10 +18,10 @@ Money records add `currency` and `posting_date`. An effective date is always sep
 | Contracts | `pay_contracts`, `billing_contracts` | Effective from and to. Basis, rate in fils, break rule, included minutes, overtime rate, partial-period method (MASTER-06). A row scoped to a site or worker acts as the assignment rate (D-020) |
 | Groups | `worker_groups`, `worker_group_members` | Optional company, site, daily wage and duty time. A member can have their own wage. Attendance rows keep their own figures, so changing a group never changes approved work (D-029) |
 | Attendance | `attendance_batches`, `attendance_entries` | Rate snapshot on each entry. Client and worker minutes stored separately. Corrections link to the revised entry (ATT-02, ATT-08) |
-| Payroll | `payroll_runs`, `payroll_lines` | Posted lines are immutable. Opening, gross, allowances, deductions, recovery, net, payable, paid and closing all stored (PAY-01) |
+| Payroll | `payroll_runs`, `payroll_lines`, `payroll_items`, `attendance_entries.payroll_line_id` | Posted figures are immutable. Opening, earned, salary, adjustment, allowances, deductions, recovery, net and payable are stored at posting. Paid and closing derive from later payments, using `paid_before_fils`. Undo only flags a line. Items are free to change until posted (PAY-01, D-033) |
 | Cash book | `cash_entries` | One row per amount in or out, with a kind saying where it belongs: advance, salary, room rent paid or received, expense, advance returned, company receipt. Append-only by trigger. A reversal row cancels a mistake (D-030, REP-08) |
 | Rooms | `rooms`, `workers.room_id` | Rent received and paid per room come from the cash book (D-031) |
-| Worker money | `deductions`, `salary_payment_allocations` | Advance outstanding is opening + given - returned, from the cash book, plus payroll recovery from T11. Deduction carries reason and authorization (PAY-05, PAY-07) |
+| Worker money | `payroll_items`, `salary_payment_allocations` (T12) | Advance outstanding is opening + given - returned - recovered through posted payroll. A deduction or room charge carries a reason and authorization, enforced by a CHECK (PAY-05, PAY-07) |
 | Timesheets | `timesheets`, `timesheet_revisions`, `timesheet_lines` | A revision preserves the original (TS-06) |
 | Invoices | `invoices`, `invoice_lines`, `invoice_source_allocations`, `credit_notes` | Draft has no legal number. Stored as structured data for a later e-invoicing export (D-011) |
 | Receipts | `receipts`, `receipt_allocations` | Unapplied credit allowed. Allocation cannot exceed outstanding (INV-05) |
@@ -45,6 +45,7 @@ No table stores an editable balance. Current balances derive from posted payroll
 | Same work not billed twice | Guard over `invoice_source_allocations` per attendance entry and billed unit |
 | Allocation within outstanding | Checked inside the posting transaction |
 | Posted rows immutable | Triggers rejecting `UPDATE` and `DELETE` on posted payroll, issued invoices and allocations |
+| One worker paid once per month | Partial unique index on `payroll_lines (worker_id, period_from)` where not reversed |
 | Cross-tenant reference invalid | Cloud: composite foreign key on `(tenant_id, id)`. Local: impossible across files, and restore checks tenant identity |
 
 ## Transactions (MODEL-07)
