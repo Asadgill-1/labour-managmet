@@ -53,4 +53,4 @@ D-023 and D-024 were settled by the owner on 2026-10-31.
 - Forms must not sit in a lazy list. Off-screen fields skip validation. Use `FormBody`.
 - A `ListTile` with `selected: true` paints `selectedTileColor`, not `tileColor`. Golden PNGs caught the panel's active item being invisible, which every widget test missed. Review new screens as images (load real fonts with `FontLoader`, or text shows as blocks).
 - A tile's white background is painted on the Material behind the list. A row that grows after first paint keeps the old background height until something scrolls. Wrap such rows in `GrowingRow`.
-- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Current graph: 1,319 nodes, 2,084 edges, 68 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.
+- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Current graph: 1,547 nodes, 2,548 edges, 66 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.
