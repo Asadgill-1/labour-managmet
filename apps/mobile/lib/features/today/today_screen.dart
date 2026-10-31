@@ -33,16 +33,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     if (picked != null) setState(() => _date = picked);
   }
 
-  Future<void> _approve(List<AttendanceEntry> pending) async {
-    final l10n = AppLocalizations.of(context);
-    var count = 0;
-    final done = await saveOrExplain(context, () async {
-      count = await ref.read(dbProvider).approveEntries(pending, operationId: newUuid());
-    });
-    if (done && mounted) showSavedOnPhone(context, l10n.approvedCount(count));
-  }
-
-  /// Unapproved rows change in place. Approved rows get a correction that keeps the original (ATT-08).
+  /// Rows change in place until their payroll is posted. After that they get a correction that keeps the original (ATT-08).
   Future<void> _openEntry(AttendanceEntry entry, String title) async {
     final l10n = AppLocalizations.of(context);
     final db = ref.read(dbProvider);
@@ -79,7 +70,6 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     final allWorkers = ref.watch(workersProvider).value ?? const <Worker>[];
     final workers = {for (final w in allWorkers) w.id: w};
     final sites = {for (final s in ref.watch(allSitesProvider).value ?? const <Site>[]) s.id: s};
-    final pending = entries.where((e) => e.state == 'draft' || e.state == 'submitted').toList();
     final counts = attendanceCounts(
       entries.map((e) => (workerId: e.workerId, workDate: e.workDate, status: AttendanceStatus.values.byName(e.attendanceStatus))),
     );
@@ -146,11 +136,6 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                 ),
               ),
             ),
-          if (pending.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: OutlinedButton(onPressed: () => _approve(pending), child: Text(l10n.approveAll(pending.length))),
-            ),
           if (entries.isEmpty) EmptyState(icon: Icons.assignment_outlined, text: l10n.todayEmpty),
           for (final entry in entries)
             _EntryRow(
@@ -188,8 +173,8 @@ class _EntryRow extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final status = AttendanceStatus.values.byName(entry.attendanceStatus);
     final problems = [
-      if (entry.state == 'draft' && entry.clientRateFils == null) l10n.issueClientRate,
-      if (entry.state == 'draft' && entry.workerRateFils == null) l10n.issueWorkerRate,
+      if (status != AttendanceStatus.absent && entry.clientRateFils == null) l10n.issueClientRate,
+      if (status != AttendanceStatus.absent && entry.workerRateFils == null) l10n.issueWorkerRate,
     ];
     return RowCard(
       child: ListTile(

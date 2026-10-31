@@ -6,6 +6,7 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'attendance.dart';
 import 'tables.dart';
 import 'tenant_database.steps.dart';
 
@@ -56,7 +57,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -102,8 +103,22 @@ class TenantDatabase extends _$TenantDatabase {
         await m.createTrigger(schema.payrollLineNoEdit);
         await m.createTrigger(schema.cashVisaNeedsWorker);
       },
+      from5To6: (m, schema) async {
+        await m.drop(schema.approvedEntryNoEdit);
+        await m.createTrigger(schema.approvedEntryNoEdit);
+      },
     ),
-    beforeOpen: (_) => customStatement('PRAGMA foreign_keys = ON'),
+    beforeOpen: (details) async {
+      await customStatement('PRAGMA foreign_keys = ON');
+      // Rows saved before D-041 held the worker's pay for a missing company rate, so they get priced by today's rule once.
+      if (details.hadUpgrade && details.versionBefore! < 6) {
+        try {
+          await repriceRows(operationId: newUuid());
+        } catch (_) {
+          // Nothing was written. The next rate saved tries again, and the owner's data must still open.
+        }
+      }
+    },
   );
 
   /// The single write path. Runs [change] with its audit event and outbox row in one transaction,

@@ -17567,7 +17567,7 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
   late final $AttendanceEntriesTable attendanceEntries =
       $AttendanceEntriesTable(this);
   late final Trigger approvedEntryNoEdit = Trigger(
-    'CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN OLD.state IN (\'approved\', \'linked\') AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes OR NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)BEGIN SELECT RAISE (ABORT, \'approved attendance is immutable\');END',
+    'CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN OLD.state IN (\'approved\', \'linked\') AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes OR(OLD.client_rate_fils IS NOT NULL AND(NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils))OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)BEGIN SELECT RAISE (ABORT, \'approved attendance is immutable\');END',
     'approved_entry_no_edit',
   );
   late final Trigger linkedEntryKeepsState = Trigger(

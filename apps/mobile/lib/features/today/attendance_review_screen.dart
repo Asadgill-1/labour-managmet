@@ -184,7 +184,8 @@ class _AttendanceReviewScreenState extends ConsumerState<AttendanceReviewScreen>
       final worker = r.priced.workerBasis;
       return (client != null && isPeriodBasis(client)) || (worker != null && isPeriodBasis(worker));
     });
-    final anyDraft = rows.any((r) => r.priced.hasPricingIssue);
+    final anyDraft = rows.any((r) => r.priced.payHeld);
+    final anyNoBill = rows.any((r) => r.priced.client.issue != null);
     return Scaffold(
       appBar: AppBar(title: Text(showDate(widget.date))),
       bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _saving ? null : _save),
@@ -203,6 +204,7 @@ class _AttendanceReviewScreenState extends ConsumerState<AttendanceReviewScreen>
           ),
           if (anyPeriod) ...[ListTile(subtitle: Text(l10n.monthlyNotInTotal)), const Divider()],
           if (anyDraft) ...[ListTile(subtitle: Text(l10n.savesAsDraft)), const Divider()],
+          if (anyNoBill) ...[ListTile(subtitle: Text(l10n.noClientRateNote)), const Divider()],
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(

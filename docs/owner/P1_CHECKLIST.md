@@ -30,7 +30,7 @@ Time note karein. Target 60 second hai.
 - [ ] Aik mazdoor par click kar ke **Ghair hazir** karein. Total AED 990.00 aur AED 792.00 ho jane chahiye.
 - [ ] **Save karein**. **Aaj** par 9 Mazdoor, 9 Shifts dikhein.
 - [ ] Wahi mazdoor usi waqt dobara daalein. Wajah ke baghair save nahin hona chahiye.
-- [ ] **Sab manzoor karein** dabayein. Phir aik manzoor shuda row kholein. Ab wajah likhe baghair correction nahin honi chahiye, aur asal row mehfooz rehni chahiye.
+- [ ] Us din ki tankhwah post karein. Phir woh row kholein. Ab wajah likhe baghair correction nahin honi chahiye, aur asal row mehfooz rehni chahiye.
 - [ ] Internet band kar ke sab dobara karein. Sab kuch chalna chahiye.
 
 Kitne second lage: ______

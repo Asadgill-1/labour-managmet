@@ -94,8 +94,9 @@ class LineAmount {
 /// contract's own overtime rate. Approved overtime with no such rate stops for review. There is no
 /// multiplier anywhere: extra hours never get an automatic one.
 LineAmount priceLine(RateTerms? terms, {required AttendanceStatus status, required int minutes, required bool overtimeApproved}) {
-  if (terms == null) return const LineAmount(issue: LineIssue.missingRate);
+  // Nobody worked, so there is nothing to price, rate or no rate.
   if (status == AttendanceStatus.absent) return const LineAmount(amountFils: 0);
+  if (terms == null) return const LineAmount(issue: LineIssue.missingRate);
 
   final included = terms.includedMinutes;
   final overtime = included != null && minutes > included ? minutes - included : 0;
@@ -227,7 +228,9 @@ class PricedShift {
   final RateBasis? workerBasis;
   final int? workerRateFils;
 
-  bool get hasPricingIssue => client.issue != null || worker.issue != null;
+  /// The worker's pay cannot be worked out yet, so the row holds that worker's payroll for review (CALC-06).
+  /// A missing company rate holds only the bill, never the wage (ATT-07, D-041).
+  bool get payHeld => worker.issue != null;
 }
 
 /// An override changes the amount and keeps the contract's basis, so mixed pay is never silently converted (ATT-03).

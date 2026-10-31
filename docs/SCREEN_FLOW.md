@@ -48,7 +48,7 @@ Language > email and password > verify email > company name > optional logo and 
 
 **Room result (D-031):** Rooms > month > rent received, rent paid, and the difference in words as profit, loss or even.
 
-**Payroll (PAY-01, D-033):** Month > everyone with pay or a problem, with what stops them in words > approve waiting attendance or add room charges in one tap > a worker's screen for allowances, deductions and advance recovery > post everyone who is ready, after one confirmation > record the payment, which goes through the cash book. Undo with a reason reopens that worker's month.
+**Payroll (PAY-01, D-033):** Month > everyone with pay or a problem, with what stops them in words > tick who pays a room charge and how much > a worker's screen for allowances, deductions and advance recovery > post everyone who is ready, after one confirmation > record the payment, which goes through the cash book. Undo with a reason reopens that worker's month.
 
 **Timesheet (TS-01):** Client > date range > site > daily summary or worker detail > commercial or non-commercial version > approve > share.
 

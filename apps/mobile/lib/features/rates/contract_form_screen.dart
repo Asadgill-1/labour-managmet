@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
+import '../../data/attendance.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
@@ -117,7 +118,7 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
       return;
     }
     if (!mounted) return;
-    final saved = await saveOrExplain(context, () async {
+    final saved = await saveOrExplain(context, () => db.savingRate(() async {
       if (_isPay) {
         final monthly = _basis == RateBasis.month;
         await db.saveRow(
@@ -163,7 +164,7 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
           ),
         );
       }
-    });
+    }));
     if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();

@@ -347,7 +347,7 @@ void main() {
     expect((await db.lastBatch())!.siteId, world.siteId);
   });
 
-  testWidgets('10 workers, one exception, saved in one flow, then approved', (tester) async {
+  testWidgets('10 workers, one exception, saved in one flow', (tester) async {
     final db = memoryDb();
     late World world;
     await real(tester, () async => world = await seedWorld(db));
@@ -387,16 +387,10 @@ void main() {
     await settle(tester);
 
     expect(find.byWidgetPredicate((w) => w is Semantics && w.properties.label == '9 mazdoor, 9 shifts, 9 worker-days'), findsOneWidget);
-    var rows = await real(tester, world.stored);
+    final rows = await real(tester, world.stored);
     expect(rows, hasLength(10));
     expect(rows.where((r) => r.attendanceStatus == 'absent'), hasLength(1));
     expect(rows.every((r) => r.state == 'submitted'), isTrue);
-
-    await tester.tap(find.text('Sab manzoor karein (10)'));
-    await settle(tester);
-    rows = await real(tester, world.stored);
-    expect(rows.every((r) => r.state == 'approved'), isTrue);
-    expect(find.textContaining('Sab manzoor karein'), findsNothing);
     await shutDown(tester, db);
   });
 }

@@ -8,14 +8,14 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/side_panel.dart';
 import '../../app/theme.dart';
-import '../../data/attendance.dart';
 import '../../data/payroll.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import 'payroll_worker_screen.dart';
+import 'room_charge_screen.dart';
 
 String issueText(AppLocalizations l10n, PayrollIssue issue, WorkerPayroll p) => switch (issue) {
-  PayrollIssue.unapprovedWork => l10n.issueUnapproved(p.unapprovedRows),
+  PayrollIssue.missingRate => l10n.issueMissingRate(p.unpricedRows),
   PayrollIssue.missingPartialMethod => l10n.issuePartial,
   PayrollIssue.negativeNet => l10n.issueNegative,
   PayrollIssue.recoveryAboveAdvance => l10n.issueRecovery,
@@ -35,7 +35,10 @@ class PayrollScreen extends ConsumerStatefulWidget {
 }
 
 class _PayrollScreenState extends ConsumerState<PayrollScreen> {
-  String _month = dubaiToday(DateTime.now()).substring(0, 7);
+  String? _picked;
+
+  /// Follows the calendar until the owner picks a month, so an app left open overnight doesn't sit on last month.
+  String get _month => _picked ?? dubaiToday(DateTime.now()).substring(0, 7);
 
   Future<void> _post(List<WorkerPayroll> ready) async {
     final l10n = AppLocalizations.of(context);
@@ -59,34 +62,6 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
     if (saved && mounted) showSavedOnPhone(context, l10n.payrollPosted(count));
   }
 
-  Future<void> _approveAll() async {
-    final l10n = AppLocalizations.of(context);
-    final db = ref.read(dbProvider);
-    var approved = 0;
-    var asked = 0;
-    final saved = await saveOrExplain(context, () async {
-      final rows = await db.unapprovedUpTo(_month);
-      asked = rows.length;
-      approved = await db.approveEntries(rows, operationId: newUuid());
-    });
-    if (!saved || !mounted) return;
-    if (approved == asked) {
-      showSavedOnPhone(context, l10n.approvedCount(approved));
-    } else {
-      showFormError(context, l10n.approveMissingRate(approved, asked - approved));
-    }
-  }
-
-  Future<void> _applyRoomCharges() async {
-    final l10n = AppLocalizations.of(context);
-    var result = (added: 0, noNote: 0);
-    final saved = await saveOrExplain(context, () async {
-      result = await ref.read(dbProvider).applyRoomCharges(_month, reason: l10n.payKindRoom, operationId: newUuid());
-    });
-    if (!saved || !mounted) return;
-    showSavedOnPhone(context, result.noNote == 0 ? l10n.roomChargesApplied(result.added) : l10n.roomChargesPartly(result.added, result.noNote));
-  }
-
   Future<void> _applyVisaInstalments() async {
     final l10n = AppLocalizations.of(context);
     var added = 0;
@@ -101,8 +76,6 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
     final l10n = AppLocalizations.of(context);
     final rows = ref.watch(payrollProvider(_month)).value ?? const <WorkerPayroll>[];
     final ready = rows.where((p) => p.canPost).toList();
-    final unapproved = rows.fold(0, (sum, p) => sum + p.unapprovedRows);
-    final roomCharges = rows.where((p) => p.needsRoomCharge).length;
     final visaInstalments = rows.where((p) => p.needsVisaInstalment).length;
     final earned = rows.fold(0, (sum, p) => sum + p.figures.grossFils);
     final cut = rows.fold(0, (sum, p) => sum + p.figures.deductionsFils + p.figures.recoveryFils + p.figures.visaFils);
@@ -115,7 +88,7 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
           TopBand(
             child: Column(
               children: [
-                MonthSwitcher(month: _month, onChanged: (m) => setState(() => _month = m)),
+                MonthSwitcher(month: _month, onChanged: (m) => setState(() => _picked = m)),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -130,19 +103,20 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          if (unapproved > 0 || roomCharges > 0 || visaInstalments > 0)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  if (unapproved > 0) OutlinedButton(onPressed: _approveAll, child: Text(l10n.approveAll(unapproved))),
-                  if (roomCharges > 0) OutlinedButton(onPressed: _applyRoomCharges, child: Text(l10n.applyRoomCharges(roomCharges))),
-                  if (visaInstalments > 0) OutlinedButton(onPressed: _applyVisaInstalments, child: Text(l10n.applyVisaInstalments(visaInstalments))),
-                ],
-              ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                OutlinedButton(
+                  onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => RoomChargeScreen(month: _month))),
+                  child: Text(l10n.applyRoomCharges),
+                ),
+                if (visaInstalments > 0) OutlinedButton(onPressed: _applyVisaInstalments, child: Text(l10n.applyVisaInstalments(visaInstalments))),
+              ],
             ),
+          ),
           if (rows.isEmpty) EmptyState(icon: Icons.payments, text: l10n.payrollEmpty),
           for (final p in rows) _PayrollRow(p, month: _month),
         ],

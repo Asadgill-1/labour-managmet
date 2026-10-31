@@ -22,7 +22,7 @@ Money records add `currency` and `posting_date`. An effective date is always sep
 | Cash book | `cash_entries` | One row per amount in or out, with a kind saying where it belongs: advance, salary, room rent paid or received, expense, advance returned, company receipt. Append-only by trigger. A reversal row cancels a mistake (D-030, REP-08) |
 | Visa money | `cash_entries` kinds `visaPaid` and `visaReturned`, `workers.visa_instalment_fils`, `payroll_lines.visa_recovery_fils` | Left = paid - returned - recovered through standing payroll lines. Always derived (D-039) |
 | Rooms | `rooms`, `workers.room_id` | Rent received and paid per room come from the cash book (D-031) |
-| Worker money | `payroll_items`, `salary_payment_allocations` (T12) | Advance outstanding is opening + given - returned - recovered through posted payroll. A deduction or room charge carries a reason and authorization, enforced by a CHECK (PAY-05, PAY-07) |
+| Worker money | `payroll_items`, `salary_payment_allocations` (T12) | Advance outstanding is opening + given - returned - recovered through posted payroll. A deduction or room charge carries a reason and authorization, enforced by a CHECK. For a room charge that is the worker's note, or the owner's own say-so when ticking them (PAY-05, PAY-07, D-041) |
 | Timesheets | `timesheets`, `timesheet_revisions`, `timesheet_lines` | A revision preserves the original (TS-06) |
 | Invoices | `invoices`, `invoice_lines`, `invoice_source_allocations`, `credit_notes` | Draft has no legal number. Stored as structured data for a later e-invoicing export (D-011) |
 | Receipts | `receipts`, `receipt_allocations` | Unapplied credit allowed. Allocation cannot exceed outstanding (INV-05) |

@@ -80,8 +80,9 @@ EntryInput entryToInput(AttendanceEntry e) => EntryInput(
     startMinute: e.startUtc == null ? null : dubaiMinuteOfDay(e.startUtc!),
     endMinute: e.endUtc == null ? null : dubaiMinuteOfDay(e.endUtc!),
     breakMinutes: e.breakMinutes,
-    breakPaidClient: e.breakPaidClient,
-    breakPaidWorker: e.breakPaidWorker,
+    // A row with no rate yet has taken no break rule from a contract, so the contract it gets later decides.
+    breakPaidClient: e.clientRateFils == null ? null : e.breakPaidClient,
+    breakPaidWorker: e.workerRateFils == null ? null : e.breakPaidWorker,
     overtimeApproved: e.overtimeApproved,
     clientOverrideFils: e.clientRateOverrideFils,
     workerOverrideFils: e.workerRateOverrideFils,
@@ -147,7 +148,8 @@ extension AttendanceOps on TenantDatabase {
     return RowPreview(input: input, priced: priced, overlaps: await _overlaps(input.workerId, priced, exceptId: exceptId));
   }
 
-  /// The columns one row writes. Unpriced rows stay drafts and cannot be approved (CALC-06).
+  /// The columns one row writes. A row with no worker pay stays a draft. A row with only the company rate missing
+  /// goes on, because the wage must not wait for the bill (CALC-06, ATT-07, D-041).
   AttendanceEntriesCompanion _entryColumns(EntryInput input, PricedShift priced) => AttendanceEntriesCompanion(
     workerId: Value(input.workerId),
     groupId: Value(input.groupId),
@@ -173,7 +175,7 @@ extension AttendanceOps on TenantDatabase {
     overrideReason: Value(input.overrideReason),
     overlapReason: Value(input.overlapReason),
     notes: Value(input.notes),
-    state: Value(priced.hasPricingIssue ? 'draft' : 'submitted'),
+    state: Value(priced.payHeld ? 'draft' : 'submitted'),
   );
 
   AttendanceEntriesCompanion _stamp(AttendanceEntriesCompanion row, String id, String operationId, DateTime now) => row.copyWith(
@@ -293,8 +295,8 @@ extension AttendanceOps on TenantDatabase {
     return newId;
   }
 
-  /// Approves rows and freezes their rate snapshot (ATT-07, CALC-06). Rows still missing a rate stay
-  /// behind as drafts, and the count of approved rows is returned.
+  /// Approves rows and freezes their rate snapshot (ATT-07, CALC-06). Posting payroll does this for the workers it
+  /// posts (D-041). Rows with no worker pay stay behind as drafts, and the count of approved rows is returned.
   Future<int> approveEntries(List<AttendanceEntry> rows, {required String operationId}) async {
     var approved = 0;
     await applyOperation(
@@ -311,13 +313,13 @@ extension AttendanceOps on TenantDatabase {
           final columns = _entryColumns(input, priced);
           await (update(attendanceEntries)..where((e) => e.id.equals(old.id))).write(
             columns.copyWith(
-              state: Value(priced.hasPricingIssue ? 'draft' : 'approved'),
+              state: Value(priced.payHeld ? 'draft' : 'approved'),
               version: Value(old.version + 1),
               updatedAtUtc: Value(DateTime.now().toUtc()),
               sourceOperationId: Value(operationId),
             ),
           );
-          if (!priced.hasPricingIssue) {
+          if (!priced.payHeld) {
             approved++;
             ids.add(old.id);
           }
@@ -327,6 +329,69 @@ extension AttendanceOps on TenantDatabase {
     );
     return approved;
   }
+
+  /// What a rate added or changed later does to stored rows. A row not yet frozen takes it in full. A frozen row only
+  /// fills a company rate it never had, so its bill appears and its pay stays put (CALC-06, D-041).
+  Future<List<(AttendanceEntry, AttendanceEntriesCompanion)>> _repriced() async {
+    final rows = await (select(attendanceEntries)..where((e) => e.superseded.equals(false) & (e.state.isIn(const ['draft', 'submitted']) | e.clientRateFils.isNull()))).get();
+    final changes = <(AttendanceEntry, AttendanceEntriesCompanion)>[];
+    for (final old in rows) {
+      final input = entryToInput(old);
+      final priced = await _price(workDate: old.workDate, clientId: old.clientId, siteId: old.siteId, input: input);
+      if (old.state == 'draft' || old.state == 'submitted') {
+        final same =
+            old.state == (priced.payHeld ? 'draft' : 'submitted') &&
+            old.clientRateFils == priced.clientRateFils &&
+            old.clientAmountFils == priced.client.amountFils &&
+            old.clientBillableMinutes == priced.clientMinutes &&
+            old.workerRateFils == priced.workerRateFils &&
+            old.workerAmountFils == priced.worker.amountFils &&
+            old.workerPayableMinutes == priced.workerMinutes;
+        if (!same) changes.add((old, _entryColumns(input, priced)));
+      } else if (priced.clientRateFils != null) {
+        changes.add((
+          old,
+          AttendanceEntriesCompanion(
+            breakPaidClient: Value(priced.breakPaidClient),
+            clientBillableMinutes: Value(priced.clientMinutes),
+            clientBasis: Value(priced.clientBasis?.name),
+            clientRateFils: Value(priced.clientRateFils),
+            clientAmountFils: Value(priced.client.amountFils),
+          ),
+        ));
+      }
+    }
+    return changes;
+  }
+
+  /// Lets rates reach the rows they change, and returns how many changed. Nothing changed means nothing is recorded.
+  Future<int> repriceRows({required String operationId}) async {
+    final changes = await _repriced();
+    if (changes.isEmpty) return 0;
+    await applyOperation(
+      operationId: operationId,
+      entity: 'attendance_entries',
+      recordId: operationId,
+      version: 1,
+      action: 'reprice',
+      change: () async {
+        final now = DateTime.now().toUtc();
+        for (final (old, columns) in changes) {
+          await (update(attendanceEntries)..where((e) => e.id.equals(old.id))).write(
+            columns.copyWith(version: Value(old.version + 1), updatedAtUtc: Value(now), actorId: Value(actorId), sourceOperationId: Value(operationId)),
+          );
+        }
+        return {'repriced': [for (final (old, _) in changes) old.id]};
+      },
+    );
+    return changes.length;
+  }
+
+  /// Saves a rate and lets it reach its rows together, so a crash can't leave them apart.
+  Future<void> savingRate(Future<void> Function() save) => transaction(() async {
+    await save();
+    await repriceRows(operationId: newUuid());
+  });
 
   /// Removes a row that nobody has approved.
   Future<void> deleteUnapprovedEntry(AttendanceEntry old, {required String operationId}) {

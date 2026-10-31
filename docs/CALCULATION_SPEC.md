@@ -39,7 +39,7 @@ The client and worker sides are calculated independently and can differ.
 2. Date, site or worker assignment contract
 3. Effective client billing contract, or effective worker pay contract
 
-No rate found: stop and review, never a silent zero. An approved row keeps its rate snapshot, so later rate changes do not touch history.
+No rate found: stop and review, never a silent zero. An approved row keeps its rate snapshot, so later rate changes do not touch history. No worker rate holds that worker's payroll. No company rate holds only the bill, which fills in when the rate is added, even on a frozen row. Rows freeze when their payroll is posted, and an absent row needs no rate (D-041).
 
 ## Overtime (CALC-07)
 
@@ -48,9 +48,9 @@ Regular and overtime minutes are stored separately. Commercial client charge and
 ## Payroll (PAY-02)
 
 ```text
-gross           = approved attendance dated in the month + monthly salary
+gross           = saved attendance dated in the month + monthly salary
 current net     = gross + allowances - approved deductions - advance recovery
-adjustment      = approved work dated before the month, less what a corrected row was already paid
+adjustment      = unposted work dated before the month, less what a corrected row was already paid
 opening         = opening balance + every earlier posted net and adjustment - all salary paid before posting
 total payable   = opening + current net + adjustment
 closing         = total payable - salary paid since posting
@@ -64,6 +64,21 @@ owed now        = opening balance + every posted net and adjustment - all salary
 - A company's optional deduction limit: `(deductions + recovery) * 10000 <= (gross + allowances) * limit_bps`. Above it, posting stops for review. None is built in (D-034).
 - Overpayment: classified as a worker advance or credit, never a negative salary (PAY-06).
 - Payment allocation defaults to oldest unpaid first, with owner confirmation (PAY-06).
+
+## Worker account (D-041)
+
+The worker register reads every stored row and keeps no balance of its own (REP-08).
+
+```text
+balance = opening salary owed + work + posted monthly salary + allowances
+          - opening advance - advance given + advance returned - visa paid + visa returned
+          - deductions and room charge - salary paid
+```
+
+- Money counts when it is given, so advance or visa taken back through pay does not move the balance. The row is still shown.
+- The balance always equals: owed now + work not yet posted - advance left - visa left.
+- A monthly salary shows once its month is posted. Allowances, deductions and salary are dated on the last day of their month.
+- A date range starts from the balance brought forward, and each worker's total is where they ended, not a sum.
 
 ## Advance sub-ledger (PAY-05)
 

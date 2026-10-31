@@ -27,6 +27,7 @@ class ExportText {
     required this.totalLabel,
     required this.madeLabel,
     required this.pagePattern,
+    required this.rollupSheet,
     this.footer,
     this.note,
   });
@@ -40,6 +41,9 @@ class ExportText {
 
   /// Holds {page} and {pages}.
   final String pagePattern;
+
+  /// The name of Excel's second sheet, which holds the sums.
+  final String rollupSheet;
   final String? footer;
   final String? note;
 }
@@ -51,12 +55,33 @@ String exportFileName(String title, String? from, String? to, ExportFormat forma
 }
 
 /// Makes the file on a background isolate, so a long register doesn't freeze the screen. 
-Future<Uint8List> makeExportBytes(ExportFormat format, ExportText text, List<RegisterColumn> columns, List<RegisterEntry> newestFirst, {required int brandArgb, required int softArgb}) async {
-  final entries = oldestFirst(newestFirst);
+Future<Uint8List> makeExportBytes(
+  ExportFormat format,
+  ExportText text,
+  List<RegisterColumn> columns,
+  List<RegisterEntry> entries, {
+  required int brandArgb,
+  required int softArgb,
+  List<RegisterRollup> rollups = const [],
+  Map<String, String> groupHeads = const {},
+  Map<String, String> groupFeet = const {},
+  bool sections = false,
+}) async {
   if (format == ExportFormat.excel) {
     final brandHex = (brandArgb & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase();
     return Isolate.run(
-      () => registerXlsx(company: text.company, title: text.title, filterLine: text.filterLine, columns: columns, entries: entries, totalLabel: text.totalLabel, brandHex: brandHex, note: text.note),
+      () => registerXlsx(
+        company: text.company,
+        title: text.title,
+        filterLine: text.filterLine,
+        columns: columns,
+        entries: entries,
+        totalLabel: text.totalLabel,
+        brandHex: brandHex,
+        note: text.note,
+        rollups: rollups,
+        rollupSheet: text.rollupSheet,
+      ),
     );
   }
   final regular = (await rootBundle.load('assets/fonts/Roboto-Regular.ttf')).buffer.asUint8List();
@@ -78,6 +103,10 @@ Future<Uint8List> makeExportBytes(ExportFormat format, ExportText text, List<Reg
       softArgb: softArgb,
       regularFont: regular,
       boldFont: bold,
+      rollups: rollups,
+      groupHeads: groupHeads,
+      groupFeet: groupFeet,
+      sections: sections,
     ),
   );
 }

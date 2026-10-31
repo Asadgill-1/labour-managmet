@@ -1648,7 +1648,7 @@ abstract class AppLocalizations {
   /// No description provided for @savesAsDraft.
   ///
   /// In en, this message translates to:
-  /// **'Rows with a missing rate save as drafts until a rate is added.'**
+  /// **'Rows with no worker rate stay out of payroll until a rate is added.'**
   String get savesAsDraft;
 
   /// No description provided for @statusPresent.
@@ -1744,25 +1744,25 @@ abstract class AppLocalizations {
   /// No description provided for @stateDraft.
   ///
   /// In en, this message translates to:
-  /// **'Draft'**
+  /// **'No pay rate'**
   String get stateDraft;
 
   /// No description provided for @stateSubmitted.
   ///
   /// In en, this message translates to:
-  /// **'Needs review'**
+  /// **'Saved'**
   String get stateSubmitted;
 
   /// No description provided for @stateApproved.
   ///
   /// In en, this message translates to:
-  /// **'Approved'**
+  /// **'Final'**
   String get stateApproved;
 
   /// No description provided for @stateLinked.
   ///
   /// In en, this message translates to:
-  /// **'In accounts'**
+  /// **'In payroll'**
   String get stateLinked;
 
   /// No description provided for @correctedTag.
@@ -1788,18 +1788,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Next ({count} workers)'**
   String nextWithCount(int count);
-
-  /// No description provided for @approveAll.
-  ///
-  /// In en, this message translates to:
-  /// **'Approve all ({count})'**
-  String approveAll(int count);
-
-  /// No description provided for @approvedCount.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} entries approved'**
-  String approvedCount(int count);
 
   /// No description provided for @countsLine.
   ///
@@ -2137,17 +2125,11 @@ abstract class AppLocalizations {
   /// **'Earned {earned}, deducted {cut}'**
   String payrollSplit(String earned, String cut);
 
-  /// No description provided for @issueUnapproved.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} attendance rows not approved yet.'**
-  String issueUnapproved(int count);
-
   /// No description provided for @applyRoomCharges.
   ///
   /// In en, this message translates to:
-  /// **'Add room charge ({count})'**
-  String applyRoomCharges(int count);
+  /// **'Add room charge'**
+  String get applyRoomCharges;
 
   /// No description provided for @roomChargesApplied.
   ///
@@ -2155,23 +2137,11 @@ abstract class AppLocalizations {
   /// **'Room charge added for {count} workers'**
   String roomChargesApplied(int count);
 
-  /// No description provided for @roomChargesPartly.
-  ///
-  /// In en, this message translates to:
-  /// **'Room charge added for {added} workers. {left} left: write the room charge note on their screen.'**
-  String roomChargesPartly(int added, int left);
-
   /// No description provided for @payKindRoom.
   ///
   /// In en, this message translates to:
   /// **'Room charge'**
   String get payKindRoom;
-
-  /// No description provided for @approveMissingRate.
-  ///
-  /// In en, this message translates to:
-  /// **'{approved} approved. {left} have no rate: add it under Rates, then approve again.'**
-  String approveMissingRate(int approved, int left);
 
   /// No description provided for @mainAttendance.
   ///
@@ -2767,12 +2737,6 @@ abstract class AppLocalizations {
   /// **'Difference'**
   String get colDifference;
 
-  /// No description provided for @colPending.
-  ///
-  /// In en, this message translates to:
-  /// **'Not approved'**
-  String get colPending;
-
   /// No description provided for @colPostedOn.
   ///
   /// In en, this message translates to:
@@ -2802,6 +2766,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Maroon and gold'**
   String get paletteMaroon;
+
+  /// No description provided for @issueMissingRate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} attendance rows have no worker rate. Add it under Rates.'**
+  String issueMissingRate(int count);
+
+  /// No description provided for @noClientRateNote.
+  ///
+  /// In en, this message translates to:
+  /// **'No company rate yet. The worker\'s pay still counts, and the bill appears once the rate is added.'**
+  String get noClientRateNote;
+
+  /// No description provided for @roomChargeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Room charge, {month}'**
+  String roomChargeTitle(String month);
+
+  /// No description provided for @roomChargeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Same amount for all (AED)'**
+  String get roomChargeAll;
+
+  /// No description provided for @roomChargeAllHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Used for anyone ticked with no amount of their own.'**
+  String get roomChargeAllHelp;
+
+  /// No description provided for @roomChargeSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Add for {count} workers'**
+  String roomChargeSave(int count);
+
+  /// No description provided for @roomChargeNeedAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Write the amount for {name}'**
+  String roomChargeNeedAmount(String name);
+
+  /// No description provided for @roomChargeNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone has this month\'s room charge already, or their month is posted.'**
+  String get roomChargeNone;
+
+  /// No description provided for @roomChargeByOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'Added by the owner'**
+  String get roomChargeByOwner;
+
+  /// No description provided for @issueNoRate.
+  ///
+  /// In en, this message translates to:
+  /// **'No rate'**
+  String get issueNoRate;
+
+  /// No description provided for @colEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned'**
+  String get colEarned;
+
+  /// No description provided for @colAdvanceVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance, visa'**
+  String get colAdvanceVisa;
+
+  /// No description provided for @colPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get colPaid;
+
+  /// No description provided for @colNoRate.
+  ///
+  /// In en, this message translates to:
+  /// **'No company rate'**
+  String get colNoRate;
+
+  /// No description provided for @colDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get colDays;
+
+  /// No description provided for @regBrought.
+  ///
+  /// In en, this message translates to:
+  /// **'Brought forward'**
+  String get regBrought;
+
+  /// No description provided for @regWorkerNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance = earned - advance and visa - deductions - paid. A monthly salary shows once its month is posted.'**
+  String get regWorkerNote;
+
+  /// No description provided for @regAttendanceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Difference = company bill - worker pay, for rows that have both. Monthly salaries are not in worker pay.'**
+  String get regAttendanceNote;
+
+  /// No description provided for @regOwedToWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance {amount}: to pay the worker'**
+  String regOwedToWorker(String amount);
+
+  /// No description provided for @regOwedByWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance {amount}: the worker owes this'**
+  String regOwedByWorker(String amount);
+
+  /// No description provided for @regSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance AED 0.00: settled'**
+  String get regSettled;
+
+  /// No description provided for @regOwedSplit.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay {pay}, less advance left {advance}, less visa left {visa}'**
+  String regOwedSplit(String pay, String advance, String visa);
+
+  /// No description provided for @regRecoveryRow.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} taken from pay. The balance counted it when it was given.'**
+  String regRecoveryRow(String amount);
+
+  /// No description provided for @regByWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'By worker'**
+  String get regByWorker;
+
+  /// No description provided for @regBySite.
+  ///
+  /// In en, this message translates to:
+  /// **'By company and site'**
+  String get regBySite;
+
+  /// No description provided for @regAllWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'All workers'**
+  String get regAllWorkers;
+
+  /// No description provided for @regSummarySheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get regSummarySheet;
 }
 
 class _AppLocalizationsDelegate

@@ -223,7 +223,7 @@ void main() {
       expect(shift.clientMinutes, 660);
       expect(shift.client.amountFils, 11000);
       expect(shift.worker.amountFils, 8800);
-      expect(shift.hasPricingIssue, isFalse);
+      expect(shift.payHeld, isFalse);
     });
 
     test('a break paid on one side only changes that side', () {
@@ -263,13 +263,27 @@ void main() {
       expect(shift.client.amountFils, 14400);
       expect(shift.workerBasis, RateBasis.month);
       expect(shift.worker.amountFils, isNull);
-      expect(shift.hasPricingIssue, isFalse);
+      expect(shift.payHeld, isFalse);
     });
 
     test('an override with no contract still stops for review', () {
       final shift = priceShift('2026-11-01', const ShiftInput(startMinute: 480, endMinute: 1200, workerOverrideFils: 800), client: client);
       expect(shift.worker.issue, LineIssue.missingRate);
-      expect(shift.hasPricingIssue, isTrue);
+      expect(shift.payHeld, isTrue);
+    });
+
+    test('a missing company rate holds the bill and never the wage (ATT-07, D-041)', () {
+      final shift = priceShift('2026-11-01', const ShiftInput(startMinute: 480, endMinute: 1200), worker: worker);
+      expect(shift.client.issue, LineIssue.missingRate);
+      expect(shift.worker.amountFils, 9600);
+      expect(shift.payHeld, isFalse);
+    });
+
+    test('an absent worker needs no rate, because nobody worked', () {
+      final shift = priceShift('2026-11-01', const ShiftInput(status: absent));
+      expect(shift.payHeld, isFalse);
+      expect(shift.worker.amountFils, 0);
+      expect(shift.client.amountFils, 0);
     });
   });
 }

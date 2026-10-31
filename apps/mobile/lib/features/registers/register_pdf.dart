@@ -5,8 +5,9 @@ import 'package:pdf/widgets.dart' as pw;
 
 import 'register_model.dart';
 
-/// A register on A4 landscape: the company and filters on every page, headings repeating over the rows,
-/// a line per date with its totals, and page X of Y. The text stays real text, not a picture (DOC-03, DOC-08).
+/// A register on A4 landscape: the company and filters on every page, its sums first, headings repeating over the rows,
+/// a line per date with its totals, and page X of Y. With [sections], each name gets its own table under its own heading,
+/// and its name stays in the table's heading on every page it runs to. The text stays real text, not a picture (DOC-03, DOC-08).
 /// ponytail: Roboto has Latin letters only, so a name typed in Urdu script prints as boxes. Bundle an Arabic-script font if owners type names that way.
 Future<Uint8List> registerPdf({
   required String company,
@@ -24,6 +25,10 @@ Future<Uint8List> registerPdf({
   required Uint8List boldFont,
   String? footer,
   String? note,
+  List<RegisterRollup> rollups = const [],
+  Map<String, String> groupHeads = const {},
+  Map<String, String> groupFeet = const {},
+  bool sections = false,
 }) async {
   final brand = PdfColor.fromInt(brandArgb);
   const rule = PdfColor.fromInt(0xFFD5DAE3);
@@ -31,10 +36,11 @@ Future<Uint8List> registerPdf({
   final band = PdfColor.fromInt(softArgb);
   const zebra = PdfColor.fromInt(0xFFF7F8FB);
   const totalFill = PdfColor.fromInt(0xFFE2E5EB);
+  final pageWidth = PdfPageFormat.a4.landscape.width - 48;
 
-  final kept = [
-    for (var i = 0; i < columns.length; i++)
-      if (columns[i].inPdf) i,
+  List<int> kept(List<RegisterColumn> cols) => [
+    for (var i = 0; i < cols.length; i++)
+      if (cols[i].inPdf) i,
   ];
 
   pw.Alignment alignOf(RegisterColumn c) => switch (c.kind) {
@@ -59,44 +65,82 @@ Future<Uint8List> registerPdf({
     );
   }
 
+  /// [name] replaces the first column's heading. A table has no cell spanning columns and clips each cell, so this is
+  /// how a long account still says whose it is on its later pages. The first column holds dates, which name themselves.
+  pw.TableRow headings(List<RegisterColumn> cols, {String? name}) {
+    final shown = kept(cols);
+    return pw.TableRow(
+      repeat: true,
+      decoration: pw.BoxDecoration(color: brand),
+      verticalAlignment: pw.TableCellVerticalAlignment.middle,
+      children: [for (final i in shown) cell(i == shown.first ? name ?? cols[i].label : cols[i].label, pw.Alignment.center, bold: true, color: PdfColors.white, size: 7)],
+    );
+  }
+
+  pw.TableRow line(List<RegisterColumn> cols, RegisterEntry entry, int index) => pw.TableRow(
+    decoration: index.isOdd ? const pw.BoxDecoration(color: zebra) : null,
+    // A dash for zero, so the figures that matter stand out on a wide page. A running balance of zero is a real figure.
+    children: [for (final i in kept(cols)) cell(entry.cells[i] == 0 && !cols[i].closing ? '-' : cellText(cols[i], entry.cells[i]), alignOf(cols[i]))],
+  );
+
   /// A line of totals: its label sits in the first column, and the totals under their own columns.
-  pw.TableRow totals(String label, Iterable<RegisterEntry> rows, PdfColor fill) {
+  pw.TableRow totals(List<RegisterColumn> cols, String label, Iterable<RegisterEntry> rows, PdfColor fill) {
+    final shown = kept(cols);
     return pw.TableRow(
       decoration: pw.BoxDecoration(color: fill),
       children: [
-        for (final i in kept)
-          i == kept.first
+        for (final i in shown)
+          i == shown.first
               ? cell(label, pw.Alignment.topLeft, bold: true)
-              : columns[i].total
-              ? cell(cellText(columns[i], columnTotal(rows, i)), pw.Alignment.topRight, bold: true)
+              : cols[i].total || cols[i].closing
+              ? cell(cellText(cols[i], columnFigure(cols, rows, i)), pw.Alignment.topRight, bold: true)
               : cell('', pw.Alignment.topLeft),
       ],
     );
   }
 
-  final rows = <pw.TableRow>[
-    pw.TableRow(
-      repeat: true,
-      decoration: pw.BoxDecoration(color: brand),
-      verticalAlignment: pw.TableCellVerticalAlignment.middle,
-      children: [for (final i in kept) cell(columns[i].label, pw.Alignment.center, bold: true, color: PdfColors.white, size: 7)],
-    ),
-  ];
-  var line = 0;
-  for (final group in groupEntries(entries)) {
-    if (group.group.isNotEmpty) rows.add(totals(cellText(columns.first, group.rows.first.cells.first), group.rows, band));
-    for (final entry in group.rows) {
-      rows.add(
-        pw.TableRow(
-          decoration: line.isOdd ? const pw.BoxDecoration(color: zebra) : null,
-          // A dash for zero, so the figures that matter stand out on a wide page.
-          children: [for (final i in kept) cell(entry.cells[i] == 0 ? '-' : cellText(columns[i], entry.cells[i]), alignOf(columns[i]))],
-        ),
-      );
-      line++;
-    }
+  pw.Widget table(List<RegisterColumn> cols, List<pw.TableRow> rows) {
+    final shown = kept(cols);
+    return pw.Table(
+      border: const pw.TableBorder(
+        left: pw.BorderSide(color: rule, width: 0.4),
+        right: pw.BorderSide(color: rule, width: 0.4),
+        top: pw.BorderSide(color: rule, width: 0.4),
+        bottom: pw.BorderSide(color: rule, width: 0.4),
+        horizontalInside: pw.BorderSide(color: rule, width: 0.4),
+        verticalInside: pw.BorderSide(color: rule, width: 0.4),
+      ),
+      columnWidths: {for (var c = 0; c < shown.length; c++) c: pw.FlexColumnWidth(cols[shown[c]].flex.toDouble())},
+      children: rows,
+    );
   }
-  rows.add(totals(totalLabel, entries, totalFill));
+
+  /// A name and what else is known about it, across the page.
+  pw.Widget nameBand(String name, String? head) => pw.Container(
+    width: pageWidth,
+    color: band,
+    padding: const pw.EdgeInsets.symmetric(horizontal: 4, vertical: 3),
+    child: pw.RichText(
+      text: pw.TextSpan(
+        children: [
+          pw.TextSpan(text: name, style: pw.TextStyle(fontSize: 9.5, fontWeight: pw.FontWeight.bold, color: brand)),
+          if (head != null && head.isNotEmpty) pw.TextSpan(text: '     $head', style: const pw.TextStyle(fontSize: 8, color: grey)),
+        ],
+      ),
+    ),
+  );
+
+  final rows = <pw.TableRow>[headings(columns)];
+  var index = 0;
+  if (!sections) {
+    for (final group in groupEntries(entries)) {
+      if (group.group.isNotEmpty) rows.add(totals(columns, cellText(columns.first, group.rows.first.cells.first), group.rows, band));
+      for (final entry in group.rows) {
+        rows.add(line(columns, entry, index++));
+      }
+    }
+    rows.add(totals(columns, totalLabel, entries, totalFill));
+  }
 
   final doc = pw.Document(title: title, author: company, creator: company);
   doc.addPage(
@@ -148,18 +192,35 @@ Future<Uint8List> registerPdf({
       ),
       build: (context) => [
         if (note != null) pw.Padding(padding: const pw.EdgeInsets.only(bottom: 6), child: pw.Text(note, style: const pw.TextStyle(fontSize: 8, color: grey))),
-        pw.Table(
-          border: const pw.TableBorder(
-            left: pw.BorderSide(color: rule, width: 0.4),
-            right: pw.BorderSide(color: rule, width: 0.4),
-            top: pw.BorderSide(color: rule, width: 0.4),
-            bottom: pw.BorderSide(color: rule, width: 0.4),
-            horizontalInside: pw.BorderSide(color: rule, width: 0.4),
-            verticalInside: pw.BorderSide(color: rule, width: 0.4),
+        for (final rollup in rollups) ...[
+          pw.Padding(
+            padding: const pw.EdgeInsets.only(bottom: 3),
+            child: pw.Text(rollup.title, style: pw.TextStyle(fontSize: 9.5, fontWeight: pw.FontWeight.bold, color: brand)),
           ),
-          columnWidths: {for (var c = 0; c < kept.length; c++) c: pw.FlexColumnWidth(columns[kept[c]].flex.toDouble())},
-          children: rows,
-        ),
+          table(rollup.columns, [
+            headings(rollup.columns),
+            for (var i = 0; i < rollup.rows.length; i++) line(rollup.columns, rollup.rows[i], i),
+            totals(rollup.columns, totalLabel, rollup.rows, totalFill),
+          ]),
+          pw.SizedBox(height: 12),
+        ],
+        if (sections)
+          for (final group in groupEntries(entries)) ...[
+            nameBand(group.group, groupHeads[group.group]),
+            table(columns, [
+              headings(columns, name: group.group),
+              for (var i = 0; i < group.rows.length; i++) line(columns, group.rows[i], i),
+              totals(columns, totalLabel, group.rows, totalFill),
+            ]),
+            if (groupFeet[group.group] != null)
+              pw.Padding(
+                padding: const pw.EdgeInsets.only(top: 3),
+                child: pw.Text(groupFeet[group.group]!, style: pw.TextStyle(fontSize: 8.5, fontWeight: pw.FontWeight.bold)),
+              ),
+            pw.SizedBox(height: 12),
+          ]
+        else
+          table(columns, rows),
       ],
     ),
   );

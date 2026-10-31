@@ -10,6 +10,11 @@
 - Calculation engine for hourly, day, shift and monthly contracts.
 - Bulk attendance with exceptions, approval and corrections.
 - New colours and cards, and a side panel of main tabs with sub-tabs.
+- Attendance counts in payroll as soon as it is saved, with no approve button. Posting is the approval.
+- A missing company rate no longer holds a worker's pay, and the bill fills in when the rate is added.
+- Room charge goes on the workers you tick, with an amount for each.
+- Worker register is now each worker's account, date by date, with the running balance.
+- Attendance register adds the difference, flags missing rates, and sums by worker and by site.
 - Three colour themes to choose from in Settings.
 - Visa money per worker, with a monthly instalment through payroll.
 - Eight registers with date range and filters, exporting to PDF, Excel and WhatsApp.

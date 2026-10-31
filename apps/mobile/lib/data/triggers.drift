@@ -65,12 +65,14 @@ END;
 CREATE UNIQUE INDEX one_live_payroll_line ON payroll_lines (worker_id, period_from) WHERE NOT reversed;
 
 -- Approved and linked rows keep their figures. A correction is a new row, and the old one is only flagged (ATT-08).
+-- A row frozen with no company rate can still fill one in, so its bill appears later. Its pay never moves (D-041).
 CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries
 WHEN OLD.state IN ('approved', 'linked')
   AND (NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes
-    OR NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes
-    OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils
-    OR NEW.client_amount_fils IS NOT OLD.client_amount_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils
+    OR (OLD.client_rate_fils IS NOT NULL AND (NEW.client_billable_minutes <> OLD.client_billable_minutes
+      OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils))
+    OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes
+    OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils
     OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)
 BEGIN
   SELECT RAISE(ABORT, 'approved attendance is immutable');

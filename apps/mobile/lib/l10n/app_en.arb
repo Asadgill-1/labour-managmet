@@ -334,7 +334,7 @@
   "issueBreak": "Break is longer than the shift",
   "issueOverrideReason": "Write why the rate changed",
   "rowsNeedFix": "Fix the rows marked in red, then save.",
-  "savesAsDraft": "Rows with a missing rate save as drafts until a rate is added.",
+  "savesAsDraft": "Rows with no worker rate stay out of payroll until a rate is added.",
   "statusPresent": "Present",
   "statusHalf": "Half day",
   "statusAbsent": "Absent",
@@ -350,34 +350,18 @@
   "correctionHelp": "The original entry is kept. This creates a corrected entry.",
   "deleteRow": "Remove this entry",
   "applyChanges": "Apply",
-  "stateDraft": "Draft",
-  "stateSubmitted": "Needs review",
-  "stateApproved": "Approved",
-  "stateLinked": "In accounts",
+  "stateDraft": "No pay rate",
+  "stateSubmitted": "Saved",
+  "stateApproved": "Final",
+  "stateLinked": "In payroll",
   "correctedTag": "Corrected",
   "cancel": "Cancel",
   "localOnlyNote": "This data is only on this phone.",
   "nextWithCount": "Next ({count} workers)",
-  "approveAll": "Approve all ({count})",
-  "approvedCount": "{count} entries approved",
   "countsLine": "{workers} workers, {shifts} shifts, {days} worker-days",
   "missingWorkers": "{count} workers have no attendance: {names}",
   "hoursPaid": "{duration} hours",
   "@nextWithCount": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@approveAll": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "@approvedCount": {
     "placeholders": {
       "count": {
         "type": "int"
@@ -522,22 +506,7 @@
       }
     }
   },
-  "issueUnapproved": "{count} attendance rows not approved yet.",
-  "@issueUnapproved": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "applyRoomCharges": "Add room charge ({count})",
-  "@applyRoomCharges": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
+  "applyRoomCharges": "Add room charge",
   "roomChargesApplied": "Room charge added for {count} workers",
   "@roomChargesApplied": {
     "placeholders": {
@@ -546,29 +515,7 @@
       }
     }
   },
-  "roomChargesPartly": "Room charge added for {added} workers. {left} left: write the room charge note on their screen.",
-  "@roomChargesPartly": {
-    "placeholders": {
-      "added": {
-        "type": "int"
-      },
-      "left": {
-        "type": "int"
-      }
-    }
-  },
   "payKindRoom": "Room charge",
-  "approveMissingRate": "{approved} approved. {left} have no rate: add it under Rates, then approve again.",
-  "@approveMissingRate": {
-    "placeholders": {
-      "approved": {
-        "type": "int"
-      },
-      "left": {
-        "type": "int"
-      }
-    }
-  },
   "mainAttendance": "Attendance",
   "mainVisa": "Visa",
   "mainMoney": "Money",
@@ -737,10 +684,98 @@
   "colHours": "Hours",
   "colWages": "Wages",
   "colDifference": "Difference",
-  "colPending": "Not approved",
   "colPostedOn": "Posted on",
   "settingsColour": "App colours",
   "paletteBlue": "Blue and orange",
   "paletteGreen": "Green and gold",
-  "paletteMaroon": "Maroon and gold"
+  "paletteMaroon": "Maroon and gold",
+  "issueMissingRate": "{count} attendance rows have no worker rate. Add it under Rates.",
+  "@issueMissingRate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noClientRateNote": "No company rate yet. The worker's pay still counts, and the bill appears once the rate is added.",
+  "roomChargeTitle": "Room charge, {month}",
+  "@roomChargeTitle": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "roomChargeAll": "Same amount for all (AED)",
+  "roomChargeAllHelp": "Used for anyone ticked with no amount of their own.",
+  "roomChargeSave": "Add for {count} workers",
+  "@roomChargeSave": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomChargeNeedAmount": "Write the amount for {name}",
+  "@roomChargeNeedAmount": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "roomChargeNone": "Everyone has this month's room charge already, or their month is posted.",
+  "roomChargeByOwner": "Added by the owner",
+  "issueNoRate": "No rate",
+  "colEarned": "Earned",
+  "colAdvanceVisa": "Advance, visa",
+  "colPaid": "Paid",
+  "colNoRate": "No company rate",
+  "colDays": "Days",
+  "regBrought": "Brought forward",
+  "regWorkerNote": "Balance = earned - advance and visa - deductions - paid. A monthly salary shows once its month is posted.",
+  "regAttendanceNote": "Difference = company bill - worker pay, for rows that have both. Monthly salaries are not in worker pay.",
+  "regOwedToWorker": "Balance {amount}: to pay the worker",
+  "@regOwedToWorker": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regOwedByWorker": "Balance {amount}: the worker owes this",
+  "@regOwedByWorker": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regSettled": "Balance AED 0.00: settled",
+  "regOwedSplit": "Pay {pay}, less advance left {advance}, less visa left {visa}",
+  "@regOwedSplit": {
+    "placeholders": {
+      "pay": {
+        "type": "String"
+      },
+      "advance": {
+        "type": "String"
+      },
+      "visa": {
+        "type": "String"
+      }
+    }
+  },
+  "regRecoveryRow": "{amount} taken from pay. The balance counted it when it was given.",
+  "@regRecoveryRow": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regByWorker": "By worker",
+  "regBySite": "By company and site",
+  "regAllWorkers": "All workers",
+  "regSummarySheet": "Summary"
 }

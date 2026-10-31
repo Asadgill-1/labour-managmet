@@ -7,7 +7,16 @@ enum CellKind { text, date, month, money, minutes, number }
 enum CellTone { none, plus, minus }
 
 class RegisterColumn {
-  const RegisterColumn(this.label, {this.kind = CellKind.text, this.flex = 3, this.total = false, this.tone = CellTone.none, this.inPdf = true});
+  const RegisterColumn(
+    this.label, {
+    this.kind = CellKind.text,
+    this.flex = 3,
+    this.total = false,
+    this.closing = false,
+    this.tone = CellTone.none,
+    this.inPdf = true,
+    this.onScreen = true,
+  });
 
   final String label;
   final CellKind kind;
@@ -17,10 +26,16 @@ class RegisterColumn {
 
   /// Added up on the band, under each date and at the bottom.
   final bool total;
+
+  /// A running balance. Its figure is where each group ended, not a sum of its rows.
+  final bool closing;
   final CellTone tone;
 
   /// A page has room for fewer columns than a sheet. Excel always has them all.
   final bool inPdf;
+
+  /// False when the heading above the rows already says it.
+  final bool onScreen;
 }
 
 class RegisterEntry {
@@ -29,7 +44,7 @@ class RegisterEntry {
   /// One per column: a String for text, date and month, an int for the rest, null for nothing.
   final List<Object?> cells;
 
-  /// The date or month this row sits under. Empty for a register with no dates.
+  /// The date, month or name this row sits under. Empty for a register with no groups.
   final String group;
 
   /// What each filter can match: filter key to the IDs this row belongs to.
@@ -44,7 +59,16 @@ class RegisterFilter {
   final List<({String value, String label})> options;
 }
 
-/// One register, ready to show or export. Rows come newest first.
+/// A small table of sums, printed ahead of a register's rows.
+class RegisterRollup {
+  const RegisterRollup(this.title, this.columns, this.rows);
+
+  final String title;
+  final List<RegisterColumn> columns;
+  final List<RegisterEntry> rows;
+}
+
+/// One register, ready to show or export. Rows come newest first, unless they group by name.
 class RegisterData {
   const RegisterData({
     required this.title,
@@ -57,6 +81,10 @@ class RegisterData {
     this.dated = true,
     this.groupKind = CellKind.date,
     this.note,
+    this.netted = true,
+    this.groupHeads = const {},
+    this.groupFeet = const {},
+    this.rollupsOf,
   });
 
   final String title;
@@ -76,11 +104,23 @@ class RegisterData {
   /// False for a register with no dates to pick.
   final bool dated;
 
-  /// [CellKind.date] or [CellKind.month].
+  /// [CellKind.date], [CellKind.month], or [CellKind.text] for one account per name, oldest row first.
   final CellKind groupKind;
 
   /// Printed with the register, for what its figures leave out.
   final String? note;
+
+  /// False when its plus and minus columns are only coloured, and a difference between them would mean nothing.
+  final bool netted;
+
+  /// Printed above and below a named group's rows.
+  final Map<String, String> groupHeads;
+  final Map<String, String> groupFeet;
+
+  /// The sums for the rows on show, so they follow the filters.
+  final List<RegisterRollup> Function(List<RegisterEntry> shown)? rollupsOf;
+
+  bool get groupsByName => groupKind == CellKind.text;
 }
 
 /// 110050 -> "1,100.50". A table says AED once in its heading.
@@ -107,8 +147,20 @@ List<RegisterEntry> filterEntries(List<RegisterEntry> entries, Map<String, Set<S
 
 int columnTotal(Iterable<RegisterEntry> entries, int column) => entries.fold(0, (total, e) => total + ((e.cells[column] as int?) ?? 0));
 
+/// What a total line shows: the sum, or for a running balance, where each group ended.
+int columnFigure(List<RegisterColumn> columns, Iterable<RegisterEntry> entries, int column) {
+  if (!columns[column].closing) return columnTotal(entries, column);
+  final last = <String, int>{};
+  for (final entry in entries) {
+    final value = entry.cells[column] as int?;
+    if (value != null) last[entry.group] = value;
+  }
+  return last.values.fold(0, (total, value) => total + value);
+}
+
 /// Plus columns less minus columns, or null when a register has no such pair.
 int? registerDifference(RegisterData data, Iterable<RegisterEntry> entries) {
+  if (!data.netted) return null;
   var plus = false;
   var minus = false;
   var net = 0;

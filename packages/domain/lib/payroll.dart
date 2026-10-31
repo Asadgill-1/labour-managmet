@@ -8,7 +8,7 @@ enum PayItemKind { allowance, deduction, roomCharge, advanceRecovery, visaRecove
 
 /// Why one worker's month cannot be posted yet. It stops for review and nothing changes silently (CALC-06, PAY-07).
 enum PayrollIssue {
-  unapprovedWork,
+  missingRate,
   missingPartialMethod,
   negativeNet,
   recoveryAboveAdvance,
@@ -26,7 +26,7 @@ class PayItemLine {
   final int amountFils;
 }
 
-/// An approved attendance row that no posted payroll holds yet. [alreadyPaidFils] is what the row it corrects
+/// An attendance row with its pay worked out, that no posted payroll holds yet. [alreadyPaidFils] is what the row it corrects
 /// was already paid, so only the difference is due (ATT-08).
 class WorkLine {
   const WorkLine(this.workDate, this.amountFils, {this.alreadyPaidFils = 0});
@@ -111,7 +111,7 @@ PayrollFigures workerPayroll({
   required Iterable<PayItemLine> items,
   required int advanceLeftFils,
   int visaLeftFils = 0,
-  int unapprovedRows = 0,
+  int unpricedRows = 0,
   String? lastPostedMonth,
   int? limitBps,
 }) {
@@ -139,7 +139,7 @@ PayrollFigures workerPayroll({
 
   final issues = <PayrollIssue>{
     if (month.compareTo(currentMonth) > 0) PayrollIssue.monthNotStarted,
-    if (unapprovedRows > 0) PayrollIssue.unapprovedWork,
+    if (unpricedRows > 0) PayrollIssue.missingRate,
     if (salary == null) PayrollIssue.missingPartialMethod,
     if (recovery > advanceLeftFils) PayrollIssue.recoveryAboveAdvance,
     if (visa > visaLeftFils) PayrollIssue.recoveryAboveVisa,

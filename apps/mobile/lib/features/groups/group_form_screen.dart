@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
+import '../../data/attendance.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
@@ -72,7 +73,7 @@ class _GroupFormScreenState extends ConsumerState<GroupFormScreen> {
       return;
     }
     final db = ref.read(dbProvider);
-    final saved = await saveOrExplain(context, () => db.saveWorkerGroup(
+    final saved = await saveOrExplain(context, () => db.savingRate(() => db.saveWorkerGroup(
       id: widget.group?.id,
       operationId: _operationId,
       members: _members,
@@ -87,7 +88,7 @@ class _GroupFormScreenState extends ConsumerState<GroupFormScreen> {
         breakMinutes: Value(int.parse(_break.text.trim())),
         active: Value(_active),
       ),
-    ));
+    )));
     if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();

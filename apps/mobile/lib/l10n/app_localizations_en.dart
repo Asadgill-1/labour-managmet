@@ -830,7 +830,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get savesAsDraft =>
-      'Rows with a missing rate save as drafts until a rate is added.';
+      'Rows with no worker rate stay out of payroll until a rate is added.';
 
   @override
   String get statusPresent => 'Present';
@@ -880,16 +880,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get applyChanges => 'Apply';
 
   @override
-  String get stateDraft => 'Draft';
+  String get stateDraft => 'No pay rate';
 
   @override
-  String get stateSubmitted => 'Needs review';
+  String get stateSubmitted => 'Saved';
 
   @override
-  String get stateApproved => 'Approved';
+  String get stateApproved => 'Final';
 
   @override
-  String get stateLinked => 'In accounts';
+  String get stateLinked => 'In payroll';
 
   @override
   String get correctedTag => 'Corrected';
@@ -903,16 +903,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String nextWithCount(int count) {
     return 'Next ($count workers)';
-  }
-
-  @override
-  String approveAll(int count) {
-    return 'Approve all ($count)';
-  }
-
-  @override
-  String approvedCount(int count) {
-    return '$count entries approved';
   }
 
   @override
@@ -1109,14 +1099,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String issueUnapproved(int count) {
-    return '$count attendance rows not approved yet.';
-  }
-
-  @override
-  String applyRoomCharges(int count) {
-    return 'Add room charge ($count)';
-  }
+  String get applyRoomCharges => 'Add room charge';
 
   @override
   String roomChargesApplied(int count) {
@@ -1124,17 +1107,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String roomChargesPartly(int added, int left) {
-    return 'Room charge added for $added workers. $left left: write the room charge note on their screen.';
-  }
-
-  @override
   String get payKindRoom => 'Room charge';
-
-  @override
-  String approveMissingRate(int approved, int left) {
-    return '$approved approved. $left have no rate: add it under Rates, then approve again.';
-  }
 
   @override
   String get mainAttendance => 'Attendance';
@@ -1463,9 +1436,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get colDifference => 'Difference';
 
   @override
-  String get colPending => 'Not approved';
-
-  @override
   String get colPostedOn => 'Posted on';
 
   @override
@@ -1479,6 +1449,108 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paletteMaroon => 'Maroon and gold';
+
+  @override
+  String issueMissingRate(int count) {
+    return '$count attendance rows have no worker rate. Add it under Rates.';
+  }
+
+  @override
+  String get noClientRateNote =>
+      'No company rate yet. The worker\'s pay still counts, and the bill appears once the rate is added.';
+
+  @override
+  String roomChargeTitle(String month) {
+    return 'Room charge, $month';
+  }
+
+  @override
+  String get roomChargeAll => 'Same amount for all (AED)';
+
+  @override
+  String get roomChargeAllHelp =>
+      'Used for anyone ticked with no amount of their own.';
+
+  @override
+  String roomChargeSave(int count) {
+    return 'Add for $count workers';
+  }
+
+  @override
+  String roomChargeNeedAmount(String name) {
+    return 'Write the amount for $name';
+  }
+
+  @override
+  String get roomChargeNone =>
+      'Everyone has this month\'s room charge already, or their month is posted.';
+
+  @override
+  String get roomChargeByOwner => 'Added by the owner';
+
+  @override
+  String get issueNoRate => 'No rate';
+
+  @override
+  String get colEarned => 'Earned';
+
+  @override
+  String get colAdvanceVisa => 'Advance, visa';
+
+  @override
+  String get colPaid => 'Paid';
+
+  @override
+  String get colNoRate => 'No company rate';
+
+  @override
+  String get colDays => 'Days';
+
+  @override
+  String get regBrought => 'Brought forward';
+
+  @override
+  String get regWorkerNote =>
+      'Balance = earned - advance and visa - deductions - paid. A monthly salary shows once its month is posted.';
+
+  @override
+  String get regAttendanceNote =>
+      'Difference = company bill - worker pay, for rows that have both. Monthly salaries are not in worker pay.';
+
+  @override
+  String regOwedToWorker(String amount) {
+    return 'Balance $amount: to pay the worker';
+  }
+
+  @override
+  String regOwedByWorker(String amount) {
+    return 'Balance $amount: the worker owes this';
+  }
+
+  @override
+  String get regSettled => 'Balance AED 0.00: settled';
+
+  @override
+  String regOwedSplit(String pay, String advance, String visa) {
+    return 'Pay $pay, less advance left $advance, less visa left $visa';
+  }
+
+  @override
+  String regRecoveryRow(String amount) {
+    return '$amount taken from pay. The balance counted it when it was given.';
+  }
+
+  @override
+  String get regByWorker => 'By worker';
+
+  @override
+  String get regBySite => 'By company and site';
+
+  @override
+  String get regAllWorkers => 'All workers';
+
+  @override
+  String get regSummarySheet => 'Summary';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -2306,7 +2378,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get savesAsDraft =>
-      'Jin rows ka rate nahin woh rate milne tak draft rahengi.';
+      'Jin rows ka mazdoor rate nahin woh rate milne tak tankhwah mein nahin ginain gi.';
 
   @override
   String get statusPresent => 'Hazir';
@@ -2356,16 +2428,16 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get applyChanges => 'Theek hai';
 
   @override
-  String get stateDraft => 'Draft';
+  String get stateDraft => 'Rate nahin';
 
   @override
-  String get stateSubmitted => 'Review baqi';
+  String get stateSubmitted => 'Save hai';
 
   @override
-  String get stateApproved => 'Manzoor';
+  String get stateApproved => 'Pakki';
 
   @override
-  String get stateLinked => 'Hisaab mein shamil';
+  String get stateLinked => 'Tankhwah mein';
 
   @override
   String get correctedTag => 'Corrected';
@@ -2379,16 +2451,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String nextWithCount(int count) {
     return 'Aage ($count mazdoor)';
-  }
-
-  @override
-  String approveAll(int count) {
-    return 'Sab manzoor karein ($count)';
-  }
-
-  @override
-  String approvedCount(int count) {
-    return '$count entries manzoor';
   }
 
   @override
@@ -2585,14 +2647,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   }
 
   @override
-  String issueUnapproved(int count) {
-    return '$count hazri abhi manzoor nahin.';
-  }
-
-  @override
-  String applyRoomCharges(int count) {
-    return 'Room charge lagayein ($count)';
-  }
+  String get applyRoomCharges => 'Room charge lagayein';
 
   @override
   String roomChargesApplied(int count) {
@@ -2600,17 +2655,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   }
 
   @override
-  String roomChargesPartly(int added, int left) {
-    return '$added mazdoor par room charge lag gaya. $left reh gaye: un ki screen par room charge ka note likhein.';
-  }
-
-  @override
   String get payKindRoom => 'Room charge';
-
-  @override
-  String approveMissingRate(int approved, int left) {
-    return '$approved manzoor. $left ka rate nahin: Rates mein likh kar dobara manzoor karein.';
-  }
 
   @override
   String get mainAttendance => 'Hazri';
@@ -2939,9 +2984,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get colDifference => 'Farq';
 
   @override
-  String get colPending => 'Manzoor baqi';
-
-  @override
   String get colPostedOn => 'Post ki';
 
   @override
@@ -2955,4 +2997,106 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get paletteMaroon => 'Maroon aur sunehra';
+
+  @override
+  String issueMissingRate(int count) {
+    return '$count hazri ka mazdoor rate nahin. Rates mein likhein.';
+  }
+
+  @override
+  String get noClientRateNote =>
+      'Company ka rate abhi nahin. Mazdoor ki tankhwah phir bhi ginti hai, bill rate likhne par banega.';
+
+  @override
+  String roomChargeTitle(String month) {
+    return 'Room charge, $month';
+  }
+
+  @override
+  String get roomChargeAll => 'Sab ke liye aik raqam (AED)';
+
+  @override
+  String get roomChargeAllHelp =>
+      'Jis ki apni raqam khali ho us par yeh lagegi.';
+
+  @override
+  String roomChargeSave(int count) {
+    return '$count mazdoor par lagayein';
+  }
+
+  @override
+  String roomChargeNeedAmount(String name) {
+    return '$name ki raqam likhein';
+  }
+
+  @override
+  String get roomChargeNone =>
+      'Sab par is mahine ka room charge lag chuka hai, ya un ka mahina post ho chuka hai.';
+
+  @override
+  String get roomChargeByOwner => 'Malik ne lagaya';
+
+  @override
+  String get issueNoRate => 'Rate nahin';
+
+  @override
+  String get colEarned => 'Kamai';
+
+  @override
+  String get colAdvanceVisa => 'Advance, visa';
+
+  @override
+  String get colPaid => 'Adaigi';
+
+  @override
+  String get colNoRate => 'Company rate nahin';
+
+  @override
+  String get colDays => 'Din';
+
+  @override
+  String get regBrought => 'Pichla baqi';
+
+  @override
+  String get regWorkerNote =>
+      'Baqi = kamai - advance aur visa - katoti - adaigi. Mahana tankhwah mahina post hone par aati hai.';
+
+  @override
+  String get regAttendanceNote =>
+      'Farq = company bill - mazdoor pay, jin rows mein dono hon. Mahana tankhwah mazdoor pay mein nahin.';
+
+  @override
+  String regOwedToWorker(String amount) {
+    return 'Baqi $amount: mazdoor ko dena hai';
+  }
+
+  @override
+  String regOwedByWorker(String amount) {
+    return 'Baqi $amount: mazdoor se lena hai';
+  }
+
+  @override
+  String get regSettled => 'Baqi AED 0.00: hisaab barabar';
+
+  @override
+  String regOwedSplit(String pay, String advance, String visa) {
+    return 'Tankhwah $pay, is mein se advance baqi $advance, visa baqi $visa';
+  }
+
+  @override
+  String regRecoveryRow(String amount) {
+    return '$amount tankhwah se kata. Baqi mein yeh dete waqt hi ginaa gaya tha.';
+  }
+
+  @override
+  String get regByWorker => 'Mazdoor ke hisaab se';
+
+  @override
+  String get regBySite => 'Company aur site ke hisaab se';
+
+  @override
+  String get regAllWorkers => 'Sab mazdoor';
+
+  @override
+  String get regSummarySheet => 'Khulasa';
 }

@@ -43,11 +43,12 @@ Test APK: `apps/mobile/build/app/outputs/flutter-apk/app-release.apk`. Yeh test 
 
 ## 2. Tankhwah ki screen
 
-- [ ] **Menu > Tankhwah** kholein. Jis mazdoor ki manzoor hazri hai, ya mahana contract hai, woh nazar aaye.
-- [ ] Jis ki hazri abhi manzoor nahin us par laal likha ho. Upar **Sab manzoor karein** dabane se theek ho jaye. Rate na ho to paigham bataye ke Rates mein likhein.
+- [ ] **Menu > Tankhwah** kholein. Jis mazdoor ki hazri lagi hai, ya mahana contract hai, woh apni kamai ke saath nazar aaye. Manzoor karne ka koi button nahin.
+- [ ] Company ka rate na ho tab bhi mazdoor ki kamai aaye. Baad mein **Rates** mein company ka rate likhein. Hazri register mein company bill khud aa jaye, aur mazdoor ki pay na badle.
+- [ ] Jis mazdoor ka apna rate na ho us par laal likha ho, aur woh post na ho. Rate likhte hi laal hat jaye.
 - [ ] Mazdoor par dabayein. **Allowance** aur **Katoti** add karein. Katoti wajah aur agreement ke baghair save na ho.
 - [ ] Jis mazdoor ka advance baqi hai us par **Advance ki wapsi** likhein. Baqi advance se zyada save na ho.
-- [ ] **Room charge lagayein** dabayein. Jin mazdooron ka room charge aur note likha hai un par lag jaye. Jin ka note nahin, paigham un ki ginti bataye.
+- [ ] **Room charge lagayein** dabayein. Sab mazdoor list mein aayen. Jin par lagana hai un par tick karein, raqam likhein, aur **lagayein** dabayein. Sirf un ki katoti Tankhwah mein aaye. Koi note nahin poocha jata.
 - [ ] Katoti kamai se zyada kar ke dekhein. Us mazdoor par laal likha aaye aur woh post na ho. Baqi post hon.
 
 ## 3. Aap ki apni misal
@@ -63,19 +64,28 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 
 - [ ] Post hue mahine mein **Post wapas karein**. Wajah ke baghair na ho. Mahina phir khul jaye, aur jo paisay diye woh mazdoor ke hisaab mein rahen.
 - [ ] Jis mahine ke baad agla mahina bhi post ho, us ko wapas karne par paigham aaye ke pehle agla mahina wapas karein.
-- [ ] Post hui hazri ki correction karein aur manzoor karein. Agle mahine **Pichli hazri ka hisaab** mein sirf farq aaye.
+- [ ] Post hui hazri ki correction karein. Agle mahine **Pichli hazri ka hisaab** mein sirf farq aaye.
 
 ## 5. Baqi screens par asar
 
 - [ ] Room charge wala mahina post hone ke baad **Rooms** mein woh raqam **Kiraya mila** mein aa jaye.
 - [ ] Mazdoor ki screen par **Tankhwah baqi** aur **Advance baqi** sahi hon, dobara kuch likhna na pare.
 
+## 5a. Mazdoor register aur Hazri register
+
+- [ ] **Labour > Mazdoor register** kholein. Har mazdoor ka apna hisaab ho, tareekh ke hisaab se: kis company aur site par, kitne ghante, kis rate par, kitni kamai, kitna advance, kis din kitni adaigi, aur har line ke baad **Baqi**.
+- [ ] Baqi khud jor kar dekhein: kamai - advance aur visa - katoti - adaigi.
+- [ ] Pichla mahina chunein. Pehli line **Pichla baqi** ho.
+- [ ] PDF aur Excel nikalein. PDF mein sab se upar sab mazdooron ka khulasa ho. Excel mein doosri sheet par.
+- [ ] **Hazri > Hazri register** ka PDF nikalein. Upar mazdoor ke hisaab se din, ghante aur pay ho, phir company aur site ke hisaab se bill, pay aur farq.
+- [ ] Jis row ka company rate nahin us par **Rate nahin** likha ho.
+
 ## 6. Aap ke faislay
 
 Yeh dono abhi PROPOSED hain. Aap ka jawab darkar hai. Accountant ko bhi dikhayein.
 
 - [ ] **D-033:** Hisaab statement ki tarah chalta hai. Baad mein di hui adaigi aakhri post hue mahine par likhi jati hai. Khaas mahine se jorna T12 mein aayega.
-- [ ] **D-034:** Mahana mazdoor ki ghair hazri par tankhwah khud nahin katti, aap wajah likh kar katoti add karte hain. Advance ki wapsi par agreement nahin poocha jata. Room charge sirf button dabane par lagta hai. Katoti ki hadd **Apni company** mein aap chahen to likhein, warna koi hadd nahin.
+- [ ] **D-034:** Mahana mazdoor ki ghair hazri par tankhwah khud nahin katti, aap wajah likh kar katoti add karte hain. Advance ki wapsi par agreement nahin poocha jata. Katoti ki hadd **Apni company** mein aap chahen to likhein, warna koi hadd nahin.
 
 ## 7. P1 se abhi baqi
 

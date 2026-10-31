@@ -102,12 +102,24 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
       totalLabel: l10n.regTotal,
       madeLabel: l10n.regMade('${showDate(ymd(now))} ${showMinuteOfDay(now.hour * 60 + now.minute)}'),
       pagePattern: l10n.regPage('{page}', '{pages}'),
+      rollupSheet: l10n.regSummarySheet,
       footer: profile?.documentFooter,
       note: data.note,
     );
     setState(() => _busy = true);
     try {
-      final bytes = await makeExportBytes(format, text, data.columns, shown, brandArgb: brand.toARGB32(), softArgb: brandSoft.toARGB32());
+      final bytes = await makeExportBytes(
+        format,
+        text,
+        data.columns,
+        data.groupsByName ? shown : oldestFirst(shown),
+        brandArgb: brand.toARGB32(),
+        softArgb: brandSoft.toARGB32(),
+        rollups: data.rollupsOf?.call(shown) ?? const [],
+        groupHeads: data.groupHeads,
+        groupFeet: data.groupFeet,
+        sections: data.groupsByName,
+      );
       final file = await writeExportFile(exportFileName(data.title, data.dated ? _from : null, data.dated ? _to : null, format), bytes);
       final result = await runExport(action, format, file, bytes);
       if (!mounted) return;
@@ -163,7 +175,7 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
     final difference = registerDifference(data, shown);
     final figures = <Widget>[
       for (final c in data.bandColumns)
-        Expanded(child: BandFigure(_bandText(data.columns[c], columnTotal(shown, c)), data.columns[c].label, size: 16)),
+        Expanded(child: BandFigure(_bandText(data.columns[c], columnFigure(data.columns, shown, c)), data.columns[c].label, size: 16)),
       if (difference != null) Expanded(child: BandFigure(formatAed(difference), l10n.colDifference, size: 16)),
     ];
     return Column(
@@ -352,7 +364,13 @@ class _Group extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final heading = data.groupKind == CellKind.month ? showMonth(group) : (group.isEmpty ? '' : '${dayName(l10n, group)}, ${showDate(group)}');
+    final heading = switch (data.groupKind) {
+      CellKind.text => group,
+      CellKind.month => showMonth(group),
+      _ => group.isEmpty ? '' : '${dayName(l10n, group)}, ${showDate(group)}',
+    };
+    final head = data.groupHeads[group];
+    final foot = data.groupFeet[group];
     final lastBand = data.bandColumns.isEmpty ? null : data.bandColumns.last;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -367,14 +385,24 @@ class _Group extends StatelessWidget {
                   [
                     l10n.regRows(rows.length),
                     // In and out are both on the band, so one of them alone would mislead here.
-                    if (lastBand != null && registerDifference(data, rows) == null) _bandText(data.columns[lastBand], columnTotal(rows, lastBand)),
+                    if (lastBand != null && registerDifference(data, rows) == null) _bandText(data.columns[lastBand], columnFigure(data.columns, rows, lastBand)),
                   ].join('   '),
                   style: const TextStyle(fontSize: 13, color: muted),
                 ),
               ],
             ),
           ),
+        if (head != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 2),
+            child: Text(head, style: const TextStyle(fontSize: 13, color: muted)),
+          ),
         for (final entry in rows) _EntryCard(data: data, entry: entry),
+        if (foot != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+            child: Text(foot, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: ink)),
+          ),
       ],
     );
   }
@@ -395,9 +423,9 @@ class _EntryCard extends StatelessWidget {
     final title = cellText(data.columns[data.titleColumn], entry.cells[data.titleColumn]);
     final details = <(String, String)>[
       for (var c = 0; c < data.columns.length; c++)
-        if (c != data.titleColumn && c != amountColumn && !(data.columns[c].kind == data.groupKind && c == 0 && entry.group.isNotEmpty))
-          // A cell repeating the row's name says nothing new.
-          if (_worthShowing(entry.cells[c]) && entry.cells[c] != title) (data.columns[c].label, _bandText(data.columns[c], entry.cells[c])),
+        if (c != data.titleColumn && c != amountColumn && data.columns[c].onScreen && !(data.columns[c].kind == data.groupKind && c == 0 && entry.group.isNotEmpty))
+          // A cell repeating the row's name says nothing new. A running balance of zero still says where the account stands.
+          if ((_worthShowing(entry.cells[c]) || (data.columns[c].closing && entry.cells[c] != null)) && entry.cells[c] != title) (data.columns[c].label, _bandText(data.columns[c], entry.cells[c])),
     ];
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),

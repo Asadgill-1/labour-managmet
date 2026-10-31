@@ -68,6 +68,62 @@ String _totalCell(String ref, RegisterColumn column, int total, String range) {
   return '<c r="$ref" s="$style"><f>SUBTOTAL(109,$range)</f><v>$value</v></c>';
 }
 
+/// The sums on a sheet of their own, one small table under another.
+String _rollupSheetXml(List<RegisterRollup> rollups, String totalLabel) {
+  final rows = StringBuffer();
+  final longest = <int, int>{};
+  var at = 1;
+  for (final rollup in rollups) {
+    final columns = rollup.columns;
+    rows.write('<row r="$at" ht="20" customHeight="1">${_textCell('A$at', rollup.title, _subtitle)}</row>');
+    at++;
+    rows.write('<row r="$at" ht="32" customHeight="1">');
+    for (var c = 0; c < columns.length; c++) {
+      rows.write(_textCell('${_letter(c)}$at', columns[c].label, _head));
+      longest[c] = _longer(longest[c], columns[c].label.length ~/ 2 + 4);
+    }
+    rows.write('</row>');
+    at++;
+    final first = at;
+    for (final entry in rollup.rows) {
+      rows.write('<row r="$at">');
+      for (var c = 0; c < columns.length; c++) {
+        rows.write(_cell('${_letter(c)}$at', columns[c], entry.cells[c]));
+        longest[c] = _longer(longest[c], cellText(columns[c], entry.cells[c]).length);
+      }
+      rows.write('</row>');
+      at++;
+    }
+    rows.write('<row r="$at" ht="20" customHeight="1">');
+    for (var c = 0; c < columns.length; c++) {
+      final ref = '${_letter(c)}$at';
+      if (columns[c].total && rollup.rows.isNotEmpty) {
+        rows.write(_totalCell(ref, columns[c], columnTotal(rollup.rows, c), '${_letter(c)}$first:${_letter(c)}${at - 1}'));
+      } else {
+        rows.write(_textCell(ref, c == 0 ? totalLabel : '', _totalText));
+      }
+    }
+    rows.write('</row>');
+    at += 2;
+  }
+  final widths = StringBuffer();
+  for (final MapEntry(key: c, value: width) in (longest.entries.toList()..sort((a, b) => a.key.compareTo(b.key)))) {
+    widths.write('<col min="${c + 1}" max="${c + 1}" width="${(width + 2).clamp(9, 42)}" customWidth="1"/>');
+  }
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+      '<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>'
+      '<sheetViews><sheetView showGridLines="0" workbookViewId="0"/></sheetViews>'
+      '<sheetFormatPr defaultRowHeight="16"/>'
+      '<cols>$widths</cols>'
+      '<sheetData>$rows</sheetData>'
+      '<pageMargins left="0.4" right="0.4" top="0.5" bottom="0.6" header="0.3" footer="0.3"/>'
+      '<pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/>'
+      '</worksheet>';
+}
+
+int _longer(int? a, int b) => a == null || b > a ? b : a;
+
 /// A sheet's name cannot hold these characters or run past 31 letters.
 String _sheetName(String title) {
   final clean = title.replaceAll(RegExp(r"[\[\]:*?/\\']"), ' ').trim();
@@ -85,6 +141,8 @@ Uint8List registerXlsx({
   required String totalLabel,
   required String brandHex,
   String? note,
+  List<RegisterRollup> rollups = const [],
+  String rollupSheet = '',
 }) {
   final lastColumn = _letter(columns.length - 1);
   final firstData = _headRow + 1;
@@ -113,7 +171,10 @@ Uint8List registerXlsx({
   rows.write('<row r="$totalRow" ht="20" customHeight="1">');
   for (var c = 0; c < columns.length; c++) {
     final ref = '${_letter(c)}$totalRow';
-    if (columns[c].total && entries.isNotEmpty) {
+    if (columns[c].closing && entries.isNotEmpty) {
+      // Where each worker ended is not a sum of the rows above, so no formula would be right.
+      rows.write('<c r="$ref" s="$_totalMoney"><v>${_decimal(columnFigure(columns, entries, c))}</v></c>');
+    } else if (columns[c].total && entries.isNotEmpty) {
       rows.write(_totalCell(ref, columns[c], columnTotal(entries, c), '${_letter(c)}$firstData:${_letter(c)}$lastData'));
     } else {
       rows.write(_textCell(ref, c == 0 ? totalLabel : '', _totalText));
@@ -154,7 +215,9 @@ Uint8List registerXlsx({
   final workbookXml =
       '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
       '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
-      '<sheets><sheet name="${_escape(sheet)}" sheetId="1" r:id="rId1"/></sheets>'
+      '<sheets><sheet name="${_escape(sheet)}" sheetId="1" r:id="rId1"/>'
+      '${rollups.isEmpty ? '' : '<sheet name="${_escape(_sheetName(rollupSheet))}" sheetId="2" r:id="rId3"/>'}'
+      '</sheets>'
       '<definedNames>'
       '<definedName name="_xlnm._FilterDatabase" localSheetId="0" hidden="1">${_escape(quoted)}!\$A\$$_headRow:\$$lastColumn\$$lastData</definedName>'
       '<definedName name="_xlnm.Print_Titles" localSheetId="0">${_escape(quoted)}!\$$_headRow:\$$_headRow</definedName>'
@@ -217,6 +280,7 @@ Uint8List registerXlsx({
         '<Default Extension="xml" ContentType="application/xml"/>'
         '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
         '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+        '${rollups.isEmpty ? '' : '<Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'}'
         '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'
         '</Types>',
   );
@@ -233,10 +297,12 @@ Uint8List registerXlsx({
         '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
         '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
         '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
+        '${rollups.isEmpty ? '' : '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/>'}'
         '</Relationships>',
   );
   add('xl/workbook.xml', workbookXml);
   add('xl/styles.xml', stylesXml);
   add('xl/worksheets/sheet1.xml', sheetXml);
+  if (rollups.isNotEmpty) add('xl/worksheets/sheet2.xml', _rollupSheetXml(rollups, totalLabel));
   return Uint8List.fromList(ZipEncoder().encode(archive));
 }

@@ -14,6 +14,7 @@ import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 
 /// One allowance or deduction for one worker's month. A deduction needs a reason and an authorization (PAY-07).
+/// A room charge carries the worker's note, or else the owner's own say-so (D-041).
 class PayItemFormScreen extends ConsumerStatefulWidget {
   const PayItemFormScreen({required this.workerId, required this.month, required this.kind, this.item, super.key});
 
@@ -31,14 +32,14 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
   final _operationId = newUuid();
   late final _amount = TextEditingController(text: widget.item == null ? _startAmount() : plainAmount(widget.item!.amountFils));
   late final _reason = TextEditingController(text: widget.item?.reason ?? _startReason());
-  late final _authorizedBy = TextEditingController(text: widget.item?.authorizedBy ?? (widget.kind == PayItemKind.roomCharge ? _worker?.roomChargeNote : null));
+  late final _authorizedBy = TextEditingController(text: widget.item?.authorizedBy);
   late final _note = TextEditingController(text: widget.item?.note);
 
   Worker? get _worker => (ref.read(workersProvider).value ?? const <Worker>[]).where((w) => w.id == widget.workerId).firstOrNull;
 
   WorkerPayroll? get _row => (ref.read(payrollProvider(widget.month)).value ?? const <WorkerPayroll>[]).where((p) => p.worker.id == widget.workerId).firstOrNull;
 
-  bool get _needsAuthorization => widget.kind == PayItemKind.deduction || widget.kind == PayItemKind.roomCharge;
+  bool get _needsAuthorization => widget.kind == PayItemKind.deduction;
 
   String _startAmount() => switch (widget.kind) {
     PayItemKind.roomCharge when _worker?.roomChargeFils != null => plainAmount(_worker!.roomChargeFils!),
@@ -69,7 +70,11 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
         kind: widget.kind,
         amountFils: parseAed(_amount.text)!,
         reason: _reason.text.trim(),
-        authorizedBy: _needsAuthorization ? _authorizedBy.text.trim() : null,
+        authorizedBy: switch (widget.kind) {
+          PayItemKind.deduction => _authorizedBy.text.trim(),
+          PayItemKind.roomCharge => widget.item?.authorizedBy ?? _worker?.roomChargeNote ?? l10n.roomChargeByOwner,
+          _ => null,
+        },
         note: text.isEmpty ? null : text,
         roomId: widget.kind == PayItemKind.roomCharge ? _worker?.roomId : null,
         operationId: _operationId,

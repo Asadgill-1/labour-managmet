@@ -27,7 +27,7 @@ class WorkerPayroll {
     this.visaLeftFils = 0,
     this.line,
     this.paidFils = 0,
-    this.unapprovedRows = 0,
+    this.unpricedRows = 0,
   });
 
   final Worker worker;
@@ -45,11 +45,13 @@ class WorkerPayroll {
 
   /// Paid since this month was posted.
   final int paidFils;
-  final int unapprovedRows;
+
+  /// Rows whose pay cannot be worked out yet, because a rate is missing.
+  final int unpricedRows;
 
   bool get posted => line != null;
   bool get canPost => !posted && figures.issues.isEmpty && !figures.isEmpty;
-  bool get needsRoomCharge => !posted && (worker.roomChargeFils ?? 0) > 0 && !items.any((i) => i.kind == PayItemKind.roomCharge.name);
+  bool get canAddRoomCharge => !posted && !items.any((i) => i.kind == PayItemKind.roomCharge.name);
   bool get needsVisaInstalment => !posted && (worker.visaInstalmentFils ?? 0) > 0 && visaLeftFils > 0 && !items.any((i) => i.kind == PayItemKind.visaRecovery.name);
   int get payableFils => openingFils + figures.dueFils;
   int get closingFils => payableFils - paidFils;
@@ -131,10 +133,10 @@ extension PayrollOps on TenantDatabase {
 
       final rows = unpaidRows.where((e) => e.workerId == worker.id);
       final work = <WorkLine>[
-        for (final r in rows.where((e) => e.state == 'approved' || e.state == 'linked'))
+        for (final r in rows.where((e) => e.state != 'draft'))
           WorkLine(r.workDate, r.workerAmountFils ?? 0, alreadyPaidFils: await _alreadyPaid(r)),
       ];
-      final unapproved = rows.where((e) => e.state == 'draft' || e.state == 'submitted').length;
+      final unpriced = rows.where((e) => e.state == 'draft').length;
       final figures = workerPayroll(
         month: month,
         currentMonth: dubaiToday(DateTime.now()).substring(0, 7),
@@ -144,11 +146,11 @@ extension PayrollOps on TenantDatabase {
         items: [for (final i in workerItems) PayItemLine(PayItemKind.values.byName(i.kind), i.amountFils)],
         advanceLeftFils: advanceLeft,
         visaLeftFils: visaLeft,
-        unapprovedRows: unapproved,
+        unpricedRows: unpriced,
         lastPostedMonth: workerLines.lastOrNull?.periodFrom.substring(0, 7),
         limitBps: limitBps,
       );
-      if (figures.isEmpty && unapproved == 0) continue;
+      if (figures.isEmpty && unpriced == 0) continue;
       final posted = workerLines.fold(0, (total, l) => total + l.netFils + l.adjustmentFils);
       result.add(
         WorkerPayroll(
@@ -159,7 +161,7 @@ extension PayrollOps on TenantDatabase {
           paidTotalFils: paidTotal,
           advanceLeftFils: advanceLeft,
           visaLeftFils: visaLeft,
-          unapprovedRows: unapproved,
+          unpricedRows: unpriced,
         ),
       );
     }
@@ -177,7 +179,7 @@ extension PayrollOps on TenantDatabase {
     }
   }
 
-  /// Rows up to the month's end that still need the owner's approval.
+  /// Rows up to the month's end that are not frozen yet.
   Future<List<AttendanceEntry>> unapprovedUpTo(String month) {
     return (select(attendanceEntries)
           ..where((e) => e.superseded.equals(false) & e.state.isIn(const ['draft', 'submitted']) & e.workDate.isSmallerOrEqualValue(monthLastDay(month))))
@@ -185,7 +187,8 @@ extension PayrollOps on TenantDatabase {
   }
 
   /// Posts everyone who is ready, and returns how many. Figures are worked out again here, so a stale screen cannot
-  /// post old numbers. The run, its lines and the links to work and items commit together or not at all (MODEL-07).
+  /// post old numbers. Posting is the owner's approval: a posted worker's rows freeze here (D-041).
+  /// The run, its lines and the links to work and items commit together or not at all (MODEL-07).
   Future<int> postPayroll(String month, {required String operationId}) async {
     final runId = newUuid();
     final from = monthFirstDay(month);
@@ -199,7 +202,11 @@ extension PayrollOps on TenantDatabase {
       action: 'post',
       change: () async {
         final now = DateTime.now().toUtc();
+        await repriceRows(operationId: newUuid());
         final ready = (await payrollFor(month)).where((p) => p.canPost).toList();
+        final readyIds = ready.map((p) => p.worker.id).toSet();
+        final toFreeze = (await unapprovedUpTo(month)).where((e) => readyIds.contains(e.workerId)).toList();
+        if (toFreeze.isNotEmpty) await approveEntries(toFreeze, operationId: newUuid());
         final run = await into(payrollRuns).insertReturning(
           PayrollRunsCompanion.insert(
             id: runId,
@@ -389,11 +396,11 @@ extension PayrollOps on TenantDatabase {
     return added;
   }
 
-  /// Adds each worker's agreed room charge for this month. Someone with no agreement note on file is left out,
-  /// because a deduction needs one (PAY-07). Returns how many were added and how many were left out.
-  Future<({int added, int noNote})> applyRoomCharges(String month, {required String reason, required String operationId}) async {
+  /// Adds a room charge for the workers the owner ticked, at the amounts given. Ticking them is the owner's authorization,
+  /// unless the worker has an agreement note of their own (PAY-07, D-041). Someone already charged or posted is left out.
+  /// Returns how many were added.
+  Future<int> applyRoomCharges(String month, {required Map<String, int> charges, required String reason, required String ownerApproved, required String operationId}) async {
     var added = 0;
-    var noNote = 0;
     await applyOperation(
       operationId: operationId,
       entity: 'payroll_items',
@@ -403,13 +410,10 @@ extension PayrollOps on TenantDatabase {
       change: () async {
         final now = DateTime.now().toUtc();
         final saved = <Map<String, dynamic>>[];
-        for (final p in await payrollFor(month)) {
-          if (!p.needsRoomCharge) continue;
-          final authorizedBy = p.worker.roomChargeNote;
-          if (authorizedBy == null) {
-            noNote++;
-            continue;
-          }
+        final current = await payrollFor(month);
+        final ticked = await (select(workers)..where((w) => w.id.isIn(charges.keys))).get();
+        for (final worker in ticked) {
+          if (current.where((p) => p.worker.id == worker.id && !p.canAddRoomCharge).isNotEmpty) continue;
           final row = await into(payrollItems).insertReturning(
             PayrollItemsCompanion.insert(
               id: newUuid(),
@@ -418,13 +422,13 @@ extension PayrollOps on TenantDatabase {
               updatedAtUtc: now,
               actorId: actorId,
               sourceOperationId: operationId,
-              workerId: p.worker.id,
+              workerId: worker.id,
               periodFrom: monthFirstDay(month),
               kind: PayItemKind.roomCharge.name,
-              amountFils: p.worker.roomChargeFils!,
+              amountFils: charges[worker.id]!,
               reason: reason,
-              authorizedBy: Value(authorizedBy),
-              roomId: Value(p.worker.roomId),
+              authorizedBy: Value(worker.roomChargeNote ?? ownerApproved),
+              roomId: Value(worker.roomId),
             ),
           );
           saved.add(row.toJson());
@@ -433,6 +437,6 @@ extension PayrollOps on TenantDatabase {
         return {'items': saved};
       },
     );
-    return (added: added, noNote: noNote);
+    return added;
   }
 }

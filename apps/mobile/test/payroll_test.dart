@@ -53,8 +53,8 @@ Future<({String client, String site})> addSite(TenantDatabase db) async {
   return (client: client, site: site);
 }
 
-/// Marks one worker for one date. The row stays unapproved unless asked.
-Future<void> addWork(TenantDatabase db, ({String client, String site}) place, String worker, String date, {bool approve = true}) async {
+/// Marks one worker for one date.
+Future<void> addWork(TenantDatabase db, ({String client, String site}) place, String worker, String date) async {
   await db.saveAttendanceBatch(
     workDate: date,
     clientId: place.client,
@@ -62,8 +62,6 @@ Future<void> addWork(TenantDatabase db, ({String client, String site}) place, St
     inputs: [EntryInput(workerId: worker, shift: shift)],
     operationId: newUuid(),
   );
-  if (!approve) return;
-  await db.approveEntries(await db.unapprovedUpTo(date.substring(0, 7)), operationId: newUuid());
 }
 
 Future<void> pay(TenantDatabase db, String worker, int fils) {
@@ -235,22 +233,85 @@ void main() {
       expect(await db.select(db.payrollLines).get(), hasLength(2));
     });
 
-    test('only approved work is paid. An unapproved row holds that worker for review (CALC-06, ATT-07)', () async {
+    test('saved attendance counts in payroll at once, and posting freezes it (ATT-07, D-041)', () async {
       final ali = await addWorker(db, 'Ali');
       final place = await addSite(db);
       await addContract(db, ali, RateBasis.day, 7000);
-      await addWork(db, place, ali, '2020-10-01', approve: false);
+      await addWork(db, place, ali, '2020-10-01');
 
-      final held = await row(db, oct, ali);
-      expect(held.figures.issues, {PayrollIssue.unapprovedWork});
-      expect(held.figures.earnedFils, 0);
-      expect(await db.postPayroll(oct, operationId: newUuid()), 0);
+      final open = await row(db, oct, ali);
+      expect(open.figures.earnedFils, 7000);
+      expect(open.canPost, isTrue);
+      expect((await db.select(db.attendanceEntries).getSingle()).state, 'submitted');
 
-      await db.approveEntries(await db.unapprovedUpTo(oct), operationId: newUuid());
       expect(await db.postPayroll(oct, operationId: newUuid()), 1);
       final paid = await db.select(db.attendanceEntries).getSingle();
       expect(paid.workerAmountFils, 7000);
       expect(paid.payrollLineId, isNotNull);
+      expect(paid.state, 'approved');
+    });
+
+    test('a row with no worker rate holds only that worker, until a rate reaches it (CALC-06, D-041)', () async {
+      final ali = await addWorker(db, 'Ali');
+      final sara = await addWorker(db, 'Sara');
+      final place = await addSite(db);
+      await addContract(db, sara, RateBasis.day, 7000);
+      await addWork(db, place, ali, '2020-10-01');
+      await addWork(db, place, sara, '2020-10-01');
+
+      final held = await row(db, oct, ali);
+      expect(held.figures.issues, {PayrollIssue.missingRate});
+      expect(held.unpricedRows, 1);
+      expect(await db.postPayroll(oct, operationId: newUuid()), 1);
+      expect((await row(db, oct, ali)).posted, isFalse);
+      expect((await row(db, oct, sara)).posted, isTrue);
+
+      await db.savingRate(() => addContract(db, ali, RateBasis.day, 8000));
+      final fixed = await row(db, oct, ali);
+      expect(fixed.figures.issues, isEmpty);
+      expect(fixed.figures.earnedFils, 8000);
+    });
+
+    test("a missing company rate never holds the wage, and the bill fills in later without moving the pay (ATT-07, D-041)", () async {
+      final ali = await addWorker(db, 'Ali');
+      final client = await db.saveRow(db.clients, id: null, operationId: newUuid(), fields: const ClientsCompanion(name: Value('ATE')));
+      final site = await db.saveRow(db.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(client), name: const Value('Melboard')));
+      await addContract(db, ali, RateBasis.day, 7000);
+      await addWork(db, (client: client, site: site), ali, '2020-10-01');
+
+      var stored = await db.select(db.attendanceEntries).getSingle();
+      expect(stored.state, 'submitted');
+      expect(stored.clientAmountFils, isNull);
+      expect((await row(db, oct, ali)).figures.earnedFils, 7000);
+      expect(await db.postPayroll(oct, operationId: newUuid()), 1);
+
+      await db.savingRate(
+        () => db.saveRow(
+          db.billingContracts,
+          id: null,
+          operationId: newUuid(),
+          fields: BillingContractsCompanion(clientId: Value(client), basis: Value(RateBasis.hour.name), rateFils: const Value(1000), effectiveFrom: const Value('2020-01-01')),
+        ),
+      );
+      stored = await db.select(db.attendanceEntries).getSingle();
+      expect(stored.state, 'approved');
+      expect(stored.clientRateFils, 1000);
+      expect(stored.clientAmountFils, 11000, reason: '12 hours less a 1 hour break');
+      expect(stored.workerAmountFils, 7000);
+
+      // Frozen again now that it has a rate, and the pay was frozen all along.
+      await expectLater(db.customStatement('UPDATE attendance_entries SET client_amount_fils = 1'), throwsA(anything));
+      await expectLater(db.customStatement('UPDATE attendance_entries SET worker_amount_fils = 1'), throwsA(anything));
+    });
+
+    test('a rate that changes nothing records nothing', () async {
+      final ali = await addWorker(db, 'Ali');
+      final place = await addSite(db);
+      await addContract(db, ali, RateBasis.day, 7000);
+      await addWork(db, place, ali, '2020-10-01');
+      final before = (await db.select(db.auditEvents).get()).length;
+      expect(await db.repriceRows(operationId: newUuid()), 0);
+      expect(await db.select(db.auditEvents).get(), hasLength(before));
     });
 
     test('a daily worker earns per row, and a monthly worker once whatever the rows (CALC-03, CALC-04)', () async {
@@ -284,7 +345,6 @@ void main() {
       final firstId = await correct(paid, 8000);
       final first = await (db.select(db.attendanceEntries)..where((e) => e.id.equals(firstId))).getSingle();
       await correct(first, 9000);
-      await db.approveEntries(await db.unapprovedUpTo(oct), operationId: newUuid());
       await addWork(db, place, ali, '2020-10-01');
 
       final october = await row(db, oct, ali);
@@ -361,20 +421,41 @@ void main() {
       });
     });
 
-    test('room charges go on in one step for those with an agreement note, and only for those on this payroll (PAY-07)', () async {
-      final noted = await addWorker(db, 'Ali', roomCharge: 20000, roomNote: 'Signed paper');
-      final noNote = await addWorker(db, 'Sara', roomCharge: 20000);
-      final idle = await addWorker(db, 'Omar', roomCharge: 20000, roomNote: 'Signed paper');
-      await addContract(db, noted, RateBasis.month, 100000);
-      await addContract(db, noNote, RateBasis.month, 100000);
+    test('room charge goes on the workers the owner ticks, at their amounts, and shows in payroll (PAY-07, D-041)', () async {
+      final room = await db.saveRow(db.rooms, id: null, operationId: newUuid(), fields: const RoomsCompanion(name: Value('Sonapur 12')));
+      final noted = await addWorker(db, 'Ali', room: room, roomCharge: 20000, roomNote: 'Signed paper');
+      final noNote = await addWorker(db, 'Sara');
+      final notTicked = await addWorker(db, 'Omar', roomCharge: 20000);
+      final idle = await addWorker(db, 'Bilal');
+      for (final worker in [noted, noNote, notTicked]) {
+        await addContract(db, worker, RateBasis.month, 100000);
+      }
 
+      Future<int> charge(String op) => db.applyRoomCharges(oct, charges: {noted: 20000, noNote: 15000, idle: 5000}, reason: 'Room', ownerApproved: 'Owner', operationId: op);
       final op = newUuid();
-      expect(await db.applyRoomCharges(oct, reason: 'Room', operationId: op), (added: 1, noNote: 1));
-      await db.applyRoomCharges(oct, reason: 'Room', operationId: op);
+      expect(await charge(op), 3);
+      await charge(op);
+
+      final first = await row(db, oct, noted);
+      expect(first.figures.deductionsFils, 20000);
+      expect(first.canAddRoomCharge, isFalse);
+      expect(first.items.single.authorizedBy, 'Signed paper');
+      expect(first.items.single.roomId, room);
+
+      final second = await row(db, oct, noNote);
+      expect(second.figures.deductionsFils, 15000);
+      expect(second.items.single.authorizedBy, 'Owner', reason: 'ticking the worker is the authorization');
+
+      expect((await row(db, oct, notTicked)).figures.deductionsFils, 0);
+
+      // Someone with no work this month still shows, and stops for review rather than carrying a debt (D-104).
+      expect((await row(db, oct, idle)).figures.issues, {PayrollIssue.negativeNet});
+
+      // A second go never doubles a charge.
+      expect(await db.applyRoomCharges(oct, charges: {noted: 99}, reason: 'Room', ownerApproved: 'Owner', operationId: newUuid()), 0);
       expect((await row(db, oct, noted)).figures.deductionsFils, 20000);
-      expect((await row(db, oct, noted)).needsRoomCharge, isFalse);
-      expect((await row(db, oct, noNote)).figures.deductionsFils, 0);
-      expect((await db.payrollFor(oct)).where((p) => p.worker.id == idle), isEmpty);
+      await db.postPayroll(oct, operationId: newUuid());
+      expect(await db.applyRoomCharges(oct, charges: {noNote: 99}, reason: 'Room', ownerApproved: 'Owner', operationId: newUuid()), 0);
     });
 
     test("the company's own limit holds a worker for review, and there is none by default (PAY-07)", () async {
@@ -402,7 +483,14 @@ void main() {
     expect(find.text('Ali Khan'), findsOneWidget);
     expect(find.text('Post ke liye tayyar'), findsOneWidget);
 
-    await tester.tap(find.text('Room charge lagayein (1)'));
+    // Nothing is charged until the owner ticks someone, and their usual amount starts filled in.
+    await tester.tap(find.text('Room charge lagayein'));
+    await settle(tester);
+    expect(find.text('0 mazdoor par lagayein'), findsOneWidget);
+    expect(find.text('200.00'), findsOneWidget);
+    await tester.tap(find.byType(Checkbox));
+    await settle(tester);
+    await tester.tap(find.text('1 mazdoor par lagayein'));
     await settle(tester);
     expect(find.textContaining('1 mazdoor par room charge'), findsOneWidget);
     expect(find.text('Kamai AED 1,000.00, katoti AED 200.00'), findsOneWidget);

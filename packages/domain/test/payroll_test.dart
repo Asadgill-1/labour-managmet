@@ -10,7 +10,7 @@ PayrollFigures figures({
   Iterable<RateTerms> contracts = const [],
   Iterable<PayItemLine> items = const [],
   int advanceLeft = 0,
-  int unapproved = 0,
+  int unpriced = 0,
   String? lastPosted,
   int? limitBps,
   String current = month,
@@ -23,7 +23,7 @@ PayrollFigures figures({
     contracts: contracts,
     items: items,
     advanceLeftFils: advanceLeft,
-    unapprovedRows: unapproved,
+    unpricedRows: unpriced,
     lastPostedMonth: lastPosted,
     limitBps: limitBps,
   );
@@ -94,7 +94,7 @@ void main() {
   });
 
   test('a row not yet approved stops that worker for review (CALC-06)', () {
-    expect(figures(unapproved: 2).issues, {PayrollIssue.unapprovedWork});
+    expect(figures(unpriced: 2).issues, {PayrollIssue.missingRate});
   });
 
   group('TC-019 monthly pay once per period (CALC-04)', () {

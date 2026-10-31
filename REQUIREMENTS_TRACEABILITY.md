@@ -35,7 +35,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | ATT-04 | 05 | Exceptions | T10 | IMPLEMENTED_UNVERIFIED | TC-024 | - |
 | ATT-05 | 05 | Duplication | T10 | IMPLEMENTED_UNVERIFIED | TC-008, TC-025 | - |
 | ATT-06 | 05 | Midnight shift | T10 | IMPLEMENTED_UNVERIFIED | TC-018 | - |
-| ATT-07 | 05 | Attendance states | T10 | IMPLEMENTED_UNVERIFIED | - | - |
+| ATT-07 | 05 | Attendance states | T10, T11e | IMPLEMENTED_UNVERIFIED | TC-060 | `apps/mobile/test/payroll_test.dart` |
 | ATT-08 | 05 | Correction | T10 | IMPLEMENTED_UNVERIFIED | TC-027 | - |
 | ATT-09 | 05 | Maaloomati summary | T10 | IMPLEMENTED_UNVERIFIED | TC-028 | - |
 | CALC-01 | 06 | Duration integer minutes mein; amounts integer fils ya exact | T04, T09 | IN_PROGRESS | TC-015 | - |
@@ -51,7 +51,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | PAY-04 | 07 | Katoti ki misal | T11 | IMPLEMENTED_UNVERIFIED | TC-032 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
 | PAY-05 | 07 | Advance sub-ledger | T11, T12, T12a | IN_PROGRESS | TC-002, TC-035, TC-051 | - |
 | PAY-06 | 07 | Salary payments | T12, T12a | IN_PROGRESS | TC-034, TC-051 | - |
-| PAY-07 | 07 | Deductions | T11 | IMPLEMENTED_UNVERIFIED | TC-033 | `apps/mobile/test/payroll_test.dart` |
+| PAY-07 | 07 | Deductions | T11, T11e | IMPLEMENTED_UNVERIFIED | TC-033, TC-061 | `apps/mobile/test/payroll_test.dart` |
 | PAY-08 | 07 | Compliance | T12 | NOT_STARTED | - | - |
 | PAY-09 | 07 | Payslip | T14 | NOT_STARTED | - | - |
 | TS-01 | 08 | Client/date range/site chunein aur approved attendance se timesheet banayein | T15 | NOT_STARTED | - | - |
@@ -79,7 +79,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | DOC-06 | 10 | Actions | T14, T18a | IN_PROGRESS | TC-059 | - |
 | DOC-07 | 10 | Data safety | T14, T18a | IN_PROGRESS | TC-059 | - |
 | DOC-08 | 10 | Tests | T14, T18a | IN_PROGRESS | TC-058 | - |
-| REP-01 | 11 | Reports | T18, T18a | IN_PROGRESS | TC-057, TC-058 | - |
+| REP-01 | 11 | Reports | T18, T18a, T11e | IN_PROGRESS | TC-057, TC-058, TC-062, TC-063 | - |
 | REP-02 | 11 | Hisaab ki separation | T18 | NOT_STARTED | TC-044 | - |
 | REP-03 | 11 | Margin | T18 | NOT_STARTED | TC-044 | - |
 | REP-04 | 11 | Closing | T13 | NOT_STARTED | TC-037 | - |
