@@ -49,4 +49,4 @@ D-023 and D-024 were settled by the owner on 2026-10-31.
 - Never chain a commit after a test run in one command unless it is gated on the result. It happened once in T06.
 - Forms must not sit in a lazy list. Off-screen fields skip validation. Use `FormBody`.
 - A `ListTile` with `selected: true` paints `selectedTileColor`, not `tileColor`. Golden PNGs caught the panel's active item being invisible, which every widget test missed. Review new screens as images (load real fonts with `FontLoader`, or text shows as blocks).
-- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Current graph: 1,219 nodes, 1,898 edges, 62 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.
+- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Current graph: 1,319 nodes, 2,084 edges, 68 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.
