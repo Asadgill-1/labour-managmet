@@ -19,6 +19,78 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabLabour => 'Labour';
 
   @override
+  String get tabGroups => 'Worker groups';
+
+  @override
+  String get addGroup => 'Make a group';
+
+  @override
+  String get editGroup => 'Edit group';
+
+  @override
+  String get groupName => 'Group name';
+
+  @override
+  String get groupNameHelp => 'For example: Emaar West';
+
+  @override
+  String get groupsEmpty =>
+      'No groups yet. Make one for workers who usually go together.';
+
+  @override
+  String get noneChoice => 'None';
+
+  @override
+  String get dailyWage => 'Daily wage (AED)';
+
+  @override
+  String get dailyWageHelp =>
+      'Optional. It shows beside every worker. To change one worker, tap the amount beside their name.';
+
+  @override
+  String get halfDayIsHalf => 'Half day pays half the daily wage';
+
+  @override
+  String get ownWageHelp => 'Leave empty to use the group\'s daily wage.';
+
+  @override
+  String get todayWageHelp =>
+      'For this attendance only. The group does not change.';
+
+  @override
+  String get todayWageReason => 'Daily wage typed while marking attendance';
+
+  @override
+  String get setWage => 'Set wage';
+
+  @override
+  String get monthlyPay => 'Monthly';
+
+  @override
+  String get workersHeading => 'Workers';
+
+  @override
+  String get searchGroup => 'Search groups';
+
+  @override
+  String get searchWorker => 'Search workers';
+
+  @override
+  String membersCount(int count) {
+    return '$count workers';
+  }
+
+  @override
+  String saveWithCount(int count) {
+    return 'Save ($count workers)';
+  }
+
+  @override
+  String wageOf(String name) {
+    return 'Daily wage: $name';
+  }
+
+  @override
   String get tabRates => 'Rates';
 
   @override
@@ -710,6 +782,77 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get tabLabour => 'Labour';
+
+  @override
+  String get tabGroups => 'Mazdoor group';
+
+  @override
+  String get addGroup => 'Group banayein';
+
+  @override
+  String get editGroup => 'Group badlein';
+
+  @override
+  String get groupName => 'Group ka naam';
+
+  @override
+  String get groupNameHelp => 'Jaise: Emaar West';
+
+  @override
+  String get groupsEmpty =>
+      'Abhi koi group nahin. Jo mazdoor aksar saath jate hain un ka group banayein.';
+
+  @override
+  String get noneChoice => 'Koi nahin';
+
+  @override
+  String get dailyWage => 'Dehari (AED)';
+
+  @override
+  String get dailyWageHelp =>
+      'Zaroori nahin. Yeh har mazdoor ke saamne aa jayegi. Kisi aik ki badalni ho to us ke naam ke saamne raqam par dabayein.';
+
+  @override
+  String get halfDayIsHalf => 'Aadhe din par aadhi dehari';
+
+  @override
+  String get ownWageHelp => 'Khaali chhorein to group ki dehari lagegi.';
+
+  @override
+  String get todayWageHelp => 'Sirf is hazri ke liye. Group nahin badlega.';
+
+  @override
+  String get todayWageReason => 'Hazri lagate waqt dehari likhi';
+
+  @override
+  String get setWage => 'Dehari likhein';
+
+  @override
+  String get monthlyPay => 'Mahana';
+
+  @override
+  String get workersHeading => 'Mazdoor';
+
+  @override
+  String get searchGroup => 'Group talash karein';
+
+  @override
+  String get searchWorker => 'Mazdoor talash karein';
+
+  @override
+  String membersCount(int count) {
+    return '$count mazdoor';
+  }
+
+  @override
+  String saveWithCount(int count) {
+    return 'Save karein ($count mazdoor)';
+  }
+
+  @override
+  String wageOf(String name) {
+    return 'Dehari: $name';
+  }
 
   @override
   String get tabRates => 'Rates';

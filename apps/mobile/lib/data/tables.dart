@@ -128,11 +128,42 @@ class OpeningBalances extends Table with Common {
   ];
 }
 
+/// A team that usually works together (D-029). Everything but the name is optional.
+class WorkerGroups extends Table with Common {
+  TextColumn get name => text()();
+  TextColumn get clientId => text().nullable().references(Clients, #id)();
+  TextColumn get siteId => text().nullable().references(Sites, #id)();
+
+  /// Pay per day for everyone in the group, unless a member has their own.
+  IntColumn get dailyRateFils => integer().nullable().check(dailyRateFils.isBiggerOrEqualValue(0))();
+  BoolColumn get halfDayIsHalf => boolean().withDefault(const Constant(true))();
+
+  /// Usual duty as minutes from local midnight. End below start means next day.
+  IntColumn get startMinute => integer().nullable()();
+  IntColumn get endMinute => integer().nullable()();
+  IntColumn get breakMinutes => integer().withDefault(const Constant(0))();
+  BoolColumn get active => boolean().withDefault(const Constant(true))();
+}
+
+class WorkerGroupMembers extends Table with Common {
+  TextColumn get groupId => text().references(WorkerGroups, #id)();
+  TextColumn get workerId => text().references(Workers, #id)();
+
+  /// Null means the group's daily wage.
+  IntColumn get dailyRateFils => integer().nullable().check(dailyRateFils.isBiggerOrEqualValue(0))();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {groupId, workerId},
+  ];
+}
+
 @DataClassName('AttendanceBatch')
 class AttendanceBatches extends Table with Common {
   TextColumn get workDate => text()();
   TextColumn get clientId => text().references(Clients, #id)();
   TextColumn get siteId => text().references(Sites, #id)();
+  TextColumn get groupId => text().nullable().references(WorkerGroups, #id)();
   TextColumn get note => text().nullable()();
 }
 
@@ -143,6 +174,9 @@ class AttendanceEntries extends Table with Common {
   TextColumn get workerId => text().references(Workers, #id)();
   TextColumn get clientId => text().references(Clients, #id)();
   TextColumn get siteId => text().references(Sites, #id)();
+
+  /// Set when marked through a group, so the row can be priced again until it is approved (D-026, D-029).
+  TextColumn get groupId => text().nullable().references(WorkerGroups, #id)();
   TextColumn get workDate => text()();
 
   /// Null for an absent row.

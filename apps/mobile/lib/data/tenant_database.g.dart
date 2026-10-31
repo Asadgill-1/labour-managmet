@@ -2672,6 +2672,948 @@ class SitesCompanion extends UpdateCompanion<Site> {
   }
 }
 
+class $WorkerGroupsTable extends WorkerGroups
+    with TableInfo<$WorkerGroupsTable, WorkerGroup> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WorkerGroupsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _clientIdMeta = const VerificationMeta(
+    'clientId',
+  );
+  @override
+  late final GeneratedColumn<String> clientId = GeneratedColumn<String>(
+    'client_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES clients (id)',
+    ),
+  );
+  static const VerificationMeta _siteIdMeta = const VerificationMeta('siteId');
+  @override
+  late final GeneratedColumn<String> siteId = GeneratedColumn<String>(
+    'site_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES sites (id)',
+    ),
+  );
+  static const VerificationMeta _dailyRateFilsMeta = const VerificationMeta(
+    'dailyRateFils',
+  );
+  @override
+  late final GeneratedColumn<int> dailyRateFils = GeneratedColumn<int>(
+    'daily_rate_fils',
+    aliasedName,
+    true,
+    check: () => ComparableExpr(dailyRateFils).isBiggerOrEqualValue(0),
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _halfDayIsHalfMeta = const VerificationMeta(
+    'halfDayIsHalf',
+  );
+  @override
+  late final GeneratedColumn<bool> halfDayIsHalf = GeneratedColumn<bool>(
+    'half_day_is_half',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("half_day_is_half" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _startMinuteMeta = const VerificationMeta(
+    'startMinute',
+  );
+  @override
+  late final GeneratedColumn<int> startMinute = GeneratedColumn<int>(
+    'start_minute',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _endMinuteMeta = const VerificationMeta(
+    'endMinute',
+  );
+  @override
+  late final GeneratedColumn<int> endMinute = GeneratedColumn<int>(
+    'end_minute',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _breakMinutesMeta = const VerificationMeta(
+    'breakMinutes',
+  );
+  @override
+  late final GeneratedColumn<int> breakMinutes = GeneratedColumn<int>(
+    'break_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _activeMeta = const VerificationMeta('active');
+  @override
+  late final GeneratedColumn<bool> active = GeneratedColumn<bool>(
+    'active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    name,
+    clientId,
+    siteId,
+    dailyRateFils,
+    halfDayIsHalf,
+    startMinute,
+    endMinute,
+    breakMinutes,
+    active,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'worker_groups';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WorkerGroup> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('client_id')) {
+      context.handle(
+        _clientIdMeta,
+        clientId.isAcceptableOrUnknown(data['client_id']!, _clientIdMeta),
+      );
+    }
+    if (data.containsKey('site_id')) {
+      context.handle(
+        _siteIdMeta,
+        siteId.isAcceptableOrUnknown(data['site_id']!, _siteIdMeta),
+      );
+    }
+    if (data.containsKey('daily_rate_fils')) {
+      context.handle(
+        _dailyRateFilsMeta,
+        dailyRateFils.isAcceptableOrUnknown(
+          data['daily_rate_fils']!,
+          _dailyRateFilsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('half_day_is_half')) {
+      context.handle(
+        _halfDayIsHalfMeta,
+        halfDayIsHalf.isAcceptableOrUnknown(
+          data['half_day_is_half']!,
+          _halfDayIsHalfMeta,
+        ),
+      );
+    }
+    if (data.containsKey('start_minute')) {
+      context.handle(
+        _startMinuteMeta,
+        startMinute.isAcceptableOrUnknown(
+          data['start_minute']!,
+          _startMinuteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('end_minute')) {
+      context.handle(
+        _endMinuteMeta,
+        endMinute.isAcceptableOrUnknown(data['end_minute']!, _endMinuteMeta),
+      );
+    }
+    if (data.containsKey('break_minutes')) {
+      context.handle(
+        _breakMinutesMeta,
+        breakMinutes.isAcceptableOrUnknown(
+          data['break_minutes']!,
+          _breakMinutesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('active')) {
+      context.handle(
+        _activeMeta,
+        active.isAcceptableOrUnknown(data['active']!, _activeMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WorkerGroup map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WorkerGroup(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      clientId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}client_id'],
+      ),
+      siteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}site_id'],
+      ),
+      dailyRateFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}daily_rate_fils'],
+      ),
+      halfDayIsHalf: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}half_day_is_half'],
+      )!,
+      startMinute: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}start_minute'],
+      ),
+      endMinute: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}end_minute'],
+      ),
+      breakMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}break_minutes'],
+      )!,
+      active: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}active'],
+      )!,
+    );
+  }
+
+  @override
+  $WorkerGroupsTable createAlias(String alias) {
+    return $WorkerGroupsTable(attachedDatabase, alias);
+  }
+}
+
+class WorkerGroup extends DataClass implements Insertable<WorkerGroup> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String name;
+  final String? clientId;
+  final String? siteId;
+
+  /// Pay per day for everyone in the group, unless a member has their own.
+  final int? dailyRateFils;
+  final bool halfDayIsHalf;
+
+  /// Usual duty as minutes from local midnight. End below start means next day.
+  final int? startMinute;
+  final int? endMinute;
+  final int breakMinutes;
+  final bool active;
+  const WorkerGroup({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.name,
+    this.clientId,
+    this.siteId,
+    this.dailyRateFils,
+    required this.halfDayIsHalf,
+    this.startMinute,
+    this.endMinute,
+    required this.breakMinutes,
+    required this.active,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || clientId != null) {
+      map['client_id'] = Variable<String>(clientId);
+    }
+    if (!nullToAbsent || siteId != null) {
+      map['site_id'] = Variable<String>(siteId);
+    }
+    if (!nullToAbsent || dailyRateFils != null) {
+      map['daily_rate_fils'] = Variable<int>(dailyRateFils);
+    }
+    map['half_day_is_half'] = Variable<bool>(halfDayIsHalf);
+    if (!nullToAbsent || startMinute != null) {
+      map['start_minute'] = Variable<int>(startMinute);
+    }
+    if (!nullToAbsent || endMinute != null) {
+      map['end_minute'] = Variable<int>(endMinute);
+    }
+    map['break_minutes'] = Variable<int>(breakMinutes);
+    map['active'] = Variable<bool>(active);
+    return map;
+  }
+
+  WorkerGroupsCompanion toCompanion(bool nullToAbsent) {
+    return WorkerGroupsCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      name: Value(name),
+      clientId: clientId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientId),
+      siteId: siteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(siteId),
+      dailyRateFils: dailyRateFils == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dailyRateFils),
+      halfDayIsHalf: Value(halfDayIsHalf),
+      startMinute: startMinute == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startMinute),
+      endMinute: endMinute == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endMinute),
+      breakMinutes: Value(breakMinutes),
+      active: Value(active),
+    );
+  }
+
+  factory WorkerGroup.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WorkerGroup(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      name: serializer.fromJson<String>(json['name']),
+      clientId: serializer.fromJson<String?>(json['clientId']),
+      siteId: serializer.fromJson<String?>(json['siteId']),
+      dailyRateFils: serializer.fromJson<int?>(json['dailyRateFils']),
+      halfDayIsHalf: serializer.fromJson<bool>(json['halfDayIsHalf']),
+      startMinute: serializer.fromJson<int?>(json['startMinute']),
+      endMinute: serializer.fromJson<int?>(json['endMinute']),
+      breakMinutes: serializer.fromJson<int>(json['breakMinutes']),
+      active: serializer.fromJson<bool>(json['active']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'name': serializer.toJson<String>(name),
+      'clientId': serializer.toJson<String?>(clientId),
+      'siteId': serializer.toJson<String?>(siteId),
+      'dailyRateFils': serializer.toJson<int?>(dailyRateFils),
+      'halfDayIsHalf': serializer.toJson<bool>(halfDayIsHalf),
+      'startMinute': serializer.toJson<int?>(startMinute),
+      'endMinute': serializer.toJson<int?>(endMinute),
+      'breakMinutes': serializer.toJson<int>(breakMinutes),
+      'active': serializer.toJson<bool>(active),
+    };
+  }
+
+  WorkerGroup copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? name,
+    Value<String?> clientId = const Value.absent(),
+    Value<String?> siteId = const Value.absent(),
+    Value<int?> dailyRateFils = const Value.absent(),
+    bool? halfDayIsHalf,
+    Value<int?> startMinute = const Value.absent(),
+    Value<int?> endMinute = const Value.absent(),
+    int? breakMinutes,
+    bool? active,
+  }) => WorkerGroup(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    name: name ?? this.name,
+    clientId: clientId.present ? clientId.value : this.clientId,
+    siteId: siteId.present ? siteId.value : this.siteId,
+    dailyRateFils: dailyRateFils.present
+        ? dailyRateFils.value
+        : this.dailyRateFils,
+    halfDayIsHalf: halfDayIsHalf ?? this.halfDayIsHalf,
+    startMinute: startMinute.present ? startMinute.value : this.startMinute,
+    endMinute: endMinute.present ? endMinute.value : this.endMinute,
+    breakMinutes: breakMinutes ?? this.breakMinutes,
+    active: active ?? this.active,
+  );
+  WorkerGroup copyWithCompanion(WorkerGroupsCompanion data) {
+    return WorkerGroup(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      name: data.name.present ? data.name.value : this.name,
+      clientId: data.clientId.present ? data.clientId.value : this.clientId,
+      siteId: data.siteId.present ? data.siteId.value : this.siteId,
+      dailyRateFils: data.dailyRateFils.present
+          ? data.dailyRateFils.value
+          : this.dailyRateFils,
+      halfDayIsHalf: data.halfDayIsHalf.present
+          ? data.halfDayIsHalf.value
+          : this.halfDayIsHalf,
+      startMinute: data.startMinute.present
+          ? data.startMinute.value
+          : this.startMinute,
+      endMinute: data.endMinute.present ? data.endMinute.value : this.endMinute,
+      breakMinutes: data.breakMinutes.present
+          ? data.breakMinutes.value
+          : this.breakMinutes,
+      active: data.active.present ? data.active.value : this.active,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorkerGroup(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('name: $name, ')
+          ..write('clientId: $clientId, ')
+          ..write('siteId: $siteId, ')
+          ..write('dailyRateFils: $dailyRateFils, ')
+          ..write('halfDayIsHalf: $halfDayIsHalf, ')
+          ..write('startMinute: $startMinute, ')
+          ..write('endMinute: $endMinute, ')
+          ..write('breakMinutes: $breakMinutes, ')
+          ..write('active: $active')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    name,
+    clientId,
+    siteId,
+    dailyRateFils,
+    halfDayIsHalf,
+    startMinute,
+    endMinute,
+    breakMinutes,
+    active,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WorkerGroup &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.name == this.name &&
+          other.clientId == this.clientId &&
+          other.siteId == this.siteId &&
+          other.dailyRateFils == this.dailyRateFils &&
+          other.halfDayIsHalf == this.halfDayIsHalf &&
+          other.startMinute == this.startMinute &&
+          other.endMinute == this.endMinute &&
+          other.breakMinutes == this.breakMinutes &&
+          other.active == this.active);
+}
+
+class WorkerGroupsCompanion extends UpdateCompanion<WorkerGroup> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> name;
+  final Value<String?> clientId;
+  final Value<String?> siteId;
+  final Value<int?> dailyRateFils;
+  final Value<bool> halfDayIsHalf;
+  final Value<int?> startMinute;
+  final Value<int?> endMinute;
+  final Value<int> breakMinutes;
+  final Value<bool> active;
+  final Value<int> rowid;
+  const WorkerGroupsCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.clientId = const Value.absent(),
+    this.siteId = const Value.absent(),
+    this.dailyRateFils = const Value.absent(),
+    this.halfDayIsHalf = const Value.absent(),
+    this.startMinute = const Value.absent(),
+    this.endMinute = const Value.absent(),
+    this.breakMinutes = const Value.absent(),
+    this.active = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WorkerGroupsCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String name,
+    this.clientId = const Value.absent(),
+    this.siteId = const Value.absent(),
+    this.dailyRateFils = const Value.absent(),
+    this.halfDayIsHalf = const Value.absent(),
+    this.startMinute = const Value.absent(),
+    this.endMinute = const Value.absent(),
+    this.breakMinutes = const Value.absent(),
+    this.active = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       name = Value(name);
+  static Insertable<WorkerGroup> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? name,
+    Expression<String>? clientId,
+    Expression<String>? siteId,
+    Expression<int>? dailyRateFils,
+    Expression<bool>? halfDayIsHalf,
+    Expression<int>? startMinute,
+    Expression<int>? endMinute,
+    Expression<int>? breakMinutes,
+    Expression<bool>? active,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (name != null) 'name': name,
+      if (clientId != null) 'client_id': clientId,
+      if (siteId != null) 'site_id': siteId,
+      if (dailyRateFils != null) 'daily_rate_fils': dailyRateFils,
+      if (halfDayIsHalf != null) 'half_day_is_half': halfDayIsHalf,
+      if (startMinute != null) 'start_minute': startMinute,
+      if (endMinute != null) 'end_minute': endMinute,
+      if (breakMinutes != null) 'break_minutes': breakMinutes,
+      if (active != null) 'active': active,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WorkerGroupsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? name,
+    Value<String?>? clientId,
+    Value<String?>? siteId,
+    Value<int?>? dailyRateFils,
+    Value<bool>? halfDayIsHalf,
+    Value<int?>? startMinute,
+    Value<int?>? endMinute,
+    Value<int>? breakMinutes,
+    Value<bool>? active,
+    Value<int>? rowid,
+  }) {
+    return WorkerGroupsCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      name: name ?? this.name,
+      clientId: clientId ?? this.clientId,
+      siteId: siteId ?? this.siteId,
+      dailyRateFils: dailyRateFils ?? this.dailyRateFils,
+      halfDayIsHalf: halfDayIsHalf ?? this.halfDayIsHalf,
+      startMinute: startMinute ?? this.startMinute,
+      endMinute: endMinute ?? this.endMinute,
+      breakMinutes: breakMinutes ?? this.breakMinutes,
+      active: active ?? this.active,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (clientId.present) {
+      map['client_id'] = Variable<String>(clientId.value);
+    }
+    if (siteId.present) {
+      map['site_id'] = Variable<String>(siteId.value);
+    }
+    if (dailyRateFils.present) {
+      map['daily_rate_fils'] = Variable<int>(dailyRateFils.value);
+    }
+    if (halfDayIsHalf.present) {
+      map['half_day_is_half'] = Variable<bool>(halfDayIsHalf.value);
+    }
+    if (startMinute.present) {
+      map['start_minute'] = Variable<int>(startMinute.value);
+    }
+    if (endMinute.present) {
+      map['end_minute'] = Variable<int>(endMinute.value);
+    }
+    if (breakMinutes.present) {
+      map['break_minutes'] = Variable<int>(breakMinutes.value);
+    }
+    if (active.present) {
+      map['active'] = Variable<bool>(active.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorkerGroupsCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('name: $name, ')
+          ..write('clientId: $clientId, ')
+          ..write('siteId: $siteId, ')
+          ..write('dailyRateFils: $dailyRateFils, ')
+          ..write('halfDayIsHalf: $halfDayIsHalf, ')
+          ..write('startMinute: $startMinute, ')
+          ..write('endMinute: $endMinute, ')
+          ..write('breakMinutes: $breakMinutes, ')
+          ..write('active: $active, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $AttendanceBatchesTable extends AttendanceBatches
     with TableInfo<$AttendanceBatchesTable, AttendanceBatch> {
   @override
@@ -2792,6 +3734,20 @@ class $AttendanceBatchesTable extends AttendanceBatches
       'REFERENCES sites (id)',
     ),
   );
+  static const VerificationMeta _groupIdMeta = const VerificationMeta(
+    'groupId',
+  );
+  @override
+  late final GeneratedColumn<String> groupId = GeneratedColumn<String>(
+    'group_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES worker_groups (id)',
+    ),
+  );
   static const VerificationMeta _noteMeta = const VerificationMeta('note');
   @override
   late final GeneratedColumn<String> note = GeneratedColumn<String>(
@@ -2813,6 +3769,7 @@ class $AttendanceBatchesTable extends AttendanceBatches
     workDate,
     clientId,
     siteId,
+    groupId,
     note,
   ];
   @override
@@ -2911,6 +3868,12 @@ class $AttendanceBatchesTable extends AttendanceBatches
     } else if (isInserting) {
       context.missing(_siteIdMeta);
     }
+    if (data.containsKey('group_id')) {
+      context.handle(
+        _groupIdMeta,
+        groupId.isAcceptableOrUnknown(data['group_id']!, _groupIdMeta),
+      );
+    }
     if (data.containsKey('note')) {
       context.handle(
         _noteMeta,
@@ -2966,6 +3929,10 @@ class $AttendanceBatchesTable extends AttendanceBatches
         DriftSqlType.string,
         data['${effectivePrefix}site_id'],
       )!,
+      groupId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}group_id'],
+      ),
       note: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}note'],
@@ -2990,6 +3957,7 @@ class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
   final String workDate;
   final String clientId;
   final String siteId;
+  final String? groupId;
   final String? note;
   const AttendanceBatch({
     required this.id,
@@ -3002,6 +3970,7 @@ class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
     required this.workDate,
     required this.clientId,
     required this.siteId,
+    this.groupId,
     this.note,
   });
   @override
@@ -3017,6 +3986,9 @@ class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
     map['work_date'] = Variable<String>(workDate);
     map['client_id'] = Variable<String>(clientId);
     map['site_id'] = Variable<String>(siteId);
+    if (!nullToAbsent || groupId != null) {
+      map['group_id'] = Variable<String>(groupId);
+    }
     if (!nullToAbsent || note != null) {
       map['note'] = Variable<String>(note);
     }
@@ -3035,6 +4007,9 @@ class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
       workDate: Value(workDate),
       clientId: Value(clientId),
       siteId: Value(siteId),
+      groupId: groupId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(groupId),
       note: note == null && nullToAbsent ? const Value.absent() : Value(note),
     );
   }
@@ -3055,6 +4030,7 @@ class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
       workDate: serializer.fromJson<String>(json['workDate']),
       clientId: serializer.fromJson<String>(json['clientId']),
       siteId: serializer.fromJson<String>(json['siteId']),
+      groupId: serializer.fromJson<String?>(json['groupId']),
       note: serializer.fromJson<String?>(json['note']),
     );
   }
@@ -3072,6 +4048,7 @@ class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
       'workDate': serializer.toJson<String>(workDate),
       'clientId': serializer.toJson<String>(clientId),
       'siteId': serializer.toJson<String>(siteId),
+      'groupId': serializer.toJson<String?>(groupId),
       'note': serializer.toJson<String?>(note),
     };
   }
@@ -3087,6 +4064,7 @@ class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
     String? workDate,
     String? clientId,
     String? siteId,
+    Value<String?> groupId = const Value.absent(),
     Value<String?> note = const Value.absent(),
   }) => AttendanceBatch(
     id: id ?? this.id,
@@ -3099,6 +4077,7 @@ class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
     workDate: workDate ?? this.workDate,
     clientId: clientId ?? this.clientId,
     siteId: siteId ?? this.siteId,
+    groupId: groupId.present ? groupId.value : this.groupId,
     note: note.present ? note.value : this.note,
   );
   AttendanceBatch copyWithCompanion(AttendanceBatchesCompanion data) {
@@ -3119,6 +4098,7 @@ class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
       workDate: data.workDate.present ? data.workDate.value : this.workDate,
       clientId: data.clientId.present ? data.clientId.value : this.clientId,
       siteId: data.siteId.present ? data.siteId.value : this.siteId,
+      groupId: data.groupId.present ? data.groupId.value : this.groupId,
       note: data.note.present ? data.note.value : this.note,
     );
   }
@@ -3136,6 +4116,7 @@ class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
           ..write('workDate: $workDate, ')
           ..write('clientId: $clientId, ')
           ..write('siteId: $siteId, ')
+          ..write('groupId: $groupId, ')
           ..write('note: $note')
           ..write(')'))
         .toString();
@@ -3153,6 +4134,7 @@ class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
     workDate,
     clientId,
     siteId,
+    groupId,
     note,
   );
   @override
@@ -3169,6 +4151,7 @@ class AttendanceBatch extends DataClass implements Insertable<AttendanceBatch> {
           other.workDate == this.workDate &&
           other.clientId == this.clientId &&
           other.siteId == this.siteId &&
+          other.groupId == this.groupId &&
           other.note == this.note);
 }
 
@@ -3183,6 +4166,7 @@ class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatch> {
   final Value<String> workDate;
   final Value<String> clientId;
   final Value<String> siteId;
+  final Value<String?> groupId;
   final Value<String?> note;
   final Value<int> rowid;
   const AttendanceBatchesCompanion({
@@ -3196,6 +4180,7 @@ class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatch> {
     this.workDate = const Value.absent(),
     this.clientId = const Value.absent(),
     this.siteId = const Value.absent(),
+    this.groupId = const Value.absent(),
     this.note = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -3210,6 +4195,7 @@ class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatch> {
     required String workDate,
     required String clientId,
     required String siteId,
+    this.groupId = const Value.absent(),
     this.note = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -3232,6 +4218,7 @@ class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatch> {
     Expression<String>? workDate,
     Expression<String>? clientId,
     Expression<String>? siteId,
+    Expression<String>? groupId,
     Expression<String>? note,
     Expression<int>? rowid,
   }) {
@@ -3246,6 +4233,7 @@ class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatch> {
       if (workDate != null) 'work_date': workDate,
       if (clientId != null) 'client_id': clientId,
       if (siteId != null) 'site_id': siteId,
+      if (groupId != null) 'group_id': groupId,
       if (note != null) 'note': note,
       if (rowid != null) 'rowid': rowid,
     });
@@ -3262,6 +4250,7 @@ class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatch> {
     Value<String>? workDate,
     Value<String>? clientId,
     Value<String>? siteId,
+    Value<String?>? groupId,
     Value<String?>? note,
     Value<int>? rowid,
   }) {
@@ -3276,6 +4265,7 @@ class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatch> {
       workDate: workDate ?? this.workDate,
       clientId: clientId ?? this.clientId,
       siteId: siteId ?? this.siteId,
+      groupId: groupId ?? this.groupId,
       note: note ?? this.note,
       rowid: rowid ?? this.rowid,
     );
@@ -3314,6 +4304,9 @@ class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatch> {
     if (siteId.present) {
       map['site_id'] = Variable<String>(siteId.value);
     }
+    if (groupId.present) {
+      map['group_id'] = Variable<String>(groupId.value);
+    }
     if (note.present) {
       map['note'] = Variable<String>(note.value);
     }
@@ -3336,6 +4329,7 @@ class AttendanceBatchesCompanion extends UpdateCompanion<AttendanceBatch> {
           ..write('workDate: $workDate, ')
           ..write('clientId: $clientId, ')
           ..write('siteId: $siteId, ')
+          ..write('groupId: $groupId, ')
           ..write('note: $note, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -4360,6 +5354,20 @@ class $AttendanceEntriesTable extends AttendanceEntries
       'REFERENCES sites (id)',
     ),
   );
+  static const VerificationMeta _groupIdMeta = const VerificationMeta(
+    'groupId',
+  );
+  @override
+  late final GeneratedColumn<String> groupId = GeneratedColumn<String>(
+    'group_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES worker_groups (id)',
+    ),
+  );
   static const VerificationMeta _workDateMeta = const VerificationMeta(
     'workDate',
   );
@@ -4682,6 +5690,7 @@ class $AttendanceEntriesTable extends AttendanceEntries
     workerId,
     clientId,
     siteId,
+    groupId,
     workDate,
     startUtc,
     endUtc,
@@ -4813,6 +5822,12 @@ class $AttendanceEntriesTable extends AttendanceEntries
       );
     } else if (isInserting) {
       context.missing(_siteIdMeta);
+    }
+    if (data.containsKey('group_id')) {
+      context.handle(
+        _groupIdMeta,
+        groupId.isAcceptableOrUnknown(data['group_id']!, _groupIdMeta),
+      );
     }
     if (data.containsKey('work_date')) {
       context.handle(
@@ -5105,6 +6120,10 @@ class $AttendanceEntriesTable extends AttendanceEntries
         DriftSqlType.string,
         data['${effectivePrefix}site_id'],
       )!,
+      groupId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}group_id'],
+      ),
       workDate: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}work_date'],
@@ -5234,6 +6253,9 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
   final String workerId;
   final String clientId;
   final String siteId;
+
+  /// Set when marked through a group, so the row can be priced again until it is approved (D-026, D-029).
+  final String? groupId;
   final String workDate;
 
   /// Null for an absent row.
@@ -5285,6 +6307,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     required this.workerId,
     required this.clientId,
     required this.siteId,
+    this.groupId,
     required this.workDate,
     this.startUtc,
     this.endUtc,
@@ -5327,6 +6350,9 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     map['worker_id'] = Variable<String>(workerId);
     map['client_id'] = Variable<String>(clientId);
     map['site_id'] = Variable<String>(siteId);
+    if (!nullToAbsent || groupId != null) {
+      map['group_id'] = Variable<String>(groupId);
+    }
     map['work_date'] = Variable<String>(workDate);
     if (!nullToAbsent || startUtc != null) {
       map['start_utc'] = Variable<DateTime>(startUtc);
@@ -5398,6 +6424,9 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
       workerId: Value(workerId),
       clientId: Value(clientId),
       siteId: Value(siteId),
+      groupId: groupId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(groupId),
       workDate: Value(workDate),
       startUtc: startUtc == null && nullToAbsent
           ? const Value.absent()
@@ -5473,6 +6502,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
       workerId: serializer.fromJson<String>(json['workerId']),
       clientId: serializer.fromJson<String>(json['clientId']),
       siteId: serializer.fromJson<String>(json['siteId']),
+      groupId: serializer.fromJson<String?>(json['groupId']),
       workDate: serializer.fromJson<String>(json['workDate']),
       startUtc: serializer.fromJson<DateTime?>(json['startUtc']),
       endUtc: serializer.fromJson<DateTime?>(json['endUtc']),
@@ -5525,6 +6555,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
       'workerId': serializer.toJson<String>(workerId),
       'clientId': serializer.toJson<String>(clientId),
       'siteId': serializer.toJson<String>(siteId),
+      'groupId': serializer.toJson<String?>(groupId),
       'workDate': serializer.toJson<String>(workDate),
       'startUtc': serializer.toJson<DateTime?>(startUtc),
       'endUtc': serializer.toJson<DateTime?>(endUtc),
@@ -5567,6 +6598,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     String? workerId,
     String? clientId,
     String? siteId,
+    Value<String?> groupId = const Value.absent(),
     String? workDate,
     Value<DateTime?> startUtc = const Value.absent(),
     Value<DateTime?> endUtc = const Value.absent(),
@@ -5606,6 +6638,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     workerId: workerId ?? this.workerId,
     clientId: clientId ?? this.clientId,
     siteId: siteId ?? this.siteId,
+    groupId: groupId.present ? groupId.value : this.groupId,
     workDate: workDate ?? this.workDate,
     startUtc: startUtc.present ? startUtc.value : this.startUtc,
     endUtc: endUtc.present ? endUtc.value : this.endUtc,
@@ -5671,6 +6704,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
       workerId: data.workerId.present ? data.workerId.value : this.workerId,
       clientId: data.clientId.present ? data.clientId.value : this.clientId,
       siteId: data.siteId.present ? data.siteId.value : this.siteId,
+      groupId: data.groupId.present ? data.groupId.value : this.groupId,
       workDate: data.workDate.present ? data.workDate.value : this.workDate,
       startUtc: data.startUtc.present ? data.startUtc.value : this.startUtc,
       endUtc: data.endUtc.present ? data.endUtc.value : this.endUtc,
@@ -5757,6 +6791,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
           ..write('workerId: $workerId, ')
           ..write('clientId: $clientId, ')
           ..write('siteId: $siteId, ')
+          ..write('groupId: $groupId, ')
           ..write('workDate: $workDate, ')
           ..write('startUtc: $startUtc, ')
           ..write('endUtc: $endUtc, ')
@@ -5801,6 +6836,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     workerId,
     clientId,
     siteId,
+    groupId,
     workDate,
     startUtc,
     endUtc,
@@ -5844,6 +6880,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
           other.workerId == this.workerId &&
           other.clientId == this.clientId &&
           other.siteId == this.siteId &&
+          other.groupId == this.groupId &&
           other.workDate == this.workDate &&
           other.startUtc == this.startUtc &&
           other.endUtc == this.endUtc &&
@@ -5885,6 +6922,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
   final Value<String> workerId;
   final Value<String> clientId;
   final Value<String> siteId;
+  final Value<String?> groupId;
   final Value<String> workDate;
   final Value<DateTime?> startUtc;
   final Value<DateTime?> endUtc;
@@ -5925,6 +6963,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     this.workerId = const Value.absent(),
     this.clientId = const Value.absent(),
     this.siteId = const Value.absent(),
+    this.groupId = const Value.absent(),
     this.workDate = const Value.absent(),
     this.startUtc = const Value.absent(),
     this.endUtc = const Value.absent(),
@@ -5966,6 +7005,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     required String workerId,
     required String clientId,
     required String siteId,
+    this.groupId = const Value.absent(),
     required String workDate,
     this.startUtc = const Value.absent(),
     this.endUtc = const Value.absent(),
@@ -6024,6 +7064,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     Expression<String>? workerId,
     Expression<String>? clientId,
     Expression<String>? siteId,
+    Expression<String>? groupId,
     Expression<String>? workDate,
     Expression<DateTime>? startUtc,
     Expression<DateTime>? endUtc,
@@ -6065,6 +7106,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
       if (workerId != null) 'worker_id': workerId,
       if (clientId != null) 'client_id': clientId,
       if (siteId != null) 'site_id': siteId,
+      if (groupId != null) 'group_id': groupId,
       if (workDate != null) 'work_date': workDate,
       if (startUtc != null) 'start_utc': startUtc,
       if (endUtc != null) 'end_utc': endUtc,
@@ -6112,6 +7154,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     Value<String>? workerId,
     Value<String>? clientId,
     Value<String>? siteId,
+    Value<String?>? groupId,
     Value<String>? workDate,
     Value<DateTime?>? startUtc,
     Value<DateTime?>? endUtc,
@@ -6153,6 +7196,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
       workerId: workerId ?? this.workerId,
       clientId: clientId ?? this.clientId,
       siteId: siteId ?? this.siteId,
+      groupId: groupId ?? this.groupId,
       workDate: workDate ?? this.workDate,
       startUtc: startUtc ?? this.startUtc,
       endUtc: endUtc ?? this.endUtc,
@@ -6222,6 +7266,9 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     }
     if (siteId.present) {
       map['site_id'] = Variable<String>(siteId.value);
+    }
+    if (groupId.present) {
+      map['group_id'] = Variable<String>(groupId.value);
     }
     if (workDate.present) {
       map['work_date'] = Variable<String>(workDate.value);
@@ -6330,6 +7377,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
           ..write('workerId: $workerId, ')
           ..write('clientId: $clientId, ')
           ..write('siteId: $siteId, ')
+          ..write('groupId: $groupId, ')
           ..write('workDate: $workDate, ')
           ..write('startUtc: $startUtc, ')
           ..write('endUtc: $endUtc, ')
@@ -10450,6 +11498,650 @@ class OpeningBalancesCompanion extends UpdateCompanion<OpeningBalance> {
   }
 }
 
+class $WorkerGroupMembersTable extends WorkerGroupMembers
+    with TableInfo<$WorkerGroupMembersTable, WorkerGroupMember> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WorkerGroupMembersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _groupIdMeta = const VerificationMeta(
+    'groupId',
+  );
+  @override
+  late final GeneratedColumn<String> groupId = GeneratedColumn<String>(
+    'group_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES worker_groups (id)',
+    ),
+  );
+  static const VerificationMeta _workerIdMeta = const VerificationMeta(
+    'workerId',
+  );
+  @override
+  late final GeneratedColumn<String> workerId = GeneratedColumn<String>(
+    'worker_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES workers (id)',
+    ),
+  );
+  static const VerificationMeta _dailyRateFilsMeta = const VerificationMeta(
+    'dailyRateFils',
+  );
+  @override
+  late final GeneratedColumn<int> dailyRateFils = GeneratedColumn<int>(
+    'daily_rate_fils',
+    aliasedName,
+    true,
+    check: () => ComparableExpr(dailyRateFils).isBiggerOrEqualValue(0),
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    groupId,
+    workerId,
+    dailyRateFils,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'worker_group_members';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WorkerGroupMember> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('group_id')) {
+      context.handle(
+        _groupIdMeta,
+        groupId.isAcceptableOrUnknown(data['group_id']!, _groupIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_groupIdMeta);
+    }
+    if (data.containsKey('worker_id')) {
+      context.handle(
+        _workerIdMeta,
+        workerId.isAcceptableOrUnknown(data['worker_id']!, _workerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_workerIdMeta);
+    }
+    if (data.containsKey('daily_rate_fils')) {
+      context.handle(
+        _dailyRateFilsMeta,
+        dailyRateFils.isAcceptableOrUnknown(
+          data['daily_rate_fils']!,
+          _dailyRateFilsMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {groupId, workerId},
+  ];
+  @override
+  WorkerGroupMember map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WorkerGroupMember(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      groupId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}group_id'],
+      )!,
+      workerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}worker_id'],
+      )!,
+      dailyRateFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}daily_rate_fils'],
+      ),
+    );
+  }
+
+  @override
+  $WorkerGroupMembersTable createAlias(String alias) {
+    return $WorkerGroupMembersTable(attachedDatabase, alias);
+  }
+}
+
+class WorkerGroupMember extends DataClass
+    implements Insertable<WorkerGroupMember> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String groupId;
+  final String workerId;
+
+  /// Null means the group's daily wage.
+  final int? dailyRateFils;
+  const WorkerGroupMember({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.groupId,
+    required this.workerId,
+    this.dailyRateFils,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['group_id'] = Variable<String>(groupId);
+    map['worker_id'] = Variable<String>(workerId);
+    if (!nullToAbsent || dailyRateFils != null) {
+      map['daily_rate_fils'] = Variable<int>(dailyRateFils);
+    }
+    return map;
+  }
+
+  WorkerGroupMembersCompanion toCompanion(bool nullToAbsent) {
+    return WorkerGroupMembersCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      groupId: Value(groupId),
+      workerId: Value(workerId),
+      dailyRateFils: dailyRateFils == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dailyRateFils),
+    );
+  }
+
+  factory WorkerGroupMember.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WorkerGroupMember(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      groupId: serializer.fromJson<String>(json['groupId']),
+      workerId: serializer.fromJson<String>(json['workerId']),
+      dailyRateFils: serializer.fromJson<int?>(json['dailyRateFils']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'groupId': serializer.toJson<String>(groupId),
+      'workerId': serializer.toJson<String>(workerId),
+      'dailyRateFils': serializer.toJson<int?>(dailyRateFils),
+    };
+  }
+
+  WorkerGroupMember copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? groupId,
+    String? workerId,
+    Value<int?> dailyRateFils = const Value.absent(),
+  }) => WorkerGroupMember(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    groupId: groupId ?? this.groupId,
+    workerId: workerId ?? this.workerId,
+    dailyRateFils: dailyRateFils.present
+        ? dailyRateFils.value
+        : this.dailyRateFils,
+  );
+  WorkerGroupMember copyWithCompanion(WorkerGroupMembersCompanion data) {
+    return WorkerGroupMember(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      groupId: data.groupId.present ? data.groupId.value : this.groupId,
+      workerId: data.workerId.present ? data.workerId.value : this.workerId,
+      dailyRateFils: data.dailyRateFils.present
+          ? data.dailyRateFils.value
+          : this.dailyRateFils,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorkerGroupMember(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('groupId: $groupId, ')
+          ..write('workerId: $workerId, ')
+          ..write('dailyRateFils: $dailyRateFils')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    groupId,
+    workerId,
+    dailyRateFils,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WorkerGroupMember &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.groupId == this.groupId &&
+          other.workerId == this.workerId &&
+          other.dailyRateFils == this.dailyRateFils);
+}
+
+class WorkerGroupMembersCompanion extends UpdateCompanion<WorkerGroupMember> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> groupId;
+  final Value<String> workerId;
+  final Value<int?> dailyRateFils;
+  final Value<int> rowid;
+  const WorkerGroupMembersCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.groupId = const Value.absent(),
+    this.workerId = const Value.absent(),
+    this.dailyRateFils = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WorkerGroupMembersCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String groupId,
+    required String workerId,
+    this.dailyRateFils = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       groupId = Value(groupId),
+       workerId = Value(workerId);
+  static Insertable<WorkerGroupMember> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? groupId,
+    Expression<String>? workerId,
+    Expression<int>? dailyRateFils,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (groupId != null) 'group_id': groupId,
+      if (workerId != null) 'worker_id': workerId,
+      if (dailyRateFils != null) 'daily_rate_fils': dailyRateFils,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WorkerGroupMembersCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? groupId,
+    Value<String>? workerId,
+    Value<int?>? dailyRateFils,
+    Value<int>? rowid,
+  }) {
+    return WorkerGroupMembersCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      groupId: groupId ?? this.groupId,
+      workerId: workerId ?? this.workerId,
+      dailyRateFils: dailyRateFils ?? this.dailyRateFils,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (groupId.present) {
+      map['group_id'] = Variable<String>(groupId.value);
+    }
+    if (workerId.present) {
+      map['worker_id'] = Variable<String>(workerId.value);
+    }
+    if (dailyRateFils.present) {
+      map['daily_rate_fils'] = Variable<int>(dailyRateFils.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorkerGroupMembersCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('groupId: $groupId, ')
+          ..write('workerId: $workerId, ')
+          ..write('dailyRateFils: $dailyRateFils, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $OutboxTable extends Outbox with TableInfo<$OutboxTable, OutboxEntry> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -11047,6 +12739,7 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
   );
   late final $ClientsTable clients = $ClientsTable(this);
   late final $SitesTable sites = $SitesTable(this);
+  late final $WorkerGroupsTable workerGroups = $WorkerGroupsTable(this);
   late final $AttendanceBatchesTable attendanceBatches =
       $AttendanceBatchesTable(this);
   late final $WorkersTable workers = $WorkersTable(this);
@@ -11072,6 +12765,8 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
   late final $OpeningBalancesTable openingBalances = $OpeningBalancesTable(
     this,
   );
+  late final $WorkerGroupMembersTable workerGroupMembers =
+      $WorkerGroupMembersTable(this);
   late final $OutboxTable outbox = $OutboxTable(this);
   late final Index idxEntriesWorkerDate = Index(
     'idx_entries_worker_date',
@@ -11091,6 +12786,7 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     auditNoDelete,
     clients,
     sites,
+    workerGroups,
     attendanceBatches,
     workers,
     attendanceEntries,
@@ -11101,6 +12797,7 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     payContracts,
     billingContracts,
     openingBalances,
+    workerGroupMembers,
     outbox,
     idxEntriesWorkerDate,
     idxEntriesDate,
@@ -11521,6 +13218,24 @@ final class $$ClientsTableReferences
     );
   }
 
+  static MultiTypedResultKey<$WorkerGroupsTable, List<WorkerGroup>>
+  _workerGroupsRefsTable(_$TenantDatabase db) => MultiTypedResultKey.fromTable(
+    db.workerGroups,
+    aliasName: 'clients__id__worker_groups__client_id',
+  );
+
+  $$WorkerGroupsTableProcessedTableManager get workerGroupsRefs {
+    final manager = $$WorkerGroupsTableTableManager(
+      $_db,
+      $_db.workerGroups,
+    ).filter((f) => f.clientId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_workerGroupsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<$AttendanceBatchesTable, List<AttendanceBatch>>
   _attendanceBatchesRefsTable(_$TenantDatabase db) =>
       MultiTypedResultKey.fromTable(
@@ -11726,6 +13441,31 @@ class $$ClientsTableFilterComposer
           }) => $$SitesTableFilterComposer(
             $db: $db,
             $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> workerGroupsRefs(
+    Expression<bool> Function($$WorkerGroupsTableFilterComposer f) f,
+  ) {
+    final $$WorkerGroupsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.clientId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableFilterComposer(
+            $db: $db,
+            $table: $db.workerGroups,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12046,6 +13786,31 @@ class $$ClientsTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> workerGroupsRefs<T extends Object>(
+    Expression<T> Function($$WorkerGroupsTableAnnotationComposer a) f,
+  ) {
+    final $$WorkerGroupsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.clientId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.workerGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> attendanceBatchesRefs<T extends Object>(
     Expression<T> Function($$AttendanceBatchesTableAnnotationComposer a) f,
   ) {
@@ -12164,6 +13929,7 @@ class $$ClientsTableTableManager
           Client,
           PrefetchHooks Function({
             bool sitesRefs,
+            bool workerGroupsRefs,
             bool attendanceBatchesRefs,
             bool attendanceEntriesRefs,
             bool billingContractsRefs,
@@ -12280,6 +14046,7 @@ class $$ClientsTableTableManager
           prefetchHooksCallback:
               ({
                 sitesRefs = false,
+                workerGroupsRefs = false,
                 attendanceBatchesRefs = false,
                 attendanceEntriesRefs = false,
                 billingContractsRefs = false,
@@ -12289,6 +14056,7 @@ class $$ClientsTableTableManager
                   db: db,
                   explicitlyWatchedTables: [
                     if (sitesRefs) db.sites,
+                    if (workerGroupsRefs) db.workerGroups,
                     if (attendanceBatchesRefs) db.attendanceBatches,
                     if (attendanceEntriesRefs) db.attendanceEntries,
                     if (billingContractsRefs) db.billingContracts,
@@ -12309,6 +14077,26 @@ class $$ClientsTableTableManager
                               ._sitesRefsTable(db),
                           managerFromTypedResult: (p0) =>
                               $$ClientsTableReferences(db, table, p0).sitesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'client_id',
+                          typedResults: items,
+                        ),
+                      if (workerGroupsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Client,
+                          $ClientsTable,
+                          WorkerGroup,
+                          $WorkerGroupsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ClientsTableReferences
+                              ._workerGroupsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ClientsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).workerGroupsRefs,
                           currentColumn: 'id',
                           referencedColumn: 'client_id',
                           typedResults: items,
@@ -12415,6 +14203,7 @@ typedef $$ClientsTableProcessedTableManager =
       Client,
       PrefetchHooks Function({
         bool sitesRefs,
+        bool workerGroupsRefs,
         bool attendanceBatchesRefs,
         bool attendanceEntriesRefs,
         bool billingContractsRefs,
@@ -12480,6 +14269,24 @@ final class $$SitesTableReferences
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$WorkerGroupsTable, List<WorkerGroup>>
+  _workerGroupsRefsTable(_$TenantDatabase db) => MultiTypedResultKey.fromTable(
+    db.workerGroups,
+    aliasName: 'sites__id__worker_groups__site_id',
+  );
+
+  $$WorkerGroupsTableProcessedTableManager get workerGroupsRefs {
+    final manager = $$WorkerGroupsTableTableManager(
+      $_db,
+      $_db.workerGroups,
+    ).filter((f) => f.siteId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_workerGroupsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
@@ -12675,6 +14482,31 @@ class $$SitesTableFilterComposer
           ),
     );
     return composer;
+  }
+
+  Expression<bool> workerGroupsRefs(
+    Expression<bool> Function($$WorkerGroupsTableFilterComposer f) f,
+  ) {
+    final $$WorkerGroupsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.siteId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableFilterComposer(
+            $db: $db,
+            $table: $db.workerGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 
   Expression<bool> attendanceBatchesRefs(
@@ -12985,6 +14817,31 @@ class $$SitesTableAnnotationComposer
     return composer;
   }
 
+  Expression<T> workerGroupsRefs<T extends Object>(
+    Expression<T> Function($$WorkerGroupsTableAnnotationComposer a) f,
+  ) {
+    final $$WorkerGroupsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.siteId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.workerGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> attendanceBatchesRefs<T extends Object>(
     Expression<T> Function($$AttendanceBatchesTableAnnotationComposer a) f,
   ) {
@@ -13103,6 +14960,7 @@ class $$SitesTableTableManager
           Site,
           PrefetchHooks Function({
             bool clientId,
+            bool workerGroupsRefs,
             bool attendanceBatchesRefs,
             bool attendanceEntriesRefs,
             bool payContractsRefs,
@@ -13211,6 +15069,7 @@ class $$SitesTableTableManager
           prefetchHooksCallback:
               ({
                 clientId = false,
+                workerGroupsRefs = false,
                 attendanceBatchesRefs = false,
                 attendanceEntriesRefs = false,
                 payContractsRefs = false,
@@ -13219,6 +15078,7 @@ class $$SitesTableTableManager
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
+                    if (workerGroupsRefs) db.workerGroups,
                     if (attendanceBatchesRefs) db.attendanceBatches,
                     if (attendanceEntriesRefs) db.attendanceEntries,
                     if (payContractsRefs) db.payContracts,
@@ -13256,6 +15116,26 @@ class $$SitesTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
+                      if (workerGroupsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Site,
+                          $SitesTable,
+                          WorkerGroup,
+                          $WorkerGroupsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$SitesTableReferences
+                              ._workerGroupsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$SitesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).workerGroupsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'site_id',
+                          typedResults: items,
+                        ),
                       if (attendanceBatchesRefs)
                         await $_getPrefetchedDataByColumns<
                           Site,
@@ -13358,10 +15238,933 @@ typedef $$SitesTableProcessedTableManager =
       Site,
       PrefetchHooks Function({
         bool clientId,
+        bool workerGroupsRefs,
         bool attendanceBatchesRefs,
         bool attendanceEntriesRefs,
         bool payContractsRefs,
         bool billingContractsRefs,
+      })
+    >;
+typedef $$WorkerGroupsTableCreateCompanionBuilder =
+    WorkerGroupsCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      required String name,
+      Value<String?> clientId,
+      Value<String?> siteId,
+      Value<int?> dailyRateFils,
+      Value<bool> halfDayIsHalf,
+      Value<int?> startMinute,
+      Value<int?> endMinute,
+      Value<int> breakMinutes,
+      Value<bool> active,
+      Value<int> rowid,
+    });
+typedef $$WorkerGroupsTableUpdateCompanionBuilder =
+    WorkerGroupsCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String> name,
+      Value<String?> clientId,
+      Value<String?> siteId,
+      Value<int?> dailyRateFils,
+      Value<bool> halfDayIsHalf,
+      Value<int?> startMinute,
+      Value<int?> endMinute,
+      Value<int> breakMinutes,
+      Value<bool> active,
+      Value<int> rowid,
+    });
+
+final class $$WorkerGroupsTableReferences
+    extends BaseReferences<_$TenantDatabase, $WorkerGroupsTable, WorkerGroup> {
+  $$WorkerGroupsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ClientsTable _clientIdTable(_$TenantDatabase db) =>
+      db.clients.createAlias('worker_groups__client_id__clients__id');
+
+  $$ClientsTableProcessedTableManager? get clientId {
+    final $_column = $_itemColumn<String>('client_id');
+    if ($_column == null) return null;
+    final manager = $$ClientsTableTableManager(
+      $_db,
+      $_db.clients,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_clientIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $SitesTable _siteIdTable(_$TenantDatabase db) =>
+      db.sites.createAlias('worker_groups__site_id__sites__id');
+
+  $$SitesTableProcessedTableManager? get siteId {
+    final $_column = $_itemColumn<String>('site_id');
+    if ($_column == null) return null;
+    final manager = $$SitesTableTableManager(
+      $_db,
+      $_db.sites,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_siteIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$AttendanceBatchesTable, List<AttendanceBatch>>
+  _attendanceBatchesRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.attendanceBatches,
+        aliasName: 'worker_groups__id__attendance_batches__group_id',
+      );
+
+  $$AttendanceBatchesTableProcessedTableManager get attendanceBatchesRefs {
+    final manager = $$AttendanceBatchesTableTableManager(
+      $_db,
+      $_db.attendanceBatches,
+    ).filter((f) => f.groupId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _attendanceBatchesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$AttendanceEntriesTable, List<AttendanceEntry>>
+  _attendanceEntriesRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.attendanceEntries,
+        aliasName: 'worker_groups__id__attendance_entries__group_id',
+      );
+
+  $$AttendanceEntriesTableProcessedTableManager get attendanceEntriesRefs {
+    final manager = $$AttendanceEntriesTableTableManager(
+      $_db,
+      $_db.attendanceEntries,
+    ).filter((f) => f.groupId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _attendanceEntriesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WorkerGroupMembersTable, List<WorkerGroupMember>>
+  _workerGroupMembersRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.workerGroupMembers,
+        aliasName: 'worker_groups__id__worker_group_members__group_id',
+      );
+
+  $$WorkerGroupMembersTableProcessedTableManager get workerGroupMembersRefs {
+    final manager = $$WorkerGroupMembersTableTableManager(
+      $_db,
+      $_db.workerGroupMembers,
+    ).filter((f) => f.groupId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _workerGroupMembersRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$WorkerGroupsTableFilterComposer
+    extends Composer<_$TenantDatabase, $WorkerGroupsTable> {
+  $$WorkerGroupsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get dailyRateFils => $composableBuilder(
+    column: $table.dailyRateFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get halfDayIsHalf => $composableBuilder(
+    column: $table.halfDayIsHalf,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get startMinute => $composableBuilder(
+    column: $table.startMinute,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get endMinute => $composableBuilder(
+    column: $table.endMinute,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get breakMinutes => $composableBuilder(
+    column: $table.breakMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get active => $composableBuilder(
+    column: $table.active,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ClientsTableFilterComposer get clientId {
+    final $$ClientsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableFilterComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SitesTableFilterComposer get siteId {
+    final $$SitesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.siteId,
+      referencedTable: $db.sites,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SitesTableFilterComposer(
+            $db: $db,
+            $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> attendanceBatchesRefs(
+    Expression<bool> Function($$AttendanceBatchesTableFilterComposer f) f,
+  ) {
+    final $$AttendanceBatchesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.attendanceBatches,
+      getReferencedColumn: (t) => t.groupId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttendanceBatchesTableFilterComposer(
+            $db: $db,
+            $table: $db.attendanceBatches,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> attendanceEntriesRefs(
+    Expression<bool> Function($$AttendanceEntriesTableFilterComposer f) f,
+  ) {
+    final $$AttendanceEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.attendanceEntries,
+      getReferencedColumn: (t) => t.groupId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttendanceEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.attendanceEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> workerGroupMembersRefs(
+    Expression<bool> Function($$WorkerGroupMembersTableFilterComposer f) f,
+  ) {
+    final $$WorkerGroupMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.workerGroupMembers,
+      getReferencedColumn: (t) => t.groupId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.workerGroupMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$WorkerGroupsTableOrderingComposer
+    extends Composer<_$TenantDatabase, $WorkerGroupsTable> {
+  $$WorkerGroupsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get dailyRateFils => $composableBuilder(
+    column: $table.dailyRateFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get halfDayIsHalf => $composableBuilder(
+    column: $table.halfDayIsHalf,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get startMinute => $composableBuilder(
+    column: $table.startMinute,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get endMinute => $composableBuilder(
+    column: $table.endMinute,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get breakMinutes => $composableBuilder(
+    column: $table.breakMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get active => $composableBuilder(
+    column: $table.active,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ClientsTableOrderingComposer get clientId {
+    final $$ClientsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableOrderingComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SitesTableOrderingComposer get siteId {
+    final $$SitesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.siteId,
+      referencedTable: $db.sites,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SitesTableOrderingComposer(
+            $db: $db,
+            $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$WorkerGroupsTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $WorkerGroupsTable> {
+  $$WorkerGroupsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get dailyRateFils => $composableBuilder(
+    column: $table.dailyRateFils,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get halfDayIsHalf => $composableBuilder(
+    column: $table.halfDayIsHalf,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get startMinute => $composableBuilder(
+    column: $table.startMinute,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get endMinute =>
+      $composableBuilder(column: $table.endMinute, builder: (column) => column);
+
+  GeneratedColumn<int> get breakMinutes => $composableBuilder(
+    column: $table.breakMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get active =>
+      $composableBuilder(column: $table.active, builder: (column) => column);
+
+  $$ClientsTableAnnotationComposer get clientId {
+    final $$ClientsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SitesTableAnnotationComposer get siteId {
+    final $$SitesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.siteId,
+      referencedTable: $db.sites,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SitesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> attendanceBatchesRefs<T extends Object>(
+    Expression<T> Function($$AttendanceBatchesTableAnnotationComposer a) f,
+  ) {
+    final $$AttendanceBatchesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.attendanceBatches,
+          getReferencedColumn: (t) => t.groupId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$AttendanceBatchesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.attendanceBatches,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> attendanceEntriesRefs<T extends Object>(
+    Expression<T> Function($$AttendanceEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$AttendanceEntriesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.attendanceEntries,
+          getReferencedColumn: (t) => t.groupId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$AttendanceEntriesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.attendanceEntries,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> workerGroupMembersRefs<T extends Object>(
+    Expression<T> Function($$WorkerGroupMembersTableAnnotationComposer a) f,
+  ) {
+    final $$WorkerGroupMembersTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.workerGroupMembers,
+          getReferencedColumn: (t) => t.groupId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WorkerGroupMembersTableAnnotationComposer(
+                $db: $db,
+                $table: $db.workerGroupMembers,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$WorkerGroupsTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $WorkerGroupsTable,
+          WorkerGroup,
+          $$WorkerGroupsTableFilterComposer,
+          $$WorkerGroupsTableOrderingComposer,
+          $$WorkerGroupsTableAnnotationComposer,
+          $$WorkerGroupsTableCreateCompanionBuilder,
+          $$WorkerGroupsTableUpdateCompanionBuilder,
+          (WorkerGroup, $$WorkerGroupsTableReferences),
+          WorkerGroup,
+          PrefetchHooks Function({
+            bool clientId,
+            bool siteId,
+            bool attendanceBatchesRefs,
+            bool attendanceEntriesRefs,
+            bool workerGroupMembersRefs,
+          })
+        > {
+  $$WorkerGroupsTableTableManager(_$TenantDatabase db, $WorkerGroupsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WorkerGroupsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WorkerGroupsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WorkerGroupsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> clientId = const Value.absent(),
+                Value<String?> siteId = const Value.absent(),
+                Value<int?> dailyRateFils = const Value.absent(),
+                Value<bool> halfDayIsHalf = const Value.absent(),
+                Value<int?> startMinute = const Value.absent(),
+                Value<int?> endMinute = const Value.absent(),
+                Value<int> breakMinutes = const Value.absent(),
+                Value<bool> active = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WorkerGroupsCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                name: name,
+                clientId: clientId,
+                siteId: siteId,
+                dailyRateFils: dailyRateFils,
+                halfDayIsHalf: halfDayIsHalf,
+                startMinute: startMinute,
+                endMinute: endMinute,
+                breakMinutes: breakMinutes,
+                active: active,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String name,
+                Value<String?> clientId = const Value.absent(),
+                Value<String?> siteId = const Value.absent(),
+                Value<int?> dailyRateFils = const Value.absent(),
+                Value<bool> halfDayIsHalf = const Value.absent(),
+                Value<int?> startMinute = const Value.absent(),
+                Value<int?> endMinute = const Value.absent(),
+                Value<int> breakMinutes = const Value.absent(),
+                Value<bool> active = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WorkerGroupsCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                name: name,
+                clientId: clientId,
+                siteId: siteId,
+                dailyRateFils: dailyRateFils,
+                halfDayIsHalf: halfDayIsHalf,
+                startMinute: startMinute,
+                endMinute: endMinute,
+                breakMinutes: breakMinutes,
+                active: active,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$WorkerGroupsTable, WorkerGroup>(table),
+                  $$WorkerGroupsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                clientId = false,
+                siteId = false,
+                attendanceBatchesRefs = false,
+                attendanceEntriesRefs = false,
+                workerGroupMembersRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (attendanceBatchesRefs) db.attendanceBatches,
+                    if (attendanceEntriesRefs) db.attendanceEntries,
+                    if (workerGroupMembersRefs) db.workerGroupMembers,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (clientId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.clientId,
+                            referencedTable: $$WorkerGroupsTableReferences
+                                ._clientIdTable(db),
+                            referencedColumn: $$WorkerGroupsTableReferences
+                                ._clientIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (siteId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.siteId,
+                            referencedTable: $$WorkerGroupsTableReferences
+                                ._siteIdTable(db),
+                            referencedColumn: $$WorkerGroupsTableReferences
+                                ._siteIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (attendanceBatchesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          WorkerGroup,
+                          $WorkerGroupsTable,
+                          AttendanceBatch,
+                          $AttendanceBatchesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkerGroupsTableReferences
+                              ._attendanceBatchesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkerGroupsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).attendanceBatchesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'group_id',
+                          typedResults: items,
+                        ),
+                      if (attendanceEntriesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          WorkerGroup,
+                          $WorkerGroupsTable,
+                          AttendanceEntry,
+                          $AttendanceEntriesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkerGroupsTableReferences
+                              ._attendanceEntriesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkerGroupsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).attendanceEntriesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'group_id',
+                          typedResults: items,
+                        ),
+                      if (workerGroupMembersRefs)
+                        await $_getPrefetchedDataByColumns<
+                          WorkerGroup,
+                          $WorkerGroupsTable,
+                          WorkerGroupMember,
+                          $WorkerGroupMembersTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkerGroupsTableReferences
+                              ._workerGroupMembersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkerGroupsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).workerGroupMembersRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'group_id',
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$WorkerGroupsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $WorkerGroupsTable,
+      WorkerGroup,
+      $$WorkerGroupsTableFilterComposer,
+      $$WorkerGroupsTableOrderingComposer,
+      $$WorkerGroupsTableAnnotationComposer,
+      $$WorkerGroupsTableCreateCompanionBuilder,
+      $$WorkerGroupsTableUpdateCompanionBuilder,
+      (WorkerGroup, $$WorkerGroupsTableReferences),
+      WorkerGroup,
+      PrefetchHooks Function({
+        bool clientId,
+        bool siteId,
+        bool attendanceBatchesRefs,
+        bool attendanceEntriesRefs,
+        bool workerGroupMembersRefs,
       })
     >;
 typedef $$AttendanceBatchesTableCreateCompanionBuilder =
@@ -13376,6 +16179,7 @@ typedef $$AttendanceBatchesTableCreateCompanionBuilder =
       required String workDate,
       required String clientId,
       required String siteId,
+      Value<String?> groupId,
       Value<String?> note,
       Value<int> rowid,
     });
@@ -13391,6 +16195,7 @@ typedef $$AttendanceBatchesTableUpdateCompanionBuilder =
       Value<String> workDate,
       Value<String> clientId,
       Value<String> siteId,
+      Value<String?> groupId,
       Value<String?> note,
       Value<int> rowid,
     });
@@ -13436,6 +16241,24 @@ final class $$AttendanceBatchesTableReferences
       $_db.sites,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_siteIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WorkerGroupsTable _groupIdTable(_$TenantDatabase db) => db
+      .workerGroups
+      .createAlias('attendance_batches__group_id__worker_groups__id');
+
+  $$WorkerGroupsTableProcessedTableManager? get groupId {
+    final $_column = $_itemColumn<String>('group_id');
+    if ($_column == null) return null;
+    final manager = $$WorkerGroupsTableTableManager(
+      $_db,
+      $_db.workerGroups,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_groupIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -13555,6 +16378,29 @@ class $$AttendanceBatchesTableFilterComposer
           }) => $$SitesTableFilterComposer(
             $db: $db,
             $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WorkerGroupsTableFilterComposer get groupId {
+    final $$WorkerGroupsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableFilterComposer(
+            $db: $db,
+            $table: $db.workerGroups,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -13689,6 +16535,29 @@ class $$AttendanceBatchesTableOrderingComposer
     );
     return composer;
   }
+
+  $$WorkerGroupsTableOrderingComposer get groupId {
+    final $$WorkerGroupsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableOrderingComposer(
+            $db: $db,
+            $table: $db.workerGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$AttendanceBatchesTableAnnotationComposer
@@ -13779,6 +16648,29 @@ class $$AttendanceBatchesTableAnnotationComposer
     return composer;
   }
 
+  $$WorkerGroupsTableAnnotationComposer get groupId {
+    final $$WorkerGroupsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.workerGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   Expression<T> attendanceEntriesRefs<T extends Object>(
     Expression<T> Function($$AttendanceEntriesTableAnnotationComposer a) f,
   ) {
@@ -13822,6 +16714,7 @@ class $$AttendanceBatchesTableTableManager
           PrefetchHooks Function({
             bool clientId,
             bool siteId,
+            bool groupId,
             bool attendanceEntriesRefs,
           })
         > {
@@ -13853,6 +16746,7 @@ class $$AttendanceBatchesTableTableManager
                 Value<String> workDate = const Value.absent(),
                 Value<String> clientId = const Value.absent(),
                 Value<String> siteId = const Value.absent(),
+                Value<String?> groupId = const Value.absent(),
                 Value<String?> note = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttendanceBatchesCompanion(
@@ -13866,6 +16760,7 @@ class $$AttendanceBatchesTableTableManager
                 workDate: workDate,
                 clientId: clientId,
                 siteId: siteId,
+                groupId: groupId,
                 note: note,
                 rowid: rowid,
               ),
@@ -13881,6 +16776,7 @@ class $$AttendanceBatchesTableTableManager
                 required String workDate,
                 required String clientId,
                 required String siteId,
+                Value<String?> groupId = const Value.absent(),
                 Value<String?> note = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttendanceBatchesCompanion.insert(
@@ -13894,6 +16790,7 @@ class $$AttendanceBatchesTableTableManager
                 workDate: workDate,
                 clientId: clientId,
                 siteId: siteId,
+                groupId: groupId,
                 note: note,
                 rowid: rowid,
               ),
@@ -13909,6 +16806,7 @@ class $$AttendanceBatchesTableTableManager
               ({
                 clientId = false,
                 siteId = false,
+                groupId = false,
                 attendanceEntriesRefs = false,
               }) {
                 return PrefetchHooks(
@@ -13951,6 +16849,17 @@ class $$AttendanceBatchesTableTableManager
                                 ._siteIdTable(db),
                             referencedColumn: $$AttendanceBatchesTableReferences
                                 ._siteIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (groupId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.groupId,
+                            referencedTable: $$AttendanceBatchesTableReferences
+                                ._groupIdTable(db),
+                            referencedColumn: $$AttendanceBatchesTableReferences
+                                ._groupIdTable(db)
                                 .id,
                           ) as T;
                         }
@@ -14002,6 +16911,7 @@ typedef $$AttendanceBatchesTableProcessedTableManager =
       PrefetchHooks Function({
         bool clientId,
         bool siteId,
+        bool groupId,
         bool attendanceEntriesRefs,
       })
     >;
@@ -14121,6 +17031,27 @@ final class $$WorkersTableReferences
 
     final cache = $_typedResult.readTableOrNull(
       _openingBalancesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WorkerGroupMembersTable, List<WorkerGroupMember>>
+  _workerGroupMembersRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.workerGroupMembers,
+        aliasName: 'workers__id__worker_group_members__worker_id',
+      );
+
+  $$WorkerGroupMembersTableProcessedTableManager get workerGroupMembersRefs {
+    final manager = $$WorkerGroupMembersTableTableManager(
+      $_db,
+      $_db.workerGroupMembers,
+    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _workerGroupMembersRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
@@ -14303,6 +17234,31 @@ class $$WorkersTableFilterComposer
           }) => $$OpeningBalancesTableFilterComposer(
             $db: $db,
             $table: $db.openingBalances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> workerGroupMembersRefs(
+    Expression<bool> Function($$WorkerGroupMembersTableFilterComposer f) f,
+  ) {
+    final $$WorkerGroupMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.workerGroupMembers,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.workerGroupMembers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -14564,6 +17520,32 @@ class $$WorkersTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> workerGroupMembersRefs<T extends Object>(
+    Expression<T> Function($$WorkerGroupMembersTableAnnotationComposer a) f,
+  ) {
+    final $$WorkerGroupMembersTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.workerGroupMembers,
+          getReferencedColumn: (t) => t.workerId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WorkerGroupMembersTableAnnotationComposer(
+                $db: $db,
+                $table: $db.workerGroupMembers,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$WorkersTableTableManager
@@ -14584,6 +17566,7 @@ class $$WorkersTableTableManager
             bool payContractsRefs,
             bool billingContractsRefs,
             bool openingBalancesRefs,
+            bool workerGroupMembersRefs,
           })
         > {
   $$WorkersTableTableManager(_$TenantDatabase db, $WorkersTable table)
@@ -14683,6 +17666,7 @@ class $$WorkersTableTableManager
                 payContractsRefs = false,
                 billingContractsRefs = false,
                 openingBalancesRefs = false,
+                workerGroupMembersRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -14691,6 +17675,7 @@ class $$WorkersTableTableManager
                     if (payContractsRefs) db.payContracts,
                     if (billingContractsRefs) db.billingContracts,
                     if (openingBalancesRefs) db.openingBalances,
+                    if (workerGroupMembersRefs) db.workerGroupMembers,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -14775,6 +17760,26 @@ class $$WorkersTableTableManager
                           referencedColumn: 'worker_id',
                           typedResults: items,
                         ),
+                      if (workerGroupMembersRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Worker,
+                          $WorkersTable,
+                          WorkerGroupMember,
+                          $WorkerGroupMembersTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkersTableReferences
+                              ._workerGroupMembersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).workerGroupMembersRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'worker_id',
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -14800,6 +17805,7 @@ typedef $$WorkersTableProcessedTableManager =
         bool payContractsRefs,
         bool billingContractsRefs,
         bool openingBalancesRefs,
+        bool workerGroupMembersRefs,
       })
     >;
 typedef $$AttendanceEntriesTableCreateCompanionBuilder =
@@ -14815,6 +17821,7 @@ typedef $$AttendanceEntriesTableCreateCompanionBuilder =
       required String workerId,
       required String clientId,
       required String siteId,
+      Value<String?> groupId,
       required String workDate,
       Value<DateTime?> startUtc,
       Value<DateTime?> endUtc,
@@ -14857,6 +17864,7 @@ typedef $$AttendanceEntriesTableUpdateCompanionBuilder =
       Value<String> workerId,
       Value<String> clientId,
       Value<String> siteId,
+      Value<String?> groupId,
       Value<String> workDate,
       Value<DateTime?> startUtc,
       Value<DateTime?> endUtc,
@@ -14963,6 +17971,24 @@ final class $$AttendanceEntriesTableReferences
       $_db.sites,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_siteIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WorkerGroupsTable _groupIdTable(_$TenantDatabase db) => db
+      .workerGroups
+      .createAlias('attendance_entries__group_id__worker_groups__id');
+
+  $$WorkerGroupsTableProcessedTableManager? get groupId {
+    final $_column = $_itemColumn<String>('group_id');
+    if ($_column == null) return null;
+    final manager = $$WorkerGroupsTableTableManager(
+      $_db,
+      $_db.workerGroups,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_groupIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -15246,6 +18272,29 @@ class $$AttendanceEntriesTableFilterComposer
           }) => $$SitesTableFilterComposer(
             $db: $db,
             $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WorkerGroupsTableFilterComposer get groupId {
+    final $$WorkerGroupsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableFilterComposer(
+            $db: $db,
+            $table: $db.workerGroups,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -15545,6 +18594,29 @@ class $$AttendanceEntriesTableOrderingComposer
     return composer;
   }
 
+  $$WorkerGroupsTableOrderingComposer get groupId {
+    final $$WorkerGroupsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableOrderingComposer(
+            $db: $db,
+            $table: $db.workerGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   $$AttendanceEntriesTableOrderingComposer get revisesEntryId {
     final $$AttendanceEntriesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -15816,6 +18888,29 @@ class $$AttendanceEntriesTableAnnotationComposer
     return composer;
   }
 
+  $$WorkerGroupsTableAnnotationComposer get groupId {
+    final $$WorkerGroupsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.workerGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   $$AttendanceEntriesTableAnnotationComposer get revisesEntryId {
     final $$AttendanceEntriesTableAnnotationComposer composer =
         $composerBuilder(
@@ -15859,6 +18954,7 @@ class $$AttendanceEntriesTableTableManager
             bool workerId,
             bool clientId,
             bool siteId,
+            bool groupId,
             bool revisesEntryId,
           })
         > {
@@ -15891,6 +18987,7 @@ class $$AttendanceEntriesTableTableManager
                 Value<String> workerId = const Value.absent(),
                 Value<String> clientId = const Value.absent(),
                 Value<String> siteId = const Value.absent(),
+                Value<String?> groupId = const Value.absent(),
                 Value<String> workDate = const Value.absent(),
                 Value<DateTime?> startUtc = const Value.absent(),
                 Value<DateTime?> endUtc = const Value.absent(),
@@ -15931,6 +19028,7 @@ class $$AttendanceEntriesTableTableManager
                 workerId: workerId,
                 clientId: clientId,
                 siteId: siteId,
+                groupId: groupId,
                 workDate: workDate,
                 startUtc: startUtc,
                 endUtc: endUtc,
@@ -15973,6 +19071,7 @@ class $$AttendanceEntriesTableTableManager
                 required String workerId,
                 required String clientId,
                 required String siteId,
+                Value<String?> groupId = const Value.absent(),
                 required String workDate,
                 Value<DateTime?> startUtc = const Value.absent(),
                 Value<DateTime?> endUtc = const Value.absent(),
@@ -16013,6 +19112,7 @@ class $$AttendanceEntriesTableTableManager
                 workerId: workerId,
                 clientId: clientId,
                 siteId: siteId,
+                groupId: groupId,
                 workDate: workDate,
                 startUtc: startUtc,
                 endUtc: endUtc,
@@ -16056,6 +19156,7 @@ class $$AttendanceEntriesTableTableManager
                 workerId = false,
                 clientId = false,
                 siteId = false,
+                groupId = false,
                 revisesEntryId = false,
               }) {
                 return PrefetchHooks(
@@ -16121,6 +19222,17 @@ class $$AttendanceEntriesTableTableManager
                                 .id,
                           ) as T;
                         }
+                        if (groupId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.groupId,
+                            referencedTable: $$AttendanceEntriesTableReferences
+                                ._groupIdTable(db),
+                            referencedColumn: $$AttendanceEntriesTableReferences
+                                ._groupIdTable(db)
+                                .id,
+                          ) as T;
+                        }
                         if (revisesEntryId) {
                           state = state.withJoin(
                             currentTable: table,
@@ -16161,6 +19273,7 @@ typedef $$AttendanceEntriesTableProcessedTableManager =
         bool workerId,
         bool clientId,
         bool siteId,
+        bool groupId,
         bool revisesEntryId,
       })
     >;
@@ -18699,6 +21812,525 @@ typedef $$OpeningBalancesTableProcessedTableManager =
       OpeningBalance,
       PrefetchHooks Function({bool workerId, bool clientId})
     >;
+typedef $$WorkerGroupMembersTableCreateCompanionBuilder =
+    WorkerGroupMembersCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      required String groupId,
+      required String workerId,
+      Value<int?> dailyRateFils,
+      Value<int> rowid,
+    });
+typedef $$WorkerGroupMembersTableUpdateCompanionBuilder =
+    WorkerGroupMembersCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String> groupId,
+      Value<String> workerId,
+      Value<int?> dailyRateFils,
+      Value<int> rowid,
+    });
+
+final class $$WorkerGroupMembersTableReferences
+    extends
+        BaseReferences<
+          _$TenantDatabase,
+          $WorkerGroupMembersTable,
+          WorkerGroupMember
+        > {
+  $$WorkerGroupMembersTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WorkerGroupsTable _groupIdTable(_$TenantDatabase db) => db
+      .workerGroups
+      .createAlias('worker_group_members__group_id__worker_groups__id');
+
+  $$WorkerGroupsTableProcessedTableManager get groupId {
+    final $_column = $_itemColumn<String>('group_id')!;
+
+    final manager = $$WorkerGroupsTableTableManager(
+      $_db,
+      $_db.workerGroups,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_groupIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WorkersTable _workerIdTable(_$TenantDatabase db) =>
+      db.workers.createAlias('worker_group_members__worker_id__workers__id');
+
+  $$WorkersTableProcessedTableManager get workerId {
+    final $_column = $_itemColumn<String>('worker_id')!;
+
+    final manager = $$WorkersTableTableManager(
+      $_db,
+      $_db.workers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_workerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$WorkerGroupMembersTableFilterComposer
+    extends Composer<_$TenantDatabase, $WorkerGroupMembersTable> {
+  $$WorkerGroupMembersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get dailyRateFils => $composableBuilder(
+    column: $table.dailyRateFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$WorkerGroupsTableFilterComposer get groupId {
+    final $$WorkerGroupsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableFilterComposer(
+            $db: $db,
+            $table: $db.workerGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WorkersTableFilterComposer get workerId {
+    final $$WorkersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workerId,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableFilterComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$WorkerGroupMembersTableOrderingComposer
+    extends Composer<_$TenantDatabase, $WorkerGroupMembersTable> {
+  $$WorkerGroupMembersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get dailyRateFils => $composableBuilder(
+    column: $table.dailyRateFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$WorkerGroupsTableOrderingComposer get groupId {
+    final $$WorkerGroupsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableOrderingComposer(
+            $db: $db,
+            $table: $db.workerGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WorkersTableOrderingComposer get workerId {
+    final $$WorkersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workerId,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableOrderingComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$WorkerGroupMembersTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $WorkerGroupMembersTable> {
+  $$WorkerGroupMembersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get dailyRateFils => $composableBuilder(
+    column: $table.dailyRateFils,
+    builder: (column) => column,
+  );
+
+  $$WorkerGroupsTableAnnotationComposer get groupId {
+    final $$WorkerGroupsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.groupId,
+      referencedTable: $db.workerGroups,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkerGroupsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.workerGroups,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WorkersTableAnnotationComposer get workerId {
+    final $$WorkersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workerId,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$WorkerGroupMembersTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $WorkerGroupMembersTable,
+          WorkerGroupMember,
+          $$WorkerGroupMembersTableFilterComposer,
+          $$WorkerGroupMembersTableOrderingComposer,
+          $$WorkerGroupMembersTableAnnotationComposer,
+          $$WorkerGroupMembersTableCreateCompanionBuilder,
+          $$WorkerGroupMembersTableUpdateCompanionBuilder,
+          (WorkerGroupMember, $$WorkerGroupMembersTableReferences),
+          WorkerGroupMember,
+          PrefetchHooks Function({bool groupId, bool workerId})
+        > {
+  $$WorkerGroupMembersTableTableManager(
+    _$TenantDatabase db,
+    $WorkerGroupMembersTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WorkerGroupMembersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WorkerGroupMembersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WorkerGroupMembersTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> groupId = const Value.absent(),
+                Value<String> workerId = const Value.absent(),
+                Value<int?> dailyRateFils = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WorkerGroupMembersCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                groupId: groupId,
+                workerId: workerId,
+                dailyRateFils: dailyRateFils,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String groupId,
+                required String workerId,
+                Value<int?> dailyRateFils = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WorkerGroupMembersCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                groupId: groupId,
+                workerId: workerId,
+                dailyRateFils: dailyRateFils,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$WorkerGroupMembersTable, WorkerGroupMember>(
+                    table,
+                  ),
+                  $$WorkerGroupMembersTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({groupId = false, workerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (groupId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.groupId,
+                        referencedTable: $$WorkerGroupMembersTableReferences
+                            ._groupIdTable(db),
+                        referencedColumn: $$WorkerGroupMembersTableReferences
+                            ._groupIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+                    if (workerId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.workerId,
+                        referencedTable: $$WorkerGroupMembersTableReferences
+                            ._workerIdTable(db),
+                        referencedColumn: $$WorkerGroupMembersTableReferences
+                            ._workerIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$WorkerGroupMembersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $WorkerGroupMembersTable,
+      WorkerGroupMember,
+      $$WorkerGroupMembersTableFilterComposer,
+      $$WorkerGroupMembersTableOrderingComposer,
+      $$WorkerGroupMembersTableAnnotationComposer,
+      $$WorkerGroupMembersTableCreateCompanionBuilder,
+      $$WorkerGroupMembersTableUpdateCompanionBuilder,
+      (WorkerGroupMember, $$WorkerGroupMembersTableReferences),
+      WorkerGroupMember,
+      PrefetchHooks Function({bool groupId, bool workerId})
+    >;
 typedef $$OutboxTableCreateCompanionBuilder = OutboxCompanion Function({
   required String operationId,
   required String tenantId,
@@ -19000,6 +22632,8 @@ class $TenantDatabaseManager {
       $$ClientsTableTableManager(_db, _db.clients);
   $$SitesTableTableManager get sites =>
       $$SitesTableTableManager(_db, _db.sites);
+  $$WorkerGroupsTableTableManager get workerGroups =>
+      $$WorkerGroupsTableTableManager(_db, _db.workerGroups);
   $$AttendanceBatchesTableTableManager get attendanceBatches =>
       $$AttendanceBatchesTableTableManager(_db, _db.attendanceBatches);
   $$WorkersTableTableManager get workers =>
@@ -19014,6 +22648,8 @@ class $TenantDatabaseManager {
       $$BillingContractsTableTableManager(_db, _db.billingContracts);
   $$OpeningBalancesTableTableManager get openingBalances =>
       $$OpeningBalancesTableTableManager(_db, _db.openingBalances);
+  $$WorkerGroupMembersTableTableManager get workerGroupMembers =>
+      $$WorkerGroupMembersTableTableManager(_db, _db.workerGroupMembers);
   $$OutboxTableTableManager get outbox =>
       $$OutboxTableTableManager(_db, _db.outbox);
 }

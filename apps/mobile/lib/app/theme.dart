@@ -101,6 +101,20 @@ final appTheme = ThemeData(
     fillColor: Colors.white,
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
   ),
+  chipTheme: ChipThemeData(
+    showCheckmark: false,
+    selectedColor: ink,
+    backgroundColor: Colors.white,
+    side: const BorderSide(color: Color(0xFF8E949A)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    labelStyle: TextStyle(
+      fontFamily: _body,
+      fontSize: 15,
+      fontWeight: FontWeight.w600,
+      color: WidgetStateColor.resolveWith((states) => states.contains(WidgetState.selected) ? Colors.white : ink),
+    ),
+  ),
+  dialogTheme: DialogThemeData(titleTextStyle: _heading.copyWith(fontSize: 20)),
   snackBarTheme: const SnackBarThemeData(backgroundColor: ink, contentTextStyle: TextStyle(fontFamily: _body, fontSize: 15, color: Colors.white)),
   textTheme: const TextTheme(
     bodyMedium: TextStyle(fontSize: 16),

@@ -25,6 +25,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 | T08 | Rate cards and opening balances | MASTER-05, MASTER-06 | IMPLEMENTED_UNVERIFIED | `p1/t08-rates` |
 | T09 | Calculation engine with PRD fixtures | CALC-01..07 | IMPLEMENTED_UNVERIFIED | `p1/t09-calc` |
 | T10 | Bulk attendance, exceptions, duplicates, midnight shift, corrections | ATT-01..09, UX-05, UX-06 | IMPLEMENTED_UNVERIFIED | `p1/t10-attendance` |
+| T10b | Worker groups, and attendance by group or by worker (owner's request, D-029) | ATT-01, ATT-03, CALC-06 | IMPLEMENTED_UNVERIFIED | `p1/t10b-worker-groups` |
 
 **Gate:** Arithmetic, duplicate and offline-save tests pass. 10-worker entry shown on a phone.
 

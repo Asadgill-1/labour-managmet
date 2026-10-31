@@ -3,6 +3,48 @@
   "tabToday": "Today",
   "tabCompanies": "Companies",
   "tabLabour": "Labour",
+  "tabGroups": "Worker groups",
+  "addGroup": "Make a group",
+  "editGroup": "Edit group",
+  "groupName": "Group name",
+  "groupNameHelp": "For example: Emaar West",
+  "groupsEmpty": "No groups yet. Make one for workers who usually go together.",
+  "noneChoice": "None",
+  "dailyWage": "Daily wage (AED)",
+  "dailyWageHelp": "Optional. It shows beside every worker. To change one worker, tap the amount beside their name.",
+  "halfDayIsHalf": "Half day pays half the daily wage",
+  "ownWageHelp": "Leave empty to use the group's daily wage.",
+  "todayWageHelp": "For this attendance only. The group does not change.",
+  "todayWageReason": "Daily wage typed while marking attendance",
+  "setWage": "Set wage",
+  "monthlyPay": "Monthly",
+  "workersHeading": "Workers",
+  "searchGroup": "Search groups",
+  "searchWorker": "Search workers",
+  "membersCount": "{count} workers",
+  "@membersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "saveWithCount": "Save ({count} workers)",
+  "@saveWithCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wageOf": "Daily wage: {name}",
+  "@wageOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "tabRates": "Rates",
   "tabSettings": "Settings",
   "menuLabel": "Menu",

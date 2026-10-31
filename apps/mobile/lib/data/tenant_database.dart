@@ -7,6 +7,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'tables.dart';
+import 'tenant_database.steps.dart';
 
 part 'tenant_database.g.dart';
 
@@ -33,6 +34,8 @@ String newUuid() {
     PayContracts,
     BillingContracts,
     OpeningBalances,
+    WorkerGroups,
+    WorkerGroupMembers,
     AttendanceBatches,
     AttendanceEntries,
     AuditEvents,
@@ -48,10 +51,20 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
-  MigrationStrategy get migration => MigrationStrategy(beforeOpen: (_) => customStatement('PRAGMA foreign_keys = ON'));
+  MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: stepByStep(
+      from1To2: (m, schema) async {
+        await m.createTable(schema.workerGroups);
+        await m.createTable(schema.workerGroupMembers);
+        await m.addColumn(schema.attendanceBatches, schema.attendanceBatches.groupId);
+        await m.addColumn(schema.attendanceEntries, schema.attendanceEntries.groupId);
+      },
+    ),
+    beforeOpen: (_) => customStatement('PRAGMA foreign_keys = ON'),
+  );
 
   /// The single write path. Runs [change] with its audit event and outbox row in one transaction,
   /// once per [operationId], so a retry after a crash or double tap changes nothing (TEAM-04, UX-07).

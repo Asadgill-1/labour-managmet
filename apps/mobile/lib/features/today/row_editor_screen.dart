@@ -63,6 +63,7 @@ class _RowEditorScreenState extends State<RowEditorScreen> {
       correctionReason: _text(_correction),
       input: EntryInput(
         workerId: widget.input.workerId,
+        groupId: widget.input.groupId,
         overrideReason: _text(_reason),
         overlapReason: _text(_overlapReason),
         notes: _text(_notes),

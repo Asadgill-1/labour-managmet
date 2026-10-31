@@ -35,6 +35,14 @@ Time note karein. Target 60 second hai.
 
 Kitne second lage: ______
 
+## 3b. Mazdoor group
+
+- [ ] **Menu > Mazdoor group** mein **Group banayein**. Naam (jaise Emaar West), company, site, dehari aur duty ka waqt likhein, phir mazdoor chunein.
+- [ ] Har chune hue mazdoor ke saamne dehari aaye. Aik ki raqam par daba kar badlein. Save kar ke dobara kholein, wahi raqam honi chahiye.
+- [ ] **Hazri lagayein** mein group par dabayein. Us ke mazdoor khud tick hon, aur company, site aur waqt khud aa jayen.
+- [ ] Aik mazdoor ka tick hatayein, phir **Mazdoor talash karein** se group ke bahar ka mazdoor chunein. Us ki dehari poochi jaye, aur group ki dehari pehle se likhi ho.
+- [ ] Hazri save karein. Phir **Hazri lagayein** khol kar wahi group dobara chunein. Group poora hona chahiye: hataya hua mazdoor wapas ho, aur naya mazdoor na ho.
+
 ## 4. Aap ke faislay
 
 Asad ne 31-10-2026 ko yeh dono tay kiye.

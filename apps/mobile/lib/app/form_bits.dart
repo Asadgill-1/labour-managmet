@@ -1,7 +1,9 @@
 import 'package:domain/dates.dart';
+import 'package:domain/money.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 
+import '../data/tenant_database.dart';
 import '../l10n/app_localizations.dart';
 import 'theme.dart';
 
@@ -161,9 +163,10 @@ class SectionHeader extends StatelessWidget {
 
 /// Search box above a register list.
 class SearchBox extends StatelessWidget {
-  const SearchBox({required this.onChanged, super.key});
+  const SearchBox({required this.onChanged, this.hint, super.key});
 
   final ValueChanged<String> onChanged;
+  final String? hint;
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +176,7 @@ class SearchBox extends StatelessWidget {
         onChanged: onChanged,
         decoration: InputDecoration(
           prefixIcon: const Icon(Icons.search),
-          hintText: AppLocalizations.of(context).search,
+          hintText: hint ?? AppLocalizations.of(context).search,
           isDense: true,
         ),
       ),
@@ -293,6 +296,45 @@ class BandFigure extends StatelessWidget {
       ],
     );
   }
+}
+
+/// Asks for one worker's daily wage. Null means cancelled. A null `fils` means the field was left empty.
+Future<({int? fils})?> askDailyWage(BuildContext context, {required String title, required String helper, int? initial}) {
+  final l10n = AppLocalizations.of(context);
+  final amount = TextEditingController(text: initial == null ? '' : plainAmount(initial));
+  final form = GlobalKey<FormState>();
+  return showDialog<({int? fils})>(
+    context: context,
+    builder: (dialog) => AlertDialog(
+      title: Text(title),
+      content: Form(
+        key: form,
+        child: Field(
+          l10n.dailyWage,
+          amount,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          helper: helper,
+          validator: (v) => (v ?? '').trim().isNotEmpty && parseAed(v!) == null ? l10n.amountInvalid : null,
+        ),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.of(dialog).pop(), child: Text(l10n.cancel)),
+        TextButton(
+          onPressed: () {
+            if (form.currentState!.validate()) Navigator.of(dialog).pop((fils: parseAed(amount.text)));
+          },
+          child: Text(l10n.applyChanges),
+        ),
+      ],
+    ),
+  );
+}
+
+/// True if this worker has a monthly pay contract on this date. Their pay stays monthly (ATT-03).
+bool onMonthlyPay(List<PayContract> contracts, String workerId, String date) {
+  return contracts.any(
+    (c) => c.workerId == workerId && c.basis == 'month' && c.effectiveFrom.compareTo(date) <= 0 && (c.effectiveTo == null || c.effectiveTo!.compareTo(date) >= 0),
+  );
 }
 
 /// Bottom sheet to pick one option. Skips the question when there is only one answer.

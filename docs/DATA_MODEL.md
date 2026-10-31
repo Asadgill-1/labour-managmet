@@ -16,6 +16,7 @@ Money records add `currency` and `posting_date`. An effective date is always sep
 | Identity | `tenant_profile` | VAT status has an effective date (MASTER-01) |
 | Masters | `clients`, `sites`, `workers` | Archive, never hard-delete with history. Worker code unique in tenant. No auto-merge by name (MASTER-07) |
 | Contracts | `pay_contracts`, `billing_contracts` | Effective from and to. Basis, rate in fils, break rule, included minutes, overtime rate, partial-period method (MASTER-06). A row scoped to a site or worker acts as the assignment rate (D-020) |
+| Groups | `worker_groups`, `worker_group_members` | Optional company, site, daily wage and duty time. A member can have their own wage. Attendance rows keep their own figures, so changing a group never changes approved work (D-029) |
 | Attendance | `attendance_batches`, `attendance_entries` | Rate snapshot on each entry. Client and worker minutes stored separately. Corrections link to the revised entry (ATT-02, ATT-08) |
 | Payroll | `payroll_runs`, `payroll_lines` | Posted lines are immutable. Opening, gross, allowances, deductions, recovery, net, payable, paid and closing all stored (PAY-01) |
 | Worker money | `advance_entries`, `deductions`, `salary_payments`, `salary_payment_allocations` | Advance is its own ledger. Deduction carries reason and authorization (PAY-05, PAY-07) |

@@ -241,6 +241,31 @@ RateTerms? _withOverride(RateTerms? terms, int? overrideFils) {
   );
 }
 
+/// Pay terms for a row marked through a worker group (D-029). A member's own daily wage beats the group's.
+/// The group's wage never replaces a monthly contract, because monthly pay must not silently turn daily (ATT-03).
+/// [typedFils] is a wage typed for this one row. It keeps a contract's basis, or becomes a daily wage if there is
+/// a group wage or no contract. Half pay is half of the wage actually used, and only if the group says so.
+RateTerms? groupPayTerms(
+  RateTerms? contract, {
+  required String date,
+  int? groupRateFils,
+  int? memberRateFils,
+  int? typedFils,
+  bool halfDayIsHalf = false,
+}) {
+  final monthly = contract != null && isPeriodBasis(contract.basis);
+  final groupWage = memberRateFils ?? (monthly ? null : groupRateFils);
+  if (groupWage == null && (contract != null || typedFils == null)) return contract;
+  final wage = typedFils ?? groupWage!;
+  return RateTerms(
+    basis: RateBasis.day,
+    rateFils: wage,
+    effectiveFrom: date,
+    breakPaid: contract?.breakPaid ?? false,
+    halfAmountFils: halfDayIsHalf ? divRoundHalfUp(wage, 2) : null,
+  );
+}
+
 /// Prices one shift for both sides, independently (CALC-02, CALC-06).
 PricedShift priceShift(String workDate, ShiftInput input, {RateTerms? client, RateTerms? worker}) {
   final clientTerms = _withOverride(client, input.clientOverrideFils);

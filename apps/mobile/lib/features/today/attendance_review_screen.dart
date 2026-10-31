@@ -114,6 +114,7 @@ class _AttendanceReviewScreenState extends ConsumerState<AttendanceReviewScreen>
       for (final i in _inputs)
         EntryInput(
           workerId: i.workerId,
+          groupId: i.groupId,
           overrideReason: reason.text.trim(),
           overlapReason: i.overlapReason,
           notes: i.notes,

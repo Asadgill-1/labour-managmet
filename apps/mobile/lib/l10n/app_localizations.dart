@@ -115,6 +115,132 @@ abstract class AppLocalizations {
   /// **'Labour'**
   String get tabLabour;
 
+  /// No description provided for @tabGroups.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker groups'**
+  String get tabGroups;
+
+  /// No description provided for @addGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a group'**
+  String get addGroup;
+
+  /// No description provided for @editGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit group'**
+  String get editGroup;
+
+  /// No description provided for @groupName.
+  ///
+  /// In en, this message translates to:
+  /// **'Group name'**
+  String get groupName;
+
+  /// No description provided for @groupNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For example: Emaar West'**
+  String get groupNameHelp;
+
+  /// No description provided for @groupsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No groups yet. Make one for workers who usually go together.'**
+  String get groupsEmpty;
+
+  /// No description provided for @noneChoice.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get noneChoice;
+
+  /// No description provided for @dailyWage.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily wage (AED)'**
+  String get dailyWage;
+
+  /// No description provided for @dailyWageHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional. It shows beside every worker. To change one worker, tap the amount beside their name.'**
+  String get dailyWageHelp;
+
+  /// No description provided for @halfDayIsHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Half day pays half the daily wage'**
+  String get halfDayIsHalf;
+
+  /// No description provided for @ownWageHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty to use the group\'s daily wage.'**
+  String get ownWageHelp;
+
+  /// No description provided for @todayWageHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For this attendance only. The group does not change.'**
+  String get todayWageHelp;
+
+  /// No description provided for @todayWageReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily wage typed while marking attendance'**
+  String get todayWageReason;
+
+  /// No description provided for @setWage.
+  ///
+  /// In en, this message translates to:
+  /// **'Set wage'**
+  String get setWage;
+
+  /// No description provided for @monthlyPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthlyPay;
+
+  /// No description provided for @workersHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers'**
+  String get workersHeading;
+
+  /// No description provided for @searchGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Search groups'**
+  String get searchGroup;
+
+  /// No description provided for @searchWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Search workers'**
+  String get searchWorker;
+
+  /// No description provided for @membersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers'**
+  String membersCount(int count);
+
+  /// No description provided for @saveWithCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Save ({count} workers)'**
+  String saveWithCount(int count);
+
+  /// No description provided for @wageOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily wage: {name}'**
+  String wageOf(String name);
+
   /// No description provided for @tabRates.
   ///
   /// In en, this message translates to:

@@ -60,6 +60,82 @@ extension Masters on TenantDatabase {
     return rowId;
   }
 
+  /// Saves a group and its members as one operation. Members no longer listed leave the group;
+  /// their past attendance is untouched, because every row keeps its own figures.
+  Future<String> saveWorkerGroup({
+    required String? id,
+    required WorkerGroupsCompanion fields,
+    required Map<String, int?> members,
+    required String operationId,
+  }) async {
+    final rowId = id ?? newUuid();
+    var version = 1;
+    if (id != null) {
+      version = (await (select(workerGroups)..where((g) => g.id.equals(id))).getSingle()).version + 1;
+    }
+    await applyOperation(
+      operationId: operationId,
+      entity: 'worker_groups',
+      recordId: rowId,
+      version: version,
+      action: id == null ? 'create' : 'update',
+      change: () async {
+        final moment = DateTime.now().toUtc();
+        final now = Variable<DateTime>(moment);
+        final shared = <String, Expression>{
+          'updated_at_utc': now,
+          'actor_id': Variable<String>(actorId),
+          'version': Variable<int>(version),
+          'source_operation_id': Variable<String>(operationId),
+        };
+        if (id == null) {
+          await into(workerGroups).insert(
+            _Stamped(fields, {...shared, 'id': Variable<String>(rowId), 'tenant_id': Variable<String>(tenantId), 'created_at_utc': now}),
+          );
+        } else {
+          await (update(workerGroups)..where((g) => g.id.equals(rowId))).write(_Stamped(fields, shared));
+        }
+
+        final current = await (select(workerGroupMembers)..where((m) => m.groupId.equals(rowId))).get();
+        for (final old in current.where((m) => !members.containsKey(m.workerId))) {
+          await (delete(workerGroupMembers)..where((m) => m.id.equals(old.id))).go();
+        }
+        for (final entry in members.entries) {
+          final old = current.where((m) => m.workerId == entry.key).firstOrNull;
+          if (old == null) {
+            await into(workerGroupMembers).insert(
+              WorkerGroupMembersCompanion.insert(
+                id: newUuid(),
+                tenantId: tenantId,
+                createdAtUtc: moment,
+                updatedAtUtc: moment,
+                actorId: actorId,
+                sourceOperationId: operationId,
+                groupId: rowId,
+                workerId: entry.key,
+                dailyRateFils: Value(entry.value),
+              ),
+            );
+          } else if (old.dailyRateFils != entry.value) {
+            await (update(workerGroupMembers)..where((m) => m.id.equals(old.id))).write(
+              WorkerGroupMembersCompanion(
+                dailyRateFils: Value(entry.value),
+                updatedAtUtc: Value(moment),
+                actorId: Value(actorId),
+                version: Value(old.version + 1),
+                sourceOperationId: Value(operationId),
+              ),
+            );
+          }
+        }
+        final group = await (select(workerGroups)..where((g) => g.id.equals(rowId))).getSingle();
+        final stored = await (select(workerGroupMembers)..where((m) => m.groupId.equals(rowId))).get();
+        return {...group.toJson(), 'members': stored.map((m) => m.toJson()).toList()};
+      },
+    );
+    return rowId;
+  }
+
   /// True if another pay contract with the same scope covers any of these dates, which would make the rate ambiguous.
   Future<bool> payContractOverlaps({
     required String workerId,

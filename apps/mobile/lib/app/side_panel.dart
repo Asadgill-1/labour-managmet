@@ -7,7 +7,7 @@ import 'providers.dart';
 import 'theme.dart';
 
 /// Every main screen. The index is its branch in the router.
-enum Section { today, companies, sites, labour, rates, balances, settings }
+enum Section { today, companies, sites, labour, groups, rates, balances, settings }
 
 /// The shell's Scaffold. Main screens have their own Scaffold, so they reach the panel through this key.
 final shellKey = GlobalKey<ScaffoldState>();
@@ -100,6 +100,7 @@ class SidePanel extends ConsumerWidget {
                 item(Section.companies, Icons.apartment, l10n.tabCompanies),
                 item(Section.sites, Icons.location_on, l10n.sitesHeading),
                 item(Section.labour, Icons.groups, l10n.tabLabour),
+                item(Section.groups, Icons.diversity_3, l10n.tabGroups),
                 item(Section.rates, Icons.sell, l10n.tabRates),
                 item(Section.balances, Icons.history, l10n.openingHeading),
                 _PanelGroup(l10n.groupPayroll),

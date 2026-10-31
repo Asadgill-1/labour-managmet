@@ -6,10 +6,13 @@ import 'tenant_database.dart';
 
 /// One row in a batch, as entered.
 class EntryInput {
-  const EntryInput({required this.workerId, required this.shift, this.overrideReason, this.overlapReason, this.notes});
+  const EntryInput({required this.workerId, required this.shift, this.groupId, this.overrideReason, this.overlapReason, this.notes});
 
   final String workerId;
   final ShiftInput shift;
+
+  /// The group this row was marked through, if any. It decides the daily wage (D-029).
+  final String? groupId;
   final String? overrideReason;
   final String? overlapReason;
   final String? notes;
@@ -66,6 +69,7 @@ RateTerms _billingTerms(BillingContract c) => RateTerms(
 /// A stored row back as form input.
 EntryInput entryToInput(AttendanceEntry e) => EntryInput(
   workerId: e.workerId,
+  groupId: e.groupId,
   overrideReason: e.overrideReason,
   overlapReason: e.overlapReason,
   notes: e.notes,
@@ -91,11 +95,27 @@ extension AttendanceOps on TenantDatabase {
   }) async {
     final billing = await (select(billingContracts)..where((c) => c.clientId.equals(clientId))).get();
     final pay = await (select(payContracts)..where((c) => c.workerId.equals(input.workerId))).get();
+    final contract = pickRate(pay.map(_payTerms), date: workDate, siteId: siteId, workerId: input.workerId);
     return priceShift(
       workDate,
       input.shift,
       client: pickRate(billing.map(_billingTerms), date: workDate, siteId: siteId, workerId: input.workerId),
-      worker: pickRate(pay.map(_payTerms), date: workDate, siteId: siteId, workerId: input.workerId),
+      worker: await _groupTerms(contract, input, workDate),
+    );
+  }
+
+  Future<RateTerms?> _groupTerms(RateTerms? contract, EntryInput input, String date) async {
+    final groupId = input.groupId;
+    if (groupId == null) return contract;
+    final group = await (select(workerGroups)..where((g) => g.id.equals(groupId))).getSingle();
+    final member = await (select(workerGroupMembers)..where((m) => m.groupId.equals(groupId) & m.workerId.equals(input.workerId))).getSingleOrNull();
+    return groupPayTerms(
+      contract,
+      date: date,
+      groupRateFils: group.dailyRateFils,
+      memberRateFils: member?.dailyRateFils,
+      typedFils: input.shift.workerOverrideFils,
+      halfDayIsHalf: group.halfDayIsHalf,
     );
   }
 
@@ -128,6 +148,7 @@ extension AttendanceOps on TenantDatabase {
   /// The columns one row writes. Unpriced rows stay drafts and cannot be approved (CALC-06).
   AttendanceEntriesCompanion _entryColumns(EntryInput input, PricedShift priced) => AttendanceEntriesCompanion(
     workerId: Value(input.workerId),
+    groupId: Value(input.groupId),
     startUtc: Value(priced.startUtc),
     endUtc: Value(priced.endUtc),
     clockMinutes: Value(priced.clockMinutes),
@@ -206,6 +227,7 @@ extension AttendanceOps on TenantDatabase {
             workDate: workDate,
             clientId: clientId,
             siteId: siteId,
+            groupId: Value(inputs.firstOrNull?.groupId),
           ),
         );
         await batch((b) => b.insertAll(attendanceEntries, rows));

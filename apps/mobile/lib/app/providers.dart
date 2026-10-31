@@ -42,6 +42,16 @@ final billingContractsProvider = StreamProvider.family<List<BillingContract>, St
       .watch();
 });
 
+final workerGroupsProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.workerGroups)..orderBy([(g) => OrderingTerm.asc(g.name)])).watch();
+});
+
+final allGroupMembersProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return db.select(db.workerGroupMembers).watch();
+});
+
 final allPayContractsProvider = StreamProvider((ref) {
   final db = ref.watch(dbProvider);
   return (db.select(db.payContracts)..orderBy([(c) => OrderingTerm.desc(c.effectiveFrom)])).watch();

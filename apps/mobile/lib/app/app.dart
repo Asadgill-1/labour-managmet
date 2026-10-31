@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../features/companies/companies_screen.dart';
 import '../features/companies/sites_screen.dart';
+import '../features/groups/groups_screen.dart';
 import '../features/labour/labour_screen.dart';
 import '../features/more/profile_form_screen.dart';
 import '../features/more/settings_screen.dart';
@@ -21,6 +22,7 @@ Widget _screen(Section section) => switch (section) {
   Section.companies => const CompaniesScreen(),
   Section.sites => const SitesScreen(),
   Section.labour => const LabourScreen(),
+  Section.groups => const GroupsScreen(),
   Section.rates => const RatesScreen(),
   Section.balances => const BalancesScreen(),
   Section.settings => const SettingsScreen(),
