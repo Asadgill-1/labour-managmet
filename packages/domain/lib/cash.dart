@@ -1,7 +1,7 @@
 /// What a line of the daily cash book is. Stored by name. Each kind says where the money belongs (D-030).
-enum CashKind { advanceGiven, salaryPaid, roomRentPaid, expense, advanceReturned, roomRentReceived, clientReceipt }
+enum CashKind { advanceGiven, salaryPaid, roomRentPaid, expense, advanceReturned, roomRentReceived, clientReceipt, visaPaid, visaReturned }
 
-bool isMoneyIn(CashKind kind) => const {CashKind.advanceReturned, CashKind.roomRentReceived, CashKind.clientReceipt}.contains(kind);
+bool isMoneyIn(CashKind kind) => const {CashKind.advanceReturned, CashKind.roomRentReceived, CashKind.clientReceipt, CashKind.visaReturned}.contains(kind);
 
 /// One stored row, for the sums below. A reversal cancels its original exactly (REP-08).
 class CashLine {
@@ -29,6 +29,13 @@ int _sum(Iterable<CashLine> lines, Set<CashKind> kinds) {
 int advanceOutstanding(int openingFils, Iterable<CashLine> lines, {int recoveredFils = 0}) {
   return openingFils + _sum(lines, const {CashKind.advanceGiven}) - _sum(lines, const {CashKind.advanceReturned}) - recoveredFils;
 }
+
+int visaPaidTotal(Iterable<CashLine> lines) => _sum(lines, const {CashKind.visaPaid});
+
+int visaReturnedTotal(Iterable<CashLine> lines) => _sum(lines, const {CashKind.visaReturned});
+
+/// left = paid - handed back - recovered through posted payroll (D-039).
+int visaOutstanding(Iterable<CashLine> lines, {int recoveredFils = 0}) => visaPaidTotal(lines) - visaReturnedTotal(lines) - recoveredFils;
 
 int salaryPaidTotal(Iterable<CashLine> lines) => _sum(lines, const {CashKind.salaryPaid});
 

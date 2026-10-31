@@ -2,9 +2,16 @@
 
 Read this first each session (AI-04). Replace it, do not append; git holds the history.
 
-**Phase:** P2. T12a and T11 are built. The P1 gate's phone checks are still open (D-035)
-**Branch:** `p2/t11-payroll` (stacked: p0/t01 > t02 > t03 > t04 > p1/t05 > t06 > t07 > t09 > t08 > t10 > t05b > t10b > p2/t12a > p2/t11, none merged)
-**Next task:** T12 (salary payments and allocations, overpayment, overdue alerts)
+**Phase:** P2. Owner's requests of 2026-10-31 (D-036 to D-039) are half built. The P1 gate's phone checks are still open (D-035)
+**Branch:** `p2/t11c-visa`, stacked on `p2/t11b-look-and-tabs` and `p2/t11-payroll`, none merged
+**Next task:** T18a registers and export (D-038). Eight register sub-tabs show an empty screen until then
+
+## T18a: where it stands
+
+- Uncommitted in the working tree, not compiled into any APK or tested: `lib/features/registers/register_model.dart`, `register_xlsx.dart`, `android/.../MainActivity.kt` (send, open, save channel `labour_app/files`), `AndroidManifest.xml` provider, `res/xml/export_paths.xml`.
+- Still to write: register builders per section, the real `LedgerScreen` (date range, multi-select filters, date groups, every field on the row), `register_pdf.dart` (`pdf` and `printing` are in pubspec; use `TableRow(repeat: true)` and raise `MultiPage.maxPages`), the export sheet, tests. Check the XLSX with openpyxl.
+- Owner has not picked a colour. `docs/owner/colour_options.png` shows the three, and `lib/app/theme.dart` keeps them behind `_palette`. Delete the unused two once picked.
+- Then: docs, graph, APK. No APK has been built since T11.
 
 ## Done
 

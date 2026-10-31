@@ -15,6 +15,7 @@ import '../features/registers/ledger_screen.dart';
 import '../features/rates/rates_screen.dart';
 import '../features/rooms/rooms_screen.dart';
 import '../features/today/today_screen.dart';
+import '../features/visa/visa_screen.dart';
 import '../l10n/app_localizations.dart';
 import 'providers.dart';
 import 'settings.dart';
@@ -33,7 +34,7 @@ Widget _screen(Section section) => switch (section) {
   Section.balances => const BalancesScreen(),
   Section.payroll => const PayrollScreen(),
   Section.settings => const SettingsScreen(),
-  Section.visa ||
+  Section.visa => const VisaScreen(),
   Section.attendanceRegister ||
   Section.workerRegister ||
   Section.visaRegister ||

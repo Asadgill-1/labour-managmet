@@ -17,6 +17,13 @@ CREATE TRIGGER cash_no_delete BEFORE DELETE ON cash_entries BEGIN
   SELECT RAISE(ABORT, 'cash entries are append-only');
 END;
 
+-- A visa line belongs to a worker (D-039). The table's own check is older than these kinds.
+CREATE TRIGGER cash_visa_needs_worker BEFORE INSERT ON cash_entries
+WHEN NEW.kind IN ('visaPaid', 'visaReturned') AND NEW.worker_id IS NULL
+BEGIN
+  SELECT RAISE(ABORT, 'a visa line needs a worker');
+END;
+
 -- Posted payroll never changes. A wrong posting is only flagged, and the flag never clears (PAY-01, REP-08).
 CREATE TRIGGER payroll_run_no_update BEFORE UPDATE ON payroll_runs BEGIN
   SELECT RAISE(ABORT, 'posted payroll is immutable');
@@ -27,7 +34,7 @@ CREATE TRIGGER payroll_run_no_delete BEFORE DELETE ON payroll_runs BEGIN
 END;
 
 CREATE TRIGGER payroll_line_no_edit BEFORE UPDATE OF run_id, worker_id, period_from, opening_fils, earned_fils, salary_fils,
-  adjustment_fils, allowances_fils, deductions_fils, recovery_fils, net_fils, payable_fils, paid_before_fils ON payroll_lines
+  adjustment_fils, allowances_fils, deductions_fils, recovery_fils, visa_recovery_fils, net_fils, payable_fils, paid_before_fils ON payroll_lines
 BEGIN
   SELECT RAISE(ABORT, 'posted payroll is immutable');
 END;

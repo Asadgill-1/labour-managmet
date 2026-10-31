@@ -2250,6 +2250,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Room register'**
   String get regRooms;
+
+  /// No description provided for @kindVisaPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa money spent'**
+  String get kindVisaPaid;
+
+  /// No description provided for @kindVisaReturned.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa money returned'**
+  String get kindVisaReturned;
+
+  /// No description provided for @visaTooHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'This is more than the visa money left.'**
+  String get visaTooHigh;
+
+  /// No description provided for @visaUndoBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t undo this: some of this visa money has already come back.'**
+  String get visaUndoBlocked;
+
+  /// No description provided for @visaBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa money left: {amount}'**
+  String visaBalance(String amount);
+
+  /// No description provided for @visaSpent.
+  ///
+  /// In en, this message translates to:
+  /// **'Spent'**
+  String get visaSpent;
+
+  /// No description provided for @visaBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get visaBack;
+
+  /// No description provided for @visaLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa left'**
+  String get visaLeft;
+
+  /// No description provided for @visaAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add visa money'**
+  String get visaAdd;
+
+  /// No description provided for @visaEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No visa money yet. Add what the company spent on a worker.'**
+  String get visaEmpty;
+
+  /// No description provided for @visaSplit.
+  ///
+  /// In en, this message translates to:
+  /// **'Spent {spent}, back {back}'**
+  String visaSplit(String spent, String back);
+
+  /// No description provided for @visaInstalment.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly instalment'**
+  String get visaInstalment;
+
+  /// No description provided for @visaInstalmentOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get visaInstalmentOff;
+
+  /// No description provided for @visaInstalmentHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken from pay when you press the button in Payroll. Leave empty to turn it off.'**
+  String get visaInstalmentHelp;
+
+  /// No description provided for @visaInstalmentShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Instalment {amount} a month'**
+  String visaInstalmentShort(String amount);
+
+  /// No description provided for @visaReturnAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add money returned'**
+  String get visaReturnAdd;
+
+  /// No description provided for @payKindVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa instalment'**
+  String get payKindVisa;
+
+  /// No description provided for @applyVisaInstalments.
+  ///
+  /// In en, this message translates to:
+  /// **'Add visa instalments ({count})'**
+  String applyVisaInstalments(int count);
+
+  /// No description provided for @visaInstalmentsApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa instalment added for {count} workers'**
+  String visaInstalmentsApplied(int count);
+
+  /// No description provided for @issueVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'This is more than the visa money left.'**
+  String get issueVisa;
 }
 
 class _AppLocalizationsDelegate

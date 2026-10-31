@@ -75,6 +75,9 @@ class Workers extends Table with Common {
   IntColumn get roomChargeFils => integer().nullable()();
   TextColumn get roomChargeNote => text().nullable()();
   TextColumn get roomId => text().nullable().references(Rooms, #id)();
+
+  /// Taken from pay each month while visa money is left. Null means off (D-039).
+  IntColumn get visaInstalmentFils => integer().nullable().check(visaInstalmentFils.isBiggerThanValue(0))();
   BoolColumn get active => boolean().withDefault(const Constant(true))();
 
   @override
@@ -293,6 +296,7 @@ class PayrollLines extends Table with Common {
   IntColumn get allowancesFils => integer()();
   IntColumn get deductionsFils => integer()();
   IntColumn get recoveryFils => integer()();
+  IntColumn get visaRecoveryFils => integer().withDefault(const Constant(0))();
   IntColumn get netFils => integer()();
   IntColumn get payableFils => integer()();
 

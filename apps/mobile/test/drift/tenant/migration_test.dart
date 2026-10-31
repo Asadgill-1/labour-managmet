@@ -41,5 +41,6 @@ void main() {
     expect(entry.workerPayableMinutes, 660);
     expect(entry.groupId, isNull);
     expect(entry.payrollLineId, isNull);
+    expect((await db.select(db.workers).getSingle()).visaInstalmentFils, isNull);
   });
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:domain/cash.dart';
 import 'package:domain/dates.dart';
 import 'package:domain/payroll.dart';
@@ -22,6 +24,7 @@ class WorkerPayroll {
     required this.openingFils,
     required this.paidTotalFils,
     required this.advanceLeftFils,
+    this.visaLeftFils = 0,
     this.line,
     this.paidFils = 0,
     this.unapprovedRows = 0,
@@ -37,6 +40,7 @@ class WorkerPayroll {
   /// Every salary payment to this worker so far.
   final int paidTotalFils;
   final int advanceLeftFils;
+  final int visaLeftFils;
   final PayrollLine? line;
 
   /// Paid since this month was posted.
@@ -46,6 +50,7 @@ class WorkerPayroll {
   bool get posted => line != null;
   bool get canPost => !posted && figures.issues.isEmpty && !figures.isEmpty;
   bool get needsRoomCharge => !posted && (worker.roomChargeFils ?? 0) > 0 && !items.any((i) => i.kind == PayItemKind.roomCharge.name);
+  bool get needsVisaInstalment => !posted && (worker.visaInstalmentFils ?? 0) > 0 && visaLeftFils > 0 && !items.any((i) => i.kind == PayItemKind.visaRecovery.name);
   int get payableFils => openingFils + figures.dueFils;
   int get closingFils => payableFils - paidFils;
 }
@@ -57,6 +62,7 @@ PayrollFigures _postedFigures(PayrollLine l) => PayrollFigures(
   allowancesFils: l.allowancesFils,
   deductionsFils: l.deductionsFils,
   recoveryFils: l.recoveryFils,
+  visaFils: l.visaRecoveryFils,
 );
 
 extension PayrollOps on TenantDatabase {
@@ -101,6 +107,7 @@ extension PayrollOps on TenantDatabase {
       final paidTotal = salaryPaidTotal(cashLines);
       final recovered = workerLines.fold(0, (total, l) => total + l.recoveryFils);
       final advanceLeft = advanceOutstanding(openingOf('worker_advance'), cashLines, recoveredFils: recovered);
+      final visaLeft = visaOutstanding(cashLines, recoveredFils: workerLines.fold(0, (total, l) => total + l.visaRecoveryFils));
 
       final index = workerLines.indexWhere((l) => l.periodFrom == from);
       if (index >= 0) {
@@ -114,6 +121,7 @@ extension PayrollOps on TenantDatabase {
             openingFils: line.openingFils,
             paidTotalFils: paidTotal,
             advanceLeftFils: advanceLeft,
+            visaLeftFils: visaLeft,
             line: line,
             paidFils: paidUntil - line.paidBeforeFils,
           ),
@@ -135,6 +143,7 @@ extension PayrollOps on TenantDatabase {
         contracts: worker.active ? contracts.where((c) => c.workerId == worker.id).map(payTerms) : const [],
         items: [for (final i in workerItems) PayItemLine(PayItemKind.values.byName(i.kind), i.amountFils)],
         advanceLeftFils: advanceLeft,
+        visaLeftFils: visaLeft,
         unapprovedRows: unapproved,
         lastPostedMonth: workerLines.lastOrNull?.periodFrom.substring(0, 7),
         limitBps: limitBps,
@@ -149,6 +158,7 @@ extension PayrollOps on TenantDatabase {
           openingFils: salaryOwed(openingOf('worker_salary_owed'), posted, cashLines),
           paidTotalFils: paidTotal,
           advanceLeftFils: advanceLeft,
+          visaLeftFils: visaLeft,
           unapprovedRows: unapproved,
         ),
       );
@@ -225,6 +235,7 @@ extension PayrollOps on TenantDatabase {
               allowancesFils: f.allowancesFils,
               deductionsFils: f.deductionsFils,
               recoveryFils: f.recoveryFils,
+              visaRecoveryFils: Value(f.visaFils),
               netFils: f.netFils,
               payableFils: p.payableFils,
               paidBeforeFils: p.paidTotalFils,
@@ -302,6 +313,13 @@ extension PayrollOps on TenantDatabase {
       final taken = others.where((i) => i.id != id).fold(0, (total, i) => total + i.amountFils);
       if (amountFils + taken > await advanceLeft(workerId)) throw const AdvanceTooHigh();
     }
+    if (kind == PayItemKind.visaRecovery) {
+      final others = await (select(payrollItems)
+            ..where((i) => i.workerId.equals(workerId) & i.kind.equals(kind.name) & i.lineId.isNull()))
+          .get();
+      final taken = others.where((i) => i.id != id).fold(0, (total, i) => total + i.amountFils);
+      if (amountFils + taken > await visaLeft(workerId)) throw const VisaTooHigh();
+    }
     await saveRow(
       payrollItems,
       id: id,
@@ -331,6 +349,44 @@ extension PayrollOps on TenantDatabase {
         return {'id': item.id, 'deleted': true};
       },
     );
+  }
+
+  /// Adds each worker's visa instalment for this month, capped at what is left (D-039). Returns how many were added.
+  Future<int> applyVisaInstalments(String month, {required String reason, required String operationId}) async {
+    var added = 0;
+    await applyOperation(
+      operationId: operationId,
+      entity: 'payroll_items',
+      recordId: operationId,
+      version: 1,
+      action: 'create',
+      change: () async {
+        final now = DateTime.now().toUtc();
+        final saved = <Map<String, dynamic>>[];
+        for (final p in await payrollFor(month)) {
+          if (!p.needsVisaInstalment) continue;
+          final row = await into(payrollItems).insertReturning(
+            PayrollItemsCompanion.insert(
+              id: newUuid(),
+              tenantId: tenantId,
+              createdAtUtc: now,
+              updatedAtUtc: now,
+              actorId: actorId,
+              sourceOperationId: operationId,
+              workerId: p.worker.id,
+              periodFrom: monthFirstDay(month),
+              kind: PayItemKind.visaRecovery.name,
+              amountFils: min(p.worker.visaInstalmentFils!, p.visaLeftFils),
+              reason: reason,
+            ),
+          );
+          saved.add(row.toJson());
+          added++;
+        }
+        return {'items': saved};
+      },
+    );
+    return added;
   }
 
   /// Adds each worker's agreed room charge for this month. Someone with no agreement note on file is left out,

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/payroll.dart';
 import '../data/tenant_database.dart';
+import '../data/visa.dart';
 
 /// Opened in main. Disposing this scope at logout closes the tenant's data (AUTH-04).
 final dbProvider = Provider<TenantDatabase>((ref) => throw UnimplementedError('opened in main'));
@@ -92,6 +93,8 @@ final roomChargesOfWorkerProvider = StreamProvider.family<List<PayrollItem>, Str
   final db = ref.watch(dbProvider);
   return (db.select(db.payrollItems)..where((i) => i.workerId.equals(workerId) & i.kind.equals('roomCharge') & i.lineId.isNotNull())).watch();
 });
+
+final visaAccountsProvider = StreamProvider<List<VisaAccount>>((ref) => ref.watch(dbProvider).watchVisaAccounts());
 
 final workerGroupsProvider = StreamProvider((ref) {
   final db = ref.watch(dbProvider);

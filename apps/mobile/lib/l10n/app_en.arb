@@ -581,5 +581,63 @@
   "regPayroll": "Pay register",
   "regAdvance": "Advance register",
   "regCash": "Money register",
-  "regRooms": "Room register"
+  "regRooms": "Room register",
+  "kindVisaPaid": "Visa money spent",
+  "kindVisaReturned": "Visa money returned",
+  "visaTooHigh": "This is more than the visa money left.",
+  "visaUndoBlocked": "Can't undo this: some of this visa money has already come back.",
+  "visaBalance": "Visa money left: {amount}",
+  "@visaBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "visaSpent": "Spent",
+  "visaBack": "Back",
+  "visaLeft": "Visa left",
+  "visaAdd": "Add visa money",
+  "visaEmpty": "No visa money yet. Add what the company spent on a worker.",
+  "visaSplit": "Spent {spent}, back {back}",
+  "@visaSplit": {
+    "placeholders": {
+      "spent": {
+        "type": "String"
+      },
+      "back": {
+        "type": "String"
+      }
+    }
+  },
+  "visaInstalment": "Monthly instalment",
+  "visaInstalmentOff": "Off",
+  "visaInstalmentHelp": "Taken from pay when you press the button in Payroll. Leave empty to turn it off.",
+  "visaInstalmentShort": "Instalment {amount} a month",
+  "@visaInstalmentShort": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "visaReturnAdd": "Add money returned",
+  "payKindVisa": "Visa instalment",
+  "applyVisaInstalments": "Add visa instalments ({count})",
+  "@applyVisaInstalments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "visaInstalmentsApplied": "Visa instalment added for {count} workers",
+  "@visaInstalmentsApplied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "issueVisa": "This is more than the visa money left."
 }

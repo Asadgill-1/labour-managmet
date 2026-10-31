@@ -408,7 +408,7 @@ class BandFigure extends StatelessWidget {
 }
 
 /// Asks for one worker's daily wage. Null means cancelled. A null `fils` means the field was left empty.
-Future<({int? fils})?> askDailyWage(BuildContext context, {required String title, required String helper, int? initial}) {
+Future<({int? fils})?> askDailyWage(BuildContext context, {required String title, required String helper, int? initial, String? label}) {
   final l10n = AppLocalizations.of(context);
   final amount = TextEditingController(text: initial == null ? '' : plainAmount(initial));
   final form = GlobalKey<FormState>();
@@ -419,7 +419,7 @@ Future<({int? fils})?> askDailyWage(BuildContext context, {required String title
       content: Form(
         key: form,
         child: Field(
-          l10n.dailyWage,
+          label ?? l10n.dailyWage,
           amount,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           helper: helper,

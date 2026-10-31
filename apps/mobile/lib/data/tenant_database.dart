@@ -56,7 +56,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -93,6 +93,14 @@ class TenantDatabase extends _$TenantDatabase {
         await m.createTrigger(schema.payrollLineNoDelete);
         await m.createTrigger(schema.postedItemNoEdit);
         await m.createTrigger(schema.postedItemNoDelete);
+      },
+      from4To5: (m, schema) async {
+        await m.addColumn(schema.workers, schema.workers.visaInstalmentFils);
+        await m.addColumn(schema.payrollLines, schema.payrollLines.visaRecoveryFils);
+        // The trigger names every figure it protects, so it comes back with the new one.
+        await m.drop(schema.payrollLineNoEdit);
+        await m.createTrigger(schema.payrollLineNoEdit);
+        await m.createTrigger(schema.cashVisaNeedsWorker);
       },
     ),
     beforeOpen: (_) => customStatement('PRAGMA foreign_keys = ON'),

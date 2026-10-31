@@ -1174,6 +1174,79 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get regRooms => 'Room register';
+
+  @override
+  String get kindVisaPaid => 'Visa money spent';
+
+  @override
+  String get kindVisaReturned => 'Visa money returned';
+
+  @override
+  String get visaTooHigh => 'This is more than the visa money left.';
+
+  @override
+  String get visaUndoBlocked =>
+      'Can\'t undo this: some of this visa money has already come back.';
+
+  @override
+  String visaBalance(String amount) {
+    return 'Visa money left: $amount';
+  }
+
+  @override
+  String get visaSpent => 'Spent';
+
+  @override
+  String get visaBack => 'Back';
+
+  @override
+  String get visaLeft => 'Visa left';
+
+  @override
+  String get visaAdd => 'Add visa money';
+
+  @override
+  String get visaEmpty =>
+      'No visa money yet. Add what the company spent on a worker.';
+
+  @override
+  String visaSplit(String spent, String back) {
+    return 'Spent $spent, back $back';
+  }
+
+  @override
+  String get visaInstalment => 'Monthly instalment';
+
+  @override
+  String get visaInstalmentOff => 'Off';
+
+  @override
+  String get visaInstalmentHelp =>
+      'Taken from pay when you press the button in Payroll. Leave empty to turn it off.';
+
+  @override
+  String visaInstalmentShort(String amount) {
+    return 'Instalment $amount a month';
+  }
+
+  @override
+  String get visaReturnAdd => 'Add money returned';
+
+  @override
+  String get payKindVisa => 'Visa instalment';
+
+  @override
+  String applyVisaInstalments(int count) {
+    return 'Add visa instalments ($count)';
+  }
+
+  @override
+  String visaInstalmentsApplied(int count) {
+    return 'Visa instalment added for $count workers';
+  }
+
+  @override
+  String get issueVisa => 'This is more than the visa money left.';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -2345,4 +2418,77 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get regRooms => 'Room register';
+
+  @override
+  String get kindVisaPaid => 'Visa ka kharcha';
+
+  @override
+  String get kindVisaReturned => 'Visa ka paisa wapas mila';
+
+  @override
+  String get visaTooHigh => 'Yeh baqi visa ke paise se zyada hai.';
+
+  @override
+  String get visaUndoBlocked =>
+      'Yeh wapas nahin ho sakta: is visa ka kuch paisa wapas aa chuka hai.';
+
+  @override
+  String visaBalance(String amount) {
+    return 'Visa baqi: $amount';
+  }
+
+  @override
+  String get visaSpent => 'Kharcha';
+
+  @override
+  String get visaBack => 'Wapas aaya';
+
+  @override
+  String get visaLeft => 'Visa baqi';
+
+  @override
+  String get visaAdd => 'Visa kharcha likhein';
+
+  @override
+  String get visaEmpty =>
+      'Abhi visa ka koi hisaab nahin. Mazdoor par jo kharcha hua woh likhein.';
+
+  @override
+  String visaSplit(String spent, String back) {
+    return 'Kharcha $spent, wapas $back';
+  }
+
+  @override
+  String get visaInstalment => 'Har mahine ki qist';
+
+  @override
+  String get visaInstalmentOff => 'Band hai';
+
+  @override
+  String get visaInstalmentHelp =>
+      'Tankhwah mein button dabane par yeh rakam katti hai. Khali chhorein to band.';
+
+  @override
+  String visaInstalmentShort(String amount) {
+    return 'Qist $amount mahina';
+  }
+
+  @override
+  String get visaReturnAdd => 'Wapas mila likhein';
+
+  @override
+  String get payKindVisa => 'Visa ki qist';
+
+  @override
+  String applyVisaInstalments(int count) {
+    return 'Visa qist lagayein ($count)';
+  }
+
+  @override
+  String visaInstalmentsApplied(int count) {
+    return '$count mazdoor par visa qist lag gayi';
+  }
+
+  @override
+  String get issueVisa => 'Visa ki wapsi baqi rakam se zyada hai.';
 }

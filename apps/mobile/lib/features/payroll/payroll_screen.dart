@@ -19,6 +19,7 @@ String issueText(AppLocalizations l10n, PayrollIssue issue, WorkerPayroll p) => 
   PayrollIssue.missingPartialMethod => l10n.issuePartial,
   PayrollIssue.negativeNet => l10n.issueNegative,
   PayrollIssue.recoveryAboveAdvance => l10n.issueRecovery,
+  PayrollIssue.recoveryAboveVisa => l10n.issueVisa,
   PayrollIssue.deductionAboveLimit => l10n.issueLimit,
   PayrollIssue.earlierMonthMissing => l10n.issueEarlier,
   PayrollIssue.laterMonthPosted => l10n.issueLater,
@@ -86,6 +87,15 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
     showSavedOnPhone(context, result.noNote == 0 ? l10n.roomChargesApplied(result.added) : l10n.roomChargesPartly(result.added, result.noNote));
   }
 
+  Future<void> _applyVisaInstalments() async {
+    final l10n = AppLocalizations.of(context);
+    var added = 0;
+    final saved = await saveOrExplain(context, () async {
+      added = await ref.read(dbProvider).applyVisaInstalments(_month, reason: l10n.payKindVisa, operationId: newUuid());
+    });
+    if (saved && mounted) showSavedOnPhone(context, l10n.visaInstalmentsApplied(added));
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -93,8 +103,9 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
     final ready = rows.where((p) => p.canPost).toList();
     final unapproved = rows.fold(0, (sum, p) => sum + p.unapprovedRows);
     final roomCharges = rows.where((p) => p.needsRoomCharge).length;
+    final visaInstalments = rows.where((p) => p.needsVisaInstalment).length;
     final earned = rows.fold(0, (sum, p) => sum + p.figures.grossFils);
-    final cut = rows.fold(0, (sum, p) => sum + p.figures.deductionsFils + p.figures.recoveryFils);
+    final cut = rows.fold(0, (sum, p) => sum + p.figures.deductionsFils + p.figures.recoveryFils + p.figures.visaFils);
     final toPay = rows.fold(0, (sum, p) => sum + (p.closingFils > 0 ? p.closingFils : 0));
     return Scaffold(
       appBar: AppBar(leading: const MenuButton(), title: Text(l10n.menuPayroll), bottom: const SubTabs(Section.payroll)),
@@ -119,7 +130,7 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          if (unapproved > 0 || roomCharges > 0)
+          if (unapproved > 0 || roomCharges > 0 || visaInstalments > 0)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
               child: Wrap(
@@ -128,6 +139,7 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
                 children: [
                   if (unapproved > 0) OutlinedButton(onPressed: _approveAll, child: Text(l10n.approveAll(unapproved))),
                   if (roomCharges > 0) OutlinedButton(onPressed: _applyRoomCharges, child: Text(l10n.applyRoomCharges(roomCharges))),
+                  if (visaInstalments > 0) OutlinedButton(onPressed: _applyVisaInstalments, child: Text(l10n.applyVisaInstalments(visaInstalments))),
                 ],
               ),
             ),
@@ -159,7 +171,7 @@ class _PayrollRow extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l10n.payrollSplit(formatAed(p.figures.grossFils), formatAed(p.figures.deductionsFils + p.figures.recoveryFils))),
+            Text(l10n.payrollSplit(formatAed(p.figures.grossFils), formatAed(p.figures.deductionsFils + p.figures.recoveryFils + p.figures.visaFils))),
             Text(state, style: TextStyle(fontFamily: headingFont, fontSize: 14, fontWeight: FontWeight.w600, color: color)),
           ],
         ),

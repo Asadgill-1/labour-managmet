@@ -1392,6 +1392,17 @@ class $WorkersTable extends Workers with TableInfo<$WorkersTable, Worker> {
       'REFERENCES rooms (id)',
     ),
   );
+  static const VerificationMeta _visaInstalmentFilsMeta =
+      const VerificationMeta('visaInstalmentFils');
+  @override
+  late final GeneratedColumn<int> visaInstalmentFils = GeneratedColumn<int>(
+    'visa_instalment_fils',
+    aliasedName,
+    true,
+    check: () => ComparableExpr(visaInstalmentFils).isBiggerThanValue(0),
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _activeMeta = const VerificationMeta('active');
   @override
   late final GeneratedColumn<bool> active = GeneratedColumn<bool>(
@@ -1422,6 +1433,7 @@ class $WorkersTable extends Workers with TableInfo<$WorkersTable, Worker> {
     roomChargeFils,
     roomChargeNote,
     roomId,
+    visaInstalmentFils,
     active,
   ];
   @override
@@ -1557,6 +1569,15 @@ class $WorkersTable extends Workers with TableInfo<$WorkersTable, Worker> {
         roomId.isAcceptableOrUnknown(data['room_id']!, _roomIdMeta),
       );
     }
+    if (data.containsKey('visa_instalment_fils')) {
+      context.handle(
+        _visaInstalmentFilsMeta,
+        visaInstalmentFils.isAcceptableOrUnknown(
+          data['visa_instalment_fils']!,
+          _visaInstalmentFilsMeta,
+        ),
+      );
+    }
     if (data.containsKey('active')) {
       context.handle(
         _activeMeta,
@@ -1636,6 +1657,10 @@ class $WorkersTable extends Workers with TableInfo<$WorkersTable, Worker> {
         DriftSqlType.string,
         data['${effectivePrefix}room_id'],
       ),
+      visaInstalmentFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}visa_instalment_fils'],
+      ),
       active: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}active'],
@@ -1665,6 +1690,9 @@ class Worker extends DataClass implements Insertable<Worker> {
   final int? roomChargeFils;
   final String? roomChargeNote;
   final String? roomId;
+
+  /// Taken from pay each month while visa money is left. Null means off (D-039).
+  final int? visaInstalmentFils;
   final bool active;
   const Worker({
     required this.id,
@@ -1682,6 +1710,7 @@ class Worker extends DataClass implements Insertable<Worker> {
     this.roomChargeFils,
     this.roomChargeNote,
     this.roomId,
+    this.visaInstalmentFils,
     required this.active,
   });
   @override
@@ -1713,6 +1742,9 @@ class Worker extends DataClass implements Insertable<Worker> {
     }
     if (!nullToAbsent || roomId != null) {
       map['room_id'] = Variable<String>(roomId);
+    }
+    if (!nullToAbsent || visaInstalmentFils != null) {
+      map['visa_instalment_fils'] = Variable<int>(visaInstalmentFils);
     }
     map['active'] = Variable<bool>(active);
     return map;
@@ -1747,6 +1779,9 @@ class Worker extends DataClass implements Insertable<Worker> {
       roomId: roomId == null && nullToAbsent
           ? const Value.absent()
           : Value(roomId),
+      visaInstalmentFils: visaInstalmentFils == null && nullToAbsent
+          ? const Value.absent()
+          : Value(visaInstalmentFils),
       active: Value(active),
     );
   }
@@ -1772,6 +1807,7 @@ class Worker extends DataClass implements Insertable<Worker> {
       roomChargeFils: serializer.fromJson<int?>(json['roomChargeFils']),
       roomChargeNote: serializer.fromJson<String?>(json['roomChargeNote']),
       roomId: serializer.fromJson<String?>(json['roomId']),
+      visaInstalmentFils: serializer.fromJson<int?>(json['visaInstalmentFils']),
       active: serializer.fromJson<bool>(json['active']),
     );
   }
@@ -1794,6 +1830,7 @@ class Worker extends DataClass implements Insertable<Worker> {
       'roomChargeFils': serializer.toJson<int?>(roomChargeFils),
       'roomChargeNote': serializer.toJson<String?>(roomChargeNote),
       'roomId': serializer.toJson<String?>(roomId),
+      'visaInstalmentFils': serializer.toJson<int?>(visaInstalmentFils),
       'active': serializer.toJson<bool>(active),
     };
   }
@@ -1814,6 +1851,7 @@ class Worker extends DataClass implements Insertable<Worker> {
     Value<int?> roomChargeFils = const Value.absent(),
     Value<String?> roomChargeNote = const Value.absent(),
     Value<String?> roomId = const Value.absent(),
+    Value<int?> visaInstalmentFils = const Value.absent(),
     bool? active,
   }) => Worker(
     id: id ?? this.id,
@@ -1835,6 +1873,9 @@ class Worker extends DataClass implements Insertable<Worker> {
         ? roomChargeNote.value
         : this.roomChargeNote,
     roomId: roomId.present ? roomId.value : this.roomId,
+    visaInstalmentFils: visaInstalmentFils.present
+        ? visaInstalmentFils.value
+        : this.visaInstalmentFils,
     active: active ?? this.active,
   );
   Worker copyWithCompanion(WorkersCompanion data) {
@@ -1866,6 +1907,9 @@ class Worker extends DataClass implements Insertable<Worker> {
           ? data.roomChargeNote.value
           : this.roomChargeNote,
       roomId: data.roomId.present ? data.roomId.value : this.roomId,
+      visaInstalmentFils: data.visaInstalmentFils.present
+          ? data.visaInstalmentFils.value
+          : this.visaInstalmentFils,
       active: data.active.present ? data.active.value : this.active,
     );
   }
@@ -1888,6 +1932,7 @@ class Worker extends DataClass implements Insertable<Worker> {
           ..write('roomChargeFils: $roomChargeFils, ')
           ..write('roomChargeNote: $roomChargeNote, ')
           ..write('roomId: $roomId, ')
+          ..write('visaInstalmentFils: $visaInstalmentFils, ')
           ..write('active: $active')
           ..write(')'))
         .toString();
@@ -1910,6 +1955,7 @@ class Worker extends DataClass implements Insertable<Worker> {
     roomChargeFils,
     roomChargeNote,
     roomId,
+    visaInstalmentFils,
     active,
   );
   @override
@@ -1931,6 +1977,7 @@ class Worker extends DataClass implements Insertable<Worker> {
           other.roomChargeFils == this.roomChargeFils &&
           other.roomChargeNote == this.roomChargeNote &&
           other.roomId == this.roomId &&
+          other.visaInstalmentFils == this.visaInstalmentFils &&
           other.active == this.active);
 }
 
@@ -1950,6 +1997,7 @@ class WorkersCompanion extends UpdateCompanion<Worker> {
   final Value<int?> roomChargeFils;
   final Value<String?> roomChargeNote;
   final Value<String?> roomId;
+  final Value<int?> visaInstalmentFils;
   final Value<bool> active;
   final Value<int> rowid;
   const WorkersCompanion({
@@ -1968,6 +2016,7 @@ class WorkersCompanion extends UpdateCompanion<Worker> {
     this.roomChargeFils = const Value.absent(),
     this.roomChargeNote = const Value.absent(),
     this.roomId = const Value.absent(),
+    this.visaInstalmentFils = const Value.absent(),
     this.active = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -1987,6 +2036,7 @@ class WorkersCompanion extends UpdateCompanion<Worker> {
     this.roomChargeFils = const Value.absent(),
     this.roomChargeNote = const Value.absent(),
     this.roomId = const Value.absent(),
+    this.visaInstalmentFils = const Value.absent(),
     this.active = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -2013,6 +2063,7 @@ class WorkersCompanion extends UpdateCompanion<Worker> {
     Expression<int>? roomChargeFils,
     Expression<String>? roomChargeNote,
     Expression<String>? roomId,
+    Expression<int>? visaInstalmentFils,
     Expression<bool>? active,
     Expression<int>? rowid,
   }) {
@@ -2032,6 +2083,8 @@ class WorkersCompanion extends UpdateCompanion<Worker> {
       if (roomChargeFils != null) 'room_charge_fils': roomChargeFils,
       if (roomChargeNote != null) 'room_charge_note': roomChargeNote,
       if (roomId != null) 'room_id': roomId,
+      if (visaInstalmentFils != null)
+        'visa_instalment_fils': visaInstalmentFils,
       if (active != null) 'active': active,
       if (rowid != null) 'rowid': rowid,
     });
@@ -2053,6 +2106,7 @@ class WorkersCompanion extends UpdateCompanion<Worker> {
     Value<int?>? roomChargeFils,
     Value<String?>? roomChargeNote,
     Value<String?>? roomId,
+    Value<int?>? visaInstalmentFils,
     Value<bool>? active,
     Value<int>? rowid,
   }) {
@@ -2072,6 +2126,7 @@ class WorkersCompanion extends UpdateCompanion<Worker> {
       roomChargeFils: roomChargeFils ?? this.roomChargeFils,
       roomChargeNote: roomChargeNote ?? this.roomChargeNote,
       roomId: roomId ?? this.roomId,
+      visaInstalmentFils: visaInstalmentFils ?? this.visaInstalmentFils,
       active: active ?? this.active,
       rowid: rowid ?? this.rowid,
     );
@@ -2125,6 +2180,9 @@ class WorkersCompanion extends UpdateCompanion<Worker> {
     if (roomId.present) {
       map['room_id'] = Variable<String>(roomId.value);
     }
+    if (visaInstalmentFils.present) {
+      map['visa_instalment_fils'] = Variable<int>(visaInstalmentFils.value);
+    }
     if (active.present) {
       map['active'] = Variable<bool>(active.value);
     }
@@ -2152,6 +2210,7 @@ class WorkersCompanion extends UpdateCompanion<Worker> {
           ..write('roomChargeFils: $roomChargeFils, ')
           ..write('roomChargeNote: $roomChargeNote, ')
           ..write('roomId: $roomId, ')
+          ..write('visaInstalmentFils: $visaInstalmentFils, ')
           ..write('active: $active, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -6165,6 +6224,18 @@ class $PayrollLinesTable extends PayrollLines
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _visaRecoveryFilsMeta = const VerificationMeta(
+    'visaRecoveryFils',
+  );
+  @override
+  late final GeneratedColumn<int> visaRecoveryFils = GeneratedColumn<int>(
+    'visa_recovery_fils',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _netFilsMeta = const VerificationMeta(
     'netFils',
   );
@@ -6232,6 +6303,7 @@ class $PayrollLinesTable extends PayrollLines
     allowancesFils,
     deductionsFils,
     recoveryFils,
+    visaRecoveryFils,
     netFils,
     payableFils,
     paidBeforeFils,
@@ -6404,6 +6476,15 @@ class $PayrollLinesTable extends PayrollLines
     } else if (isInserting) {
       context.missing(_recoveryFilsMeta);
     }
+    if (data.containsKey('visa_recovery_fils')) {
+      context.handle(
+        _visaRecoveryFilsMeta,
+        visaRecoveryFils.isAcceptableOrUnknown(
+          data['visa_recovery_fils']!,
+          _visaRecoveryFilsMeta,
+        ),
+      );
+    }
     if (data.containsKey('net_fils')) {
       context.handle(
         _netFilsMeta,
@@ -6517,6 +6598,10 @@ class $PayrollLinesTable extends PayrollLines
         DriftSqlType.int,
         data['${effectivePrefix}recovery_fils'],
       )!,
+      visaRecoveryFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}visa_recovery_fils'],
+      )!,
       netFils: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}net_fils'],
@@ -6562,6 +6647,7 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
   final int allowancesFils;
   final int deductionsFils;
   final int recoveryFils;
+  final int visaRecoveryFils;
   final int netFils;
   final int payableFils;
 
@@ -6586,6 +6672,7 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
     required this.allowancesFils,
     required this.deductionsFils,
     required this.recoveryFils,
+    required this.visaRecoveryFils,
     required this.netFils,
     required this.payableFils,
     required this.paidBeforeFils,
@@ -6611,6 +6698,7 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
     map['allowances_fils'] = Variable<int>(allowancesFils);
     map['deductions_fils'] = Variable<int>(deductionsFils);
     map['recovery_fils'] = Variable<int>(recoveryFils);
+    map['visa_recovery_fils'] = Variable<int>(visaRecoveryFils);
     map['net_fils'] = Variable<int>(netFils);
     map['payable_fils'] = Variable<int>(payableFils);
     map['paid_before_fils'] = Variable<int>(paidBeforeFils);
@@ -6637,6 +6725,7 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
       allowancesFils: Value(allowancesFils),
       deductionsFils: Value(deductionsFils),
       recoveryFils: Value(recoveryFils),
+      visaRecoveryFils: Value(visaRecoveryFils),
       netFils: Value(netFils),
       payableFils: Value(payableFils),
       paidBeforeFils: Value(paidBeforeFils),
@@ -6667,6 +6756,7 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
       allowancesFils: serializer.fromJson<int>(json['allowancesFils']),
       deductionsFils: serializer.fromJson<int>(json['deductionsFils']),
       recoveryFils: serializer.fromJson<int>(json['recoveryFils']),
+      visaRecoveryFils: serializer.fromJson<int>(json['visaRecoveryFils']),
       netFils: serializer.fromJson<int>(json['netFils']),
       payableFils: serializer.fromJson<int>(json['payableFils']),
       paidBeforeFils: serializer.fromJson<int>(json['paidBeforeFils']),
@@ -6694,6 +6784,7 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
       'allowancesFils': serializer.toJson<int>(allowancesFils),
       'deductionsFils': serializer.toJson<int>(deductionsFils),
       'recoveryFils': serializer.toJson<int>(recoveryFils),
+      'visaRecoveryFils': serializer.toJson<int>(visaRecoveryFils),
       'netFils': serializer.toJson<int>(netFils),
       'payableFils': serializer.toJson<int>(payableFils),
       'paidBeforeFils': serializer.toJson<int>(paidBeforeFils),
@@ -6719,6 +6810,7 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
     int? allowancesFils,
     int? deductionsFils,
     int? recoveryFils,
+    int? visaRecoveryFils,
     int? netFils,
     int? payableFils,
     int? paidBeforeFils,
@@ -6741,6 +6833,7 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
     allowancesFils: allowancesFils ?? this.allowancesFils,
     deductionsFils: deductionsFils ?? this.deductionsFils,
     recoveryFils: recoveryFils ?? this.recoveryFils,
+    visaRecoveryFils: visaRecoveryFils ?? this.visaRecoveryFils,
     netFils: netFils ?? this.netFils,
     payableFils: payableFils ?? this.payableFils,
     paidBeforeFils: paidBeforeFils ?? this.paidBeforeFils,
@@ -6787,6 +6880,9 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
       recoveryFils: data.recoveryFils.present
           ? data.recoveryFils.value
           : this.recoveryFils,
+      visaRecoveryFils: data.visaRecoveryFils.present
+          ? data.visaRecoveryFils.value
+          : this.visaRecoveryFils,
       netFils: data.netFils.present ? data.netFils.value : this.netFils,
       payableFils: data.payableFils.present
           ? data.payableFils.value
@@ -6818,6 +6914,7 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
           ..write('allowancesFils: $allowancesFils, ')
           ..write('deductionsFils: $deductionsFils, ')
           ..write('recoveryFils: $recoveryFils, ')
+          ..write('visaRecoveryFils: $visaRecoveryFils, ')
           ..write('netFils: $netFils, ')
           ..write('payableFils: $payableFils, ')
           ..write('paidBeforeFils: $paidBeforeFils, ')
@@ -6845,6 +6942,7 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
     allowancesFils,
     deductionsFils,
     recoveryFils,
+    visaRecoveryFils,
     netFils,
     payableFils,
     paidBeforeFils,
@@ -6871,6 +6969,7 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
           other.allowancesFils == this.allowancesFils &&
           other.deductionsFils == this.deductionsFils &&
           other.recoveryFils == this.recoveryFils &&
+          other.visaRecoveryFils == this.visaRecoveryFils &&
           other.netFils == this.netFils &&
           other.payableFils == this.payableFils &&
           other.paidBeforeFils == this.paidBeforeFils &&
@@ -6895,6 +6994,7 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
   final Value<int> allowancesFils;
   final Value<int> deductionsFils;
   final Value<int> recoveryFils;
+  final Value<int> visaRecoveryFils;
   final Value<int> netFils;
   final Value<int> payableFils;
   final Value<int> paidBeforeFils;
@@ -6918,6 +7018,7 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
     this.allowancesFils = const Value.absent(),
     this.deductionsFils = const Value.absent(),
     this.recoveryFils = const Value.absent(),
+    this.visaRecoveryFils = const Value.absent(),
     this.netFils = const Value.absent(),
     this.payableFils = const Value.absent(),
     this.paidBeforeFils = const Value.absent(),
@@ -6942,6 +7043,7 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
     required int allowancesFils,
     required int deductionsFils,
     required int recoveryFils,
+    this.visaRecoveryFils = const Value.absent(),
     required int netFils,
     required int payableFils,
     required int paidBeforeFils,
@@ -6984,6 +7086,7 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
     Expression<int>? allowancesFils,
     Expression<int>? deductionsFils,
     Expression<int>? recoveryFils,
+    Expression<int>? visaRecoveryFils,
     Expression<int>? netFils,
     Expression<int>? payableFils,
     Expression<int>? paidBeforeFils,
@@ -7008,6 +7111,7 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
       if (allowancesFils != null) 'allowances_fils': allowancesFils,
       if (deductionsFils != null) 'deductions_fils': deductionsFils,
       if (recoveryFils != null) 'recovery_fils': recoveryFils,
+      if (visaRecoveryFils != null) 'visa_recovery_fils': visaRecoveryFils,
       if (netFils != null) 'net_fils': netFils,
       if (payableFils != null) 'payable_fils': payableFils,
       if (paidBeforeFils != null) 'paid_before_fils': paidBeforeFils,
@@ -7034,6 +7138,7 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
     Value<int>? allowancesFils,
     Value<int>? deductionsFils,
     Value<int>? recoveryFils,
+    Value<int>? visaRecoveryFils,
     Value<int>? netFils,
     Value<int>? payableFils,
     Value<int>? paidBeforeFils,
@@ -7058,6 +7163,7 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
       allowancesFils: allowancesFils ?? this.allowancesFils,
       deductionsFils: deductionsFils ?? this.deductionsFils,
       recoveryFils: recoveryFils ?? this.recoveryFils,
+      visaRecoveryFils: visaRecoveryFils ?? this.visaRecoveryFils,
       netFils: netFils ?? this.netFils,
       payableFils: payableFils ?? this.payableFils,
       paidBeforeFils: paidBeforeFils ?? this.paidBeforeFils,
@@ -7120,6 +7226,9 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
     if (recoveryFils.present) {
       map['recovery_fils'] = Variable<int>(recoveryFils.value);
     }
+    if (visaRecoveryFils.present) {
+      map['visa_recovery_fils'] = Variable<int>(visaRecoveryFils.value);
+    }
     if (netFils.present) {
       map['net_fils'] = Variable<int>(netFils.value);
     }
@@ -7158,6 +7267,7 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
           ..write('allowancesFils: $allowancesFils, ')
           ..write('deductionsFils: $deductionsFils, ')
           ..write('recoveryFils: $recoveryFils, ')
+          ..write('visaRecoveryFils: $visaRecoveryFils, ')
           ..write('netFils: $netFils, ')
           ..write('payableFils: $payableFils, ')
           ..write('paidBeforeFils: $paidBeforeFils, ')
@@ -17412,6 +17522,10 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     'CREATE TRIGGER cash_no_delete BEFORE DELETE ON cash_entries BEGIN SELECT RAISE (ABORT, \'cash entries are append-only\');END',
     'cash_no_delete',
   );
+  late final Trigger cashVisaNeedsWorker = Trigger(
+    'CREATE TRIGGER cash_visa_needs_worker BEFORE INSERT ON cash_entries WHEN NEW.kind IN (\'visaPaid\', \'visaReturned\') AND NEW.worker_id IS NULL BEGIN SELECT RAISE (ABORT, \'a visa line needs a worker\');END',
+    'cash_visa_needs_worker',
+  );
   late final $PayrollRunsTable payrollRuns = $PayrollRunsTable(this);
   late final Trigger payrollRunNoUpdate = Trigger(
     'CREATE TRIGGER payroll_run_no_update BEFORE UPDATE ON payroll_runs BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
@@ -17423,7 +17537,7 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
   );
   late final $PayrollLinesTable payrollLines = $PayrollLinesTable(this);
   late final Trigger payrollLineNoEdit = Trigger(
-    'CREATE TRIGGER payroll_line_no_edit BEFORE UPDATE OF run_id, worker_id, period_from, opening_fils, earned_fils, salary_fils, adjustment_fils, allowances_fils, deductions_fils, recovery_fils, net_fils, payable_fils, paid_before_fils ON payroll_lines BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
+    'CREATE TRIGGER payroll_line_no_edit BEFORE UPDATE OF run_id, worker_id, period_from, opening_fils, earned_fils, salary_fils, adjustment_fils, allowances_fils, deductions_fils, recovery_fils, visa_recovery_fils, net_fils, payable_fils, paid_before_fils ON payroll_lines BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
     'payroll_line_no_edit',
   );
   late final Trigger payrollLineStaysReversed = Trigger(
@@ -17518,6 +17632,7 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     cashEntries,
     cashNoUpdate,
     cashNoDelete,
+    cashVisaNeedsWorker,
     payrollRuns,
     payrollRunNoUpdate,
     payrollRunNoDelete,
@@ -17576,6 +17691,13 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
       on: TableUpdateQuery.onTableName(
         'cash_entries',
         limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'cash_entries',
+        limitUpdateKind: UpdateKind.insert,
       ),
       result: [],
     ),
@@ -18567,6 +18689,7 @@ typedef $$WorkersTableCreateCompanionBuilder = WorkersCompanion Function({
   Value<int?> roomChargeFils,
   Value<String?> roomChargeNote,
   Value<String?> roomId,
+  Value<int?> visaInstalmentFils,
   Value<bool> active,
   Value<int> rowid,
 });
@@ -18586,6 +18709,7 @@ typedef $$WorkersTableUpdateCompanionBuilder = WorkersCompanion Function({
   Value<int?> roomChargeFils,
   Value<String?> roomChargeNote,
   Value<String?> roomId,
+  Value<int?> visaInstalmentFils,
   Value<bool> active,
   Value<int> rowid,
 });
@@ -18844,6 +18968,11 @@ class $$WorkersTableFilterComposer
 
   ColumnFilters<String> get roomChargeNote => $composableBuilder(
     column: $table.roomChargeNote,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get visaInstalmentFils => $composableBuilder(
+    column: $table.visaInstalmentFils,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -19155,6 +19284,11 @@ class $$WorkersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get visaInstalmentFils => $composableBuilder(
+    column: $table.visaInstalmentFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get active => $composableBuilder(
     column: $table.active,
     builder: (column) => ColumnOrderings(column),
@@ -19244,6 +19378,11 @@ class $$WorkersTableAnnotationComposer
 
   GeneratedColumn<String> get roomChargeNote => $composableBuilder(
     column: $table.roomChargeNote,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get visaInstalmentFils => $composableBuilder(
+    column: $table.visaInstalmentFils,
     builder: (column) => column,
   );
 
@@ -19529,6 +19668,7 @@ class $$WorkersTableTableManager
                 Value<int?> roomChargeFils = const Value.absent(),
                 Value<String?> roomChargeNote = const Value.absent(),
                 Value<String?> roomId = const Value.absent(),
+                Value<int?> visaInstalmentFils = const Value.absent(),
                 Value<bool> active = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WorkersCompanion(
@@ -19547,6 +19687,7 @@ class $$WorkersTableTableManager
                 roomChargeFils: roomChargeFils,
                 roomChargeNote: roomChargeNote,
                 roomId: roomId,
+                visaInstalmentFils: visaInstalmentFils,
                 active: active,
                 rowid: rowid,
               ),
@@ -19567,6 +19708,7 @@ class $$WorkersTableTableManager
                 Value<int?> roomChargeFils = const Value.absent(),
                 Value<String?> roomChargeNote = const Value.absent(),
                 Value<String?> roomId = const Value.absent(),
+                Value<int?> visaInstalmentFils = const Value.absent(),
                 Value<bool> active = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WorkersCompanion.insert(
@@ -19585,6 +19727,7 @@ class $$WorkersTableTableManager
                 roomChargeFils: roomChargeFils,
                 roomChargeNote: roomChargeNote,
                 roomId: roomId,
+                visaInstalmentFils: visaInstalmentFils,
                 active: active,
                 rowid: rowid,
               ),
@@ -23513,6 +23656,7 @@ typedef $$PayrollLinesTableCreateCompanionBuilder =
       required int allowancesFils,
       required int deductionsFils,
       required int recoveryFils,
+      Value<int> visaRecoveryFils,
       required int netFils,
       required int payableFils,
       required int paidBeforeFils,
@@ -23538,6 +23682,7 @@ typedef $$PayrollLinesTableUpdateCompanionBuilder =
       Value<int> allowancesFils,
       Value<int> deductionsFils,
       Value<int> recoveryFils,
+      Value<int> visaRecoveryFils,
       Value<int> netFils,
       Value<int> payableFils,
       Value<int> paidBeforeFils,
@@ -23704,6 +23849,11 @@ class $$PayrollLinesTableFilterComposer
 
   ColumnFilters<int> get recoveryFils => $composableBuilder(
     column: $table.recoveryFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get visaRecoveryFils => $composableBuilder(
+    column: $table.visaRecoveryFils,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23908,6 +24058,11 @@ class $$PayrollLinesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get visaRecoveryFils => $composableBuilder(
+    column: $table.visaRecoveryFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get netFils => $composableBuilder(
     column: $table.netFils,
     builder: (column) => ColumnOrderings(column),
@@ -24048,6 +24203,11 @@ class $$PayrollLinesTableAnnotationComposer
 
   GeneratedColumn<int> get recoveryFils => $composableBuilder(
     column: $table.recoveryFils,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get visaRecoveryFils => $composableBuilder(
+    column: $table.visaRecoveryFils,
     builder: (column) => column,
   );
 
@@ -24215,6 +24375,7 @@ class $$PayrollLinesTableTableManager
                 Value<int> allowancesFils = const Value.absent(),
                 Value<int> deductionsFils = const Value.absent(),
                 Value<int> recoveryFils = const Value.absent(),
+                Value<int> visaRecoveryFils = const Value.absent(),
                 Value<int> netFils = const Value.absent(),
                 Value<int> payableFils = const Value.absent(),
                 Value<int> paidBeforeFils = const Value.absent(),
@@ -24238,6 +24399,7 @@ class $$PayrollLinesTableTableManager
                 allowancesFils: allowancesFils,
                 deductionsFils: deductionsFils,
                 recoveryFils: recoveryFils,
+                visaRecoveryFils: visaRecoveryFils,
                 netFils: netFils,
                 payableFils: payableFils,
                 paidBeforeFils: paidBeforeFils,
@@ -24263,6 +24425,7 @@ class $$PayrollLinesTableTableManager
                 required int allowancesFils,
                 required int deductionsFils,
                 required int recoveryFils,
+                Value<int> visaRecoveryFils = const Value.absent(),
                 required int netFils,
                 required int payableFils,
                 required int paidBeforeFils,
@@ -24286,6 +24449,7 @@ class $$PayrollLinesTableTableManager
                 allowancesFils: allowancesFils,
                 deductionsFils: deductionsFils,
                 recoveryFils: recoveryFils,
+                visaRecoveryFils: visaRecoveryFils,
                 netFils: netFils,
                 payableFils: payableFils,
                 paidBeforeFils: paidBeforeFils,

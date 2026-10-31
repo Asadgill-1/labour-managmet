@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:domain/money.dart';
 import 'package:domain/payroll.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +43,7 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
   String _startAmount() => switch (widget.kind) {
     PayItemKind.roomCharge when _worker?.roomChargeFils != null => plainAmount(_worker!.roomChargeFils!),
     PayItemKind.advanceRecovery when (_row?.advanceLeftFils ?? 0) > 0 => plainAmount(_row!.advanceLeftFils),
+    PayItemKind.visaRecovery when (_row?.visaLeftFils ?? 0) > 0 => plainAmount(min(_worker?.visaInstalmentFils ?? _row!.visaLeftFils, _row!.visaLeftFils)),
     _ => '',
   };
 
@@ -49,6 +52,7 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
     return switch (widget.kind) {
       PayItemKind.roomCharge => l10n.payKindRoom,
       PayItemKind.advanceRecovery => l10n.payKindRecovery,
+      PayItemKind.visaRecovery => l10n.payKindVisa,
       _ => '',
     };
   }
@@ -72,6 +76,9 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
       );
     } on AdvanceTooHigh {
       if (mounted) showFormError(context, l10n.advanceTooHigh);
+      return;
+    } on VisaTooHigh {
+      if (mounted) showFormError(context, l10n.visaTooHigh);
       return;
     } catch (_) {
       if (mounted) showFormError(context, l10n.saveFailed);
@@ -98,9 +105,11 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
       PayItemKind.deduction => l10n.payKindDeduction,
       PayItemKind.roomCharge => l10n.payKindRoom,
       PayItemKind.advanceRecovery => l10n.payKindRecovery,
+      PayItemKind.visaRecovery => l10n.payKindVisa,
     };
     String? required(String? v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null;
-    final advanceLeft = (ref.watch(payrollProvider(widget.month)).value ?? const <WorkerPayroll>[]).where((p) => p.worker.id == widget.workerId).firstOrNull?.advanceLeftFils;
+    final row = (ref.watch(payrollProvider(widget.month)).value ?? const <WorkerPayroll>[]).where((p) => p.worker.id == widget.workerId).firstOrNull;
+    final advanceLeft = row?.advanceLeftFils;
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -115,6 +124,10 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
           children: [
             if (widget.kind == PayItemKind.advanceRecovery && advanceLeft != null) ...[
               Text(l10n.advanceBalance(formatAed(advanceLeft)), style: const TextStyle(color: muted)),
+              fieldGap,
+            ],
+            if (widget.kind == PayItemKind.visaRecovery && row != null) ...[
+              Text(l10n.visaBalance(formatAed(row.visaLeftFils)), style: const TextStyle(color: muted)),
               fieldGap,
             ],
             Field(

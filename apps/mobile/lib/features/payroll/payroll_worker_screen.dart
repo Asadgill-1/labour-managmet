@@ -119,6 +119,7 @@ class PayrollWorkerScreen extends ConsumerWidget {
                 _addButton(context, PayItemKind.deduction, l10n.payKindDeduction),
                 if (p.needsRoomCharge) _addButton(context, PayItemKind.roomCharge, l10n.payKindRoom),
                 if (p.advanceLeftFils > 0) _addButton(context, PayItemKind.advanceRecovery, l10n.payKindRecovery),
+                if (p.visaLeftFils > 0) _addButton(context, PayItemKind.visaRecovery, l10n.payKindVisa),
               ],
             ),
           SectionHeader(l10n.payrollSumHeading),

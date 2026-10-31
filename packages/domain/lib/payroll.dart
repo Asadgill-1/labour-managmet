@@ -3,8 +3,8 @@ import 'cash.dart';
 import 'dates.dart';
 
 /// What a payroll item is. Stored by name. Room charge and other deductions need an authorization (PAY-07).
-/// Recovery comes off the worker's advance (PAY-05).
-enum PayItemKind { allowance, deduction, roomCharge, advanceRecovery }
+/// Recovery comes off the worker's advance (PAY-05), and a visa instalment off their visa money (D-039).
+enum PayItemKind { allowance, deduction, roomCharge, advanceRecovery, visaRecovery }
 
 /// Why one worker's month cannot be posted yet. It stops for review and nothing changes silently (CALC-06, PAY-07).
 enum PayrollIssue {
@@ -12,6 +12,7 @@ enum PayrollIssue {
   missingPartialMethod,
   negativeNet,
   recoveryAboveAdvance,
+  recoveryAboveVisa,
   deductionAboveLimit,
   earlierMonthMissing,
   laterMonthPosted,
@@ -43,6 +44,7 @@ class PayrollFigures {
     this.allowancesFils = 0,
     this.deductionsFils = 0,
     this.recoveryFils = 0,
+    this.visaFils = 0,
     this.issues = const {},
   });
 
@@ -59,14 +61,15 @@ class PayrollFigures {
   /// Room charge and other deductions.
   final int deductionsFils;
   final int recoveryFils;
+  final int visaFils;
   final Set<PayrollIssue> issues;
 
   int get grossFils => earnedFils + salaryFils;
-  int get netFils => grossFils + allowancesFils - deductionsFils - recoveryFils;
+  int get netFils => grossFils + allowancesFils - deductionsFils - recoveryFils - visaFils;
 
   /// What posting adds to the worker's account.
   int get dueFils => netFils + adjustmentFils;
-  bool get isEmpty => grossFils == 0 && adjustmentFils == 0 && allowancesFils == 0 && deductionsFils == 0 && recoveryFils == 0;
+  bool get isEmpty => grossFils == 0 && adjustmentFils == 0 && allowancesFils == 0 && deductionsFils == 0 && recoveryFils == 0 && visaFils == 0;
 }
 
 /// A worker's monthly pay for one period, whatever the attendance rows (CALC-04). Each day goes to one contract,
@@ -107,6 +110,7 @@ PayrollFigures workerPayroll({
   required Iterable<RateTerms> contracts,
   required Iterable<PayItemLine> items,
   required int advanceLeftFils,
+  int visaLeftFils = 0,
   int unapprovedRows = 0,
   String? lastPostedMonth,
   int? limitBps,
@@ -129,15 +133,17 @@ PayrollFigures workerPayroll({
   final allowances = sum(const {PayItemKind.allowance});
   final deductions = sum(const {PayItemKind.deduction, PayItemKind.roomCharge});
   final recovery = sum(const {PayItemKind.advanceRecovery});
+  final visa = sum(const {PayItemKind.visaRecovery});
   final earnings = earned + (salary ?? 0) + allowances;
-  final net = earnings - deductions - recovery;
+  final net = earnings - deductions - recovery - visa;
 
   final issues = <PayrollIssue>{
     if (month.compareTo(currentMonth) > 0) PayrollIssue.monthNotStarted,
     if (unapprovedRows > 0) PayrollIssue.unapprovedWork,
     if (salary == null) PayrollIssue.missingPartialMethod,
     if (recovery > advanceLeftFils) PayrollIssue.recoveryAboveAdvance,
-    if (limitBps != null && (deductions + recovery) * 10000 > earnings * limitBps) PayrollIssue.deductionAboveLimit,
+    if (visa > visaLeftFils) PayrollIssue.recoveryAboveVisa,
+    if (limitBps != null && (deductions + recovery + visa) * 10000 > earnings * limitBps) PayrollIssue.deductionAboveLimit,
     if (later) PayrollIssue.laterMonthPosted,
     if (lastPostedMonth != null)
       for (var m = addMonths(lastPostedMonth, 1); m.compareTo(month) < 0; m = addMonths(m, 1))
@@ -152,6 +158,7 @@ PayrollFigures workerPayroll({
     allowancesFils: allowances,
     deductionsFils: deductions,
     recoveryFils: recovery,
+    visaFils: visa,
     issues: issues,
   );
 }

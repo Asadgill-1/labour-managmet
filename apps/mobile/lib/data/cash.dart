@@ -8,6 +8,11 @@ class AdvanceTooHigh implements Exception {
   const AdvanceTooHigh();
 }
 
+/// More than the worker still has left to return, so visa money would go negative (D-039).
+class VisaTooHigh implements Exception {
+  const VisaTooHigh();
+}
+
 CashLine cashLine(CashEntry e) => CashLine(CashKind.values.byName(e.kind), e.amountFils, reversal: e.reversesEntryId != null);
 
 extension CashOps on TenantDatabase {
@@ -18,6 +23,13 @@ extension CashOps on TenantDatabase {
     final lines = await (select(payrollLines)..where((l) => l.workerId.equals(workerId) & l.reversed.equals(false))).get();
     final recovered = lines.fold(0, (total, l) => total + l.recoveryFils);
     return advanceOutstanding(opening?.amountFils ?? 0, rows.map(cashLine), recoveredFils: recovered);
+  }
+
+  /// What is left of the visa money spent on this worker (D-039).
+  Future<int> visaLeft(String workerId) async {
+    final rows = await (select(cashEntries)..where((c) => c.workerId.equals(workerId))).get();
+    final lines = await (select(payrollLines)..where((l) => l.workerId.equals(workerId) & l.reversed.equals(false))).get();
+    return visaOutstanding(rows.map(cashLine), recoveredFils: lines.fold(0, (total, l) => total + l.visaRecoveryFils));
   }
 
   /// Writes one line. A retry with the same operation ID changes nothing (TEAM-04).
@@ -43,6 +55,7 @@ extension CashOps on TenantDatabase {
       action: 'create',
       change: () async {
         if (kind == CashKind.advanceReturned && amountFils > await advanceLeft(workerId!)) throw const AdvanceTooHigh();
+        if (kind == CashKind.visaReturned && amountFils > await visaLeft(workerId!)) throw const VisaTooHigh();
         final now = DateTime.now().toUtc();
         final row = await into(cashEntries).insertReturning(
           CashEntriesCompanion.insert(
@@ -83,6 +96,7 @@ extension CashOps on TenantDatabase {
       change: () async {
         if (entry.reversesEntryId != null) throw StateError('a reversal cannot be reversed');
         if (entry.kind == CashKind.advanceGiven.name && entry.amountFils > await advanceLeft(entry.workerId!)) throw const AdvanceTooHigh();
+        if (entry.kind == CashKind.visaPaid.name && entry.amountFils > await visaLeft(entry.workerId!)) throw const VisaTooHigh();
         final now = DateTime.now().toUtc();
         final row = await into(cashEntries).insertReturning(
           CashEntriesCompanion.insert(

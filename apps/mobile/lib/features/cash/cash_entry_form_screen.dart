@@ -12,8 +12,8 @@ import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import 'cash_row.dart';
 
-const _outKinds = [CashKind.advanceGiven, CashKind.salaryPaid, CashKind.roomRentPaid, CashKind.expense];
-const _inKinds = [CashKind.roomRentReceived, CashKind.advanceReturned, CashKind.clientReceipt];
+const _outKinds = [CashKind.advanceGiven, CashKind.salaryPaid, CashKind.visaPaid, CashKind.roomRentPaid, CashKind.expense];
+const _inKinds = [CashKind.roomRentReceived, CashKind.advanceReturned, CashKind.visaReturned, CashKind.clientReceipt];
 
 /// One money entry. The owner says what the money was for and the line goes where it belongs (D-030).
 class CashEntryFormScreen extends ConsumerStatefulWidget {
@@ -45,7 +45,7 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
   late final _amount = TextEditingController(text: widget.amountFils == null ? null : plainAmount(widget.amountFils!));
   final _note = TextEditingController();
 
-  bool get _needsWorker => const {CashKind.advanceGiven, CashKind.salaryPaid, CashKind.advanceReturned, CashKind.roomRentReceived}.contains(_kind);
+  bool get _needsWorker => const {CashKind.advanceGiven, CashKind.salaryPaid, CashKind.advanceReturned, CashKind.roomRentReceived, CashKind.visaPaid, CashKind.visaReturned}.contains(_kind);
   bool get _needsRoom => const {CashKind.roomRentPaid, CashKind.roomRentReceived}.contains(_kind);
 
   /// Rent from a worker starts on their room and their agreed room charge.
@@ -87,6 +87,9 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
       );
     } on AdvanceTooHigh {
       if (mounted) showFormError(context, l10n.advanceTooHigh);
+      return;
+    } on VisaTooHigh {
+      if (mounted) showFormError(context, l10n.visaTooHigh);
       return;
     } catch (_) {
       if (mounted) showFormError(context, l10n.saveFailed);

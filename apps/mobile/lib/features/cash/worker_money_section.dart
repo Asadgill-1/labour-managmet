@@ -45,6 +45,8 @@ class WorkerMoneySection extends ConsumerWidget {
         const Divider(),
         InfoRow(l10n.advanceOutstanding, formatAed(advanceOutstanding(openingOf('worker_advance'), lines, recoveredFils: recovered))),
         const Divider(),
+        InfoRow(l10n.visaLeft, formatAed(visaOutstanding(lines, recoveredFils: posted.fold(0, (total, l) => total + l.visaRecoveryFils)))),
+        const Divider(),
         InfoRow(l10n.salaryPaidTotal, formatAed(salaryPaidTotal(lines))),
         const Divider(),
         InfoRow(l10n.workerRentTotal, formatAed(roomResult(lines, deductedFils: deductedRent).receivedFils)),

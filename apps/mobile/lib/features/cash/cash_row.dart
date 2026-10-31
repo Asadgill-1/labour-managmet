@@ -30,6 +30,8 @@ String kindLabel(AppLocalizations l10n, CashKind kind) => switch (kind) {
   CashKind.advanceReturned => l10n.kindAdvanceReturned,
   CashKind.roomRentReceived => l10n.kindRoomRentReceived,
   CashKind.clientReceipt => l10n.kindClientReceipt,
+  CashKind.visaPaid => l10n.kindVisaPaid,
+  CashKind.visaReturned => l10n.kindVisaReturned,
 };
 
 /// Everything in a list that has been undone. Pass the list's own rows.
@@ -57,6 +59,8 @@ class CashEntryRow extends ConsumerWidget {
       if (context.mounted) showSavedOnPhone(context, l10n.savedOnPhone);
     } on AdvanceTooHigh {
       if (context.mounted) showFormError(context, l10n.advanceUndoBlocked);
+    } on VisaTooHigh {
+      if (context.mounted) showFormError(context, l10n.visaUndoBlocked);
     } catch (_) {
       if (context.mounted) showFormError(context, l10n.saveFailed);
     }
