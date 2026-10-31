@@ -34,8 +34,10 @@ Kitne second lage: ______
 
 ## 4. Aap ke faislay
 
-- [ ] **Logo aur mazdoor ki photo (D-023):** Yeh T14 mein documents ke saath aayenge. Theek hai?
-- [ ] **Raat ki shift ki tareekh (D-024):** Aap ne manzoor kiya tha ke contract is ko badal sakta hai. Abhi contract mein yeh option nahin. Hazri lagate waqt tareekh khud chun sakte hain. Kya yeh kaafi hai?
+Asad ne 31-10-2026 ko yeh dono tay kiye.
+
+- [x] **Logo aur mazdoor ki photo (D-023):** Yeh T14 mein documents ke saath aayenge.
+- [x] **Hazri ka waqt aur tareekh (D-024):** Mazdoor din ya raat kisi bhi waqt add ho sakta hai, koi shift fixed nahin, aur tareekh hath se daali jayegi.
 
 ## 5. Aap ke karne ke kaam (P0 se baqi)
 

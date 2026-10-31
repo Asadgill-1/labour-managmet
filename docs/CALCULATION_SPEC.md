@@ -17,7 +17,7 @@ Source of truth for `packages/domain`. Figures are arithmetic fixtures from the 
 | Validity | `0 <= break <= clock`, otherwise the row is rejected | ATT-06 |
 | Client billable minutes | `clock - client unpaid break` | CALC-02 |
 | Worker payable minutes | `clock - worker unpaid break` | CALC-02 |
-| Work date | Shift start date unless the contract says otherwise (D-103) | ATT-06 |
+| Work date | The date entered by hand. A night shift keeps it even when it ends next day (D-024) | ATT-06 |
 
 The client and worker sides are calculated independently and can differ.
 

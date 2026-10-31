@@ -26,8 +26,8 @@ Status: ACCEPTED (owner approved), or PROPOSED (waiting for sign-off). New decis
 | D-020 | ACCEPTED | No separate `assignments` table. A contract row with a `site_id` or `worker_id` is the assignment-level rate that beats the general one | Covers CALC-06's priority order with one mechanism. "Copy yesterday's team" covers team memory. Add the table only if assignments need data of their own |
 | D-021 | ACCEPTED | All writes go through `applyOperation`, and the outbox primary key is the idempotency key. No per-table unique index on `source_operation_id` | One guard covers every caller. A batch shares one operation across many rows, which a per-table index would reject |
 | D-022 | ACCEPTED | Overtime on a contract is an explicit per-hour rate, not a multiplier | Works for hourly, shift and monthly bases alike, and nothing is implied about a legal multiplier (CALC-07) |
-| D-023 | PROPOSED | Company logo (MASTER-01) and worker photo (MASTER-04) move to T14, with the image handling and validation of DOC-04 | Nothing uses them before documents exist, and uploads need one validated path. The fields are hidden until then. Owner to confirm at the P1 gate (AI-07) |
-| D-024 | PROPOSED | D-103's "contract can override" the work date is not built. Work date is the date chosen when entering attendance, which defaults to today | The owner can already pick the date by hand. A contract field also raises an open question: which contract decides when the client and worker sides differ. Add it if a real contract needs it. Owner to confirm at the P1 gate |
+| D-023 | ACCEPTED | Company logo (MASTER-01) and worker photo (MASTER-04) move to T14, with the image handling and validation of DOC-04 | Nothing uses them before documents exist, and uploads need one validated path. The fields are hidden until then. Owner approved 2026-10-31 (AI-07) |
+| D-024 | ACCEPTED | Supersedes D-103's "contract can override": no contract-level work date. The date is set by hand when entering attendance. Workers can be added at any time, day or night, with no fixed shift | Owner's rule on 2026-10-31: "We can add worker anytime day or night, nothing is fix and date add by hand." Today is only a prefilled starting value, and a site's usual times are optional |
 | D-025 | ACCEPTED | Until the first pilot APK, schema v1 may be regenerated in place | No device holds real data yet. From the first pilot on, every change needs a version bump and a migration (MODEL-08) |
 | D-026 | ACCEPTED | Rows with a missing rate save as drafts and cannot be approved. Rates are frozen on approval, not on save | A rate added later reaches unapproved rows, and an approved row never changes (CALC-06) |
 
@@ -39,6 +39,6 @@ An accountant must still review these before production. None of them is a legal
 | --- | --- | --- | --- |
 | D-101 | Rounding | Half-up to fils per attendance line. VAT per invoice line; document total is the sum of lines | CALC-01, INV-04 |
 | D-102 | Monthly proration | No default. Each contract must choose calendar days or a fixed divisor | CALC-04 |
-| D-103 | Midnight shift | Work date is the shift start date; contract can override | ATT-06 |
+| D-103 | Midnight shift | Work date is the date entered by hand, which a night shift keeps even when it ends next day. The contract override was dropped (D-024) | ATT-06 |
 | D-104 | Negative current wage | Block posting and send to review, never auto-carry as debt | PAY-07 |
 | D-105 | Renewal on month end | Anchor on the original day, clamp to the last day of the month | BILL-04 |

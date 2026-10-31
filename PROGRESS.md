@@ -21,8 +21,9 @@ Test evidence is host only. Encryption on Android, UX-06 timing and BUILD-04 on 
 Details in `docs/owner/P1_CHECKLIST.md`.
 
 1. Install the APK, run the encryption check, and enter 10 workers on a real phone.
-2. Confirm or change D-023 (logo and photo move to T14) and D-024 (no contract-level work date).
-3. Run `gh auth login`. Until then no issues or PRs can be created and CI results cannot be read.
+2. Run `gh auth login`. Until then no issues or PRs can be created and CI results cannot be read.
+
+D-023 and D-024 were settled by the owner on 2026-10-31.
 
 ## Open
 
