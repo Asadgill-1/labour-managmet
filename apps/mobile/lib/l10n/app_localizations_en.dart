@@ -1729,13 +1729,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsColour => 'App colours';
 
   @override
-  String get paletteBlue => 'Blue and orange';
+  String get paletteBlue => 'Blue';
 
   @override
-  String get paletteGreen => 'Green and gold';
+  String get paletteGreen => 'Green';
 
   @override
-  String get paletteMaroon => 'Maroon and gold';
+  String get paletteMaroon => 'Maroon';
 
   @override
   String issueMissingRate(int count) {
@@ -3729,13 +3729,13 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get settingsColour => 'App ke rang';
 
   @override
-  String get paletteBlue => 'Neela aur narangi';
+  String get paletteBlue => 'Neela';
 
   @override
-  String get paletteGreen => 'Sabz aur sunehra';
+  String get paletteGreen => 'Sabz';
 
   @override
-  String get paletteMaroon => 'Maroon aur sunehra';
+  String get paletteMaroon => 'Maroon';
 
   @override
   String issueMissingRate(int count) {

@@ -58,23 +58,21 @@ String sectionLabel(AppLocalizations l10n, Section section) => switch (section) 
 
 /// A main tab and the sub-tabs under it. Related screens stay together (D-036).
 class MainTab {
-  const MainTab(this.label, this.icon, this.fill, this.color, this.sections);
+  const MainTab(this.label, this.icon, this.sections);
 
   final String Function(AppLocalizations) label;
   final IconData icon;
-  final Color fill;
-  final Color color;
   final List<Section> sections;
 }
 
 final mainTabs = [
-  MainTab((l) => l.mainAttendance, Icons.how_to_reg, const Color(0xFFE3ECFF), const Color(0xFF2450B8), const [Section.today, Section.groups, Section.attendanceRegister]),
-  MainTab((l) => l.tabLabour, Icons.groups, const Color(0xFFDFF5EF), const Color(0xFF0B7A66), const [Section.labour, Section.workerRegister]),
-  MainTab((l) => l.mainVisa, Icons.badge, const Color(0xFFF0E6FF), const Color(0xFF6B3FC4), const [Section.visa, Section.visaRegister]),
-  MainTab((l) => l.tabCompanies, Icons.apartment, const Color(0xFFDDF3FA), const Color(0xFF0B7196), const [Section.companies, Section.sites, Section.rates, Section.companyRegister]),
-  MainTab((l) => l.menuPayroll, Icons.payments, const Color(0xFFE6F4DC), const Color(0xFF3F7D1D), const [Section.payroll, Section.payrollRegister, Section.advanceRegister]),
-  MainTab((l) => l.mainMoney, Icons.account_balance_wallet, const Color(0xFFFFE8DA), const Color(0xFFC2500F), const [Section.cash, Section.balances, Section.cashRegister, Section.closing]),
-  MainTab((l) => l.tabRooms, Icons.bed, const Color(0xFFFFE4EC), const Color(0xFFC2255C), const [Section.rooms, Section.roomRegister]),
+  MainTab((l) => l.mainAttendance, Icons.how_to_reg, const [Section.today, Section.groups, Section.attendanceRegister]),
+  MainTab((l) => l.tabLabour, Icons.groups, const [Section.labour, Section.workerRegister]),
+  MainTab((l) => l.mainVisa, Icons.badge, const [Section.visa, Section.visaRegister]),
+  MainTab((l) => l.tabCompanies, Icons.apartment, const [Section.companies, Section.sites, Section.rates, Section.companyRegister]),
+  MainTab((l) => l.menuPayroll, Icons.payments, const [Section.payroll, Section.payrollRegister, Section.advanceRegister]),
+  MainTab((l) => l.mainMoney, Icons.account_balance_wallet, const [Section.cash, Section.balances, Section.cashRegister, Section.closing]),
+  MainTab((l) => l.tabRooms, Icons.bed, const [Section.rooms, Section.roomRegister]),
 ];
 
 /// The shell's Scaffold. Main screens have their own Scaffold, so they reach the panel through this key.
@@ -141,12 +139,12 @@ class _SubTabsState extends State<SubTabs> {
           height: 46,
           child: ListView(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.fromLTRB(12, 2, 12, 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             children: [
               for (final section in siblings)
                 Padding(
                   key: section == widget.section ? _selected : null,
-                  padding: const EdgeInsets.only(right: 6),
+                  padding: EdgeInsets.zero,
                   child: _SubTab(
                     sectionLabel(l10n, section),
                     selected: section == widget.section,
@@ -174,20 +172,17 @@ class _SubTab extends StatelessWidget {
     return Semantics(
       button: true,
       selected: selected,
-      child: Material(
-        color: selected ? Colors.white : Colors.white.withValues(alpha: 0.14),
-        borderRadius: BorderRadius.circular(18),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: selected ? null : onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(fontFamily: headingFont, fontSize: 14, fontWeight: FontWeight.w600, color: selected ? brand : Colors.white),
-              ),
-            ),
+      child: InkWell(
+        onTap: selected ? null : onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: selected ? Colors.white : Colors.transparent, width: 3)),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(fontFamily: headingFont, fontSize: 14.5, fontWeight: selected ? FontWeight.w700 : FontWeight.w400, color: selected ? Colors.white : Colors.white.withValues(alpha: 0.82)),
           ),
         ),
       ),
@@ -254,8 +249,6 @@ class SidePanel extends ConsumerWidget {
                 for (final tab in mainTabs)
                   _MainTabRow(
                     icon: tab.icon,
-                    fill: tab.fill,
-                    color: tab.color,
                     label: tab.label(l10n),
                     open: tab.sections.contains(current),
                     children: [
@@ -265,8 +258,6 @@ class SidePanel extends ConsumerWidget {
                   ),
                 _MainTabRow(
                   icon: Icons.schedule,
-                  fill: paper,
-                  color: muted,
                   label: l10n.groupSoon,
                   open: false,
                   children: [
@@ -314,11 +305,9 @@ class SidePanel extends ConsumerWidget {
 }
 
 class _MainTabRow extends StatelessWidget {
-  const _MainTabRow({required this.icon, required this.fill, required this.color, required this.label, required this.open, required this.children});
+  const _MainTabRow({required this.icon, required this.label, required this.open, required this.children});
 
   final IconData icon;
-  final Color fill;
-  final Color color;
   final String label;
   final bool open;
   final List<Widget> children;
@@ -329,17 +318,13 @@ class _MainTabRow extends StatelessWidget {
       initiallyExpanded: open,
       shape: const Border(),
       collapsedShape: const Border(),
-      tilePadding: const EdgeInsets.symmetric(horizontal: 12),
-      childrenPadding: const EdgeInsets.fromLTRB(32, 0, 12, 6),
+      tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+      childrenPadding: const EdgeInsets.fromLTRB(44, 0, 12, 6),
       iconColor: muted,
       collapsedIconColor: muted,
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(12)),
-        child: Icon(icon, color: color, size: 22),
-      ),
-      title: Text(label, style: sectionTitleStyle.copyWith(fontSize: 16)),
+      minTileHeight: 48,
+      leading: Icon(icon, color: open ? action : muted, size: 22),
+      title: Text(label, style: sectionTitleStyle.copyWith(fontWeight: FontWeight.w500)),
       children: children,
     );
   }
@@ -356,7 +341,7 @@ class _SubRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: selected ? brandSoft : Colors.transparent,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(10),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
@@ -372,8 +357,8 @@ class _SubRow extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: headingFont,
                     fontSize: 15,
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                    color: selected ? brand : (onTap == null ? muted : ink),
+                    fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+                    color: selected ? action : (onTap == null ? muted : ink),
                   ),
                 ),
               ),
@@ -402,12 +387,12 @@ class _FooterRow extends StatelessWidget {
         minTileHeight: 46,
         tileColor: Colors.transparent,
         selectedTileColor: brandSoft,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 8),
         selected: selected,
         onTap: onTap,
-        leading: Icon(icon, color: selected ? brand : muted),
-        title: Text(label, style: TextStyle(fontFamily: headingFont, fontSize: 15, fontWeight: FontWeight.w600, color: selected ? brand : ink)),
+        leading: Icon(icon, color: selected ? action : muted),
+        title: Text(label, style: TextStyle(fontFamily: headingFont, fontSize: 15, fontWeight: FontWeight.w500, color: selected ? action : ink)),
       ),
     );
   }

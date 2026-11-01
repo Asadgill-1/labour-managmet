@@ -264,8 +264,8 @@ class _BandChip extends StatelessWidget {
       button: true,
       selected: selected,
       child: Material(
-        color: selected ? Colors.white : Colors.white.withValues(alpha: 0.14),
-        borderRadius: BorderRadius.circular(18),
+        color: selected ? Colors.white : Colors.transparent,
+        shape: StadiumBorder(side: BorderSide(color: Colors.white.withValues(alpha: selected ? 1 : 0.5))),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
@@ -275,7 +275,7 @@ class _BandChip extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (icon != null) ...[Icon(icon, size: 16, color: color), const SizedBox(width: 4)],
-                Text(label, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: color)),
+                Text(label, style: TextStyle(fontSize: 14, fontWeight: selected ? FontWeight.w500 : FontWeight.w400, color: color)),
               ],
             ),
           ),
@@ -296,7 +296,7 @@ class _BandButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(10),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
@@ -304,7 +304,7 @@ class _BandButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
           child: Row(
             children: [
-              Icon(icon, size: 16, color: brand),
+              Icon(icon, size: 16, color: action),
               const SizedBox(width: 6),
               Expanded(
                 child: FittedBox(
@@ -344,10 +344,10 @@ class _GroupHead extends StatelessWidget {
       children: [
         if (group.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 2),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
             child: Row(
               children: [
-                Expanded(child: Text(heading, style: sectionTitleStyle.copyWith(fontSize: 15))),
+                Expanded(child: Text(heading, style: sectionTitleStyle)),
                 Text(
                   [
                     l10n.regRows(rows.length),
@@ -388,26 +388,20 @@ class _EntryCard extends StatelessWidget {
           // A cell repeating the row's name says nothing new. A running balance of zero still says where the account stands.
           if ((_worthShowing(entry.cells[c]) || (data.columns[c].closing && entry.cells[c] != null)) && entry.cells[c] != title) (data.columns[c].label, _bandText(data.columns[c], entry.cells[c])),
     ];
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [BoxShadow(color: Color(0x0F17213A), blurRadius: 10, offset: Offset(0, 2))],
-        ),
+    return RowCard(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: Text(title, style: sectionTitleStyle.copyWith(fontSize: 15.5))),
+                Expanded(child: Text(title, style: sectionTitleStyle.copyWith(fontWeight: FontWeight.w500))),
                 if (amount != null)
                   RowValue(
                     formatAed(amount),
-                    style: amountStyle.copyWith(fontSize: 15.5, color: tone == CellTone.plus ? settled : (tone == CellTone.minus ? due : ink)),
+                    style: amountStyle.copyWith(fontSize: 16, fontWeight: FontWeight.w500, color: tone == CellTone.plus ? settled : (tone == CellTone.minus ? due : ink)),
                   ),
               ],
             ),

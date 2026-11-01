@@ -67,16 +67,15 @@ void main() {
     await real(tester, () => seedProfile(db));
     await pumpApp(tester, db);
     Color? bandOnToday() {
-      final box = tester.widget<DecoratedBox>(find.descendant(of: find.byType(TopBand), matching: find.byType(DecoratedBox)).first);
-      return (box.decoration as BoxDecoration).color;
+      return tester.widget<ColoredBox>(find.descendant(of: find.byType(TopBand), matching: find.byType(ColoredBox)).first).color;
     }
 
     expect(bandOnToday(), AppPalette.blue.brand);
 
     await goTo(tester, 'Settings');
-    await tester.tap(find.text('Sabz aur sunehra'));
+    await tester.tap(find.text('Sabz'));
     await settle(tester);
-    expect(Theme.of(tester.element(find.text('Sabz aur sunehra'))).colorScheme.primary, AppPalette.green.brand);
+    expect(Theme.of(tester.element(find.text('Sabz'))).colorScheme.primary, AppPalette.green.brand);
     expect((await real(tester, () => AppSettings.load(const FlutterSecureStorage()))).palette, AppPalette.green);
 
     // The attendance screen was already built, behind this one, and still picks up the change.

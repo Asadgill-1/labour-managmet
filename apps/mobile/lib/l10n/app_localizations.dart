@@ -3190,19 +3190,19 @@ abstract class AppLocalizations {
   /// No description provided for @paletteBlue.
   ///
   /// In en, this message translates to:
-  /// **'Blue and orange'**
+  /// **'Blue'**
   String get paletteBlue;
 
   /// No description provided for @paletteGreen.
   ///
   /// In en, this message translates to:
-  /// **'Green and gold'**
+  /// **'Green'**
   String get paletteGreen;
 
   /// No description provided for @paletteMaroon.
   ///
   /// In en, this message translates to:
-  /// **'Maroon and gold'**
+  /// **'Maroon'**
   String get paletteMaroon;
 
   /// No description provided for @issueMissingRate.

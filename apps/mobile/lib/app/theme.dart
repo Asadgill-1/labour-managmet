@@ -1,3 +1,7 @@
+// Hallmark · theme: dose, palette and surfaces only (dealt 3/3, seed phone-app-labour-supply-d9dd·82ad75fc·2026-11-01·r0)
+// shape: app screen · redesign: full · signature: the bound account book, dark cover over ruled cream pages, double rule under a total, a stamp on a closed month
+// waive: Dose's "never red for late": a wage owed and a month that cannot close must read as money at stake, in words as well as colour (UX-04).
+// waive: Floor 15 and 16 (CSS stamp, sloplint): this is Flutter, so the stamp sits here and screens are read by eye from golden images.
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,16 +11,21 @@ import '../l10n/app_localizations.dart';
 
 /// The colours a user can choose from in Settings (D-040).
 enum AppPalette {
-  blue(Color(0xFF143E8F), Color(0xFFE7EDFA), Color(0xFFE8590C), Colors.white),
-  green(Color(0xFF0B6B5D), Color(0xFFE0F2EE), Color(0xFFF2B233), Color(0xFF1B2A25)),
-  maroon(Color(0xFF7A1F3D), Color(0xFFF7E8ED), Color(0xFFE9A92B), Color(0xFF2A1A12));
+  blue(Color(0xFF0B2648), Color(0xFFE0EEFF), Color(0xFF155AA7), Color(0xFF034486)),
+  green(Color(0xFF00301B), Color(0xFFDDF3E6), Color(0xFF007040), Color(0xFF00572E)),
+  maroon(Color(0xFF43131E), Color(0xFFFFE5E8), Color(0xFF9C2A47), Color(0xFF7C1734));
 
-  const AppPalette(this.brand, this.brandSoft, this.action, this.onAction);
+  const AppPalette(this.brand, this.brandSoft, this.action, this.rim);
 
+  /// The book's cover: header and anything that says "this app".
   final Color brand;
   final Color brandSoft;
+
+  /// The one signal: the main action and what is selected.
   final Color action;
-  final Color onAction;
+
+  /// The moulded edge under the main action.
+  final Color rim;
 }
 
 var _palette = AppPalette.blue;
@@ -27,18 +36,21 @@ Color get brandSoft => _palette.brandSoft;
 
 /// The screen's one main action.
 Color get action => _palette.action;
-Color get onAction => _palette.onAction;
+const onAction = Colors.white;
 
-const ink = Color(0xFF1C2433);
-const muted = Color(0xFF5F6878);
-const paper = Color(0xFFF3F4F7);
-const rule = Color(0xFFE2E5EB);
-const due = Color(0xFFC62828);
-const dueSoft = Color(0xFFFDE7E7);
-const settled = Color(0xFF12804F);
-const settledSoft = Color(0xFFDDF5E8);
-const warn = Color(0xFF9A5B00);
-const warnSoft = Color(0xFFFFF1D6);
+const ink = Color(0xFF15201B);
+const muted = Color(0xFF5A6259);
+const paper = Color(0xFFFAF7EF);
+const rule = Color(0xFFDDD8CB);
+
+/// The edge of a field, darker than a rule so it can be seen on paper.
+const fieldEdge = Color(0xFFA9A79C);
+const due = Color(0xFF9E2320);
+const dueSoft = Color(0xFFFBE7E2);
+const settled = Color(0xFF036639);
+const settledSoft = Color(0xFFDBF4E3);
+const warn = Color(0xFF7E4F04);
+const warnSoft = Color(0xFFFBEDD1);
 
 /// Named outright and bundled: a style with no family falls back to the phone's own font, which on some phones is a handwriting theme.
 const headingFont = 'Roboto';
@@ -46,12 +58,12 @@ const headingFont = 'Roboto';
 const _heading = TextStyle(fontFamily: headingFont, fontWeight: FontWeight.w700, color: ink);
 
 /// Section headings inside a screen.
-const sectionTitleStyle = TextStyle(fontFamily: headingFont, fontSize: 17, fontWeight: FontWeight.w700, color: ink);
+const sectionTitleStyle = TextStyle(fontFamily: headingFont, fontSize: 16, fontWeight: FontWeight.w700, color: ink);
 
 /// Lines up digits in amount columns.
 const amountStyle = TextStyle(fontFamily: headingFont, fontSize: 17, fontWeight: FontWeight.w700, color: ink, fontFeatures: [FontFeature.tabularFigures()]);
 
-final _corner12 = BorderRadius.circular(12);
+final _corner10 = BorderRadius.circular(10);
 
 final _themes = <AppPalette, ThemeData>{};
 
@@ -84,7 +96,7 @@ ThemeData _buildTheme() => ThemeData(
     onSurface: ink,
     onSurfaceVariant: muted,
     error: due,
-    outline: Color(0xFF9AA3B2),
+    outline: fieldEdge,
     outlineVariant: rule,
   ),
   scaffoldBackgroundColor: paper,
@@ -98,7 +110,7 @@ ThemeData _buildTheme() => ThemeData(
     systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent),
     titleTextStyle: _heading.copyWith(fontSize: 20, color: Colors.white),
   ),
-  drawerTheme: const DrawerThemeData(backgroundColor: Colors.white, surfaceTintColor: Colors.transparent, shape: RoundedRectangleBorder()),
+  drawerTheme: const DrawerThemeData(backgroundColor: paper, surfaceTintColor: Colors.transparent, shape: RoundedRectangleBorder()),
   tabBarTheme: TabBarThemeData(
     labelColor: Colors.white,
     unselectedLabelColor: Colors.white.withValues(alpha: 0.75),
@@ -108,10 +120,10 @@ ThemeData _buildTheme() => ThemeData(
     unselectedLabelStyle: _heading.copyWith(fontSize: 15, fontWeight: FontWeight.w500),
   ),
   listTileTheme: ListTileThemeData(
-    tileColor: Colors.white,
+    tileColor: Colors.transparent,
     iconColor: muted,
-    titleTextStyle: _heading.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
-    subtitleTextStyle: const TextStyle(fontFamily: headingFont, fontSize: 13.5, height: 1.35, color: muted),
+    titleTextStyle: _heading.copyWith(fontSize: 16, fontWeight: FontWeight.w500),
+    subtitleTextStyle: const TextStyle(fontFamily: headingFont, fontSize: 14, height: 1.35, color: muted),
     leadingAndTrailingTextStyle: const TextStyle(fontFamily: headingFont, fontSize: 15, color: ink),
   ),
   filledButtonTheme: FilledButtonThemeData(
@@ -120,58 +132,58 @@ ThemeData _buildTheme() => ThemeData(
       foregroundColor: onAction,
       disabledBackgroundColor: rule,
       disabledForegroundColor: muted,
-      minimumSize: const Size.fromHeight(54),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      textStyle: _heading.copyWith(fontSize: 17),
+      minimumSize: const Size.fromHeight(52),
+      shape: RoundedRectangleBorder(borderRadius: _corner10),
+      textStyle: _heading.copyWith(fontSize: 16, fontWeight: FontWeight.w500),
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
-      foregroundColor: brand,
-      backgroundColor: brandSoft,
-      minimumSize: const Size.fromHeight(48),
-      side: BorderSide.none,
-      shape: RoundedRectangleBorder(borderRadius: _corner12),
-      textStyle: _heading.copyWith(fontSize: 15.5, fontWeight: FontWeight.w600),
+      foregroundColor: action,
+      minimumSize: const Size(64, 44),
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      side: BorderSide(color: action),
+      shape: RoundedRectangleBorder(borderRadius: _corner10),
+      textStyle: _heading.copyWith(fontSize: 15, fontWeight: FontWeight.w500),
     ),
   ),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      foregroundColor: brand,
+      foregroundColor: action,
       minimumSize: const Size(48, 48),
-      textStyle: const TextStyle(fontFamily: headingFont, fontSize: 15, fontWeight: FontWeight.w600),
+      textStyle: const TextStyle(fontFamily: headingFont, fontSize: 15, fontWeight: FontWeight.w500),
     ),
   ),
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
     fillColor: Colors.white,
-    border: OutlineInputBorder(borderRadius: _corner12, borderSide: const BorderSide(color: rule)),
-    enabledBorder: OutlineInputBorder(borderRadius: _corner12, borderSide: const BorderSide(color: Color(0xFFCBD2DE))),
-    focusedBorder: OutlineInputBorder(borderRadius: _corner12, borderSide: BorderSide(color: brand, width: 2)),
+    border: OutlineInputBorder(borderRadius: _corner10, borderSide: const BorderSide(color: fieldEdge)),
+    enabledBorder: OutlineInputBorder(borderRadius: _corner10, borderSide: const BorderSide(color: fieldEdge)),
+    focusedBorder: OutlineInputBorder(borderRadius: _corner10, borderSide: BorderSide(color: action, width: 2)),
   ),
   chipTheme: ChipThemeData(
     showCheckmark: false,
-    selectedColor: brand,
+    selectedColor: action,
     backgroundColor: Colors.white,
-    side: const BorderSide(color: Color(0xFFCBD2DE)),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+    side: const BorderSide(color: fieldEdge),
+    shape: const StadiumBorder(),
     labelStyle: TextStyle(
       fontFamily: headingFont,
       fontSize: 14.5,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w500,
       color: WidgetStateColor.resolveWith((states) => states.contains(WidgetState.selected) ? Colors.white : ink),
     ),
   ),
   dialogTheme: DialogThemeData(
     backgroundColor: Colors.white,
     surfaceTintColor: Colors.transparent,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    titleTextStyle: _heading.copyWith(fontSize: 19),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+    titleTextStyle: _heading.copyWith(fontSize: 18),
   ),
   bottomSheetTheme: const BottomSheetThemeData(
-    backgroundColor: Colors.white,
+    backgroundColor: paper,
     surfaceTintColor: Colors.transparent,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(22))),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(14))),
   ),
   snackBarTheme: const SnackBarThemeData(backgroundColor: ink, contentTextStyle: TextStyle(fontFamily: headingFont, fontSize: 15, color: Colors.white)),
   textTheme: const TextTheme(
@@ -181,17 +193,17 @@ ThemeData _buildTheme() => ThemeData(
   ),
 );
 
-/// The coloured block under the header that holds a screen's date and main figures.
+/// The rest of the cover under the header, holding a screen's date and main figures. Its straight edge meets the page.
 class TopBand extends StatelessWidget {
-  const TopBand({required this.child, this.padding = const EdgeInsets.fromLTRB(12, 0, 12, 16), super.key});
+  const TopBand({required this.child, this.padding = const EdgeInsets.fromLTRB(16, 0, 16, 14), super.key});
 
   final Widget child;
   final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(color: brand, borderRadius: const BorderRadius.vertical(bottom: Radius.circular(22))),
+    return ColoredBox(
+      color: brand,
       child: Padding(padding: padding, child: child),
     );
   }
@@ -224,12 +236,22 @@ class MainActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Color(0x141C2433), blurRadius: 12, offset: Offset(0, -2))]),
+      decoration: const BoxDecoration(
+        color: paper,
+        border: Border(top: BorderSide(color: rule)),
+      ),
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-          child: FilledButton(onPressed: onPressed, child: Text(label)),
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 13),
+          // A moulded edge under the one main action, gone when it can't be pressed.
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: _corner10,
+              boxShadow: [if (onPressed != null) BoxShadow(color: _palette.rim, offset: const Offset(0, 3))],
+            ),
+            child: FilledButton(onPressed: onPressed, child: Text(label)),
+          ),
         ),
       ),
     );

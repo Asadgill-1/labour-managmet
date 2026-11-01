@@ -43,6 +43,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 | T18a | Eight registers with filters, and PDF, Excel and WhatsApp export (owner's request, D-038) | REP-01, DOC-01, DOC-03, DOC-06, DOC-07 | IMPLEMENTED_UNVERIFIED | `p2/t18a-registers` |
 | T12 | Advance sub-ledger, salary payments and allocations, overdue alerts (D-043) | PAY-05, PAY-06, PAY-08, MODEL-08 | IMPLEMENTED_UNVERIFIED | `p2/t12-salary-allocations` |
 | T13 | Expenses and period close (D-044) | REP-04, REP-05, REP-07, MODEL-08 | IMPLEMENTED_UNVERIFIED | `p2/t13-period-close` |
+| T13c | The whole app redesigned with Hallmark as a bound account book (owner's request, D-046) | UX-01, UX-03, UX-04 | IMPLEMENTED_UNVERIFIED | `p2/t13b-closing-pending` |
 | T13b | Nothing closes while anything is left, and what is left shows date by date (owner's request, D-045) | REP-04, MODEL-08 | IMPLEMENTED_UNVERIFIED | `p2/t13b-closing-pending` |
 
 **Gate:** PRD examples and month-close reconciliation pass.

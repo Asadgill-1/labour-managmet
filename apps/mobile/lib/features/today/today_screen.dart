@@ -87,27 +87,13 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 8),
           const WagesDueBanner(),
           if (closed) const ClosedNote(),
           if (missing.isNotEmpty && !closed)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-              child: Material(
-                color: warnSoft,
-                borderRadius: BorderRadius.circular(16),
-                clipBehavior: Clip.antiAlias,
-                child: ListTile(
-                  tileColor: Colors.transparent,
-                  leading: const Icon(Icons.warning_amber, color: warn),
-                  title: Text(
-                    l10n.missingWorkers(missing.length, missing.take(5).map((w) => w.name).join(', ')),
-                    style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: warn),
-                  ),
-                  trailing: const Icon(Icons.chevron_right, color: warn),
-                  onTap: _markAttendance,
-                ),
-              ),
+            NoticeRow(
+              icon: Icons.warning_amber,
+              title: l10n.missingWorkers(missing.length, missing.take(5).map((w) => w.name).join(', ')),
+              onTap: _markAttendance,
             ),
           if (entries.isEmpty) EmptyState(icon: Icons.assignment_outlined, text: l10n.todayEmpty),
           for (final entry in entries)
@@ -198,8 +184,8 @@ class _StateLabel extends StatelessWidget {
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(20)),
-      child: Text(label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: color)),
+      decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(999)),
+      child: Text(label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: color)),
     );
   }
 }

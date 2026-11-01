@@ -148,18 +148,7 @@ class ClosedNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-      child: Material(
-        color: paper,
-        borderRadius: BorderRadius.circular(16),
-        child: ListTile(
-          tileColor: Colors.transparent,
-          leading: const Icon(Icons.lock, color: muted),
-          title: Text(AppLocalizations.of(context).closedNote, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: muted)),
-        ),
-      ),
-    );
+    return NoteRow(icon: Icons.lock, text: AppLocalizations.of(context).closedNote, color: muted);
   }
 }
 
@@ -172,12 +161,20 @@ class SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 20, 8, 4),
-      child: Row(
-        children: [
-          Expanded(child: Text(title, style: sectionTitleStyle)),
-          if (action != null) Flexible(child: action!),
-        ],
+      padding: const EdgeInsets.fromLTRB(16, 18, 16, 0),
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: ink)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Row(
+            children: [
+              Expanded(child: Text(title, style: sectionTitleStyle)),
+              if (action != null) Flexible(child: action!),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -255,7 +252,7 @@ class SearchBox extends StatelessWidget {
   }
 }
 
-/// One row of a list, as its own white card.
+/// One ruled line of a list, as in an account book.
 class RowCard extends StatelessWidget {
   const RowCard({required this.child, super.key});
 
@@ -263,41 +260,19 @@ class RowCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [BoxShadow(color: Color(0x0F17213A), blurRadius: 10, offset: Offset(0, 2))],
-        ),
-        child: Material(
-          type: MaterialType.transparency,
-          borderRadius: BorderRadius.circular(16),
-          clipBehavior: Clip.antiAlias,
-          child: ListTileTheme.merge(tileColor: Colors.transparent, child: child),
-        ),
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: rule)),
       ),
+      child: Material(type: MaterialType.transparency, child: child),
     );
   }
 }
 
-/// Soft and strong colour pairs, so a list of names is easy to scan. The same name always gets the same colours.
-const _tagColors = [
-  (Color(0xFFE3ECFF), Color(0xFF2450B8)),
-  (Color(0xFFDFF5EF), Color(0xFF0B7A66)),
-  (Color(0xFFFFE8DA), Color(0xFFC2500F)),
-  (Color(0xFFF0E6FF), Color(0xFF6B3FC4)),
-  (Color(0xFFFFE4EC), Color(0xFFC2255C)),
-  (Color(0xFFFFF3CF), Color(0xFF8A6000)),
-  (Color(0xFFDDF3FA), Color(0xFF0B7196)),
-  (Color(0xFFE6F4DC), Color(0xFF3F7D1D)),
-];
-
 /// A name's first letter, for a [RowTag].
 String initial(String name) => name.trim().isEmpty ? '?' : name.trim()[0].toUpperCase();
 
-/// Rounded mark at the start of a row, tinted by its text.
+/// A small mark at the start of a row: a state in its own colours, or a name's first letter.
 class RowTag extends StatelessWidget {
   const RowTag(String this.text, {this.fill, this.color, super.key}) : icon = null;
   const RowTag.icon(IconData this.icon, {required Color this.fill, required Color this.color, super.key}) : text = null;
@@ -309,17 +284,16 @@ class RowTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tint = _tagColors[(text ?? '').codeUnits.fold(0, (total, c) => total + c) % _tagColors.length];
-    final foreground = color ?? tint.$2;
+    final foreground = color ?? brand;
     return Container(
-      width: 46,
-      height: 46,
-      padding: const EdgeInsets.all(5),
+      width: 38,
+      height: 38,
+      padding: const EdgeInsets.all(4),
       alignment: Alignment.center,
-      decoration: BoxDecoration(color: fill ?? tint.$1, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(color: fill ?? brandSoft, borderRadius: BorderRadius.circular(10)),
       child: icon != null
-          ? Icon(icon, color: foreground)
-          : FittedBox(fit: BoxFit.scaleDown, child: Text(text!, style: amountStyle.copyWith(fontSize: 17, color: foreground))),
+          ? Icon(icon, size: 20, color: foreground)
+          : FittedBox(fit: BoxFit.scaleDown, child: Text(text!, style: amountStyle.copyWith(fontSize: 15, color: foreground))),
     );
   }
 }
@@ -386,6 +360,30 @@ class NoteRow extends StatelessWidget {
   }
 }
 
+/// Something waiting on the owner, full width across the page, that opens where it can be dealt with.
+class NoticeRow extends StatelessWidget {
+  const NoticeRow({required this.icon, required this.title, required this.onTap, this.subtitle, super.key});
+
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: warnSoft,
+      child: ListTile(
+        leading: Icon(icon, color: warn),
+        title: Text(title, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w500, color: warn)),
+        subtitle: subtitle == null ? null : Text(subtitle!, style: const TextStyle(color: warn)),
+        trailing: const Icon(Icons.chevron_right, color: warn),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
 /// The bottom line of a sum, under a double rule as in an account book.
 class TotalRow extends StatelessWidget {
   const TotalRow(this.label, this.value, {super.key});
@@ -395,25 +393,21 @@ class TotalRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Colors.white,
-      child: Column(
-        children: [
-          const Divider(color: ink, height: 1),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-            child: Row(
-              children: [
-                Expanded(child: Text(label, style: sectionTitleStyle.copyWith(fontSize: 16))),
-                RowValue(value),
-              ],
-            ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+          child: Row(
+            children: [
+              Expanded(child: Text(label, style: sectionTitleStyle)),
+              RowValue(value),
+            ],
           ),
-          const Divider(color: ink, height: 1),
-          const SizedBox(height: 2),
-          const Divider(color: ink, height: 1),
-        ],
-      ),
+        ),
+        const Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Divider(color: ink)),
+        const SizedBox(height: 2),
+        const Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Divider(color: ink)),
+      ],
     );
   }
 }
@@ -460,18 +454,13 @@ class EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(32, 48, 32, 48),
+        padding: const EdgeInsets.fromLTRB(32, 40, 32, 40),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 84,
-              height: 84,
-              decoration: BoxDecoration(color: brandSoft, shape: BoxShape.circle),
-              child: Icon(icon, size: 40, color: brand),
-            ),
-            const SizedBox(height: 12),
-            Text(text, textAlign: TextAlign.center, style: const TextStyle(color: muted)),
+            Icon(icon, size: 36, color: muted),
+            const SizedBox(height: 10),
+            Text(text, textAlign: TextAlign.center, style: const TextStyle(height: 1.4, color: muted)),
           ],
         ),
       ),
@@ -479,7 +468,7 @@ class EmptyState extends StatelessWidget {
   }
 }
 
-/// One figure with its label, as a tile on the coloured band at the top of a screen.
+/// One figure with its label on the cover, ruled off from the next like a column in a book.
 class BandFigure extends StatelessWidget {
   const BandFigure(this.value, this.label, {this.size = 28, super.key});
 
@@ -490,8 +479,10 @@ class BandFigure extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
-      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.13), borderRadius: BorderRadius.circular(14)),
+      padding: const EdgeInsets.only(left: 10),
+      decoration: BoxDecoration(
+        border: Border(left: BorderSide(color: Colors.white.withValues(alpha: 0.35))),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -505,11 +496,7 @@ class BandFigure extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 2),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-            child: Text(label, style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.85))),
-          ),
+          Text(label, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 13, height: 1.2, color: Colors.white.withValues(alpha: 0.85))),
         ],
       ),
     );
@@ -670,7 +657,7 @@ class DayStrip extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       margin: const EdgeInsets.symmetric(horizontal: 2),
-                      decoration: BoxDecoration(color: offset == 0 ? Colors.white : null, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: offset == 0 ? Colors.white : null, borderRadius: BorderRadius.circular(10)),
                       child: Column(
                         children: [
                           // Fixed height, so a long day name that shrinks doesn't lift its number out of line.

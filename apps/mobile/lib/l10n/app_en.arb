@@ -927,9 +927,9 @@
   "colDifference": "Difference",
   "colPostedOn": "Posted on",
   "settingsColour": "App colours",
-  "paletteBlue": "Blue and orange",
-  "paletteGreen": "Green and gold",
-  "paletteMaroon": "Maroon and gold",
+  "paletteBlue": "Blue",
+  "paletteGreen": "Green",
+  "paletteMaroon": "Maroon",
   "issueMissingRate": "{count} attendance rows have no worker rate. Add it under Rates.",
   "@issueMissingRate": {
     "placeholders": {

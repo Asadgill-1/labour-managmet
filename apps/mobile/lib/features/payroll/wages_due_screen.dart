@@ -20,24 +20,11 @@ class WagesDueBanner extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final due = ref.watch(wagesDueProvider).value ?? const <WorkerWagesDue>[];
     if (due.isEmpty) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-      child: Material(
-        color: warnSoft,
-        borderRadius: BorderRadius.circular(16),
-        clipBehavior: Clip.antiAlias,
-        child: ListTile(
-          tileColor: Colors.transparent,
-          leading: const Icon(Icons.schedule, color: warn),
-          title: Text(
-            l10n.wagesDueBanner(due.length, formatAed(due.fold(0, (total, w) => total + w.totalFils))),
-            style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: warn),
-          ),
-          subtitle: Text(l10n.wagesDueOldest(showMonth(due.first.wages.first.month)), style: const TextStyle(color: warn)),
-          trailing: const Icon(Icons.chevron_right, color: warn),
-          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const WagesDueScreen())),
-        ),
-      ),
+    return NoticeRow(
+      icon: Icons.schedule,
+      title: l10n.wagesDueBanner(due.length, formatAed(due.fold(0, (total, w) => total + w.totalFils))),
+      subtitle: l10n.wagesDueOldest(showMonth(due.first.wages.first.month)),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const WagesDueScreen())),
     );
   }
 }
