@@ -55,7 +55,8 @@ class CashEntryRow extends ConsumerWidget {
 
   Future<void> _undo(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
-    final reason = await askReason(context, title: l10n.reverseTitle, helper: l10n.reverseHelp, confirm: l10n.reverseConfirm);
+    final closed = isClosed(entry.entryDate, ref.read(lockedThroughProvider).value);
+    final reason = await askReason(context, title: l10n.reverseTitle, helper: closed ? l10n.reverseHelpClosed : l10n.reverseHelp, confirm: l10n.reverseConfirm);
     if (reason == null || !context.mounted) return;
     try {
       await ref.read(dbProvider).reverseCashEntry(entry, reason: reason, operationId: newUuid());
@@ -64,8 +65,8 @@ class CashEntryRow extends ConsumerWidget {
       if (context.mounted) showFormError(context, l10n.advanceUndoBlocked);
     } on VisaTooHigh {
       if (context.mounted) showFormError(context, l10n.visaUndoBlocked);
-    } catch (_) {
-      if (context.mounted) showFormError(context, l10n.saveFailed);
+    } catch (e) {
+      if (context.mounted) showFormError(context, saveErrorText(l10n, e));
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:domain/cash.dart';
+import 'package:domain/dates.dart';
 import 'package:drift/drift.dart';
 
 import 'tenant_database.dart';
@@ -45,6 +46,7 @@ extension CashOps on TenantDatabase {
     String? category,
     String method = 'cash',
     String? note,
+    String? reference,
   }) {
     final id = newUuid();
     return applyOperation(
@@ -75,6 +77,7 @@ extension CashOps on TenantDatabase {
             category: Value(category),
             method: Value(method),
             note: Value(note),
+            reference: Value(reference),
           ),
         );
         return row.toJson();
@@ -82,8 +85,8 @@ extension CashOps on TenantDatabase {
     );
   }
 
-  /// Undoes a line with a matching reversal on the same date. The original stays on record (REP-08).
-  /// ponytail: uses the original's date, so a closed period would change. T13 needs a dated adjustment here once locks exist (REP-04).
+  /// Undoes a line with a matching reversal on the same date. The original stays on record (REP-08). A line in a closed
+  /// month is reversed today instead, as a dated adjustment, so the closed month stays as it was (REP-04).
   Future<void> reverseCashEntry(CashEntry entry, {required String reason, required String operationId}) {
     final id = newUuid();
     return applyOperation(
@@ -106,7 +109,7 @@ extension CashOps on TenantDatabase {
             updatedAtUtc: now,
             actorId: actorId,
             sourceOperationId: operationId,
-            entryDate: entry.entryDate,
+            entryDate: isClosed(entry.entryDate, await lockedThrough()) ? dubaiToday(now) : entry.entryDate,
             kind: entry.kind,
             amountFils: entry.amountFils,
             workerId: Value(entry.workerId),

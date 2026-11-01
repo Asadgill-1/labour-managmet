@@ -131,6 +131,17 @@ late    = today after the due day
 
 Only finished months count. The days are the company's own, and no legal period is built in.
 
+## Closing a month (REP-04, D-044)
+
+```text
+closing = opening + earned - advance - room, visa and deductions - paid     (added over every worker)
+```
+
+- Closing moves no figure. The closing equals Tankhwah's balance once advance is cut, and the next month's opening.
+- A month closes only once it has ended, every worker with pay is posted, and no attendance is missing a pay rate. Earlier open months close with it.
+- A reversal of a closed month's cash line is dated today. It counts as a minus on today's month, and the closed month keeps the line.
+- A rate saved later reaches open rows only.
+
 ## Advance sub-ledger (PAY-05)
 
 ```text
@@ -186,4 +197,4 @@ These must pass exactly in `dart test`. Amounts in AED.
 
 ## For the accountant to confirm
 
-The payroll rules in D-043. Rounding level (D-101). Partial-period methods offered (D-102). Work-date attribution (D-103). Deduction limits and authorization evidence (PAY-07). The payroll rules in D-034, above all no automatic absence cut on a monthly salary. Overtime configuration (CALC-07). VAT categories and rounding on Tax Invoices (INV-02..04).
+The closing rules in D-044. The payroll rules in D-043. Rounding level (D-101). Partial-period methods offered (D-102). Work-date attribution (D-103). Deduction limits and authorization evidence (PAY-07). The payroll rules in D-034, above all no automatic absence cut on a monthly salary. Overtime configuration (CALC-07). VAT categories and rounding on Tax Invoices (INV-02..04).

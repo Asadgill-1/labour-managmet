@@ -657,6 +657,144 @@
       }
     }
   },
+  "tabClosing": "Close month",
+  "closingWorkersLeft": "Left on workers' accounts",
+  "closingState": "This month",
+  "closingOpen": "Open",
+  "closingClosed": "Closed",
+  "closingNotOver": "This month has not ended yet, so it cannot be closed.",
+  "closingIsClosed": "This month is closed. A change now goes into an open month as an allowance, deduction or reversal.",
+  "closingStops": "Fix these first",
+  "closingChecks": "Have a look at these",
+  "closingAllClear": "Nothing to fix. This month can be closed.",
+  "closingSummary": "Workers' accounts this month",
+  "closingCuts": "Room, visa and deductions",
+  "closingExpenses": "Expenses",
+  "findingNoWorkerRate": "{count} workers have attendance with no pay rate: {names}. Add a rate or remove the attendance.",
+  "@findingNoWorkerRate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "findingNotPosted": "{count} workers are not posted: {names}. Post them in Payroll.",
+  "@findingNotPosted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "findingNoCompanyRate": "{count} companies have no rate, so their bill is incomplete: {names}.",
+  "@findingNoCompanyRate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "findingNoHazri": "{count} workers have no attendance: {names}.",
+  "@findingNoHazri": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "findingOverlap": "{count} workers have shifts that overlap: {names}.",
+  "@findingOverlap": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "findingNoMonth": "{count} workers have a payment with no month chosen, which settles the oldest month: {names}.",
+  "@findingNoMonth": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "closeButton": "Close {month}",
+  "@closeButton": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "closeTitle": "Close {month}?",
+  "@closeTitle": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "closeBody": "Attendance, expenses and payroll up to this month will stop changing. A later change goes into an open month as an allowance, deduction or reversal.",
+  "closeWithChecks": "{count} points above are still worth a look.",
+  "@closeWithChecks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closeConfirm": "Close",
+  "closeDone": "{month} is closed",
+  "@closeDone": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "closeNotReady": "This month cannot close yet. Fix what is listed first.",
+  "reopenButton": "Open this month again",
+  "reopenTitle": "Open {month} again",
+  "@reopenTitle": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "reopenHelp": "Why it must change. The reason stays on record.",
+  "reopenConfirm": "Open",
+  "reopenDone": "{month} is open again",
+  "@reopenDone": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "reopenLater": "Open the later month first.",
+  "periodLockedError": "This month is closed. Enter the difference in an open month as an allowance or deduction, or open it again from Close month.",
+  "closedNote": "This month is closed. Nothing here can change.",
+  "reverseHelpClosed": "This month is closed, so the reversal is written with today's date and the closed month stays as it was.",
+  "issueClosed": "This month is closed.",
   "applyVisaInstalments": "Add visa instalments ({count})",
   "@applyVisaInstalments": {
     "placeholders": {

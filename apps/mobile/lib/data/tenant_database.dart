@@ -14,6 +14,14 @@ part 'tenant_database.g.dart';
 
 final _uuid = RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
 
+/// The date falls in a closed month (REP-04). The database refuses the write, so no path around it exists.
+class PeriodLocked implements Exception {
+  const PeriodLocked();
+}
+
+/// [through] is the last day of the latest closed month, from [TenantDatabase.lockedThrough].
+bool isClosed(String date, String? through) => through != null && date.compareTo(through) <= 0;
+
 /// Replaced by the signed-in user's ID in T19.
 const localOwner = 'local-owner';
 
@@ -40,6 +48,7 @@ String newUuid() {
     Rooms,
     CashEntries,
     SalaryAllocations,
+    PeriodLocks,
     AttendanceBatches,
     AttendanceEntries,
     PayrollRuns,
@@ -58,7 +67,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -119,6 +128,28 @@ class TenantDatabase extends _$TenantDatabase {
         await m.createTrigger(schema.allocationNoUpdate);
         await m.createTrigger(schema.allocationNoDelete);
       },
+      from8To9: (m, schema) async {
+        await m.createTable(schema.periodLocks);
+        await m.createIndex(schema.oneLivePeriodLock);
+        for (final trigger in [
+          schema.lockNoDelete,
+          schema.lockNoEdit,
+          schema.lockStaysReopened,
+          schema.closedCashNoInsert,
+          schema.closedEntryNoInsert,
+          schema.closedEntryNoEdit,
+          schema.closedEntryNoDelete,
+          schema.closedItemNoInsert,
+          schema.closedItemNoEdit,
+          schema.closedItemNoDelete,
+          schema.closedLineNoInsert,
+          schema.closedLineNoReverse,
+          schema.closedOpeningNoInsert,
+          schema.closedOpeningNoEdit,
+        ]) {
+          await m.createTrigger(trigger);
+        }
+      },
     ),
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -133,10 +164,37 @@ class TenantDatabase extends _$TenantDatabase {
     },
   );
 
+  /// The last day of the latest closed month (REP-04). Null when none is closed.
+  Future<String?> lockedThrough() async {
+    final latest = periodLocks.lastDay.max();
+    final query = selectOnly(periodLocks)
+      ..addColumns([latest])
+      ..where(periodLocks.reopened.equals(false));
+    return (await query.getSingle()).read(latest);
+  }
+
   /// The single write path. Runs [change] with its audit event and outbox row in one transaction,
   /// once per [operationId], so a retry after a crash or double tap changes nothing (TEAM-04, UX-07).
   /// [change] returns the stored record, which becomes the outbox payload.
   Future<void> applyOperation({
+    required String operationId,
+    required String entity,
+    required String recordId,
+    required int version,
+    required String action,
+    required Future<Map<String, dynamic>> Function() change,
+    String? reason,
+  }) async {
+    try {
+      await _applyOnce(operationId: operationId, entity: entity, recordId: recordId, version: version, action: action, change: change, reason: reason);
+    } catch (e) {
+      // From a background database this arrives wrapped, so the words are what stays the same.
+      if (e.toString().contains('period is closed')) throw const PeriodLocked();
+      rethrow;
+    }
+  }
+
+  Future<void> _applyOnce({
     required String operationId,
     required String entity,
     required String recordId,

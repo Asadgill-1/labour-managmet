@@ -70,6 +70,97 @@ BEGIN
   SELECT RAISE(ABORT, 'a posted payroll item is immutable');
 END;
 
+-- A closed month stays as it was. A change after it is a dated adjustment in an open month, or the month is opened
+-- again with a reason (REP-04). `period is closed` is how the app tells this apart from any other refusal.
+CREATE TRIGGER lock_no_delete BEFORE DELETE ON period_locks BEGIN
+  SELECT RAISE(ABORT, 'a period lock stays on record');
+END;
+
+CREATE TRIGGER lock_no_edit BEFORE UPDATE OF month, last_day ON period_locks BEGIN
+  SELECT RAISE(ABORT, 'a period lock stays on record');
+END;
+
+CREATE TRIGGER lock_stays_reopened BEFORE UPDATE OF reopened ON period_locks
+WHEN OLD.reopened
+BEGIN
+  SELECT RAISE(ABORT, 'a reopened lock stays reopened');
+END;
+
+CREATE UNIQUE INDEX one_live_period_lock ON period_locks (month) WHERE NOT reopened;
+
+CREATE TRIGGER closed_cash_no_insert BEFORE INSERT ON cash_entries
+WHEN NEW.entry_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_entry_no_insert BEFORE INSERT ON attendance_entries
+WHEN NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+-- Linking a closed row to a later posting or a timesheet changes no figure, so it may still happen.
+CREATE TRIGGER closed_entry_no_edit BEFORE UPDATE ON attendance_entries
+WHEN (OLD.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened))
+  AND (NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes
+    OR NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes
+    OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils
+    OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils
+    OR NEW.worker_id <> OLD.worker_id OR NEW.client_id <> OLD.client_id OR NEW.site_id <> OLD.site_id
+    OR NEW.work_date <> OLD.work_date OR NEW.superseded <> OLD.superseded OR NEW.attendance_status <> OLD.attendance_status)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_entry_no_delete BEFORE DELETE ON attendance_entries
+WHEN OLD.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_item_no_insert BEFORE INSERT ON payroll_items
+WHEN NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_item_no_edit BEFORE UPDATE ON payroll_items
+WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_item_no_delete BEFORE DELETE ON payroll_items
+WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_line_no_insert BEFORE INSERT ON payroll_lines
+WHEN NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_line_no_reverse BEFORE UPDATE OF reversed ON payroll_lines
+WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_opening_no_insert BEFORE INSERT ON opening_balances
+WHEN NEW.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_opening_no_edit BEFORE UPDATE ON opening_balances
+WHEN OLD.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
 -- One worker cannot be paid twice for one month.
 CREATE UNIQUE INDEX one_live_payroll_line ON payroll_lines (worker_id, period_from) WHERE NOT reversed;
 

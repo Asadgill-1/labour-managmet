@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/cash/cash_screen.dart';
+import '../features/closing/closing_screen.dart';
 import '../features/companies/companies_screen.dart';
 import '../features/companies/sites_screen.dart';
 import '../features/groups/groups_screen.dart';
@@ -35,6 +36,7 @@ Widget _screen(Section section) => switch (section) {
   Section.payroll => const PayrollScreen(),
   Section.settings => const SettingsScreen(),
   Section.visa => const VisaScreen(),
+  Section.closing => const ClosingScreen(),
   Section.attendanceRegister ||
   Section.workerRegister ||
   Section.visaRegister ||

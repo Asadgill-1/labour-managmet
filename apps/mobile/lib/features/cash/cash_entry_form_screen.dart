@@ -181,6 +181,7 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
           category: isExpense ? _category : null,
           method: _method,
           note: note,
+          reference: isExpense && _reference.text.trim().isNotEmpty ? _reference.text.trim() : null,
         );
       }
     } on AllocationTooHigh {
@@ -193,8 +194,8 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
     } on VisaTooHigh {
       if (mounted) showFormError(context, l10n.visaTooHigh);
       return;
-    } catch (_) {
-      if (mounted) showFormError(context, l10n.saveFailed);
+    } catch (e) {
+      if (mounted) showFormError(context, saveErrorText(l10n, e));
       return;
     }
     if (!mounted) return;
@@ -395,9 +396,11 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
               onSelectionChanged: (s) => setState(() => _method = s.single),
             ),
             fieldGap,
-            if (isSalary) ...[
+            if (isSalary || _kind == CashKind.expense) ...[
               Field(l10n.salaryReference, _reference),
               fieldGap,
+            ],
+            if (isSalary) ...[
               Field(l10n.salaryReceiver, _receiver, helper: l10n.salaryReceiverHelp),
               fieldGap,
             ],

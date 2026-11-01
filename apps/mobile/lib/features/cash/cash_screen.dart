@@ -37,6 +37,7 @@ class _CashScreenState extends ConsumerState<CashScreen> {
     final totals = cashTotals(rows.map(cashLine));
     final undone = undoneIds(rows);
     final today = dubaiToday(DateTime.now());
+    final closed = isClosed(_date, ref.watch(lockedThroughProvider).value);
     return Scaffold(
       appBar: AppBar(
         leading: const MenuButton(),
@@ -53,7 +54,7 @@ class _CashScreenState extends ConsumerState<CashScreen> {
       ),
       bottomNavigationBar: MainActionBar(
         label: l10n.addCash,
-        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => CashEntryFormScreen(date: _date))),
+        onPressed: closed ? null : () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => CashEntryFormScreen(date: _date))),
       ),
       body: ListView(
         children: [
@@ -76,6 +77,7 @@ class _CashScreenState extends ConsumerState<CashScreen> {
             ),
           ),
           const SizedBox(height: 8),
+          if (closed) const ClosedNote(),
           if (rows.isEmpty) EmptyState(icon: Icons.receipt_long, text: l10n.cashEmpty),
           for (final entry in rows) CashEntryRow(entry, undone: undone.contains(entry.id)),
         ],

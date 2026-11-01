@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../data/closing.dart';
+import '../data/tenant_database.dart';
 import '../l10n/app_localizations.dart';
 
 /// The colours a user can choose from in Settings (D-040).
@@ -272,12 +274,20 @@ void showSavedOnPhone(BuildContext context, String message) {
 /// Runs a save and says so plainly if it fails, so a failed write is never silent (UX-07).
 /// The caller keeps its operation ID, so trying again cannot apply twice.
 Future<bool> saveOrExplain(BuildContext context, Future<void> Function() work) async {
-  final message = AppLocalizations.of(context).saveFailed;
+  final l10n = AppLocalizations.of(context);
   try {
     await work();
     return true;
-  } catch (_) {
-    if (context.mounted) showFormError(context, message);
+  } catch (e) {
+    if (context.mounted) showFormError(context, saveErrorText(l10n, e));
     return false;
   }
 }
+
+/// What to tell the owner when a save fails. A closed month says what to do instead (REP-04).
+String saveErrorText(AppLocalizations l10n, Object error) => switch (error) {
+  PeriodLocked() => l10n.periodLockedError,
+  LaterMonthClosed() => l10n.reopenLater,
+  MonthNotReady() => l10n.closeNotReady,
+  _ => l10n.saveFailed,
+};

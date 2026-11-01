@@ -8940,6 +8940,629 @@ class PayrollItemsCompanion extends UpdateCompanion<PayrollItem> {
   }
 }
 
+class $PeriodLocksTable extends PeriodLocks
+    with TableInfo<$PeriodLocksTable, PeriodLock> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PeriodLocksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _monthMeta = const VerificationMeta('month');
+  @override
+  late final GeneratedColumn<String> month = GeneratedColumn<String>(
+    'month',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastDayMeta = const VerificationMeta(
+    'lastDay',
+  );
+  @override
+  late final GeneratedColumn<String> lastDay = GeneratedColumn<String>(
+    'last_day',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _reopenedMeta = const VerificationMeta(
+    'reopened',
+  );
+  @override
+  late final GeneratedColumn<bool> reopened = GeneratedColumn<bool>(
+    'reopened',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("reopened" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    month,
+    lastDay,
+    reopened,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'period_locks';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PeriodLock> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('month')) {
+      context.handle(
+        _monthMeta,
+        month.isAcceptableOrUnknown(data['month']!, _monthMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_monthMeta);
+    }
+    if (data.containsKey('last_day')) {
+      context.handle(
+        _lastDayMeta,
+        lastDay.isAcceptableOrUnknown(data['last_day']!, _lastDayMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_lastDayMeta);
+    }
+    if (data.containsKey('reopened')) {
+      context.handle(
+        _reopenedMeta,
+        reopened.isAcceptableOrUnknown(data['reopened']!, _reopenedMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PeriodLock map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PeriodLock(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      month: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}month'],
+      )!,
+      lastDay: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_day'],
+      )!,
+      reopened: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}reopened'],
+      )!,
+    );
+  }
+
+  @override
+  $PeriodLocksTable createAlias(String alias) {
+    return $PeriodLocksTable(attachedDatabase, alias);
+  }
+}
+
+class PeriodLock extends DataClass implements Insertable<PeriodLock> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+
+  /// YYYY-MM.
+  final String month;
+  final String lastDay;
+  final bool reopened;
+  const PeriodLock({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.month,
+    required this.lastDay,
+    required this.reopened,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['month'] = Variable<String>(month);
+    map['last_day'] = Variable<String>(lastDay);
+    map['reopened'] = Variable<bool>(reopened);
+    return map;
+  }
+
+  PeriodLocksCompanion toCompanion(bool nullToAbsent) {
+    return PeriodLocksCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      month: Value(month),
+      lastDay: Value(lastDay),
+      reopened: Value(reopened),
+    );
+  }
+
+  factory PeriodLock.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PeriodLock(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      month: serializer.fromJson<String>(json['month']),
+      lastDay: serializer.fromJson<String>(json['lastDay']),
+      reopened: serializer.fromJson<bool>(json['reopened']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'month': serializer.toJson<String>(month),
+      'lastDay': serializer.toJson<String>(lastDay),
+      'reopened': serializer.toJson<bool>(reopened),
+    };
+  }
+
+  PeriodLock copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? month,
+    String? lastDay,
+    bool? reopened,
+  }) => PeriodLock(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    month: month ?? this.month,
+    lastDay: lastDay ?? this.lastDay,
+    reopened: reopened ?? this.reopened,
+  );
+  PeriodLock copyWithCompanion(PeriodLocksCompanion data) {
+    return PeriodLock(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      month: data.month.present ? data.month.value : this.month,
+      lastDay: data.lastDay.present ? data.lastDay.value : this.lastDay,
+      reopened: data.reopened.present ? data.reopened.value : this.reopened,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PeriodLock(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('month: $month, ')
+          ..write('lastDay: $lastDay, ')
+          ..write('reopened: $reopened')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    month,
+    lastDay,
+    reopened,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PeriodLock &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.month == this.month &&
+          other.lastDay == this.lastDay &&
+          other.reopened == this.reopened);
+}
+
+class PeriodLocksCompanion extends UpdateCompanion<PeriodLock> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> month;
+  final Value<String> lastDay;
+  final Value<bool> reopened;
+  final Value<int> rowid;
+  const PeriodLocksCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.month = const Value.absent(),
+    this.lastDay = const Value.absent(),
+    this.reopened = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PeriodLocksCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String month,
+    required String lastDay,
+    this.reopened = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       month = Value(month),
+       lastDay = Value(lastDay);
+  static Insertable<PeriodLock> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? month,
+    Expression<String>? lastDay,
+    Expression<bool>? reopened,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (month != null) 'month': month,
+      if (lastDay != null) 'last_day': lastDay,
+      if (reopened != null) 'reopened': reopened,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PeriodLocksCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? month,
+    Value<String>? lastDay,
+    Value<bool>? reopened,
+    Value<int>? rowid,
+  }) {
+    return PeriodLocksCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      month: month ?? this.month,
+      lastDay: lastDay ?? this.lastDay,
+      reopened: reopened ?? this.reopened,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (month.present) {
+      map['month'] = Variable<String>(month.value);
+    }
+    if (lastDay.present) {
+      map['last_day'] = Variable<String>(lastDay.value);
+    }
+    if (reopened.present) {
+      map['reopened'] = Variable<bool>(reopened.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PeriodLocksCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('month: $month, ')
+          ..write('lastDay: $lastDay, ')
+          ..write('reopened: $reopened, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $WorkerGroupsTable extends WorkerGroups
     with TableInfo<$WorkerGroupsTable, WorkerGroup> {
   @override
@@ -12860,6 +13483,790 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
   }
 }
 
+class $OpeningBalancesTable extends OpeningBalances
+    with TableInfo<$OpeningBalancesTable, OpeningBalance> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $OpeningBalancesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _workerIdMeta = const VerificationMeta(
+    'workerId',
+  );
+  @override
+  late final GeneratedColumn<String> workerId = GeneratedColumn<String>(
+    'worker_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES workers (id)',
+    ),
+  );
+  static const VerificationMeta _clientIdMeta = const VerificationMeta(
+    'clientId',
+  );
+  @override
+  late final GeneratedColumn<String> clientId = GeneratedColumn<String>(
+    'client_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES clients (id)',
+    ),
+  );
+  static const VerificationMeta _amountFilsMeta = const VerificationMeta(
+    'amountFils',
+  );
+  @override
+  late final GeneratedColumn<int> amountFils = GeneratedColumn<int>(
+    'amount_fils',
+    aliasedName,
+    false,
+    check: () => ComparableExpr(amountFils).isBiggerOrEqualValue(0),
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _asOfDateMeta = const VerificationMeta(
+    'asOfDate',
+  );
+  @override
+  late final GeneratedColumn<String> asOfDate = GeneratedColumn<String>(
+    'as_of_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceNoteMeta = const VerificationMeta(
+    'sourceNote',
+  );
+  @override
+  late final GeneratedColumn<String> sourceNote = GeneratedColumn<String>(
+    'source_note',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    kind,
+    workerId,
+    clientId,
+    amountFils,
+    asOfDate,
+    sourceNote,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'opening_balances';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<OpeningBalance> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_kindMeta);
+    }
+    if (data.containsKey('worker_id')) {
+      context.handle(
+        _workerIdMeta,
+        workerId.isAcceptableOrUnknown(data['worker_id']!, _workerIdMeta),
+      );
+    }
+    if (data.containsKey('client_id')) {
+      context.handle(
+        _clientIdMeta,
+        clientId.isAcceptableOrUnknown(data['client_id']!, _clientIdMeta),
+      );
+    }
+    if (data.containsKey('amount_fils')) {
+      context.handle(
+        _amountFilsMeta,
+        amountFils.isAcceptableOrUnknown(data['amount_fils']!, _amountFilsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountFilsMeta);
+    }
+    if (data.containsKey('as_of_date')) {
+      context.handle(
+        _asOfDateMeta,
+        asOfDate.isAcceptableOrUnknown(data['as_of_date']!, _asOfDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_asOfDateMeta);
+    }
+    if (data.containsKey('source_note')) {
+      context.handle(
+        _sourceNoteMeta,
+        sourceNote.isAcceptableOrUnknown(data['source_note']!, _sourceNoteMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceNoteMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {kind, workerId},
+    {kind, clientId},
+  ];
+  @override
+  OpeningBalance map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return OpeningBalance(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      workerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}worker_id'],
+      ),
+      clientId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}client_id'],
+      ),
+      amountFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_fils'],
+      )!,
+      asOfDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}as_of_date'],
+      )!,
+      sourceNote: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_note'],
+      )!,
+    );
+  }
+
+  @override
+  $OpeningBalancesTable createAlias(String alias) {
+    return $OpeningBalancesTable(attachedDatabase, alias);
+  }
+}
+
+class OpeningBalance extends DataClass implements Insertable<OpeningBalance> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+
+  /// 'worker_salary_owed', 'worker_advance' or 'client_receivable'.
+  final String kind;
+  final String? workerId;
+  final String? clientId;
+  final int amountFils;
+  final String asOfDate;
+  final String sourceNote;
+  const OpeningBalance({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.kind,
+    this.workerId,
+    this.clientId,
+    required this.amountFils,
+    required this.asOfDate,
+    required this.sourceNote,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['kind'] = Variable<String>(kind);
+    if (!nullToAbsent || workerId != null) {
+      map['worker_id'] = Variable<String>(workerId);
+    }
+    if (!nullToAbsent || clientId != null) {
+      map['client_id'] = Variable<String>(clientId);
+    }
+    map['amount_fils'] = Variable<int>(amountFils);
+    map['as_of_date'] = Variable<String>(asOfDate);
+    map['source_note'] = Variable<String>(sourceNote);
+    return map;
+  }
+
+  OpeningBalancesCompanion toCompanion(bool nullToAbsent) {
+    return OpeningBalancesCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      kind: Value(kind),
+      workerId: workerId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(workerId),
+      clientId: clientId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientId),
+      amountFils: Value(amountFils),
+      asOfDate: Value(asOfDate),
+      sourceNote: Value(sourceNote),
+    );
+  }
+
+  factory OpeningBalance.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return OpeningBalance(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      workerId: serializer.fromJson<String?>(json['workerId']),
+      clientId: serializer.fromJson<String?>(json['clientId']),
+      amountFils: serializer.fromJson<int>(json['amountFils']),
+      asOfDate: serializer.fromJson<String>(json['asOfDate']),
+      sourceNote: serializer.fromJson<String>(json['sourceNote']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'kind': serializer.toJson<String>(kind),
+      'workerId': serializer.toJson<String?>(workerId),
+      'clientId': serializer.toJson<String?>(clientId),
+      'amountFils': serializer.toJson<int>(amountFils),
+      'asOfDate': serializer.toJson<String>(asOfDate),
+      'sourceNote': serializer.toJson<String>(sourceNote),
+    };
+  }
+
+  OpeningBalance copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? kind,
+    Value<String?> workerId = const Value.absent(),
+    Value<String?> clientId = const Value.absent(),
+    int? amountFils,
+    String? asOfDate,
+    String? sourceNote,
+  }) => OpeningBalance(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    kind: kind ?? this.kind,
+    workerId: workerId.present ? workerId.value : this.workerId,
+    clientId: clientId.present ? clientId.value : this.clientId,
+    amountFils: amountFils ?? this.amountFils,
+    asOfDate: asOfDate ?? this.asOfDate,
+    sourceNote: sourceNote ?? this.sourceNote,
+  );
+  OpeningBalance copyWithCompanion(OpeningBalancesCompanion data) {
+    return OpeningBalance(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      workerId: data.workerId.present ? data.workerId.value : this.workerId,
+      clientId: data.clientId.present ? data.clientId.value : this.clientId,
+      amountFils: data.amountFils.present
+          ? data.amountFils.value
+          : this.amountFils,
+      asOfDate: data.asOfDate.present ? data.asOfDate.value : this.asOfDate,
+      sourceNote: data.sourceNote.present
+          ? data.sourceNote.value
+          : this.sourceNote,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OpeningBalance(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('kind: $kind, ')
+          ..write('workerId: $workerId, ')
+          ..write('clientId: $clientId, ')
+          ..write('amountFils: $amountFils, ')
+          ..write('asOfDate: $asOfDate, ')
+          ..write('sourceNote: $sourceNote')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    kind,
+    workerId,
+    clientId,
+    amountFils,
+    asOfDate,
+    sourceNote,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is OpeningBalance &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.kind == this.kind &&
+          other.workerId == this.workerId &&
+          other.clientId == this.clientId &&
+          other.amountFils == this.amountFils &&
+          other.asOfDate == this.asOfDate &&
+          other.sourceNote == this.sourceNote);
+}
+
+class OpeningBalancesCompanion extends UpdateCompanion<OpeningBalance> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> kind;
+  final Value<String?> workerId;
+  final Value<String?> clientId;
+  final Value<int> amountFils;
+  final Value<String> asOfDate;
+  final Value<String> sourceNote;
+  final Value<int> rowid;
+  const OpeningBalancesCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.workerId = const Value.absent(),
+    this.clientId = const Value.absent(),
+    this.amountFils = const Value.absent(),
+    this.asOfDate = const Value.absent(),
+    this.sourceNote = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  OpeningBalancesCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String kind,
+    this.workerId = const Value.absent(),
+    this.clientId = const Value.absent(),
+    required int amountFils,
+    required String asOfDate,
+    required String sourceNote,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       kind = Value(kind),
+       amountFils = Value(amountFils),
+       asOfDate = Value(asOfDate),
+       sourceNote = Value(sourceNote);
+  static Insertable<OpeningBalance> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? kind,
+    Expression<String>? workerId,
+    Expression<String>? clientId,
+    Expression<int>? amountFils,
+    Expression<String>? asOfDate,
+    Expression<String>? sourceNote,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (kind != null) 'kind': kind,
+      if (workerId != null) 'worker_id': workerId,
+      if (clientId != null) 'client_id': clientId,
+      if (amountFils != null) 'amount_fils': amountFils,
+      if (asOfDate != null) 'as_of_date': asOfDate,
+      if (sourceNote != null) 'source_note': sourceNote,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  OpeningBalancesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? kind,
+    Value<String?>? workerId,
+    Value<String?>? clientId,
+    Value<int>? amountFils,
+    Value<String>? asOfDate,
+    Value<String>? sourceNote,
+    Value<int>? rowid,
+  }) {
+    return OpeningBalancesCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      kind: kind ?? this.kind,
+      workerId: workerId ?? this.workerId,
+      clientId: clientId ?? this.clientId,
+      amountFils: amountFils ?? this.amountFils,
+      asOfDate: asOfDate ?? this.asOfDate,
+      sourceNote: sourceNote ?? this.sourceNote,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (workerId.present) {
+      map['worker_id'] = Variable<String>(workerId.value);
+    }
+    if (clientId.present) {
+      map['client_id'] = Variable<String>(clientId.value);
+    }
+    if (amountFils.present) {
+      map['amount_fils'] = Variable<int>(amountFils.value);
+    }
+    if (asOfDate.present) {
+      map['as_of_date'] = Variable<String>(asOfDate.value);
+    }
+    if (sourceNote.present) {
+      map['source_note'] = Variable<String>(sourceNote.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OpeningBalancesCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('kind: $kind, ')
+          ..write('workerId: $workerId, ')
+          ..write('clientId: $clientId, ')
+          ..write('amountFils: $amountFils, ')
+          ..write('asOfDate: $asOfDate, ')
+          ..write('sourceNote: $sourceNote, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $TenantProfilesTable extends TenantProfiles
     with TableInfo<$TenantProfilesTable, TenantProfile> {
   @override
@@ -16277,790 +17684,6 @@ class BillingContractsCompanion extends UpdateCompanion<BillingContract> {
   }
 }
 
-class $OpeningBalancesTable extends OpeningBalances
-    with TableInfo<$OpeningBalancesTable, OpeningBalance> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $OpeningBalancesTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
-    'tenantId',
-  );
-  @override
-  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
-    'tenant_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
-    'createdAtUtc',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
-    'created_at_utc',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
-    'updatedAtUtc',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
-    'updated_at_utc',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _actorIdMeta = const VerificationMeta(
-    'actorId',
-  );
-  @override
-  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
-    'actor_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _versionMeta = const VerificationMeta(
-    'version',
-  );
-  @override
-  late final GeneratedColumn<int> version = GeneratedColumn<int>(
-    'version',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(1),
-  );
-  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
-    'sourceOperationId',
-  );
-  @override
-  late final GeneratedColumn<String> sourceOperationId =
-      GeneratedColumn<String>(
-        'source_operation_id',
-        aliasedName,
-        false,
-        type: DriftSqlType.string,
-        requiredDuringInsert: true,
-      );
-  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
-  @override
-  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
-    'kind',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _workerIdMeta = const VerificationMeta(
-    'workerId',
-  );
-  @override
-  late final GeneratedColumn<String> workerId = GeneratedColumn<String>(
-    'worker_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES workers (id)',
-    ),
-  );
-  static const VerificationMeta _clientIdMeta = const VerificationMeta(
-    'clientId',
-  );
-  @override
-  late final GeneratedColumn<String> clientId = GeneratedColumn<String>(
-    'client_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES clients (id)',
-    ),
-  );
-  static const VerificationMeta _amountFilsMeta = const VerificationMeta(
-    'amountFils',
-  );
-  @override
-  late final GeneratedColumn<int> amountFils = GeneratedColumn<int>(
-    'amount_fils',
-    aliasedName,
-    false,
-    check: () => ComparableExpr(amountFils).isBiggerOrEqualValue(0),
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _asOfDateMeta = const VerificationMeta(
-    'asOfDate',
-  );
-  @override
-  late final GeneratedColumn<String> asOfDate = GeneratedColumn<String>(
-    'as_of_date',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _sourceNoteMeta = const VerificationMeta(
-    'sourceNote',
-  );
-  @override
-  late final GeneratedColumn<String> sourceNote = GeneratedColumn<String>(
-    'source_note',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    tenantId,
-    createdAtUtc,
-    updatedAtUtc,
-    actorId,
-    version,
-    sourceOperationId,
-    kind,
-    workerId,
-    clientId,
-    amountFils,
-    asOfDate,
-    sourceNote,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'opening_balances';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<OpeningBalance> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('tenant_id')) {
-      context.handle(
-        _tenantIdMeta,
-        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_tenantIdMeta);
-    }
-    if (data.containsKey('created_at_utc')) {
-      context.handle(
-        _createdAtUtcMeta,
-        createdAtUtc.isAcceptableOrUnknown(
-          data['created_at_utc']!,
-          _createdAtUtcMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_createdAtUtcMeta);
-    }
-    if (data.containsKey('updated_at_utc')) {
-      context.handle(
-        _updatedAtUtcMeta,
-        updatedAtUtc.isAcceptableOrUnknown(
-          data['updated_at_utc']!,
-          _updatedAtUtcMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_updatedAtUtcMeta);
-    }
-    if (data.containsKey('actor_id')) {
-      context.handle(
-        _actorIdMeta,
-        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_actorIdMeta);
-    }
-    if (data.containsKey('version')) {
-      context.handle(
-        _versionMeta,
-        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
-      );
-    }
-    if (data.containsKey('source_operation_id')) {
-      context.handle(
-        _sourceOperationIdMeta,
-        sourceOperationId.isAcceptableOrUnknown(
-          data['source_operation_id']!,
-          _sourceOperationIdMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_sourceOperationIdMeta);
-    }
-    if (data.containsKey('kind')) {
-      context.handle(
-        _kindMeta,
-        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_kindMeta);
-    }
-    if (data.containsKey('worker_id')) {
-      context.handle(
-        _workerIdMeta,
-        workerId.isAcceptableOrUnknown(data['worker_id']!, _workerIdMeta),
-      );
-    }
-    if (data.containsKey('client_id')) {
-      context.handle(
-        _clientIdMeta,
-        clientId.isAcceptableOrUnknown(data['client_id']!, _clientIdMeta),
-      );
-    }
-    if (data.containsKey('amount_fils')) {
-      context.handle(
-        _amountFilsMeta,
-        amountFils.isAcceptableOrUnknown(data['amount_fils']!, _amountFilsMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountFilsMeta);
-    }
-    if (data.containsKey('as_of_date')) {
-      context.handle(
-        _asOfDateMeta,
-        asOfDate.isAcceptableOrUnknown(data['as_of_date']!, _asOfDateMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_asOfDateMeta);
-    }
-    if (data.containsKey('source_note')) {
-      context.handle(
-        _sourceNoteMeta,
-        sourceNote.isAcceptableOrUnknown(data['source_note']!, _sourceNoteMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_sourceNoteMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {kind, workerId},
-    {kind, clientId},
-  ];
-  @override
-  OpeningBalance map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return OpeningBalance(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      tenantId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}tenant_id'],
-      )!,
-      createdAtUtc: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at_utc'],
-      )!,
-      updatedAtUtc: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at_utc'],
-      )!,
-      actorId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}actor_id'],
-      )!,
-      version: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}version'],
-      )!,
-      sourceOperationId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}source_operation_id'],
-      )!,
-      kind: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}kind'],
-      )!,
-      workerId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}worker_id'],
-      ),
-      clientId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}client_id'],
-      ),
-      amountFils: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}amount_fils'],
-      )!,
-      asOfDate: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}as_of_date'],
-      )!,
-      sourceNote: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}source_note'],
-      )!,
-    );
-  }
-
-  @override
-  $OpeningBalancesTable createAlias(String alias) {
-    return $OpeningBalancesTable(attachedDatabase, alias);
-  }
-}
-
-class OpeningBalance extends DataClass implements Insertable<OpeningBalance> {
-  final String id;
-  final String tenantId;
-  final DateTime createdAtUtc;
-  final DateTime updatedAtUtc;
-  final String actorId;
-  final int version;
-  final String sourceOperationId;
-
-  /// 'worker_salary_owed', 'worker_advance' or 'client_receivable'.
-  final String kind;
-  final String? workerId;
-  final String? clientId;
-  final int amountFils;
-  final String asOfDate;
-  final String sourceNote;
-  const OpeningBalance({
-    required this.id,
-    required this.tenantId,
-    required this.createdAtUtc,
-    required this.updatedAtUtc,
-    required this.actorId,
-    required this.version,
-    required this.sourceOperationId,
-    required this.kind,
-    this.workerId,
-    this.clientId,
-    required this.amountFils,
-    required this.asOfDate,
-    required this.sourceNote,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['tenant_id'] = Variable<String>(tenantId);
-    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
-    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
-    map['actor_id'] = Variable<String>(actorId);
-    map['version'] = Variable<int>(version);
-    map['source_operation_id'] = Variable<String>(sourceOperationId);
-    map['kind'] = Variable<String>(kind);
-    if (!nullToAbsent || workerId != null) {
-      map['worker_id'] = Variable<String>(workerId);
-    }
-    if (!nullToAbsent || clientId != null) {
-      map['client_id'] = Variable<String>(clientId);
-    }
-    map['amount_fils'] = Variable<int>(amountFils);
-    map['as_of_date'] = Variable<String>(asOfDate);
-    map['source_note'] = Variable<String>(sourceNote);
-    return map;
-  }
-
-  OpeningBalancesCompanion toCompanion(bool nullToAbsent) {
-    return OpeningBalancesCompanion(
-      id: Value(id),
-      tenantId: Value(tenantId),
-      createdAtUtc: Value(createdAtUtc),
-      updatedAtUtc: Value(updatedAtUtc),
-      actorId: Value(actorId),
-      version: Value(version),
-      sourceOperationId: Value(sourceOperationId),
-      kind: Value(kind),
-      workerId: workerId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(workerId),
-      clientId: clientId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(clientId),
-      amountFils: Value(amountFils),
-      asOfDate: Value(asOfDate),
-      sourceNote: Value(sourceNote),
-    );
-  }
-
-  factory OpeningBalance.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return OpeningBalance(
-      id: serializer.fromJson<String>(json['id']),
-      tenantId: serializer.fromJson<String>(json['tenantId']),
-      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
-      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
-      actorId: serializer.fromJson<String>(json['actorId']),
-      version: serializer.fromJson<int>(json['version']),
-      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
-      kind: serializer.fromJson<String>(json['kind']),
-      workerId: serializer.fromJson<String?>(json['workerId']),
-      clientId: serializer.fromJson<String?>(json['clientId']),
-      amountFils: serializer.fromJson<int>(json['amountFils']),
-      asOfDate: serializer.fromJson<String>(json['asOfDate']),
-      sourceNote: serializer.fromJson<String>(json['sourceNote']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'tenantId': serializer.toJson<String>(tenantId),
-      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
-      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
-      'actorId': serializer.toJson<String>(actorId),
-      'version': serializer.toJson<int>(version),
-      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
-      'kind': serializer.toJson<String>(kind),
-      'workerId': serializer.toJson<String?>(workerId),
-      'clientId': serializer.toJson<String?>(clientId),
-      'amountFils': serializer.toJson<int>(amountFils),
-      'asOfDate': serializer.toJson<String>(asOfDate),
-      'sourceNote': serializer.toJson<String>(sourceNote),
-    };
-  }
-
-  OpeningBalance copyWith({
-    String? id,
-    String? tenantId,
-    DateTime? createdAtUtc,
-    DateTime? updatedAtUtc,
-    String? actorId,
-    int? version,
-    String? sourceOperationId,
-    String? kind,
-    Value<String?> workerId = const Value.absent(),
-    Value<String?> clientId = const Value.absent(),
-    int? amountFils,
-    String? asOfDate,
-    String? sourceNote,
-  }) => OpeningBalance(
-    id: id ?? this.id,
-    tenantId: tenantId ?? this.tenantId,
-    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
-    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
-    actorId: actorId ?? this.actorId,
-    version: version ?? this.version,
-    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
-    kind: kind ?? this.kind,
-    workerId: workerId.present ? workerId.value : this.workerId,
-    clientId: clientId.present ? clientId.value : this.clientId,
-    amountFils: amountFils ?? this.amountFils,
-    asOfDate: asOfDate ?? this.asOfDate,
-    sourceNote: sourceNote ?? this.sourceNote,
-  );
-  OpeningBalance copyWithCompanion(OpeningBalancesCompanion data) {
-    return OpeningBalance(
-      id: data.id.present ? data.id.value : this.id,
-      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
-      createdAtUtc: data.createdAtUtc.present
-          ? data.createdAtUtc.value
-          : this.createdAtUtc,
-      updatedAtUtc: data.updatedAtUtc.present
-          ? data.updatedAtUtc.value
-          : this.updatedAtUtc,
-      actorId: data.actorId.present ? data.actorId.value : this.actorId,
-      version: data.version.present ? data.version.value : this.version,
-      sourceOperationId: data.sourceOperationId.present
-          ? data.sourceOperationId.value
-          : this.sourceOperationId,
-      kind: data.kind.present ? data.kind.value : this.kind,
-      workerId: data.workerId.present ? data.workerId.value : this.workerId,
-      clientId: data.clientId.present ? data.clientId.value : this.clientId,
-      amountFils: data.amountFils.present
-          ? data.amountFils.value
-          : this.amountFils,
-      asOfDate: data.asOfDate.present ? data.asOfDate.value : this.asOfDate,
-      sourceNote: data.sourceNote.present
-          ? data.sourceNote.value
-          : this.sourceNote,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('OpeningBalance(')
-          ..write('id: $id, ')
-          ..write('tenantId: $tenantId, ')
-          ..write('createdAtUtc: $createdAtUtc, ')
-          ..write('updatedAtUtc: $updatedAtUtc, ')
-          ..write('actorId: $actorId, ')
-          ..write('version: $version, ')
-          ..write('sourceOperationId: $sourceOperationId, ')
-          ..write('kind: $kind, ')
-          ..write('workerId: $workerId, ')
-          ..write('clientId: $clientId, ')
-          ..write('amountFils: $amountFils, ')
-          ..write('asOfDate: $asOfDate, ')
-          ..write('sourceNote: $sourceNote')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    id,
-    tenantId,
-    createdAtUtc,
-    updatedAtUtc,
-    actorId,
-    version,
-    sourceOperationId,
-    kind,
-    workerId,
-    clientId,
-    amountFils,
-    asOfDate,
-    sourceNote,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is OpeningBalance &&
-          other.id == this.id &&
-          other.tenantId == this.tenantId &&
-          other.createdAtUtc == this.createdAtUtc &&
-          other.updatedAtUtc == this.updatedAtUtc &&
-          other.actorId == this.actorId &&
-          other.version == this.version &&
-          other.sourceOperationId == this.sourceOperationId &&
-          other.kind == this.kind &&
-          other.workerId == this.workerId &&
-          other.clientId == this.clientId &&
-          other.amountFils == this.amountFils &&
-          other.asOfDate == this.asOfDate &&
-          other.sourceNote == this.sourceNote);
-}
-
-class OpeningBalancesCompanion extends UpdateCompanion<OpeningBalance> {
-  final Value<String> id;
-  final Value<String> tenantId;
-  final Value<DateTime> createdAtUtc;
-  final Value<DateTime> updatedAtUtc;
-  final Value<String> actorId;
-  final Value<int> version;
-  final Value<String> sourceOperationId;
-  final Value<String> kind;
-  final Value<String?> workerId;
-  final Value<String?> clientId;
-  final Value<int> amountFils;
-  final Value<String> asOfDate;
-  final Value<String> sourceNote;
-  final Value<int> rowid;
-  const OpeningBalancesCompanion({
-    this.id = const Value.absent(),
-    this.tenantId = const Value.absent(),
-    this.createdAtUtc = const Value.absent(),
-    this.updatedAtUtc = const Value.absent(),
-    this.actorId = const Value.absent(),
-    this.version = const Value.absent(),
-    this.sourceOperationId = const Value.absent(),
-    this.kind = const Value.absent(),
-    this.workerId = const Value.absent(),
-    this.clientId = const Value.absent(),
-    this.amountFils = const Value.absent(),
-    this.asOfDate = const Value.absent(),
-    this.sourceNote = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  OpeningBalancesCompanion.insert({
-    required String id,
-    required String tenantId,
-    required DateTime createdAtUtc,
-    required DateTime updatedAtUtc,
-    required String actorId,
-    this.version = const Value.absent(),
-    required String sourceOperationId,
-    required String kind,
-    this.workerId = const Value.absent(),
-    this.clientId = const Value.absent(),
-    required int amountFils,
-    required String asOfDate,
-    required String sourceNote,
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       tenantId = Value(tenantId),
-       createdAtUtc = Value(createdAtUtc),
-       updatedAtUtc = Value(updatedAtUtc),
-       actorId = Value(actorId),
-       sourceOperationId = Value(sourceOperationId),
-       kind = Value(kind),
-       amountFils = Value(amountFils),
-       asOfDate = Value(asOfDate),
-       sourceNote = Value(sourceNote);
-  static Insertable<OpeningBalance> custom({
-    Expression<String>? id,
-    Expression<String>? tenantId,
-    Expression<DateTime>? createdAtUtc,
-    Expression<DateTime>? updatedAtUtc,
-    Expression<String>? actorId,
-    Expression<int>? version,
-    Expression<String>? sourceOperationId,
-    Expression<String>? kind,
-    Expression<String>? workerId,
-    Expression<String>? clientId,
-    Expression<int>? amountFils,
-    Expression<String>? asOfDate,
-    Expression<String>? sourceNote,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (tenantId != null) 'tenant_id': tenantId,
-      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
-      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
-      if (actorId != null) 'actor_id': actorId,
-      if (version != null) 'version': version,
-      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
-      if (kind != null) 'kind': kind,
-      if (workerId != null) 'worker_id': workerId,
-      if (clientId != null) 'client_id': clientId,
-      if (amountFils != null) 'amount_fils': amountFils,
-      if (asOfDate != null) 'as_of_date': asOfDate,
-      if (sourceNote != null) 'source_note': sourceNote,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  OpeningBalancesCompanion copyWith({
-    Value<String>? id,
-    Value<String>? tenantId,
-    Value<DateTime>? createdAtUtc,
-    Value<DateTime>? updatedAtUtc,
-    Value<String>? actorId,
-    Value<int>? version,
-    Value<String>? sourceOperationId,
-    Value<String>? kind,
-    Value<String?>? workerId,
-    Value<String?>? clientId,
-    Value<int>? amountFils,
-    Value<String>? asOfDate,
-    Value<String>? sourceNote,
-    Value<int>? rowid,
-  }) {
-    return OpeningBalancesCompanion(
-      id: id ?? this.id,
-      tenantId: tenantId ?? this.tenantId,
-      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
-      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
-      actorId: actorId ?? this.actorId,
-      version: version ?? this.version,
-      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
-      kind: kind ?? this.kind,
-      workerId: workerId ?? this.workerId,
-      clientId: clientId ?? this.clientId,
-      amountFils: amountFils ?? this.amountFils,
-      asOfDate: asOfDate ?? this.asOfDate,
-      sourceNote: sourceNote ?? this.sourceNote,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (tenantId.present) {
-      map['tenant_id'] = Variable<String>(tenantId.value);
-    }
-    if (createdAtUtc.present) {
-      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
-    }
-    if (updatedAtUtc.present) {
-      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
-    }
-    if (actorId.present) {
-      map['actor_id'] = Variable<String>(actorId.value);
-    }
-    if (version.present) {
-      map['version'] = Variable<int>(version.value);
-    }
-    if (sourceOperationId.present) {
-      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
-    }
-    if (kind.present) {
-      map['kind'] = Variable<String>(kind.value);
-    }
-    if (workerId.present) {
-      map['worker_id'] = Variable<String>(workerId.value);
-    }
-    if (clientId.present) {
-      map['client_id'] = Variable<String>(clientId.value);
-    }
-    if (amountFils.present) {
-      map['amount_fils'] = Variable<int>(amountFils.value);
-    }
-    if (asOfDate.present) {
-      map['as_of_date'] = Variable<String>(asOfDate.value);
-    }
-    if (sourceNote.present) {
-      map['source_note'] = Variable<String>(sourceNote.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('OpeningBalancesCompanion(')
-          ..write('id: $id, ')
-          ..write('tenantId: $tenantId, ')
-          ..write('createdAtUtc: $createdAtUtc, ')
-          ..write('updatedAtUtc: $updatedAtUtc, ')
-          ..write('actorId: $actorId, ')
-          ..write('version: $version, ')
-          ..write('sourceOperationId: $sourceOperationId, ')
-          ..write('kind: $kind, ')
-          ..write('workerId: $workerId, ')
-          ..write('clientId: $clientId, ')
-          ..write('amountFils: $amountFils, ')
-          ..write('asOfDate: $asOfDate, ')
-          ..write('sourceNote: $sourceNote, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $WorkerGroupMembersTable extends WorkerGroupMembers
     with TableInfo<$WorkerGroupMembersTable, WorkerGroupMember> {
   @override
@@ -18399,15 +19022,79 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     'CREATE TRIGGER posted_item_no_delete BEFORE DELETE ON payroll_items WHEN OLD.line_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'a posted payroll item is immutable\');END',
     'posted_item_no_delete',
   );
-  late final Index oneLivePayrollLine = Index(
-    'one_live_payroll_line',
-    'CREATE UNIQUE INDEX one_live_payroll_line ON payroll_lines (worker_id, period_from) WHERE NOT reversed',
+  late final $PeriodLocksTable periodLocks = $PeriodLocksTable(this);
+  late final Trigger lockNoDelete = Trigger(
+    'CREATE TRIGGER lock_no_delete BEFORE DELETE ON period_locks BEGIN SELECT RAISE (ABORT, \'a period lock stays on record\');END',
+    'lock_no_delete',
+  );
+  late final Trigger lockNoEdit = Trigger(
+    'CREATE TRIGGER lock_no_edit BEFORE UPDATE OF month, last_day ON period_locks BEGIN SELECT RAISE (ABORT, \'a period lock stays on record\');END',
+    'lock_no_edit',
+  );
+  late final Trigger lockStaysReopened = Trigger(
+    'CREATE TRIGGER lock_stays_reopened BEFORE UPDATE OF reopened ON period_locks WHEN OLD.reopened BEGIN SELECT RAISE (ABORT, \'a reopened lock stays reopened\');END',
+    'lock_stays_reopened',
+  );
+  late final Index oneLivePeriodLock = Index(
+    'one_live_period_lock',
+    'CREATE UNIQUE INDEX one_live_period_lock ON period_locks (month) WHERE NOT reopened',
+  );
+  late final Trigger closedCashNoInsert = Trigger(
+    'CREATE TRIGGER closed_cash_no_insert BEFORE INSERT ON cash_entries WHEN NEW.entry_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_cash_no_insert',
   );
   late final $WorkerGroupsTable workerGroups = $WorkerGroupsTable(this);
   late final $AttendanceBatchesTable attendanceBatches =
       $AttendanceBatchesTable(this);
   late final $AttendanceEntriesTable attendanceEntries =
       $AttendanceEntriesTable(this);
+  late final Trigger closedEntryNoInsert = Trigger(
+    'CREATE TRIGGER closed_entry_no_insert BEFORE INSERT ON attendance_entries WHEN NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_entry_no_insert',
+  );
+  late final Trigger closedEntryNoEdit = Trigger(
+    'CREATE TRIGGER closed_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN(OLD.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened))AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes OR NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils OR NEW.worker_id <> OLD.worker_id OR NEW.client_id <> OLD.client_id OR NEW.site_id <> OLD.site_id OR NEW.work_date <> OLD.work_date OR NEW.superseded <> OLD.superseded OR NEW.attendance_status <> OLD.attendance_status)BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_entry_no_edit',
+  );
+  late final Trigger closedEntryNoDelete = Trigger(
+    'CREATE TRIGGER closed_entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_entry_no_delete',
+  );
+  late final Trigger closedItemNoInsert = Trigger(
+    'CREATE TRIGGER closed_item_no_insert BEFORE INSERT ON payroll_items WHEN NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_item_no_insert',
+  );
+  late final Trigger closedItemNoEdit = Trigger(
+    'CREATE TRIGGER closed_item_no_edit BEFORE UPDATE ON payroll_items WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_item_no_edit',
+  );
+  late final Trigger closedItemNoDelete = Trigger(
+    'CREATE TRIGGER closed_item_no_delete BEFORE DELETE ON payroll_items WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_item_no_delete',
+  );
+  late final Trigger closedLineNoInsert = Trigger(
+    'CREATE TRIGGER closed_line_no_insert BEFORE INSERT ON payroll_lines WHEN NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_line_no_insert',
+  );
+  late final Trigger closedLineNoReverse = Trigger(
+    'CREATE TRIGGER closed_line_no_reverse BEFORE UPDATE OF reversed ON payroll_lines WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_line_no_reverse',
+  );
+  late final $OpeningBalancesTable openingBalances = $OpeningBalancesTable(
+    this,
+  );
+  late final Trigger closedOpeningNoInsert = Trigger(
+    'CREATE TRIGGER closed_opening_no_insert BEFORE INSERT ON opening_balances WHEN NEW.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_opening_no_insert',
+  );
+  late final Trigger closedOpeningNoEdit = Trigger(
+    'CREATE TRIGGER closed_opening_no_edit BEFORE UPDATE ON opening_balances WHEN OLD.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_opening_no_edit',
+  );
+  late final Index oneLivePayrollLine = Index(
+    'one_live_payroll_line',
+    'CREATE UNIQUE INDEX one_live_payroll_line ON payroll_lines (worker_id, period_from) WHERE NOT reversed',
+  );
   late final Trigger approvedEntryNoEdit = Trigger(
     'CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN OLD.state IN (\'approved\', \'linked\') AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes OR(OLD.client_rate_fils IS NOT NULL AND(NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils))OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)BEGIN SELECT RAISE (ABORT, \'approved attendance is immutable\');END',
     'approved_entry_no_edit',
@@ -18423,9 +19110,6 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
   late final $TenantProfilesTable tenantProfiles = $TenantProfilesTable(this);
   late final $PayContractsTable payContracts = $PayContractsTable(this);
   late final $BillingContractsTable billingContracts = $BillingContractsTable(
-    this,
-  );
-  late final $OpeningBalancesTable openingBalances = $OpeningBalancesTable(
     this,
   );
   late final $WorkerGroupMembersTable workerGroupMembers =
@@ -18488,17 +19172,33 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     payrollItems,
     postedItemNoEdit,
     postedItemNoDelete,
-    oneLivePayrollLine,
+    periodLocks,
+    lockNoDelete,
+    lockNoEdit,
+    lockStaysReopened,
+    oneLivePeriodLock,
+    closedCashNoInsert,
     workerGroups,
     attendanceBatches,
     attendanceEntries,
+    closedEntryNoInsert,
+    closedEntryNoEdit,
+    closedEntryNoDelete,
+    closedItemNoInsert,
+    closedItemNoEdit,
+    closedItemNoDelete,
+    closedLineNoInsert,
+    closedLineNoReverse,
+    openingBalances,
+    closedOpeningNoInsert,
+    closedOpeningNoEdit,
+    oneLivePayrollLine,
     approvedEntryNoEdit,
     linkedEntryKeepsState,
     entryNoDelete,
     tenantProfiles,
     payContracts,
     billingContracts,
-    openingBalances,
     workerGroupMembers,
     outbox,
     idxCashDate,
@@ -18606,6 +19306,104 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
       on: TableUpdateQuery.onTableName(
         'payroll_items',
         limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'period_locks',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'period_locks',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'period_locks',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'cash_entries',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'attendance_entries',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'attendance_entries',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'attendance_entries',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_items',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_items',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_items',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_lines',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_lines',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'opening_balances',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'opening_balances',
+        limitUpdateKind: UpdateKind.update,
       ),
       result: [],
     ),
@@ -19669,6 +20467,27 @@ final class $$WorkersTableReferences
     );
   }
 
+  static MultiTypedResultKey<$OpeningBalancesTable, List<OpeningBalance>>
+  _openingBalancesRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.openingBalances,
+        aliasName: 'workers__id__opening_balances__worker_id',
+      );
+
+  $$OpeningBalancesTableProcessedTableManager get openingBalancesRefs {
+    final manager = $$OpeningBalancesTableTableManager(
+      $_db,
+      $_db.openingBalances,
+    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _openingBalancesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<$PayContractsTable, List<PayContract>>
   _payContractsRefsTable(_$TenantDatabase db) => MultiTypedResultKey.fromTable(
     db.payContracts,
@@ -19702,27 +20521,6 @@ final class $$WorkersTableReferences
 
     final cache = $_typedResult.readTableOrNull(
       _billingContractsRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$OpeningBalancesTable, List<OpeningBalance>>
-  _openingBalancesRefsTable(_$TenantDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.openingBalances,
-        aliasName: 'workers__id__opening_balances__worker_id',
-      );
-
-  $$OpeningBalancesTableProcessedTableManager get openingBalancesRefs {
-    final manager = $$OpeningBalancesTableTableManager(
-      $_db,
-      $_db.openingBalances,
-    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _openingBalancesRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
@@ -19963,6 +20761,31 @@ class $$WorkersTableFilterComposer
     return f(composer);
   }
 
+  Expression<bool> openingBalancesRefs(
+    Expression<bool> Function($$OpeningBalancesTableFilterComposer f) f,
+  ) {
+    final $$OpeningBalancesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.openingBalances,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$OpeningBalancesTableFilterComposer(
+            $db: $db,
+            $table: $db.openingBalances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<bool> payContractsRefs(
     Expression<bool> Function($$PayContractsTableFilterComposer f) f,
   ) {
@@ -20004,31 +20827,6 @@ class $$WorkersTableFilterComposer
           }) => $$BillingContractsTableFilterComposer(
             $db: $db,
             $table: $db.billingContracts,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<bool> openingBalancesRefs(
-    Expression<bool> Function($$OpeningBalancesTableFilterComposer f) f,
-  ) {
-    final $$OpeningBalancesTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.openingBalances,
-      getReferencedColumn: (t) => t.workerId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$OpeningBalancesTableFilterComposer(
-            $db: $db,
-            $table: $db.openingBalances,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -20372,6 +21170,31 @@ class $$WorkersTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> openingBalancesRefs<T extends Object>(
+    Expression<T> Function($$OpeningBalancesTableAnnotationComposer a) f,
+  ) {
+    final $$OpeningBalancesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.openingBalances,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$OpeningBalancesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.openingBalances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> payContractsRefs<T extends Object>(
     Expression<T> Function($$PayContractsTableAnnotationComposer a) f,
   ) {
@@ -20413,31 +21236,6 @@ class $$WorkersTableAnnotationComposer
           }) => $$BillingContractsTableAnnotationComposer(
             $db: $db,
             $table: $db.billingContracts,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<T> openingBalancesRefs<T extends Object>(
-    Expression<T> Function($$OpeningBalancesTableAnnotationComposer a) f,
-  ) {
-    final $$OpeningBalancesTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.openingBalances,
-      getReferencedColumn: (t) => t.workerId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$OpeningBalancesTableAnnotationComposer(
-            $db: $db,
-            $table: $db.openingBalances,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -20493,9 +21291,9 @@ class $$WorkersTableTableManager
             bool payrollLinesRefs,
             bool payrollItemsRefs,
             bool attendanceEntriesRefs,
+            bool openingBalancesRefs,
             bool payContractsRefs,
             bool billingContractsRefs,
-            bool openingBalancesRefs,
             bool workerGroupMembersRefs,
           })
         > {
@@ -20605,9 +21403,9 @@ class $$WorkersTableTableManager
                 payrollLinesRefs = false,
                 payrollItemsRefs = false,
                 attendanceEntriesRefs = false,
+                openingBalancesRefs = false,
                 payContractsRefs = false,
                 billingContractsRefs = false,
-                openingBalancesRefs = false,
                 workerGroupMembersRefs = false,
               }) {
                 return PrefetchHooks(
@@ -20617,9 +21415,9 @@ class $$WorkersTableTableManager
                     if (payrollLinesRefs) db.payrollLines,
                     if (payrollItemsRefs) db.payrollItems,
                     if (attendanceEntriesRefs) db.attendanceEntries,
+                    if (openingBalancesRefs) db.openingBalances,
                     if (payContractsRefs) db.payContracts,
                     if (billingContractsRefs) db.billingContracts,
-                    if (openingBalancesRefs) db.openingBalances,
                     if (workerGroupMembersRefs) db.workerGroupMembers,
                   ],
                   addJoins:
@@ -20734,6 +21532,26 @@ class $$WorkersTableTableManager
                           referencedColumn: 'worker_id',
                           typedResults: items,
                         ),
+                      if (openingBalancesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Worker,
+                          $WorkersTable,
+                          OpeningBalance,
+                          $OpeningBalancesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkersTableReferences
+                              ._openingBalancesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).openingBalancesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'worker_id',
+                          typedResults: items,
+                        ),
                       if (payContractsRefs)
                         await $_getPrefetchedDataByColumns<
                           Worker,
@@ -20770,26 +21588,6 @@ class $$WorkersTableTableManager
                                 table,
                                 p0,
                               ).billingContractsRefs,
-                          currentColumn: 'id',
-                          referencedColumn: 'worker_id',
-                          typedResults: items,
-                        ),
-                      if (openingBalancesRefs)
-                        await $_getPrefetchedDataByColumns<
-                          Worker,
-                          $WorkersTable,
-                          OpeningBalance,
-                          $OpeningBalancesTable
-                        >(
-                          currentTable: table,
-                          referencedTable: $$WorkersTableReferences
-                              ._openingBalancesRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$WorkersTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).openingBalancesRefs,
                           currentColumn: 'id',
                           referencedColumn: 'worker_id',
                           typedResults: items,
@@ -20840,9 +21638,9 @@ typedef $$WorkersTableProcessedTableManager =
         bool payrollLinesRefs,
         bool payrollItemsRefs,
         bool attendanceEntriesRefs,
+        bool openingBalancesRefs,
         bool payContractsRefs,
         bool billingContractsRefs,
-        bool openingBalancesRefs,
         bool workerGroupMembersRefs,
       })
     >;
@@ -20992,27 +21790,6 @@ final class $$ClientsTableReferences
     );
   }
 
-  static MultiTypedResultKey<$BillingContractsTable, List<BillingContract>>
-  _billingContractsRefsTable(_$TenantDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.billingContracts,
-        aliasName: 'clients__id__billing_contracts__client_id',
-      );
-
-  $$BillingContractsTableProcessedTableManager get billingContractsRefs {
-    final manager = $$BillingContractsTableTableManager(
-      $_db,
-      $_db.billingContracts,
-    ).filter((f) => f.clientId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _billingContractsRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
   static MultiTypedResultKey<$OpeningBalancesTable, List<OpeningBalance>>
   _openingBalancesRefsTable(_$TenantDatabase db) =>
       MultiTypedResultKey.fromTable(
@@ -21028,6 +21805,27 @@ final class $$ClientsTableReferences
 
     final cache = $_typedResult.readTableOrNull(
       _openingBalancesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$BillingContractsTable, List<BillingContract>>
+  _billingContractsRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.billingContracts,
+        aliasName: 'clients__id__billing_contracts__client_id',
+      );
+
+  $$BillingContractsTableProcessedTableManager get billingContractsRefs {
+    final manager = $$BillingContractsTableTableManager(
+      $_db,
+      $_db.billingContracts,
+    ).filter((f) => f.clientId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _billingContractsRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
@@ -21264,31 +22062,6 @@ class $$ClientsTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> billingContractsRefs(
-    Expression<bool> Function($$BillingContractsTableFilterComposer f) f,
-  ) {
-    final $$BillingContractsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.billingContracts,
-      getReferencedColumn: (t) => t.clientId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BillingContractsTableFilterComposer(
-            $db: $db,
-            $table: $db.billingContracts,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
   Expression<bool> openingBalancesRefs(
     Expression<bool> Function($$OpeningBalancesTableFilterComposer f) f,
   ) {
@@ -21305,6 +22078,31 @@ class $$ClientsTableFilterComposer
           }) => $$OpeningBalancesTableFilterComposer(
             $db: $db,
             $table: $db.openingBalances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> billingContractsRefs(
+    Expression<bool> Function($$BillingContractsTableFilterComposer f) f,
+  ) {
+    final $$BillingContractsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.billingContracts,
+      getReferencedColumn: (t) => t.clientId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BillingContractsTableFilterComposer(
+            $db: $db,
+            $table: $db.billingContracts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -21627,31 +22425,6 @@ class $$ClientsTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> billingContractsRefs<T extends Object>(
-    Expression<T> Function($$BillingContractsTableAnnotationComposer a) f,
-  ) {
-    final $$BillingContractsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.billingContracts,
-      getReferencedColumn: (t) => t.clientId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BillingContractsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.billingContracts,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
   Expression<T> openingBalancesRefs<T extends Object>(
     Expression<T> Function($$OpeningBalancesTableAnnotationComposer a) f,
   ) {
@@ -21668,6 +22441,31 @@ class $$ClientsTableAnnotationComposer
           }) => $$OpeningBalancesTableAnnotationComposer(
             $db: $db,
             $table: $db.openingBalances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> billingContractsRefs<T extends Object>(
+    Expression<T> Function($$BillingContractsTableAnnotationComposer a) f,
+  ) {
+    final $$BillingContractsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.billingContracts,
+      getReferencedColumn: (t) => t.clientId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BillingContractsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.billingContracts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -21697,8 +22495,8 @@ class $$ClientsTableTableManager
             bool workerGroupsRefs,
             bool attendanceBatchesRefs,
             bool attendanceEntriesRefs,
-            bool billingContractsRefs,
             bool openingBalancesRefs,
+            bool billingContractsRefs,
           })
         > {
   $$ClientsTableTableManager(_$TenantDatabase db, $ClientsTable table)
@@ -21815,8 +22613,8 @@ class $$ClientsTableTableManager
                 workerGroupsRefs = false,
                 attendanceBatchesRefs = false,
                 attendanceEntriesRefs = false,
-                billingContractsRefs = false,
                 openingBalancesRefs = false,
+                billingContractsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -21826,8 +22624,8 @@ class $$ClientsTableTableManager
                     if (workerGroupsRefs) db.workerGroups,
                     if (attendanceBatchesRefs) db.attendanceBatches,
                     if (attendanceEntriesRefs) db.attendanceEntries,
-                    if (billingContractsRefs) db.billingContracts,
                     if (openingBalancesRefs) db.openingBalances,
+                    if (billingContractsRefs) db.billingContracts,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -21928,26 +22726,6 @@ class $$ClientsTableTableManager
                           referencedColumn: 'client_id',
                           typedResults: items,
                         ),
-                      if (billingContractsRefs)
-                        await $_getPrefetchedDataByColumns<
-                          Client,
-                          $ClientsTable,
-                          BillingContract,
-                          $BillingContractsTable
-                        >(
-                          currentTable: table,
-                          referencedTable: $$ClientsTableReferences
-                              ._billingContractsRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$ClientsTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).billingContractsRefs,
-                          currentColumn: 'id',
-                          referencedColumn: 'client_id',
-                          typedResults: items,
-                        ),
                       if (openingBalancesRefs)
                         await $_getPrefetchedDataByColumns<
                           Client,
@@ -21964,6 +22742,26 @@ class $$ClientsTableTableManager
                                 table,
                                 p0,
                               ).openingBalancesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'client_id',
+                          typedResults: items,
+                        ),
+                      if (billingContractsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Client,
+                          $ClientsTable,
+                          BillingContract,
+                          $BillingContractsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ClientsTableReferences
+                              ._billingContractsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ClientsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).billingContractsRefs,
                           currentColumn: 'id',
                           referencedColumn: 'client_id',
                           typedResults: items,
@@ -21994,8 +22792,8 @@ typedef $$ClientsTableProcessedTableManager =
         bool workerGroupsRefs,
         bool attendanceBatchesRefs,
         bool attendanceEntriesRefs,
-        bool billingContractsRefs,
         bool openingBalancesRefs,
+        bool billingContractsRefs,
       })
     >;
 typedef $$SitesTableCreateCompanionBuilder = SitesCompanion Function({
@@ -26720,6 +27518,316 @@ typedef $$PayrollItemsTableProcessedTableManager =
       PayrollItem,
       PrefetchHooks Function({bool workerId, bool roomId, bool lineId})
     >;
+typedef $$PeriodLocksTableCreateCompanionBuilder =
+    PeriodLocksCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      required String month,
+      required String lastDay,
+      Value<bool> reopened,
+      Value<int> rowid,
+    });
+typedef $$PeriodLocksTableUpdateCompanionBuilder =
+    PeriodLocksCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String> month,
+      Value<String> lastDay,
+      Value<bool> reopened,
+      Value<int> rowid,
+    });
+
+class $$PeriodLocksTableFilterComposer
+    extends Composer<_$TenantDatabase, $PeriodLocksTable> {
+  $$PeriodLocksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get month => $composableBuilder(
+    column: $table.month,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastDay => $composableBuilder(
+    column: $table.lastDay,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get reopened => $composableBuilder(
+    column: $table.reopened,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PeriodLocksTableOrderingComposer
+    extends Composer<_$TenantDatabase, $PeriodLocksTable> {
+  $$PeriodLocksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get month => $composableBuilder(
+    column: $table.month,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastDay => $composableBuilder(
+    column: $table.lastDay,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get reopened => $composableBuilder(
+    column: $table.reopened,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PeriodLocksTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $PeriodLocksTable> {
+  $$PeriodLocksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get month =>
+      $composableBuilder(column: $table.month, builder: (column) => column);
+
+  GeneratedColumn<String> get lastDay =>
+      $composableBuilder(column: $table.lastDay, builder: (column) => column);
+
+  GeneratedColumn<bool> get reopened =>
+      $composableBuilder(column: $table.reopened, builder: (column) => column);
+}
+
+class $$PeriodLocksTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $PeriodLocksTable,
+          PeriodLock,
+          $$PeriodLocksTableFilterComposer,
+          $$PeriodLocksTableOrderingComposer,
+          $$PeriodLocksTableAnnotationComposer,
+          $$PeriodLocksTableCreateCompanionBuilder,
+          $$PeriodLocksTableUpdateCompanionBuilder,
+          (
+            PeriodLock,
+            BaseReferences<_$TenantDatabase, $PeriodLocksTable, PeriodLock>,
+          ),
+          PeriodLock,
+          PrefetchHooks Function()
+        > {
+  $$PeriodLocksTableTableManager(_$TenantDatabase db, $PeriodLocksTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PeriodLocksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PeriodLocksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PeriodLocksTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> month = const Value.absent(),
+                Value<String> lastDay = const Value.absent(),
+                Value<bool> reopened = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PeriodLocksCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                month: month,
+                lastDay: lastDay,
+                reopened: reopened,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String month,
+                required String lastDay,
+                Value<bool> reopened = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PeriodLocksCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                month: month,
+                lastDay: lastDay,
+                reopened: reopened,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$PeriodLocksTable, PeriodLock>(table),
+                  BaseReferences<
+                    _$TenantDatabase,
+                    $PeriodLocksTable,
+                    PeriodLock
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PeriodLocksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $PeriodLocksTable,
+      PeriodLock,
+      $$PeriodLocksTableFilterComposer,
+      $$PeriodLocksTableOrderingComposer,
+      $$PeriodLocksTableAnnotationComposer,
+      $$PeriodLocksTableCreateCompanionBuilder,
+      $$PeriodLocksTableUpdateCompanionBuilder,
+      (
+        PeriodLock,
+        BaseReferences<_$TenantDatabase, $PeriodLocksTable, PeriodLock>,
+      ),
+      PeriodLock,
+      PrefetchHooks Function()
+    >;
 typedef $$WorkerGroupsTableCreateCompanionBuilder =
     WorkerGroupsCompanion Function({
       required String id,
@@ -29966,6 +31074,578 @@ typedef $$AttendanceEntriesTableProcessedTableManager =
         bool payrollLineId,
       })
     >;
+typedef $$OpeningBalancesTableCreateCompanionBuilder =
+    OpeningBalancesCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      required String kind,
+      Value<String?> workerId,
+      Value<String?> clientId,
+      required int amountFils,
+      required String asOfDate,
+      required String sourceNote,
+      Value<int> rowid,
+    });
+typedef $$OpeningBalancesTableUpdateCompanionBuilder =
+    OpeningBalancesCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String> kind,
+      Value<String?> workerId,
+      Value<String?> clientId,
+      Value<int> amountFils,
+      Value<String> asOfDate,
+      Value<String> sourceNote,
+      Value<int> rowid,
+    });
+
+final class $$OpeningBalancesTableReferences
+    extends
+        BaseReferences<
+          _$TenantDatabase,
+          $OpeningBalancesTable,
+          OpeningBalance
+        > {
+  $$OpeningBalancesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WorkersTable _workerIdTable(_$TenantDatabase db) =>
+      db.workers.createAlias('opening_balances__worker_id__workers__id');
+
+  $$WorkersTableProcessedTableManager? get workerId {
+    final $_column = $_itemColumn<String>('worker_id');
+    if ($_column == null) return null;
+    final manager = $$WorkersTableTableManager(
+      $_db,
+      $_db.workers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_workerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $ClientsTable _clientIdTable(_$TenantDatabase db) =>
+      db.clients.createAlias('opening_balances__client_id__clients__id');
+
+  $$ClientsTableProcessedTableManager? get clientId {
+    final $_column = $_itemColumn<String>('client_id');
+    if ($_column == null) return null;
+    final manager = $$ClientsTableTableManager(
+      $_db,
+      $_db.clients,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_clientIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$OpeningBalancesTableFilterComposer
+    extends Composer<_$TenantDatabase, $OpeningBalancesTable> {
+  $$OpeningBalancesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get asOfDate => $composableBuilder(
+    column: $table.asOfDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceNote => $composableBuilder(
+    column: $table.sourceNote,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$WorkersTableFilterComposer get workerId {
+    final $$WorkersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workerId,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableFilterComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ClientsTableFilterComposer get clientId {
+    final $$ClientsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableFilterComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$OpeningBalancesTableOrderingComposer
+    extends Composer<_$TenantDatabase, $OpeningBalancesTable> {
+  $$OpeningBalancesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get asOfDate => $composableBuilder(
+    column: $table.asOfDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceNote => $composableBuilder(
+    column: $table.sourceNote,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$WorkersTableOrderingComposer get workerId {
+    final $$WorkersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workerId,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableOrderingComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ClientsTableOrderingComposer get clientId {
+    final $$ClientsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableOrderingComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$OpeningBalancesTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $OpeningBalancesTable> {
+  $$OpeningBalancesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get asOfDate =>
+      $composableBuilder(column: $table.asOfDate, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceNote => $composableBuilder(
+    column: $table.sourceNote,
+    builder: (column) => column,
+  );
+
+  $$WorkersTableAnnotationComposer get workerId {
+    final $$WorkersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workerId,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ClientsTableAnnotationComposer get clientId {
+    final $$ClientsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$OpeningBalancesTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $OpeningBalancesTable,
+          OpeningBalance,
+          $$OpeningBalancesTableFilterComposer,
+          $$OpeningBalancesTableOrderingComposer,
+          $$OpeningBalancesTableAnnotationComposer,
+          $$OpeningBalancesTableCreateCompanionBuilder,
+          $$OpeningBalancesTableUpdateCompanionBuilder,
+          (OpeningBalance, $$OpeningBalancesTableReferences),
+          OpeningBalance,
+          PrefetchHooks Function({bool workerId, bool clientId})
+        > {
+  $$OpeningBalancesTableTableManager(
+    _$TenantDatabase db,
+    $OpeningBalancesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$OpeningBalancesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$OpeningBalancesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$OpeningBalancesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<String?> workerId = const Value.absent(),
+                Value<String?> clientId = const Value.absent(),
+                Value<int> amountFils = const Value.absent(),
+                Value<String> asOfDate = const Value.absent(),
+                Value<String> sourceNote = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => OpeningBalancesCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                kind: kind,
+                workerId: workerId,
+                clientId: clientId,
+                amountFils: amountFils,
+                asOfDate: asOfDate,
+                sourceNote: sourceNote,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String kind,
+                Value<String?> workerId = const Value.absent(),
+                Value<String?> clientId = const Value.absent(),
+                required int amountFils,
+                required String asOfDate,
+                required String sourceNote,
+                Value<int> rowid = const Value.absent(),
+              }) => OpeningBalancesCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                kind: kind,
+                workerId: workerId,
+                clientId: clientId,
+                amountFils: amountFils,
+                asOfDate: asOfDate,
+                sourceNote: sourceNote,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$OpeningBalancesTable, OpeningBalance>(table),
+                  $$OpeningBalancesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({workerId = false, clientId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (workerId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.workerId,
+                        referencedTable: $$OpeningBalancesTableReferences
+                            ._workerIdTable(db),
+                        referencedColumn: $$OpeningBalancesTableReferences
+                            ._workerIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+                    if (clientId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.clientId,
+                        referencedTable: $$OpeningBalancesTableReferences
+                            ._clientIdTable(db),
+                        referencedColumn: $$OpeningBalancesTableReferences
+                            ._clientIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$OpeningBalancesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $OpeningBalancesTable,
+      OpeningBalance,
+      $$OpeningBalancesTableFilterComposer,
+      $$OpeningBalancesTableOrderingComposer,
+      $$OpeningBalancesTableAnnotationComposer,
+      $$OpeningBalancesTableCreateCompanionBuilder,
+      $$OpeningBalancesTableUpdateCompanionBuilder,
+      (OpeningBalance, $$OpeningBalancesTableReferences),
+      OpeningBalance,
+      PrefetchHooks Function({bool workerId, bool clientId})
+    >;
 typedef $$TenantProfilesTableCreateCompanionBuilder =
     TenantProfilesCompanion Function({
       required String id,
@@ -31971,578 +33651,6 @@ typedef $$BillingContractsTableProcessedTableManager =
       BillingContract,
       PrefetchHooks Function({bool clientId, bool siteId, bool workerId})
     >;
-typedef $$OpeningBalancesTableCreateCompanionBuilder =
-    OpeningBalancesCompanion Function({
-      required String id,
-      required String tenantId,
-      required DateTime createdAtUtc,
-      required DateTime updatedAtUtc,
-      required String actorId,
-      Value<int> version,
-      required String sourceOperationId,
-      required String kind,
-      Value<String?> workerId,
-      Value<String?> clientId,
-      required int amountFils,
-      required String asOfDate,
-      required String sourceNote,
-      Value<int> rowid,
-    });
-typedef $$OpeningBalancesTableUpdateCompanionBuilder =
-    OpeningBalancesCompanion Function({
-      Value<String> id,
-      Value<String> tenantId,
-      Value<DateTime> createdAtUtc,
-      Value<DateTime> updatedAtUtc,
-      Value<String> actorId,
-      Value<int> version,
-      Value<String> sourceOperationId,
-      Value<String> kind,
-      Value<String?> workerId,
-      Value<String?> clientId,
-      Value<int> amountFils,
-      Value<String> asOfDate,
-      Value<String> sourceNote,
-      Value<int> rowid,
-    });
-
-final class $$OpeningBalancesTableReferences
-    extends
-        BaseReferences<
-          _$TenantDatabase,
-          $OpeningBalancesTable,
-          OpeningBalance
-        > {
-  $$OpeningBalancesTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $WorkersTable _workerIdTable(_$TenantDatabase db) =>
-      db.workers.createAlias('opening_balances__worker_id__workers__id');
-
-  $$WorkersTableProcessedTableManager? get workerId {
-    final $_column = $_itemColumn<String>('worker_id');
-    if ($_column == null) return null;
-    final manager = $$WorkersTableTableManager(
-      $_db,
-      $_db.workers,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_workerIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $ClientsTable _clientIdTable(_$TenantDatabase db) =>
-      db.clients.createAlias('opening_balances__client_id__clients__id');
-
-  $$ClientsTableProcessedTableManager? get clientId {
-    final $_column = $_itemColumn<String>('client_id');
-    if ($_column == null) return null;
-    final manager = $$ClientsTableTableManager(
-      $_db,
-      $_db.clients,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_clientIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$OpeningBalancesTableFilterComposer
-    extends Composer<_$TenantDatabase, $OpeningBalancesTable> {
-  $$OpeningBalancesTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get tenantId => $composableBuilder(
-    column: $table.tenantId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
-    column: $table.createdAtUtc,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
-    column: $table.updatedAtUtc,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get actorId => $composableBuilder(
-    column: $table.actorId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get version => $composableBuilder(
-    column: $table.version,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get sourceOperationId => $composableBuilder(
-    column: $table.sourceOperationId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get kind => $composableBuilder(
-    column: $table.kind,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get amountFils => $composableBuilder(
-    column: $table.amountFils,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get asOfDate => $composableBuilder(
-    column: $table.asOfDate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get sourceNote => $composableBuilder(
-    column: $table.sourceNote,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$WorkersTableFilterComposer get workerId {
-    final $$WorkersTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.workerId,
-      referencedTable: $db.workers,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorkersTableFilterComposer(
-            $db: $db,
-            $table: $db.workers,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$ClientsTableFilterComposer get clientId {
-    final $$ClientsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.clientId,
-      referencedTable: $db.clients,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ClientsTableFilterComposer(
-            $db: $db,
-            $table: $db.clients,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$OpeningBalancesTableOrderingComposer
-    extends Composer<_$TenantDatabase, $OpeningBalancesTable> {
-  $$OpeningBalancesTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get tenantId => $composableBuilder(
-    column: $table.tenantId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
-    column: $table.createdAtUtc,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
-    column: $table.updatedAtUtc,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get actorId => $composableBuilder(
-    column: $table.actorId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get version => $composableBuilder(
-    column: $table.version,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
-    column: $table.sourceOperationId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get kind => $composableBuilder(
-    column: $table.kind,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get amountFils => $composableBuilder(
-    column: $table.amountFils,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get asOfDate => $composableBuilder(
-    column: $table.asOfDate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get sourceNote => $composableBuilder(
-    column: $table.sourceNote,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$WorkersTableOrderingComposer get workerId {
-    final $$WorkersTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.workerId,
-      referencedTable: $db.workers,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorkersTableOrderingComposer(
-            $db: $db,
-            $table: $db.workers,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$ClientsTableOrderingComposer get clientId {
-    final $$ClientsTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.clientId,
-      referencedTable: $db.clients,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ClientsTableOrderingComposer(
-            $db: $db,
-            $table: $db.clients,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$OpeningBalancesTableAnnotationComposer
-    extends Composer<_$TenantDatabase, $OpeningBalancesTable> {
-  $$OpeningBalancesTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get tenantId =>
-      $composableBuilder(column: $table.tenantId, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
-    column: $table.createdAtUtc,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
-    column: $table.updatedAtUtc,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get actorId =>
-      $composableBuilder(column: $table.actorId, builder: (column) => column);
-
-  GeneratedColumn<int> get version =>
-      $composableBuilder(column: $table.version, builder: (column) => column);
-
-  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
-    column: $table.sourceOperationId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get kind =>
-      $composableBuilder(column: $table.kind, builder: (column) => column);
-
-  GeneratedColumn<int> get amountFils => $composableBuilder(
-    column: $table.amountFils,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get asOfDate =>
-      $composableBuilder(column: $table.asOfDate, builder: (column) => column);
-
-  GeneratedColumn<String> get sourceNote => $composableBuilder(
-    column: $table.sourceNote,
-    builder: (column) => column,
-  );
-
-  $$WorkersTableAnnotationComposer get workerId {
-    final $$WorkersTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.workerId,
-      referencedTable: $db.workers,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorkersTableAnnotationComposer(
-            $db: $db,
-            $table: $db.workers,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$ClientsTableAnnotationComposer get clientId {
-    final $$ClientsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.clientId,
-      referencedTable: $db.clients,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ClientsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.clients,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$OpeningBalancesTableTableManager
-    extends
-        RootTableManager<
-          _$TenantDatabase,
-          $OpeningBalancesTable,
-          OpeningBalance,
-          $$OpeningBalancesTableFilterComposer,
-          $$OpeningBalancesTableOrderingComposer,
-          $$OpeningBalancesTableAnnotationComposer,
-          $$OpeningBalancesTableCreateCompanionBuilder,
-          $$OpeningBalancesTableUpdateCompanionBuilder,
-          (OpeningBalance, $$OpeningBalancesTableReferences),
-          OpeningBalance,
-          PrefetchHooks Function({bool workerId, bool clientId})
-        > {
-  $$OpeningBalancesTableTableManager(
-    _$TenantDatabase db,
-    $OpeningBalancesTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$OpeningBalancesTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$OpeningBalancesTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$OpeningBalancesTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String> tenantId = const Value.absent(),
-                Value<DateTime> createdAtUtc = const Value.absent(),
-                Value<DateTime> updatedAtUtc = const Value.absent(),
-                Value<String> actorId = const Value.absent(),
-                Value<int> version = const Value.absent(),
-                Value<String> sourceOperationId = const Value.absent(),
-                Value<String> kind = const Value.absent(),
-                Value<String?> workerId = const Value.absent(),
-                Value<String?> clientId = const Value.absent(),
-                Value<int> amountFils = const Value.absent(),
-                Value<String> asOfDate = const Value.absent(),
-                Value<String> sourceNote = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => OpeningBalancesCompanion(
-                id: id,
-                tenantId: tenantId,
-                createdAtUtc: createdAtUtc,
-                updatedAtUtc: updatedAtUtc,
-                actorId: actorId,
-                version: version,
-                sourceOperationId: sourceOperationId,
-                kind: kind,
-                workerId: workerId,
-                clientId: clientId,
-                amountFils: amountFils,
-                asOfDate: asOfDate,
-                sourceNote: sourceNote,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                required String tenantId,
-                required DateTime createdAtUtc,
-                required DateTime updatedAtUtc,
-                required String actorId,
-                Value<int> version = const Value.absent(),
-                required String sourceOperationId,
-                required String kind,
-                Value<String?> workerId = const Value.absent(),
-                Value<String?> clientId = const Value.absent(),
-                required int amountFils,
-                required String asOfDate,
-                required String sourceNote,
-                Value<int> rowid = const Value.absent(),
-              }) => OpeningBalancesCompanion.insert(
-                id: id,
-                tenantId: tenantId,
-                createdAtUtc: createdAtUtc,
-                updatedAtUtc: updatedAtUtc,
-                actorId: actorId,
-                version: version,
-                sourceOperationId: sourceOperationId,
-                kind: kind,
-                workerId: workerId,
-                clientId: clientId,
-                amountFils: amountFils,
-                asOfDate: asOfDate,
-                sourceNote: sourceNote,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable<$OpeningBalancesTable, OpeningBalance>(table),
-                  $$OpeningBalancesTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({workerId = false, clientId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (workerId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.workerId,
-                        referencedTable: $$OpeningBalancesTableReferences
-                            ._workerIdTable(db),
-                        referencedColumn: $$OpeningBalancesTableReferences
-                            ._workerIdTable(db)
-                            .id,
-                      ) as T;
-                    }
-                    if (clientId) {
-                      state = state.withJoin(
-                        currentTable: table,
-                        currentColumn: table.clientId,
-                        referencedTable: $$OpeningBalancesTableReferences
-                            ._clientIdTable(db),
-                        referencedColumn: $$OpeningBalancesTableReferences
-                            ._clientIdTable(db)
-                            .id,
-                      ) as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$OpeningBalancesTableProcessedTableManager =
-    ProcessedTableManager<
-      _$TenantDatabase,
-      $OpeningBalancesTable,
-      OpeningBalance,
-      $$OpeningBalancesTableFilterComposer,
-      $$OpeningBalancesTableOrderingComposer,
-      $$OpeningBalancesTableAnnotationComposer,
-      $$OpeningBalancesTableCreateCompanionBuilder,
-      $$OpeningBalancesTableUpdateCompanionBuilder,
-      (OpeningBalance, $$OpeningBalancesTableReferences),
-      OpeningBalance,
-      PrefetchHooks Function({bool workerId, bool clientId})
-    >;
 typedef $$WorkerGroupMembersTableCreateCompanionBuilder =
     WorkerGroupMembersCompanion Function({
       required String id,
@@ -33394,20 +34502,22 @@ class $TenantDatabaseManager {
       $$PayrollLinesTableTableManager(_db, _db.payrollLines);
   $$PayrollItemsTableTableManager get payrollItems =>
       $$PayrollItemsTableTableManager(_db, _db.payrollItems);
+  $$PeriodLocksTableTableManager get periodLocks =>
+      $$PeriodLocksTableTableManager(_db, _db.periodLocks);
   $$WorkerGroupsTableTableManager get workerGroups =>
       $$WorkerGroupsTableTableManager(_db, _db.workerGroups);
   $$AttendanceBatchesTableTableManager get attendanceBatches =>
       $$AttendanceBatchesTableTableManager(_db, _db.attendanceBatches);
   $$AttendanceEntriesTableTableManager get attendanceEntries =>
       $$AttendanceEntriesTableTableManager(_db, _db.attendanceEntries);
+  $$OpeningBalancesTableTableManager get openingBalances =>
+      $$OpeningBalancesTableTableManager(_db, _db.openingBalances);
   $$TenantProfilesTableTableManager get tenantProfiles =>
       $$TenantProfilesTableTableManager(_db, _db.tenantProfiles);
   $$PayContractsTableTableManager get payContracts =>
       $$PayContractsTableTableManager(_db, _db.payContracts);
   $$BillingContractsTableTableManager get billingContracts =>
       $$BillingContractsTableTableManager(_db, _db.billingContracts);
-  $$OpeningBalancesTableTableManager get openingBalances =>
-      $$OpeningBalancesTableTableManager(_db, _db.openingBalances);
   $$WorkerGroupMembersTableTableManager get workerGroupMembers =>
       $$WorkerGroupMembersTableTableManager(_db, _db.workerGroupMembers);
   $$OutboxTableTableManager get outbox =>

@@ -37,6 +37,10 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
   /// Rows change in place until their payroll is posted. After that they get a correction that keeps the original (ATT-08).
   Future<void> _openEntry(AttendanceEntry entry, String title) async {
     final l10n = AppLocalizations.of(context);
+    if (isClosed(entry.workDate, ref.read(lockedThroughProvider).value)) {
+      showFormError(context, l10n.periodLockedError);
+      return;
+    }
     final db = ref.read(dbProvider);
     final locked = entry.state == 'approved' || entry.state == 'linked';
     final input = entryToInput(entry);
@@ -59,8 +63,8 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       if (mounted) showSavedOnPhone(context, l10n.savedOnPhone);
     } on AttendanceInvalid {
       if (mounted) showFormError(context, l10n.rowsNeedFix);
-    } catch (_) {
-      if (mounted) showFormError(context, l10n.saveFailed);
+    } catch (e) {
+      if (mounted) showFormError(context, saveErrorText(l10n, e));
     }
   }
 
@@ -77,6 +81,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     final recorded = entries.map((e) => e.workerId).toSet();
     final missing = allWorkers.where((w) => w.active && !recorded.contains(w.id)).toList();
     final today = dubaiToday(DateTime.now());
+    final closed = isClosed(_date, ref.watch(lockedThroughProvider).value);
 
     return Scaffold(
       appBar: AppBar(
@@ -93,7 +98,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
           IconButton(tooltip: l10n.pickDate, icon: const Icon(Icons.calendar_month), onPressed: _chooseDate),
         ],
       ),
-      bottomNavigationBar: MainActionBar(label: l10n.markAttendance, onPressed: _markAttendance),
+      bottomNavigationBar: MainActionBar(label: l10n.markAttendance, onPressed: closed ? null : _markAttendance),
       body: ListView(
         children: [
           TopBand(
@@ -119,7 +124,8 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
           ),
           const SizedBox(height: 8),
           const WagesDueBanner(),
-          if (missing.isNotEmpty)
+          if (closed) const ClosedNote(),
+          if (missing.isNotEmpty && !closed)
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
               child: Material(

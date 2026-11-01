@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/app/side_panel.dart';
 import 'package:labour_app/data/attendance.dart';
+import 'package:labour_app/data/closing.dart';
 import 'package:labour_app/data/payroll.dart';
 import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/data/tenant_database.dart';
@@ -145,5 +146,11 @@ void main() {
     expect(posted, workers);
     final after = await timed('slip after posting', () => db.statementsFor(month, workerId: 'w7'));
     expect(after.single.closingFils, days * 9000);
+
+    final closing = await timed('closing check', () => db.closingFor(month));
+    expect(closing.canClose, isTrue);
+    expect(closing.closingFils, workers * days * 9000);
+    await timed('closing', () => db.closeMonth(month, operationId: newUuid()));
+    expect(await db.lockedThrough(), monthLastDay(month));
   }, timeout: const Timeout(Duration(minutes: 5)));
 }

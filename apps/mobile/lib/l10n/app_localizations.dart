@@ -2491,6 +2491,222 @@ abstract class AppLocalizations {
   /// **'Advance cut for {count} workers'**
   String advanceCutsApplied(int count);
 
+  /// No description provided for @tabClosing.
+  ///
+  /// In en, this message translates to:
+  /// **'Close month'**
+  String get tabClosing;
+
+  /// No description provided for @closingWorkersLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left on workers\' accounts'**
+  String get closingWorkersLeft;
+
+  /// No description provided for @closingState.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get closingState;
+
+  /// No description provided for @closingOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get closingOpen;
+
+  /// No description provided for @closingClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get closingClosed;
+
+  /// No description provided for @closingNotOver.
+  ///
+  /// In en, this message translates to:
+  /// **'This month has not ended yet, so it cannot be closed.'**
+  String get closingNotOver;
+
+  /// No description provided for @closingIsClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'This month is closed. A change now goes into an open month as an allowance, deduction or reversal.'**
+  String get closingIsClosed;
+
+  /// No description provided for @closingStops.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix these first'**
+  String get closingStops;
+
+  /// No description provided for @closingChecks.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a look at these'**
+  String get closingChecks;
+
+  /// No description provided for @closingAllClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to fix. This month can be closed.'**
+  String get closingAllClear;
+
+  /// No description provided for @closingSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers\' accounts this month'**
+  String get closingSummary;
+
+  /// No description provided for @closingCuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Room, visa and deductions'**
+  String get closingCuts;
+
+  /// No description provided for @closingExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses'**
+  String get closingExpenses;
+
+  /// No description provided for @findingNoWorkerRate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers have attendance with no pay rate: {names}. Add a rate or remove the attendance.'**
+  String findingNoWorkerRate(int count, String names);
+
+  /// No description provided for @findingNotPosted.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers are not posted: {names}. Post them in Payroll.'**
+  String findingNotPosted(int count, String names);
+
+  /// No description provided for @findingNoCompanyRate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} companies have no rate, so their bill is incomplete: {names}.'**
+  String findingNoCompanyRate(int count, String names);
+
+  /// No description provided for @findingNoHazri.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers have no attendance: {names}.'**
+  String findingNoHazri(int count, String names);
+
+  /// No description provided for @findingOverlap.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers have shifts that overlap: {names}.'**
+  String findingOverlap(int count, String names);
+
+  /// No description provided for @findingNoMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers have a payment with no month chosen, which settles the oldest month: {names}.'**
+  String findingNoMonth(int count, String names);
+
+  /// No description provided for @closeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Close {month}'**
+  String closeButton(String month);
+
+  /// No description provided for @closeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Close {month}?'**
+  String closeTitle(String month);
+
+  /// No description provided for @closeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance, expenses and payroll up to this month will stop changing. A later change goes into an open month as an allowance, deduction or reversal.'**
+  String get closeBody;
+
+  /// No description provided for @closeWithChecks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} points above are still worth a look.'**
+  String closeWithChecks(int count);
+
+  /// No description provided for @closeConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeConfirm;
+
+  /// No description provided for @closeDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{month} is closed'**
+  String closeDone(String month);
+
+  /// No description provided for @closeNotReady.
+  ///
+  /// In en, this message translates to:
+  /// **'This month cannot close yet. Fix what is listed first.'**
+  String get closeNotReady;
+
+  /// No description provided for @reopenButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Open this month again'**
+  String get reopenButton;
+
+  /// No description provided for @reopenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {month} again'**
+  String reopenTitle(String month);
+
+  /// No description provided for @reopenHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it must change. The reason stays on record.'**
+  String get reopenHelp;
+
+  /// No description provided for @reopenConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get reopenConfirm;
+
+  /// No description provided for @reopenDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{month} is open again'**
+  String reopenDone(String month);
+
+  /// No description provided for @reopenLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the later month first.'**
+  String get reopenLater;
+
+  /// No description provided for @periodLockedError.
+  ///
+  /// In en, this message translates to:
+  /// **'This month is closed. Enter the difference in an open month as an allowance or deduction, or open it again from Close month.'**
+  String get periodLockedError;
+
+  /// No description provided for @closedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This month is closed. Nothing here can change.'**
+  String get closedNote;
+
+  /// No description provided for @reverseHelpClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'This month is closed, so the reversal is written with today\'s date and the closed month stays as it was.'**
+  String get reverseHelpClosed;
+
+  /// No description provided for @issueClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'This month is closed.'**
+  String get issueClosed;
+
   /// No description provided for @applyVisaInstalments.
   ///
   /// In en, this message translates to:

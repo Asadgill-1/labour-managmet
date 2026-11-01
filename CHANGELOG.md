@@ -10,6 +10,9 @@
 - Calculation engine for hourly, day, shift and monthly contracts.
 - Bulk attendance with exceptions, approval and corrections.
 - New colours and cards, and a side panel of main tabs with sub-tabs.
+- Close a month: what must be fixed first, what to look at, how it adds up, then your confirmation. A closed month stops changing, and can be opened again with a reason.
+- Undoing money from a closed month is written with today's date, so the closed month stays as it was.
+- Expenses take a payment reference, and the money register filters by category.
 - Choose which month a salary payment settles, oldest first by default, with reference and who took it.
 - Paying more than is owed goes on the worker's advance, after you confirm.
 - A reminder of unpaid salary on Aaj and Tankhwah, with how late each month is, counted from your own days.

@@ -150,6 +150,15 @@ class SalaryAllocations extends Table with Common {
   ];
 }
 
+/// A closed month (REP-04). Everything up to [lastDay] is locked while this row stands. Opening it again only flags it,
+/// with the owner's reason in the audit log. Triggers enforce this.
+class PeriodLocks extends Table with Common {
+  /// YYYY-MM.
+  TextColumn get month => text()();
+  TextColumn get lastDay => text()();
+  BoolColumn get reopened => boolean().withDefault(const Constant(false))();
+}
+
 /// Rate terms shared by both contract tables (MASTER-06). Dates are YYYY-MM-DD.
 mixin RateTerms on Table {
   TextColumn get basis => text()();

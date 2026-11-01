@@ -12,6 +12,7 @@ PayrollFigures figures({
   int advanceLeft = 0,
   int unpriced = 0,
   String? lastPosted,
+  String? closed,
   int? limitBps,
   String current = month,
   String period = month,
@@ -25,6 +26,7 @@ PayrollFigures figures({
     advanceLeftFils: advanceLeft,
     unpricedRows: unpriced,
     lastPostedMonth: lastPosted,
+    closedMonth: closed,
     limitBps: limitBps,
   );
 }
@@ -34,6 +36,25 @@ RateTerms monthly(int fils, {String from = '2026-01-01', String? to, PartialMeth
 }
 
 void main() {
+  group('a closed month (REP-04)', () {
+    test('cannot post, and pays no salary', () {
+      final closed = figures(contracts: [monthly(200000)], closed: month);
+      expect(closed.issues, contains(PayrollIssue.monthClosed));
+      expect(closed.salaryFils, 0);
+      expect(figures(contracts: [monthly(200000)], period: '2026-09', closed: month).issues, contains(PayrollIssue.monthClosed));
+    });
+
+    test('never holds up a later month, though an open one still does', () {
+      final held = figures(contracts: [monthly(200000)], lastPosted: '2026-08');
+      expect(held.issues, contains(PayrollIssue.earlierMonthMissing));
+      final free = figures(contracts: [monthly(200000)], lastPosted: '2026-08', closed: '2026-09');
+      expect(free.issues, isNot(contains(PayrollIssue.earlierMonthMissing)));
+      expect(free.salaryFils, 200000);
+      final still = figures(contracts: [monthly(200000)], lastPosted: '2026-07', closed: '2026-08');
+      expect(still.issues, contains(PayrollIssue.earlierMonthMissing));
+    });
+  });
+
   group('TC-001 carry-forward (PAY-02, PAY-03)', () {
     test('1,000 earned and 500 paid leaves 1,500 due next month, and 1,500 still due if nothing is paid', () {
       final september = figures(work: const [WorkLine('2026-09-30', 100000)], period: '2026-09');

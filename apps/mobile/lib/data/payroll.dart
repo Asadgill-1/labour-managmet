@@ -88,6 +88,7 @@ extension PayrollOps on TenantDatabase {
     final from = monthFirstDay(month);
     final to = monthLastDay(month);
     final limitBps = (await select(tenantProfiles).getSingleOrNull())?.deductionLimitBps;
+    final closedThrough = await lockedThrough();
     final allWorkers = await (select(workers)..orderBy([(w) => OrderingTerm.asc(w.name)])).get();
     final contracts = await select(payContracts).get();
     final items = await (select(payrollItems)
@@ -164,6 +165,7 @@ extension PayrollOps on TenantDatabase {
         visaLeftFils: visaLeft,
         unpricedRows: unpriced,
         lastPostedMonth: workerLines.lastOrNull?.periodFrom.substring(0, 7),
+        closedMonth: closedThrough?.substring(0, 7),
         limitBps: limitBps,
       );
       if (figures.isEmpty && unpriced == 0) continue;

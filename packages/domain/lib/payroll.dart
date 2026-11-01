@@ -17,6 +17,7 @@ enum PayrollIssue {
   earlierMonthMissing,
   laterMonthPosted,
   monthNotStarted,
+  monthClosed,
 }
 
 class PayItemLine {
@@ -113,6 +114,7 @@ PayrollFigures workerPayroll({
   int visaLeftFils = 0,
   int unpricedRows = 0,
   String? lastPostedMonth,
+  String? closedMonth,
   int? limitBps,
 }) {
   final from = monthFirstDay(month);
@@ -128,8 +130,9 @@ PayrollFigures workerPayroll({
   }
   int sum(Set<PayItemKind> kinds) => items.where((i) => kinds.contains(i.kind)).fold(0, (total, i) => total + i.amountFils);
   final later = lastPostedMonth != null && lastPostedMonth.compareTo(month) >= 0;
-  // A month behind the latest posted one cannot pay a salary any more. Only its late rows carry forward.
-  final salary = later ? 0 : periodSalary(contracts, month);
+  final closed = closedMonth != null && month.compareTo(closedMonth) <= 0;
+  // A month behind the latest posted one cannot pay a salary any more, and nor can a closed one. Only late rows carry forward.
+  final salary = later || closed ? 0 : periodSalary(contracts, month);
   final allowances = sum(const {PayItemKind.allowance});
   final deductions = sum(const {PayItemKind.deduction, PayItemKind.roomCharge});
   final recovery = sum(const {PayItemKind.advanceRecovery});
@@ -145,9 +148,11 @@ PayrollFigures workerPayroll({
     if (visa > visaLeftFils) PayrollIssue.recoveryAboveVisa,
     if (limitBps != null && (deductions + recovery + visa) * 10000 > earnings * limitBps) PayrollIssue.deductionAboveLimit,
     if (later) PayrollIssue.laterMonthPosted,
+    if (closed) PayrollIssue.monthClosed,
     if (lastPostedMonth != null)
       for (var m = addMonths(lastPostedMonth, 1); m.compareTo(month) < 0; m = addMonths(m, 1))
-        if (_monthlyCovers(contracts, m)) PayrollIssue.earlierMonthMissing,
+        // A closed month can no longer be posted, so it never holds up a later one (REP-04).
+        if ((closedMonth == null || m.compareTo(closedMonth) > 0) && _monthlyCovers(contracts, m)) PayrollIssue.earlierMonthMissing,
     // Never carried as debt by itself (D-104).
     if (net < 0 || net + adjustment < 0) PayrollIssue.negativeNet,
   };

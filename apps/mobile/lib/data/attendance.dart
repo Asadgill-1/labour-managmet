@@ -365,13 +365,16 @@ extension AttendanceOps on TenantDatabase {
   }
 
   /// What a rate added or changed later does to stored rows. A row not yet frozen takes it in full. A frozen row only
-  /// fills a company rate it never had, so its bill appears and its pay stays put (CALC-06, D-041).
+  /// fills a company rate it never had, so its bill appears and its pay stays put (CALC-06, D-041). A closed month takes
+  /// nothing, so its reports stay as they were (REP-05).
   /// The limits keep a thousand workers' rows out of it when one worker's rate changes.
   Future<List<(AttendanceEntry, AttendanceEntriesCompanion)>> _repriced({String? workerId, String? clientId, String? groupId, String? upTo}) async {
+    final closedThrough = await lockedThrough();
     final rows = await (select(attendanceEntries)
           ..where(
             (e) =>
                 e.superseded.equals(false) &
+                (closedThrough == null ? const Constant(true) : e.workDate.isBiggerThanValue(closedThrough)) &
                 (e.state.isIn(const ['draft', 'submitted']) | e.clientRateFils.isNull()) &
                 (workerId == null ? const Constant(true) : e.workerId.equals(workerId)) &
                 (clientId == null ? const Constant(true) : e.clientId.equals(clientId)) &

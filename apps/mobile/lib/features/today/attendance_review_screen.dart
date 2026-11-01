@@ -156,11 +156,11 @@ class _AttendanceReviewScreenState extends ConsumerState<AttendanceReviewScreen>
         showFormError(context, l10n.rowsNeedFix);
       }
       return;
-    } catch (_) {
+    } catch (e) {
       // The operation ID is unchanged, so tapping Save again cannot save twice.
       if (mounted) {
         setState(() => _saving = false);
-        showFormError(context, l10n.saveFailed);
+        showFormError(context, saveErrorText(l10n, e));
       }
       return;
     }

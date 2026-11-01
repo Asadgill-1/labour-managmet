@@ -101,6 +101,7 @@ extension StatementOps on TenantDatabase {
     final from = monthFirstDay(month);
     final to = monthLastDay(month);
     final thisMonth = dubaiToday(DateTime.now()).substring(0, 7);
+    final closedThrough = await lockedThrough();
 
     final people = await (select(workers)
           ..where((w) => workerId == null ? const Constant(true) : w.id.equals(workerId))
@@ -128,8 +129,15 @@ extension StatementOps on TenantDatabase {
           ..where((c) => workerId == null ? c.workerId.isNotNull() : c.workerId.equals(workerId))
           ..orderBy([(c) => OrderingTerm.asc(c.entryDate), (c) => OrderingTerm.asc(c.createdAtUtc)]))
         .get();
-    final undone = {for (final c in cash) ?c.reversesEntryId};
-    final cashOf = groupedBy(cash.where((c) => c.reversesEntryId == null && !undone.contains(c.id)), (c) => c.workerId);
+    // A mistake undone in its own month leaves no trace. One from a closed month stays there, and its reversal counts on
+    // the later date it carries (REP-04).
+    final dateOf = {for (final c in cash) c.id: c.entryDate};
+    bool sameMonth(CashEntry reversal) => reversal.entryDate.substring(0, 7) == dateOf[reversal.reversesEntryId]?.substring(0, 7);
+    final undone = {
+      for (final c in cash)
+        if (c.reversesEntryId != null && sameMonth(c)) c.reversesEntryId!,
+    };
+    final cashOf = groupedBy(cash.where((c) => c.reversesEntryId == null ? !undone.contains(c.id) : !sameMonth(c)), (c) => c.workerId);
 
     final allocations = await (select(salaryAllocations)..where((a) => workerId == null ? const Constant(true) : a.paymentId.isIn([for (final c in cash) c.id]))).get();
     final partsOf = <String, Map<String, int>>{};
@@ -202,29 +210,30 @@ extension StatementOps on TenantDatabase {
       for (final c in cashOf[worker.id] ?? const <CashEntry>[]) {
         final m = c.entryDate.substring(0, 7);
         final current = m == month;
+        final fils = c.reversesEntryId == null ? c.amountFils : -c.amountFils;
         switch (CashKind.values.byName(c.kind)) {
           case CashKind.salaryPaid:
-            payments.add(StatementPayment(c.entryDate, c.amountFils, note: c.note ?? c.reference ?? c.method, parts: partsOf[c.id]));
+            payments.add(StatementPayment(c.entryDate, fils, note: c.note ?? c.reference ?? c.method, parts: c.reversesEntryId == null ? partsOf[c.id] : {m: fils}));
           case CashKind.advanceGiven:
             if (m.compareTo(month) > 0) break;
-            add(m, -c.amountFils);
-            aside(m, c.amountFils);
+            add(m, -fils);
+            aside(m, fils);
             if (current) {
-              advance += c.amountFils;
-              money.add(StatementMoney(c.entryDate, StatementMoneyKind.advance, c.amountFils, note: c.note));
+              advance += fils;
+              money.add(StatementMoney(c.entryDate, StatementMoneyKind.advance, fils, note: c.note));
             }
           case CashKind.advanceReturned:
             if (m.compareTo(month) > 0) break;
-            add(m, c.amountFils);
-            aside(m, -c.amountFils);
+            add(m, fils);
+            aside(m, -fils);
             if (current) {
-              advance -= c.amountFils;
-              money.add(StatementMoney(c.entryDate, StatementMoneyKind.advanceReturned, -c.amountFils, note: c.note));
+              advance -= fils;
+              money.add(StatementMoney(c.entryDate, StatementMoneyKind.advanceReturned, -fils, note: c.note));
             }
           case CashKind.visaPaid:
-            if (c.entryDate.compareTo(to) <= 0) visaGiven += c.amountFils;
+            if (c.entryDate.compareTo(to) <= 0) visaGiven += fils;
           case CashKind.visaReturned:
-            if (c.entryDate.compareTo(to) <= 0) visaGiven -= c.amountFils;
+            if (c.entryDate.compareTo(to) <= 0) visaGiven -= fils;
           // Rent the worker paid in cash is the room's money, not part of their wage.
           case CashKind.roomRentPaid || CashKind.roomRentReceived || CashKind.expense || CashKind.clientReceipt:
             break;
@@ -253,7 +262,7 @@ extension StatementOps on TenantDatabase {
         final activity = [...own.keys, ...brought.keys, ...payments.map((p) => p.date.substring(0, 7)), month]..sort();
         final first = firstContract.compareTo(activity.first) > 0 ? firstContract : activity.first;
         for (var m = first; m.compareTo(month) <= 0 && m.compareTo(thisMonth) <= 0; m = addMonths(m, 1)) {
-          if (!salaries.containsKey(m) && (lastPosted == null || m.compareTo(lastPosted) > 0)) salaries[m] = periodSalary(monthly, m) ?? 0;
+          if (!salaries.containsKey(m) && (lastPosted == null || m.compareTo(lastPosted) > 0) && !isClosed(monthLastDay(m), closedThrough)) salaries[m] = periodSalary(monthly, m) ?? 0;
         }
       }
       salaries.forEach(add);

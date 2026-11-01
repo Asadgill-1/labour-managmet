@@ -27,6 +27,7 @@ String issueText(AppLocalizations l10n, PayrollIssue issue, WorkerPayroll p) => 
   PayrollIssue.earlierMonthMissing => l10n.issueEarlier,
   PayrollIssue.laterMonthPosted => l10n.issueLater,
   PayrollIssue.monthNotStarted => l10n.issueNotStarted,
+  PayrollIssue.monthClosed => l10n.issueClosed,
 };
 
 /// One month's pay for everyone: review, then post with one confirmation (PAY-01).
@@ -124,12 +125,13 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
     final ready = rows.where((p) => p.canPost).toList();
     final visaInstalments = rows.where((p) => p.needsVisaInstalment).length;
     final advanceCuts = rows.where((p) => p.needsAdvanceCut).length;
+    final closed = isClosed(monthLastDay(_month), ref.watch(lockedThroughProvider).value);
     final earned = rows.fold(0, (sum, p) => sum + p.figures.grossFils);
     final cut = rows.fold(0, (sum, p) => sum + p.figures.deductionsFils + p.figures.recoveryFils + p.figures.visaFils);
     final toPay = rows.fold(0, (sum, p) => sum + (p.closingFils > 0 ? p.closingFils : 0));
     return Scaffold(
       appBar: AppBar(leading: const MenuButton(), title: Text(l10n.menuPayroll), bottom: const SubTabs(Section.payroll)),
-      bottomNavigationBar: MainActionBar(label: l10n.payrollPost(ready.length), onPressed: ready.isEmpty ? null : () => _post(ready)),
+      bottomNavigationBar: MainActionBar(label: l10n.payrollPost(ready.length), onPressed: ready.isEmpty || closed ? null : () => _post(ready)),
       body: ListView(
         children: [
           TopBand(
@@ -151,18 +153,20 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
           ),
           const SizedBox(height: 8),
           const WagesDueBanner(),
+          if (closed) const ClosedNote(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
-                OutlinedButton(
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => RoomChargeScreen(month: _month))),
-                  child: Text(l10n.applyRoomCharges),
-                ),
-                if (visaInstalments > 0) OutlinedButton(onPressed: _applyVisaInstalments, child: Text(l10n.applyVisaInstalments(visaInstalments))),
-                if (advanceCuts > 0) OutlinedButton(onPressed: _applyAdvanceCuts, child: Text(l10n.applyAdvanceCuts(advanceCuts))),
+                if (!closed)
+                  OutlinedButton(
+                    onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => RoomChargeScreen(month: _month))),
+                    child: Text(l10n.applyRoomCharges),
+                  ),
+                if (visaInstalments > 0 && !closed) OutlinedButton(onPressed: _applyVisaInstalments, child: Text(l10n.applyVisaInstalments(visaInstalments))),
+                if (advanceCuts > 0 && !closed) OutlinedButton(onPressed: _applyAdvanceCuts, child: Text(l10n.applyAdvanceCuts(advanceCuts))),
                 OutlinedButton.icon(
                   icon: const Icon(Icons.table_chart),
                   label: Text(_makingSheet ? l10n.exportMaking : l10n.ownerSheet),

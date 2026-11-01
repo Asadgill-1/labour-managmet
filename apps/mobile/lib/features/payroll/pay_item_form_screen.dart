@@ -85,8 +85,8 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
     } on VisaTooHigh {
       if (mounted) showFormError(context, l10n.visaTooHigh);
       return;
-    } catch (_) {
-      if (mounted) showFormError(context, l10n.saveFailed);
+    } catch (e) {
+      if (mounted) showFormError(context, saveErrorText(l10n, e));
       return;
     }
     if (!mounted) return;

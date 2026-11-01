@@ -1325,6 +1325,144 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get tabClosing => 'Close month';
+
+  @override
+  String get closingWorkersLeft => 'Left on workers\' accounts';
+
+  @override
+  String get closingState => 'This month';
+
+  @override
+  String get closingOpen => 'Open';
+
+  @override
+  String get closingClosed => 'Closed';
+
+  @override
+  String get closingNotOver =>
+      'This month has not ended yet, so it cannot be closed.';
+
+  @override
+  String get closingIsClosed =>
+      'This month is closed. A change now goes into an open month as an allowance, deduction or reversal.';
+
+  @override
+  String get closingStops => 'Fix these first';
+
+  @override
+  String get closingChecks => 'Have a look at these';
+
+  @override
+  String get closingAllClear => 'Nothing to fix. This month can be closed.';
+
+  @override
+  String get closingSummary => 'Workers\' accounts this month';
+
+  @override
+  String get closingCuts => 'Room, visa and deductions';
+
+  @override
+  String get closingExpenses => 'Expenses';
+
+  @override
+  String findingNoWorkerRate(int count, String names) {
+    return '$count workers have attendance with no pay rate: $names. Add a rate or remove the attendance.';
+  }
+
+  @override
+  String findingNotPosted(int count, String names) {
+    return '$count workers are not posted: $names. Post them in Payroll.';
+  }
+
+  @override
+  String findingNoCompanyRate(int count, String names) {
+    return '$count companies have no rate, so their bill is incomplete: $names.';
+  }
+
+  @override
+  String findingNoHazri(int count, String names) {
+    return '$count workers have no attendance: $names.';
+  }
+
+  @override
+  String findingOverlap(int count, String names) {
+    return '$count workers have shifts that overlap: $names.';
+  }
+
+  @override
+  String findingNoMonth(int count, String names) {
+    return '$count workers have a payment with no month chosen, which settles the oldest month: $names.';
+  }
+
+  @override
+  String closeButton(String month) {
+    return 'Close $month';
+  }
+
+  @override
+  String closeTitle(String month) {
+    return 'Close $month?';
+  }
+
+  @override
+  String get closeBody =>
+      'Attendance, expenses and payroll up to this month will stop changing. A later change goes into an open month as an allowance, deduction or reversal.';
+
+  @override
+  String closeWithChecks(int count) {
+    return '$count points above are still worth a look.';
+  }
+
+  @override
+  String get closeConfirm => 'Close';
+
+  @override
+  String closeDone(String month) {
+    return '$month is closed';
+  }
+
+  @override
+  String get closeNotReady =>
+      'This month cannot close yet. Fix what is listed first.';
+
+  @override
+  String get reopenButton => 'Open this month again';
+
+  @override
+  String reopenTitle(String month) {
+    return 'Open $month again';
+  }
+
+  @override
+  String get reopenHelp => 'Why it must change. The reason stays on record.';
+
+  @override
+  String get reopenConfirm => 'Open';
+
+  @override
+  String reopenDone(String month) {
+    return '$month is open again';
+  }
+
+  @override
+  String get reopenLater => 'Open the later month first.';
+
+  @override
+  String get periodLockedError =>
+      'This month is closed. Enter the difference in an open month as an allowance or deduction, or open it again from Close month.';
+
+  @override
+  String get closedNote => 'This month is closed. Nothing here can change.';
+
+  @override
+  String get reverseHelpClosed =>
+      'This month is closed, so the reversal is written with today\'s date and the closed month stays as it was.';
+
+  @override
+  String get issueClosed => 'This month is closed.';
+
+  @override
   String applyVisaInstalments(int count) {
     return 'Add visa instalments ($count)';
   }
@@ -3151,6 +3289,145 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String advanceCutsApplied(int count) {
     return '$count mazdoor ka advance kat gaya';
   }
+
+  @override
+  String get tabClosing => 'Mahina band';
+
+  @override
+  String get closingWorkersLeft => 'Mazdooron ka baqi';
+
+  @override
+  String get closingState => 'Yeh mahina';
+
+  @override
+  String get closingOpen => 'Khula hai';
+
+  @override
+  String get closingClosed => 'Band hai';
+
+  @override
+  String get closingNotOver =>
+      'Yeh mahina abhi khatam nahin hua, is liye band nahin ho sakta.';
+
+  @override
+  String get closingIsClosed =>
+      'Yeh mahina band hai. Ab farq khule mahine mein allowance, katoti ya wapsi se likha jata hai.';
+
+  @override
+  String get closingStops => 'Pehle yeh theek karein';
+
+  @override
+  String get closingChecks => 'Yeh dekh lein';
+
+  @override
+  String get closingAllClear =>
+      'Kuch theek karne ko nahin. Yeh mahina band ho sakta hai.';
+
+  @override
+  String get closingSummary => 'Is mahine mazdooron ka hisaab';
+
+  @override
+  String get closingCuts => 'Room, visa aur katoti';
+
+  @override
+  String get closingExpenses => 'Kharche';
+
+  @override
+  String findingNoWorkerRate(int count, String names) {
+    return '$count mazdoor ki hazri par tankhwah ka rate nahin: $names. Rate likhein ya hazri hatayein.';
+  }
+
+  @override
+  String findingNotPosted(int count, String names) {
+    return '$count mazdoor ki tankhwah post nahin hui: $names. Tankhwah mein post karein.';
+  }
+
+  @override
+  String findingNoCompanyRate(int count, String names) {
+    return '$count company ka rate nahin, is liye bill adhoora hai: $names.';
+  }
+
+  @override
+  String findingNoHazri(int count, String names) {
+    return '$count mazdoor ki koi hazri nahin: $names.';
+  }
+
+  @override
+  String findingOverlap(int count, String names) {
+    return '$count mazdoor ki hazri waqt mein takrati hai: $names.';
+  }
+
+  @override
+  String findingNoMonth(int count, String names) {
+    return '$count mazdoor ki adaigi mein mahina nahin chuna, woh purane mahine se judi hai: $names.';
+  }
+
+  @override
+  String closeButton(String month) {
+    return '$month band karein';
+  }
+
+  @override
+  String closeTitle(String month) {
+    return '$month band karein?';
+  }
+
+  @override
+  String get closeBody =>
+      'Is mahine tak ki hazri, kharche aur tankhwah ab nahin badlenge. Baad ka farq khule mahine mein allowance, katoti ya wapsi se likha jayega.';
+
+  @override
+  String closeWithChecks(int count) {
+    return 'Upar $count baatein abhi dekhne wali hain.';
+  }
+
+  @override
+  String get closeConfirm => 'Band karein';
+
+  @override
+  String closeDone(String month) {
+    return '$month band ho gaya';
+  }
+
+  @override
+  String get closeNotReady =>
+      'Yeh mahina abhi band nahin ho sakta. Pehle likhi hui baatein theek karein.';
+
+  @override
+  String get reopenButton => 'Yeh mahina dobara kholein';
+
+  @override
+  String reopenTitle(String month) {
+    return '$month dobara kholein';
+  }
+
+  @override
+  String get reopenHelp => 'Kyun badalna hai. Yeh wajah record mein rahegi.';
+
+  @override
+  String get reopenConfirm => 'Kholein';
+
+  @override
+  String reopenDone(String month) {
+    return '$month dobara khul gaya';
+  }
+
+  @override
+  String get reopenLater => 'Pehle baad wala mahina kholein.';
+
+  @override
+  String get periodLockedError =>
+      'Yeh mahina band hai. Farq khule mahine mein allowance ya katoti se likhein, ya Mahina band se mahina dobara kholein.';
+
+  @override
+  String get closedNote => 'Yeh mahina band hai. Yahan kuch nahin badlega.';
+
+  @override
+  String get reverseHelpClosed =>
+      'Yeh mahina band hai, is liye wapsi aaj ki tareekh par likhi jayegi aur band mahina waisa hi rahega.';
+
+  @override
+  String get issueClosed => 'Yeh mahina band hai.';
 
   @override
   String applyVisaInstalments(int count) {

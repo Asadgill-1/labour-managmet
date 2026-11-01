@@ -26,6 +26,7 @@ enum Section {
   cash,
   balances,
   cashRegister,
+  closing,
   rooms,
   roomRegister,
   settings,
@@ -49,6 +50,7 @@ String sectionLabel(AppLocalizations l10n, Section section) => switch (section) 
   Section.cash => l10n.tabCash,
   Section.balances => l10n.openingHeading,
   Section.cashRegister => l10n.regCash,
+  Section.closing => l10n.tabClosing,
   Section.rooms => l10n.tabRooms,
   Section.roomRegister => l10n.regRooms,
   Section.settings => l10n.tabSettings,
@@ -71,7 +73,7 @@ final mainTabs = [
   MainTab((l) => l.mainVisa, Icons.badge, const Color(0xFFF0E6FF), const Color(0xFF6B3FC4), const [Section.visa, Section.visaRegister]),
   MainTab((l) => l.tabCompanies, Icons.apartment, const Color(0xFFDDF3FA), const Color(0xFF0B7196), const [Section.companies, Section.sites, Section.rates, Section.companyRegister]),
   MainTab((l) => l.menuPayroll, Icons.payments, const Color(0xFFE6F4DC), const Color(0xFF3F7D1D), const [Section.payroll, Section.payrollRegister, Section.advanceRegister]),
-  MainTab((l) => l.mainMoney, Icons.account_balance_wallet, const Color(0xFFFFE8DA), const Color(0xFFC2500F), const [Section.cash, Section.balances, Section.cashRegister]),
+  MainTab((l) => l.mainMoney, Icons.account_balance_wallet, const Color(0xFFFFE8DA), const Color(0xFFC2500F), const [Section.cash, Section.balances, Section.cashRegister, Section.closing]),
   MainTab((l) => l.tabRooms, Icons.bed, const Color(0xFFFFE4EC), const Color(0xFFC2255C), const [Section.rooms, Section.roomRegister]),
 ];
 

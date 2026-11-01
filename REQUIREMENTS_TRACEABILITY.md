@@ -82,10 +82,10 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | REP-01 | 11 | Reports | T18, T18a, T11e, T11f | IN_PROGRESS | TC-057, TC-058, TC-062, TC-063, TC-067 | - |
 | REP-02 | 11 | Hisaab ki separation | T18 | NOT_STARTED | TC-044 | - |
 | REP-03 | 11 | Margin | T11f, T18 | IN_PROGRESS | TC-044, TC-065 | `apps/mobile/test/statement_test.dart` |
-| REP-04 | 11 | Closing | T13 | NOT_STARTED | TC-037 | - |
-| REP-05 | 11 | Historical integrity | T13 | NOT_STARTED | - | - |
+| REP-04 | 11 | Closing | T13 | IMPLEMENTED_UNVERIFIED | TC-037, TC-072, TC-073, TC-074 | - |
+| REP-05 | 11 | Historical integrity | T13 | IMPLEMENTED_UNVERIFIED | TC-075 | - |
 | REP-06 | 11 | Backup/export | T18, T18a | IN_PROGRESS | TC-058 | - |
-| REP-07 | 11 | Expenses | T13, T12a | IN_PROGRESS | TC-052 | - |
+| REP-07 | 11 | Expenses | T13, T12a | IMPLEMENTED_UNVERIFIED | TC-052 | - |
 | REP-08 | 11 | Ledger design | T11, T12a | IMPLEMENTED_UNVERIFIED | TC-036, TC-051, TC-055 | `apps/mobile/test/payroll_test.dart`, `apps/mobile/test/cash_test.dart` |
 | PLAN-01 | 12 | Trial 14 din; Team feature trial owner ki clear | T24 | NOT_STARTED | - | - |
 | PLAN-02 | 12 | Manager trial end par paid Team entitlement na ho | T24 | NOT_STARTED | - | - |

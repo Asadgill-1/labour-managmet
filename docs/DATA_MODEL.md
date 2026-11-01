@@ -26,8 +26,8 @@ Money records add `currency` and `posting_date`. An effective date is always sep
 | Timesheets | `timesheets`, `timesheet_revisions`, `timesheet_lines` | A revision preserves the original (TS-06) |
 | Invoices | `invoices`, `invoice_lines`, `invoice_source_allocations`, `credit_notes` | Draft has no legal number. Stored as structured data for a later e-invoicing export (D-011) |
 | Receipts | `receipts`, `receipt_allocations` | Unapplied credit allowed. Allocation cannot exceed outstanding (INV-05) |
-| Costs | `cash_entries` | Expenses are cash book rows with a category and optional site. Actual room cost is separate from room charge recovered from a worker (REP-07) |
-| Closing | `period_locks` | Change after lock needs an owner reason and a dated adjustment (REP-04) |
+| Costs | `cash_entries` | Expenses are cash book rows with a category, an optional site and a payment reference. Actual room cost is separate from room charge recovered from a worker (REP-07) |
+| Closing | `period_locks` | One row per closed month, with its last day. Everything up to the latest live row is locked. Opening a month again only flags its row, and the reason is in the audit log (REP-04, D-044) |
 | Documents | `document_snapshots` | PDF plus data and template snapshot. Later logo changes never alter an issued copy (DOC-05) |
 | System | `audit_events`, `outbox`, `backup_manifests` | See below |
 
@@ -47,6 +47,7 @@ No table stores an editable balance. Current balances derive from posted payroll
 | Allocation within outstanding | Checked inside the posting transaction |
 | Posted rows immutable | Triggers rejecting `UPDATE` and `DELETE` on posted payroll, issued invoices and allocations |
 | What a payment settled never changes | Triggers rejecting `UPDATE` and `DELETE` on `salary_allocations`. One row per payment and month, `UNIQUE (payment_id, month)` |
+| A closed month stays as it was | Triggers rejecting writes dated up to the latest live `period_locks.last_day` on `cash_entries`, `attendance_entries`, `payroll_items`, `payroll_lines` and `opening_balances`. Linking a closed row to a later posting or a timesheet changes no figure, and is allowed. `applyOperation` turns the refusal into `PeriodLocked` |
 | One worker paid once per month | Partial unique index on `payroll_lines (worker_id, period_from)` where not reversed |
 | Cross-tenant reference invalid | Cloud: composite foreign key on `(tenant_id, id)`. Local: impossible across files, and restore checks tenant identity |
 

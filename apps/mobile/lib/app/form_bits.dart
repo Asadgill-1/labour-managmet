@@ -142,6 +142,27 @@ class TimeField extends StatelessWidget {
 }
 
 /// Section heading in a detail screen, with an optional action on the right.
+/// Says a screen's date or month is closed, so nothing here can change (REP-04).
+class ClosedNote extends StatelessWidget {
+  const ClosedNote({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+      child: Material(
+        color: paper,
+        borderRadius: BorderRadius.circular(16),
+        child: ListTile(
+          tileColor: Colors.transparent,
+          leading: const Icon(Icons.lock, color: muted),
+          title: Text(AppLocalizations.of(context).closedNote, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: muted)),
+        ),
+      ),
+    );
+  }
+}
+
 class SectionHeader extends StatelessWidget {
   const SectionHeader(this.title, {this.action, super.key});
 

@@ -1,6 +1,6 @@
 # P2 Owner Checklist
 
-Yeh checklist Asad ke liye hai (BUILD-03). Tankhwah (T11) aur adaigi ko mahine se jorna (T12) ban gaye hain. Period close abhi nahin, woh T13 mein aayega.
+Yeh checklist Asad ke liye hai (BUILD-03). Tankhwah (T11) aur adaigi ko mahine se jorna (T12) ban gaye hain. Mahina band karna (T13) bhi ban gaya hai.
 
 Test APK: `apps/mobile/build/app/outputs/flutter-apk/app-release.apk`. Yeh test build hai. Asal data na daalein.
 
@@ -109,11 +109,26 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 - [ ] Advance wale mazdoor par **Tankhwah** mein **Advance katein** dabayein. **Mazdoor ko dena hai** ab slip ke baqi ke barabar ho. Mazdoor ki screen par us raqam ko badal bhi sakte hain.
 - [ ] **Apni company** mein **Mahine ke baad tankhwah kitne din mein** likhein. Us din tak **abhi late nahin** likha aaye, us ke baad din ginay jayen.
 
+## 5d. Mahina band
+
+- [ ] **Hisaab > Mahina band** kholein. Pichla mahina khule. Jis ki tankhwah post nahin hui, us ka naam **Pehle yeh theek karein** mein aaye, aur band karne ka button na chale.
+- [ ] Tankhwah post karein. Yeh line hat jaye aur button chal jaye.
+- [ ] **Is mahine mazdooron ka hisaab** khud jor kar dekhein: pichla baqi + kamai - advance - katoti - ada kiya = baqi.
+- [ ] **Band karein** dabayein. Paigham parhein aur **Wapas** dabayein. Kuch na badle. Phir dobara dabayein aur band karein.
+- [ ] Us mahine ki kisi tareekh par **Aaj** aur **Rozana hisaab** kholein. Upar **Yeh mahina band hai** ho, aur naya likhne ka button na chale.
+- [ ] Us mahine ki hazri par dabayein. Paigham aaye, aur kuch na badle.
+- [ ] Rozana hisaab mein us mahine ki koi line undo karein. Wapsi aaj ki tareekh par likhi jaye, aur us mahine ki slip wahi rahe.
+- [ ] Mazdoor ka rate badlein. Band mahine ki hazri aur slip wahi rahen.
+- [ ] Band mahine ki tankhwah agle mahine ki tareekh par dein. Adaigi ho jaye, aur us mahine ki slip par **Ada kiya** mein aaye.
+- [ ] **Yeh mahina dobara kholein** dabayein aur wajah likhein. Mahina khul jaye.
+- [ ] **Rozana hisaab** mein Kharcha likhein, **Reference** ke saath. **Hisaab register** mein category ka filter chalayein.
+
 ## 6. Aap ke faislay
 
-Yeh teeno abhi PROPOSED hain. Aap ka jawab darkar hai. Accountant ko bhi dikhayein.
+Yeh chaaron abhi PROPOSED hain. Aap ka jawab darkar hai. Accountant ko bhi dikhayein.
 
 - [ ] **D-033:** Hisaab statement ki tarah chalta hai. Tankhwah screen par purane post hue mahine ka "ada kiya" tareekh se ginta hai. Khaas mahine slip aur baqi tankhwah mein dikhte hain.
+- [ ] **D-044:** Tankhwah post kiye baghair, ya hazri ka rate likhe baghair, mahina band nahin hota. Band mahine mein kuch nahin badalta, farq khule mahine mein allowance ya katoti se likha jata hai. Mahina wajah likh kar dobara khul sakta hai, sirf aakhri band mahina.
 - [ ] **D-043:** Zyada adaigi advance mein jati hai. Advance tab tak Tankhwah se nahin katta jab tak aap **Advance katein** na dabayein, slip mein woh dete hi kat jata hai. Purani adaigiyan khud purane mahine se jorti hain. Late ka hisaab aap ke apne dinon se hota hai, koi qanooni muddat app mein nahin.
 - [ ] **D-034:** Mahana mazdoor ki ghair hazri par tankhwah khud nahin katti, aap wajah likh kar katoti add karte hain. Advance ki wapsi par agreement nahin poocha jata. Katoti ki hadd **Apni company** mein aap chahen to likhein, warna koi hadd nahin.
 

@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/closing.dart';
 import '../data/payroll.dart';
 import '../data/statement.dart';
 import '../data/tenant_database.dart';
@@ -77,6 +78,18 @@ final cashOfWorkerProvider = StreamProvider.family<List<CashEntry>, String>((ref
 
 /// [month] is YYYY-MM.
 final payrollProvider = StreamProvider.family<List<WorkerPayroll>, String>((ref, month) => ref.watch(dbProvider).watchPayroll(month));
+
+/// The last day of the latest closed month (REP-04).
+final lockedThroughProvider = StreamProvider<String?>((ref) {
+  final db = ref.watch(dbProvider);
+  final lastDay = db.periodLocks.lastDay.max();
+  final query = db.selectOnly(db.periodLocks)
+    ..addColumns([lastDay])
+    ..where(db.periodLocks.reopened.equals(false));
+  return query.watchSingle().map((row) => row.read(lastDay));
+});
+
+final closingProvider = StreamProvider.autoDispose.family<MonthClosing, String>((ref, month) => ref.watch(dbProvider).watchClosing(month));
 
 final wagesDueProvider = StreamProvider<List<WorkerWagesDue>>((ref) => ref.watch(dbProvider).watchWagesDue());
 
