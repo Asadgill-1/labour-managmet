@@ -49,10 +49,10 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | PAY-02 | 07 | Do alag concepts | T11 | IMPLEMENTED_UNVERIFIED | TC-001, TC-054 | `packages/domain/test/payroll_test.dart` |
 | PAY-03 | 07 | User ki misal | T11 | IMPLEMENTED_UNVERIFIED | TC-001 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
 | PAY-04 | 07 | Katoti ki misal | T11 | IMPLEMENTED_UNVERIFIED | TC-032 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
-| PAY-05 | 07 | Advance sub-ledger | T11, T12, T12a | IN_PROGRESS | TC-002, TC-035, TC-051 | - |
-| PAY-06 | 07 | Salary payments | T12, T12a | IN_PROGRESS | TC-034, TC-051 | - |
+| PAY-05 | 07 | Advance sub-ledger | T11, T12, T12a | IMPLEMENTED_UNVERIFIED | TC-002, TC-035, TC-051, TC-070 | - |
+| PAY-06 | 07 | Salary payments | T12, T12a | IMPLEMENTED_UNVERIFIED | TC-034, TC-051, TC-068, TC-069 | - |
 | PAY-07 | 07 | Deductions | T11, T11e | IMPLEMENTED_UNVERIFIED | TC-033, TC-061 | `apps/mobile/test/payroll_test.dart` |
-| PAY-08 | 07 | Compliance | T12 | NOT_STARTED | - | - |
+| PAY-08 | 07 | Compliance | T12 | IMPLEMENTED_UNVERIFIED | TC-071 | - |
 | PAY-09 | 07 | Payslip | T11f, T14 | IN_PROGRESS | TC-064 | `apps/mobile/test/statement_test.dart` |
 | TS-01 | 08 | Client/date range/site chunein aur approved attendance se timesheet banayein | T15 | NOT_STARTED | - | - |
 | TS-02 | 08 | Columns | T15 | NOT_STARTED | TC-038 | - |

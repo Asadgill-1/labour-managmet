@@ -11,6 +11,21 @@ import 'tenant_database.dart';
 
 enum StatementMoneyKind { advance, advanceReturned, room, visa, deduction, paid }
 
+/// A month was given more than it still owes (PAY-06). Overpaying goes on the advance, never on a month.
+class AllocationTooHigh implements Exception {
+  const AllocationTooHigh();
+}
+
+/// One worker's finished months with wages still unpaid (PAY-08).
+class WorkerWagesDue {
+  const WorkerWagesDue(this.worker, this.wages);
+
+  final Worker worker;
+  final List<WageDue> wages;
+
+  int get totalFils => wages.fold(0, (total, w) => total + w.fils);
+}
+
 /// A dated line of money on a worker's month.
 class StatementMoney {
   const StatementMoney(this.date, this.kind, this.fils, {this.note});
@@ -40,6 +55,8 @@ class WorkerStatement {
     required this.visaLeftFils,
     required this.work,
     required this.money,
+    required this.unpaid,
+    required this.owing,
   });
 
   final Worker worker;
@@ -65,6 +82,12 @@ class WorkerStatement {
   final List<AttendanceEntry> work;
   final List<StatementMoney> money;
 
+  /// Each month's wage still unpaid, with advance kept apart as on Tankhwah. This is what a payment can settle (PAY-06).
+  final Map<String, int> unpaid;
+
+  /// The same less any advance not yet cut, which is what the worker is really still waiting for (PAY-08).
+  final Map<String, int> owing;
+
   int get earnedFils => workFils + salaryFils + allowanceFils;
   int get takenFils => advanceFils + roomFils + visaFils + otherFils + paidFils;
   int get closingFils => openingFils + earnedFils - takenFils;
@@ -73,11 +96,10 @@ class WorkerStatement {
 
 extension StatementOps on TenantDatabase {
   /// Everyone's month, or one worker's. Older months are only added up in the database, so a year of history costs
-  /// no more than a month of it (REP-08).
-  Future<List<WorkerStatement>> statementsFor(String month, {String? workerId}) async {
+  /// no more than a month of it (REP-08). Without [withWork], the day by day rows are left out.
+  Future<List<WorkerStatement>> statementsFor(String month, {String? workerId, bool withWork = true}) async {
     final from = monthFirstDay(month);
     final to = monthLastDay(month);
-    final latestPayment = monthLastDay(addMonths(month, 1));
     final thisMonth = dubaiToday(DateTime.now()).substring(0, 7);
 
     final people = await (select(workers)
@@ -94,18 +116,26 @@ extension StatementOps on TenantDatabase {
         .get();
     final sumsOf = groupedBy(sums, (r) => r.read(attendanceEntries.workerId)!);
 
-    final rows = await (select(attendanceEntries)
-          ..where((e) => e.superseded.equals(false) & e.workDate.isBetweenValues(from, to) & (workerId == null ? const Constant(true) : e.workerId.equals(workerId)))
-          ..orderBy([(e) => OrderingTerm.asc(e.workDate), (e) => OrderingTerm.asc(e.createdAtUtc)]))
-        .get();
+    final rows = !withWork
+        ? const <AttendanceEntry>[]
+        : await (select(attendanceEntries)
+              ..where((e) => e.superseded.equals(false) & e.workDate.isBetweenValues(from, to) & (workerId == null ? const Constant(true) : e.workerId.equals(workerId)))
+              ..orderBy([(e) => OrderingTerm.asc(e.workDate), (e) => OrderingTerm.asc(e.createdAtUtc)]))
+            .get();
     final rowsOf = groupedBy(rows, (e) => e.workerId);
 
     final cash = await (select(cashEntries)
-          ..where((c) => c.entryDate.isSmallerOrEqualValue(latestPayment) & (workerId == null ? c.workerId.isNotNull() : c.workerId.equals(workerId)))
+          ..where((c) => workerId == null ? c.workerId.isNotNull() : c.workerId.equals(workerId))
           ..orderBy([(c) => OrderingTerm.asc(c.entryDate), (c) => OrderingTerm.asc(c.createdAtUtc)]))
         .get();
     final undone = {for (final c in cash) ?c.reversesEntryId};
     final cashOf = groupedBy(cash.where((c) => c.reversesEntryId == null && !undone.contains(c.id)), (c) => c.workerId);
+
+    final allocations = await (select(salaryAllocations)..where((a) => workerId == null ? const Constant(true) : a.paymentId.isIn([for (final c in cash) c.id]))).get();
+    final partsOf = <String, Map<String, int>>{};
+    for (final a in allocations) {
+      (partsOf[a.paymentId] ??= {})[a.month] = a.amountFils;
+    }
 
     final items = await (select(payrollItems)
           ..where((i) => i.periodFrom.isSmallerOrEqualValue(from) & (workerId == null ? const Constant(true) : i.workerId.equals(workerId)))
@@ -131,6 +161,11 @@ extension StatementOps on TenantDatabase {
       for (final r in sumsOf[worker.id] ?? const <TypedResult>[]) {
         add(r.read(monthOf)!, r.read(earned) ?? 0);
       }
+      final workFils = own[month] ?? 0;
+
+      // The account counts advance when given. Wages count it only when it is cut (PAY-05).
+      final advanceAside = <String, int>{};
+      void aside(String m, int fils) => advanceAside[m] = (advanceAside[m] ?? 0) + fils;
 
       var allowance = 0, room = 0, visa = 0, other = 0, visaCut = 0;
       final money = <StatementMoney>[];
@@ -158,7 +193,7 @@ extension StatementOps on TenantDatabase {
             cut(StatementMoneyKind.visa, () => visa += i.amountFils);
           // Counted when the advance was given.
           case PayItemKind.advanceRecovery:
-            break;
+            aside(m, -i.amountFils);
         }
       }
 
@@ -169,10 +204,11 @@ extension StatementOps on TenantDatabase {
         final current = m == month;
         switch (CashKind.values.byName(c.kind)) {
           case CashKind.salaryPaid:
-            payments.add(StatementPayment(c.entryDate, c.amountFils, note: c.note ?? c.method));
+            payments.add(StatementPayment(c.entryDate, c.amountFils, note: c.note ?? c.reference ?? c.method, parts: partsOf[c.id]));
           case CashKind.advanceGiven:
             if (m.compareTo(month) > 0) break;
             add(m, -c.amountFils);
+            aside(m, c.amountFils);
             if (current) {
               advance += c.amountFils;
               money.add(StatementMoney(c.entryDate, StatementMoneyKind.advance, c.amountFils, note: c.note));
@@ -180,6 +216,7 @@ extension StatementOps on TenantDatabase {
           case CashKind.advanceReturned:
             if (m.compareTo(month) > 0) break;
             add(m, c.amountFils);
+            aside(m, -c.amountFils);
             if (current) {
               advance -= c.amountFils;
               money.add(StatementMoney(c.entryDate, StatementMoneyKind.advanceReturned, -c.amountFils, note: c.note));
@@ -199,7 +236,10 @@ extension StatementOps on TenantDatabase {
       for (final b in openingsOf[worker.id] ?? const <OpeningBalance>[]) {
         final m = b.asOfDate.substring(0, 7);
         if (b.kind == 'worker_salary_owed') brought[m] = (brought[m] ?? 0) + b.amountFils;
-        if (b.kind == 'worker_advance') brought[m] = (brought[m] ?? 0) - b.amountFils;
+        if (b.kind == 'worker_advance') {
+          brought[m] = (brought[m] ?? 0) - b.amountFils;
+          aside(m, b.amountFils);
+        }
       }
 
       // A monthly salary counts once its month is posted, and until then at what posting would pay. A contract dated
@@ -218,7 +258,10 @@ extension StatementOps on TenantDatabase {
       }
       salaries.forEach(add);
 
-      final months = monthStatements(ownByMonth: own, broughtByMonth: brought, payments: payments, through: month);
+      final account = _added(own, brought);
+      final wages = _added(account, advanceAside);
+      final placed = placePayments(wages, payments);
+      final months = monthStatements(ownByMonth: own, broughtByMonth: brought, placed: placed, through: month);
       final statement = months.where((s) => s.month == month).firstOrNull;
       money
         ..addAll([for (final p in statement?.payments ?? const <StatementPayment>[]) StatementMoney(p.date, StatementMoneyKind.paid, p.fils, note: p.note)])
@@ -229,7 +272,7 @@ extension StatementOps on TenantDatabase {
         worker: worker,
         month: month,
         openingFils: statement?.openingFils ?? 0,
-        workFils: work.fold(0, (total, e) => total + (e.workerAmountFils ?? 0)),
+        workFils: workFils,
         salaryFils: salaries[month] ?? 0,
         allowanceFils: allowance,
         advanceFils: advance,
@@ -240,9 +283,112 @@ extension StatementOps on TenantDatabase {
         visaLeftFils: visaGiven - visaCut,
         work: work,
         money: money,
+        unpaid: unpaidAfter(wages, placed, through: month),
+        owing: unpaidAfter(account, placed, through: month),
       );
       if (workerId != null || one.hasSomething) result.add(one);
     }
     return result;
   }
+
+  /// Records a salary payment and the months it settles, together (PAY-06, MODEL-07). Anything beyond [parts] goes on the
+  /// worker's advance as a line of its own, so it never shows as a negative salary. A retry changes nothing (TEAM-04).
+  /// ponytail: undoing the salary line leaves that advance line, which is undone by hand. Link them if owners trip on it.
+  Future<void> addSalaryPayment({
+    required String operationId,
+    required String date,
+    required String workerId,
+    required int amountFils,
+    required Map<String, int> parts,
+    required String extraNote,
+    String method = 'cash',
+    String? note,
+    String? reference,
+    String? receiver,
+  }) {
+    final id = newUuid();
+    return applyOperation(
+      operationId: operationId,
+      entity: 'cash_entries',
+      recordId: id,
+      version: 1,
+      action: 'create',
+      change: () async {
+        final paid = parts.values.fold(0, (total, fils) => total + fils);
+        final unpaid = (await statementsFor(date.substring(0, 7), workerId: workerId, withWork: false)).single.unpaid;
+        if (paid > amountFils || parts.entries.any((p) => p.value <= 0 || p.value > (unpaid[p.key] ?? 0))) throw const AllocationTooHigh();
+        final now = DateTime.now().toUtc();
+        Future<CashEntry> line(String rowId, CashKind kind, int fils, String? text) => into(cashEntries).insertReturning(
+          CashEntriesCompanion.insert(
+            id: rowId,
+            tenantId: tenantId,
+            createdAtUtc: now,
+            updatedAtUtc: now,
+            actorId: actorId,
+            sourceOperationId: operationId,
+            entryDate: date,
+            kind: kind.name,
+            amountFils: fils,
+            workerId: Value(workerId),
+            method: Value(method),
+            note: Value(text),
+            reference: Value(reference),
+            receiver: Value(receiver),
+          ),
+        );
+        final saved = <Map<String, dynamic>>[];
+        if (paid > 0) {
+          saved.add((await line(id, CashKind.salaryPaid, paid, note)).toJson());
+          for (final part in parts.entries) {
+            await into(salaryAllocations).insert(
+              SalaryAllocationsCompanion.insert(
+                id: newUuid(),
+                tenantId: tenantId,
+                createdAtUtc: now,
+                updatedAtUtc: now,
+                actorId: actorId,
+                sourceOperationId: operationId,
+                paymentId: id,
+                month: part.key,
+                amountFils: part.value,
+              ),
+            );
+          }
+        }
+        if (amountFils > paid) saved.add((await line(paid > 0 ? newUuid() : id, CashKind.advanceGiven, amountFils - paid, extraNote)).toJson());
+        return {'lines': saved, 'parts': parts};
+      },
+    );
+  }
+
+  /// Everyone with wages unpaid from a finished month, longest waiting first (PAY-08).
+  Future<List<WorkerWagesDue>> wagesDueNow() async {
+    final today = dubaiToday(DateTime.now());
+    final dueDays = (await select(tenantProfiles).getSingleOrNull())?.wageDueDays;
+    final result = <WorkerWagesDue>[];
+    for (final s in await statementsFor(today.substring(0, 7), withWork: false)) {
+      final wages = wagesDue(s.owing, today: today, dueDays: dueDays);
+      if (wages.isNotEmpty) result.add(WorkerWagesDue(s.worker, wages));
+    }
+    result.sort((a, b) => a.wages.first.month.compareTo(b.wages.first.month));
+    return result;
+  }
+
+  /// Sends a fresh list whenever anything behind it changes.
+  /// ponytail: adds up every worker on each change. Fine at 1,000 workers (see scale_test), debounce if a phone shows lag.
+  Stream<List<WorkerWagesDue>> watchWagesDue() async* {
+    yield await wagesDueNow();
+    final changes = tableUpdates(
+      TableUpdateQuery.onAllTables([attendanceEntries, payContracts, payrollItems, payrollLines, cashEntries, salaryAllocations, openingBalances, workers, tenantProfiles]),
+    );
+    await for (final _ in changes) {
+      yield await wagesDueNow();
+    }
+  }
+}
+
+Map<String, int> _added(Map<String, int> a, Map<String, int> b) {
+  final sum = {...a};
+  b.forEach((month, fils) => sum[month] = (sum[month] ?? 0) + fils);
+  return sum;
 }

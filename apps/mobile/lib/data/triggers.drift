@@ -17,6 +17,15 @@ CREATE TRIGGER cash_no_delete BEFORE DELETE ON cash_entries BEGIN
   SELECT RAISE(ABORT, 'cash entries are append-only');
 END;
 
+-- What a payment settled stays on record. Undoing the payment sets these aside (PAY-06, REP-08).
+CREATE TRIGGER allocation_no_update BEFORE UPDATE ON salary_allocations BEGIN
+  SELECT RAISE(ABORT, 'salary allocations are append-only');
+END;
+
+CREATE TRIGGER allocation_no_delete BEFORE DELETE ON salary_allocations BEGIN
+  SELECT RAISE(ABORT, 'salary allocations are append-only');
+END;
+
 -- A visa line belongs to a worker (D-039). The table's own check is older than these kinds.
 CREATE TRIGGER cash_visa_needs_worker BEFORE INSERT ON cash_entries
 WHEN NEW.kind IN ('visaPaid', 'visaReturned') AND NEW.worker_id IS NULL

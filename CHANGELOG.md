@@ -10,6 +10,10 @@
 - Calculation engine for hourly, day, shift and monthly contracts.
 - Bulk attendance with exceptions, approval and corrections.
 - New colours and cards, and a side panel of main tabs with sub-tabs.
+- Choose which month a salary payment settles, oldest first by default, with reference and who took it.
+- Paying more than is owed goes on the worker's advance, after you confirm.
+- A reminder of unpaid salary on Aaj and Tankhwah, with how late each month is, counted from your own days.
+- One button in Tankhwah to cut advance, so "To pay" matches the slip.
 - Salary slip for each worker, as a PDF to send on WhatsApp, with no company figures on it.
 - Owner's salary sheet by company, with rates, bill, pay and estimated profit, in PDF and Excel.
 - A worker's own pay shows under their name when you make a group, and you can change it there, per day or per hour. The group's wage is only for someone with no pay of their own.

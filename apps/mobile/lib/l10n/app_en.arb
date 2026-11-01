@@ -570,6 +570,93 @@
   },
   "visaReturnAdd": "Add money returned",
   "payKindVisa": "Visa instalment",
+  "salaryMonthsHeading": "Which month's salary",
+  "salaryMonthLeft": "{amount} unpaid",
+  "@salaryMonthLeft": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "salaryOldestFirst": "Oldest first",
+  "salaryNothingOwed": "No salary is unpaid for this worker. This amount goes on their advance.",
+  "salaryExtraLine": "{amount} more than is owed. It goes on the advance.",
+  "@salaryExtraLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "salaryExtraTitle": "{amount} more than is owed",
+  "@salaryExtraTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "salaryExtraBody": "This extra is written as an advance to this worker, and comes back through a later salary.",
+  "salaryExtraConfirm": "Write as advance",
+  "salaryExtraNote": "Paid above salary owed",
+  "salaryPartsTooMuch": "The months add up to more than the amount.",
+  "salaryPartTooHigh": "Above what is unpaid",
+  "salaryReference": "Reference (bank or cheque)",
+  "salaryReceiver": "Received by",
+  "salaryReceiverHelp": "Leave empty if the worker took it.",
+  "wagesDueBanner": "{count, plural, =1{1 worker} other{{count} workers}} unpaid: {amount}",
+  "@wagesDueBanner": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "wagesDueOldest": "Waiting longest: {month}",
+  "@wagesDueOldest": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "wagesDueTitle": "Unpaid salary",
+  "wagesDueWorkers": "Workers",
+  "wagesDueTotal": "Unpaid",
+  "wagesDueLate": "{days, plural, =1{1 day late} other{{days} days late}}",
+  "@wagesDueLate": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "wagesDueInTime": "due, not late yet",
+  "wagesDueNone": "Every finished month is paid.",
+  "wagesDueNote": "A reminder only. Recording a late salary does not make it lawful, and this app is not a wage payment or WPS service.",
+  "wageDueDays": "Days to pay salary after month end",
+  "wageDueDaysHelp": "Your own figure, ask your accountant. Empty means late from the day after month end.",
+  "wageDueDaysError": "A whole number from 0 to 90.",
+  "applyAdvanceCuts": "Cut advance ({count})",
+  "@applyAdvanceCuts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "advanceCutsApplied": "Advance cut for {count} workers",
+  "@advanceCutsApplied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "applyVisaInstalments": "Add visa instalments ({count})",
   "@applyVisaInstalments": {
     "placeholders": {

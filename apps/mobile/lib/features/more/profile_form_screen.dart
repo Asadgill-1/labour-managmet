@@ -35,6 +35,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
   late final _bank = TextEditingController(text: widget.profile?.bankDetails);
   late final _footer = TextEditingController(text: widget.profile?.documentFooter);
   late final _limit = TextEditingController(text: widget.profile?.deductionLimitBps == null ? null : '${widget.profile!.deductionLimitBps! ~/ 100}');
+  late final _wageDays = TextEditingController(text: widget.profile?.wageDueDays?.toString());
   late bool _vat = widget.profile?.vatRegistered ?? false;
   late String? _vatFrom = widget.profile?.vatEffectiveFrom;
 
@@ -60,6 +61,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
         bankDetails: optionalText(_bank),
         documentFooter: optionalText(_footer),
         deductionLimitBps: Value(_limit.text.trim().isEmpty ? null : int.parse(_limit.text.trim()) * 100),
+        wageDueDays: Value(int.tryParse(_wageDays.text.trim())),
       ),
     ));
     if (!saved || !mounted) return;
@@ -126,6 +128,19 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
                 if (text.isEmpty) return null;
                 final percent = int.tryParse(text);
                 return percent == null || percent < 1 || percent > 100 ? l10n.deductionLimitError : null;
+              },
+            ),
+            fieldGap,
+            Field(
+              l10n.wageDueDays,
+              _wageDays,
+              keyboardType: TextInputType.number,
+              helper: l10n.wageDueDaysHelp,
+              validator: (v) {
+                final text = (v ?? '').trim();
+                if (text.isEmpty) return null;
+                final days = int.tryParse(text);
+                return days == null || days < 0 || days > 90 ? l10n.wageDueDaysError : null;
               },
             ),
           ],

@@ -526,8 +526,8 @@ void main() {
     await settle(tester);
     await tester.tap(find.text('Adaigi likhein'));
     await settle(tester);
-    expect(find.text('750.00'), findsOneWidget);
-    await tester.enterText(find.widgetWithText(TextFormField, 'Raqam (AED)'), '300');
+    expect(find.text('750.00'), findsNWidgets(2), reason: 'the amount, and the month it settles');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Raqam (AED)').first, '300');
     await tester.tap(find.text('Save karein'));
     await settle(tester);
     expect(find.text('AED 450.00'), findsNWidgets(2), reason: 'the band, and the account');

@@ -1,5 +1,6 @@
 import 'package:drift_dev/api/migrations_native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/data/tenant_database.dart';
 
 import 'generated/schema.dart';
@@ -106,5 +107,28 @@ void main() {
     expect(rows['open']!.workerBasis, 'hour');
     expect(rows['open']!.workerAmountFils, 7000);
     expect(rows['frozen']!.workerAmountFils, 1000);
+  });
+
+  test('a phone on version 7 upgrades: old payments stay whole and go oldest first, and what a new one settles cannot change (PAY-06)', () async {
+    final old = await verifier.schemaAt(7);
+    old.rawDatabase.execute('''
+      INSERT INTO tenant_profiles (id, $commonColumns, legal_name) VALUES ('p1', $common, 'Labour');
+      INSERT INTO workers (id, $commonColumns, code, name) VALUES ('w1', $common, 'W001', 'Ahmad');
+      INSERT INTO opening_balances (id, $commonColumns, kind, worker_id, amount_fils, as_of_date, source_note) VALUES ('o1', $common, 'worker_salary_owed', 'w1', 5000, '2026-09-30', 'Old book');
+      INSERT INTO cash_entries (id, $commonColumns, entry_date, kind, amount_fils, worker_id) VALUES ('c1', $common, '2026-10-05', 'salaryPaid', 3000, 'w1');
+    ''');
+
+    final db = TenantDatabase(old.newConnection(), tenantId: 't', deviceId: 'device');
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, db.schemaVersion);
+
+    final line = await db.select(db.cashEntries).getSingle();
+    expect((line.amountFils, line.reference, line.receiver), (3000, null, null));
+    expect((await db.select(db.tenantProfiles).getSingle()).wageDueDays, isNull);
+    final statement = (await db.statementsFor('2026-10', workerId: 'w1')).single;
+    expect(statement.unpaid, {'2026-09': 2000});
+
+    await db.addSalaryPayment(operationId: newUuid(), date: '2026-10-06', workerId: 'w1', amountFils: 2000, parts: {'2026-09': 2000}, extraNote: 'x');
+    await expectLater(db.delete(db.salaryAllocations).go(), throwsA(anything));
   });
 }

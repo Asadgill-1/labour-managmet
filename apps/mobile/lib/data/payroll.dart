@@ -56,6 +56,7 @@ class WorkerPayroll {
   bool get canPost => !posted && figures.issues.isEmpty && !figures.isEmpty;
   bool get canAddRoomCharge => !posted && !items.any((i) => i.kind == PayItemKind.roomCharge.name);
   bool get needsVisaInstalment => !posted && (worker.visaInstalmentFils ?? 0) > 0 && visaLeftFils > 0 && !items.any((i) => i.kind == PayItemKind.visaRecovery.name);
+  bool get needsAdvanceCut => !posted && advanceLeftFils > 0 && figures.netFils > 0 && !items.any((i) => i.kind == PayItemKind.advanceRecovery.name);
   int get payableFils => openingFils + figures.dueFils;
   int get closingFils => payableFils - paidFils;
 }
@@ -399,6 +400,50 @@ extension PayrollOps on TenantDatabase {
               periodFrom: monthFirstDay(month),
               kind: PayItemKind.visaRecovery.name,
               amountFils: min(p.worker.visaInstalmentFils!, p.visaLeftFils),
+              reason: reason,
+            ),
+          );
+          saved.add(row.toJson());
+          added++;
+        }
+        return {'items': saved};
+      },
+    );
+    return added;
+  }
+
+  /// Cuts what each worker's month can carry of their advance, so "To pay" here matches the slip, which counts an advance
+  /// when given. The owner presses this, and can still change or remove each one before posting (PAY-05, D-043).
+  /// A recovery waiting on another unposted month stays counted. Returns how many were added.
+  Future<int> applyAdvanceCuts(String month, {required String reason, required String operationId}) async {
+    var added = 0;
+    await applyOperation(
+      operationId: operationId,
+      entity: 'payroll_items',
+      recordId: operationId,
+      version: 1,
+      action: 'create',
+      change: () async {
+        final now = DateTime.now().toUtc();
+        final saved = <Map<String, dynamic>>[];
+        final waiting = groupedBy(await (select(payrollItems)..where((i) => i.kind.equals(PayItemKind.advanceRecovery.name) & i.lineId.isNull())).get(), (i) => i.workerId);
+        for (final p in await payrollFor(month)) {
+          if (!p.needsAdvanceCut) continue;
+          final left = p.advanceLeftFils - (waiting[p.worker.id] ?? const <PayrollItem>[]).fold<int>(0, (total, i) => total + i.amountFils);
+          final cut = min(left, p.figures.netFils);
+          if (cut <= 0) continue;
+          final row = await into(payrollItems).insertReturning(
+            PayrollItemsCompanion.insert(
+              id: newUuid(),
+              tenantId: tenantId,
+              createdAtUtc: now,
+              updatedAtUtc: now,
+              actorId: actorId,
+              sourceOperationId: operationId,
+              workerId: p.worker.id,
+              periodFrom: monthFirstDay(month),
+              kind: PayItemKind.advanceRecovery.name,
+              amountFils: cut,
               reason: reason,
             ),
           );

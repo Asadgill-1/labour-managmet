@@ -22,7 +22,7 @@ Money records add `currency` and `posting_date`. An effective date is always sep
 | Cash book | `cash_entries` | One row per amount in or out, with a kind saying where it belongs: advance, salary, room rent paid or received, expense, advance returned, company receipt. Append-only by trigger. A reversal row cancels a mistake (D-030, REP-08) |
 | Visa money | `cash_entries` kinds `visaPaid` and `visaReturned`, `workers.visa_instalment_fils`, `payroll_lines.visa_recovery_fils` | Left = paid - returned - recovered through standing payroll lines. Always derived (D-039) |
 | Rooms | `rooms`, `workers.room_id` | Rent received and paid per room come from the cash book (D-031) |
-| Worker money | `payroll_items`, `salary_payment_allocations` (T12) | Advance outstanding is opening + given - returned - recovered through posted payroll. A deduction or room charge carries a reason and authorization, enforced by a CHECK. For a room charge that is the worker's note, or the owner's own say-so when ticking them (PAY-05, PAY-07, D-041) |
+| Worker money | `payroll_items`, `salary_allocations` | A salary payment's months, append-only: a row per month with its share, set aside when the payment is undone. `cash_entries.reference` and `receiver` hold the rest of PAY-06, and `tenant_profiles.wage_due_days` the company's own days to pay (D-043). Advance outstanding is opening + given - returned - recovered through posted payroll. A deduction or room charge carries a reason and authorization, enforced by a CHECK. For a room charge that is the worker's note, or the owner's own say-so when ticking them (PAY-05, PAY-07, D-041) |
 | Timesheets | `timesheets`, `timesheet_revisions`, `timesheet_lines` | A revision preserves the original (TS-06) |
 | Invoices | `invoices`, `invoice_lines`, `invoice_source_allocations`, `credit_notes` | Draft has no legal number. Stored as structured data for a later e-invoicing export (D-011) |
 | Receipts | `receipts`, `receipt_allocations` | Unapplied credit allowed. Allocation cannot exceed outstanding (INV-05) |
@@ -46,6 +46,7 @@ No table stores an editable balance. Current balances derive from posted payroll
 | Same work not billed twice | Guard over `invoice_source_allocations` per attendance entry and billed unit |
 | Allocation within outstanding | Checked inside the posting transaction |
 | Posted rows immutable | Triggers rejecting `UPDATE` and `DELETE` on posted payroll, issued invoices and allocations |
+| What a payment settled never changes | Triggers rejecting `UPDATE` and `DELETE` on `salary_allocations`. One row per payment and month, `UNIQUE (payment_id, month)` |
 | One worker paid once per month | Partial unique index on `payroll_lines (worker_id, period_from)` where not reversed |
 | Cross-tenant reference invalid | Cloud: composite foreign key on `(tenant_id, id)`. Local: impossible across files, and restore checks tenant identity |
 

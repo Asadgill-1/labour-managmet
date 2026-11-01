@@ -422,6 +422,7 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
     }
   }
   final cash = groupedBy(await (db.select(db.cashEntries)..where((c) => c.workerId.isNotNull())).get(), (c) => c.workerId);
+  final parts = await _salaryParts(db);
   final lines = groupedBy(await (db.select(db.payrollLines)..where((l) => l.reversed.equals(false))).get(), (l) => l.workerId);
   final items = groupedBy(await db.select(db.payrollItems).get(), (i) => i.workerId);
   final openings = groupedBy(await (db.select(db.openingBalances)..where((b) => b.workerId.isNotNull())).get(), (b) => b.workerId);
@@ -477,7 +478,7 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
           final kind = CashKind.values.byName(c.kind);
           final signed = cashLine(c).signedFils;
           final what = _withReversal(l10n, kindLabel(l10n, kind), c);
-          final note = [_methodLabel(l10n, c.method), ?c.note].join(', ');
+          final note = [_methodLabel(l10n, c.method), ...salaryPartLabels(parts[c.id] ?? const []), ?c.reference, ?c.receiver, ?c.note].join(', ');
           return switch (kind) {
             CashKind.salaryPaid => _AccountLine(c.entryDate, c.createdAtUtc, what, paid: signed, note: note),
             CashKind.advanceGiven => _AccountLine(c.entryDate, c.createdAtUtc, what, given: signed, advance: signed, note: note),
@@ -649,11 +650,17 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
   );
 }
 
+/// The months each salary payment settled, by payment (PAY-06).
+Future<Map<String, List<SalaryAllocation>>> _salaryParts(TenantDatabase db) async {
+  return groupedBy(await (db.select(db.salaryAllocations)..orderBy([(a) => OrderingTerm.asc(a.month)])).get(), (a) => a.paymentId);
+}
+
 Future<RegisterData> _cash(TenantDatabase db, AppLocalizations l10n, _Masters m, String? from, String? to) async {
   final rows = (await (db.select(db.cashEntries)..orderBy([(c) => OrderingTerm.desc(c.entryDate), (c) => OrderingTerm.asc(c.createdAtUtc)])).get())
       .where((c) => _inRange(c.entryDate, from, to))
       .toList();
   final undone = undoneIds(rows);
+  final parts = await _salaryParts(db);
   return RegisterData(
     title: l10n.regCash,
     titleColumn: 1,
@@ -693,7 +700,7 @@ Future<RegisterData> _cash(TenantDatabase db, AppLocalizations l10n, _Masters m,
               _methodLabel(l10n, c.method),
               isMoneyIn(kind) ? line.signedFils : null,
               isMoneyIn(kind) ? null : line.signedFils,
-              c.note,
+              [...salaryPartLabels(parts[c.id] ?? const []), ?c.reference, ?c.receiver, ?c.note].join(', '),
             ],
             group: c.entryDate,
             tags: {

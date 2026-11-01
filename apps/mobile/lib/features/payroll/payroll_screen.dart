@@ -15,6 +15,7 @@ import '../registers/export_flow.dart';
 import '../registers/salary_sheet.dart';
 import 'payroll_worker_screen.dart';
 import 'room_charge_screen.dart';
+import 'wages_due_screen.dart';
 
 String issueText(AppLocalizations l10n, PayrollIssue issue, WorkerPayroll p) => switch (issue) {
   PayrollIssue.missingRate => l10n.issueMissingRate(p.unpricedRows),
@@ -75,6 +76,15 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
     if (saved && mounted) showSavedOnPhone(context, l10n.visaInstalmentsApplied(added));
   }
 
+  Future<void> _applyAdvanceCuts() async {
+    final l10n = AppLocalizations.of(context);
+    var added = 0;
+    final saved = await saveOrExplain(context, () async {
+      added = await ref.read(dbProvider).applyAdvanceCuts(_month, reason: l10n.payKindRecovery, operationId: newUuid());
+    });
+    if (saved && mounted) showSavedOnPhone(context, l10n.advanceCutsApplied(added));
+  }
+
   /// The owner's own sheet for this month, with what each company pays and what is left over.
   Future<void> _ownerSheet() async {
     final l10n = AppLocalizations.of(context);
@@ -113,6 +123,7 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
     final shown = needle.isEmpty ? rows : rows.where((p) => p.worker.name.toLowerCase().contains(needle) || p.worker.code.toLowerCase().contains(needle)).toList();
     final ready = rows.where((p) => p.canPost).toList();
     final visaInstalments = rows.where((p) => p.needsVisaInstalment).length;
+    final advanceCuts = rows.where((p) => p.needsAdvanceCut).length;
     final earned = rows.fold(0, (sum, p) => sum + p.figures.grossFils);
     final cut = rows.fold(0, (sum, p) => sum + p.figures.deductionsFils + p.figures.recoveryFils + p.figures.visaFils);
     final toPay = rows.fold(0, (sum, p) => sum + (p.closingFils > 0 ? p.closingFils : 0));
@@ -139,6 +150,7 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
             ),
           ),
           const SizedBox(height: 8),
+          const WagesDueBanner(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: Wrap(
@@ -150,6 +162,7 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
                   child: Text(l10n.applyRoomCharges),
                 ),
                 if (visaInstalments > 0) OutlinedButton(onPressed: _applyVisaInstalments, child: Text(l10n.applyVisaInstalments(visaInstalments))),
+                if (advanceCuts > 0) OutlinedButton(onPressed: _applyAdvanceCuts, child: Text(l10n.applyAdvanceCuts(advanceCuts))),
                 OutlinedButton.icon(
                   icon: const Icon(Icons.table_chart),
                   label: Text(_makingSheet ? l10n.exportMaking : l10n.ownerSheet),

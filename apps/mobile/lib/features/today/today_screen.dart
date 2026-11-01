@@ -10,6 +10,7 @@ import '../../app/theme.dart';
 import '../../data/attendance.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../payroll/wages_due_screen.dart';
 import 'attendance_entry_screen.dart';
 import 'attendance_review_screen.dart';
 import 'row_editor_screen.dart';
@@ -117,6 +118,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
             ),
           ),
           const SizedBox(height: 8),
+          const WagesDueBanner(),
           if (missing.isNotEmpty)
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),

@@ -1209,6 +1209,122 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payKindVisa => 'Visa instalment';
 
   @override
+  String get salaryMonthsHeading => 'Which month\'s salary';
+
+  @override
+  String salaryMonthLeft(String amount) {
+    return '$amount unpaid';
+  }
+
+  @override
+  String get salaryOldestFirst => 'Oldest first';
+
+  @override
+  String get salaryNothingOwed =>
+      'No salary is unpaid for this worker. This amount goes on their advance.';
+
+  @override
+  String salaryExtraLine(String amount) {
+    return '$amount more than is owed. It goes on the advance.';
+  }
+
+  @override
+  String salaryExtraTitle(String amount) {
+    return '$amount more than is owed';
+  }
+
+  @override
+  String get salaryExtraBody =>
+      'This extra is written as an advance to this worker, and comes back through a later salary.';
+
+  @override
+  String get salaryExtraConfirm => 'Write as advance';
+
+  @override
+  String get salaryExtraNote => 'Paid above salary owed';
+
+  @override
+  String get salaryPartsTooMuch => 'The months add up to more than the amount.';
+
+  @override
+  String get salaryPartTooHigh => 'Above what is unpaid';
+
+  @override
+  String get salaryReference => 'Reference (bank or cheque)';
+
+  @override
+  String get salaryReceiver => 'Received by';
+
+  @override
+  String get salaryReceiverHelp => 'Leave empty if the worker took it.';
+
+  @override
+  String wagesDueBanner(int count, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count workers',
+      one: '1 worker',
+    );
+    return '$_temp0 unpaid: $amount';
+  }
+
+  @override
+  String wagesDueOldest(String month) {
+    return 'Waiting longest: $month';
+  }
+
+  @override
+  String get wagesDueTitle => 'Unpaid salary';
+
+  @override
+  String get wagesDueWorkers => 'Workers';
+
+  @override
+  String get wagesDueTotal => 'Unpaid';
+
+  @override
+  String wagesDueLate(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days late',
+      one: '1 day late',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get wagesDueInTime => 'due, not late yet';
+
+  @override
+  String get wagesDueNone => 'Every finished month is paid.';
+
+  @override
+  String get wagesDueNote =>
+      'A reminder only. Recording a late salary does not make it lawful, and this app is not a wage payment or WPS service.';
+
+  @override
+  String get wageDueDays => 'Days to pay salary after month end';
+
+  @override
+  String get wageDueDaysHelp =>
+      'Your own figure, ask your accountant. Empty means late from the day after month end.';
+
+  @override
+  String get wageDueDaysError => 'A whole number from 0 to 90.';
+
+  @override
+  String applyAdvanceCuts(int count) {
+    return 'Cut advance ($count)';
+  }
+
+  @override
+  String advanceCutsApplied(int count) {
+    return 'Advance cut for $count workers';
+  }
+
+  @override
   String applyVisaInstalments(int count) {
     return 'Add visa instalments ($count)';
   }
@@ -2931,6 +3047,110 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get payKindVisa => 'Visa ki qist';
+
+  @override
+  String get salaryMonthsHeading => 'Kis mahine ki tankhwah';
+
+  @override
+  String salaryMonthLeft(String amount) {
+    return '$amount baqi';
+  }
+
+  @override
+  String get salaryOldestFirst => 'Purana pehle';
+
+  @override
+  String get salaryNothingOwed =>
+      'Is mazdoor ki koi tankhwah baqi nahin. Yeh raqam advance mein jayegi.';
+
+  @override
+  String salaryExtraLine(String amount) {
+    return '$amount baqi se zyada hai. Yeh advance mein jayega.';
+  }
+
+  @override
+  String salaryExtraTitle(String amount) {
+    return '$amount baqi se zyada hai';
+  }
+
+  @override
+  String get salaryExtraBody =>
+      'Yeh zyada raqam is mazdoor ke advance mein likhi jayegi, aur baad ki tankhwah se wapas ayegi.';
+
+  @override
+  String get salaryExtraConfirm => 'Advance mein likhein';
+
+  @override
+  String get salaryExtraNote => 'Tankhwah se zyada diya';
+
+  @override
+  String get salaryPartsTooMuch => 'Mahinon ka jor raqam se zyada hai.';
+
+  @override
+  String get salaryPartTooHigh => 'Baqi se zyada hai';
+
+  @override
+  String get salaryReference => 'Reference (bank ya cheque)';
+
+  @override
+  String get salaryReceiver => 'Kis ne liya';
+
+  @override
+  String get salaryReceiverHelp => 'Mazdoor ne khud liya ho to khaali rakhein.';
+
+  @override
+  String wagesDueBanner(int count, String amount) {
+    return '$count mazdoor ki tankhwah baqi: $amount';
+  }
+
+  @override
+  String wagesDueOldest(String month) {
+    return 'Sab se purani: $month';
+  }
+
+  @override
+  String get wagesDueTitle => 'Baqi tankhwah';
+
+  @override
+  String get wagesDueWorkers => 'Mazdoor';
+
+  @override
+  String get wagesDueTotal => 'Baqi';
+
+  @override
+  String wagesDueLate(int days) {
+    return '$days din late';
+  }
+
+  @override
+  String get wagesDueInTime => 'dena hai, abhi late nahin';
+
+  @override
+  String get wagesDueNone => 'Har guzre mahine ki tankhwah ada ho chuki hai.';
+
+  @override
+  String get wagesDueNote =>
+      'Yeh sirf yaad-dehani hai. Der se di tankhwah likhne se woh qanooni nahin ho jati, aur yeh app tankhwah bhejne ya WPS ki service nahin.';
+
+  @override
+  String get wageDueDays => 'Mahine ke baad tankhwah kitne din mein';
+
+  @override
+  String get wageDueDaysHelp =>
+      'Aap ka apna number, accountant se poochh lein. Khaali ho to mahina khatam hote hi late.';
+
+  @override
+  String get wageDueDaysError => '0 se 90 tak poora number likhein.';
+
+  @override
+  String applyAdvanceCuts(int count) {
+    return 'Advance katein ($count)';
+  }
+
+  @override
+  String advanceCutsApplied(int count) {
+    return '$count mazdoor ka advance kat gaya';
+  }
 
   @override
   String applyVisaInstalments(int count) {

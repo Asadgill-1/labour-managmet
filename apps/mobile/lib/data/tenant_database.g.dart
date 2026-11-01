@@ -4499,6 +4499,28 @@ class $CashEntriesTable extends CashEntries
       'UNIQUE REFERENCES cash_entries (id)',
     ),
   );
+  static const VerificationMeta _referenceMeta = const VerificationMeta(
+    'reference',
+  );
+  @override
+  late final GeneratedColumn<String> reference = GeneratedColumn<String>(
+    'reference',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _receiverMeta = const VerificationMeta(
+    'receiver',
+  );
+  @override
+  late final GeneratedColumn<String> receiver = GeneratedColumn<String>(
+    'receiver',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -4520,6 +4542,8 @@ class $CashEntriesTable extends CashEntries
     method,
     note,
     reversesEntryId,
+    reference,
+    receiver,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4674,6 +4698,18 @@ class $CashEntriesTable extends CashEntries
         ),
       );
     }
+    if (data.containsKey('reference')) {
+      context.handle(
+        _referenceMeta,
+        reference.isAcceptableOrUnknown(data['reference']!, _referenceMeta),
+      );
+    }
+    if (data.containsKey('receiver')) {
+      context.handle(
+        _receiverMeta,
+        receiver.isAcceptableOrUnknown(data['receiver']!, _receiverMeta),
+      );
+    }
     return context;
   }
 
@@ -4759,6 +4795,14 @@ class $CashEntriesTable extends CashEntries
         DriftSqlType.string,
         data['${effectivePrefix}reverses_entry_id'],
       ),
+      reference: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reference'],
+      ),
+      receiver: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}receiver'],
+      ),
     );
   }
 
@@ -4794,6 +4838,12 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
 
   /// Set on a reversal, which carries the original's figures. Unique, so nothing is reversed twice.
   final String? reversesEntryId;
+
+  /// A bank or cheque reference on a salary payment (PAY-06).
+  final String? reference;
+
+  /// Who took the money, when it was not the worker (PAY-06).
+  final String? receiver;
   const CashEntry({
     required this.id,
     required this.tenantId,
@@ -4814,6 +4864,8 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
     required this.method,
     this.note,
     this.reversesEntryId,
+    this.reference,
+    this.receiver,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4851,6 +4903,12 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
     if (!nullToAbsent || reversesEntryId != null) {
       map['reverses_entry_id'] = Variable<String>(reversesEntryId);
     }
+    if (!nullToAbsent || reference != null) {
+      map['reference'] = Variable<String>(reference);
+    }
+    if (!nullToAbsent || receiver != null) {
+      map['receiver'] = Variable<String>(receiver);
+    }
     return map;
   }
 
@@ -4887,6 +4945,12 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
       reversesEntryId: reversesEntryId == null && nullToAbsent
           ? const Value.absent()
           : Value(reversesEntryId),
+      reference: reference == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reference),
+      receiver: receiver == null && nullToAbsent
+          ? const Value.absent()
+          : Value(receiver),
     );
   }
 
@@ -4915,6 +4979,8 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
       method: serializer.fromJson<String>(json['method']),
       note: serializer.fromJson<String?>(json['note']),
       reversesEntryId: serializer.fromJson<String?>(json['reversesEntryId']),
+      reference: serializer.fromJson<String?>(json['reference']),
+      receiver: serializer.fromJson<String?>(json['receiver']),
     );
   }
   @override
@@ -4940,6 +5006,8 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
       'method': serializer.toJson<String>(method),
       'note': serializer.toJson<String?>(note),
       'reversesEntryId': serializer.toJson<String?>(reversesEntryId),
+      'reference': serializer.toJson<String?>(reference),
+      'receiver': serializer.toJson<String?>(receiver),
     };
   }
 
@@ -4963,6 +5031,8 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
     String? method,
     Value<String?> note = const Value.absent(),
     Value<String?> reversesEntryId = const Value.absent(),
+    Value<String?> reference = const Value.absent(),
+    Value<String?> receiver = const Value.absent(),
   }) => CashEntry(
     id: id ?? this.id,
     tenantId: tenantId ?? this.tenantId,
@@ -4985,6 +5055,8 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
     reversesEntryId: reversesEntryId.present
         ? reversesEntryId.value
         : this.reversesEntryId,
+    reference: reference.present ? reference.value : this.reference,
+    receiver: receiver.present ? receiver.value : this.receiver,
   );
   CashEntry copyWithCompanion(CashEntriesCompanion data) {
     return CashEntry(
@@ -5017,6 +5089,8 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
       reversesEntryId: data.reversesEntryId.present
           ? data.reversesEntryId.value
           : this.reversesEntryId,
+      reference: data.reference.present ? data.reference.value : this.reference,
+      receiver: data.receiver.present ? data.receiver.value : this.receiver,
     );
   }
 
@@ -5041,13 +5115,15 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
           ..write('category: $category, ')
           ..write('method: $method, ')
           ..write('note: $note, ')
-          ..write('reversesEntryId: $reversesEntryId')
+          ..write('reversesEntryId: $reversesEntryId, ')
+          ..write('reference: $reference, ')
+          ..write('receiver: $receiver')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     tenantId,
     createdAtUtc,
@@ -5067,7 +5143,9 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
     method,
     note,
     reversesEntryId,
-  );
+    reference,
+    receiver,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -5090,7 +5168,9 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
           other.category == this.category &&
           other.method == this.method &&
           other.note == this.note &&
-          other.reversesEntryId == this.reversesEntryId);
+          other.reversesEntryId == this.reversesEntryId &&
+          other.reference == this.reference &&
+          other.receiver == this.receiver);
 }
 
 class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
@@ -5113,6 +5193,8 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
   final Value<String> method;
   final Value<String?> note;
   final Value<String?> reversesEntryId;
+  final Value<String?> reference;
+  final Value<String?> receiver;
   final Value<int> rowid;
   const CashEntriesCompanion({
     this.id = const Value.absent(),
@@ -5134,6 +5216,8 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
     this.method = const Value.absent(),
     this.note = const Value.absent(),
     this.reversesEntryId = const Value.absent(),
+    this.reference = const Value.absent(),
+    this.receiver = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   CashEntriesCompanion.insert({
@@ -5156,6 +5240,8 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
     this.method = const Value.absent(),
     this.note = const Value.absent(),
     this.reversesEntryId = const Value.absent(),
+    this.reference = const Value.absent(),
+    this.receiver = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        tenantId = Value(tenantId),
@@ -5186,6 +5272,8 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
     Expression<String>? method,
     Expression<String>? note,
     Expression<String>? reversesEntryId,
+    Expression<String>? reference,
+    Expression<String>? receiver,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -5208,6 +5296,8 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
       if (method != null) 'method': method,
       if (note != null) 'note': note,
       if (reversesEntryId != null) 'reverses_entry_id': reversesEntryId,
+      if (reference != null) 'reference': reference,
+      if (receiver != null) 'receiver': receiver,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -5232,6 +5322,8 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
     Value<String>? method,
     Value<String?>? note,
     Value<String?>? reversesEntryId,
+    Value<String?>? reference,
+    Value<String?>? receiver,
     Value<int>? rowid,
   }) {
     return CashEntriesCompanion(
@@ -5254,6 +5346,8 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
       method: method ?? this.method,
       note: note ?? this.note,
       reversesEntryId: reversesEntryId ?? this.reversesEntryId,
+      reference: reference ?? this.reference,
+      receiver: receiver ?? this.receiver,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5318,6 +5412,12 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
     if (reversesEntryId.present) {
       map['reverses_entry_id'] = Variable<String>(reversesEntryId.value);
     }
+    if (reference.present) {
+      map['reference'] = Variable<String>(reference.value);
+    }
+    if (receiver.present) {
+      map['receiver'] = Variable<String>(receiver.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -5346,6 +5446,641 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
           ..write('method: $method, ')
           ..write('note: $note, ')
           ..write('reversesEntryId: $reversesEntryId, ')
+          ..write('reference: $reference, ')
+          ..write('receiver: $receiver, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SalaryAllocationsTable extends SalaryAllocations
+    with TableInfo<$SalaryAllocationsTable, SalaryAllocation> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SalaryAllocationsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES cash_entries (id)',
+    ),
+  );
+  static const VerificationMeta _monthMeta = const VerificationMeta('month');
+  @override
+  late final GeneratedColumn<String> month = GeneratedColumn<String>(
+    'month',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountFilsMeta = const VerificationMeta(
+    'amountFils',
+  );
+  @override
+  late final GeneratedColumn<int> amountFils = GeneratedColumn<int>(
+    'amount_fils',
+    aliasedName,
+    false,
+    check: () => ComparableExpr(amountFils).isBiggerThanValue(0),
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    paymentId,
+    month,
+    amountFils,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'salary_allocations';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SalaryAllocation> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_paymentIdMeta);
+    }
+    if (data.containsKey('month')) {
+      context.handle(
+        _monthMeta,
+        month.isAcceptableOrUnknown(data['month']!, _monthMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_monthMeta);
+    }
+    if (data.containsKey('amount_fils')) {
+      context.handle(
+        _amountFilsMeta,
+        amountFils.isAcceptableOrUnknown(data['amount_fils']!, _amountFilsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountFilsMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {paymentId, month},
+  ];
+  @override
+  SalaryAllocation map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SalaryAllocation(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      )!,
+      month: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}month'],
+      )!,
+      amountFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_fils'],
+      )!,
+    );
+  }
+
+  @override
+  $SalaryAllocationsTable createAlias(String alias) {
+    return $SalaryAllocationsTable(attachedDatabase, alias);
+  }
+}
+
+class SalaryAllocation extends DataClass
+    implements Insertable<SalaryAllocation> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String paymentId;
+
+  /// YYYY-MM.
+  final String month;
+  final int amountFils;
+  const SalaryAllocation({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.paymentId,
+    required this.month,
+    required this.amountFils,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['payment_id'] = Variable<String>(paymentId);
+    map['month'] = Variable<String>(month);
+    map['amount_fils'] = Variable<int>(amountFils);
+    return map;
+  }
+
+  SalaryAllocationsCompanion toCompanion(bool nullToAbsent) {
+    return SalaryAllocationsCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      paymentId: Value(paymentId),
+      month: Value(month),
+      amountFils: Value(amountFils),
+    );
+  }
+
+  factory SalaryAllocation.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SalaryAllocation(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      paymentId: serializer.fromJson<String>(json['paymentId']),
+      month: serializer.fromJson<String>(json['month']),
+      amountFils: serializer.fromJson<int>(json['amountFils']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'paymentId': serializer.toJson<String>(paymentId),
+      'month': serializer.toJson<String>(month),
+      'amountFils': serializer.toJson<int>(amountFils),
+    };
+  }
+
+  SalaryAllocation copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? paymentId,
+    String? month,
+    int? amountFils,
+  }) => SalaryAllocation(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    paymentId: paymentId ?? this.paymentId,
+    month: month ?? this.month,
+    amountFils: amountFils ?? this.amountFils,
+  );
+  SalaryAllocation copyWithCompanion(SalaryAllocationsCompanion data) {
+    return SalaryAllocation(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
+      month: data.month.present ? data.month.value : this.month,
+      amountFils: data.amountFils.present
+          ? data.amountFils.value
+          : this.amountFils,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SalaryAllocation(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('month: $month, ')
+          ..write('amountFils: $amountFils')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    paymentId,
+    month,
+    amountFils,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SalaryAllocation &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.paymentId == this.paymentId &&
+          other.month == this.month &&
+          other.amountFils == this.amountFils);
+}
+
+class SalaryAllocationsCompanion extends UpdateCompanion<SalaryAllocation> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> paymentId;
+  final Value<String> month;
+  final Value<int> amountFils;
+  final Value<int> rowid;
+  const SalaryAllocationsCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.paymentId = const Value.absent(),
+    this.month = const Value.absent(),
+    this.amountFils = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SalaryAllocationsCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String paymentId,
+    required String month,
+    required int amountFils,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       paymentId = Value(paymentId),
+       month = Value(month),
+       amountFils = Value(amountFils);
+  static Insertable<SalaryAllocation> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? paymentId,
+    Expression<String>? month,
+    Expression<int>? amountFils,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (paymentId != null) 'payment_id': paymentId,
+      if (month != null) 'month': month,
+      if (amountFils != null) 'amount_fils': amountFils,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SalaryAllocationsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? paymentId,
+    Value<String>? month,
+    Value<int>? amountFils,
+    Value<int>? rowid,
+  }) {
+    return SalaryAllocationsCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      paymentId: paymentId ?? this.paymentId,
+      month: month ?? this.month,
+      amountFils: amountFils ?? this.amountFils,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
+    }
+    if (month.present) {
+      map['month'] = Variable<String>(month.value);
+    }
+    if (amountFils.present) {
+      map['amount_fils'] = Variable<int>(amountFils.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SalaryAllocationsCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('month: $month, ')
+          ..write('amountFils: $amountFils, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -12362,6 +13097,17 @@ class $TenantProfilesTable extends TenantProfiles
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _wageDueDaysMeta = const VerificationMeta(
+    'wageDueDays',
+  );
+  @override
+  late final GeneratedColumn<int> wageDueDays = GeneratedColumn<int>(
+    'wage_due_days',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -12385,6 +13131,7 @@ class $TenantProfilesTable extends TenantProfiles
     bankDetails,
     documentFooter,
     deductionLimitBps,
+    wageDueDays,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -12568,6 +13315,15 @@ class $TenantProfilesTable extends TenantProfiles
         ),
       );
     }
+    if (data.containsKey('wage_due_days')) {
+      context.handle(
+        _wageDueDaysMeta,
+        wageDueDays.isAcceptableOrUnknown(
+          data['wage_due_days']!,
+          _wageDueDaysMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -12661,6 +13417,10 @@ class $TenantProfilesTable extends TenantProfiles
         DriftSqlType.int,
         data['${effectivePrefix}deduction_limit_bps'],
       ),
+      wageDueDays: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wage_due_days'],
+      ),
     );
   }
 
@@ -12694,6 +13454,9 @@ class TenantProfile extends DataClass implements Insertable<TenantProfile> {
 
   /// The company's own limit on deductions, as a share of earnings. Null means none. Never a built-in legal figure (PAY-07).
   final int? deductionLimitBps;
+
+  /// Days after a month ends before its wages count as late. The company's own figure, never a legal one (PAY-08).
+  final int? wageDueDays;
   const TenantProfile({
     required this.id,
     required this.tenantId,
@@ -12716,6 +13479,7 @@ class TenantProfile extends DataClass implements Insertable<TenantProfile> {
     this.bankDetails,
     this.documentFooter,
     this.deductionLimitBps,
+    this.wageDueDays,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -12761,6 +13525,9 @@ class TenantProfile extends DataClass implements Insertable<TenantProfile> {
     if (!nullToAbsent || deductionLimitBps != null) {
       map['deduction_limit_bps'] = Variable<int>(deductionLimitBps);
     }
+    if (!nullToAbsent || wageDueDays != null) {
+      map['wage_due_days'] = Variable<int>(wageDueDays);
+    }
     return map;
   }
 
@@ -12805,6 +13572,9 @@ class TenantProfile extends DataClass implements Insertable<TenantProfile> {
       deductionLimitBps: deductionLimitBps == null && nullToAbsent
           ? const Value.absent()
           : Value(deductionLimitBps),
+      wageDueDays: wageDueDays == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wageDueDays),
     );
   }
 
@@ -12835,6 +13605,7 @@ class TenantProfile extends DataClass implements Insertable<TenantProfile> {
       bankDetails: serializer.fromJson<String?>(json['bankDetails']),
       documentFooter: serializer.fromJson<String?>(json['documentFooter']),
       deductionLimitBps: serializer.fromJson<int?>(json['deductionLimitBps']),
+      wageDueDays: serializer.fromJson<int?>(json['wageDueDays']),
     );
   }
   @override
@@ -12862,6 +13633,7 @@ class TenantProfile extends DataClass implements Insertable<TenantProfile> {
       'bankDetails': serializer.toJson<String?>(bankDetails),
       'documentFooter': serializer.toJson<String?>(documentFooter),
       'deductionLimitBps': serializer.toJson<int?>(deductionLimitBps),
+      'wageDueDays': serializer.toJson<int?>(wageDueDays),
     };
   }
 
@@ -12887,6 +13659,7 @@ class TenantProfile extends DataClass implements Insertable<TenantProfile> {
     Value<String?> bankDetails = const Value.absent(),
     Value<String?> documentFooter = const Value.absent(),
     Value<int?> deductionLimitBps = const Value.absent(),
+    Value<int?> wageDueDays = const Value.absent(),
   }) => TenantProfile(
     id: id ?? this.id,
     tenantId: tenantId ?? this.tenantId,
@@ -12917,6 +13690,7 @@ class TenantProfile extends DataClass implements Insertable<TenantProfile> {
     deductionLimitBps: deductionLimitBps.present
         ? deductionLimitBps.value
         : this.deductionLimitBps,
+    wageDueDays: wageDueDays.present ? wageDueDays.value : this.wageDueDays,
   );
   TenantProfile copyWithCompanion(TenantProfilesCompanion data) {
     return TenantProfile(
@@ -12963,6 +13737,9 @@ class TenantProfile extends DataClass implements Insertable<TenantProfile> {
       deductionLimitBps: data.deductionLimitBps.present
           ? data.deductionLimitBps.value
           : this.deductionLimitBps,
+      wageDueDays: data.wageDueDays.present
+          ? data.wageDueDays.value
+          : this.wageDueDays,
     );
   }
 
@@ -12989,7 +13766,8 @@ class TenantProfile extends DataClass implements Insertable<TenantProfile> {
           ..write('paymentTermsDays: $paymentTermsDays, ')
           ..write('bankDetails: $bankDetails, ')
           ..write('documentFooter: $documentFooter, ')
-          ..write('deductionLimitBps: $deductionLimitBps')
+          ..write('deductionLimitBps: $deductionLimitBps, ')
+          ..write('wageDueDays: $wageDueDays')
           ..write(')'))
         .toString();
   }
@@ -13017,6 +13795,7 @@ class TenantProfile extends DataClass implements Insertable<TenantProfile> {
     bankDetails,
     documentFooter,
     deductionLimitBps,
+    wageDueDays,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -13042,7 +13821,8 @@ class TenantProfile extends DataClass implements Insertable<TenantProfile> {
           other.paymentTermsDays == this.paymentTermsDays &&
           other.bankDetails == this.bankDetails &&
           other.documentFooter == this.documentFooter &&
-          other.deductionLimitBps == this.deductionLimitBps);
+          other.deductionLimitBps == this.deductionLimitBps &&
+          other.wageDueDays == this.wageDueDays);
 }
 
 class TenantProfilesCompanion extends UpdateCompanion<TenantProfile> {
@@ -13067,6 +13847,7 @@ class TenantProfilesCompanion extends UpdateCompanion<TenantProfile> {
   final Value<String?> bankDetails;
   final Value<String?> documentFooter;
   final Value<int?> deductionLimitBps;
+  final Value<int?> wageDueDays;
   final Value<int> rowid;
   const TenantProfilesCompanion({
     this.id = const Value.absent(),
@@ -13090,6 +13871,7 @@ class TenantProfilesCompanion extends UpdateCompanion<TenantProfile> {
     this.bankDetails = const Value.absent(),
     this.documentFooter = const Value.absent(),
     this.deductionLimitBps = const Value.absent(),
+    this.wageDueDays = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TenantProfilesCompanion.insert({
@@ -13114,6 +13896,7 @@ class TenantProfilesCompanion extends UpdateCompanion<TenantProfile> {
     this.bankDetails = const Value.absent(),
     this.documentFooter = const Value.absent(),
     this.deductionLimitBps = const Value.absent(),
+    this.wageDueDays = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        tenantId = Value(tenantId),
@@ -13144,6 +13927,7 @@ class TenantProfilesCompanion extends UpdateCompanion<TenantProfile> {
     Expression<String>? bankDetails,
     Expression<String>? documentFooter,
     Expression<int>? deductionLimitBps,
+    Expression<int>? wageDueDays,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -13168,6 +13952,7 @@ class TenantProfilesCompanion extends UpdateCompanion<TenantProfile> {
       if (bankDetails != null) 'bank_details': bankDetails,
       if (documentFooter != null) 'document_footer': documentFooter,
       if (deductionLimitBps != null) 'deduction_limit_bps': deductionLimitBps,
+      if (wageDueDays != null) 'wage_due_days': wageDueDays,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -13194,6 +13979,7 @@ class TenantProfilesCompanion extends UpdateCompanion<TenantProfile> {
     Value<String?>? bankDetails,
     Value<String?>? documentFooter,
     Value<int?>? deductionLimitBps,
+    Value<int?>? wageDueDays,
     Value<int>? rowid,
   }) {
     return TenantProfilesCompanion(
@@ -13218,6 +14004,7 @@ class TenantProfilesCompanion extends UpdateCompanion<TenantProfile> {
       bankDetails: bankDetails ?? this.bankDetails,
       documentFooter: documentFooter ?? this.documentFooter,
       deductionLimitBps: deductionLimitBps ?? this.deductionLimitBps,
+      wageDueDays: wageDueDays ?? this.wageDueDays,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -13288,6 +14075,9 @@ class TenantProfilesCompanion extends UpdateCompanion<TenantProfile> {
     if (deductionLimitBps.present) {
       map['deduction_limit_bps'] = Variable<int>(deductionLimitBps.value);
     }
+    if (wageDueDays.present) {
+      map['wage_due_days'] = Variable<int>(wageDueDays.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -13318,6 +14108,7 @@ class TenantProfilesCompanion extends UpdateCompanion<TenantProfile> {
           ..write('bankDetails: $bankDetails, ')
           ..write('documentFooter: $documentFooter, ')
           ..write('deductionLimitBps: $deductionLimitBps, ')
+          ..write('wageDueDays: $wageDueDays, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -17563,6 +18354,16 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     'CREATE TRIGGER cash_no_delete BEFORE DELETE ON cash_entries BEGIN SELECT RAISE (ABORT, \'cash entries are append-only\');END',
     'cash_no_delete',
   );
+  late final $SalaryAllocationsTable salaryAllocations =
+      $SalaryAllocationsTable(this);
+  late final Trigger allocationNoUpdate = Trigger(
+    'CREATE TRIGGER allocation_no_update BEFORE UPDATE ON salary_allocations BEGIN SELECT RAISE (ABORT, \'salary allocations are append-only\');END',
+    'allocation_no_update',
+  );
+  late final Trigger allocationNoDelete = Trigger(
+    'CREATE TRIGGER allocation_no_delete BEFORE DELETE ON salary_allocations BEGIN SELECT RAISE (ABORT, \'salary allocations are append-only\');END',
+    'allocation_no_delete',
+  );
   late final Trigger cashVisaNeedsWorker = Trigger(
     'CREATE TRIGGER cash_visa_needs_worker BEFORE INSERT ON cash_entries WHEN NEW.kind IN (\'visaPaid\', \'visaReturned\') AND NEW.worker_id IS NULL BEGIN SELECT RAISE (ABORT, \'a visa line needs a worker\');END',
     'cash_visa_needs_worker',
@@ -17673,6 +18474,9 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     cashEntries,
     cashNoUpdate,
     cashNoDelete,
+    salaryAllocations,
+    allocationNoUpdate,
+    allocationNoDelete,
     cashVisaNeedsWorker,
     payrollRuns,
     payrollRunNoUpdate,
@@ -17731,6 +18535,20 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     WritePropagation(
       on: TableUpdateQuery.onTableName(
         'cash_entries',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'salary_allocations',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'salary_allocations',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [],
@@ -22328,6 +23146,8 @@ typedef $$CashEntriesTableCreateCompanionBuilder =
       Value<String> method,
       Value<String?> note,
       Value<String?> reversesEntryId,
+      Value<String?> reference,
+      Value<String?> receiver,
       Value<int> rowid,
     });
 typedef $$CashEntriesTableUpdateCompanionBuilder =
@@ -22351,6 +23171,8 @@ typedef $$CashEntriesTableUpdateCompanionBuilder =
       Value<String> method,
       Value<String?> note,
       Value<String?> reversesEntryId,
+      Value<String?> reference,
+      Value<String?> receiver,
       Value<int> rowid,
     });
 
@@ -22443,6 +23265,27 @@ final class $$CashEntriesTableReferences
       manager.$state.copyWith(prefetchedData: [item]),
     );
   }
+
+  static MultiTypedResultKey<$SalaryAllocationsTable, List<SalaryAllocation>>
+  _salaryAllocationsRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.salaryAllocations,
+        aliasName: 'cash_entries__id__salary_allocations__payment_id',
+      );
+
+  $$SalaryAllocationsTableProcessedTableManager get salaryAllocationsRefs {
+    final manager = $$SalaryAllocationsTableTableManager(
+      $_db,
+      $_db.salaryAllocations,
+    ).filter((f) => f.paymentId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _salaryAllocationsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CashEntriesTableFilterComposer
@@ -22521,6 +23364,16 @@ class $$CashEntriesTableFilterComposer
 
   ColumnFilters<String> get note => $composableBuilder(
     column: $table.note,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reference => $composableBuilder(
+    column: $table.reference,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get receiver => $composableBuilder(
+    column: $table.receiver,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -22638,6 +23491,31 @@ class $$CashEntriesTableFilterComposer
     );
     return composer;
   }
+
+  Expression<bool> salaryAllocationsRefs(
+    Expression<bool> Function($$SalaryAllocationsTableFilterComposer f) f,
+  ) {
+    final $$SalaryAllocationsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.salaryAllocations,
+      getReferencedColumn: (t) => t.paymentId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SalaryAllocationsTableFilterComposer(
+            $db: $db,
+            $table: $db.salaryAllocations,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CashEntriesTableOrderingComposer
@@ -22716,6 +23594,16 @@ class $$CashEntriesTableOrderingComposer
 
   ColumnOrderings<String> get note => $composableBuilder(
     column: $table.note,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reference => $composableBuilder(
+    column: $table.reference,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get receiver => $composableBuilder(
+    column: $table.receiver,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -22894,6 +23782,12 @@ class $$CashEntriesTableAnnotationComposer
   GeneratedColumn<String> get note =>
       $composableBuilder(column: $table.note, builder: (column) => column);
 
+  GeneratedColumn<String> get reference =>
+      $composableBuilder(column: $table.reference, builder: (column) => column);
+
+  GeneratedColumn<String> get receiver =>
+      $composableBuilder(column: $table.receiver, builder: (column) => column);
+
   $$WorkersTableAnnotationComposer get workerId {
     final $$WorkersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -23008,6 +23902,32 @@ class $$CashEntriesTableAnnotationComposer
     );
     return composer;
   }
+
+  Expression<T> salaryAllocationsRefs<T extends Object>(
+    Expression<T> Function($$SalaryAllocationsTableAnnotationComposer a) f,
+  ) {
+    final $$SalaryAllocationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.salaryAllocations,
+          getReferencedColumn: (t) => t.paymentId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$SalaryAllocationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.salaryAllocations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$CashEntriesTableTableManager
@@ -23029,6 +23949,7 @@ class $$CashEntriesTableTableManager
             bool clientId,
             bool siteId,
             bool reversesEntryId,
+            bool salaryAllocationsRefs,
           })
         > {
   $$CashEntriesTableTableManager(_$TenantDatabase db, $CashEntriesTable table)
@@ -23063,6 +23984,8 @@ class $$CashEntriesTableTableManager
                 Value<String> method = const Value.absent(),
                 Value<String?> note = const Value.absent(),
                 Value<String?> reversesEntryId = const Value.absent(),
+                Value<String?> reference = const Value.absent(),
+                Value<String?> receiver = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CashEntriesCompanion(
                 id: id,
@@ -23084,6 +24007,8 @@ class $$CashEntriesTableTableManager
                 method: method,
                 note: note,
                 reversesEntryId: reversesEntryId,
+                reference: reference,
+                receiver: receiver,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -23107,6 +24032,8 @@ class $$CashEntriesTableTableManager
                 Value<String> method = const Value.absent(),
                 Value<String?> note = const Value.absent(),
                 Value<String?> reversesEntryId = const Value.absent(),
+                Value<String?> reference = const Value.absent(),
+                Value<String?> receiver = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CashEntriesCompanion.insert(
                 id: id,
@@ -23128,6 +24055,8 @@ class $$CashEntriesTableTableManager
                 method: method,
                 note: note,
                 reversesEntryId: reversesEntryId,
+                reference: reference,
+                receiver: receiver,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -23145,10 +24074,13 @@ class $$CashEntriesTableTableManager
                 clientId = false,
                 siteId = false,
                 reversesEntryId = false,
+                salaryAllocationsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
-                  explicitlyWatchedTables: [],
+                  explicitlyWatchedTables: [
+                    if (salaryAllocationsRefs) db.salaryAllocations,
+                  ],
                   addJoins:
                       <
                         T extends TableManagerState<
@@ -23224,7 +24156,28 @@ class $$CashEntriesTableTableManager
                         return state;
                       },
                   getPrefetchedDataCallback: (items) async {
-                    return [];
+                    return [
+                      if (salaryAllocationsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          CashEntry,
+                          $CashEntriesTable,
+                          SalaryAllocation,
+                          $SalaryAllocationsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CashEntriesTableReferences
+                              ._salaryAllocationsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CashEntriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).salaryAllocationsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'payment_id',
+                          typedResults: items,
+                        ),
+                    ];
                   },
                 );
               },
@@ -23250,7 +24203,441 @@ typedef $$CashEntriesTableProcessedTableManager =
         bool clientId,
         bool siteId,
         bool reversesEntryId,
+        bool salaryAllocationsRefs,
       })
+    >;
+typedef $$SalaryAllocationsTableCreateCompanionBuilder =
+    SalaryAllocationsCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      required String paymentId,
+      required String month,
+      required int amountFils,
+      Value<int> rowid,
+    });
+typedef $$SalaryAllocationsTableUpdateCompanionBuilder =
+    SalaryAllocationsCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String> paymentId,
+      Value<String> month,
+      Value<int> amountFils,
+      Value<int> rowid,
+    });
+
+final class $$SalaryAllocationsTableReferences
+    extends
+        BaseReferences<
+          _$TenantDatabase,
+          $SalaryAllocationsTable,
+          SalaryAllocation
+        > {
+  $$SalaryAllocationsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $CashEntriesTable _paymentIdTable(_$TenantDatabase db) => db
+      .cashEntries
+      .createAlias('salary_allocations__payment_id__cash_entries__id');
+
+  $$CashEntriesTableProcessedTableManager get paymentId {
+    final $_column = $_itemColumn<String>('payment_id')!;
+
+    final manager = $$CashEntriesTableTableManager(
+      $_db,
+      $_db.cashEntries,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_paymentIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$SalaryAllocationsTableFilterComposer
+    extends Composer<_$TenantDatabase, $SalaryAllocationsTable> {
+  $$SalaryAllocationsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get month => $composableBuilder(
+    column: $table.month,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CashEntriesTableFilterComposer get paymentId {
+    final $$CashEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paymentId,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SalaryAllocationsTableOrderingComposer
+    extends Composer<_$TenantDatabase, $SalaryAllocationsTable> {
+  $$SalaryAllocationsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get month => $composableBuilder(
+    column: $table.month,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CashEntriesTableOrderingComposer get paymentId {
+    final $$CashEntriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paymentId,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SalaryAllocationsTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $SalaryAllocationsTable> {
+  $$SalaryAllocationsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get month =>
+      $composableBuilder(column: $table.month, builder: (column) => column);
+
+  GeneratedColumn<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => column,
+  );
+
+  $$CashEntriesTableAnnotationComposer get paymentId {
+    final $$CashEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paymentId,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SalaryAllocationsTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $SalaryAllocationsTable,
+          SalaryAllocation,
+          $$SalaryAllocationsTableFilterComposer,
+          $$SalaryAllocationsTableOrderingComposer,
+          $$SalaryAllocationsTableAnnotationComposer,
+          $$SalaryAllocationsTableCreateCompanionBuilder,
+          $$SalaryAllocationsTableUpdateCompanionBuilder,
+          (SalaryAllocation, $$SalaryAllocationsTableReferences),
+          SalaryAllocation,
+          PrefetchHooks Function({bool paymentId})
+        > {
+  $$SalaryAllocationsTableTableManager(
+    _$TenantDatabase db,
+    $SalaryAllocationsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SalaryAllocationsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SalaryAllocationsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SalaryAllocationsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> paymentId = const Value.absent(),
+                Value<String> month = const Value.absent(),
+                Value<int> amountFils = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SalaryAllocationsCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                paymentId: paymentId,
+                month: month,
+                amountFils: amountFils,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String paymentId,
+                required String month,
+                required int amountFils,
+                Value<int> rowid = const Value.absent(),
+              }) => SalaryAllocationsCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                paymentId: paymentId,
+                month: month,
+                amountFils: amountFils,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SalaryAllocationsTable, SalaryAllocation>(table),
+                  $$SalaryAllocationsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({paymentId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (paymentId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.paymentId,
+                        referencedTable: $$SalaryAllocationsTableReferences
+                            ._paymentIdTable(db),
+                        referencedColumn: $$SalaryAllocationsTableReferences
+                            ._paymentIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$SalaryAllocationsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $SalaryAllocationsTable,
+      SalaryAllocation,
+      $$SalaryAllocationsTableFilterComposer,
+      $$SalaryAllocationsTableOrderingComposer,
+      $$SalaryAllocationsTableAnnotationComposer,
+      $$SalaryAllocationsTableCreateCompanionBuilder,
+      $$SalaryAllocationsTableUpdateCompanionBuilder,
+      (SalaryAllocation, $$SalaryAllocationsTableReferences),
+      SalaryAllocation,
+      PrefetchHooks Function({bool paymentId})
     >;
 typedef $$PayrollRunsTableCreateCompanionBuilder =
     PayrollRunsCompanion Function({
@@ -28602,6 +29989,7 @@ typedef $$TenantProfilesTableCreateCompanionBuilder =
       Value<String?> bankDetails,
       Value<String?> documentFooter,
       Value<int?> deductionLimitBps,
+      Value<int?> wageDueDays,
       Value<int> rowid,
     });
 typedef $$TenantProfilesTableUpdateCompanionBuilder =
@@ -28627,6 +30015,7 @@ typedef $$TenantProfilesTableUpdateCompanionBuilder =
       Value<String?> bankDetails,
       Value<String?> documentFooter,
       Value<int?> deductionLimitBps,
+      Value<int?> wageDueDays,
       Value<int> rowid,
     });
 
@@ -28741,6 +30130,11 @@ class $$TenantProfilesTableFilterComposer
 
   ColumnFilters<int> get deductionLimitBps => $composableBuilder(
     column: $table.deductionLimitBps,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get wageDueDays => $composableBuilder(
+    column: $table.wageDueDays,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -28858,6 +30252,11 @@ class $$TenantProfilesTableOrderingComposer
     column: $table.deductionLimitBps,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get wageDueDays => $composableBuilder(
+    column: $table.wageDueDays,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TenantProfilesTableAnnotationComposer
@@ -28953,6 +30352,11 @@ class $$TenantProfilesTableAnnotationComposer
     column: $table.deductionLimitBps,
     builder: (column) => column,
   );
+
+  GeneratedColumn<int> get wageDueDays => $composableBuilder(
+    column: $table.wageDueDays,
+    builder: (column) => column,
+  );
 }
 
 class $$TenantProfilesTableTableManager
@@ -29013,6 +30417,7 @@ class $$TenantProfilesTableTableManager
                 Value<String?> bankDetails = const Value.absent(),
                 Value<String?> documentFooter = const Value.absent(),
                 Value<int?> deductionLimitBps = const Value.absent(),
+                Value<int?> wageDueDays = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TenantProfilesCompanion(
                 id: id,
@@ -29036,6 +30441,7 @@ class $$TenantProfilesTableTableManager
                 bankDetails: bankDetails,
                 documentFooter: documentFooter,
                 deductionLimitBps: deductionLimitBps,
+                wageDueDays: wageDueDays,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -29061,6 +30467,7 @@ class $$TenantProfilesTableTableManager
                 Value<String?> bankDetails = const Value.absent(),
                 Value<String?> documentFooter = const Value.absent(),
                 Value<int?> deductionLimitBps = const Value.absent(),
+                Value<int?> wageDueDays = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TenantProfilesCompanion.insert(
                 id: id,
@@ -29084,6 +30491,7 @@ class $$TenantProfilesTableTableManager
                 bankDetails: bankDetails,
                 documentFooter: documentFooter,
                 deductionLimitBps: deductionLimitBps,
+                wageDueDays: wageDueDays,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -31978,6 +33386,8 @@ class $TenantDatabaseManager {
       $$SitesTableTableManager(_db, _db.sites);
   $$CashEntriesTableTableManager get cashEntries =>
       $$CashEntriesTableTableManager(_db, _db.cashEntries);
+  $$SalaryAllocationsTableTableManager get salaryAllocations =>
+      $$SalaryAllocationsTableTableManager(_db, _db.salaryAllocations);
   $$PayrollRunsTableTableManager get payrollRuns =>
       $$PayrollRunsTableTableManager(_db, _db.payrollRuns);
   $$PayrollLinesTableTableManager get payrollLines =>

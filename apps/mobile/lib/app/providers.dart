@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/payroll.dart';
+import '../data/statement.dart';
 import '../data/tenant_database.dart';
 import '../data/visa.dart';
 
@@ -76,6 +77,17 @@ final cashOfWorkerProvider = StreamProvider.family<List<CashEntry>, String>((ref
 
 /// [month] is YYYY-MM.
 final payrollProvider = StreamProvider.family<List<WorkerPayroll>, String>((ref, month) => ref.watch(dbProvider).watchPayroll(month));
+
+final wagesDueProvider = StreamProvider<List<WorkerWagesDue>>((ref) => ref.watch(dbProvider).watchWagesDue());
+
+/// The months one salary payment settled (PAY-06).
+final allocationsOfPaymentProvider = StreamProvider.family<List<SalaryAllocation>, String>((ref, paymentId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.salaryAllocations)
+        ..where((a) => a.paymentId.equals(paymentId))
+        ..orderBy([(a) => OrderingTerm.asc(a.month)]))
+      .watch();
+});
 
 /// Posted months that still stand.
 final linesOfWorkerProvider = StreamProvider.family<List<PayrollLine>, String>((ref, workerId) {

@@ -39,6 +39,7 @@ String newUuid() {
     WorkerGroupMembers,
     Rooms,
     CashEntries,
+    SalaryAllocations,
     AttendanceBatches,
     AttendanceEntries,
     PayrollRuns,
@@ -57,7 +58,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -109,6 +110,14 @@ class TenantDatabase extends _$TenantDatabase {
       },
       from6To7: (m, schema) async {
         await m.addColumn(schema.workerGroupMembers, schema.workerGroupMembers.rateBasis);
+      },
+      from7To8: (m, schema) async {
+        await m.addColumn(schema.cashEntries, schema.cashEntries.reference);
+        await m.addColumn(schema.cashEntries, schema.cashEntries.receiver);
+        await m.addColumn(schema.tenantProfiles, schema.tenantProfiles.wageDueDays);
+        await m.createTable(schema.salaryAllocations);
+        await m.createTrigger(schema.allocationNoUpdate);
+        await m.createTrigger(schema.allocationNoDelete);
       },
     ),
     beforeOpen: (details) async {

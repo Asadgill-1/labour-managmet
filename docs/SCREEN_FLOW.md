@@ -50,6 +50,12 @@ Language > email and password > verify email > company name > optional logo and 
 
 **Payroll (PAY-01, D-033):** Month > everyone with pay or a problem, with what stops them in words > tick who pays a room charge and how much > a worker's screen for allowances, deductions and advance recovery > post everyone who is ready, after one confirmation > record the payment, which goes through the cash book. Undo with a reason reopens that worker's month.
 
+**Salary payment (PAY-06, D-043):** Tankhwah or Rozana hisaab > Tankhwah > worker and amount > each unpaid month with its share, oldest first > change a share, or Purana pehle to start again > more than is owed asks before it goes on the advance > save. The line shows its months in the cash book and registers.
+
+**Unpaid salary (PAY-08, D-043):** A reminder on Aaj and Tankhwah > Baqi tankhwah: each worker, each finished month, how late > tap a worker to pay > the reminder clears. Days to pay are set in Apni company.
+
+**Advance (PAY-05, D-043):** Tankhwah > month > Advance katein adds a recovery for everyone with advance left, up to what the month carries > change or remove one on the worker's screen > post.
+
 **Salary slip (PAY-09, D-042):** Tankhwah > month > worker > Salary slip > says whose slip and the balance > see or print, save, WhatsApp, other apps. The owner picks the recipient in WhatsApp. One worker at a time (DOC-07).
 
 **Owner's sheet (REP-03, D-042):** Tankhwah > month > Malik ki sheet > PDF or Excel > see, save, WhatsApp, other apps.

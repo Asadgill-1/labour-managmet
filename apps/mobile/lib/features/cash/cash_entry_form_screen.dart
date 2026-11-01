@@ -1,6 +1,7 @@
 import 'package:domain/cash.dart';
 import 'package:domain/dates.dart';
 import 'package:domain/money.dart';
+import 'package:domain/statement.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,6 +9,7 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/cash.dart';
+import '../../data/statement.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import 'cash_row.dart';
@@ -44,6 +46,75 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
   String _method = 'cash';
   late final _amount = TextEditingController(text: widget.amountFils == null ? null : plainAmount(widget.amountFils!));
   final _note = TextEditingController();
+  final _reference = TextEditingController();
+  final _receiver = TextEditingController();
+
+  /// What this worker's months still owe, and how much of this payment goes on each (PAY-06).
+  Map<String, int> _unpaid = const {};
+  final _parts = <String, TextEditingController>{};
+
+  /// Once the owner types a month's share, the amount stops sharing itself out over it.
+  bool _partsEdited = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUnpaid();
+  }
+
+  /// Months up to the payment's date, so a late correction to an older month shows here at once.
+  Future<void> _loadUnpaid() async {
+    final workerId = _workerId;
+    final month = _date?.substring(0, 7);
+    if (_kind != CashKind.salaryPaid || workerId == null || month == null) return;
+    final statements = await ref.read(dbProvider).statementsFor(month, workerId: workerId, withWork: false);
+    if (!mounted || workerId != _workerId || month != _date?.substring(0, 7)) return;
+    setState(() {
+      _unpaid = statements.single.unpaid;
+      for (final m in _unpaid.keys) {
+        _parts[m] ??= TextEditingController();
+      }
+      _partsEdited = false;
+      _shareOut();
+    });
+  }
+
+  void _shareOut() {
+    final split = splitOldestFirst(_unpaid, parseAed(_amount.text) ?? 0);
+    for (final m in _unpaid.keys) {
+      _parts[m]!.text = split.parts[m] == null ? '' : plainAmount(split.parts[m]!);
+    }
+  }
+
+  void _amountChanged() {
+    setState(() {
+      if (!_partsEdited) _shareOut();
+    });
+  }
+
+  Map<String, int> get _partsTyped => {
+    for (final m in _unpaid.keys)
+      if ((parseAed(_parts[m]!.text) ?? 0) > 0) m: parseAed(_parts[m]!.text)!,
+  };
+
+  int get _extraFils => (parseAed(_amount.text) ?? 0) - _partsTyped.values.fold(0, (total, fils) => total + fils);
+
+  /// Paying beyond what is owed is a clear yes from the owner, never a surprise on the worker's account (PAY-06).
+  Future<bool> _confirmExtra(int extra) async {
+    final l10n = AppLocalizations.of(context);
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        title: Text(l10n.salaryExtraTitle(formatAed(extra))),
+        content: Text(l10n.salaryExtraBody),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialog).pop(false), child: Text(l10n.cancel)),
+          TextButton(onPressed: () => Navigator.of(dialog).pop(true), child: Text(l10n.salaryExtraConfirm)),
+        ],
+      ),
+    );
+    return yes == true;
+  }
 
   bool get _needsWorker => const {CashKind.advanceGiven, CashKind.salaryPaid, CashKind.advanceReturned, CashKind.roomRentReceived, CashKind.visaPaid, CashKind.visaReturned}.contains(_kind);
   bool get _needsRoom => const {CashKind.roomRentPaid, CashKind.roomRentReceived}.contains(_kind);
@@ -62,6 +133,7 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
       _kind = kind;
       _fillRentFromWorker();
     });
+    _loadUnpaid();
   }
 
   Future<void> _save() async {
@@ -71,20 +143,50 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
     final roomId = _needsRoom ? _roomId : null;
     final clientId = _kind == CashKind.clientReceipt ? _clientId : null;
     final isExpense = _kind == CashKind.expense;
+    final isSalary = _kind == CashKind.salaryPaid;
+    if (isSalary) {
+      final extra = _extraFils;
+      if (extra < 0) {
+        showFormError(context, l10n.salaryPartsTooMuch);
+        return;
+      }
+      if (extra > 0 && !await _confirmExtra(extra)) return;
+      if (!mounted) return;
+    }
+    final note = _note.text.trim().isEmpty ? null : _note.text.trim();
     try {
-      await ref.read(dbProvider).addCashEntry(
-        operationId: _operationId,
-        date: _date!,
-        kind: _kind,
-        amountFils: parseAed(_amount.text)!,
-        workerId: workerId,
-        roomId: roomId,
-        clientId: clientId,
-        siteId: isExpense ? _siteId : null,
-        category: isExpense ? _category : null,
-        method: _method,
-        note: _note.text.trim().isEmpty ? null : _note.text.trim(),
-      );
+      if (isSalary) {
+        await ref.read(dbProvider).addSalaryPayment(
+          operationId: _operationId,
+          date: _date!,
+          workerId: workerId!,
+          amountFils: parseAed(_amount.text)!,
+          parts: _partsTyped,
+          extraNote: l10n.salaryExtraNote,
+          method: _method,
+          note: note,
+          reference: _reference.text.trim().isEmpty ? null : _reference.text.trim(),
+          receiver: _receiver.text.trim().isEmpty ? null : _receiver.text.trim(),
+        );
+      } else {
+        await ref.read(dbProvider).addCashEntry(
+          operationId: _operationId,
+          date: _date!,
+          kind: _kind,
+          amountFils: parseAed(_amount.text)!,
+          workerId: workerId,
+          roomId: roomId,
+          clientId: clientId,
+          siteId: isExpense ? _siteId : null,
+          category: isExpense ? _category : null,
+          method: _method,
+          note: note,
+        );
+      }
+    } on AllocationTooHigh {
+      if (mounted) showFormError(context, l10n.salaryPartTooHigh);
+      await _loadUnpaid();
+      return;
     } on AdvanceTooHigh {
       if (mounted) showFormError(context, l10n.advanceTooHigh);
       return;
@@ -112,7 +214,8 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
     final rooms = (ref.watch(roomsProvider).value ?? const <Room>[]).where((r) => r.active || r.id == _roomId).toList();
     final clients = (ref.watch(clientsProvider).value ?? const <Client>[]).where((c) => c.active || c.id == _clientId).toList();
     final sites = (ref.watch(allSitesProvider).value ?? const <Site>[]).where((s) => s.active).toList();
-    final showAdvanceLeft = _kind == CashKind.advanceReturned && _workerId != null;
+    final isSalary = _kind == CashKind.salaryPaid && _workerId != null;
+    final showAdvanceLeft = (_kind == CashKind.advanceReturned || isSalary) && _workerId != null;
     final advanceOpening = (ref.watch(openingBalancesProvider).value ?? const <OpeningBalance>[])
         .where((b) => b.kind == 'worker_advance' && b.workerId == _workerId)
         .fold(0, (total, b) => total + b.amountFils);
@@ -150,10 +253,13 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
                 l10n.chooseWorker,
                 selected: _workerId,
                 options: [for (final w in workers) (value: w.id, label: '${w.name} (${w.code})')],
-                onChanged: (v) => setState(() {
-                  _workerId = v;
-                  _fillRentFromWorker();
-                }),
+                onChanged: (v) {
+                  setState(() {
+                    _workerId = v;
+                    _fillRentFromWorker();
+                  });
+                  _loadUnpaid();
+                },
               ),
               fieldGap,
             ],
@@ -212,9 +318,73 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
               _amount,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               validator: (v) => (parseAed(v ?? '') ?? 0) <= 0 ? l10n.amountInvalid : null,
+              onChanged: (_) => _amountChanged(),
             ),
             fieldGap,
-            DateField(l10n.workDate, value: _date, onChanged: (v) => setState(() => _date = v), required: true),
+            if (isSalary) ...[
+              Row(
+                children: [
+                  Expanded(child: Text(l10n.salaryMonthsHeading, style: sectionTitleStyle)),
+                  if (_partsEdited)
+                    TextButton(
+                      onPressed: () => setState(() {
+                        _partsEdited = false;
+                        _shareOut();
+                      }),
+                      child: Text(l10n.salaryOldestFirst),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              if (_unpaid.isEmpty) Text(l10n.salaryNothingOwed, style: const TextStyle(color: muted)),
+              for (final m in _unpaid.keys.toList()..sort())
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 14),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(showMonth(m), style: const TextStyle(fontWeight: FontWeight.w600)),
+                            Text(l10n.salaryMonthLeft(formatAed(_unpaid[m]!)), style: const TextStyle(color: muted, fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      SizedBox(
+                        width: 130,
+                        child: Field(
+                          l10n.amountAed,
+                          _parts[m]!,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          onChanged: (_) => setState(() => _partsEdited = true),
+                          validator: (v) {
+                            if ((v ?? '').trim().isEmpty) return null;
+                            final fils = parseAed(v!);
+                            if (fils == null || fils < 0) return l10n.amountInvalid;
+                            return fils > _unpaid[m]! ? l10n.salaryPartTooHigh : null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              if (_extraFils > 0) ...[
+                const SizedBox(height: 4),
+                Text(l10n.salaryExtraLine(formatAed(_extraFils)), style: const TextStyle(color: warn, fontWeight: FontWeight.w600)),
+              ],
+              fieldGap,
+            ],
+            DateField(
+              l10n.workDate,
+              value: _date,
+              onChanged: (v) {
+                setState(() => _date = v);
+                _loadUnpaid();
+              },
+              required: true,
+            ),
             fieldGap,
             SegmentedButton<String>(
               segments: [
@@ -225,6 +395,12 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
               onSelectionChanged: (s) => setState(() => _method = s.single),
             ),
             fieldGap,
+            if (isSalary) ...[
+              Field(l10n.salaryReference, _reference),
+              fieldGap,
+              Field(l10n.salaryReceiver, _receiver, helper: l10n.salaryReceiverHelp),
+              fieldGap,
+            ],
             Field(l10n.note, _note),
           ],
         ),

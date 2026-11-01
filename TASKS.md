@@ -41,7 +41,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 | T11d | Three colour themes, chosen in Settings (owner's request, D-040) | UX-04 | IMPLEMENTED_UNVERIFIED | `p2/t11d-themes` |
 | T11c | Visa money with monthly instalment through payroll (owner's request, D-039) | PAY-01, REP-08, MODEL-08 | IMPLEMENTED_UNVERIFIED | `p2/t11c-visa` |
 | T18a | Eight registers with filters, and PDF, Excel and WhatsApp export (owner's request, D-038) | REP-01, DOC-01, DOC-03, DOC-06, DOC-07 | IMPLEMENTED_UNVERIFIED | `p2/t18a-registers` |
-| T12 | Advance sub-ledger, salary payments and allocations, overdue alerts | PAY-05, PAY-06, PAY-08 | NOT_STARTED | - |
+| T12 | Advance sub-ledger, salary payments and allocations, overdue alerts (D-043) | PAY-05, PAY-06, PAY-08, MODEL-08 | IMPLEMENTED_UNVERIFIED | `p2/t12-salary-allocations` |
 | T13 | Expenses and period close | REP-04, REP-05, REP-07 | NOT_STARTED | - |
 
 **Gate:** PRD examples and month-close reconciliation pass.

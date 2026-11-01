@@ -36,6 +36,16 @@ String addDays(String storedDate, int days) {
   return ymd(DateTime.utc(parts[0], parts[1], parts[2] + days));
 }
 
+/// Whole days from one stored date to another. Below zero when [to] comes first.
+int daysBetween(String from, String to) {
+  DateTime day(String stored) {
+    final parts = stored.split('-').map(int.parse).toList();
+    return DateTime.utc(parts[0], parts[1], parts[2]);
+  }
+
+  return day(to).difference(day(from)).inDays;
+}
+
 /// A stored month ("2026-10") shifted by whole months.
 String addMonths(String month, int months) {
   final parts = month.split('-').map(int.parse).toList();

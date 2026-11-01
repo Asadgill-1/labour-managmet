@@ -34,6 +34,9 @@ String kindLabel(AppLocalizations l10n, CashKind kind) => switch (kind) {
   CashKind.visaReturned => l10n.kindVisaReturned,
 };
 
+/// "09-2026: AED 500.00" for each month a salary payment settled (PAY-06).
+List<String> salaryPartLabels(Iterable<SalaryAllocation> parts) => [for (final p in parts) '${dates.showMonth(p.month)}: ${formatAed(p.amountFils)}'];
+
 /// Everything in a list that has been undone. Pass the list's own rows.
 Set<String> undoneIds(Iterable<CashEntry> rows) => {for (final e in rows) ?e.reversesEntryId};
 
@@ -77,6 +80,7 @@ class CashEntryRow extends ConsumerWidget {
     final client = (ref.watch(clientsProvider).value ?? const <Client>[]).where((c) => c.id == entry.clientId).firstOrNull;
     final site = (ref.watch(allSitesProvider).value ?? const <Site>[]).where((s) => s.id == entry.siteId).firstOrNull;
     final what = reversal ? l10n.reversalTag : kindLabel(l10n, kind);
+    final settles = kind == CashKind.salaryPaid && !reversal ? ref.watch(allocationsOfPaymentProvider(entry.id)).value ?? const <SalaryAllocation>[] : const <SalaryAllocation>[];
     final title = onWorkerScreen ? what : (worker?.name ?? room?.name ?? client?.name ?? categoryLabel(l10n, entry.category));
     final signIsPlus = moneyIn != reversal;
     final amount = '${signIsPlus ? '+' : '-'}${formatAed(entry.amountFils)}';
@@ -94,6 +98,9 @@ class CashEntryRow extends ConsumerWidget {
             ?site?.name,
             if (showDate) dates.showDate(entry.entryDate),
             if (entry.method == 'bank') l10n.methodBank,
+            ...salaryPartLabels(settles),
+            ?entry.reference,
+            ?entry.receiver,
             ?entry.note,
           ].join(', '),
         ),

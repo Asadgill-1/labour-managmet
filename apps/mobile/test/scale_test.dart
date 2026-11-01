@@ -129,6 +129,10 @@ void main() {
     expect(one.single.work, hasLength(days));
     expect(one.single.closingFils, days * 9000);
 
+    final due = await timed('wages due', () => db.wagesDueNow());
+    expect(due, hasLength(workers));
+    expect(due.first.totalFils, days * 9000);
+
     final payroll = await timed('payroll', () => db.payrollFor(month));
     expect(payroll, hasLength(workers));
     expect(payroll.fold(0, (total, p) => total + p.figures.earnedFils), workers * days * 9000);

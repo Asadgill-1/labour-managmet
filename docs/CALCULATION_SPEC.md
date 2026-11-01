@@ -92,7 +92,7 @@ closing = opening + work + monthly salary + allowances - advance - room - visa -
 ```
 
 - Each closing is the next opening, and the last closing is the balance above, apart from a monthly salary not yet posted, which the slip counts and the register does not.
-- A salary payment stays whole. It goes on the month before its date while that month still has something owing, otherwise on its own month. T12 replaces this with the owner's own choice.
+- A salary payment shows on the month it settles, dated when it was paid, and can split across months (D-043).
 - A monthly salary counts before posting at what posting would pay, from the account's first activity.
 - Money from before the app is opening balance, never this month's earnings or advance (MASTER-05).
 
@@ -107,6 +107,29 @@ estimate         = bills - wages - monthly salaries - allowances + other deducti
 - Work rows only, by work date, so it does not wait for an invoice. A company with no rate or a monthly rate shows no bill, and the sheet says its profit looks low.
 - Monthly salaries are not split across companies. Advance and visa money are not expenses (REP-02).
 - It is labelled an estimate, never audited net profit.
+
+## Salary payment against months (PAY-06, D-043)
+
+```text
+month owes = work + monthly salary + allowances - deductions - room - visa instalment - advance recovery - payments settling it
+extra      = payment - shares of months
+```
+
+- The shares come from the owner, starting oldest first. A share above what a month owes is refused.
+- The extra is written as its own advance line, after a clear yes. It is never a negative salary.
+- A month below zero is a credit that comes off the oldest months first, so the months always add up to the whole account and never fall below zero.
+- A payment from before this has no shares. It goes oldest first among months up to its date when read, and anything over stays on its own month.
+- Months owed = Tankhwah's balance + work not posted. This only says which month is settled, never how much is owed.
+
+## Wages due (PAY-08, D-043)
+
+```text
+owing   = month owes, with advance counted when given
+due on  = last day of the month + wage_due_days (0 when not set)
+late    = today after the due day
+```
+
+Only finished months count. The days are the company's own, and no legal period is built in.
 
 ## Advance sub-ledger (PAY-05)
 
@@ -163,4 +186,4 @@ These must pass exactly in `dart test`. Amounts in AED.
 
 ## For the accountant to confirm
 
-Rounding level (D-101). Partial-period methods offered (D-102). Work-date attribution (D-103). Deduction limits and authorization evidence (PAY-07). The payroll rules in D-034, above all no automatic absence cut on a monthly salary. Overtime configuration (CALC-07). VAT categories and rounding on Tax Invoices (INV-02..04).
+The payroll rules in D-043. Rounding level (D-101). Partial-period methods offered (D-102). Work-date attribution (D-103). Deduction limits and authorization evidence (PAY-07). The payroll rules in D-034, above all no automatic absence cut on a monthly salary. Overtime configuration (CALC-07). VAT categories and rounding on Tax Invoices (INV-02..04).

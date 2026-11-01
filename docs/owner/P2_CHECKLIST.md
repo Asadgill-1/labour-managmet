@@ -1,6 +1,6 @@
 # P2 Owner Checklist
 
-Yeh checklist Asad ke liye hai (BUILD-03). Tankhwah (T11) ban gayi hai. Tankhwah ko khaas mahine se jorna, overdue alert aur period close abhi nahin, woh T12 aur T13 mein aayenge.
+Yeh checklist Asad ke liye hai (BUILD-03). Tankhwah (T11) aur adaigi ko mahine se jorna (T12) ban gaye hain. Period close abhi nahin, woh T13 mein aayega.
 
 Test APK: `apps/mobile/build/app/outputs/flutter-apk/app-release.apk`. Yeh test build hai. Asal data na daalein.
 
@@ -95,11 +95,26 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 - [ ] Excel asal Excel ya Google Sheets mein kholein. Teen sheets hon: Khulasa, Company wise, Mazdooron ka hisaab.
 - [ ] Agar aap ke paas bohat mazdoor hain: Hazri register ka Excel banne mein kitna waqt laga, likh dein.
 
+## 5c. Adaigi, zyada adaigi aur baqi tankhwah
+
+- [ ] Do mahine ki hazri lagayein aur kuch ada na karein. **Aaj** aur **Tankhwah** par peela khana aaye: kitne mazdoor, kitni tankhwah baqi.
+- [ ] Us khane ko dabayein. **Baqi tankhwah** mein har mazdoor, har mahina aur kitne din late likha ho.
+- [ ] Mazdoor ko dabayein. Form mein har baqi mahina apni raqam ke saath aaye, purana mahina pehle bhara ho.
+- [ ] Raqam kam karein. Mahinon ki raqam khud badle, purane mahine se.
+- [ ] Sirf naye mahine mein raqam likhein aur purane ko khaali karein. Save karein. Purane mahine ki slip par adaigi na aaye, naye mahine ki slip par aaye, us din ki tareekh ke saath.
+- [ ] Baqi se zyada raqam likhein. Paigham aaye ke yeh advance mein jayegi. **Wapas** par kuch save na ho.
+- [ ] **Advance mein likhein** dabayein. Rozana hisaab mein do lines hon: Tankhwah aur Advance. **Advance baqi** us raqam se barh jaye.
+- [ ] Tankhwah wali line par undo karein. Mahina phir baqi ho jaye. Advance wali line alag se undo karni hai.
+- [ ] **Bank** chunein, **Reference** aur **Kis ne liya** likhein. Hisaab register mein yeh aur mahine nazar aayen.
+- [ ] Advance wale mazdoor par **Tankhwah** mein **Advance katein** dabayein. **Mazdoor ko dena hai** ab slip ke baqi ke barabar ho. Mazdoor ki screen par us raqam ko badal bhi sakte hain.
+- [ ] **Apni company** mein **Mahine ke baad tankhwah kitne din mein** likhein. Us din tak **abhi late nahin** likha aaye, us ke baad din ginay jayen.
+
 ## 6. Aap ke faislay
 
-Yeh dono abhi PROPOSED hain. Aap ka jawab darkar hai. Accountant ko bhi dikhayein.
+Yeh teeno abhi PROPOSED hain. Aap ka jawab darkar hai. Accountant ko bhi dikhayein.
 
-- [ ] **D-033:** Hisaab statement ki tarah chalta hai. Baad mein di hui adaigi aakhri post hue mahine par likhi jati hai. Khaas mahine se jorna T12 mein aayega.
+- [ ] **D-033:** Hisaab statement ki tarah chalta hai. Tankhwah screen par purane post hue mahine ka "ada kiya" tareekh se ginta hai. Khaas mahine slip aur baqi tankhwah mein dikhte hain.
+- [ ] **D-043:** Zyada adaigi advance mein jati hai. Advance tab tak Tankhwah se nahin katta jab tak aap **Advance katein** na dabayein, slip mein woh dete hi kat jata hai. Purani adaigiyan khud purane mahine se jorti hain. Late ka hisaab aap ke apne dinon se hota hai, koi qanooni muddat app mein nahin.
 - [ ] **D-034:** Mahana mazdoor ki ghair hazri par tankhwah khud nahin katti, aap wajah likh kar katoti add karte hain. Advance ki wapsi par agreement nahin poocha jata. Katoti ki hadd **Apni company** mein aap chahen to likhein, warna koi hadd nahin.
 
 ## 7. P1 se abhi baqi

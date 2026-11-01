@@ -34,6 +34,9 @@ class TenantProfiles extends Table with Common {
 
   /// The company's own limit on deductions, as a share of earnings. Null means none. Never a built-in legal figure (PAY-07).
   IntColumn get deductionLimitBps => integer().nullable()();
+
+  /// Days after a month ends before its wages count as late. The company's own figure, never a legal one (PAY-08).
+  IntColumn get wageDueDays => integer().nullable()();
 }
 
 class Clients extends Table with Common {
@@ -118,11 +121,32 @@ class CashEntries extends Table with Common {
   /// Set on a reversal, which carries the original's figures. Unique, so nothing is reversed twice.
   TextColumn get reversesEntryId => text().nullable().unique().references(CashEntries, #id)();
 
+  /// A bank or cheque reference on a salary payment (PAY-06).
+  TextColumn get reference => text().nullable()();
+
+  /// Who took the money, when it was not the worker (PAY-06).
+  TextColumn get receiver => text().nullable()();
+
   @override
   List<String> get customConstraints => [
     "CHECK (kind NOT IN ('advanceGiven', 'salaryPaid', 'advanceReturned') OR worker_id IS NOT NULL)",
     "CHECK (kind NOT IN ('roomRentPaid', 'roomRentReceived') OR room_id IS NOT NULL)",
     "CHECK (kind <> 'clientReceipt' OR client_id IS NOT NULL)",
+  ];
+}
+
+/// Which month a salary payment settles, as the owner confirmed it (PAY-06). These rows never change. Undoing the
+/// payment in the cash book sets them aside with it (REP-08). Triggers enforce this.
+class SalaryAllocations extends Table with Common {
+  TextColumn get paymentId => text().references(CashEntries, #id)();
+
+  /// YYYY-MM.
+  TextColumn get month => text()();
+  IntColumn get amountFils => integer().check(amountFils.isBiggerThanValue(0))();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {paymentId, month},
   ];
 }
 

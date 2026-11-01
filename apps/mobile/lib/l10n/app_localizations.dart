@@ -2323,6 +2323,174 @@ abstract class AppLocalizations {
   /// **'Visa instalment'**
   String get payKindVisa;
 
+  /// No description provided for @salaryMonthsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Which month\'s salary'**
+  String get salaryMonthsHeading;
+
+  /// No description provided for @salaryMonthLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} unpaid'**
+  String salaryMonthLeft(String amount);
+
+  /// No description provided for @salaryOldestFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest first'**
+  String get salaryOldestFirst;
+
+  /// No description provided for @salaryNothingOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'No salary is unpaid for this worker. This amount goes on their advance.'**
+  String get salaryNothingOwed;
+
+  /// No description provided for @salaryExtraLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} more than is owed. It goes on the advance.'**
+  String salaryExtraLine(String amount);
+
+  /// No description provided for @salaryExtraTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} more than is owed'**
+  String salaryExtraTitle(String amount);
+
+  /// No description provided for @salaryExtraBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This extra is written as an advance to this worker, and comes back through a later salary.'**
+  String get salaryExtraBody;
+
+  /// No description provided for @salaryExtraConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Write as advance'**
+  String get salaryExtraConfirm;
+
+  /// No description provided for @salaryExtraNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid above salary owed'**
+  String get salaryExtraNote;
+
+  /// No description provided for @salaryPartsTooMuch.
+  ///
+  /// In en, this message translates to:
+  /// **'The months add up to more than the amount.'**
+  String get salaryPartsTooMuch;
+
+  /// No description provided for @salaryPartTooHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Above what is unpaid'**
+  String get salaryPartTooHigh;
+
+  /// No description provided for @salaryReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference (bank or cheque)'**
+  String get salaryReference;
+
+  /// No description provided for @salaryReceiver.
+  ///
+  /// In en, this message translates to:
+  /// **'Received by'**
+  String get salaryReceiver;
+
+  /// No description provided for @salaryReceiverHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty if the worker took it.'**
+  String get salaryReceiverHelp;
+
+  /// No description provided for @wagesDueBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 worker} other{{count} workers}} unpaid: {amount}'**
+  String wagesDueBanner(int count, String amount);
+
+  /// No description provided for @wagesDueOldest.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting longest: {month}'**
+  String wagesDueOldest(String month);
+
+  /// No description provided for @wagesDueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpaid salary'**
+  String get wagesDueTitle;
+
+  /// No description provided for @wagesDueWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers'**
+  String get wagesDueWorkers;
+
+  /// No description provided for @wagesDueTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpaid'**
+  String get wagesDueTotal;
+
+  /// No description provided for @wagesDueLate.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day late} other{{days} days late}}'**
+  String wagesDueLate(int days);
+
+  /// No description provided for @wagesDueInTime.
+  ///
+  /// In en, this message translates to:
+  /// **'due, not late yet'**
+  String get wagesDueInTime;
+
+  /// No description provided for @wagesDueNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Every finished month is paid.'**
+  String get wagesDueNone;
+
+  /// No description provided for @wagesDueNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A reminder only. Recording a late salary does not make it lawful, and this app is not a wage payment or WPS service.'**
+  String get wagesDueNote;
+
+  /// No description provided for @wageDueDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Days to pay salary after month end'**
+  String get wageDueDays;
+
+  /// No description provided for @wageDueDaysHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own figure, ask your accountant. Empty means late from the day after month end.'**
+  String get wageDueDaysHelp;
+
+  /// No description provided for @wageDueDaysError.
+  ///
+  /// In en, this message translates to:
+  /// **'A whole number from 0 to 90.'**
+  String get wageDueDaysError;
+
+  /// No description provided for @applyAdvanceCuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut advance ({count})'**
+  String applyAdvanceCuts(int count);
+
+  /// No description provided for @advanceCutsApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance cut for {count} workers'**
+  String advanceCutsApplied(int count);
+
   /// No description provided for @applyVisaInstalments.
   ///
   /// In en, this message translates to:
