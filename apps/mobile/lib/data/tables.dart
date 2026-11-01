@@ -171,6 +171,62 @@ class DayOffs extends Table with Common {
   ];
 }
 
+/// An uploaded image, kept for good so a paper can always find what it was issued with (DOC-04, DOC-05). Triggers enforce this.
+class DocumentAssets extends Table with Common {
+  TextColumn get kind => text()();
+  TextColumn get mime => text()();
+  IntColumn get widthPx => integer()();
+  IntColumn get heightPx => integer()();
+  BlobColumn get bytes => blob()();
+}
+
+/// How the company's papers look today: one row. Changing it never touches a paper already issued (DOC-02 to DOC-05).
+class DocumentTemplates extends Table with Common {
+  TextColumn get logoAssetId => text().nullable().references(DocumentAssets, #id)();
+  TextColumn get headerAssetId => text().nullable().references(DocumentAssets, #id)();
+  TextColumn get footerAssetId => text().nullable().references(DocumentAssets, #id)();
+  TextColumn get signatureAssetId => text().nullable().references(DocumentAssets, #id)();
+  TextColumn get stampAssetId => text().nullable().references(DocumentAssets, #id)();
+
+  /// JSON, by image kind: size, position and trim.
+  TextColumn get placements => text().withDefault(const Constant('{}'))();
+
+  /// False for pre-printed paper. Nothing of the company prints, and the blank space stays clear.
+  BoolColumn get printLetterhead => boolean().withDefault(const Constant(true))();
+  IntColumn get blankTopMm => integer().withDefault(const Constant(40))();
+  IntColumn get blankBottomMm => integer().withDefault(const Constant(25))();
+  BoolColumn get showSignature => boolean().withDefault(const Constant(false))();
+  BoolColumn get showStamp => boolean().withDefault(const Constant(false))();
+}
+
+/// A paper as it was issued: its file, what it said and how it looked (DOC-05). Never changes, and a change to the facts
+/// is a new revision under the same number. Triggers enforce this.
+@TableIndex(name: 'idx_issued_subject', columns: {#kind, #subjectId, #period})
+class IssuedDocuments extends Table with Common {
+  TextColumn get kind => text()();
+  IntColumn get year => integer()();
+  IntColumn get seq => integer()();
+  IntColumn get revision => integer()();
+  TextColumn get number => text()();
+
+  /// The worker of a slip, or the cash line of a receipt.
+  TextColumn get subjectId => text()();
+
+  /// YYYY-MM on a slip.
+  TextColumn get period => text().nullable()();
+  TextColumn get title => text()();
+  TextColumn get summary => text()();
+  TextColumn get dataJson => text()();
+  TextColumn get identityJson => text()();
+  TextColumn get metaJson => text()();
+  BlobColumn get pdfBytes => blob()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {tenantId, kind, year, seq, revision},
+  ];
+}
+
 /// Rate terms shared by both contract tables (MASTER-06). Dates are YYYY-MM-DD.
 mixin RateTerms on Table {
   TextColumn get basis => text()();

@@ -94,6 +94,23 @@ BEGIN
   SELECT RAISE(ABORT, 'period is closed');
 END;
 
+-- A paper stays exactly as it was issued, and so does any image it used (DOC-05).
+CREATE TRIGGER issued_no_edit BEFORE UPDATE ON issued_documents BEGIN
+  SELECT RAISE(ABORT, 'an issued document never changes');
+END;
+
+CREATE TRIGGER issued_no_delete BEFORE DELETE ON issued_documents BEGIN
+  SELECT RAISE(ABORT, 'an issued document stays on record');
+END;
+
+CREATE TRIGGER asset_no_edit BEFORE UPDATE ON document_assets BEGIN
+  SELECT RAISE(ABORT, 'a stored image never changes');
+END;
+
+CREATE TRIGGER asset_no_delete BEFORE DELETE ON document_assets BEGIN
+  SELECT RAISE(ABORT, 'a stored image stays on record');
+END;
+
 CREATE TRIGGER closed_day_off_no_insert BEFORE INSERT ON day_offs
 WHEN NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
 BEGIN

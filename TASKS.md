@@ -52,7 +52,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 
 | Task | Title | Requirements | Status | Branch / PR |
 | --- | --- | --- | --- | --- |
-| T14 | Shared document engine: letterhead, snapshots, share sheet, payslip | DOC-01..08, PAY-09 | NOT_STARTED | - |
+| T14 | Shared document engine: letterhead, snapshots, share sheet, payslip (D-047) | DOC-01..08, PAY-09 | IMPLEMENTED_UNVERIFIED | `p3/t14-document-engine` |
 | T15 | Timesheets, revisions, billed allocation | TS-01..08 | NOT_STARTED | - |
 | T16 | Invoices, VAT, numbering, credit notes, e-invoice labelling and structured export | INV-01..04, INV-06, INV-08, INV-09 | NOT_STARTED | - |
 | T17 | Receipts, status, client statement | INV-05, INV-07 | NOT_STARTED | - |

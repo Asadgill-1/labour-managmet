@@ -6,6 +6,8 @@ import '../features/cash/cash_screen.dart';
 import '../features/closing/closing_screen.dart';
 import '../features/companies/companies_screen.dart';
 import '../features/companies/sites_screen.dart';
+import '../features/documents/documents_screen.dart';
+import '../features/documents/letterhead_screen.dart';
 import '../features/groups/groups_screen.dart';
 import '../features/labour/labour_screen.dart';
 import '../features/more/profile_form_screen.dart';
@@ -37,6 +39,8 @@ Widget _screen(Section section) => switch (section) {
   Section.settings => const SettingsScreen(),
   Section.visa => const VisaScreen(),
   Section.closing => const ClosingScreen(),
+  Section.documents => const DocumentsScreen(),
+  Section.letterhead => const LetterheadScreen(),
   Section.attendanceRegister ||
   Section.workerRegister ||
   Section.visaRegister ||

@@ -114,7 +114,7 @@ void main() {
 
     final file = await timed(
       'attendance Excel',
-      () async => registerXlsx(company: 'Co', title: register.title, filterLine: '', columns: register.columns, entries: register.entries, totalLabel: 'Total', brandHex: '1F3A8A', rollups: register.rollupsOf!(register.entries), rollupSheet: 'Khulasa'),
+      () async => registerXlsx(company: 'Co', title: register.title, filterLine: '', columns: register.columns, entries: register.entries, totalLabel: 'Total', brandHex: '1F3A8A', softHex: 'E0EEFF', rollups: register.rollupsOf!(register.entries), rollupSheet: 'Khulasa'),
     );
     final sheet1 = utf8.decode(ZipDecoder().decodeBytes(file).findFile('xl/worksheets/sheet1.xml')!.content as List<int>);
     expect(RegExp('<row ').allMatches(sheet1).length, workers * days + 5, reason: 'four lines and headings above, a total below, every row in between');

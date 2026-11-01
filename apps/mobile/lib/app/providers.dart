@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/closing.dart';
+import '../data/documents.dart';
 import '../data/payroll.dart';
 import '../data/statement.dart';
 import '../data/tenant_database.dart';
@@ -118,6 +119,18 @@ final roomChargesOfWorkerProvider = StreamProvider.family<List<PayrollItem>, Str
   final db = ref.watch(dbProvider);
   return (db.select(db.payrollItems)..where((i) => i.workerId.equals(workerId) & i.kind.equals('roomCharge') & i.lineId.isNotNull())).watch();
 });
+
+final documentTemplateProvider = StreamProvider<DocumentTemplate?>((ref) {
+  final db = ref.watch(dbProvider);
+  return db.select(db.documentTemplates).watchSingleOrNull();
+});
+
+final documentAssetProvider = FutureProvider.family<DocumentAsset?, String>((ref, id) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.documentAssets)..where((a) => a.id.equals(id))).getSingleOrNull();
+});
+
+final issuedDocumentsProvider = StreamProvider<List<IssuedRow>>((ref) => ref.watch(dbProvider).watchIssued());
 
 final visaAccountsProvider = StreamProvider<List<VisaAccount>>((ref) => ref.watch(dbProvider).watchVisaAccounts());
 

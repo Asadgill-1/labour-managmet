@@ -10,6 +10,7 @@ import '../../app/theme.dart';
 import '../../data/cash.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../documents/receipt.dart';
 
 const expenseCategories = ['transport', 'food', 'visa', 'tools', 'office', 'other'];
 
@@ -70,6 +71,31 @@ class CashEntryRow extends ConsumerWidget {
     }
   }
 
+  /// Money handed to a worker can give them a receipt. Anything else only has the undo.
+  Future<void> _tap(BuildContext context, WidgetRef ref, CashKind kind) async {
+    if ((kind != CashKind.salaryPaid && kind != CashKind.advanceGiven) || entry.workerId == null) return _undo(context, ref);
+    final l10n = AppLocalizations.of(context);
+    final receipt = await showModalBottomSheet<bool>(
+      context: context,
+      builder: (sheet) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(leading: const Icon(Icons.receipt_long), title: Text(l10n.receiptMake), onTap: () => Navigator.of(sheet).pop(true)),
+            const Divider(),
+            ListTile(leading: const Icon(Icons.undo), title: Text(l10n.reverseConfirm), onTap: () => Navigator.of(sheet).pop(false)),
+          ],
+        ),
+      ),
+    );
+    if (receipt == null || !context.mounted) return;
+    if (receipt) {
+      await shareReceipt(context, ref, entry, onBusy: (_) {});
+    } else {
+      await _undo(context, ref);
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
@@ -111,7 +137,7 @@ class CashEntryRow extends ConsumerWidget {
               ? amountStyle.copyWith(color: muted, decoration: TextDecoration.lineThrough)
               : amountStyle.copyWith(color: reversal ? muted : (moneyIn ? settled : due)),
         ),
-        onTap: reversal || undone ? null : () => _undo(context, ref),
+        onTap: reversal || undone ? null : () => _tap(context, ref, kind),
       ),
     );
   }

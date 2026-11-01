@@ -8,6 +8,7 @@ import 'package:domain/payroll.dart';
 import 'package:drift/drift.dart' show BooleanExpressionOperators, Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:labour_app/documents/document_frame.dart';
 import 'package:labour_app/app/side_panel.dart';
 import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/cash.dart';
@@ -404,7 +405,7 @@ void main() {
       RegisterEntry(['2020-09-06', '=SUM(A1)', 60, -2505, 2], group: '2020-09-06'),
     ];
     Archive unzip() => ZipDecoder().decodeBytes(
-      registerXlsx(company: 'Al Noor', title: 'Hazri: register', filterLine: 'Tareekh', columns: columns, entries: entries, totalLabel: 'Total', brandHex: '143E8F'),
+      registerXlsx(company: 'Al Noor', title: 'Hazri: register', filterLine: 'Tareekh', columns: columns, entries: entries, totalLabel: 'Total', brandHex: '143E8F', softHex: 'E0EEFF'),
     );
     String part(Archive a, String name) => utf8.decode(a.findFile(name)!.content as List<int>);
 
@@ -448,6 +449,7 @@ void main() {
           entries: rows,
           totalLabel: 'Total',
           brandHex: '143E8F',
+          softHex: 'E0EEFF',
           rollupSheet: 'Khulasa',
           rollups: const [
             RegisterRollup('Sab', [RegisterColumn('Name'), RegisterColumn('Earned', kind: CellKind.money, total: true)], [RegisterEntry(['Asif', 1500]), RegisterEntry(['Imran', 200])]),
@@ -471,17 +473,11 @@ void main() {
     Future<List<int>> pdf(List<RegisterEntry> entries) async {
       final data = await build(Section.attendanceRegister);
       return registerPdf(
-        company: 'Al Noor Labour Supply LLC',
-        companyLine: 'Dubai',
-        title: 'Hazri register',
-        filterLine: 'Tareekh: sab',
+        identity: const DocumentIdentity(legalName: 'Al Noor Labour Supply LLC', contactLine: 'Dubai'),
+        meta: DocumentMeta(title: 'Hazri register', subtitle: 'Tareekh: sab', pagePattern: 'Safha {page} / {pages}', madeLabel: 'Banaya'),
         columns: data.columns,
         entries: entries,
         totalLabel: 'Total',
-        pageLabel: (page, pages) => 'Safha $page / $pages',
-        madeLabel: 'Banaya',
-        brandArgb: 0xFF143E8F,
-        softArgb: 0xFFE7EDFA,
         regularFont: File('assets/fonts/Roboto-Regular.ttf').readAsBytesSync(),
         boldFont: File('assets/fonts/Roboto-Bold.ttf').readAsBytesSync(),
       );
@@ -506,17 +502,11 @@ void main() {
     test('a worker account prints in sections with its sums, and a long one runs across pages', () async {
       final data = await build(Section.workerRegister);
       Future<List<int>> account(List<RegisterEntry> entries) => registerPdf(
-        company: 'Al Noor Labour Supply LLC',
-        companyLine: 'Dubai',
-        title: 'Mazdoor register',
-        filterLine: 'Tareekh: sab',
+        identity: const DocumentIdentity(legalName: 'Al Noor Labour Supply LLC', contactLine: 'Dubai'),
+        meta: DocumentMeta(title: 'Mazdoor register', subtitle: 'Tareekh: sab', pagePattern: 'Safha {page} / {pages}', madeLabel: 'Banaya'),
         columns: data.columns,
         entries: entries,
         totalLabel: 'Total',
-        pageLabel: (page, pages) => 'Safha $page / $pages',
-        madeLabel: 'Banaya',
-        brandArgb: 0xFF143E8F,
-        softArgb: 0xFFE7EDFA,
         regularFont: File('assets/fonts/Roboto-Regular.ttf').readAsBytesSync(),
         boldFont: File('assets/fonts/Roboto-Bold.ttf').readAsBytesSync(),
         rollups: data.rollupsOf!(entries),

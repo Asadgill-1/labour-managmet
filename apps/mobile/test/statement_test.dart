@@ -8,6 +8,7 @@ import 'package:domain/payroll.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:labour_app/documents/document_frame.dart';
 import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/cash.dart';
 import 'package:labour_app/data/masters.dart';
@@ -36,7 +37,6 @@ late String pier;
 
 ExportText textFor(String title) => ExportText(
   company: 'Test Labour LLC',
-  companyLine: '',
   title: title,
   filterLine: '10-2020',
   totalLabel: 'Total',
@@ -183,8 +183,8 @@ void main() {
         ...slip.money.rows.expand((r) => r),
         ...slip.notes,
       ].join(' ');
-      expect(everything, isNot(contains('15.00')), reason: "the company's rate");
-      expect(everything, isNot(contains('135.00')), reason: "a day's bill");
+      expect(everything, isNot(contains(RegExp(r'(?<![\d,])15\.00'))), reason: "the company's rate");
+      expect(everything, isNot(contains(RegExp(r'(?<![\d,])135\.00'))), reason: "a day's bill");
       expect(everything, isNot(contains(l10n.colBill)));
       expect(everything, isNot(contains(l10n.colProfit)));
       expect(slip.days.rows.first, ['05-10-2020', 'Emaar', 'Marina', l10n.statusPresent, '9:00', '10.00 ${l10n.basisHour}', '90.00']);
@@ -214,7 +214,7 @@ void main() {
       }
       final slip = slipContent(await statementOf(asif, '2020-12'), l10n, textFor(l10n.slipTitle));
       expect(slip.days.rows, hasLength(62));
-      final bytes = await slipPdf(slip, brandArgb: 0xFF1F3A8A, softArgb: 0xFFEAF0FF, regularFont: regular, boldFont: bold);
+      final bytes = await slipPdf(slip, const DocumentIdentity(legalName: 'Test'), const DocumentMeta(title: 'Slip', pagePattern: '{page}/{pages}', madeLabel: 'Made'), regularFont: regular, boldFont: bold);
       final raw = latin1.decode(bytes);
       expect(raw.substring(0, 5), '%PDF-');
       expect(RegExp(r'/Type\s*/Page\b').allMatches(raw).length, greaterThan(1));
@@ -296,6 +296,7 @@ void main() {
         entries: sheet.entries,
         totalLabel: 'Total',
         brandHex: '1F3A8A',
+        softHex: 'E0EEFF',
         note: sheet.note,
         rollups: sheet.rollupsOf!(sheet.entries),
         rollupSheet: l10n.regSummarySheet,
@@ -321,17 +322,11 @@ void main() {
       final regular = File('assets/fonts/Roboto-Regular.ttf').readAsBytesSync();
       final bold = File('assets/fonts/Roboto-Bold.ttf').readAsBytesSync();
       final bytes = await registerPdf(
-        company: 'Test',
-        companyLine: '',
-        title: sheet.title,
-        filterLine: '10-2020',
+        identity: const DocumentIdentity(legalName: 'Test', contactLine: ''),
+        meta: DocumentMeta(title: sheet.title, subtitle: '10-2020', pagePattern: 'Safha {page} / {pages}', madeLabel: 'Banaya'),
         columns: sheet.columns,
         entries: sheet.entries,
         totalLabel: 'Total',
-        pageLabel: (p, n) => '$p / $n',
-        madeLabel: 'Made',
-        brandArgb: 0xFF1F3A8A,
-        softArgb: 0xFFEAF0FF,
         regularFont: regular,
         boldFont: bold,
         rollups: sheet.rollupsOf!(sheet.entries),
@@ -349,17 +344,11 @@ void main() {
     final bold = File('assets/fonts/Roboto-Bold.ttf').readAsBytesSync();
     final watch = Stopwatch()..start();
     final bytes = await registerPdf(
-      company: 'Test',
-      companyLine: '',
-      title: 'Long',
-      filterLine: '',
-      columns: columns,
+      identity: const DocumentIdentity(legalName: 'Test', contactLine: ''),
+      meta: DocumentMeta(title: 'Long', subtitle: '', pagePattern: 'Safha {page} / {pages}', madeLabel: 'Banaya'),
+        columns: columns,
       entries: entries,
       totalLabel: 'Total',
-      pageLabel: (p, n) => '$p / $n',
-      madeLabel: 'Made',
-      brandArgb: 0xFF1F3A8A,
-      softArgb: 0xFFEAF0FF,
       regularFont: regular,
       boldFont: bold,
     );

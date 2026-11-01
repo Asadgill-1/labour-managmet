@@ -49,7 +49,7 @@ Future<void> goTo(WidgetTester tester, String section) async {
   await settle(tester);
   // A sub-tab shows once its main tab is open.
   final sub = find.byKey(ValueKey('sub-$section'));
-  for (final main in const ['Hazri', 'Labour', 'Visa', 'Companies', 'Tankhwah', 'Hisaab', 'Rooms']) {
+  for (final main in const ['Hazri', 'Labour', 'Visa', 'Companies', 'Tankhwah', 'Hisaab', 'Rooms', 'Kaghazat']) {
     if (sub.evaluate().isNotEmpty) break;
     await tester.tap(find.text(main).hitTestable().first);
     await settle(tester);

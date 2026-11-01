@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
 
+import '../../documents/document_frame.dart';
 import 'register_model.dart';
 import 'register_pdf.dart';
 import 'register_xlsx.dart';
@@ -21,14 +22,12 @@ String _mime(ExportFormat format) => format == ExportFormat.pdf ? 'application/p
 class ExportText {
   const ExportText({
     required this.company,
-    required this.companyLine,
     required this.title,
     required this.filterLine,
     required this.totalLabel,
     required this.madeLabel,
     required this.pagePattern,
     required this.rollupSheet,
-    this.footer,
     this.note,
     this.mainSheet,
     this.summaryFirst = false,
@@ -37,7 +36,6 @@ class ExportText {
   });
 
   final String company;
-  final String companyLine;
   final String title;
   final String filterLine;
   final String totalLabel;
@@ -48,7 +46,6 @@ class ExportText {
 
   /// The name of Excel's second sheet, which holds the sums.
   final String rollupSheet;
-  final String? footer;
   final String? note;
 
   /// Excel's name for the sheet of rows, when it should not be the title.
@@ -82,8 +79,7 @@ Future<Uint8List> makeExportBytes(
   ExportText text,
   List<RegisterColumn> columns,
   List<RegisterEntry> entries, {
-  required int brandArgb,
-  required int softArgb,
+  required DocumentIdentity identity,
   List<RegisterRollup> rollups = const [],
   Map<String, String> groupHeads = const {},
   Map<String, String> groupFeet = const {},
@@ -91,7 +87,8 @@ Future<Uint8List> makeExportBytes(
 }) async {
   final rows = [for (final e in entries) RegisterEntry(e.cells, group: e.group)];
   if (format == ExportFormat.excel) {
-    final brandHex = (brandArgb & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase();
+    final brandHex = (identity.brandArgb & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase();
+    final softHex = (identity.softArgb & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase();
     return Isolate.run(
       () => registerXlsx(
         company: text.company,
@@ -101,6 +98,7 @@ Future<Uint8List> makeExportBytes(
         entries: rows,
         totalLabel: text.totalLabel,
         brandHex: brandHex,
+        softHex: softHex,
         note: text.note,
         rollups: rollups,
         rollupSheet: text.rollupSheet,
@@ -111,21 +109,15 @@ Future<Uint8List> makeExportBytes(
   }
   final regular = (await rootBundle.load('assets/fonts/Roboto-Regular.ttf')).buffer.asUint8List();
   final bold = (await rootBundle.load('assets/fonts/Roboto-Bold.ttf')).buffer.asUint8List();
+  final meta = DocumentMeta(title: text.title, subtitle: text.filterLine, pagePattern: text.pagePattern, madeLabel: text.madeLabel);
   return Isolate.run(
     () => registerPdf(
-      company: text.company,
-      companyLine: text.companyLine,
-      title: text.title,
-      filterLine: text.filterLine,
+      identity: identity,
+      meta: meta,
       columns: columns,
       entries: rows,
       totalLabel: text.totalLabel,
-      pageLabel: (page, pages) => text.pagePattern.replaceAll('{page}', '$page').replaceAll('{pages}', '$pages'),
-      madeLabel: text.madeLabel,
-      footer: text.footer,
       note: text.note,
-      brandArgb: brandArgb,
-      softArgb: softArgb,
       regularFont: regular,
       boldFont: bold,
       rollups: rollups,

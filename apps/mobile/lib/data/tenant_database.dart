@@ -50,6 +50,9 @@ String newUuid() {
     SalaryAllocations,
     PeriodLocks,
     DayOffs,
+    DocumentAssets,
+    DocumentTemplates,
+    IssuedDocuments,
     AttendanceBatches,
     AttendanceEntries,
     PayrollRuns,
@@ -68,7 +71,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 11;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -154,6 +157,15 @@ class TenantDatabase extends _$TenantDatabase {
       from9To10: (m, schema) async {
         await m.createTable(schema.dayOffs);
         await m.createTrigger(schema.closedDayOffNoInsert);
+      },
+      from10To11: (m, schema) async {
+        await m.createTable(schema.documentAssets);
+        await m.createTable(schema.documentTemplates);
+        await m.createTable(schema.issuedDocuments);
+        await m.createIndex(schema.idxIssuedSubject);
+        for (final trigger in [schema.issuedNoEdit, schema.issuedNoDelete, schema.assetNoEdit, schema.assetNoDelete]) {
+          await m.createTrigger(trigger);
+        }
       },
     ),
     beforeOpen: (details) async {

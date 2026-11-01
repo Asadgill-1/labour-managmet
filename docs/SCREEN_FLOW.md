@@ -27,6 +27,7 @@ The panel lists main tabs that open to show sub-tabs. The current tab's sub-tabs
 | Companies | Companies, Sites, Rates, Company register |
 | Tankhwah | Tankhwah, Tankhwah register, Advance register |
 | Hisaab | Rozana hisaab, Pichla baqaya, Hisaab register, Mahina band |
+| Kaghazat | Bane hue kaghaz, Letterhead |
 | Rooms | Rooms, Room register |
 | Jald aa raha hai | Timesheet, Invoice, Paisay mile, Reports, Documents, Team, Backup, Plan, Help |
 

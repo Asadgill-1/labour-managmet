@@ -109,6 +109,22 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 - [ ] Advance wale mazdoor par **Tankhwah** mein **Advance katein** dabayein. **Mazdoor ko dena hai** ab slip ke baqi ke barabar ho. Mazdoor ki screen par us raqam ko badal bhi sakte hain.
 - [ ] **Apni company** mein **Mahine ke baad tankhwah kitne din mein** likhein. Us din tak **abhi late nahin** likha aaye, us ke baad din ginay jayen.
 
+## 5e. Letterhead aur kaghazat (T14)
+
+Yeh hissa P3 ka hai, magar isi APK mein hai.
+
+- [ ] **Menu > Kaghazat > Letterhead** kholein. Header ki tasveer chunein: PNG ya JPEG. Chaurai aur jagah badlein, phir **Namoona dekhein**. Tasveer sidhi ho, khinchi hui na ho, aur rows us ke neeche hon.
+- [ ] Choti tasveer lagayein. **Dhundli lagegi** ka paigham aaye. PDF ya bari file chunein, app mana kar de.
+- [ ] Logo, footer ki tasveer, dastakhat aur mohar lagayein. Dastakhat aur mohar **Kaghaz par dikhayein** se on aur off hon.
+- [ ] **Company ka heading print karein** band karein aur khali jagah likhein. Namoona mein company ka naam na ho, aur upar jagah khali ho.
+- [ ] **Tankhwah > kisi mazdoor > Salary slip**: pehle yeh likha aaye kis ka kaghaz hai. **Dekhein** dabayein, safhe nazar aayen, neeche Print, Save, WhatsApp hon.
+- [ ] Slip par Kamai, Katoti, Is mahine ka net, Pichla baqi aur Ada kiya alag alag hon.
+- [ ] **Kaghazat > Bane hue kaghaz** mein woh slip apne number ke saath aaye. Dobara Salary slip banayein, naya number na bane.
+- [ ] Us mazdoor ki adaigi likh kar slip phir banayein. Number wahi rahe, aage **R2** ho. List mein dono rahen.
+- [ ] Letterhead badlein. Purana kaghaz kholein, woh purane letterhead ke saath hi aaye. **COPY likh kar dein** on kar ke kholein, us par COPY likha ho aur number wahi ho.
+- [ ] **Rozana hisaab** mein tankhwah ya advance ki line dabayein. **Raseed banayein** se raseed bane.
+- [ ] Printer ho to aik slip print kar ke dekhein.
+
 ## 5d. Mahina band
 
 - [ ] **Hisaab > Mahina band** kholein. Pichla mahina khule. Upar likha ho kitni cheezain baqi hain, aur neeche har tareekh ke saath woh cheez. Band karne ka button na chale.
@@ -132,6 +148,7 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 Yeh chaaron abhi PROPOSED hain. Aap ka jawab darkar hai. Accountant ko bhi dikhayein.
 
 - [ ] **D-033:** Hisaab statement ki tarah chalta hai. Tankhwah screen par purane post hue mahine ka "ada kiya" tareekh se ginta hai. Khaas mahine slip aur baqi tankhwah mein dikhte hain.
+- [ ] **D-047:** Slip aur raseed ka number aur asal file hamesha mehfooz rehti hai, aur figure badalne par R2 banta hai. Letterhead abhi sab ke liye khula hai, plan aane par yeh paid hoga.
 - [ ] **D-045:** Jab tak koi cheez baqi hai mahina band nahin hota. Baqi tankhwah mahina nahin rokti, kyun ke woh agle mahine jati hai. Agar aap chahte hain ke baqi tankhwah bhi roke to batayein.
 - [ ] **D-044:** Band mahine mein kuch nahin badalta. Band mahine mein kuch nahin badalta, farq khule mahine mein allowance ya katoti se likha jata hai. Mahina wajah likh kar dobara khul sakta hai, sirf aakhri band mahina.
 - [ ] **D-043:** Zyada adaigi advance mein jati hai. Advance tab tak Tankhwah se nahin katta jab tak aap **Advance katein** na dabayein, slip mein woh dete hi kat jata hai. Purani adaigiyan khud purane mahine se jorti hain. Late ka hisaab aap ke apne dinon se hota hai, koi qanooni muddat app mein nahin.

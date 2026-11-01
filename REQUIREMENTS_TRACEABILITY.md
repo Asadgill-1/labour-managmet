@@ -53,7 +53,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | PAY-06 | 07 | Salary payments | T12, T12a | IMPLEMENTED_UNVERIFIED | TC-034, TC-051, TC-068, TC-069 | - |
 | PAY-07 | 07 | Deductions | T11, T11e | IMPLEMENTED_UNVERIFIED | TC-033, TC-061 | `apps/mobile/test/payroll_test.dart` |
 | PAY-08 | 07 | Compliance | T12 | IMPLEMENTED_UNVERIFIED | TC-071 | - |
-| PAY-09 | 07 | Payslip | T11f, T14 | IN_PROGRESS | TC-064 | `apps/mobile/test/statement_test.dart` |
+| PAY-09 | 07 | Payslip | T11f, T14 | IMPLEMENTED_UNVERIFIED | TC-064, TC-083 | `apps/mobile/test/statement_test.dart` |
 | TS-01 | 08 | Client/date range/site chunein aur approved attendance se timesheet banayein | T15 | NOT_STARTED | - | - |
 | TS-02 | 08 | Columns | T15 | NOT_STARTED | TC-038 | - |
 | TS-03 | 08 | Daily summary | T15 | NOT_STARTED | TC-039 | - |
@@ -71,14 +71,14 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | INV-07 | 09 | Status | T17 | NOT_STARTED | - | - |
 | INV-08 | 09 | Online/offline numbering | T16 | NOT_STARTED | - | - |
 | INV-09 | 09 | e-Invoicing gate | T16 | NOT_STARTED | - | - |
-| DOC-01 | 10 | Aik shared engine | T14, T18a | IN_PROGRESS | TC-009, TC-058 | - |
-| DOC-02 | 10 | Free basic identity | T14 | NOT_STARTED | - | - |
-| DOC-03 | 10 | Layout | T14, T18a | IN_PROGRESS | TC-058 | - |
-| DOC-04 | 10 | Images | T14 | NOT_STARTED | - | - |
-| DOC-05 | 10 | Revision | T14 | NOT_STARTED | TC-042 | - |
-| DOC-06 | 10 | Actions | T14, T18a | IN_PROGRESS | TC-059 | - |
-| DOC-07 | 10 | Data safety | T14, T18a | IN_PROGRESS | TC-059 | - |
-| DOC-08 | 10 | Tests | T14, T18a | IN_PROGRESS | TC-058 | - |
+| DOC-01 | 10 | Aik shared engine | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-009, TC-058, TC-077 | - |
+| DOC-02 | 10 | Free basic identity | T14 | IMPLEMENTED_UNVERIFIED | TC-078 | - |
+| DOC-03 | 10 | Layout | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-058, TC-078 | - |
+| DOC-04 | 10 | Images | T14 | IMPLEMENTED_UNVERIFIED | TC-079 | - |
+| DOC-05 | 10 | Revision | T14 | IMPLEMENTED_UNVERIFIED | TC-042, TC-080 | - |
+| DOC-06 | 10 | Actions | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-059, TC-081 | - |
+| DOC-07 | 10 | Data safety | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-059, TC-081 | - |
+| DOC-08 | 10 | Tests | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-058, TC-082 | - |
 | REP-01 | 11 | Reports | T18, T18a, T11e, T11f | IN_PROGRESS | TC-057, TC-058, TC-062, TC-063, TC-067 | - |
 | REP-02 | 11 | Hisaab ki separation | T18 | NOT_STARTED | TC-044 | - |
 | REP-03 | 11 | Margin | T11f, T18 | IN_PROGRESS | TC-044, TC-065 | `apps/mobile/test/statement_test.dart` |

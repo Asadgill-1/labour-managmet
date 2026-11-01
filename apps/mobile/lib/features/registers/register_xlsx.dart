@@ -218,6 +218,7 @@ Uint8List registerXlsx({
   required List<RegisterEntry> entries,
   required String totalLabel,
   required String brandHex,
+  required String softHex,
   String? note,
   List<RegisterRollup> rollups = const [],
   String rollupSheet = '',
@@ -265,7 +266,11 @@ Uint8List registerXlsx({
       '</workbook>';
 
   final brand = 'FF$brandHex';
-  const line = '<left style="thin"><color rgb="FFD5DAE3"/></left><right style="thin"><color rgb="FFD5DAE3"/></right><top style="thin"><color rgb="FFD5DAE3"/></top><bottom style="thin"><color rgb="FFD5DAE3"/></bottom><diagonal/>';
+  final soft = 'FF$softHex';
+  // Rules across only, as in an account book.
+  const line = '<left/><right/><top/><bottom style="hair"><color rgb="FF8A8676"/></bottom><diagonal/>';
+  const head = '<left/><right/><top/><bottom style="medium"><color rgb="FF15201B"/></bottom><diagonal/>';
+  const total = '<left/><right/><top style="thin"><color rgb="FF15201B"/></top><bottom style="double"><color rgb="FF15201B"/></bottom><diagonal/>';
   final stylesXml =
       '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
       '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
@@ -274,33 +279,33 @@ Uint8List registerXlsx({
       '<font><sz val="11"/><name val="Calibri"/></font>'
       '<font><b/><sz val="16"/><color rgb="$brand"/><name val="Calibri"/></font>'
       '<font><b/><sz val="13"/><name val="Calibri"/></font>'
-      '<font><sz val="10"/><color rgb="FF5B667A"/><name val="Calibri"/></font>'
-      '<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>'
+      '<font><sz val="10"/><color rgb="FF5A6259"/><name val="Calibri"/></font>'
+      '<font><b/><sz val="11"/><color rgb="FF15201B"/><name val="Calibri"/></font>'
       '<font><b/><sz val="11"/><name val="Calibri"/></font>'
       '</fonts>'
       '<fills count="4">'
       '<fill><patternFill patternType="none"/></fill>'
       '<fill><patternFill patternType="gray125"/></fill>'
-      '<fill><patternFill patternType="solid"><fgColor rgb="$brand"/><bgColor indexed="64"/></patternFill></fill>'
-      '<fill><patternFill patternType="solid"><fgColor rgb="FFEEF1F6"/><bgColor indexed="64"/></patternFill></fill>'
+      '<fill><patternFill patternType="solid"><fgColor rgb="$soft"/><bgColor indexed="64"/></patternFill></fill>'
+      '<fill><patternFill patternType="none"/></fill>'
       '</fills>'
-      '<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border>$line</border></borders>'
+      '<borders count="4"><border><left/><right/><top/><bottom/><diagonal/></border><border>$line</border><border>$head</border><border>$total</border></borders>'
       '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
       '<cellXfs count="14">'
       '<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
       '<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/>'
       '<xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/>'
       '<xf numFmtId="0" fontId="3" fillId="0" borderId="0" xfId="0" applyFont="1"/>'
-      '<xf numFmtId="0" fontId="4" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'
+      '<xf numFmtId="0" fontId="4" fillId="2" borderId="2" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'
       '<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>'
       '<xf numFmtId="164" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="top"/></xf>'
       '<xf numFmtId="4" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment vertical="top"/></xf>'
       '<xf numFmtId="165" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment vertical="top"/></xf>'
       '<xf numFmtId="1" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment vertical="top"/></xf>'
-      '<xf numFmtId="0" fontId="5" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1"/>'
-      '<xf numFmtId="4" fontId="5" fillId="3" borderId="1" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1"/>'
-      '<xf numFmtId="165" fontId="5" fillId="3" borderId="1" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1"/>'
-      '<xf numFmtId="1" fontId="5" fillId="3" borderId="1" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1"/>'
+      '<xf numFmtId="0" fontId="5" fillId="0" borderId="3" xfId="0" applyFont="1" applyBorder="1"/>'
+      '<xf numFmtId="4" fontId="5" fillId="0" borderId="3" xfId="0" applyNumberFormat="1" applyFont="1" applyBorder="1"/>'
+      '<xf numFmtId="165" fontId="5" fillId="0" borderId="3" xfId="0" applyNumberFormat="1" applyFont="1" applyBorder="1"/>'
+      '<xf numFmtId="1" fontId="5" fillId="0" borderId="3" xfId="0" applyNumberFormat="1" applyFont="1" applyBorder="1"/>'
       '</cellXfs>'
       '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'
       '</styleSheet>';

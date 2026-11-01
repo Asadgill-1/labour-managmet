@@ -29,6 +29,8 @@ enum Section {
   closing,
   rooms,
   roomRegister,
+  documents,
+  letterhead,
   settings,
 }
 
@@ -53,6 +55,8 @@ String sectionLabel(AppLocalizations l10n, Section section) => switch (section) 
   Section.closing => l10n.tabClosing,
   Section.rooms => l10n.tabRooms,
   Section.roomRegister => l10n.regRooms,
+  Section.documents => l10n.docsTab,
+  Section.letterhead => l10n.lhTab,
   Section.settings => l10n.tabSettings,
 };
 
@@ -73,6 +77,7 @@ final mainTabs = [
   MainTab((l) => l.menuPayroll, Icons.payments, const [Section.payroll, Section.payrollRegister, Section.advanceRegister]),
   MainTab((l) => l.mainMoney, Icons.account_balance_wallet, const [Section.cash, Section.balances, Section.cashRegister, Section.closing]),
   MainTab((l) => l.tabRooms, Icons.bed, const [Section.rooms, Section.roomRegister]),
+  MainTab((l) => l.mainDocuments, Icons.description, const [Section.documents, Section.letterhead]),
 ];
 
 /// The shell's Scaffold. Main screens have their own Scaffold, so they reach the panel through this key.
@@ -266,7 +271,6 @@ class SidePanel extends ConsumerWidget {
                       l10n.menuInvoices,
                       l10n.menuReceived,
                       l10n.menuReports,
-                      l10n.menuDocuments,
                       l10n.menuTeam,
                       l10n.menuBackup,
                       l10n.menuPlan,

@@ -2014,6 +2014,193 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get colVisaLeft => 'Visa left';
+
+  @override
+  String get mainDocuments => 'Documents';
+
+  @override
+  String get docsTab => 'Issued papers';
+
+  @override
+  String get docsEmpty =>
+      'No papers yet. A salary slip or receipt shows here once made.';
+
+  @override
+  String get docCopyOption => 'Mark as COPY';
+
+  @override
+  String get docCopyHelp =>
+      'The number stays the same. Without COPY you get the same file that was issued.';
+
+  @override
+  String get docCopyLabel => 'COPY';
+
+  @override
+  String get docPrint => 'Print';
+
+  @override
+  String get slipEarnings => 'Earnings';
+
+  @override
+  String get slipEarned => 'Total earned';
+
+  @override
+  String get slipDeductions => 'Deductions';
+
+  @override
+  String get slipDeducted => 'Total deducted';
+
+  @override
+  String get slipAccount => 'Account';
+
+  @override
+  String get slipNet => 'This month\'s net';
+
+  @override
+  String slipWorkBasis(int days, String hours) {
+    return 'Work: $days days, $hours hours';
+  }
+
+  @override
+  String get receiptMake => 'Make a receipt';
+
+  @override
+  String get receiptPaymentTitle => 'Salary receipt';
+
+  @override
+  String get receiptAdvanceTitle => 'Advance receipt';
+
+  @override
+  String get receiptPayment => 'Salary paid';
+
+  @override
+  String get receiptAdvance => 'Advance given';
+
+  @override
+  String get receiptMethod => 'Method';
+
+  @override
+  String get receiptReference => 'Reference';
+
+  @override
+  String get receiptReceiver => 'Taken by';
+
+  @override
+  String receiptMonth(String month) {
+    return 'Salary for $month';
+  }
+
+  @override
+  String get receiptNote =>
+      'This receipt is the company\'s own record. It is not proof of a bank payment.';
+
+  @override
+  String get receiptTakenBy => 'Signature of the person receiving';
+
+  @override
+  String get receiptFromCompany => 'For the company';
+
+  @override
+  String get lhTab => 'Letterhead';
+
+  @override
+  String get lhOld =>
+      'Papers already issued stay as they are. This applies to new papers only.';
+
+  @override
+  String get lhIdentity => 'Company details';
+
+  @override
+  String get lhIdentityNote => 'Name, address, phone and TRN come from here.';
+
+  @override
+  String get lhPrinted => 'Print the company heading';
+
+  @override
+  String get lhPrintedHelp =>
+      'Turn off if your paper is already printed. Then name, logo and footer do not print.';
+
+  @override
+  String get lhBlankTop => 'Blank at top (mm)';
+
+  @override
+  String get lhBlankBottom => 'Blank at foot (mm)';
+
+  @override
+  String get lhBlankBad => 'Enter 0 to 120 mm.';
+
+  @override
+  String get lhLogo => 'Logo';
+
+  @override
+  String get lhHeader => 'Header image';
+
+  @override
+  String get lhFooter => 'Footer image';
+
+  @override
+  String get lhSignature => 'Signature';
+
+  @override
+  String get lhStamp => 'Stamp';
+
+  @override
+  String get lhUpload => 'Choose image';
+
+  @override
+  String get lhChange => 'Change';
+
+  @override
+  String get lhRemove => 'Remove';
+
+  @override
+  String get lhSize => 'Width';
+
+  @override
+  String get lhLeft => 'Left';
+
+  @override
+  String get lhCenter => 'Centre';
+
+  @override
+  String get lhRight => 'Right';
+
+  @override
+  String get lhCrop => 'Trim edges';
+
+  @override
+  String get lhCropTop => 'Top';
+
+  @override
+  String get lhCropBottom => 'Bottom';
+
+  @override
+  String get lhCropLeft => 'Left';
+
+  @override
+  String get lhCropRight => 'Right';
+
+  @override
+  String get lhShow => 'Show on papers';
+
+  @override
+  String lhResolution(int width, int height) {
+    return '$width x $height pixels';
+  }
+
+  @override
+  String lhLowRes(int dpi) {
+    return 'Will look soft in print ($dpi DPI). Use a bigger image or a smaller width.';
+  }
+
+  @override
+  String get lhBadType => 'Only PNG or JPEG images work.';
+
+  @override
+  String get lhTooLarge => 'The image is over 5 MB.';
+
+  @override
+  String get lhSample => 'See a sample';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -4015,4 +4202,191 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get colVisaLeft => 'Visa baqi';
+
+  @override
+  String get mainDocuments => 'Kaghazat';
+
+  @override
+  String get docsTab => 'Bane hue kaghaz';
+
+  @override
+  String get docsEmpty =>
+      'Abhi koi kaghaz nahin bana. Salary slip ya raseed banane par yahan aa jayega.';
+
+  @override
+  String get docCopyOption => 'COPY likh kar dein';
+
+  @override
+  String get docCopyHelp =>
+      'Number wahi rahega. Bina COPY ke woh file milti hai jo pehle di thi.';
+
+  @override
+  String get docCopyLabel => 'COPY';
+
+  @override
+  String get docPrint => 'Print';
+
+  @override
+  String get slipEarnings => 'Kamai';
+
+  @override
+  String get slipEarned => 'Kul kamai';
+
+  @override
+  String get slipDeductions => 'Katoti';
+
+  @override
+  String get slipDeducted => 'Kul katoti';
+
+  @override
+  String get slipAccount => 'Hisaab';
+
+  @override
+  String get slipNet => 'Is mahine ka net';
+
+  @override
+  String slipWorkBasis(int days, String hours) {
+    return 'Kaam: $days din, $hours ghante';
+  }
+
+  @override
+  String get receiptMake => 'Raseed banayein';
+
+  @override
+  String get receiptPaymentTitle => 'Tankhwah ki raseed';
+
+  @override
+  String get receiptAdvanceTitle => 'Advance ki raseed';
+
+  @override
+  String get receiptPayment => 'Tankhwah di';
+
+  @override
+  String get receiptAdvance => 'Advance diya';
+
+  @override
+  String get receiptMethod => 'Tareeqa';
+
+  @override
+  String get receiptReference => 'Reference';
+
+  @override
+  String get receiptReceiver => 'Kis ne liya';
+
+  @override
+  String receiptMonth(String month) {
+    return '$month ki tankhwah';
+  }
+
+  @override
+  String get receiptNote =>
+      'Yeh raseed company ka apna record hai. Yeh bank adaigi ka saboot nahin.';
+
+  @override
+  String get receiptTakenBy => 'Lene wale ke dastakhat';
+
+  @override
+  String get receiptFromCompany => 'Company ki taraf se';
+
+  @override
+  String get lhTab => 'Letterhead';
+
+  @override
+  String get lhOld =>
+      'Jo kaghaz ban chuke woh nahin badlenge. Yeh sirf naye kaghazon par lagega.';
+
+  @override
+  String get lhIdentity => 'Company ki pehchan';
+
+  @override
+  String get lhIdentityNote => 'Naam, pata, phone aur TRN yahan se aate hain.';
+
+  @override
+  String get lhPrinted => 'Company ka heading print karein';
+
+  @override
+  String get lhPrintedHelp =>
+      'Band karein agar kaghaz par pehle se heading chhapi hai. Tab naam, logo aur footer print nahin honge.';
+
+  @override
+  String get lhBlankTop => 'Upar khali (mm)';
+
+  @override
+  String get lhBlankBottom => 'Neeche khali (mm)';
+
+  @override
+  String get lhBlankBad => '0 se 120 mm tak likhein.';
+
+  @override
+  String get lhLogo => 'Logo';
+
+  @override
+  String get lhHeader => 'Header ki tasveer';
+
+  @override
+  String get lhFooter => 'Footer ki tasveer';
+
+  @override
+  String get lhSignature => 'Dastakhat';
+
+  @override
+  String get lhStamp => 'Mohar';
+
+  @override
+  String get lhUpload => 'Tasveer chunein';
+
+  @override
+  String get lhChange => 'Badlein';
+
+  @override
+  String get lhRemove => 'Hatayein';
+
+  @override
+  String get lhSize => 'Chaurai';
+
+  @override
+  String get lhLeft => 'Baen';
+
+  @override
+  String get lhCenter => 'Beech';
+
+  @override
+  String get lhRight => 'Dayen';
+
+  @override
+  String get lhCrop => 'Kinare kaatein';
+
+  @override
+  String get lhCropTop => 'Upar';
+
+  @override
+  String get lhCropBottom => 'Neeche';
+
+  @override
+  String get lhCropLeft => 'Baen';
+
+  @override
+  String get lhCropRight => 'Dayen';
+
+  @override
+  String get lhShow => 'Kaghaz par dikhayein';
+
+  @override
+  String lhResolution(int width, int height) {
+    return '$width x $height pixel';
+  }
+
+  @override
+  String lhLowRes(int dpi) {
+    return 'Print mein dhundli lagegi ($dpi DPI). Bari tasveer lagayein ya chaurai kam karein.';
+  }
+
+  @override
+  String get lhBadType => 'Sirf PNG ya JPEG tasveer chalegi.';
+
+  @override
+  String get lhTooLarge => 'Tasveer 5 MB se bari hai.';
+
+  @override
+  String get lhSample => 'Namoona dekhein';
 }

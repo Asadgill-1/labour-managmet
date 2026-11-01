@@ -1139,5 +1139,97 @@
   },
   "sheetNote": "An estimate from attendance, not audited accounts. A company with no rate or a monthly rate shows no bill here, so its profit looks low. Advance and visa money are not expenses, because workers pay them back.",
   "colProfit": "Profit",
-  "colVisaLeft": "Visa left"
+  "colVisaLeft": "Visa left",
+  "mainDocuments": "Documents",
+  "docsTab": "Issued papers",
+  "docsEmpty": "No papers yet. A salary slip or receipt shows here once made.",
+  "docCopyOption": "Mark as COPY",
+  "docCopyHelp": "The number stays the same. Without COPY you get the same file that was issued.",
+  "docCopyLabel": "COPY",
+  "docPrint": "Print",
+  "slipEarnings": "Earnings",
+  "slipEarned": "Total earned",
+  "slipDeductions": "Deductions",
+  "slipDeducted": "Total deducted",
+  "slipAccount": "Account",
+  "slipNet": "This month's net",
+  "slipWorkBasis": "Work: {days} days, {hours} hours",
+  "@slipWorkBasis": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptMake": "Make a receipt",
+  "receiptPaymentTitle": "Salary receipt",
+  "receiptAdvanceTitle": "Advance receipt",
+  "receiptPayment": "Salary paid",
+  "receiptAdvance": "Advance given",
+  "receiptMethod": "Method",
+  "receiptReference": "Reference",
+  "receiptReceiver": "Taken by",
+  "receiptMonth": "Salary for {month}",
+  "@receiptMonth": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptNote": "This receipt is the company's own record. It is not proof of a bank payment.",
+  "receiptTakenBy": "Signature of the person receiving",
+  "receiptFromCompany": "For the company",
+  "lhTab": "Letterhead",
+  "lhOld": "Papers already issued stay as they are. This applies to new papers only.",
+  "lhIdentity": "Company details",
+  "lhIdentityNote": "Name, address, phone and TRN come from here.",
+  "lhPrinted": "Print the company heading",
+  "lhPrintedHelp": "Turn off if your paper is already printed. Then name, logo and footer do not print.",
+  "lhBlankTop": "Blank at top (mm)",
+  "lhBlankBottom": "Blank at foot (mm)",
+  "lhBlankBad": "Enter 0 to 120 mm.",
+  "lhLogo": "Logo",
+  "lhHeader": "Header image",
+  "lhFooter": "Footer image",
+  "lhSignature": "Signature",
+  "lhStamp": "Stamp",
+  "lhUpload": "Choose image",
+  "lhChange": "Change",
+  "lhRemove": "Remove",
+  "lhSize": "Width",
+  "lhLeft": "Left",
+  "lhCenter": "Centre",
+  "lhRight": "Right",
+  "lhCrop": "Trim edges",
+  "lhCropTop": "Top",
+  "lhCropBottom": "Bottom",
+  "lhCropLeft": "Left",
+  "lhCropRight": "Right",
+  "lhShow": "Show on papers",
+  "lhResolution": "{width} x {height} pixels",
+  "@lhResolution": {
+    "placeholders": {
+      "width": {
+        "type": "int"
+      },
+      "height": {
+        "type": "int"
+      }
+    }
+  },
+  "lhLowRes": "Will look soft in print ({dpi} DPI). Use a bigger image or a smaller width.",
+  "@lhLowRes": {
+    "placeholders": {
+      "dpi": {
+        "type": "int"
+      }
+    }
+  },
+  "lhBadType": "Only PNG or JPEG images work.",
+  "lhTooLarge": "The image is over 5 MB.",
+  "lhSample": "See a sample"
 }

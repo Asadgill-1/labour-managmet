@@ -50,3 +50,7 @@ graphify-out/
 .DS_Store
 Thumbs.db
 ~$*
+
+# Screens drawn to read by eye
+apps/mobile/test/zz/
+apps/mobile/test/zz_*

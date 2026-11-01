@@ -3672,6 +3672,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Visa left'**
   String get colVisaLeft;
+
+  /// No description provided for @mainDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get mainDocuments;
+
+  /// No description provided for @docsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued papers'**
+  String get docsTab;
+
+  /// No description provided for @docsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No papers yet. A salary slip or receipt shows here once made.'**
+  String get docsEmpty;
+
+  /// No description provided for @docCopyOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as COPY'**
+  String get docCopyOption;
+
+  /// No description provided for @docCopyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The number stays the same. Without COPY you get the same file that was issued.'**
+  String get docCopyHelp;
+
+  /// No description provided for @docCopyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'COPY'**
+  String get docCopyLabel;
+
+  /// No description provided for @docPrint.
+  ///
+  /// In en, this message translates to:
+  /// **'Print'**
+  String get docPrint;
+
+  /// No description provided for @slipEarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Earnings'**
+  String get slipEarnings;
+
+  /// No description provided for @slipEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Total earned'**
+  String get slipEarned;
+
+  /// No description provided for @slipDeductions.
+  ///
+  /// In en, this message translates to:
+  /// **'Deductions'**
+  String get slipDeductions;
+
+  /// No description provided for @slipDeducted.
+  ///
+  /// In en, this message translates to:
+  /// **'Total deducted'**
+  String get slipDeducted;
+
+  /// No description provided for @slipAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get slipAccount;
+
+  /// No description provided for @slipNet.
+  ///
+  /// In en, this message translates to:
+  /// **'This month\'s net'**
+  String get slipNet;
+
+  /// No description provided for @slipWorkBasis.
+  ///
+  /// In en, this message translates to:
+  /// **'Work: {days} days, {hours} hours'**
+  String slipWorkBasis(int days, String hours);
+
+  /// No description provided for @receiptMake.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a receipt'**
+  String get receiptMake;
+
+  /// No description provided for @receiptPaymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary receipt'**
+  String get receiptPaymentTitle;
+
+  /// No description provided for @receiptAdvanceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance receipt'**
+  String get receiptAdvanceTitle;
+
+  /// No description provided for @receiptPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary paid'**
+  String get receiptPayment;
+
+  /// No description provided for @receiptAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance given'**
+  String get receiptAdvance;
+
+  /// No description provided for @receiptMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Method'**
+  String get receiptMethod;
+
+  /// No description provided for @receiptReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference'**
+  String get receiptReference;
+
+  /// No description provided for @receiptReceiver.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken by'**
+  String get receiptReceiver;
+
+  /// No description provided for @receiptMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary for {month}'**
+  String receiptMonth(String month);
+
+  /// No description provided for @receiptNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This receipt is the company\'s own record. It is not proof of a bank payment.'**
+  String get receiptNote;
+
+  /// No description provided for @receiptTakenBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature of the person receiving'**
+  String get receiptTakenBy;
+
+  /// No description provided for @receiptFromCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'For the company'**
+  String get receiptFromCompany;
+
+  /// No description provided for @lhTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Letterhead'**
+  String get lhTab;
+
+  /// No description provided for @lhOld.
+  ///
+  /// In en, this message translates to:
+  /// **'Papers already issued stay as they are. This applies to new papers only.'**
+  String get lhOld;
+
+  /// No description provided for @lhIdentity.
+  ///
+  /// In en, this message translates to:
+  /// **'Company details'**
+  String get lhIdentity;
+
+  /// No description provided for @lhIdentityNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Name, address, phone and TRN come from here.'**
+  String get lhIdentityNote;
+
+  /// No description provided for @lhPrinted.
+  ///
+  /// In en, this message translates to:
+  /// **'Print the company heading'**
+  String get lhPrinted;
+
+  /// No description provided for @lhPrintedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off if your paper is already printed. Then name, logo and footer do not print.'**
+  String get lhPrintedHelp;
+
+  /// No description provided for @lhBlankTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Blank at top (mm)'**
+  String get lhBlankTop;
+
+  /// No description provided for @lhBlankBottom.
+  ///
+  /// In en, this message translates to:
+  /// **'Blank at foot (mm)'**
+  String get lhBlankBottom;
+
+  /// No description provided for @lhBlankBad.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter 0 to 120 mm.'**
+  String get lhBlankBad;
+
+  /// No description provided for @lhLogo.
+  ///
+  /// In en, this message translates to:
+  /// **'Logo'**
+  String get lhLogo;
+
+  /// No description provided for @lhHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Header image'**
+  String get lhHeader;
+
+  /// No description provided for @lhFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Footer image'**
+  String get lhFooter;
+
+  /// No description provided for @lhSignature.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature'**
+  String get lhSignature;
+
+  /// No description provided for @lhStamp.
+  ///
+  /// In en, this message translates to:
+  /// **'Stamp'**
+  String get lhStamp;
+
+  /// No description provided for @lhUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose image'**
+  String get lhUpload;
+
+  /// No description provided for @lhChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get lhChange;
+
+  /// No description provided for @lhRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get lhRemove;
+
+  /// No description provided for @lhSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Width'**
+  String get lhSize;
+
+  /// No description provided for @lhLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get lhLeft;
+
+  /// No description provided for @lhCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Centre'**
+  String get lhCenter;
+
+  /// No description provided for @lhRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get lhRight;
+
+  /// No description provided for @lhCrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Trim edges'**
+  String get lhCrop;
+
+  /// No description provided for @lhCropTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Top'**
+  String get lhCropTop;
+
+  /// No description provided for @lhCropBottom.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom'**
+  String get lhCropBottom;
+
+  /// No description provided for @lhCropLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get lhCropLeft;
+
+  /// No description provided for @lhCropRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get lhCropRight;
+
+  /// No description provided for @lhShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show on papers'**
+  String get lhShow;
+
+  /// No description provided for @lhResolution.
+  ///
+  /// In en, this message translates to:
+  /// **'{width} x {height} pixels'**
+  String lhResolution(int width, int height);
+
+  /// No description provided for @lhLowRes.
+  ///
+  /// In en, this message translates to:
+  /// **'Will look soft in print ({dpi} DPI). Use a bigger image or a smaller width.'**
+  String lhLowRes(int dpi);
+
+  /// No description provided for @lhBadType.
+  ///
+  /// In en, this message translates to:
+  /// **'Only PNG or JPEG images work.'**
+  String get lhBadType;
+
+  /// No description provided for @lhTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'The image is over 5 MB.'**
+  String get lhTooLarge;
+
+  /// No description provided for @lhSample.
+  ///
+  /// In en, this message translates to:
+  /// **'See a sample'**
+  String get lhSample;
 }
 
 class _AppLocalizationsDelegate

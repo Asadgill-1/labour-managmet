@@ -9563,6 +9563,1822 @@ class PeriodLocksCompanion extends UpdateCompanion<PeriodLock> {
   }
 }
 
+class $IssuedDocumentsTable extends IssuedDocuments
+    with TableInfo<$IssuedDocumentsTable, IssuedDocument> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $IssuedDocumentsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _yearMeta = const VerificationMeta('year');
+  @override
+  late final GeneratedColumn<int> year = GeneratedColumn<int>(
+    'year',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _seqMeta = const VerificationMeta('seq');
+  @override
+  late final GeneratedColumn<int> seq = GeneratedColumn<int>(
+    'seq',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _revisionMeta = const VerificationMeta(
+    'revision',
+  );
+  @override
+  late final GeneratedColumn<int> revision = GeneratedColumn<int>(
+    'revision',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _numberMeta = const VerificationMeta('number');
+  @override
+  late final GeneratedColumn<String> number = GeneratedColumn<String>(
+    'number',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _subjectIdMeta = const VerificationMeta(
+    'subjectId',
+  );
+  @override
+  late final GeneratedColumn<String> subjectId = GeneratedColumn<String>(
+    'subject_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _periodMeta = const VerificationMeta('period');
+  @override
+  late final GeneratedColumn<String> period = GeneratedColumn<String>(
+    'period',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _summaryMeta = const VerificationMeta(
+    'summary',
+  );
+  @override
+  late final GeneratedColumn<String> summary = GeneratedColumn<String>(
+    'summary',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dataJsonMeta = const VerificationMeta(
+    'dataJson',
+  );
+  @override
+  late final GeneratedColumn<String> dataJson = GeneratedColumn<String>(
+    'data_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _identityJsonMeta = const VerificationMeta(
+    'identityJson',
+  );
+  @override
+  late final GeneratedColumn<String> identityJson = GeneratedColumn<String>(
+    'identity_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _metaJsonMeta = const VerificationMeta(
+    'metaJson',
+  );
+  @override
+  late final GeneratedColumn<String> metaJson = GeneratedColumn<String>(
+    'meta_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _pdfBytesMeta = const VerificationMeta(
+    'pdfBytes',
+  );
+  @override
+  late final GeneratedColumn<Uint8List> pdfBytes = GeneratedColumn<Uint8List>(
+    'pdf_bytes',
+    aliasedName,
+    false,
+    type: DriftSqlType.blob,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    kind,
+    year,
+    seq,
+    revision,
+    number,
+    subjectId,
+    period,
+    title,
+    summary,
+    dataJson,
+    identityJson,
+    metaJson,
+    pdfBytes,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'issued_documents';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<IssuedDocument> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_kindMeta);
+    }
+    if (data.containsKey('year')) {
+      context.handle(
+        _yearMeta,
+        year.isAcceptableOrUnknown(data['year']!, _yearMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_yearMeta);
+    }
+    if (data.containsKey('seq')) {
+      context.handle(
+        _seqMeta,
+        seq.isAcceptableOrUnknown(data['seq']!, _seqMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_seqMeta);
+    }
+    if (data.containsKey('revision')) {
+      context.handle(
+        _revisionMeta,
+        revision.isAcceptableOrUnknown(data['revision']!, _revisionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_revisionMeta);
+    }
+    if (data.containsKey('number')) {
+      context.handle(
+        _numberMeta,
+        number.isAcceptableOrUnknown(data['number']!, _numberMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_numberMeta);
+    }
+    if (data.containsKey('subject_id')) {
+      context.handle(
+        _subjectIdMeta,
+        subjectId.isAcceptableOrUnknown(data['subject_id']!, _subjectIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_subjectIdMeta);
+    }
+    if (data.containsKey('period')) {
+      context.handle(
+        _periodMeta,
+        period.isAcceptableOrUnknown(data['period']!, _periodMeta),
+      );
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('summary')) {
+      context.handle(
+        _summaryMeta,
+        summary.isAcceptableOrUnknown(data['summary']!, _summaryMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_summaryMeta);
+    }
+    if (data.containsKey('data_json')) {
+      context.handle(
+        _dataJsonMeta,
+        dataJson.isAcceptableOrUnknown(data['data_json']!, _dataJsonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dataJsonMeta);
+    }
+    if (data.containsKey('identity_json')) {
+      context.handle(
+        _identityJsonMeta,
+        identityJson.isAcceptableOrUnknown(
+          data['identity_json']!,
+          _identityJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_identityJsonMeta);
+    }
+    if (data.containsKey('meta_json')) {
+      context.handle(
+        _metaJsonMeta,
+        metaJson.isAcceptableOrUnknown(data['meta_json']!, _metaJsonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_metaJsonMeta);
+    }
+    if (data.containsKey('pdf_bytes')) {
+      context.handle(
+        _pdfBytesMeta,
+        pdfBytes.isAcceptableOrUnknown(data['pdf_bytes']!, _pdfBytesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_pdfBytesMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {tenantId, kind, year, seq, revision},
+  ];
+  @override
+  IssuedDocument map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return IssuedDocument(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      year: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}year'],
+      )!,
+      seq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}seq'],
+      )!,
+      revision: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}revision'],
+      )!,
+      number: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}number'],
+      )!,
+      subjectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subject_id'],
+      )!,
+      period: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}period'],
+      ),
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      summary: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}summary'],
+      )!,
+      dataJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}data_json'],
+      )!,
+      identityJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}identity_json'],
+      )!,
+      metaJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}meta_json'],
+      )!,
+      pdfBytes: attachedDatabase.typeMapping.read(
+        DriftSqlType.blob,
+        data['${effectivePrefix}pdf_bytes'],
+      )!,
+    );
+  }
+
+  @override
+  $IssuedDocumentsTable createAlias(String alias) {
+    return $IssuedDocumentsTable(attachedDatabase, alias);
+  }
+}
+
+class IssuedDocument extends DataClass implements Insertable<IssuedDocument> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String kind;
+  final int year;
+  final int seq;
+  final int revision;
+  final String number;
+
+  /// The worker of a slip, or the cash line of a receipt.
+  final String subjectId;
+
+  /// YYYY-MM on a slip.
+  final String? period;
+  final String title;
+  final String summary;
+  final String dataJson;
+  final String identityJson;
+  final String metaJson;
+  final Uint8List pdfBytes;
+  const IssuedDocument({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.kind,
+    required this.year,
+    required this.seq,
+    required this.revision,
+    required this.number,
+    required this.subjectId,
+    this.period,
+    required this.title,
+    required this.summary,
+    required this.dataJson,
+    required this.identityJson,
+    required this.metaJson,
+    required this.pdfBytes,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['kind'] = Variable<String>(kind);
+    map['year'] = Variable<int>(year);
+    map['seq'] = Variable<int>(seq);
+    map['revision'] = Variable<int>(revision);
+    map['number'] = Variable<String>(number);
+    map['subject_id'] = Variable<String>(subjectId);
+    if (!nullToAbsent || period != null) {
+      map['period'] = Variable<String>(period);
+    }
+    map['title'] = Variable<String>(title);
+    map['summary'] = Variable<String>(summary);
+    map['data_json'] = Variable<String>(dataJson);
+    map['identity_json'] = Variable<String>(identityJson);
+    map['meta_json'] = Variable<String>(metaJson);
+    map['pdf_bytes'] = Variable<Uint8List>(pdfBytes);
+    return map;
+  }
+
+  IssuedDocumentsCompanion toCompanion(bool nullToAbsent) {
+    return IssuedDocumentsCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      kind: Value(kind),
+      year: Value(year),
+      seq: Value(seq),
+      revision: Value(revision),
+      number: Value(number),
+      subjectId: Value(subjectId),
+      period: period == null && nullToAbsent
+          ? const Value.absent()
+          : Value(period),
+      title: Value(title),
+      summary: Value(summary),
+      dataJson: Value(dataJson),
+      identityJson: Value(identityJson),
+      metaJson: Value(metaJson),
+      pdfBytes: Value(pdfBytes),
+    );
+  }
+
+  factory IssuedDocument.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return IssuedDocument(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      year: serializer.fromJson<int>(json['year']),
+      seq: serializer.fromJson<int>(json['seq']),
+      revision: serializer.fromJson<int>(json['revision']),
+      number: serializer.fromJson<String>(json['number']),
+      subjectId: serializer.fromJson<String>(json['subjectId']),
+      period: serializer.fromJson<String?>(json['period']),
+      title: serializer.fromJson<String>(json['title']),
+      summary: serializer.fromJson<String>(json['summary']),
+      dataJson: serializer.fromJson<String>(json['dataJson']),
+      identityJson: serializer.fromJson<String>(json['identityJson']),
+      metaJson: serializer.fromJson<String>(json['metaJson']),
+      pdfBytes: serializer.fromJson<Uint8List>(json['pdfBytes']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'kind': serializer.toJson<String>(kind),
+      'year': serializer.toJson<int>(year),
+      'seq': serializer.toJson<int>(seq),
+      'revision': serializer.toJson<int>(revision),
+      'number': serializer.toJson<String>(number),
+      'subjectId': serializer.toJson<String>(subjectId),
+      'period': serializer.toJson<String?>(period),
+      'title': serializer.toJson<String>(title),
+      'summary': serializer.toJson<String>(summary),
+      'dataJson': serializer.toJson<String>(dataJson),
+      'identityJson': serializer.toJson<String>(identityJson),
+      'metaJson': serializer.toJson<String>(metaJson),
+      'pdfBytes': serializer.toJson<Uint8List>(pdfBytes),
+    };
+  }
+
+  IssuedDocument copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? kind,
+    int? year,
+    int? seq,
+    int? revision,
+    String? number,
+    String? subjectId,
+    Value<String?> period = const Value.absent(),
+    String? title,
+    String? summary,
+    String? dataJson,
+    String? identityJson,
+    String? metaJson,
+    Uint8List? pdfBytes,
+  }) => IssuedDocument(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    kind: kind ?? this.kind,
+    year: year ?? this.year,
+    seq: seq ?? this.seq,
+    revision: revision ?? this.revision,
+    number: number ?? this.number,
+    subjectId: subjectId ?? this.subjectId,
+    period: period.present ? period.value : this.period,
+    title: title ?? this.title,
+    summary: summary ?? this.summary,
+    dataJson: dataJson ?? this.dataJson,
+    identityJson: identityJson ?? this.identityJson,
+    metaJson: metaJson ?? this.metaJson,
+    pdfBytes: pdfBytes ?? this.pdfBytes,
+  );
+  IssuedDocument copyWithCompanion(IssuedDocumentsCompanion data) {
+    return IssuedDocument(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      year: data.year.present ? data.year.value : this.year,
+      seq: data.seq.present ? data.seq.value : this.seq,
+      revision: data.revision.present ? data.revision.value : this.revision,
+      number: data.number.present ? data.number.value : this.number,
+      subjectId: data.subjectId.present ? data.subjectId.value : this.subjectId,
+      period: data.period.present ? data.period.value : this.period,
+      title: data.title.present ? data.title.value : this.title,
+      summary: data.summary.present ? data.summary.value : this.summary,
+      dataJson: data.dataJson.present ? data.dataJson.value : this.dataJson,
+      identityJson: data.identityJson.present
+          ? data.identityJson.value
+          : this.identityJson,
+      metaJson: data.metaJson.present ? data.metaJson.value : this.metaJson,
+      pdfBytes: data.pdfBytes.present ? data.pdfBytes.value : this.pdfBytes,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('IssuedDocument(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('kind: $kind, ')
+          ..write('year: $year, ')
+          ..write('seq: $seq, ')
+          ..write('revision: $revision, ')
+          ..write('number: $number, ')
+          ..write('subjectId: $subjectId, ')
+          ..write('period: $period, ')
+          ..write('title: $title, ')
+          ..write('summary: $summary, ')
+          ..write('dataJson: $dataJson, ')
+          ..write('identityJson: $identityJson, ')
+          ..write('metaJson: $metaJson, ')
+          ..write('pdfBytes: $pdfBytes')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    kind,
+    year,
+    seq,
+    revision,
+    number,
+    subjectId,
+    period,
+    title,
+    summary,
+    dataJson,
+    identityJson,
+    metaJson,
+    $driftBlobEquality.hash(pdfBytes),
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is IssuedDocument &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.kind == this.kind &&
+          other.year == this.year &&
+          other.seq == this.seq &&
+          other.revision == this.revision &&
+          other.number == this.number &&
+          other.subjectId == this.subjectId &&
+          other.period == this.period &&
+          other.title == this.title &&
+          other.summary == this.summary &&
+          other.dataJson == this.dataJson &&
+          other.identityJson == this.identityJson &&
+          other.metaJson == this.metaJson &&
+          $driftBlobEquality.equals(other.pdfBytes, this.pdfBytes));
+}
+
+class IssuedDocumentsCompanion extends UpdateCompanion<IssuedDocument> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> kind;
+  final Value<int> year;
+  final Value<int> seq;
+  final Value<int> revision;
+  final Value<String> number;
+  final Value<String> subjectId;
+  final Value<String?> period;
+  final Value<String> title;
+  final Value<String> summary;
+  final Value<String> dataJson;
+  final Value<String> identityJson;
+  final Value<String> metaJson;
+  final Value<Uint8List> pdfBytes;
+  final Value<int> rowid;
+  const IssuedDocumentsCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.year = const Value.absent(),
+    this.seq = const Value.absent(),
+    this.revision = const Value.absent(),
+    this.number = const Value.absent(),
+    this.subjectId = const Value.absent(),
+    this.period = const Value.absent(),
+    this.title = const Value.absent(),
+    this.summary = const Value.absent(),
+    this.dataJson = const Value.absent(),
+    this.identityJson = const Value.absent(),
+    this.metaJson = const Value.absent(),
+    this.pdfBytes = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  IssuedDocumentsCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String kind,
+    required int year,
+    required int seq,
+    required int revision,
+    required String number,
+    required String subjectId,
+    this.period = const Value.absent(),
+    required String title,
+    required String summary,
+    required String dataJson,
+    required String identityJson,
+    required String metaJson,
+    required Uint8List pdfBytes,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       kind = Value(kind),
+       year = Value(year),
+       seq = Value(seq),
+       revision = Value(revision),
+       number = Value(number),
+       subjectId = Value(subjectId),
+       title = Value(title),
+       summary = Value(summary),
+       dataJson = Value(dataJson),
+       identityJson = Value(identityJson),
+       metaJson = Value(metaJson),
+       pdfBytes = Value(pdfBytes);
+  static Insertable<IssuedDocument> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? kind,
+    Expression<int>? year,
+    Expression<int>? seq,
+    Expression<int>? revision,
+    Expression<String>? number,
+    Expression<String>? subjectId,
+    Expression<String>? period,
+    Expression<String>? title,
+    Expression<String>? summary,
+    Expression<String>? dataJson,
+    Expression<String>? identityJson,
+    Expression<String>? metaJson,
+    Expression<Uint8List>? pdfBytes,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (kind != null) 'kind': kind,
+      if (year != null) 'year': year,
+      if (seq != null) 'seq': seq,
+      if (revision != null) 'revision': revision,
+      if (number != null) 'number': number,
+      if (subjectId != null) 'subject_id': subjectId,
+      if (period != null) 'period': period,
+      if (title != null) 'title': title,
+      if (summary != null) 'summary': summary,
+      if (dataJson != null) 'data_json': dataJson,
+      if (identityJson != null) 'identity_json': identityJson,
+      if (metaJson != null) 'meta_json': metaJson,
+      if (pdfBytes != null) 'pdf_bytes': pdfBytes,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  IssuedDocumentsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? kind,
+    Value<int>? year,
+    Value<int>? seq,
+    Value<int>? revision,
+    Value<String>? number,
+    Value<String>? subjectId,
+    Value<String?>? period,
+    Value<String>? title,
+    Value<String>? summary,
+    Value<String>? dataJson,
+    Value<String>? identityJson,
+    Value<String>? metaJson,
+    Value<Uint8List>? pdfBytes,
+    Value<int>? rowid,
+  }) {
+    return IssuedDocumentsCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      kind: kind ?? this.kind,
+      year: year ?? this.year,
+      seq: seq ?? this.seq,
+      revision: revision ?? this.revision,
+      number: number ?? this.number,
+      subjectId: subjectId ?? this.subjectId,
+      period: period ?? this.period,
+      title: title ?? this.title,
+      summary: summary ?? this.summary,
+      dataJson: dataJson ?? this.dataJson,
+      identityJson: identityJson ?? this.identityJson,
+      metaJson: metaJson ?? this.metaJson,
+      pdfBytes: pdfBytes ?? this.pdfBytes,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (year.present) {
+      map['year'] = Variable<int>(year.value);
+    }
+    if (seq.present) {
+      map['seq'] = Variable<int>(seq.value);
+    }
+    if (revision.present) {
+      map['revision'] = Variable<int>(revision.value);
+    }
+    if (number.present) {
+      map['number'] = Variable<String>(number.value);
+    }
+    if (subjectId.present) {
+      map['subject_id'] = Variable<String>(subjectId.value);
+    }
+    if (period.present) {
+      map['period'] = Variable<String>(period.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (summary.present) {
+      map['summary'] = Variable<String>(summary.value);
+    }
+    if (dataJson.present) {
+      map['data_json'] = Variable<String>(dataJson.value);
+    }
+    if (identityJson.present) {
+      map['identity_json'] = Variable<String>(identityJson.value);
+    }
+    if (metaJson.present) {
+      map['meta_json'] = Variable<String>(metaJson.value);
+    }
+    if (pdfBytes.present) {
+      map['pdf_bytes'] = Variable<Uint8List>(pdfBytes.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('IssuedDocumentsCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('kind: $kind, ')
+          ..write('year: $year, ')
+          ..write('seq: $seq, ')
+          ..write('revision: $revision, ')
+          ..write('number: $number, ')
+          ..write('subjectId: $subjectId, ')
+          ..write('period: $period, ')
+          ..write('title: $title, ')
+          ..write('summary: $summary, ')
+          ..write('dataJson: $dataJson, ')
+          ..write('identityJson: $identityJson, ')
+          ..write('metaJson: $metaJson, ')
+          ..write('pdfBytes: $pdfBytes, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DocumentAssetsTable extends DocumentAssets
+    with TableInfo<$DocumentAssetsTable, DocumentAsset> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DocumentAssetsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _mimeMeta = const VerificationMeta('mime');
+  @override
+  late final GeneratedColumn<String> mime = GeneratedColumn<String>(
+    'mime',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _widthPxMeta = const VerificationMeta(
+    'widthPx',
+  );
+  @override
+  late final GeneratedColumn<int> widthPx = GeneratedColumn<int>(
+    'width_px',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _heightPxMeta = const VerificationMeta(
+    'heightPx',
+  );
+  @override
+  late final GeneratedColumn<int> heightPx = GeneratedColumn<int>(
+    'height_px',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bytesMeta = const VerificationMeta('bytes');
+  @override
+  late final GeneratedColumn<Uint8List> bytes = GeneratedColumn<Uint8List>(
+    'bytes',
+    aliasedName,
+    false,
+    type: DriftSqlType.blob,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    kind,
+    mime,
+    widthPx,
+    heightPx,
+    bytes,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'document_assets';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DocumentAsset> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_kindMeta);
+    }
+    if (data.containsKey('mime')) {
+      context.handle(
+        _mimeMeta,
+        mime.isAcceptableOrUnknown(data['mime']!, _mimeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_mimeMeta);
+    }
+    if (data.containsKey('width_px')) {
+      context.handle(
+        _widthPxMeta,
+        widthPx.isAcceptableOrUnknown(data['width_px']!, _widthPxMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_widthPxMeta);
+    }
+    if (data.containsKey('height_px')) {
+      context.handle(
+        _heightPxMeta,
+        heightPx.isAcceptableOrUnknown(data['height_px']!, _heightPxMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_heightPxMeta);
+    }
+    if (data.containsKey('bytes')) {
+      context.handle(
+        _bytesMeta,
+        bytes.isAcceptableOrUnknown(data['bytes']!, _bytesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_bytesMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DocumentAsset map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DocumentAsset(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      mime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}mime'],
+      )!,
+      widthPx: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}width_px'],
+      )!,
+      heightPx: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}height_px'],
+      )!,
+      bytes: attachedDatabase.typeMapping.read(
+        DriftSqlType.blob,
+        data['${effectivePrefix}bytes'],
+      )!,
+    );
+  }
+
+  @override
+  $DocumentAssetsTable createAlias(String alias) {
+    return $DocumentAssetsTable(attachedDatabase, alias);
+  }
+}
+
+class DocumentAsset extends DataClass implements Insertable<DocumentAsset> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String kind;
+  final String mime;
+  final int widthPx;
+  final int heightPx;
+  final Uint8List bytes;
+  const DocumentAsset({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.kind,
+    required this.mime,
+    required this.widthPx,
+    required this.heightPx,
+    required this.bytes,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['kind'] = Variable<String>(kind);
+    map['mime'] = Variable<String>(mime);
+    map['width_px'] = Variable<int>(widthPx);
+    map['height_px'] = Variable<int>(heightPx);
+    map['bytes'] = Variable<Uint8List>(bytes);
+    return map;
+  }
+
+  DocumentAssetsCompanion toCompanion(bool nullToAbsent) {
+    return DocumentAssetsCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      kind: Value(kind),
+      mime: Value(mime),
+      widthPx: Value(widthPx),
+      heightPx: Value(heightPx),
+      bytes: Value(bytes),
+    );
+  }
+
+  factory DocumentAsset.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DocumentAsset(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      mime: serializer.fromJson<String>(json['mime']),
+      widthPx: serializer.fromJson<int>(json['widthPx']),
+      heightPx: serializer.fromJson<int>(json['heightPx']),
+      bytes: serializer.fromJson<Uint8List>(json['bytes']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'kind': serializer.toJson<String>(kind),
+      'mime': serializer.toJson<String>(mime),
+      'widthPx': serializer.toJson<int>(widthPx),
+      'heightPx': serializer.toJson<int>(heightPx),
+      'bytes': serializer.toJson<Uint8List>(bytes),
+    };
+  }
+
+  DocumentAsset copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? kind,
+    String? mime,
+    int? widthPx,
+    int? heightPx,
+    Uint8List? bytes,
+  }) => DocumentAsset(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    kind: kind ?? this.kind,
+    mime: mime ?? this.mime,
+    widthPx: widthPx ?? this.widthPx,
+    heightPx: heightPx ?? this.heightPx,
+    bytes: bytes ?? this.bytes,
+  );
+  DocumentAsset copyWithCompanion(DocumentAssetsCompanion data) {
+    return DocumentAsset(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      mime: data.mime.present ? data.mime.value : this.mime,
+      widthPx: data.widthPx.present ? data.widthPx.value : this.widthPx,
+      heightPx: data.heightPx.present ? data.heightPx.value : this.heightPx,
+      bytes: data.bytes.present ? data.bytes.value : this.bytes,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DocumentAsset(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('kind: $kind, ')
+          ..write('mime: $mime, ')
+          ..write('widthPx: $widthPx, ')
+          ..write('heightPx: $heightPx, ')
+          ..write('bytes: $bytes')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    kind,
+    mime,
+    widthPx,
+    heightPx,
+    $driftBlobEquality.hash(bytes),
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DocumentAsset &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.kind == this.kind &&
+          other.mime == this.mime &&
+          other.widthPx == this.widthPx &&
+          other.heightPx == this.heightPx &&
+          $driftBlobEquality.equals(other.bytes, this.bytes));
+}
+
+class DocumentAssetsCompanion extends UpdateCompanion<DocumentAsset> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> kind;
+  final Value<String> mime;
+  final Value<int> widthPx;
+  final Value<int> heightPx;
+  final Value<Uint8List> bytes;
+  final Value<int> rowid;
+  const DocumentAssetsCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.mime = const Value.absent(),
+    this.widthPx = const Value.absent(),
+    this.heightPx = const Value.absent(),
+    this.bytes = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DocumentAssetsCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String kind,
+    required String mime,
+    required int widthPx,
+    required int heightPx,
+    required Uint8List bytes,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       kind = Value(kind),
+       mime = Value(mime),
+       widthPx = Value(widthPx),
+       heightPx = Value(heightPx),
+       bytes = Value(bytes);
+  static Insertable<DocumentAsset> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? kind,
+    Expression<String>? mime,
+    Expression<int>? widthPx,
+    Expression<int>? heightPx,
+    Expression<Uint8List>? bytes,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (kind != null) 'kind': kind,
+      if (mime != null) 'mime': mime,
+      if (widthPx != null) 'width_px': widthPx,
+      if (heightPx != null) 'height_px': heightPx,
+      if (bytes != null) 'bytes': bytes,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DocumentAssetsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? kind,
+    Value<String>? mime,
+    Value<int>? widthPx,
+    Value<int>? heightPx,
+    Value<Uint8List>? bytes,
+    Value<int>? rowid,
+  }) {
+    return DocumentAssetsCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      kind: kind ?? this.kind,
+      mime: mime ?? this.mime,
+      widthPx: widthPx ?? this.widthPx,
+      heightPx: heightPx ?? this.heightPx,
+      bytes: bytes ?? this.bytes,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (mime.present) {
+      map['mime'] = Variable<String>(mime.value);
+    }
+    if (widthPx.present) {
+      map['width_px'] = Variable<int>(widthPx.value);
+    }
+    if (heightPx.present) {
+      map['height_px'] = Variable<int>(heightPx.value);
+    }
+    if (bytes.present) {
+      map['bytes'] = Variable<Uint8List>(bytes.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DocumentAssetsCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('kind: $kind, ')
+          ..write('mime: $mime, ')
+          ..write('widthPx: $widthPx, ')
+          ..write('heightPx: $heightPx, ')
+          ..write('bytes: $bytes, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $DayOffsTable extends DayOffs with TableInfo<$DayOffsTable, DayOff> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -18949,6 +20765,1087 @@ class WorkerGroupMembersCompanion extends UpdateCompanion<WorkerGroupMember> {
   }
 }
 
+class $DocumentTemplatesTable extends DocumentTemplates
+    with TableInfo<$DocumentTemplatesTable, DocumentTemplate> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DocumentTemplatesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _logoAssetIdMeta = const VerificationMeta(
+    'logoAssetId',
+  );
+  @override
+  late final GeneratedColumn<String> logoAssetId = GeneratedColumn<String>(
+    'logo_asset_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES document_assets (id)',
+    ),
+  );
+  static const VerificationMeta _headerAssetIdMeta = const VerificationMeta(
+    'headerAssetId',
+  );
+  @override
+  late final GeneratedColumn<String> headerAssetId = GeneratedColumn<String>(
+    'header_asset_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES document_assets (id)',
+    ),
+  );
+  static const VerificationMeta _footerAssetIdMeta = const VerificationMeta(
+    'footerAssetId',
+  );
+  @override
+  late final GeneratedColumn<String> footerAssetId = GeneratedColumn<String>(
+    'footer_asset_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES document_assets (id)',
+    ),
+  );
+  static const VerificationMeta _signatureAssetIdMeta = const VerificationMeta(
+    'signatureAssetId',
+  );
+  @override
+  late final GeneratedColumn<String> signatureAssetId = GeneratedColumn<String>(
+    'signature_asset_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES document_assets (id)',
+    ),
+  );
+  static const VerificationMeta _stampAssetIdMeta = const VerificationMeta(
+    'stampAssetId',
+  );
+  @override
+  late final GeneratedColumn<String> stampAssetId = GeneratedColumn<String>(
+    'stamp_asset_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES document_assets (id)',
+    ),
+  );
+  static const VerificationMeta _placementsMeta = const VerificationMeta(
+    'placements',
+  );
+  @override
+  late final GeneratedColumn<String> placements = GeneratedColumn<String>(
+    'placements',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _printLetterheadMeta = const VerificationMeta(
+    'printLetterhead',
+  );
+  @override
+  late final GeneratedColumn<bool> printLetterhead = GeneratedColumn<bool>(
+    'print_letterhead',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("print_letterhead" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _blankTopMmMeta = const VerificationMeta(
+    'blankTopMm',
+  );
+  @override
+  late final GeneratedColumn<int> blankTopMm = GeneratedColumn<int>(
+    'blank_top_mm',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(40),
+  );
+  static const VerificationMeta _blankBottomMmMeta = const VerificationMeta(
+    'blankBottomMm',
+  );
+  @override
+  late final GeneratedColumn<int> blankBottomMm = GeneratedColumn<int>(
+    'blank_bottom_mm',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(25),
+  );
+  static const VerificationMeta _showSignatureMeta = const VerificationMeta(
+    'showSignature',
+  );
+  @override
+  late final GeneratedColumn<bool> showSignature = GeneratedColumn<bool>(
+    'show_signature',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_signature" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _showStampMeta = const VerificationMeta(
+    'showStamp',
+  );
+  @override
+  late final GeneratedColumn<bool> showStamp = GeneratedColumn<bool>(
+    'show_stamp',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_stamp" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    logoAssetId,
+    headerAssetId,
+    footerAssetId,
+    signatureAssetId,
+    stampAssetId,
+    placements,
+    printLetterhead,
+    blankTopMm,
+    blankBottomMm,
+    showSignature,
+    showStamp,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'document_templates';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DocumentTemplate> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('logo_asset_id')) {
+      context.handle(
+        _logoAssetIdMeta,
+        logoAssetId.isAcceptableOrUnknown(
+          data['logo_asset_id']!,
+          _logoAssetIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('header_asset_id')) {
+      context.handle(
+        _headerAssetIdMeta,
+        headerAssetId.isAcceptableOrUnknown(
+          data['header_asset_id']!,
+          _headerAssetIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('footer_asset_id')) {
+      context.handle(
+        _footerAssetIdMeta,
+        footerAssetId.isAcceptableOrUnknown(
+          data['footer_asset_id']!,
+          _footerAssetIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('signature_asset_id')) {
+      context.handle(
+        _signatureAssetIdMeta,
+        signatureAssetId.isAcceptableOrUnknown(
+          data['signature_asset_id']!,
+          _signatureAssetIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('stamp_asset_id')) {
+      context.handle(
+        _stampAssetIdMeta,
+        stampAssetId.isAcceptableOrUnknown(
+          data['stamp_asset_id']!,
+          _stampAssetIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('placements')) {
+      context.handle(
+        _placementsMeta,
+        placements.isAcceptableOrUnknown(data['placements']!, _placementsMeta),
+      );
+    }
+    if (data.containsKey('print_letterhead')) {
+      context.handle(
+        _printLetterheadMeta,
+        printLetterhead.isAcceptableOrUnknown(
+          data['print_letterhead']!,
+          _printLetterheadMeta,
+        ),
+      );
+    }
+    if (data.containsKey('blank_top_mm')) {
+      context.handle(
+        _blankTopMmMeta,
+        blankTopMm.isAcceptableOrUnknown(
+          data['blank_top_mm']!,
+          _blankTopMmMeta,
+        ),
+      );
+    }
+    if (data.containsKey('blank_bottom_mm')) {
+      context.handle(
+        _blankBottomMmMeta,
+        blankBottomMm.isAcceptableOrUnknown(
+          data['blank_bottom_mm']!,
+          _blankBottomMmMeta,
+        ),
+      );
+    }
+    if (data.containsKey('show_signature')) {
+      context.handle(
+        _showSignatureMeta,
+        showSignature.isAcceptableOrUnknown(
+          data['show_signature']!,
+          _showSignatureMeta,
+        ),
+      );
+    }
+    if (data.containsKey('show_stamp')) {
+      context.handle(
+        _showStampMeta,
+        showStamp.isAcceptableOrUnknown(data['show_stamp']!, _showStampMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DocumentTemplate map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DocumentTemplate(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      logoAssetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}logo_asset_id'],
+      ),
+      headerAssetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}header_asset_id'],
+      ),
+      footerAssetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}footer_asset_id'],
+      ),
+      signatureAssetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}signature_asset_id'],
+      ),
+      stampAssetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}stamp_asset_id'],
+      ),
+      placements: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}placements'],
+      )!,
+      printLetterhead: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}print_letterhead'],
+      )!,
+      blankTopMm: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}blank_top_mm'],
+      )!,
+      blankBottomMm: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}blank_bottom_mm'],
+      )!,
+      showSignature: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}show_signature'],
+      )!,
+      showStamp: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}show_stamp'],
+      )!,
+    );
+  }
+
+  @override
+  $DocumentTemplatesTable createAlias(String alias) {
+    return $DocumentTemplatesTable(attachedDatabase, alias);
+  }
+}
+
+class DocumentTemplate extends DataClass
+    implements Insertable<DocumentTemplate> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String? logoAssetId;
+  final String? headerAssetId;
+  final String? footerAssetId;
+  final String? signatureAssetId;
+  final String? stampAssetId;
+
+  /// JSON, by image kind: size, position and trim.
+  final String placements;
+
+  /// False for pre-printed paper. Nothing of the company prints, and the blank space stays clear.
+  final bool printLetterhead;
+  final int blankTopMm;
+  final int blankBottomMm;
+  final bool showSignature;
+  final bool showStamp;
+  const DocumentTemplate({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    this.logoAssetId,
+    this.headerAssetId,
+    this.footerAssetId,
+    this.signatureAssetId,
+    this.stampAssetId,
+    required this.placements,
+    required this.printLetterhead,
+    required this.blankTopMm,
+    required this.blankBottomMm,
+    required this.showSignature,
+    required this.showStamp,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    if (!nullToAbsent || logoAssetId != null) {
+      map['logo_asset_id'] = Variable<String>(logoAssetId);
+    }
+    if (!nullToAbsent || headerAssetId != null) {
+      map['header_asset_id'] = Variable<String>(headerAssetId);
+    }
+    if (!nullToAbsent || footerAssetId != null) {
+      map['footer_asset_id'] = Variable<String>(footerAssetId);
+    }
+    if (!nullToAbsent || signatureAssetId != null) {
+      map['signature_asset_id'] = Variable<String>(signatureAssetId);
+    }
+    if (!nullToAbsent || stampAssetId != null) {
+      map['stamp_asset_id'] = Variable<String>(stampAssetId);
+    }
+    map['placements'] = Variable<String>(placements);
+    map['print_letterhead'] = Variable<bool>(printLetterhead);
+    map['blank_top_mm'] = Variable<int>(blankTopMm);
+    map['blank_bottom_mm'] = Variable<int>(blankBottomMm);
+    map['show_signature'] = Variable<bool>(showSignature);
+    map['show_stamp'] = Variable<bool>(showStamp);
+    return map;
+  }
+
+  DocumentTemplatesCompanion toCompanion(bool nullToAbsent) {
+    return DocumentTemplatesCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      logoAssetId: logoAssetId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(logoAssetId),
+      headerAssetId: headerAssetId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(headerAssetId),
+      footerAssetId: footerAssetId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(footerAssetId),
+      signatureAssetId: signatureAssetId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(signatureAssetId),
+      stampAssetId: stampAssetId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stampAssetId),
+      placements: Value(placements),
+      printLetterhead: Value(printLetterhead),
+      blankTopMm: Value(blankTopMm),
+      blankBottomMm: Value(blankBottomMm),
+      showSignature: Value(showSignature),
+      showStamp: Value(showStamp),
+    );
+  }
+
+  factory DocumentTemplate.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DocumentTemplate(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      logoAssetId: serializer.fromJson<String?>(json['logoAssetId']),
+      headerAssetId: serializer.fromJson<String?>(json['headerAssetId']),
+      footerAssetId: serializer.fromJson<String?>(json['footerAssetId']),
+      signatureAssetId: serializer.fromJson<String?>(json['signatureAssetId']),
+      stampAssetId: serializer.fromJson<String?>(json['stampAssetId']),
+      placements: serializer.fromJson<String>(json['placements']),
+      printLetterhead: serializer.fromJson<bool>(json['printLetterhead']),
+      blankTopMm: serializer.fromJson<int>(json['blankTopMm']),
+      blankBottomMm: serializer.fromJson<int>(json['blankBottomMm']),
+      showSignature: serializer.fromJson<bool>(json['showSignature']),
+      showStamp: serializer.fromJson<bool>(json['showStamp']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'logoAssetId': serializer.toJson<String?>(logoAssetId),
+      'headerAssetId': serializer.toJson<String?>(headerAssetId),
+      'footerAssetId': serializer.toJson<String?>(footerAssetId),
+      'signatureAssetId': serializer.toJson<String?>(signatureAssetId),
+      'stampAssetId': serializer.toJson<String?>(stampAssetId),
+      'placements': serializer.toJson<String>(placements),
+      'printLetterhead': serializer.toJson<bool>(printLetterhead),
+      'blankTopMm': serializer.toJson<int>(blankTopMm),
+      'blankBottomMm': serializer.toJson<int>(blankBottomMm),
+      'showSignature': serializer.toJson<bool>(showSignature),
+      'showStamp': serializer.toJson<bool>(showStamp),
+    };
+  }
+
+  DocumentTemplate copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    Value<String?> logoAssetId = const Value.absent(),
+    Value<String?> headerAssetId = const Value.absent(),
+    Value<String?> footerAssetId = const Value.absent(),
+    Value<String?> signatureAssetId = const Value.absent(),
+    Value<String?> stampAssetId = const Value.absent(),
+    String? placements,
+    bool? printLetterhead,
+    int? blankTopMm,
+    int? blankBottomMm,
+    bool? showSignature,
+    bool? showStamp,
+  }) => DocumentTemplate(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    logoAssetId: logoAssetId.present ? logoAssetId.value : this.logoAssetId,
+    headerAssetId: headerAssetId.present
+        ? headerAssetId.value
+        : this.headerAssetId,
+    footerAssetId: footerAssetId.present
+        ? footerAssetId.value
+        : this.footerAssetId,
+    signatureAssetId: signatureAssetId.present
+        ? signatureAssetId.value
+        : this.signatureAssetId,
+    stampAssetId: stampAssetId.present ? stampAssetId.value : this.stampAssetId,
+    placements: placements ?? this.placements,
+    printLetterhead: printLetterhead ?? this.printLetterhead,
+    blankTopMm: blankTopMm ?? this.blankTopMm,
+    blankBottomMm: blankBottomMm ?? this.blankBottomMm,
+    showSignature: showSignature ?? this.showSignature,
+    showStamp: showStamp ?? this.showStamp,
+  );
+  DocumentTemplate copyWithCompanion(DocumentTemplatesCompanion data) {
+    return DocumentTemplate(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      logoAssetId: data.logoAssetId.present
+          ? data.logoAssetId.value
+          : this.logoAssetId,
+      headerAssetId: data.headerAssetId.present
+          ? data.headerAssetId.value
+          : this.headerAssetId,
+      footerAssetId: data.footerAssetId.present
+          ? data.footerAssetId.value
+          : this.footerAssetId,
+      signatureAssetId: data.signatureAssetId.present
+          ? data.signatureAssetId.value
+          : this.signatureAssetId,
+      stampAssetId: data.stampAssetId.present
+          ? data.stampAssetId.value
+          : this.stampAssetId,
+      placements: data.placements.present
+          ? data.placements.value
+          : this.placements,
+      printLetterhead: data.printLetterhead.present
+          ? data.printLetterhead.value
+          : this.printLetterhead,
+      blankTopMm: data.blankTopMm.present
+          ? data.blankTopMm.value
+          : this.blankTopMm,
+      blankBottomMm: data.blankBottomMm.present
+          ? data.blankBottomMm.value
+          : this.blankBottomMm,
+      showSignature: data.showSignature.present
+          ? data.showSignature.value
+          : this.showSignature,
+      showStamp: data.showStamp.present ? data.showStamp.value : this.showStamp,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DocumentTemplate(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('logoAssetId: $logoAssetId, ')
+          ..write('headerAssetId: $headerAssetId, ')
+          ..write('footerAssetId: $footerAssetId, ')
+          ..write('signatureAssetId: $signatureAssetId, ')
+          ..write('stampAssetId: $stampAssetId, ')
+          ..write('placements: $placements, ')
+          ..write('printLetterhead: $printLetterhead, ')
+          ..write('blankTopMm: $blankTopMm, ')
+          ..write('blankBottomMm: $blankBottomMm, ')
+          ..write('showSignature: $showSignature, ')
+          ..write('showStamp: $showStamp')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    logoAssetId,
+    headerAssetId,
+    footerAssetId,
+    signatureAssetId,
+    stampAssetId,
+    placements,
+    printLetterhead,
+    blankTopMm,
+    blankBottomMm,
+    showSignature,
+    showStamp,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DocumentTemplate &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.logoAssetId == this.logoAssetId &&
+          other.headerAssetId == this.headerAssetId &&
+          other.footerAssetId == this.footerAssetId &&
+          other.signatureAssetId == this.signatureAssetId &&
+          other.stampAssetId == this.stampAssetId &&
+          other.placements == this.placements &&
+          other.printLetterhead == this.printLetterhead &&
+          other.blankTopMm == this.blankTopMm &&
+          other.blankBottomMm == this.blankBottomMm &&
+          other.showSignature == this.showSignature &&
+          other.showStamp == this.showStamp);
+}
+
+class DocumentTemplatesCompanion extends UpdateCompanion<DocumentTemplate> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String?> logoAssetId;
+  final Value<String?> headerAssetId;
+  final Value<String?> footerAssetId;
+  final Value<String?> signatureAssetId;
+  final Value<String?> stampAssetId;
+  final Value<String> placements;
+  final Value<bool> printLetterhead;
+  final Value<int> blankTopMm;
+  final Value<int> blankBottomMm;
+  final Value<bool> showSignature;
+  final Value<bool> showStamp;
+  final Value<int> rowid;
+  const DocumentTemplatesCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.logoAssetId = const Value.absent(),
+    this.headerAssetId = const Value.absent(),
+    this.footerAssetId = const Value.absent(),
+    this.signatureAssetId = const Value.absent(),
+    this.stampAssetId = const Value.absent(),
+    this.placements = const Value.absent(),
+    this.printLetterhead = const Value.absent(),
+    this.blankTopMm = const Value.absent(),
+    this.blankBottomMm = const Value.absent(),
+    this.showSignature = const Value.absent(),
+    this.showStamp = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DocumentTemplatesCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    this.logoAssetId = const Value.absent(),
+    this.headerAssetId = const Value.absent(),
+    this.footerAssetId = const Value.absent(),
+    this.signatureAssetId = const Value.absent(),
+    this.stampAssetId = const Value.absent(),
+    this.placements = const Value.absent(),
+    this.printLetterhead = const Value.absent(),
+    this.blankTopMm = const Value.absent(),
+    this.blankBottomMm = const Value.absent(),
+    this.showSignature = const Value.absent(),
+    this.showStamp = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId);
+  static Insertable<DocumentTemplate> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? logoAssetId,
+    Expression<String>? headerAssetId,
+    Expression<String>? footerAssetId,
+    Expression<String>? signatureAssetId,
+    Expression<String>? stampAssetId,
+    Expression<String>? placements,
+    Expression<bool>? printLetterhead,
+    Expression<int>? blankTopMm,
+    Expression<int>? blankBottomMm,
+    Expression<bool>? showSignature,
+    Expression<bool>? showStamp,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (logoAssetId != null) 'logo_asset_id': logoAssetId,
+      if (headerAssetId != null) 'header_asset_id': headerAssetId,
+      if (footerAssetId != null) 'footer_asset_id': footerAssetId,
+      if (signatureAssetId != null) 'signature_asset_id': signatureAssetId,
+      if (stampAssetId != null) 'stamp_asset_id': stampAssetId,
+      if (placements != null) 'placements': placements,
+      if (printLetterhead != null) 'print_letterhead': printLetterhead,
+      if (blankTopMm != null) 'blank_top_mm': blankTopMm,
+      if (blankBottomMm != null) 'blank_bottom_mm': blankBottomMm,
+      if (showSignature != null) 'show_signature': showSignature,
+      if (showStamp != null) 'show_stamp': showStamp,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DocumentTemplatesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String?>? logoAssetId,
+    Value<String?>? headerAssetId,
+    Value<String?>? footerAssetId,
+    Value<String?>? signatureAssetId,
+    Value<String?>? stampAssetId,
+    Value<String>? placements,
+    Value<bool>? printLetterhead,
+    Value<int>? blankTopMm,
+    Value<int>? blankBottomMm,
+    Value<bool>? showSignature,
+    Value<bool>? showStamp,
+    Value<int>? rowid,
+  }) {
+    return DocumentTemplatesCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      logoAssetId: logoAssetId ?? this.logoAssetId,
+      headerAssetId: headerAssetId ?? this.headerAssetId,
+      footerAssetId: footerAssetId ?? this.footerAssetId,
+      signatureAssetId: signatureAssetId ?? this.signatureAssetId,
+      stampAssetId: stampAssetId ?? this.stampAssetId,
+      placements: placements ?? this.placements,
+      printLetterhead: printLetterhead ?? this.printLetterhead,
+      blankTopMm: blankTopMm ?? this.blankTopMm,
+      blankBottomMm: blankBottomMm ?? this.blankBottomMm,
+      showSignature: showSignature ?? this.showSignature,
+      showStamp: showStamp ?? this.showStamp,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (logoAssetId.present) {
+      map['logo_asset_id'] = Variable<String>(logoAssetId.value);
+    }
+    if (headerAssetId.present) {
+      map['header_asset_id'] = Variable<String>(headerAssetId.value);
+    }
+    if (footerAssetId.present) {
+      map['footer_asset_id'] = Variable<String>(footerAssetId.value);
+    }
+    if (signatureAssetId.present) {
+      map['signature_asset_id'] = Variable<String>(signatureAssetId.value);
+    }
+    if (stampAssetId.present) {
+      map['stamp_asset_id'] = Variable<String>(stampAssetId.value);
+    }
+    if (placements.present) {
+      map['placements'] = Variable<String>(placements.value);
+    }
+    if (printLetterhead.present) {
+      map['print_letterhead'] = Variable<bool>(printLetterhead.value);
+    }
+    if (blankTopMm.present) {
+      map['blank_top_mm'] = Variable<int>(blankTopMm.value);
+    }
+    if (blankBottomMm.present) {
+      map['blank_bottom_mm'] = Variable<int>(blankBottomMm.value);
+    }
+    if (showSignature.present) {
+      map['show_signature'] = Variable<bool>(showSignature.value);
+    }
+    if (showStamp.present) {
+      map['show_stamp'] = Variable<bool>(showStamp.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DocumentTemplatesCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('logoAssetId: $logoAssetId, ')
+          ..write('headerAssetId: $headerAssetId, ')
+          ..write('footerAssetId: $footerAssetId, ')
+          ..write('signatureAssetId: $signatureAssetId, ')
+          ..write('stampAssetId: $stampAssetId, ')
+          ..write('placements: $placements, ')
+          ..write('printLetterhead: $printLetterhead, ')
+          ..write('blankTopMm: $blankTopMm, ')
+          ..write('blankBottomMm: $blankBottomMm, ')
+          ..write('showSignature: $showSignature, ')
+          ..write('showStamp: $showStamp, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $OutboxTable extends Outbox with TableInfo<$OutboxTable, OutboxEntry> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -19623,6 +22520,26 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     'CREATE TRIGGER closed_cash_no_insert BEFORE INSERT ON cash_entries WHEN NEW.entry_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
     'closed_cash_no_insert',
   );
+  late final $IssuedDocumentsTable issuedDocuments = $IssuedDocumentsTable(
+    this,
+  );
+  late final Trigger issuedNoEdit = Trigger(
+    'CREATE TRIGGER issued_no_edit BEFORE UPDATE ON issued_documents BEGIN SELECT RAISE (ABORT, \'an issued document never changes\');END',
+    'issued_no_edit',
+  );
+  late final Trigger issuedNoDelete = Trigger(
+    'CREATE TRIGGER issued_no_delete BEFORE DELETE ON issued_documents BEGIN SELECT RAISE (ABORT, \'an issued document stays on record\');END',
+    'issued_no_delete',
+  );
+  late final $DocumentAssetsTable documentAssets = $DocumentAssetsTable(this);
+  late final Trigger assetNoEdit = Trigger(
+    'CREATE TRIGGER asset_no_edit BEFORE UPDATE ON document_assets BEGIN SELECT RAISE (ABORT, \'a stored image never changes\');END',
+    'asset_no_edit',
+  );
+  late final Trigger assetNoDelete = Trigger(
+    'CREATE TRIGGER asset_no_delete BEFORE DELETE ON document_assets BEGIN SELECT RAISE (ABORT, \'a stored image stays on record\');END',
+    'asset_no_delete',
+  );
   late final $DayOffsTable dayOffs = $DayOffsTable(this);
   late final Trigger closedDayOffNoInsert = Trigger(
     'CREATE TRIGGER closed_day_off_no_insert BEFORE INSERT ON day_offs WHEN NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
@@ -19699,6 +22616,8 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
   );
   late final $WorkerGroupMembersTable workerGroupMembers =
       $WorkerGroupMembersTable(this);
+  late final $DocumentTemplatesTable documentTemplates =
+      $DocumentTemplatesTable(this);
   late final $OutboxTable outbox = $OutboxTable(this);
   late final Index idxCashDate = Index(
     'idx_cash_date',
@@ -19711,6 +22630,10 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
   late final Index idxCashRoom = Index(
     'idx_cash_room',
     'CREATE INDEX idx_cash_room ON cash_entries (room_id)',
+  );
+  late final Index idxIssuedSubject = Index(
+    'idx_issued_subject',
+    'CREATE INDEX idx_issued_subject ON issued_documents (kind, subject_id, period)',
   );
   late final Index idxEntriesWorkerDate = Index(
     'idx_entries_worker_date',
@@ -19763,6 +22686,12 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     lockStaysReopened,
     oneLivePeriodLock,
     closedCashNoInsert,
+    issuedDocuments,
+    issuedNoEdit,
+    issuedNoDelete,
+    documentAssets,
+    assetNoEdit,
+    assetNoDelete,
     dayOffs,
     closedDayOffNoInsert,
     workerGroups,
@@ -19787,10 +22716,12 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     payContracts,
     billingContracts,
     workerGroupMembers,
+    documentTemplates,
     outbox,
     idxCashDate,
     idxCashWorker,
     idxCashRoom,
+    idxIssuedSubject,
     idxEntriesWorkerDate,
     idxEntriesDate,
     idxPayrollLinesWorker,
@@ -19921,6 +22852,34 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
       on: TableUpdateQuery.onTableName(
         'cash_entries',
         limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'issued_documents',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'issued_documents',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'document_assets',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'document_assets',
+        limitUpdateKind: UpdateKind.delete,
       ),
       result: [],
     ),
@@ -28515,6 +31474,868 @@ typedef $$PeriodLocksTableProcessedTableManager =
       PeriodLock,
       PrefetchHooks Function()
     >;
+typedef $$IssuedDocumentsTableCreateCompanionBuilder =
+    IssuedDocumentsCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      required String kind,
+      required int year,
+      required int seq,
+      required int revision,
+      required String number,
+      required String subjectId,
+      Value<String?> period,
+      required String title,
+      required String summary,
+      required String dataJson,
+      required String identityJson,
+      required String metaJson,
+      required Uint8List pdfBytes,
+      Value<int> rowid,
+    });
+typedef $$IssuedDocumentsTableUpdateCompanionBuilder =
+    IssuedDocumentsCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String> kind,
+      Value<int> year,
+      Value<int> seq,
+      Value<int> revision,
+      Value<String> number,
+      Value<String> subjectId,
+      Value<String?> period,
+      Value<String> title,
+      Value<String> summary,
+      Value<String> dataJson,
+      Value<String> identityJson,
+      Value<String> metaJson,
+      Value<Uint8List> pdfBytes,
+      Value<int> rowid,
+    });
+
+class $$IssuedDocumentsTableFilterComposer
+    extends Composer<_$TenantDatabase, $IssuedDocumentsTable> {
+  $$IssuedDocumentsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get seq => $composableBuilder(
+    column: $table.seq,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get number => $composableBuilder(
+    column: $table.number,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get subjectId => $composableBuilder(
+    column: $table.subjectId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get period => $composableBuilder(
+    column: $table.period,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get summary => $composableBuilder(
+    column: $table.summary,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dataJson => $composableBuilder(
+    column: $table.dataJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get identityJson => $composableBuilder(
+    column: $table.identityJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get metaJson => $composableBuilder(
+    column: $table.metaJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<Uint8List> get pdfBytes => $composableBuilder(
+    column: $table.pdfBytes,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$IssuedDocumentsTableOrderingComposer
+    extends Composer<_$TenantDatabase, $IssuedDocumentsTable> {
+  $$IssuedDocumentsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get seq => $composableBuilder(
+    column: $table.seq,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get number => $composableBuilder(
+    column: $table.number,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get subjectId => $composableBuilder(
+    column: $table.subjectId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get period => $composableBuilder(
+    column: $table.period,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get summary => $composableBuilder(
+    column: $table.summary,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dataJson => $composableBuilder(
+    column: $table.dataJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get identityJson => $composableBuilder(
+    column: $table.identityJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get metaJson => $composableBuilder(
+    column: $table.metaJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<Uint8List> get pdfBytes => $composableBuilder(
+    column: $table.pdfBytes,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$IssuedDocumentsTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $IssuedDocumentsTable> {
+  $$IssuedDocumentsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<int> get year =>
+      $composableBuilder(column: $table.year, builder: (column) => column);
+
+  GeneratedColumn<int> get seq =>
+      $composableBuilder(column: $table.seq, builder: (column) => column);
+
+  GeneratedColumn<int> get revision =>
+      $composableBuilder(column: $table.revision, builder: (column) => column);
+
+  GeneratedColumn<String> get number =>
+      $composableBuilder(column: $table.number, builder: (column) => column);
+
+  GeneratedColumn<String> get subjectId =>
+      $composableBuilder(column: $table.subjectId, builder: (column) => column);
+
+  GeneratedColumn<String> get period =>
+      $composableBuilder(column: $table.period, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get summary =>
+      $composableBuilder(column: $table.summary, builder: (column) => column);
+
+  GeneratedColumn<String> get dataJson =>
+      $composableBuilder(column: $table.dataJson, builder: (column) => column);
+
+  GeneratedColumn<String> get identityJson => $composableBuilder(
+    column: $table.identityJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get metaJson =>
+      $composableBuilder(column: $table.metaJson, builder: (column) => column);
+
+  GeneratedColumn<Uint8List> get pdfBytes =>
+      $composableBuilder(column: $table.pdfBytes, builder: (column) => column);
+}
+
+class $$IssuedDocumentsTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $IssuedDocumentsTable,
+          IssuedDocument,
+          $$IssuedDocumentsTableFilterComposer,
+          $$IssuedDocumentsTableOrderingComposer,
+          $$IssuedDocumentsTableAnnotationComposer,
+          $$IssuedDocumentsTableCreateCompanionBuilder,
+          $$IssuedDocumentsTableUpdateCompanionBuilder,
+          (
+            IssuedDocument,
+            BaseReferences<
+              _$TenantDatabase,
+              $IssuedDocumentsTable,
+              IssuedDocument
+            >,
+          ),
+          IssuedDocument,
+          PrefetchHooks Function()
+        > {
+  $$IssuedDocumentsTableTableManager(
+    _$TenantDatabase db,
+    $IssuedDocumentsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$IssuedDocumentsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$IssuedDocumentsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$IssuedDocumentsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<int> year = const Value.absent(),
+                Value<int> seq = const Value.absent(),
+                Value<int> revision = const Value.absent(),
+                Value<String> number = const Value.absent(),
+                Value<String> subjectId = const Value.absent(),
+                Value<String?> period = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> summary = const Value.absent(),
+                Value<String> dataJson = const Value.absent(),
+                Value<String> identityJson = const Value.absent(),
+                Value<String> metaJson = const Value.absent(),
+                Value<Uint8List> pdfBytes = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => IssuedDocumentsCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                kind: kind,
+                year: year,
+                seq: seq,
+                revision: revision,
+                number: number,
+                subjectId: subjectId,
+                period: period,
+                title: title,
+                summary: summary,
+                dataJson: dataJson,
+                identityJson: identityJson,
+                metaJson: metaJson,
+                pdfBytes: pdfBytes,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String kind,
+                required int year,
+                required int seq,
+                required int revision,
+                required String number,
+                required String subjectId,
+                Value<String?> period = const Value.absent(),
+                required String title,
+                required String summary,
+                required String dataJson,
+                required String identityJson,
+                required String metaJson,
+                required Uint8List pdfBytes,
+                Value<int> rowid = const Value.absent(),
+              }) => IssuedDocumentsCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                kind: kind,
+                year: year,
+                seq: seq,
+                revision: revision,
+                number: number,
+                subjectId: subjectId,
+                period: period,
+                title: title,
+                summary: summary,
+                dataJson: dataJson,
+                identityJson: identityJson,
+                metaJson: metaJson,
+                pdfBytes: pdfBytes,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$IssuedDocumentsTable, IssuedDocument>(table),
+                  BaseReferences<
+                    _$TenantDatabase,
+                    $IssuedDocumentsTable,
+                    IssuedDocument
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$IssuedDocumentsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $IssuedDocumentsTable,
+      IssuedDocument,
+      $$IssuedDocumentsTableFilterComposer,
+      $$IssuedDocumentsTableOrderingComposer,
+      $$IssuedDocumentsTableAnnotationComposer,
+      $$IssuedDocumentsTableCreateCompanionBuilder,
+      $$IssuedDocumentsTableUpdateCompanionBuilder,
+      (
+        IssuedDocument,
+        BaseReferences<_$TenantDatabase, $IssuedDocumentsTable, IssuedDocument>,
+      ),
+      IssuedDocument,
+      PrefetchHooks Function()
+    >;
+typedef $$DocumentAssetsTableCreateCompanionBuilder =
+    DocumentAssetsCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      required String kind,
+      required String mime,
+      required int widthPx,
+      required int heightPx,
+      required Uint8List bytes,
+      Value<int> rowid,
+    });
+typedef $$DocumentAssetsTableUpdateCompanionBuilder =
+    DocumentAssetsCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String> kind,
+      Value<String> mime,
+      Value<int> widthPx,
+      Value<int> heightPx,
+      Value<Uint8List> bytes,
+      Value<int> rowid,
+    });
+
+class $$DocumentAssetsTableFilterComposer
+    extends Composer<_$TenantDatabase, $DocumentAssetsTable> {
+  $$DocumentAssetsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get mime => $composableBuilder(
+    column: $table.mime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get widthPx => $composableBuilder(
+    column: $table.widthPx,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get heightPx => $composableBuilder(
+    column: $table.heightPx,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<Uint8List> get bytes => $composableBuilder(
+    column: $table.bytes,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$DocumentAssetsTableOrderingComposer
+    extends Composer<_$TenantDatabase, $DocumentAssetsTable> {
+  $$DocumentAssetsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get mime => $composableBuilder(
+    column: $table.mime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get widthPx => $composableBuilder(
+    column: $table.widthPx,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get heightPx => $composableBuilder(
+    column: $table.heightPx,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<Uint8List> get bytes => $composableBuilder(
+    column: $table.bytes,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$DocumentAssetsTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $DocumentAssetsTable> {
+  $$DocumentAssetsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<String> get mime =>
+      $composableBuilder(column: $table.mime, builder: (column) => column);
+
+  GeneratedColumn<int> get widthPx =>
+      $composableBuilder(column: $table.widthPx, builder: (column) => column);
+
+  GeneratedColumn<int> get heightPx =>
+      $composableBuilder(column: $table.heightPx, builder: (column) => column);
+
+  GeneratedColumn<Uint8List> get bytes =>
+      $composableBuilder(column: $table.bytes, builder: (column) => column);
+}
+
+class $$DocumentAssetsTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $DocumentAssetsTable,
+          DocumentAsset,
+          $$DocumentAssetsTableFilterComposer,
+          $$DocumentAssetsTableOrderingComposer,
+          $$DocumentAssetsTableAnnotationComposer,
+          $$DocumentAssetsTableCreateCompanionBuilder,
+          $$DocumentAssetsTableUpdateCompanionBuilder,
+          (
+            DocumentAsset,
+            BaseReferences<
+              _$TenantDatabase,
+              $DocumentAssetsTable,
+              DocumentAsset
+            >,
+          ),
+          DocumentAsset,
+          PrefetchHooks Function()
+        > {
+  $$DocumentAssetsTableTableManager(
+    _$TenantDatabase db,
+    $DocumentAssetsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DocumentAssetsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DocumentAssetsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DocumentAssetsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<String> mime = const Value.absent(),
+                Value<int> widthPx = const Value.absent(),
+                Value<int> heightPx = const Value.absent(),
+                Value<Uint8List> bytes = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DocumentAssetsCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                kind: kind,
+                mime: mime,
+                widthPx: widthPx,
+                heightPx: heightPx,
+                bytes: bytes,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String kind,
+                required String mime,
+                required int widthPx,
+                required int heightPx,
+                required Uint8List bytes,
+                Value<int> rowid = const Value.absent(),
+              }) => DocumentAssetsCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                kind: kind,
+                mime: mime,
+                widthPx: widthPx,
+                heightPx: heightPx,
+                bytes: bytes,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$DocumentAssetsTable, DocumentAsset>(table),
+                  BaseReferences<
+                    _$TenantDatabase,
+                    $DocumentAssetsTable,
+                    DocumentAsset
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$DocumentAssetsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $DocumentAssetsTable,
+      DocumentAsset,
+      $$DocumentAssetsTableFilterComposer,
+      $$DocumentAssetsTableOrderingComposer,
+      $$DocumentAssetsTableAnnotationComposer,
+      $$DocumentAssetsTableCreateCompanionBuilder,
+      $$DocumentAssetsTableUpdateCompanionBuilder,
+      (
+        DocumentAsset,
+        BaseReferences<_$TenantDatabase, $DocumentAssetsTable, DocumentAsset>,
+      ),
+      DocumentAsset,
+      PrefetchHooks Function()
+    >;
 typedef $$DayOffsTableCreateCompanionBuilder = DayOffsCompanion Function({
   required String id,
   required String tenantId,
@@ -35269,6 +39090,959 @@ typedef $$WorkerGroupMembersTableProcessedTableManager =
       WorkerGroupMember,
       PrefetchHooks Function({bool groupId, bool workerId})
     >;
+typedef $$DocumentTemplatesTableCreateCompanionBuilder =
+    DocumentTemplatesCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      Value<String?> logoAssetId,
+      Value<String?> headerAssetId,
+      Value<String?> footerAssetId,
+      Value<String?> signatureAssetId,
+      Value<String?> stampAssetId,
+      Value<String> placements,
+      Value<bool> printLetterhead,
+      Value<int> blankTopMm,
+      Value<int> blankBottomMm,
+      Value<bool> showSignature,
+      Value<bool> showStamp,
+      Value<int> rowid,
+    });
+typedef $$DocumentTemplatesTableUpdateCompanionBuilder =
+    DocumentTemplatesCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String?> logoAssetId,
+      Value<String?> headerAssetId,
+      Value<String?> footerAssetId,
+      Value<String?> signatureAssetId,
+      Value<String?> stampAssetId,
+      Value<String> placements,
+      Value<bool> printLetterhead,
+      Value<int> blankTopMm,
+      Value<int> blankBottomMm,
+      Value<bool> showSignature,
+      Value<bool> showStamp,
+      Value<int> rowid,
+    });
+
+final class $$DocumentTemplatesTableReferences
+    extends
+        BaseReferences<
+          _$TenantDatabase,
+          $DocumentTemplatesTable,
+          DocumentTemplate
+        > {
+  $$DocumentTemplatesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $DocumentAssetsTable _logoAssetIdTable(_$TenantDatabase db) => db
+      .documentAssets
+      .createAlias('document_templates__logo_asset_id__document_assets__id');
+
+  $$DocumentAssetsTableProcessedTableManager? get logoAssetId {
+    final $_column = $_itemColumn<String>('logo_asset_id');
+    if ($_column == null) return null;
+    final manager = $$DocumentAssetsTableTableManager(
+      $_db,
+      $_db.documentAssets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_logoAssetIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $DocumentAssetsTable _headerAssetIdTable(_$TenantDatabase db) => db
+      .documentAssets
+      .createAlias('document_templates__header_asset_id__document_assets__id');
+
+  $$DocumentAssetsTableProcessedTableManager? get headerAssetId {
+    final $_column = $_itemColumn<String>('header_asset_id');
+    if ($_column == null) return null;
+    final manager = $$DocumentAssetsTableTableManager(
+      $_db,
+      $_db.documentAssets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_headerAssetIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $DocumentAssetsTable _footerAssetIdTable(_$TenantDatabase db) => db
+      .documentAssets
+      .createAlias('document_templates__footer_asset_id__document_assets__id');
+
+  $$DocumentAssetsTableProcessedTableManager? get footerAssetId {
+    final $_column = $_itemColumn<String>('footer_asset_id');
+    if ($_column == null) return null;
+    final manager = $$DocumentAssetsTableTableManager(
+      $_db,
+      $_db.documentAssets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_footerAssetIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $DocumentAssetsTable _signatureAssetIdTable(_$TenantDatabase db) =>
+      db.documentAssets.createAlias(
+        'document_templates__signature_asset_id__document_assets__id',
+      );
+
+  $$DocumentAssetsTableProcessedTableManager? get signatureAssetId {
+    final $_column = $_itemColumn<String>('signature_asset_id');
+    if ($_column == null) return null;
+    final manager = $$DocumentAssetsTableTableManager(
+      $_db,
+      $_db.documentAssets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_signatureAssetIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $DocumentAssetsTable _stampAssetIdTable(_$TenantDatabase db) => db
+      .documentAssets
+      .createAlias('document_templates__stamp_asset_id__document_assets__id');
+
+  $$DocumentAssetsTableProcessedTableManager? get stampAssetId {
+    final $_column = $_itemColumn<String>('stamp_asset_id');
+    if ($_column == null) return null;
+    final manager = $$DocumentAssetsTableTableManager(
+      $_db,
+      $_db.documentAssets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_stampAssetIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DocumentTemplatesTableFilterComposer
+    extends Composer<_$TenantDatabase, $DocumentTemplatesTable> {
+  $$DocumentTemplatesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get placements => $composableBuilder(
+    column: $table.placements,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get printLetterhead => $composableBuilder(
+    column: $table.printLetterhead,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get blankTopMm => $composableBuilder(
+    column: $table.blankTopMm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get blankBottomMm => $composableBuilder(
+    column: $table.blankBottomMm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get showSignature => $composableBuilder(
+    column: $table.showSignature,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get showStamp => $composableBuilder(
+    column: $table.showStamp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$DocumentAssetsTableFilterComposer get logoAssetId {
+    final $$DocumentAssetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.logoAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableFilterComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableFilterComposer get headerAssetId {
+    final $$DocumentAssetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.headerAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableFilterComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableFilterComposer get footerAssetId {
+    final $$DocumentAssetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.footerAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableFilterComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableFilterComposer get signatureAssetId {
+    final $$DocumentAssetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.signatureAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableFilterComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableFilterComposer get stampAssetId {
+    final $$DocumentAssetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.stampAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableFilterComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DocumentTemplatesTableOrderingComposer
+    extends Composer<_$TenantDatabase, $DocumentTemplatesTable> {
+  $$DocumentTemplatesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get placements => $composableBuilder(
+    column: $table.placements,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get printLetterhead => $composableBuilder(
+    column: $table.printLetterhead,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get blankTopMm => $composableBuilder(
+    column: $table.blankTopMm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get blankBottomMm => $composableBuilder(
+    column: $table.blankBottomMm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get showSignature => $composableBuilder(
+    column: $table.showSignature,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get showStamp => $composableBuilder(
+    column: $table.showStamp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$DocumentAssetsTableOrderingComposer get logoAssetId {
+    final $$DocumentAssetsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.logoAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableOrderingComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableOrderingComposer get headerAssetId {
+    final $$DocumentAssetsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.headerAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableOrderingComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableOrderingComposer get footerAssetId {
+    final $$DocumentAssetsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.footerAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableOrderingComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableOrderingComposer get signatureAssetId {
+    final $$DocumentAssetsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.signatureAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableOrderingComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableOrderingComposer get stampAssetId {
+    final $$DocumentAssetsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.stampAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableOrderingComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DocumentTemplatesTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $DocumentTemplatesTable> {
+  $$DocumentTemplatesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get placements => $composableBuilder(
+    column: $table.placements,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get printLetterhead => $composableBuilder(
+    column: $table.printLetterhead,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get blankTopMm => $composableBuilder(
+    column: $table.blankTopMm,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get blankBottomMm => $composableBuilder(
+    column: $table.blankBottomMm,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get showSignature => $composableBuilder(
+    column: $table.showSignature,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get showStamp =>
+      $composableBuilder(column: $table.showStamp, builder: (column) => column);
+
+  $$DocumentAssetsTableAnnotationComposer get logoAssetId {
+    final $$DocumentAssetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.logoAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableAnnotationComposer get headerAssetId {
+    final $$DocumentAssetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.headerAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableAnnotationComposer get footerAssetId {
+    final $$DocumentAssetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.footerAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableAnnotationComposer get signatureAssetId {
+    final $$DocumentAssetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.signatureAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableAnnotationComposer get stampAssetId {
+    final $$DocumentAssetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.stampAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DocumentTemplatesTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $DocumentTemplatesTable,
+          DocumentTemplate,
+          $$DocumentTemplatesTableFilterComposer,
+          $$DocumentTemplatesTableOrderingComposer,
+          $$DocumentTemplatesTableAnnotationComposer,
+          $$DocumentTemplatesTableCreateCompanionBuilder,
+          $$DocumentTemplatesTableUpdateCompanionBuilder,
+          (DocumentTemplate, $$DocumentTemplatesTableReferences),
+          DocumentTemplate,
+          PrefetchHooks Function({
+            bool logoAssetId,
+            bool headerAssetId,
+            bool footerAssetId,
+            bool signatureAssetId,
+            bool stampAssetId,
+          })
+        > {
+  $$DocumentTemplatesTableTableManager(
+    _$TenantDatabase db,
+    $DocumentTemplatesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DocumentTemplatesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DocumentTemplatesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DocumentTemplatesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String?> logoAssetId = const Value.absent(),
+                Value<String?> headerAssetId = const Value.absent(),
+                Value<String?> footerAssetId = const Value.absent(),
+                Value<String?> signatureAssetId = const Value.absent(),
+                Value<String?> stampAssetId = const Value.absent(),
+                Value<String> placements = const Value.absent(),
+                Value<bool> printLetterhead = const Value.absent(),
+                Value<int> blankTopMm = const Value.absent(),
+                Value<int> blankBottomMm = const Value.absent(),
+                Value<bool> showSignature = const Value.absent(),
+                Value<bool> showStamp = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DocumentTemplatesCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                logoAssetId: logoAssetId,
+                headerAssetId: headerAssetId,
+                footerAssetId: footerAssetId,
+                signatureAssetId: signatureAssetId,
+                stampAssetId: stampAssetId,
+                placements: placements,
+                printLetterhead: printLetterhead,
+                blankTopMm: blankTopMm,
+                blankBottomMm: blankBottomMm,
+                showSignature: showSignature,
+                showStamp: showStamp,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                Value<String?> logoAssetId = const Value.absent(),
+                Value<String?> headerAssetId = const Value.absent(),
+                Value<String?> footerAssetId = const Value.absent(),
+                Value<String?> signatureAssetId = const Value.absent(),
+                Value<String?> stampAssetId = const Value.absent(),
+                Value<String> placements = const Value.absent(),
+                Value<bool> printLetterhead = const Value.absent(),
+                Value<int> blankTopMm = const Value.absent(),
+                Value<int> blankBottomMm = const Value.absent(),
+                Value<bool> showSignature = const Value.absent(),
+                Value<bool> showStamp = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DocumentTemplatesCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                logoAssetId: logoAssetId,
+                headerAssetId: headerAssetId,
+                footerAssetId: footerAssetId,
+                signatureAssetId: signatureAssetId,
+                stampAssetId: stampAssetId,
+                placements: placements,
+                printLetterhead: printLetterhead,
+                blankTopMm: blankTopMm,
+                blankBottomMm: blankBottomMm,
+                showSignature: showSignature,
+                showStamp: showStamp,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$DocumentTemplatesTable, DocumentTemplate>(table),
+                  $$DocumentTemplatesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                logoAssetId = false,
+                headerAssetId = false,
+                footerAssetId = false,
+                signatureAssetId = false,
+                stampAssetId = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (logoAssetId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.logoAssetId,
+                            referencedTable: $$DocumentTemplatesTableReferences
+                                ._logoAssetIdTable(db),
+                            referencedColumn: $$DocumentTemplatesTableReferences
+                                ._logoAssetIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (headerAssetId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.headerAssetId,
+                            referencedTable: $$DocumentTemplatesTableReferences
+                                ._headerAssetIdTable(db),
+                            referencedColumn: $$DocumentTemplatesTableReferences
+                                ._headerAssetIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (footerAssetId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.footerAssetId,
+                            referencedTable: $$DocumentTemplatesTableReferences
+                                ._footerAssetIdTable(db),
+                            referencedColumn: $$DocumentTemplatesTableReferences
+                                ._footerAssetIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (signatureAssetId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.signatureAssetId,
+                            referencedTable: $$DocumentTemplatesTableReferences
+                                ._signatureAssetIdTable(db),
+                            referencedColumn: $$DocumentTemplatesTableReferences
+                                ._signatureAssetIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (stampAssetId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.stampAssetId,
+                            referencedTable: $$DocumentTemplatesTableReferences
+                                ._stampAssetIdTable(db),
+                            referencedColumn: $$DocumentTemplatesTableReferences
+                                ._stampAssetIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$DocumentTemplatesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $DocumentTemplatesTable,
+      DocumentTemplate,
+      $$DocumentTemplatesTableFilterComposer,
+      $$DocumentTemplatesTableOrderingComposer,
+      $$DocumentTemplatesTableAnnotationComposer,
+      $$DocumentTemplatesTableCreateCompanionBuilder,
+      $$DocumentTemplatesTableUpdateCompanionBuilder,
+      (DocumentTemplate, $$DocumentTemplatesTableReferences),
+      DocumentTemplate,
+      PrefetchHooks Function({
+        bool logoAssetId,
+        bool headerAssetId,
+        bool footerAssetId,
+        bool signatureAssetId,
+        bool stampAssetId,
+      })
+    >;
 typedef $$OutboxTableCreateCompanionBuilder = OutboxCompanion Function({
   required String operationId,
   required String tenantId,
@@ -35586,6 +40360,10 @@ class $TenantDatabaseManager {
       $$PayrollItemsTableTableManager(_db, _db.payrollItems);
   $$PeriodLocksTableTableManager get periodLocks =>
       $$PeriodLocksTableTableManager(_db, _db.periodLocks);
+  $$IssuedDocumentsTableTableManager get issuedDocuments =>
+      $$IssuedDocumentsTableTableManager(_db, _db.issuedDocuments);
+  $$DocumentAssetsTableTableManager get documentAssets =>
+      $$DocumentAssetsTableTableManager(_db, _db.documentAssets);
   $$DayOffsTableTableManager get dayOffs =>
       $$DayOffsTableTableManager(_db, _db.dayOffs);
   $$WorkerGroupsTableTableManager get workerGroups =>
@@ -35604,6 +40382,8 @@ class $TenantDatabaseManager {
       $$BillingContractsTableTableManager(_db, _db.billingContracts);
   $$WorkerGroupMembersTableTableManager get workerGroupMembers =>
       $$WorkerGroupMembersTableTableManager(_db, _db.workerGroupMembers);
+  $$DocumentTemplatesTableTableManager get documentTemplates =>
+      $$DocumentTemplatesTableTableManager(_db, _db.documentTemplates);
   $$OutboxTableTableManager get outbox =>
       $$OutboxTableTableManager(_db, _db.outbox);
 }

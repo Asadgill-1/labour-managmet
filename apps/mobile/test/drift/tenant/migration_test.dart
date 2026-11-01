@@ -1,8 +1,10 @@
 import 'package:domain/cash.dart';
+import 'package:drift/drift.dart' show Value;
 import 'package:drift_dev/api/migrations_native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/data/cash.dart';
 import 'package:labour_app/data/closing.dart';
+import 'package:labour_app/data/documents.dart';
 import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/data/tenant_database.dart';
 
@@ -133,6 +135,28 @@ void main() {
 
     await db.addSalaryPayment(operationId: newUuid(), date: '2026-10-06', workerId: 'w1', amountFils: 2000, parts: {'2026-09': 2000}, extraNote: 'x');
     await expectLater(db.delete(db.salaryAllocations).go(), throwsA(anything));
+  });
+
+  test('a phone on version 10 upgrades: it has no template, papers issue with the company details, and nothing else moves (DOC-05)', () async {
+    final old = await verifier.schemaAt(10);
+    old.rawDatabase.execute('''
+      INSERT INTO tenant_profiles (id, $commonColumns, legal_name, address) VALUES ('p1', $common, 'Al Noor LLC', 'Dubai');
+      INSERT INTO workers (id, $commonColumns, code, name) VALUES ('w1', $common, 'W001', 'Ahmad');
+      INSERT INTO cash_entries (id, $commonColumns, entry_date, kind, amount_fils, worker_id) VALUES ('c1', $common, '2026-09-05', 'advanceGiven', 3000, 'w1');
+    ''');
+
+    final db = TenantDatabase(old.newConnection(), tenantId: 't', deviceId: 'device');
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, db.schemaVersion);
+
+    expect(await db.documentTemplate(), isNull);
+    final identity = await db.currentIdentity(brandArgb: 1, softArgb: 2);
+    expect((identity.legalName, identity.contactLine, identity.printLetterhead), ('Al Noor LLC', 'Dubai', true));
+    expect((await db.select(db.cashEntries).getSingle()).amountFils, 3000);
+    await db.saveDocumentTemplate(const DocumentTemplatesCompanion(blankTopMm: Value(55)), operationId: newUuid());
+    expect((await db.documentTemplate())!.blankTopMm, 55);
+    await expectLater(db.customStatement('DELETE FROM document_assets'), completes);
+    await expectLater(db.customUpdate("UPDATE issued_documents SET title = 'x'"), completes, reason: 'no rows yet, and the trigger fires per row');
   });
 
   test('a phone on version 9 upgrades: a closed month stays closed, and a day off can be marked after it (D-045)', () async {
