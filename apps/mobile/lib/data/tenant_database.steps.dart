@@ -9554,6 +9554,1546 @@ i1.GeneratedColumn<int> _column_166(String aliasedName) =>
       $customConstraints: 'NOT NULL DEFAULT 0 CHECK (show_stamp IN (0, 1))',
       defaultValue: const i1.CustomExpression('0'),
     );
+
+final class Schema12 extends i0.VersionedSchema {
+  Schema12({required super.database}) : super(version: 12);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    auditEvents,
+    auditNoUpdate,
+    auditNoDelete,
+    rooms,
+    workers,
+    clients,
+    sites,
+    cashEntries,
+    cashNoUpdate,
+    cashNoDelete,
+    salaryAllocations,
+    allocationNoUpdate,
+    allocationNoDelete,
+    cashVisaNeedsWorker,
+    payrollRuns,
+    payrollRunNoUpdate,
+    payrollRunNoDelete,
+    payrollLines,
+    payrollLineNoEdit,
+    payrollLineStaysReversed,
+    payrollLineNoDelete,
+    payrollItems,
+    postedItemNoEdit,
+    postedItemNoDelete,
+    periodLocks,
+    lockNoDelete,
+    lockNoEdit,
+    lockStaysReopened,
+    oneLivePeriodLock,
+    closedCashNoInsert,
+    issuedDocuments,
+    issuedNoEdit,
+    issuedNoDelete,
+    documentAssets,
+    assetNoEdit,
+    assetNoDelete,
+    dayOffs,
+    closedDayOffNoInsert,
+    workerGroups,
+    attendanceBatches,
+    attendanceEntries,
+    closedEntryNoInsert,
+    closedEntryNoEdit,
+    closedEntryNoDelete,
+    closedItemNoInsert,
+    closedItemNoEdit,
+    closedItemNoDelete,
+    closedLineNoInsert,
+    closedLineNoReverse,
+    openingBalances,
+    closedOpeningNoInsert,
+    closedOpeningNoEdit,
+    oneLivePayrollLine,
+    approvedEntryNoEdit,
+    linkedEntryKeepsState,
+    entryNoDelete,
+    timesheets,
+    timesheetKeepsNumber,
+    timesheetNoDelete,
+    timesheetRevisions,
+    revisionNoRedraft,
+    revisionKeepsAdjustments,
+    revisionAcceptedLocked,
+    revisionNoDelete,
+    timesheetLines,
+    timesheetLineNoEdit,
+    timesheetLineStaysOff,
+    timesheetLineNoDelete,
+    oneLiveTimesheetLine,
+    billedAllocations,
+    billingNoEdit,
+    billingStaysReleased,
+    billingNoDelete,
+    oneLiveBilling,
+    tenantProfiles,
+    payContracts,
+    billingContracts,
+    workerGroupMembers,
+    documentTemplates,
+    outbox,
+    idxCashDate,
+    idxCashWorker,
+    idxCashRoom,
+    idxIssuedSubject,
+    idxTimesheetLinesRevision,
+    idxTimesheetLinesTimesheet,
+    idxEntriesWorkerDate,
+    idxEntriesDate,
+    idxPayrollLinesWorker,
+    idxPayrollItemsPeriod,
+  ];
+  late final Shape0 auditEvents = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'audit_events',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger auditNoUpdate = i1.Trigger(
+    'CREATE TRIGGER audit_no_update BEFORE UPDATE ON audit_events BEGIN SELECT RAISE (ABORT, \'audit events are append-only\');END',
+    'audit_no_update',
+  );
+  final i1.Trigger auditNoDelete = i1.Trigger(
+    'CREATE TRIGGER audit_no_delete BEFORE DELETE ON audit_events BEGIN SELECT RAISE (ABORT, \'audit events are append-only\');END',
+    'audit_no_delete',
+  );
+  late final Shape13 rooms = Shape13(
+    source: i0.VersionedTable(
+      entityName: 'rooms',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_14,
+        _column_24,
+        _column_25,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape21 workers = Shape21(
+    source: i0.VersionedTable(
+      entityName: 'workers',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'UNIQUE(tenant_id, code)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_44,
+        _column_14,
+        _column_17,
+        _column_45,
+        _column_46,
+        _column_47,
+        _column_48,
+        _column_104,
+        _column_130,
+        _column_25,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape1 clients = Shape1(
+    source: i0.VersionedTable(
+      entityName: 'clients',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+        _column_19,
+        _column_20,
+        _column_21,
+        _column_22,
+        _column_23,
+        _column_24,
+        _column_25,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape2 sites = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'sites',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_26,
+        _column_14,
+        _column_27,
+        _column_28,
+        _column_29,
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_25,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape24 cashEntries = Shape24(
+    source: i0.VersionedTable(
+      entityName: 'cash_entries',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'CHECK(kind NOT IN (\'advanceGiven\', \'salaryPaid\', \'advanceReturned\') OR worker_id IS NOT NULL)',
+        'CHECK(kind NOT IN (\'roomRentPaid\', \'roomRentReceived\') OR room_id IS NOT NULL)',
+        'CHECK(kind <> \'clientReceipt\' OR client_id IS NOT NULL)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_105,
+        _column_96,
+        _column_106,
+        _column_81,
+        _column_95,
+        _column_104,
+        _column_34,
+        _column_35,
+        _column_107,
+        _column_108,
+        _column_24,
+        _column_109,
+        _column_133,
+        _column_134,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger cashNoUpdate = i1.Trigger(
+    'CREATE TRIGGER cash_no_update BEFORE UPDATE ON cash_entries BEGIN SELECT RAISE (ABORT, \'cash entries are append-only\');END',
+    'cash_no_update',
+  );
+  final i1.Trigger cashNoDelete = i1.Trigger(
+    'CREATE TRIGGER cash_no_delete BEFORE DELETE ON cash_entries BEGIN SELECT RAISE (ABORT, \'cash entries are append-only\');END',
+    'cash_no_delete',
+  );
+  late final Shape25 salaryAllocations = Shape25(
+    source: i0.VersionedTable(
+      entityName: 'salary_allocations',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'UNIQUE(payment_id, month)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_135,
+        _column_136,
+        _column_106,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger allocationNoUpdate = i1.Trigger(
+    'CREATE TRIGGER allocation_no_update BEFORE UPDATE ON salary_allocations BEGIN SELECT RAISE (ABORT, \'salary allocations are append-only\');END',
+    'allocation_no_update',
+  );
+  final i1.Trigger allocationNoDelete = i1.Trigger(
+    'CREATE TRIGGER allocation_no_delete BEFORE DELETE ON salary_allocations BEGIN SELECT RAISE (ABORT, \'salary allocations are append-only\');END',
+    'allocation_no_delete',
+  );
+  final i1.Trigger cashVisaNeedsWorker = i1.Trigger(
+    'CREATE TRIGGER cash_visa_needs_worker BEFORE INSERT ON cash_entries WHEN NEW.kind IN (\'visaPaid\', \'visaReturned\') AND NEW.worker_id IS NULL BEGIN SELECT RAISE (ABORT, \'a visa line needs a worker\');END',
+    'cash_visa_needs_worker',
+  );
+  late final Shape16 payrollRuns = Shape16(
+    source: i0.VersionedTable(
+      entityName: 'payroll_runs',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_110,
+        _column_111,
+        _column_112,
+        _column_81,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger payrollRunNoUpdate = i1.Trigger(
+    'CREATE TRIGGER payroll_run_no_update BEFORE UPDATE ON payroll_runs BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
+    'payroll_run_no_update',
+  );
+  final i1.Trigger payrollRunNoDelete = i1.Trigger(
+    'CREATE TRIGGER payroll_run_no_delete BEFORE DELETE ON payroll_runs BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
+    'payroll_run_no_delete',
+  );
+  late final Shape22 payrollLines = Shape22(
+    source: i0.VersionedTable(
+      entityName: 'payroll_lines',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_113,
+        _column_50,
+        _column_110,
+        _column_114,
+        _column_115,
+        _column_116,
+        _column_117,
+        _column_118,
+        _column_119,
+        _column_120,
+        _column_131,
+        _column_121,
+        _column_122,
+        _column_123,
+        _column_124,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger payrollLineNoEdit = i1.Trigger(
+    'CREATE TRIGGER payroll_line_no_edit BEFORE UPDATE OF run_id, worker_id, period_from, opening_fils, earned_fils, salary_fils, adjustment_fils, allowances_fils, deductions_fils, recovery_fils, visa_recovery_fils, net_fils, payable_fils, paid_before_fils ON payroll_lines BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
+    'payroll_line_no_edit',
+  );
+  final i1.Trigger payrollLineStaysReversed = i1.Trigger(
+    'CREATE TRIGGER payroll_line_stays_reversed BEFORE UPDATE OF reversed ON payroll_lines WHEN OLD.reversed BEGIN SELECT RAISE (ABORT, \'a reversed payroll line stays reversed\');END',
+    'payroll_line_stays_reversed',
+  );
+  final i1.Trigger payrollLineNoDelete = i1.Trigger(
+    'CREATE TRIGGER payroll_line_no_delete BEFORE DELETE ON payroll_lines BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
+    'payroll_line_no_delete',
+  );
+  late final Shape18 payrollItems = Shape18(
+    source: i0.VersionedTable(
+      entityName: 'payroll_items',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'CHECK(kind NOT IN (\'deduction\', \'roomCharge\') OR authorized_by IS NOT NULL)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_50,
+        _column_110,
+        _column_96,
+        _column_106,
+        _column_125,
+        _column_126,
+        _column_24,
+        _column_104,
+        _column_127,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger postedItemNoEdit = i1.Trigger(
+    'CREATE TRIGGER posted_item_no_edit BEFORE UPDATE OF worker_id, period_from, kind, amount_fils, reason, authorized_by, room_id ON payroll_items WHEN OLD.line_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'a posted payroll item is immutable\');END',
+    'posted_item_no_edit',
+  );
+  final i1.Trigger postedItemNoDelete = i1.Trigger(
+    'CREATE TRIGGER posted_item_no_delete BEFORE DELETE ON payroll_items WHEN OLD.line_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'a posted payroll item is immutable\');END',
+    'posted_item_no_delete',
+  );
+  late final Shape27 periodLocks = Shape27(
+    source: i0.VersionedTable(
+      entityName: 'period_locks',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_136,
+        _column_138,
+        _column_139,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger lockNoDelete = i1.Trigger(
+    'CREATE TRIGGER lock_no_delete BEFORE DELETE ON period_locks BEGIN SELECT RAISE (ABORT, \'a period lock stays on record\');END',
+    'lock_no_delete',
+  );
+  final i1.Trigger lockNoEdit = i1.Trigger(
+    'CREATE TRIGGER lock_no_edit BEFORE UPDATE OF month, last_day ON period_locks BEGIN SELECT RAISE (ABORT, \'a period lock stays on record\');END',
+    'lock_no_edit',
+  );
+  final i1.Trigger lockStaysReopened = i1.Trigger(
+    'CREATE TRIGGER lock_stays_reopened BEFORE UPDATE OF reopened ON period_locks WHEN OLD.reopened BEGIN SELECT RAISE (ABORT, \'a reopened lock stays reopened\');END',
+    'lock_stays_reopened',
+  );
+  final i1.Index oneLivePeriodLock = i1.Index(
+    'one_live_period_lock',
+    'CREATE UNIQUE INDEX one_live_period_lock ON period_locks (month) WHERE NOT reopened',
+  );
+  final i1.Trigger closedCashNoInsert = i1.Trigger(
+    'CREATE TRIGGER closed_cash_no_insert BEFORE INSERT ON cash_entries WHEN NEW.entry_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_cash_no_insert',
+  );
+  late final Shape29 issuedDocuments = Shape29(
+    source: i0.VersionedTable(
+      entityName: 'issued_documents',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'UNIQUE(tenant_id, kind, year, seq, revision)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_96,
+        _column_140,
+        _column_141,
+        _column_142,
+        _column_143,
+        _column_144,
+        _column_145,
+        _column_146,
+        _column_147,
+        _column_148,
+        _column_149,
+        _column_150,
+        _column_151,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger issuedNoEdit = i1.Trigger(
+    'CREATE TRIGGER issued_no_edit BEFORE UPDATE ON issued_documents BEGIN SELECT RAISE (ABORT, \'an issued document never changes\');END',
+    'issued_no_edit',
+  );
+  final i1.Trigger issuedNoDelete = i1.Trigger(
+    'CREATE TRIGGER issued_no_delete BEFORE DELETE ON issued_documents BEGIN SELECT RAISE (ABORT, \'an issued document stays on record\');END',
+    'issued_no_delete',
+  );
+  late final Shape30 documentAssets = Shape30(
+    source: i0.VersionedTable(
+      entityName: 'document_assets',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_96,
+        _column_152,
+        _column_153,
+        _column_154,
+        _column_155,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger assetNoEdit = i1.Trigger(
+    'CREATE TRIGGER asset_no_edit BEFORE UPDATE ON document_assets BEGIN SELECT RAISE (ABORT, \'a stored image never changes\');END',
+    'asset_no_edit',
+  );
+  final i1.Trigger assetNoDelete = i1.Trigger(
+    'CREATE TRIGGER asset_no_delete BEFORE DELETE ON document_assets BEGIN SELECT RAISE (ABORT, \'a stored image stays on record\');END',
+    'asset_no_delete',
+  );
+  late final Shape28 dayOffs = Shape28(
+    source: i0.VersionedTable(
+      entityName: 'day_offs',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'UNIQUE(tenant_id, worker_id, work_date)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_50,
+        _column_41,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger closedDayOffNoInsert = i1.Trigger(
+    'CREATE TRIGGER closed_day_off_no_insert BEFORE INSERT ON day_offs WHEN NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_day_off_no_insert',
+  );
+  late final Shape3 workerGroups = Shape3(
+    source: i0.VersionedTable(
+      entityName: 'worker_groups',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_14,
+        _column_34,
+        _column_35,
+        _column_36,
+        _column_37,
+        _column_38,
+        _column_39,
+        _column_40,
+        _column_25,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape4 attendanceBatches = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'attendance_batches',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_41,
+        _column_26,
+        _column_42,
+        _column_43,
+        _column_24,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape19 attendanceEntries = Shape19(
+    source: i0.VersionedTable(
+      entityName: 'attendance_entries',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'CHECK(break_minutes <= clock_minutes)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_49,
+        _column_50,
+        _column_26,
+        _column_42,
+        _column_43,
+        _column_41,
+        _column_51,
+        _column_52,
+        _column_53,
+        _column_54,
+        _column_55,
+        _column_56,
+        _column_57,
+        _column_58,
+        _column_59,
+        _column_60,
+        _column_61,
+        _column_62,
+        _column_63,
+        _column_64,
+        _column_65,
+        _column_66,
+        _column_67,
+        _column_68,
+        _column_69,
+        _column_70,
+        _column_71,
+        _column_72,
+        _column_73,
+        _column_74,
+        _column_75,
+        _column_76,
+        _column_128,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger closedEntryNoInsert = i1.Trigger(
+    'CREATE TRIGGER closed_entry_no_insert BEFORE INSERT ON attendance_entries WHEN NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_entry_no_insert',
+  );
+  final i1.Trigger closedEntryNoEdit = i1.Trigger(
+    'CREATE TRIGGER closed_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN(OLD.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened))AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes OR NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils OR NEW.worker_id <> OLD.worker_id OR NEW.client_id <> OLD.client_id OR NEW.site_id <> OLD.site_id OR NEW.work_date <> OLD.work_date OR NEW.superseded <> OLD.superseded OR NEW.attendance_status <> OLD.attendance_status)BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_entry_no_edit',
+  );
+  final i1.Trigger closedEntryNoDelete = i1.Trigger(
+    'CREATE TRIGGER closed_entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_entry_no_delete',
+  );
+  final i1.Trigger closedItemNoInsert = i1.Trigger(
+    'CREATE TRIGGER closed_item_no_insert BEFORE INSERT ON payroll_items WHEN NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_item_no_insert',
+  );
+  final i1.Trigger closedItemNoEdit = i1.Trigger(
+    'CREATE TRIGGER closed_item_no_edit BEFORE UPDATE ON payroll_items WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_item_no_edit',
+  );
+  final i1.Trigger closedItemNoDelete = i1.Trigger(
+    'CREATE TRIGGER closed_item_no_delete BEFORE DELETE ON payroll_items WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_item_no_delete',
+  );
+  final i1.Trigger closedLineNoInsert = i1.Trigger(
+    'CREATE TRIGGER closed_line_no_insert BEFORE INSERT ON payroll_lines WHEN NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_line_no_insert',
+  );
+  final i1.Trigger closedLineNoReverse = i1.Trigger(
+    'CREATE TRIGGER closed_line_no_reverse BEFORE UPDATE OF reversed ON payroll_lines WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_line_no_reverse',
+  );
+  late final Shape10 openingBalances = Shape10(
+    source: i0.VersionedTable(
+      entityName: 'opening_balances',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'UNIQUE(kind, worker_id)',
+        'UNIQUE(kind, client_id)',
+        'CHECK((worker_id IS NULL)<>(client_id IS NULL))',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_96,
+        _column_95,
+        _column_34,
+        _column_97,
+        _column_98,
+        _column_99,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger closedOpeningNoInsert = i1.Trigger(
+    'CREATE TRIGGER closed_opening_no_insert BEFORE INSERT ON opening_balances WHEN NEW.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_opening_no_insert',
+  );
+  final i1.Trigger closedOpeningNoEdit = i1.Trigger(
+    'CREATE TRIGGER closed_opening_no_edit BEFORE UPDATE ON opening_balances WHEN OLD.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_opening_no_edit',
+  );
+  final i1.Index oneLivePayrollLine = i1.Index(
+    'one_live_payroll_line',
+    'CREATE UNIQUE INDEX one_live_payroll_line ON payroll_lines (worker_id, period_from) WHERE NOT reversed',
+  );
+  final i1.Trigger approvedEntryNoEdit = i1.Trigger(
+    'CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN OLD.state IN (\'approved\', \'linked\') AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes OR(OLD.client_rate_fils IS NOT NULL AND(NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils))OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)BEGIN SELECT RAISE (ABORT, \'approved attendance is immutable\');END',
+    'approved_entry_no_edit',
+  );
+  final i1.Trigger linkedEntryKeepsState = i1.Trigger(
+    'CREATE TRIGGER linked_entry_keeps_state BEFORE UPDATE ON attendance_entries WHEN OLD.state = \'linked\' AND NEW.state <> \'linked\' BEGIN SELECT RAISE (ABORT, \'linked attendance is immutable\');END',
+    'linked_entry_keeps_state',
+  );
+  final i1.Trigger entryNoDelete = i1.Trigger(
+    'CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.state NOT IN (\'draft\', \'submitted\') BEGIN SELECT RAISE (ABORT, \'approved attendance cannot be deleted\');END',
+    'entry_no_delete',
+  );
+  late final Shape32 timesheets = Shape32(
+    source: i0.VersionedTable(
+      entityName: 'timesheets',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'UNIQUE(tenant_id, year, seq)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_26,
+        _column_35,
+        _column_167,
+        _column_168,
+        _column_169,
+        _column_170,
+        _column_171,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger timesheetKeepsNumber = i1.Trigger(
+    'CREATE TRIGGER timesheet_keeps_number BEFORE UPDATE OF client_id, site_id, from_date, to_date, year, seq, number ON timesheets WHEN OLD.number IS NOT NULL BEGIN SELECT RAISE (ABORT, \'an approved timesheet keeps its number and dates\');END',
+    'timesheet_keeps_number',
+  );
+  final i1.Trigger timesheetNoDelete = i1.Trigger(
+    'CREATE TRIGGER timesheet_no_delete BEFORE DELETE ON timesheets WHEN OLD.number IS NOT NULL BEGIN SELECT RAISE (ABORT, \'an approved timesheet stays on record\');END',
+    'timesheet_no_delete',
+  );
+  late final Shape33 timesheetRevisions = Shape33(
+    source: i0.VersionedTable(
+      entityName: 'timesheet_revisions',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'UNIQUE(timesheet_id, revision)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_172,
+        _column_142,
+        _column_173,
+        _column_9,
+        _column_174,
+        _column_175,
+        _column_176,
+        _column_177,
+        _column_178,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger revisionNoRedraft = i1.Trigger(
+    'CREATE TRIGGER revision_no_redraft BEFORE UPDATE OF status ON timesheet_revisions WHEN OLD.status <> \'draft\' AND NEW.status = \'draft\' BEGIN SELECT RAISE (ABORT, \'an approved revision stays approved\');END',
+    'revision_no_redraft',
+  );
+  final i1.Trigger revisionKeepsAdjustments = i1.Trigger(
+    'CREATE TRIGGER revision_keeps_adjustments BEFORE UPDATE OF timesheet_id, revision, adjustments ON timesheet_revisions WHEN OLD.status <> \'draft\' BEGIN SELECT RAISE (ABORT, \'an approved revision never changes\');END',
+    'revision_keeps_adjustments',
+  );
+  final i1.Trigger revisionAcceptedLocked = i1.Trigger(
+    'CREATE TRIGGER revision_accepted_locked BEFORE UPDATE ON timesheet_revisions WHEN OLD.status = \'accepted\' BEGIN SELECT RAISE (ABORT, \'an accepted revision is locked\');END',
+    'revision_accepted_locked',
+  );
+  final i1.Trigger revisionNoDelete = i1.Trigger(
+    'CREATE TRIGGER revision_no_delete BEFORE DELETE ON timesheet_revisions WHEN OLD.status <> \'draft\' BEGIN SELECT RAISE (ABORT, \'an approved revision stays on record\');END',
+    'revision_no_delete',
+  );
+  late final Shape34 timesheetLines = Shape34(
+    source: i0.VersionedTable(
+      entityName: 'timesheet_lines',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_172,
+        _column_179,
+        _column_180,
+        _column_181,
+        _column_41,
+        _column_42,
+        _column_182,
+        _column_50,
+        _column_183,
+        _column_184,
+        _column_45,
+        _column_61,
+        _column_185,
+        _column_186,
+        _column_187,
+        _column_85,
+        _column_188,
+        _column_189,
+        _column_190,
+        _column_191,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger timesheetLineNoEdit = i1.Trigger(
+    'CREATE TRIGGER timesheet_line_no_edit BEFORE UPDATE OF timesheet_id, revision_id, entry_id, work_key, work_date, site_id, site_name, worker_id, worker_name, worker_code, trade, attendance_status, clock_minutes, break_minutes, billable_minutes, basis, rate_fils, amount_fils, adjust_reason ON timesheet_lines BEGIN SELECT RAISE (ABORT, \'an approved timesheet line never changes\');END',
+    'timesheet_line_no_edit',
+  );
+  final i1.Trigger timesheetLineStaysOff = i1.Trigger(
+    'CREATE TRIGGER timesheet_line_stays_off BEFORE UPDATE OF live ON timesheet_lines WHEN NOT OLD.live AND NEW.live BEGIN SELECT RAISE (ABORT, \'a replaced timesheet line stays replaced\');END',
+    'timesheet_line_stays_off',
+  );
+  final i1.Trigger timesheetLineNoDelete = i1.Trigger(
+    'CREATE TRIGGER timesheet_line_no_delete BEFORE DELETE ON timesheet_lines BEGIN SELECT RAISE (ABORT, \'an approved timesheet line stays on record\');END',
+    'timesheet_line_no_delete',
+  );
+  final i1.Index oneLiveTimesheetLine = i1.Index(
+    'one_live_timesheet_line',
+    'CREATE UNIQUE INDEX one_live_timesheet_line ON timesheet_lines (work_key) WHERE live',
+  );
+  late final Shape35 billedAllocations = Shape35(
+    source: i0.VersionedTable(
+      entityName: 'billed_allocations',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_192,
+        _column_181,
+        _column_193,
+        _column_97,
+        _column_194,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger billingNoEdit = i1.Trigger(
+    'CREATE TRIGGER billing_no_edit BEFORE UPDATE OF line_id, work_key, invoice_id, amount_fils ON billed_allocations BEGIN SELECT RAISE (ABORT, \'a billed allocation never changes\');END',
+    'billing_no_edit',
+  );
+  final i1.Trigger billingStaysReleased = i1.Trigger(
+    'CREATE TRIGGER billing_stays_released BEFORE UPDATE OF released ON billed_allocations WHEN OLD.released BEGIN SELECT RAISE (ABORT, \'a released allocation stays released\');END',
+    'billing_stays_released',
+  );
+  final i1.Trigger billingNoDelete = i1.Trigger(
+    'CREATE TRIGGER billing_no_delete BEFORE DELETE ON billed_allocations BEGIN SELECT RAISE (ABORT, \'a billed allocation stays on record\');END',
+    'billing_no_delete',
+  );
+  final i1.Index oneLiveBilling = i1.Index(
+    'one_live_billing',
+    'CREATE UNIQUE INDEX one_live_billing ON billed_allocations (work_key) WHERE NOT released',
+  );
+  late final Shape26 tenantProfiles = Shape26(
+    source: i0.VersionedTable(
+      entityName: 'tenant_profiles',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_77,
+        _column_78,
+        _column_15,
+        _column_17,
+        _column_18,
+        _column_19,
+        _column_79,
+        _column_20,
+        _column_80,
+        _column_81,
+        _column_82,
+        _column_83,
+        _column_84,
+        _column_129,
+        _column_137,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape8 payContracts = Shape8(
+    source: i0.VersionedTable(
+      entityName: 'pay_contracts',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_85,
+        _column_86,
+        _column_87,
+        _column_88,
+        _column_89,
+        _column_90,
+        _column_91,
+        _column_92,
+        _column_50,
+        _column_35,
+        _column_93,
+        _column_94,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape9 billingContracts = Shape9(
+    source: i0.VersionedTable(
+      entityName: 'billing_contracts',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_85,
+        _column_86,
+        _column_87,
+        _column_88,
+        _column_89,
+        _column_90,
+        _column_91,
+        _column_92,
+        _column_26,
+        _column_35,
+        _column_95,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape23 workerGroupMembers = Shape23(
+    source: i0.VersionedTable(
+      entityName: 'worker_group_members',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'UNIQUE(group_id, worker_id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_100,
+        _column_50,
+        _column_36,
+        _column_132,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape31 documentTemplates = Shape31(
+    source: i0.VersionedTable(
+      entityName: 'document_templates',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_156,
+        _column_157,
+        _column_158,
+        _column_159,
+        _column_160,
+        _column_161,
+        _column_162,
+        _column_163,
+        _column_164,
+        _column_165,
+        _column_166,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape12 outbox = Shape12(
+    source: i0.VersionedTable(
+      entityName: 'outbox',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(operation_id)'],
+      columns: [
+        _column_8,
+        _column_1,
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_101,
+        _column_102,
+        _column_10,
+        _column_103,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxCashDate = i1.Index(
+    'idx_cash_date',
+    'CREATE INDEX idx_cash_date ON cash_entries (entry_date)',
+  );
+  final i1.Index idxCashWorker = i1.Index(
+    'idx_cash_worker',
+    'CREATE INDEX idx_cash_worker ON cash_entries (worker_id)',
+  );
+  final i1.Index idxCashRoom = i1.Index(
+    'idx_cash_room',
+    'CREATE INDEX idx_cash_room ON cash_entries (room_id)',
+  );
+  final i1.Index idxIssuedSubject = i1.Index(
+    'idx_issued_subject',
+    'CREATE INDEX idx_issued_subject ON issued_documents (kind, subject_id, period)',
+  );
+  final i1.Index idxTimesheetLinesRevision = i1.Index(
+    'idx_timesheet_lines_revision',
+    'CREATE INDEX idx_timesheet_lines_revision ON timesheet_lines (revision_id)',
+  );
+  final i1.Index idxTimesheetLinesTimesheet = i1.Index(
+    'idx_timesheet_lines_timesheet',
+    'CREATE INDEX idx_timesheet_lines_timesheet ON timesheet_lines (timesheet_id, live)',
+  );
+  final i1.Index idxEntriesWorkerDate = i1.Index(
+    'idx_entries_worker_date',
+    'CREATE INDEX idx_entries_worker_date ON attendance_entries (worker_id, work_date)',
+  );
+  final i1.Index idxEntriesDate = i1.Index(
+    'idx_entries_date',
+    'CREATE INDEX idx_entries_date ON attendance_entries (work_date)',
+  );
+  final i1.Index idxPayrollLinesWorker = i1.Index(
+    'idx_payroll_lines_worker',
+    'CREATE INDEX idx_payroll_lines_worker ON payroll_lines (worker_id)',
+  );
+  final i1.Index idxPayrollItemsPeriod = i1.Index(
+    'idx_payroll_items_period',
+    'CREATE INDEX idx_payroll_items_period ON payroll_items (period_from)',
+  );
+}
+
+class Shape32 extends i0.VersionedTable {
+  Shape32({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get tenantId =>
+      columnsByName['tenant_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAtUtc =>
+      columnsByName['created_at_utc']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAtUtc =>
+      columnsByName['updated_at_utc']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get actorId =>
+      columnsByName['actor_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get version =>
+      columnsByName['version']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get sourceOperationId =>
+      columnsByName['source_operation_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get clientId =>
+      columnsByName['client_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get siteId =>
+      columnsByName['site_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get fromDate =>
+      columnsByName['from_date']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get toDate =>
+      columnsByName['to_date']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get year =>
+      columnsByName['year']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get seq =>
+      columnsByName['seq']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get number =>
+      columnsByName['number']! as i1.GeneratedColumn<String>;
+}
+
+i1.GeneratedColumn<String> _column_167(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'from_date',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_168(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'to_date',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_169(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'year',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<int> _column_170(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'seq',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<String> _column_171(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'number',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
+
+class Shape33 extends i0.VersionedTable {
+  Shape33({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get tenantId =>
+      columnsByName['tenant_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAtUtc =>
+      columnsByName['created_at_utc']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAtUtc =>
+      columnsByName['updated_at_utc']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get actorId =>
+      columnsByName['actor_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get version =>
+      columnsByName['version']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get sourceOperationId =>
+      columnsByName['source_operation_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get timesheetId =>
+      columnsByName['timesheet_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get revision =>
+      columnsByName['revision']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get status =>
+      columnsByName['status']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get reason =>
+      columnsByName['reason']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get adjustments =>
+      columnsByName['adjustments']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get sharedOn =>
+      columnsByName['shared_on']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get respondedOn =>
+      columnsByName['responded_on']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get responseNote =>
+      columnsByName['response_note']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get evidenceAssetId =>
+      columnsByName['evidence_asset_id']! as i1.GeneratedColumn<String>;
+}
+
+i1.GeneratedColumn<String> _column_172(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'timesheet_id',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL REFERENCES timesheets(id)',
+    );
+i1.GeneratedColumn<String> _column_173(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'status',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL DEFAULT \'draft\'',
+      defaultValue: const i1.CustomExpression('\'draft\''),
+    );
+i1.GeneratedColumn<String> _column_174(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'adjustments',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL DEFAULT \'{}\'',
+      defaultValue: const i1.CustomExpression('\'{}\''),
+    );
+i1.GeneratedColumn<String> _column_175(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'shared_on',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<String> _column_176(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'responded_on',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<String> _column_177(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'response_note',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<String> _column_178(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'evidence_asset_id',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL REFERENCES document_assets(id)',
+    );
+
+class Shape34 extends i0.VersionedTable {
+  Shape34({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get tenantId =>
+      columnsByName['tenant_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAtUtc =>
+      columnsByName['created_at_utc']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAtUtc =>
+      columnsByName['updated_at_utc']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get actorId =>
+      columnsByName['actor_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get version =>
+      columnsByName['version']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get sourceOperationId =>
+      columnsByName['source_operation_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get timesheetId =>
+      columnsByName['timesheet_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get revisionId =>
+      columnsByName['revision_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get entryId =>
+      columnsByName['entry_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get workKey =>
+      columnsByName['work_key']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get workDate =>
+      columnsByName['work_date']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get siteId =>
+      columnsByName['site_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get siteName =>
+      columnsByName['site_name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get workerId =>
+      columnsByName['worker_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get workerName =>
+      columnsByName['worker_name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get workerCode =>
+      columnsByName['worker_code']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get trade =>
+      columnsByName['trade']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get attendanceStatus =>
+      columnsByName['attendance_status']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get clockMinutes =>
+      columnsByName['clock_minutes']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get breakMinutes =>
+      columnsByName['break_minutes']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get billableMinutes =>
+      columnsByName['billable_minutes']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get basis =>
+      columnsByName['basis']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get rateFils =>
+      columnsByName['rate_fils']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get amountFils =>
+      columnsByName['amount_fils']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get adjustReason =>
+      columnsByName['adjust_reason']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get live =>
+      columnsByName['live']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<String> _column_179(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'revision_id',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL REFERENCES timesheet_revisions(id)',
+    );
+i1.GeneratedColumn<String> _column_180(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'entry_id',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL REFERENCES attendance_entries(id)',
+    );
+i1.GeneratedColumn<String> _column_181(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'work_key',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_182(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'site_name',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_183(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'worker_name',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_184(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'worker_code',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_185(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'clock_minutes',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_186(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'break_minutes',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_187(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'billable_minutes',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_188(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'rate_fils',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_189(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'amount_fils',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NULL CHECK (amount_fils >= 0)',
+    );
+i1.GeneratedColumn<String> _column_190(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'adjust_reason',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<int> _column_191(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'live',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT 1 CHECK (live IN (0, 1))',
+      defaultValue: const i1.CustomExpression('1'),
+    );
+
+class Shape35 extends i0.VersionedTable {
+  Shape35({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get tenantId =>
+      columnsByName['tenant_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAtUtc =>
+      columnsByName['created_at_utc']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get updatedAtUtc =>
+      columnsByName['updated_at_utc']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get actorId =>
+      columnsByName['actor_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get version =>
+      columnsByName['version']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get sourceOperationId =>
+      columnsByName['source_operation_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get lineId =>
+      columnsByName['line_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get workKey =>
+      columnsByName['work_key']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get invoiceId =>
+      columnsByName['invoice_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get amountFils =>
+      columnsByName['amount_fils']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get released =>
+      columnsByName['released']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<String> _column_192(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'line_id',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL REFERENCES timesheet_lines(id)',
+    );
+i1.GeneratedColumn<String> _column_193(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'invoice_id',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_194(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'released',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT 0 CHECK (released IN (0, 1))',
+      defaultValue: const i1.CustomExpression('0'),
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
@@ -9565,6 +11105,7 @@ i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema9 schema) from8To9,
   required Future<void> Function(i1.Migrator m, Schema10 schema) from9To10,
   required Future<void> Function(i1.Migrator m, Schema11 schema) from10To11,
+  required Future<void> Function(i1.Migrator m, Schema12 schema) from11To12,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -9618,6 +11159,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from10To11(migrator, schema);
         return 11;
+      case 11:
+        final schema = Schema12(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from11To12(migrator, schema);
+        return 12;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -9635,6 +11181,7 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema9 schema) from8To9,
   required Future<void> Function(i1.Migrator m, Schema10 schema) from9To10,
   required Future<void> Function(i1.Migrator m, Schema11 schema) from10To11,
+  required Future<void> Function(i1.Migrator m, Schema12 schema) from11To12,
 }) => i0.VersionedSchema.stepByStepHelper(
   step: migrationSteps(
     from1To2: from1To2,
@@ -9647,5 +11194,6 @@ i1.OnUpgrade stepByStep({
     from8To9: from8To9,
     from9To10: from9To10,
     from10To11: from10To11,
+    from11To12: from11To12,
   ),
 );

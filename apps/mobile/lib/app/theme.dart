@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 
 import '../data/closing.dart';
 import '../data/tenant_database.dart';
+import '../data/timesheets.dart';
 import '../l10n/app_localizations.dart';
 
 /// The colours a user can choose from in Settings (D-040).
@@ -311,5 +312,7 @@ String saveErrorText(AppLocalizations l10n, Object error) => switch (error) {
   PeriodLocked() => l10n.periodLockedError,
   LaterMonthClosed() => l10n.reopenLater,
   MonthNotReady() => l10n.closeNotReady,
+  TimesheetEmpty() => l10n.tsNothing,
+  TimesheetWrongStep() => l10n.tsWrongStep,
   _ => l10n.saveFailed,
 };

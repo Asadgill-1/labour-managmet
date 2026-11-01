@@ -16663,6 +16663,3997 @@ class OpeningBalancesCompanion extends UpdateCompanion<OpeningBalance> {
   }
 }
 
+class $TimesheetsTable extends Timesheets
+    with TableInfo<$TimesheetsTable, Timesheet> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TimesheetsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _clientIdMeta = const VerificationMeta(
+    'clientId',
+  );
+  @override
+  late final GeneratedColumn<String> clientId = GeneratedColumn<String>(
+    'client_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES clients (id)',
+    ),
+  );
+  static const VerificationMeta _siteIdMeta = const VerificationMeta('siteId');
+  @override
+  late final GeneratedColumn<String> siteId = GeneratedColumn<String>(
+    'site_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES sites (id)',
+    ),
+  );
+  static const VerificationMeta _fromDateMeta = const VerificationMeta(
+    'fromDate',
+  );
+  @override
+  late final GeneratedColumn<String> fromDate = GeneratedColumn<String>(
+    'from_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _toDateMeta = const VerificationMeta('toDate');
+  @override
+  late final GeneratedColumn<String> toDate = GeneratedColumn<String>(
+    'to_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _yearMeta = const VerificationMeta('year');
+  @override
+  late final GeneratedColumn<int> year = GeneratedColumn<int>(
+    'year',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _seqMeta = const VerificationMeta('seq');
+  @override
+  late final GeneratedColumn<int> seq = GeneratedColumn<int>(
+    'seq',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _numberMeta = const VerificationMeta('number');
+  @override
+  late final GeneratedColumn<String> number = GeneratedColumn<String>(
+    'number',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    clientId,
+    siteId,
+    fromDate,
+    toDate,
+    year,
+    seq,
+    number,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'timesheets';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Timesheet> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('client_id')) {
+      context.handle(
+        _clientIdMeta,
+        clientId.isAcceptableOrUnknown(data['client_id']!, _clientIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_clientIdMeta);
+    }
+    if (data.containsKey('site_id')) {
+      context.handle(
+        _siteIdMeta,
+        siteId.isAcceptableOrUnknown(data['site_id']!, _siteIdMeta),
+      );
+    }
+    if (data.containsKey('from_date')) {
+      context.handle(
+        _fromDateMeta,
+        fromDate.isAcceptableOrUnknown(data['from_date']!, _fromDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fromDateMeta);
+    }
+    if (data.containsKey('to_date')) {
+      context.handle(
+        _toDateMeta,
+        toDate.isAcceptableOrUnknown(data['to_date']!, _toDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_toDateMeta);
+    }
+    if (data.containsKey('year')) {
+      context.handle(
+        _yearMeta,
+        year.isAcceptableOrUnknown(data['year']!, _yearMeta),
+      );
+    }
+    if (data.containsKey('seq')) {
+      context.handle(
+        _seqMeta,
+        seq.isAcceptableOrUnknown(data['seq']!, _seqMeta),
+      );
+    }
+    if (data.containsKey('number')) {
+      context.handle(
+        _numberMeta,
+        number.isAcceptableOrUnknown(data['number']!, _numberMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {tenantId, year, seq},
+  ];
+  @override
+  Timesheet map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Timesheet(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      clientId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}client_id'],
+      )!,
+      siteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}site_id'],
+      ),
+      fromDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}from_date'],
+      )!,
+      toDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}to_date'],
+      )!,
+      year: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}year'],
+      ),
+      seq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}seq'],
+      ),
+      number: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}number'],
+      ),
+    );
+  }
+
+  @override
+  $TimesheetsTable createAlias(String alias) {
+    return $TimesheetsTable(attachedDatabase, alias);
+  }
+}
+
+class Timesheet extends DataClass implements Insertable<Timesheet> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String clientId;
+
+  /// Null means every site of the company.
+  final String? siteId;
+  final String fromDate;
+  final String toDate;
+  final int? year;
+  final int? seq;
+  final String? number;
+  const Timesheet({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.clientId,
+    this.siteId,
+    required this.fromDate,
+    required this.toDate,
+    this.year,
+    this.seq,
+    this.number,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['client_id'] = Variable<String>(clientId);
+    if (!nullToAbsent || siteId != null) {
+      map['site_id'] = Variable<String>(siteId);
+    }
+    map['from_date'] = Variable<String>(fromDate);
+    map['to_date'] = Variable<String>(toDate);
+    if (!nullToAbsent || year != null) {
+      map['year'] = Variable<int>(year);
+    }
+    if (!nullToAbsent || seq != null) {
+      map['seq'] = Variable<int>(seq);
+    }
+    if (!nullToAbsent || number != null) {
+      map['number'] = Variable<String>(number);
+    }
+    return map;
+  }
+
+  TimesheetsCompanion toCompanion(bool nullToAbsent) {
+    return TimesheetsCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      clientId: Value(clientId),
+      siteId: siteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(siteId),
+      fromDate: Value(fromDate),
+      toDate: Value(toDate),
+      year: year == null && nullToAbsent ? const Value.absent() : Value(year),
+      seq: seq == null && nullToAbsent ? const Value.absent() : Value(seq),
+      number: number == null && nullToAbsent
+          ? const Value.absent()
+          : Value(number),
+    );
+  }
+
+  factory Timesheet.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Timesheet(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      clientId: serializer.fromJson<String>(json['clientId']),
+      siteId: serializer.fromJson<String?>(json['siteId']),
+      fromDate: serializer.fromJson<String>(json['fromDate']),
+      toDate: serializer.fromJson<String>(json['toDate']),
+      year: serializer.fromJson<int?>(json['year']),
+      seq: serializer.fromJson<int?>(json['seq']),
+      number: serializer.fromJson<String?>(json['number']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'clientId': serializer.toJson<String>(clientId),
+      'siteId': serializer.toJson<String?>(siteId),
+      'fromDate': serializer.toJson<String>(fromDate),
+      'toDate': serializer.toJson<String>(toDate),
+      'year': serializer.toJson<int?>(year),
+      'seq': serializer.toJson<int?>(seq),
+      'number': serializer.toJson<String?>(number),
+    };
+  }
+
+  Timesheet copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? clientId,
+    Value<String?> siteId = const Value.absent(),
+    String? fromDate,
+    String? toDate,
+    Value<int?> year = const Value.absent(),
+    Value<int?> seq = const Value.absent(),
+    Value<String?> number = const Value.absent(),
+  }) => Timesheet(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    clientId: clientId ?? this.clientId,
+    siteId: siteId.present ? siteId.value : this.siteId,
+    fromDate: fromDate ?? this.fromDate,
+    toDate: toDate ?? this.toDate,
+    year: year.present ? year.value : this.year,
+    seq: seq.present ? seq.value : this.seq,
+    number: number.present ? number.value : this.number,
+  );
+  Timesheet copyWithCompanion(TimesheetsCompanion data) {
+    return Timesheet(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      clientId: data.clientId.present ? data.clientId.value : this.clientId,
+      siteId: data.siteId.present ? data.siteId.value : this.siteId,
+      fromDate: data.fromDate.present ? data.fromDate.value : this.fromDate,
+      toDate: data.toDate.present ? data.toDate.value : this.toDate,
+      year: data.year.present ? data.year.value : this.year,
+      seq: data.seq.present ? data.seq.value : this.seq,
+      number: data.number.present ? data.number.value : this.number,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Timesheet(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('clientId: $clientId, ')
+          ..write('siteId: $siteId, ')
+          ..write('fromDate: $fromDate, ')
+          ..write('toDate: $toDate, ')
+          ..write('year: $year, ')
+          ..write('seq: $seq, ')
+          ..write('number: $number')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    clientId,
+    siteId,
+    fromDate,
+    toDate,
+    year,
+    seq,
+    number,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Timesheet &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.clientId == this.clientId &&
+          other.siteId == this.siteId &&
+          other.fromDate == this.fromDate &&
+          other.toDate == this.toDate &&
+          other.year == this.year &&
+          other.seq == this.seq &&
+          other.number == this.number);
+}
+
+class TimesheetsCompanion extends UpdateCompanion<Timesheet> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> clientId;
+  final Value<String?> siteId;
+  final Value<String> fromDate;
+  final Value<String> toDate;
+  final Value<int?> year;
+  final Value<int?> seq;
+  final Value<String?> number;
+  final Value<int> rowid;
+  const TimesheetsCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.clientId = const Value.absent(),
+    this.siteId = const Value.absent(),
+    this.fromDate = const Value.absent(),
+    this.toDate = const Value.absent(),
+    this.year = const Value.absent(),
+    this.seq = const Value.absent(),
+    this.number = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TimesheetsCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String clientId,
+    this.siteId = const Value.absent(),
+    required String fromDate,
+    required String toDate,
+    this.year = const Value.absent(),
+    this.seq = const Value.absent(),
+    this.number = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       clientId = Value(clientId),
+       fromDate = Value(fromDate),
+       toDate = Value(toDate);
+  static Insertable<Timesheet> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? clientId,
+    Expression<String>? siteId,
+    Expression<String>? fromDate,
+    Expression<String>? toDate,
+    Expression<int>? year,
+    Expression<int>? seq,
+    Expression<String>? number,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (clientId != null) 'client_id': clientId,
+      if (siteId != null) 'site_id': siteId,
+      if (fromDate != null) 'from_date': fromDate,
+      if (toDate != null) 'to_date': toDate,
+      if (year != null) 'year': year,
+      if (seq != null) 'seq': seq,
+      if (number != null) 'number': number,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TimesheetsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? clientId,
+    Value<String?>? siteId,
+    Value<String>? fromDate,
+    Value<String>? toDate,
+    Value<int?>? year,
+    Value<int?>? seq,
+    Value<String?>? number,
+    Value<int>? rowid,
+  }) {
+    return TimesheetsCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      clientId: clientId ?? this.clientId,
+      siteId: siteId ?? this.siteId,
+      fromDate: fromDate ?? this.fromDate,
+      toDate: toDate ?? this.toDate,
+      year: year ?? this.year,
+      seq: seq ?? this.seq,
+      number: number ?? this.number,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (clientId.present) {
+      map['client_id'] = Variable<String>(clientId.value);
+    }
+    if (siteId.present) {
+      map['site_id'] = Variable<String>(siteId.value);
+    }
+    if (fromDate.present) {
+      map['from_date'] = Variable<String>(fromDate.value);
+    }
+    if (toDate.present) {
+      map['to_date'] = Variable<String>(toDate.value);
+    }
+    if (year.present) {
+      map['year'] = Variable<int>(year.value);
+    }
+    if (seq.present) {
+      map['seq'] = Variable<int>(seq.value);
+    }
+    if (number.present) {
+      map['number'] = Variable<String>(number.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimesheetsCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('clientId: $clientId, ')
+          ..write('siteId: $siteId, ')
+          ..write('fromDate: $fromDate, ')
+          ..write('toDate: $toDate, ')
+          ..write('year: $year, ')
+          ..write('seq: $seq, ')
+          ..write('number: $number, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TimesheetRevisionsTable extends TimesheetRevisions
+    with TableInfo<$TimesheetRevisionsTable, TimesheetRevision> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TimesheetRevisionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _timesheetIdMeta = const VerificationMeta(
+    'timesheetId',
+  );
+  @override
+  late final GeneratedColumn<String> timesheetId = GeneratedColumn<String>(
+    'timesheet_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES timesheets (id)',
+    ),
+  );
+  static const VerificationMeta _revisionMeta = const VerificationMeta(
+    'revision',
+  );
+  @override
+  late final GeneratedColumn<int> revision = GeneratedColumn<int>(
+    'revision',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('draft'),
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _adjustmentsMeta = const VerificationMeta(
+    'adjustments',
+  );
+  @override
+  late final GeneratedColumn<String> adjustments = GeneratedColumn<String>(
+    'adjustments',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _sharedOnMeta = const VerificationMeta(
+    'sharedOn',
+  );
+  @override
+  late final GeneratedColumn<String> sharedOn = GeneratedColumn<String>(
+    'shared_on',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _respondedOnMeta = const VerificationMeta(
+    'respondedOn',
+  );
+  @override
+  late final GeneratedColumn<String> respondedOn = GeneratedColumn<String>(
+    'responded_on',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _responseNoteMeta = const VerificationMeta(
+    'responseNote',
+  );
+  @override
+  late final GeneratedColumn<String> responseNote = GeneratedColumn<String>(
+    'response_note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _evidenceAssetIdMeta = const VerificationMeta(
+    'evidenceAssetId',
+  );
+  @override
+  late final GeneratedColumn<String> evidenceAssetId = GeneratedColumn<String>(
+    'evidence_asset_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES document_assets (id)',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    timesheetId,
+    revision,
+    status,
+    reason,
+    adjustments,
+    sharedOn,
+    respondedOn,
+    responseNote,
+    evidenceAssetId,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'timesheet_revisions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TimesheetRevision> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('timesheet_id')) {
+      context.handle(
+        _timesheetIdMeta,
+        timesheetId.isAcceptableOrUnknown(
+          data['timesheet_id']!,
+          _timesheetIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_timesheetIdMeta);
+    }
+    if (data.containsKey('revision')) {
+      context.handle(
+        _revisionMeta,
+        revision.isAcceptableOrUnknown(data['revision']!, _revisionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_revisionMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    }
+    if (data.containsKey('adjustments')) {
+      context.handle(
+        _adjustmentsMeta,
+        adjustments.isAcceptableOrUnknown(
+          data['adjustments']!,
+          _adjustmentsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('shared_on')) {
+      context.handle(
+        _sharedOnMeta,
+        sharedOn.isAcceptableOrUnknown(data['shared_on']!, _sharedOnMeta),
+      );
+    }
+    if (data.containsKey('responded_on')) {
+      context.handle(
+        _respondedOnMeta,
+        respondedOn.isAcceptableOrUnknown(
+          data['responded_on']!,
+          _respondedOnMeta,
+        ),
+      );
+    }
+    if (data.containsKey('response_note')) {
+      context.handle(
+        _responseNoteMeta,
+        responseNote.isAcceptableOrUnknown(
+          data['response_note']!,
+          _responseNoteMeta,
+        ),
+      );
+    }
+    if (data.containsKey('evidence_asset_id')) {
+      context.handle(
+        _evidenceAssetIdMeta,
+        evidenceAssetId.isAcceptableOrUnknown(
+          data['evidence_asset_id']!,
+          _evidenceAssetIdMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {timesheetId, revision},
+  ];
+  @override
+  TimesheetRevision map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TimesheetRevision(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      timesheetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}timesheet_id'],
+      )!,
+      revision: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}revision'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      ),
+      adjustments: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}adjustments'],
+      )!,
+      sharedOn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}shared_on'],
+      ),
+      respondedOn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}responded_on'],
+      ),
+      responseNote: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}response_note'],
+      ),
+      evidenceAssetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}evidence_asset_id'],
+      ),
+    );
+  }
+
+  @override
+  $TimesheetRevisionsTable createAlias(String alias) {
+    return $TimesheetRevisionsTable(attachedDatabase, alias);
+  }
+}
+
+class TimesheetRevision extends DataClass
+    implements Insertable<TimesheetRevision> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String timesheetId;
+  final int revision;
+
+  /// A `TsStatus` by name.
+  final String status;
+
+  /// Why this revision exists. Null on the first.
+  final String? reason;
+
+  /// JSON while a draft, by attendance row: what the company agreed instead, and why. Attendance and pay never change for it (TS-06).
+  final String adjustments;
+  final String? sharedOn;
+  final String? respondedOn;
+  final String? responseNote;
+
+  /// A photo of what the company sent back. Never a verified signature (TS-04).
+  final String? evidenceAssetId;
+  const TimesheetRevision({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.timesheetId,
+    required this.revision,
+    required this.status,
+    this.reason,
+    required this.adjustments,
+    this.sharedOn,
+    this.respondedOn,
+    this.responseNote,
+    this.evidenceAssetId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['timesheet_id'] = Variable<String>(timesheetId);
+    map['revision'] = Variable<int>(revision);
+    map['status'] = Variable<String>(status);
+    if (!nullToAbsent || reason != null) {
+      map['reason'] = Variable<String>(reason);
+    }
+    map['adjustments'] = Variable<String>(adjustments);
+    if (!nullToAbsent || sharedOn != null) {
+      map['shared_on'] = Variable<String>(sharedOn);
+    }
+    if (!nullToAbsent || respondedOn != null) {
+      map['responded_on'] = Variable<String>(respondedOn);
+    }
+    if (!nullToAbsent || responseNote != null) {
+      map['response_note'] = Variable<String>(responseNote);
+    }
+    if (!nullToAbsent || evidenceAssetId != null) {
+      map['evidence_asset_id'] = Variable<String>(evidenceAssetId);
+    }
+    return map;
+  }
+
+  TimesheetRevisionsCompanion toCompanion(bool nullToAbsent) {
+    return TimesheetRevisionsCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      timesheetId: Value(timesheetId),
+      revision: Value(revision),
+      status: Value(status),
+      reason: reason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reason),
+      adjustments: Value(adjustments),
+      sharedOn: sharedOn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sharedOn),
+      respondedOn: respondedOn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(respondedOn),
+      responseNote: responseNote == null && nullToAbsent
+          ? const Value.absent()
+          : Value(responseNote),
+      evidenceAssetId: evidenceAssetId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(evidenceAssetId),
+    );
+  }
+
+  factory TimesheetRevision.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TimesheetRevision(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      timesheetId: serializer.fromJson<String>(json['timesheetId']),
+      revision: serializer.fromJson<int>(json['revision']),
+      status: serializer.fromJson<String>(json['status']),
+      reason: serializer.fromJson<String?>(json['reason']),
+      adjustments: serializer.fromJson<String>(json['adjustments']),
+      sharedOn: serializer.fromJson<String?>(json['sharedOn']),
+      respondedOn: serializer.fromJson<String?>(json['respondedOn']),
+      responseNote: serializer.fromJson<String?>(json['responseNote']),
+      evidenceAssetId: serializer.fromJson<String?>(json['evidenceAssetId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'timesheetId': serializer.toJson<String>(timesheetId),
+      'revision': serializer.toJson<int>(revision),
+      'status': serializer.toJson<String>(status),
+      'reason': serializer.toJson<String?>(reason),
+      'adjustments': serializer.toJson<String>(adjustments),
+      'sharedOn': serializer.toJson<String?>(sharedOn),
+      'respondedOn': serializer.toJson<String?>(respondedOn),
+      'responseNote': serializer.toJson<String?>(responseNote),
+      'evidenceAssetId': serializer.toJson<String?>(evidenceAssetId),
+    };
+  }
+
+  TimesheetRevision copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? timesheetId,
+    int? revision,
+    String? status,
+    Value<String?> reason = const Value.absent(),
+    String? adjustments,
+    Value<String?> sharedOn = const Value.absent(),
+    Value<String?> respondedOn = const Value.absent(),
+    Value<String?> responseNote = const Value.absent(),
+    Value<String?> evidenceAssetId = const Value.absent(),
+  }) => TimesheetRevision(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    timesheetId: timesheetId ?? this.timesheetId,
+    revision: revision ?? this.revision,
+    status: status ?? this.status,
+    reason: reason.present ? reason.value : this.reason,
+    adjustments: adjustments ?? this.adjustments,
+    sharedOn: sharedOn.present ? sharedOn.value : this.sharedOn,
+    respondedOn: respondedOn.present ? respondedOn.value : this.respondedOn,
+    responseNote: responseNote.present ? responseNote.value : this.responseNote,
+    evidenceAssetId: evidenceAssetId.present
+        ? evidenceAssetId.value
+        : this.evidenceAssetId,
+  );
+  TimesheetRevision copyWithCompanion(TimesheetRevisionsCompanion data) {
+    return TimesheetRevision(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      timesheetId: data.timesheetId.present
+          ? data.timesheetId.value
+          : this.timesheetId,
+      revision: data.revision.present ? data.revision.value : this.revision,
+      status: data.status.present ? data.status.value : this.status,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      adjustments: data.adjustments.present
+          ? data.adjustments.value
+          : this.adjustments,
+      sharedOn: data.sharedOn.present ? data.sharedOn.value : this.sharedOn,
+      respondedOn: data.respondedOn.present
+          ? data.respondedOn.value
+          : this.respondedOn,
+      responseNote: data.responseNote.present
+          ? data.responseNote.value
+          : this.responseNote,
+      evidenceAssetId: data.evidenceAssetId.present
+          ? data.evidenceAssetId.value
+          : this.evidenceAssetId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimesheetRevision(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('timesheetId: $timesheetId, ')
+          ..write('revision: $revision, ')
+          ..write('status: $status, ')
+          ..write('reason: $reason, ')
+          ..write('adjustments: $adjustments, ')
+          ..write('sharedOn: $sharedOn, ')
+          ..write('respondedOn: $respondedOn, ')
+          ..write('responseNote: $responseNote, ')
+          ..write('evidenceAssetId: $evidenceAssetId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    timesheetId,
+    revision,
+    status,
+    reason,
+    adjustments,
+    sharedOn,
+    respondedOn,
+    responseNote,
+    evidenceAssetId,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TimesheetRevision &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.timesheetId == this.timesheetId &&
+          other.revision == this.revision &&
+          other.status == this.status &&
+          other.reason == this.reason &&
+          other.adjustments == this.adjustments &&
+          other.sharedOn == this.sharedOn &&
+          other.respondedOn == this.respondedOn &&
+          other.responseNote == this.responseNote &&
+          other.evidenceAssetId == this.evidenceAssetId);
+}
+
+class TimesheetRevisionsCompanion extends UpdateCompanion<TimesheetRevision> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> timesheetId;
+  final Value<int> revision;
+  final Value<String> status;
+  final Value<String?> reason;
+  final Value<String> adjustments;
+  final Value<String?> sharedOn;
+  final Value<String?> respondedOn;
+  final Value<String?> responseNote;
+  final Value<String?> evidenceAssetId;
+  final Value<int> rowid;
+  const TimesheetRevisionsCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.timesheetId = const Value.absent(),
+    this.revision = const Value.absent(),
+    this.status = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.adjustments = const Value.absent(),
+    this.sharedOn = const Value.absent(),
+    this.respondedOn = const Value.absent(),
+    this.responseNote = const Value.absent(),
+    this.evidenceAssetId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TimesheetRevisionsCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String timesheetId,
+    required int revision,
+    this.status = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.adjustments = const Value.absent(),
+    this.sharedOn = const Value.absent(),
+    this.respondedOn = const Value.absent(),
+    this.responseNote = const Value.absent(),
+    this.evidenceAssetId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       timesheetId = Value(timesheetId),
+       revision = Value(revision);
+  static Insertable<TimesheetRevision> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? timesheetId,
+    Expression<int>? revision,
+    Expression<String>? status,
+    Expression<String>? reason,
+    Expression<String>? adjustments,
+    Expression<String>? sharedOn,
+    Expression<String>? respondedOn,
+    Expression<String>? responseNote,
+    Expression<String>? evidenceAssetId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (timesheetId != null) 'timesheet_id': timesheetId,
+      if (revision != null) 'revision': revision,
+      if (status != null) 'status': status,
+      if (reason != null) 'reason': reason,
+      if (adjustments != null) 'adjustments': adjustments,
+      if (sharedOn != null) 'shared_on': sharedOn,
+      if (respondedOn != null) 'responded_on': respondedOn,
+      if (responseNote != null) 'response_note': responseNote,
+      if (evidenceAssetId != null) 'evidence_asset_id': evidenceAssetId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TimesheetRevisionsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? timesheetId,
+    Value<int>? revision,
+    Value<String>? status,
+    Value<String?>? reason,
+    Value<String>? adjustments,
+    Value<String?>? sharedOn,
+    Value<String?>? respondedOn,
+    Value<String?>? responseNote,
+    Value<String?>? evidenceAssetId,
+    Value<int>? rowid,
+  }) {
+    return TimesheetRevisionsCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      timesheetId: timesheetId ?? this.timesheetId,
+      revision: revision ?? this.revision,
+      status: status ?? this.status,
+      reason: reason ?? this.reason,
+      adjustments: adjustments ?? this.adjustments,
+      sharedOn: sharedOn ?? this.sharedOn,
+      respondedOn: respondedOn ?? this.respondedOn,
+      responseNote: responseNote ?? this.responseNote,
+      evidenceAssetId: evidenceAssetId ?? this.evidenceAssetId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (timesheetId.present) {
+      map['timesheet_id'] = Variable<String>(timesheetId.value);
+    }
+    if (revision.present) {
+      map['revision'] = Variable<int>(revision.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (adjustments.present) {
+      map['adjustments'] = Variable<String>(adjustments.value);
+    }
+    if (sharedOn.present) {
+      map['shared_on'] = Variable<String>(sharedOn.value);
+    }
+    if (respondedOn.present) {
+      map['responded_on'] = Variable<String>(respondedOn.value);
+    }
+    if (responseNote.present) {
+      map['response_note'] = Variable<String>(responseNote.value);
+    }
+    if (evidenceAssetId.present) {
+      map['evidence_asset_id'] = Variable<String>(evidenceAssetId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimesheetRevisionsCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('timesheetId: $timesheetId, ')
+          ..write('revision: $revision, ')
+          ..write('status: $status, ')
+          ..write('reason: $reason, ')
+          ..write('adjustments: $adjustments, ')
+          ..write('sharedOn: $sharedOn, ')
+          ..write('respondedOn: $respondedOn, ')
+          ..write('responseNote: $responseNote, ')
+          ..write('evidenceAssetId: $evidenceAssetId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TimesheetLinesTable extends TimesheetLines
+    with TableInfo<$TimesheetLinesTable, TimesheetLine> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TimesheetLinesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _timesheetIdMeta = const VerificationMeta(
+    'timesheetId',
+  );
+  @override
+  late final GeneratedColumn<String> timesheetId = GeneratedColumn<String>(
+    'timesheet_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES timesheets (id)',
+    ),
+  );
+  static const VerificationMeta _revisionIdMeta = const VerificationMeta(
+    'revisionId',
+  );
+  @override
+  late final GeneratedColumn<String> revisionId = GeneratedColumn<String>(
+    'revision_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES timesheet_revisions (id)',
+    ),
+  );
+  static const VerificationMeta _entryIdMeta = const VerificationMeta(
+    'entryId',
+  );
+  @override
+  late final GeneratedColumn<String> entryId = GeneratedColumn<String>(
+    'entry_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES attendance_entries (id)',
+    ),
+  );
+  static const VerificationMeta _workKeyMeta = const VerificationMeta(
+    'workKey',
+  );
+  @override
+  late final GeneratedColumn<String> workKey = GeneratedColumn<String>(
+    'work_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _workDateMeta = const VerificationMeta(
+    'workDate',
+  );
+  @override
+  late final GeneratedColumn<String> workDate = GeneratedColumn<String>(
+    'work_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _siteIdMeta = const VerificationMeta('siteId');
+  @override
+  late final GeneratedColumn<String> siteId = GeneratedColumn<String>(
+    'site_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES sites (id)',
+    ),
+  );
+  static const VerificationMeta _siteNameMeta = const VerificationMeta(
+    'siteName',
+  );
+  @override
+  late final GeneratedColumn<String> siteName = GeneratedColumn<String>(
+    'site_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _workerIdMeta = const VerificationMeta(
+    'workerId',
+  );
+  @override
+  late final GeneratedColumn<String> workerId = GeneratedColumn<String>(
+    'worker_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES workers (id)',
+    ),
+  );
+  static const VerificationMeta _workerNameMeta = const VerificationMeta(
+    'workerName',
+  );
+  @override
+  late final GeneratedColumn<String> workerName = GeneratedColumn<String>(
+    'worker_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _workerCodeMeta = const VerificationMeta(
+    'workerCode',
+  );
+  @override
+  late final GeneratedColumn<String> workerCode = GeneratedColumn<String>(
+    'worker_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tradeMeta = const VerificationMeta('trade');
+  @override
+  late final GeneratedColumn<String> trade = GeneratedColumn<String>(
+    'trade',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _attendanceStatusMeta = const VerificationMeta(
+    'attendanceStatus',
+  );
+  @override
+  late final GeneratedColumn<String> attendanceStatus = GeneratedColumn<String>(
+    'attendance_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _clockMinutesMeta = const VerificationMeta(
+    'clockMinutes',
+  );
+  @override
+  late final GeneratedColumn<int> clockMinutes = GeneratedColumn<int>(
+    'clock_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _breakMinutesMeta = const VerificationMeta(
+    'breakMinutes',
+  );
+  @override
+  late final GeneratedColumn<int> breakMinutes = GeneratedColumn<int>(
+    'break_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _billableMinutesMeta = const VerificationMeta(
+    'billableMinutes',
+  );
+  @override
+  late final GeneratedColumn<int> billableMinutes = GeneratedColumn<int>(
+    'billable_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _basisMeta = const VerificationMeta('basis');
+  @override
+  late final GeneratedColumn<String> basis = GeneratedColumn<String>(
+    'basis',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _rateFilsMeta = const VerificationMeta(
+    'rateFils',
+  );
+  @override
+  late final GeneratedColumn<int> rateFils = GeneratedColumn<int>(
+    'rate_fils',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountFilsMeta = const VerificationMeta(
+    'amountFils',
+  );
+  @override
+  late final GeneratedColumn<int> amountFils = GeneratedColumn<int>(
+    'amount_fils',
+    aliasedName,
+    true,
+    check: () => ComparableExpr(amountFils).isBiggerOrEqualValue(0),
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _adjustReasonMeta = const VerificationMeta(
+    'adjustReason',
+  );
+  @override
+  late final GeneratedColumn<String> adjustReason = GeneratedColumn<String>(
+    'adjust_reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _liveMeta = const VerificationMeta('live');
+  @override
+  late final GeneratedColumn<bool> live = GeneratedColumn<bool>(
+    'live',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("live" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    timesheetId,
+    revisionId,
+    entryId,
+    workKey,
+    workDate,
+    siteId,
+    siteName,
+    workerId,
+    workerName,
+    workerCode,
+    trade,
+    attendanceStatus,
+    clockMinutes,
+    breakMinutes,
+    billableMinutes,
+    basis,
+    rateFils,
+    amountFils,
+    adjustReason,
+    live,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'timesheet_lines';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TimesheetLine> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('timesheet_id')) {
+      context.handle(
+        _timesheetIdMeta,
+        timesheetId.isAcceptableOrUnknown(
+          data['timesheet_id']!,
+          _timesheetIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_timesheetIdMeta);
+    }
+    if (data.containsKey('revision_id')) {
+      context.handle(
+        _revisionIdMeta,
+        revisionId.isAcceptableOrUnknown(data['revision_id']!, _revisionIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_revisionIdMeta);
+    }
+    if (data.containsKey('entry_id')) {
+      context.handle(
+        _entryIdMeta,
+        entryId.isAcceptableOrUnknown(data['entry_id']!, _entryIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entryIdMeta);
+    }
+    if (data.containsKey('work_key')) {
+      context.handle(
+        _workKeyMeta,
+        workKey.isAcceptableOrUnknown(data['work_key']!, _workKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_workKeyMeta);
+    }
+    if (data.containsKey('work_date')) {
+      context.handle(
+        _workDateMeta,
+        workDate.isAcceptableOrUnknown(data['work_date']!, _workDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_workDateMeta);
+    }
+    if (data.containsKey('site_id')) {
+      context.handle(
+        _siteIdMeta,
+        siteId.isAcceptableOrUnknown(data['site_id']!, _siteIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_siteIdMeta);
+    }
+    if (data.containsKey('site_name')) {
+      context.handle(
+        _siteNameMeta,
+        siteName.isAcceptableOrUnknown(data['site_name']!, _siteNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_siteNameMeta);
+    }
+    if (data.containsKey('worker_id')) {
+      context.handle(
+        _workerIdMeta,
+        workerId.isAcceptableOrUnknown(data['worker_id']!, _workerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_workerIdMeta);
+    }
+    if (data.containsKey('worker_name')) {
+      context.handle(
+        _workerNameMeta,
+        workerName.isAcceptableOrUnknown(data['worker_name']!, _workerNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_workerNameMeta);
+    }
+    if (data.containsKey('worker_code')) {
+      context.handle(
+        _workerCodeMeta,
+        workerCode.isAcceptableOrUnknown(data['worker_code']!, _workerCodeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_workerCodeMeta);
+    }
+    if (data.containsKey('trade')) {
+      context.handle(
+        _tradeMeta,
+        trade.isAcceptableOrUnknown(data['trade']!, _tradeMeta),
+      );
+    }
+    if (data.containsKey('attendance_status')) {
+      context.handle(
+        _attendanceStatusMeta,
+        attendanceStatus.isAcceptableOrUnknown(
+          data['attendance_status']!,
+          _attendanceStatusMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_attendanceStatusMeta);
+    }
+    if (data.containsKey('clock_minutes')) {
+      context.handle(
+        _clockMinutesMeta,
+        clockMinutes.isAcceptableOrUnknown(
+          data['clock_minutes']!,
+          _clockMinutesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_clockMinutesMeta);
+    }
+    if (data.containsKey('break_minutes')) {
+      context.handle(
+        _breakMinutesMeta,
+        breakMinutes.isAcceptableOrUnknown(
+          data['break_minutes']!,
+          _breakMinutesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_breakMinutesMeta);
+    }
+    if (data.containsKey('billable_minutes')) {
+      context.handle(
+        _billableMinutesMeta,
+        billableMinutes.isAcceptableOrUnknown(
+          data['billable_minutes']!,
+          _billableMinutesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_billableMinutesMeta);
+    }
+    if (data.containsKey('basis')) {
+      context.handle(
+        _basisMeta,
+        basis.isAcceptableOrUnknown(data['basis']!, _basisMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_basisMeta);
+    }
+    if (data.containsKey('rate_fils')) {
+      context.handle(
+        _rateFilsMeta,
+        rateFils.isAcceptableOrUnknown(data['rate_fils']!, _rateFilsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_rateFilsMeta);
+    }
+    if (data.containsKey('amount_fils')) {
+      context.handle(
+        _amountFilsMeta,
+        amountFils.isAcceptableOrUnknown(data['amount_fils']!, _amountFilsMeta),
+      );
+    }
+    if (data.containsKey('adjust_reason')) {
+      context.handle(
+        _adjustReasonMeta,
+        adjustReason.isAcceptableOrUnknown(
+          data['adjust_reason']!,
+          _adjustReasonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('live')) {
+      context.handle(
+        _liveMeta,
+        live.isAcceptableOrUnknown(data['live']!, _liveMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TimesheetLine map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TimesheetLine(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      timesheetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}timesheet_id'],
+      )!,
+      revisionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}revision_id'],
+      )!,
+      entryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entry_id'],
+      )!,
+      workKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}work_key'],
+      )!,
+      workDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}work_date'],
+      )!,
+      siteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}site_id'],
+      )!,
+      siteName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}site_name'],
+      )!,
+      workerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}worker_id'],
+      )!,
+      workerName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}worker_name'],
+      )!,
+      workerCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}worker_code'],
+      )!,
+      trade: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}trade'],
+      ),
+      attendanceStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}attendance_status'],
+      )!,
+      clockMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}clock_minutes'],
+      )!,
+      breakMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}break_minutes'],
+      )!,
+      billableMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}billable_minutes'],
+      )!,
+      basis: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}basis'],
+      )!,
+      rateFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rate_fils'],
+      )!,
+      amountFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_fils'],
+      ),
+      adjustReason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}adjust_reason'],
+      ),
+      live: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}live'],
+      )!,
+    );
+  }
+
+  @override
+  $TimesheetLinesTable createAlias(String alias) {
+    return $TimesheetLinesTable(attachedDatabase, alias);
+  }
+}
+
+class TimesheetLine extends DataClass implements Insertable<TimesheetLine> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String timesheetId;
+  final String revisionId;
+  final String entryId;
+
+  /// The first row of the entry's correction chain, so a corrected row is still the same work (TS-05).
+  final String workKey;
+  final String workDate;
+  final String siteId;
+  final String siteName;
+  final String workerId;
+  final String workerName;
+  final String workerCode;
+  final String? trade;
+
+  /// What the company is charged for: 'present', 'half' or 'absent'.
+  final String attendanceStatus;
+  final int clockMinutes;
+  final int breakMinutes;
+  final int billableMinutes;
+  final String basis;
+  final int rateFils;
+
+  /// Null on a monthly row, whose fee belongs to the contract (TS-08).
+  final int? amountFils;
+
+  /// Set when this differs from the attendance.
+  final String? adjustReason;
+  final bool live;
+  const TimesheetLine({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.timesheetId,
+    required this.revisionId,
+    required this.entryId,
+    required this.workKey,
+    required this.workDate,
+    required this.siteId,
+    required this.siteName,
+    required this.workerId,
+    required this.workerName,
+    required this.workerCode,
+    this.trade,
+    required this.attendanceStatus,
+    required this.clockMinutes,
+    required this.breakMinutes,
+    required this.billableMinutes,
+    required this.basis,
+    required this.rateFils,
+    this.amountFils,
+    this.adjustReason,
+    required this.live,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['timesheet_id'] = Variable<String>(timesheetId);
+    map['revision_id'] = Variable<String>(revisionId);
+    map['entry_id'] = Variable<String>(entryId);
+    map['work_key'] = Variable<String>(workKey);
+    map['work_date'] = Variable<String>(workDate);
+    map['site_id'] = Variable<String>(siteId);
+    map['site_name'] = Variable<String>(siteName);
+    map['worker_id'] = Variable<String>(workerId);
+    map['worker_name'] = Variable<String>(workerName);
+    map['worker_code'] = Variable<String>(workerCode);
+    if (!nullToAbsent || trade != null) {
+      map['trade'] = Variable<String>(trade);
+    }
+    map['attendance_status'] = Variable<String>(attendanceStatus);
+    map['clock_minutes'] = Variable<int>(clockMinutes);
+    map['break_minutes'] = Variable<int>(breakMinutes);
+    map['billable_minutes'] = Variable<int>(billableMinutes);
+    map['basis'] = Variable<String>(basis);
+    map['rate_fils'] = Variable<int>(rateFils);
+    if (!nullToAbsent || amountFils != null) {
+      map['amount_fils'] = Variable<int>(amountFils);
+    }
+    if (!nullToAbsent || adjustReason != null) {
+      map['adjust_reason'] = Variable<String>(adjustReason);
+    }
+    map['live'] = Variable<bool>(live);
+    return map;
+  }
+
+  TimesheetLinesCompanion toCompanion(bool nullToAbsent) {
+    return TimesheetLinesCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      timesheetId: Value(timesheetId),
+      revisionId: Value(revisionId),
+      entryId: Value(entryId),
+      workKey: Value(workKey),
+      workDate: Value(workDate),
+      siteId: Value(siteId),
+      siteName: Value(siteName),
+      workerId: Value(workerId),
+      workerName: Value(workerName),
+      workerCode: Value(workerCode),
+      trade: trade == null && nullToAbsent
+          ? const Value.absent()
+          : Value(trade),
+      attendanceStatus: Value(attendanceStatus),
+      clockMinutes: Value(clockMinutes),
+      breakMinutes: Value(breakMinutes),
+      billableMinutes: Value(billableMinutes),
+      basis: Value(basis),
+      rateFils: Value(rateFils),
+      amountFils: amountFils == null && nullToAbsent
+          ? const Value.absent()
+          : Value(amountFils),
+      adjustReason: adjustReason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(adjustReason),
+      live: Value(live),
+    );
+  }
+
+  factory TimesheetLine.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TimesheetLine(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      timesheetId: serializer.fromJson<String>(json['timesheetId']),
+      revisionId: serializer.fromJson<String>(json['revisionId']),
+      entryId: serializer.fromJson<String>(json['entryId']),
+      workKey: serializer.fromJson<String>(json['workKey']),
+      workDate: serializer.fromJson<String>(json['workDate']),
+      siteId: serializer.fromJson<String>(json['siteId']),
+      siteName: serializer.fromJson<String>(json['siteName']),
+      workerId: serializer.fromJson<String>(json['workerId']),
+      workerName: serializer.fromJson<String>(json['workerName']),
+      workerCode: serializer.fromJson<String>(json['workerCode']),
+      trade: serializer.fromJson<String?>(json['trade']),
+      attendanceStatus: serializer.fromJson<String>(json['attendanceStatus']),
+      clockMinutes: serializer.fromJson<int>(json['clockMinutes']),
+      breakMinutes: serializer.fromJson<int>(json['breakMinutes']),
+      billableMinutes: serializer.fromJson<int>(json['billableMinutes']),
+      basis: serializer.fromJson<String>(json['basis']),
+      rateFils: serializer.fromJson<int>(json['rateFils']),
+      amountFils: serializer.fromJson<int?>(json['amountFils']),
+      adjustReason: serializer.fromJson<String?>(json['adjustReason']),
+      live: serializer.fromJson<bool>(json['live']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'timesheetId': serializer.toJson<String>(timesheetId),
+      'revisionId': serializer.toJson<String>(revisionId),
+      'entryId': serializer.toJson<String>(entryId),
+      'workKey': serializer.toJson<String>(workKey),
+      'workDate': serializer.toJson<String>(workDate),
+      'siteId': serializer.toJson<String>(siteId),
+      'siteName': serializer.toJson<String>(siteName),
+      'workerId': serializer.toJson<String>(workerId),
+      'workerName': serializer.toJson<String>(workerName),
+      'workerCode': serializer.toJson<String>(workerCode),
+      'trade': serializer.toJson<String?>(trade),
+      'attendanceStatus': serializer.toJson<String>(attendanceStatus),
+      'clockMinutes': serializer.toJson<int>(clockMinutes),
+      'breakMinutes': serializer.toJson<int>(breakMinutes),
+      'billableMinutes': serializer.toJson<int>(billableMinutes),
+      'basis': serializer.toJson<String>(basis),
+      'rateFils': serializer.toJson<int>(rateFils),
+      'amountFils': serializer.toJson<int?>(amountFils),
+      'adjustReason': serializer.toJson<String?>(adjustReason),
+      'live': serializer.toJson<bool>(live),
+    };
+  }
+
+  TimesheetLine copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? timesheetId,
+    String? revisionId,
+    String? entryId,
+    String? workKey,
+    String? workDate,
+    String? siteId,
+    String? siteName,
+    String? workerId,
+    String? workerName,
+    String? workerCode,
+    Value<String?> trade = const Value.absent(),
+    String? attendanceStatus,
+    int? clockMinutes,
+    int? breakMinutes,
+    int? billableMinutes,
+    String? basis,
+    int? rateFils,
+    Value<int?> amountFils = const Value.absent(),
+    Value<String?> adjustReason = const Value.absent(),
+    bool? live,
+  }) => TimesheetLine(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    timesheetId: timesheetId ?? this.timesheetId,
+    revisionId: revisionId ?? this.revisionId,
+    entryId: entryId ?? this.entryId,
+    workKey: workKey ?? this.workKey,
+    workDate: workDate ?? this.workDate,
+    siteId: siteId ?? this.siteId,
+    siteName: siteName ?? this.siteName,
+    workerId: workerId ?? this.workerId,
+    workerName: workerName ?? this.workerName,
+    workerCode: workerCode ?? this.workerCode,
+    trade: trade.present ? trade.value : this.trade,
+    attendanceStatus: attendanceStatus ?? this.attendanceStatus,
+    clockMinutes: clockMinutes ?? this.clockMinutes,
+    breakMinutes: breakMinutes ?? this.breakMinutes,
+    billableMinutes: billableMinutes ?? this.billableMinutes,
+    basis: basis ?? this.basis,
+    rateFils: rateFils ?? this.rateFils,
+    amountFils: amountFils.present ? amountFils.value : this.amountFils,
+    adjustReason: adjustReason.present ? adjustReason.value : this.adjustReason,
+    live: live ?? this.live,
+  );
+  TimesheetLine copyWithCompanion(TimesheetLinesCompanion data) {
+    return TimesheetLine(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      timesheetId: data.timesheetId.present
+          ? data.timesheetId.value
+          : this.timesheetId,
+      revisionId: data.revisionId.present
+          ? data.revisionId.value
+          : this.revisionId,
+      entryId: data.entryId.present ? data.entryId.value : this.entryId,
+      workKey: data.workKey.present ? data.workKey.value : this.workKey,
+      workDate: data.workDate.present ? data.workDate.value : this.workDate,
+      siteId: data.siteId.present ? data.siteId.value : this.siteId,
+      siteName: data.siteName.present ? data.siteName.value : this.siteName,
+      workerId: data.workerId.present ? data.workerId.value : this.workerId,
+      workerName: data.workerName.present
+          ? data.workerName.value
+          : this.workerName,
+      workerCode: data.workerCode.present
+          ? data.workerCode.value
+          : this.workerCode,
+      trade: data.trade.present ? data.trade.value : this.trade,
+      attendanceStatus: data.attendanceStatus.present
+          ? data.attendanceStatus.value
+          : this.attendanceStatus,
+      clockMinutes: data.clockMinutes.present
+          ? data.clockMinutes.value
+          : this.clockMinutes,
+      breakMinutes: data.breakMinutes.present
+          ? data.breakMinutes.value
+          : this.breakMinutes,
+      billableMinutes: data.billableMinutes.present
+          ? data.billableMinutes.value
+          : this.billableMinutes,
+      basis: data.basis.present ? data.basis.value : this.basis,
+      rateFils: data.rateFils.present ? data.rateFils.value : this.rateFils,
+      amountFils: data.amountFils.present
+          ? data.amountFils.value
+          : this.amountFils,
+      adjustReason: data.adjustReason.present
+          ? data.adjustReason.value
+          : this.adjustReason,
+      live: data.live.present ? data.live.value : this.live,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimesheetLine(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('timesheetId: $timesheetId, ')
+          ..write('revisionId: $revisionId, ')
+          ..write('entryId: $entryId, ')
+          ..write('workKey: $workKey, ')
+          ..write('workDate: $workDate, ')
+          ..write('siteId: $siteId, ')
+          ..write('siteName: $siteName, ')
+          ..write('workerId: $workerId, ')
+          ..write('workerName: $workerName, ')
+          ..write('workerCode: $workerCode, ')
+          ..write('trade: $trade, ')
+          ..write('attendanceStatus: $attendanceStatus, ')
+          ..write('clockMinutes: $clockMinutes, ')
+          ..write('breakMinutes: $breakMinutes, ')
+          ..write('billableMinutes: $billableMinutes, ')
+          ..write('basis: $basis, ')
+          ..write('rateFils: $rateFils, ')
+          ..write('amountFils: $amountFils, ')
+          ..write('adjustReason: $adjustReason, ')
+          ..write('live: $live')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    timesheetId,
+    revisionId,
+    entryId,
+    workKey,
+    workDate,
+    siteId,
+    siteName,
+    workerId,
+    workerName,
+    workerCode,
+    trade,
+    attendanceStatus,
+    clockMinutes,
+    breakMinutes,
+    billableMinutes,
+    basis,
+    rateFils,
+    amountFils,
+    adjustReason,
+    live,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TimesheetLine &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.timesheetId == this.timesheetId &&
+          other.revisionId == this.revisionId &&
+          other.entryId == this.entryId &&
+          other.workKey == this.workKey &&
+          other.workDate == this.workDate &&
+          other.siteId == this.siteId &&
+          other.siteName == this.siteName &&
+          other.workerId == this.workerId &&
+          other.workerName == this.workerName &&
+          other.workerCode == this.workerCode &&
+          other.trade == this.trade &&
+          other.attendanceStatus == this.attendanceStatus &&
+          other.clockMinutes == this.clockMinutes &&
+          other.breakMinutes == this.breakMinutes &&
+          other.billableMinutes == this.billableMinutes &&
+          other.basis == this.basis &&
+          other.rateFils == this.rateFils &&
+          other.amountFils == this.amountFils &&
+          other.adjustReason == this.adjustReason &&
+          other.live == this.live);
+}
+
+class TimesheetLinesCompanion extends UpdateCompanion<TimesheetLine> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> timesheetId;
+  final Value<String> revisionId;
+  final Value<String> entryId;
+  final Value<String> workKey;
+  final Value<String> workDate;
+  final Value<String> siteId;
+  final Value<String> siteName;
+  final Value<String> workerId;
+  final Value<String> workerName;
+  final Value<String> workerCode;
+  final Value<String?> trade;
+  final Value<String> attendanceStatus;
+  final Value<int> clockMinutes;
+  final Value<int> breakMinutes;
+  final Value<int> billableMinutes;
+  final Value<String> basis;
+  final Value<int> rateFils;
+  final Value<int?> amountFils;
+  final Value<String?> adjustReason;
+  final Value<bool> live;
+  final Value<int> rowid;
+  const TimesheetLinesCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.timesheetId = const Value.absent(),
+    this.revisionId = const Value.absent(),
+    this.entryId = const Value.absent(),
+    this.workKey = const Value.absent(),
+    this.workDate = const Value.absent(),
+    this.siteId = const Value.absent(),
+    this.siteName = const Value.absent(),
+    this.workerId = const Value.absent(),
+    this.workerName = const Value.absent(),
+    this.workerCode = const Value.absent(),
+    this.trade = const Value.absent(),
+    this.attendanceStatus = const Value.absent(),
+    this.clockMinutes = const Value.absent(),
+    this.breakMinutes = const Value.absent(),
+    this.billableMinutes = const Value.absent(),
+    this.basis = const Value.absent(),
+    this.rateFils = const Value.absent(),
+    this.amountFils = const Value.absent(),
+    this.adjustReason = const Value.absent(),
+    this.live = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TimesheetLinesCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String timesheetId,
+    required String revisionId,
+    required String entryId,
+    required String workKey,
+    required String workDate,
+    required String siteId,
+    required String siteName,
+    required String workerId,
+    required String workerName,
+    required String workerCode,
+    this.trade = const Value.absent(),
+    required String attendanceStatus,
+    required int clockMinutes,
+    required int breakMinutes,
+    required int billableMinutes,
+    required String basis,
+    required int rateFils,
+    this.amountFils = const Value.absent(),
+    this.adjustReason = const Value.absent(),
+    this.live = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       timesheetId = Value(timesheetId),
+       revisionId = Value(revisionId),
+       entryId = Value(entryId),
+       workKey = Value(workKey),
+       workDate = Value(workDate),
+       siteId = Value(siteId),
+       siteName = Value(siteName),
+       workerId = Value(workerId),
+       workerName = Value(workerName),
+       workerCode = Value(workerCode),
+       attendanceStatus = Value(attendanceStatus),
+       clockMinutes = Value(clockMinutes),
+       breakMinutes = Value(breakMinutes),
+       billableMinutes = Value(billableMinutes),
+       basis = Value(basis),
+       rateFils = Value(rateFils);
+  static Insertable<TimesheetLine> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? timesheetId,
+    Expression<String>? revisionId,
+    Expression<String>? entryId,
+    Expression<String>? workKey,
+    Expression<String>? workDate,
+    Expression<String>? siteId,
+    Expression<String>? siteName,
+    Expression<String>? workerId,
+    Expression<String>? workerName,
+    Expression<String>? workerCode,
+    Expression<String>? trade,
+    Expression<String>? attendanceStatus,
+    Expression<int>? clockMinutes,
+    Expression<int>? breakMinutes,
+    Expression<int>? billableMinutes,
+    Expression<String>? basis,
+    Expression<int>? rateFils,
+    Expression<int>? amountFils,
+    Expression<String>? adjustReason,
+    Expression<bool>? live,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (timesheetId != null) 'timesheet_id': timesheetId,
+      if (revisionId != null) 'revision_id': revisionId,
+      if (entryId != null) 'entry_id': entryId,
+      if (workKey != null) 'work_key': workKey,
+      if (workDate != null) 'work_date': workDate,
+      if (siteId != null) 'site_id': siteId,
+      if (siteName != null) 'site_name': siteName,
+      if (workerId != null) 'worker_id': workerId,
+      if (workerName != null) 'worker_name': workerName,
+      if (workerCode != null) 'worker_code': workerCode,
+      if (trade != null) 'trade': trade,
+      if (attendanceStatus != null) 'attendance_status': attendanceStatus,
+      if (clockMinutes != null) 'clock_minutes': clockMinutes,
+      if (breakMinutes != null) 'break_minutes': breakMinutes,
+      if (billableMinutes != null) 'billable_minutes': billableMinutes,
+      if (basis != null) 'basis': basis,
+      if (rateFils != null) 'rate_fils': rateFils,
+      if (amountFils != null) 'amount_fils': amountFils,
+      if (adjustReason != null) 'adjust_reason': adjustReason,
+      if (live != null) 'live': live,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TimesheetLinesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? timesheetId,
+    Value<String>? revisionId,
+    Value<String>? entryId,
+    Value<String>? workKey,
+    Value<String>? workDate,
+    Value<String>? siteId,
+    Value<String>? siteName,
+    Value<String>? workerId,
+    Value<String>? workerName,
+    Value<String>? workerCode,
+    Value<String?>? trade,
+    Value<String>? attendanceStatus,
+    Value<int>? clockMinutes,
+    Value<int>? breakMinutes,
+    Value<int>? billableMinutes,
+    Value<String>? basis,
+    Value<int>? rateFils,
+    Value<int?>? amountFils,
+    Value<String?>? adjustReason,
+    Value<bool>? live,
+    Value<int>? rowid,
+  }) {
+    return TimesheetLinesCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      timesheetId: timesheetId ?? this.timesheetId,
+      revisionId: revisionId ?? this.revisionId,
+      entryId: entryId ?? this.entryId,
+      workKey: workKey ?? this.workKey,
+      workDate: workDate ?? this.workDate,
+      siteId: siteId ?? this.siteId,
+      siteName: siteName ?? this.siteName,
+      workerId: workerId ?? this.workerId,
+      workerName: workerName ?? this.workerName,
+      workerCode: workerCode ?? this.workerCode,
+      trade: trade ?? this.trade,
+      attendanceStatus: attendanceStatus ?? this.attendanceStatus,
+      clockMinutes: clockMinutes ?? this.clockMinutes,
+      breakMinutes: breakMinutes ?? this.breakMinutes,
+      billableMinutes: billableMinutes ?? this.billableMinutes,
+      basis: basis ?? this.basis,
+      rateFils: rateFils ?? this.rateFils,
+      amountFils: amountFils ?? this.amountFils,
+      adjustReason: adjustReason ?? this.adjustReason,
+      live: live ?? this.live,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (timesheetId.present) {
+      map['timesheet_id'] = Variable<String>(timesheetId.value);
+    }
+    if (revisionId.present) {
+      map['revision_id'] = Variable<String>(revisionId.value);
+    }
+    if (entryId.present) {
+      map['entry_id'] = Variable<String>(entryId.value);
+    }
+    if (workKey.present) {
+      map['work_key'] = Variable<String>(workKey.value);
+    }
+    if (workDate.present) {
+      map['work_date'] = Variable<String>(workDate.value);
+    }
+    if (siteId.present) {
+      map['site_id'] = Variable<String>(siteId.value);
+    }
+    if (siteName.present) {
+      map['site_name'] = Variable<String>(siteName.value);
+    }
+    if (workerId.present) {
+      map['worker_id'] = Variable<String>(workerId.value);
+    }
+    if (workerName.present) {
+      map['worker_name'] = Variable<String>(workerName.value);
+    }
+    if (workerCode.present) {
+      map['worker_code'] = Variable<String>(workerCode.value);
+    }
+    if (trade.present) {
+      map['trade'] = Variable<String>(trade.value);
+    }
+    if (attendanceStatus.present) {
+      map['attendance_status'] = Variable<String>(attendanceStatus.value);
+    }
+    if (clockMinutes.present) {
+      map['clock_minutes'] = Variable<int>(clockMinutes.value);
+    }
+    if (breakMinutes.present) {
+      map['break_minutes'] = Variable<int>(breakMinutes.value);
+    }
+    if (billableMinutes.present) {
+      map['billable_minutes'] = Variable<int>(billableMinutes.value);
+    }
+    if (basis.present) {
+      map['basis'] = Variable<String>(basis.value);
+    }
+    if (rateFils.present) {
+      map['rate_fils'] = Variable<int>(rateFils.value);
+    }
+    if (amountFils.present) {
+      map['amount_fils'] = Variable<int>(amountFils.value);
+    }
+    if (adjustReason.present) {
+      map['adjust_reason'] = Variable<String>(adjustReason.value);
+    }
+    if (live.present) {
+      map['live'] = Variable<bool>(live.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimesheetLinesCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('timesheetId: $timesheetId, ')
+          ..write('revisionId: $revisionId, ')
+          ..write('entryId: $entryId, ')
+          ..write('workKey: $workKey, ')
+          ..write('workDate: $workDate, ')
+          ..write('siteId: $siteId, ')
+          ..write('siteName: $siteName, ')
+          ..write('workerId: $workerId, ')
+          ..write('workerName: $workerName, ')
+          ..write('workerCode: $workerCode, ')
+          ..write('trade: $trade, ')
+          ..write('attendanceStatus: $attendanceStatus, ')
+          ..write('clockMinutes: $clockMinutes, ')
+          ..write('breakMinutes: $breakMinutes, ')
+          ..write('billableMinutes: $billableMinutes, ')
+          ..write('basis: $basis, ')
+          ..write('rateFils: $rateFils, ')
+          ..write('amountFils: $amountFils, ')
+          ..write('adjustReason: $adjustReason, ')
+          ..write('live: $live, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $BilledAllocationsTable extends BilledAllocations
+    with TableInfo<$BilledAllocationsTable, BilledAllocation> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BilledAllocationsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _lineIdMeta = const VerificationMeta('lineId');
+  @override
+  late final GeneratedColumn<String> lineId = GeneratedColumn<String>(
+    'line_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES timesheet_lines (id)',
+    ),
+  );
+  static const VerificationMeta _workKeyMeta = const VerificationMeta(
+    'workKey',
+  );
+  @override
+  late final GeneratedColumn<String> workKey = GeneratedColumn<String>(
+    'work_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _invoiceIdMeta = const VerificationMeta(
+    'invoiceId',
+  );
+  @override
+  late final GeneratedColumn<String> invoiceId = GeneratedColumn<String>(
+    'invoice_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountFilsMeta = const VerificationMeta(
+    'amountFils',
+  );
+  @override
+  late final GeneratedColumn<int> amountFils = GeneratedColumn<int>(
+    'amount_fils',
+    aliasedName,
+    false,
+    check: () => ComparableExpr(amountFils).isBiggerOrEqualValue(0),
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _releasedMeta = const VerificationMeta(
+    'released',
+  );
+  @override
+  late final GeneratedColumn<bool> released = GeneratedColumn<bool>(
+    'released',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("released" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    lineId,
+    workKey,
+    invoiceId,
+    amountFils,
+    released,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'billed_allocations';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BilledAllocation> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('line_id')) {
+      context.handle(
+        _lineIdMeta,
+        lineId.isAcceptableOrUnknown(data['line_id']!, _lineIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_lineIdMeta);
+    }
+    if (data.containsKey('work_key')) {
+      context.handle(
+        _workKeyMeta,
+        workKey.isAcceptableOrUnknown(data['work_key']!, _workKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_workKeyMeta);
+    }
+    if (data.containsKey('invoice_id')) {
+      context.handle(
+        _invoiceIdMeta,
+        invoiceId.isAcceptableOrUnknown(data['invoice_id']!, _invoiceIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_invoiceIdMeta);
+    }
+    if (data.containsKey('amount_fils')) {
+      context.handle(
+        _amountFilsMeta,
+        amountFils.isAcceptableOrUnknown(data['amount_fils']!, _amountFilsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountFilsMeta);
+    }
+    if (data.containsKey('released')) {
+      context.handle(
+        _releasedMeta,
+        released.isAcceptableOrUnknown(data['released']!, _releasedMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BilledAllocation map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BilledAllocation(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      lineId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}line_id'],
+      )!,
+      workKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}work_key'],
+      )!,
+      invoiceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}invoice_id'],
+      )!,
+      amountFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_fils'],
+      )!,
+      released: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}released'],
+      )!,
+    );
+  }
+
+  @override
+  $BilledAllocationsTable createAlias(String alias) {
+    return $BilledAllocationsTable(attachedDatabase, alias);
+  }
+}
+
+class BilledAllocation extends DataClass
+    implements Insertable<BilledAllocation> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String lineId;
+  final String workKey;
+
+  /// T16's invoice.
+  final String invoiceId;
+  final int amountFils;
+  final bool released;
+  const BilledAllocation({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.lineId,
+    required this.workKey,
+    required this.invoiceId,
+    required this.amountFils,
+    required this.released,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['line_id'] = Variable<String>(lineId);
+    map['work_key'] = Variable<String>(workKey);
+    map['invoice_id'] = Variable<String>(invoiceId);
+    map['amount_fils'] = Variable<int>(amountFils);
+    map['released'] = Variable<bool>(released);
+    return map;
+  }
+
+  BilledAllocationsCompanion toCompanion(bool nullToAbsent) {
+    return BilledAllocationsCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      lineId: Value(lineId),
+      workKey: Value(workKey),
+      invoiceId: Value(invoiceId),
+      amountFils: Value(amountFils),
+      released: Value(released),
+    );
+  }
+
+  factory BilledAllocation.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BilledAllocation(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      lineId: serializer.fromJson<String>(json['lineId']),
+      workKey: serializer.fromJson<String>(json['workKey']),
+      invoiceId: serializer.fromJson<String>(json['invoiceId']),
+      amountFils: serializer.fromJson<int>(json['amountFils']),
+      released: serializer.fromJson<bool>(json['released']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'lineId': serializer.toJson<String>(lineId),
+      'workKey': serializer.toJson<String>(workKey),
+      'invoiceId': serializer.toJson<String>(invoiceId),
+      'amountFils': serializer.toJson<int>(amountFils),
+      'released': serializer.toJson<bool>(released),
+    };
+  }
+
+  BilledAllocation copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? lineId,
+    String? workKey,
+    String? invoiceId,
+    int? amountFils,
+    bool? released,
+  }) => BilledAllocation(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    lineId: lineId ?? this.lineId,
+    workKey: workKey ?? this.workKey,
+    invoiceId: invoiceId ?? this.invoiceId,
+    amountFils: amountFils ?? this.amountFils,
+    released: released ?? this.released,
+  );
+  BilledAllocation copyWithCompanion(BilledAllocationsCompanion data) {
+    return BilledAllocation(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      lineId: data.lineId.present ? data.lineId.value : this.lineId,
+      workKey: data.workKey.present ? data.workKey.value : this.workKey,
+      invoiceId: data.invoiceId.present ? data.invoiceId.value : this.invoiceId,
+      amountFils: data.amountFils.present
+          ? data.amountFils.value
+          : this.amountFils,
+      released: data.released.present ? data.released.value : this.released,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BilledAllocation(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('lineId: $lineId, ')
+          ..write('workKey: $workKey, ')
+          ..write('invoiceId: $invoiceId, ')
+          ..write('amountFils: $amountFils, ')
+          ..write('released: $released')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    lineId,
+    workKey,
+    invoiceId,
+    amountFils,
+    released,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BilledAllocation &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.lineId == this.lineId &&
+          other.workKey == this.workKey &&
+          other.invoiceId == this.invoiceId &&
+          other.amountFils == this.amountFils &&
+          other.released == this.released);
+}
+
+class BilledAllocationsCompanion extends UpdateCompanion<BilledAllocation> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> lineId;
+  final Value<String> workKey;
+  final Value<String> invoiceId;
+  final Value<int> amountFils;
+  final Value<bool> released;
+  final Value<int> rowid;
+  const BilledAllocationsCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.lineId = const Value.absent(),
+    this.workKey = const Value.absent(),
+    this.invoiceId = const Value.absent(),
+    this.amountFils = const Value.absent(),
+    this.released = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  BilledAllocationsCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String lineId,
+    required String workKey,
+    required String invoiceId,
+    required int amountFils,
+    this.released = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       lineId = Value(lineId),
+       workKey = Value(workKey),
+       invoiceId = Value(invoiceId),
+       amountFils = Value(amountFils);
+  static Insertable<BilledAllocation> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? lineId,
+    Expression<String>? workKey,
+    Expression<String>? invoiceId,
+    Expression<int>? amountFils,
+    Expression<bool>? released,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (lineId != null) 'line_id': lineId,
+      if (workKey != null) 'work_key': workKey,
+      if (invoiceId != null) 'invoice_id': invoiceId,
+      if (amountFils != null) 'amount_fils': amountFils,
+      if (released != null) 'released': released,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  BilledAllocationsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? lineId,
+    Value<String>? workKey,
+    Value<String>? invoiceId,
+    Value<int>? amountFils,
+    Value<bool>? released,
+    Value<int>? rowid,
+  }) {
+    return BilledAllocationsCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      lineId: lineId ?? this.lineId,
+      workKey: workKey ?? this.workKey,
+      invoiceId: invoiceId ?? this.invoiceId,
+      amountFils: amountFils ?? this.amountFils,
+      released: released ?? this.released,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (lineId.present) {
+      map['line_id'] = Variable<String>(lineId.value);
+    }
+    if (workKey.present) {
+      map['work_key'] = Variable<String>(workKey.value);
+    }
+    if (invoiceId.present) {
+      map['invoice_id'] = Variable<String>(invoiceId.value);
+    }
+    if (amountFils.present) {
+      map['amount_fils'] = Variable<int>(amountFils.value);
+    }
+    if (released.present) {
+      map['released'] = Variable<bool>(released.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BilledAllocationsCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('lineId: $lineId, ')
+          ..write('workKey: $workKey, ')
+          ..write('invoiceId: $invoiceId, ')
+          ..write('amountFils: $amountFils, ')
+          ..write('released: $released, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $TenantProfilesTable extends TenantProfiles
     with TableInfo<$TenantProfilesTable, TenantProfile> {
   @override
@@ -22609,6 +26600,68 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     'CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.state NOT IN (\'draft\', \'submitted\') BEGIN SELECT RAISE (ABORT, \'approved attendance cannot be deleted\');END',
     'entry_no_delete',
   );
+  late final $TimesheetsTable timesheets = $TimesheetsTable(this);
+  late final Trigger timesheetKeepsNumber = Trigger(
+    'CREATE TRIGGER timesheet_keeps_number BEFORE UPDATE OF client_id, site_id, from_date, to_date, year, seq, number ON timesheets WHEN OLD.number IS NOT NULL BEGIN SELECT RAISE (ABORT, \'an approved timesheet keeps its number and dates\');END',
+    'timesheet_keeps_number',
+  );
+  late final Trigger timesheetNoDelete = Trigger(
+    'CREATE TRIGGER timesheet_no_delete BEFORE DELETE ON timesheets WHEN OLD.number IS NOT NULL BEGIN SELECT RAISE (ABORT, \'an approved timesheet stays on record\');END',
+    'timesheet_no_delete',
+  );
+  late final $TimesheetRevisionsTable timesheetRevisions =
+      $TimesheetRevisionsTable(this);
+  late final Trigger revisionNoRedraft = Trigger(
+    'CREATE TRIGGER revision_no_redraft BEFORE UPDATE OF status ON timesheet_revisions WHEN OLD.status <> \'draft\' AND NEW.status = \'draft\' BEGIN SELECT RAISE (ABORT, \'an approved revision stays approved\');END',
+    'revision_no_redraft',
+  );
+  late final Trigger revisionKeepsAdjustments = Trigger(
+    'CREATE TRIGGER revision_keeps_adjustments BEFORE UPDATE OF timesheet_id, revision, adjustments ON timesheet_revisions WHEN OLD.status <> \'draft\' BEGIN SELECT RAISE (ABORT, \'an approved revision never changes\');END',
+    'revision_keeps_adjustments',
+  );
+  late final Trigger revisionAcceptedLocked = Trigger(
+    'CREATE TRIGGER revision_accepted_locked BEFORE UPDATE ON timesheet_revisions WHEN OLD.status = \'accepted\' BEGIN SELECT RAISE (ABORT, \'an accepted revision is locked\');END',
+    'revision_accepted_locked',
+  );
+  late final Trigger revisionNoDelete = Trigger(
+    'CREATE TRIGGER revision_no_delete BEFORE DELETE ON timesheet_revisions WHEN OLD.status <> \'draft\' BEGIN SELECT RAISE (ABORT, \'an approved revision stays on record\');END',
+    'revision_no_delete',
+  );
+  late final $TimesheetLinesTable timesheetLines = $TimesheetLinesTable(this);
+  late final Trigger timesheetLineNoEdit = Trigger(
+    'CREATE TRIGGER timesheet_line_no_edit BEFORE UPDATE OF timesheet_id, revision_id, entry_id, work_key, work_date, site_id, site_name, worker_id, worker_name, worker_code, trade, attendance_status, clock_minutes, break_minutes, billable_minutes, basis, rate_fils, amount_fils, adjust_reason ON timesheet_lines BEGIN SELECT RAISE (ABORT, \'an approved timesheet line never changes\');END',
+    'timesheet_line_no_edit',
+  );
+  late final Trigger timesheetLineStaysOff = Trigger(
+    'CREATE TRIGGER timesheet_line_stays_off BEFORE UPDATE OF live ON timesheet_lines WHEN NOT OLD.live AND NEW.live BEGIN SELECT RAISE (ABORT, \'a replaced timesheet line stays replaced\');END',
+    'timesheet_line_stays_off',
+  );
+  late final Trigger timesheetLineNoDelete = Trigger(
+    'CREATE TRIGGER timesheet_line_no_delete BEFORE DELETE ON timesheet_lines BEGIN SELECT RAISE (ABORT, \'an approved timesheet line stays on record\');END',
+    'timesheet_line_no_delete',
+  );
+  late final Index oneLiveTimesheetLine = Index(
+    'one_live_timesheet_line',
+    'CREATE UNIQUE INDEX one_live_timesheet_line ON timesheet_lines (work_key) WHERE live',
+  );
+  late final $BilledAllocationsTable billedAllocations =
+      $BilledAllocationsTable(this);
+  late final Trigger billingNoEdit = Trigger(
+    'CREATE TRIGGER billing_no_edit BEFORE UPDATE OF line_id, work_key, invoice_id, amount_fils ON billed_allocations BEGIN SELECT RAISE (ABORT, \'a billed allocation never changes\');END',
+    'billing_no_edit',
+  );
+  late final Trigger billingStaysReleased = Trigger(
+    'CREATE TRIGGER billing_stays_released BEFORE UPDATE OF released ON billed_allocations WHEN OLD.released BEGIN SELECT RAISE (ABORT, \'a released allocation stays released\');END',
+    'billing_stays_released',
+  );
+  late final Trigger billingNoDelete = Trigger(
+    'CREATE TRIGGER billing_no_delete BEFORE DELETE ON billed_allocations BEGIN SELECT RAISE (ABORT, \'a billed allocation stays on record\');END',
+    'billing_no_delete',
+  );
+  late final Index oneLiveBilling = Index(
+    'one_live_billing',
+    'CREATE UNIQUE INDEX one_live_billing ON billed_allocations (work_key) WHERE NOT released',
+  );
   late final $TenantProfilesTable tenantProfiles = $TenantProfilesTable(this);
   late final $PayContractsTable payContracts = $PayContractsTable(this);
   late final $BillingContractsTable billingContracts = $BillingContractsTable(
@@ -22634,6 +26687,14 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
   late final Index idxIssuedSubject = Index(
     'idx_issued_subject',
     'CREATE INDEX idx_issued_subject ON issued_documents (kind, subject_id, period)',
+  );
+  late final Index idxTimesheetLinesRevision = Index(
+    'idx_timesheet_lines_revision',
+    'CREATE INDEX idx_timesheet_lines_revision ON timesheet_lines (revision_id)',
+  );
+  late final Index idxTimesheetLinesTimesheet = Index(
+    'idx_timesheet_lines_timesheet',
+    'CREATE INDEX idx_timesheet_lines_timesheet ON timesheet_lines (timesheet_id, live)',
   );
   late final Index idxEntriesWorkerDate = Index(
     'idx_entries_worker_date',
@@ -22712,6 +26773,24 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     approvedEntryNoEdit,
     linkedEntryKeepsState,
     entryNoDelete,
+    timesheets,
+    timesheetKeepsNumber,
+    timesheetNoDelete,
+    timesheetRevisions,
+    revisionNoRedraft,
+    revisionKeepsAdjustments,
+    revisionAcceptedLocked,
+    revisionNoDelete,
+    timesheetLines,
+    timesheetLineNoEdit,
+    timesheetLineStaysOff,
+    timesheetLineNoDelete,
+    oneLiveTimesheetLine,
+    billedAllocations,
+    billingNoEdit,
+    billingStaysReleased,
+    billingNoDelete,
+    oneLiveBilling,
     tenantProfiles,
     payContracts,
     billingContracts,
@@ -22722,6 +26801,8 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     idxCashWorker,
     idxCashRoom,
     idxIssuedSubject,
+    idxTimesheetLinesRevision,
+    idxTimesheetLinesTimesheet,
     idxEntriesWorkerDate,
     idxEntriesDate,
     idxPayrollLinesWorker,
@@ -22977,6 +27058,90 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     WritePropagation(
       on: TableUpdateQuery.onTableName(
         'attendance_entries',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheets',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_revisions',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_revisions',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_revisions',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_revisions',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_lines',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_lines',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_lines',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'billed_allocations',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'billed_allocations',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'billed_allocations',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [],
@@ -24060,6 +28225,25 @@ final class $$WorkersTableReferences
     );
   }
 
+  static MultiTypedResultKey<$TimesheetLinesTable, List<TimesheetLine>>
+  _timesheetLinesRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.timesheetLines,
+        aliasName: 'workers__id__timesheet_lines__worker_id',
+      );
+
+  $$TimesheetLinesTableProcessedTableManager get timesheetLinesRefs {
+    final manager = $$TimesheetLinesTableTableManager(
+      $_db,
+      $_db.timesheetLines,
+    ).filter((f) => f.workerId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_timesheetLinesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<$PayContractsTable, List<PayContract>>
   _payContractsRefsTable(_$TenantDatabase db) => MultiTypedResultKey.fromTable(
     db.payContracts,
@@ -24374,6 +28558,31 @@ class $$WorkersTableFilterComposer
           }) => $$OpeningBalancesTableFilterComposer(
             $db: $db,
             $table: $db.openingBalances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> timesheetLinesRefs(
+    Expression<bool> Function($$TimesheetLinesTableFilterComposer f) f,
+  ) {
+    final $$TimesheetLinesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -24817,6 +29026,31 @@ class $$WorkersTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> timesheetLinesRefs<T extends Object>(
+    Expression<T> Function($$TimesheetLinesTableAnnotationComposer a) f,
+  ) {
+    final $$TimesheetLinesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.workerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> payContractsRefs<T extends Object>(
     Expression<T> Function($$PayContractsTableAnnotationComposer a) f,
   ) {
@@ -24915,6 +29149,7 @@ class $$WorkersTableTableManager
             bool dayOffsRefs,
             bool attendanceEntriesRefs,
             bool openingBalancesRefs,
+            bool timesheetLinesRefs,
             bool payContractsRefs,
             bool billingContractsRefs,
             bool workerGroupMembersRefs,
@@ -25028,6 +29263,7 @@ class $$WorkersTableTableManager
                 dayOffsRefs = false,
                 attendanceEntriesRefs = false,
                 openingBalancesRefs = false,
+                timesheetLinesRefs = false,
                 payContractsRefs = false,
                 billingContractsRefs = false,
                 workerGroupMembersRefs = false,
@@ -25041,6 +29277,7 @@ class $$WorkersTableTableManager
                     if (dayOffsRefs) db.dayOffs,
                     if (attendanceEntriesRefs) db.attendanceEntries,
                     if (openingBalancesRefs) db.openingBalances,
+                    if (timesheetLinesRefs) db.timesheetLines,
                     if (payContractsRefs) db.payContracts,
                     if (billingContractsRefs) db.billingContracts,
                     if (workerGroupMembersRefs) db.workerGroupMembers,
@@ -25197,6 +29434,26 @@ class $$WorkersTableTableManager
                           referencedColumn: 'worker_id',
                           typedResults: items,
                         ),
+                      if (timesheetLinesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Worker,
+                          $WorkersTable,
+                          TimesheetLine,
+                          $TimesheetLinesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkersTableReferences
+                              ._timesheetLinesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).timesheetLinesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'worker_id',
+                          typedResults: items,
+                        ),
                       if (payContractsRefs)
                         await $_getPrefetchedDataByColumns<
                           Worker,
@@ -25285,6 +29542,7 @@ typedef $$WorkersTableProcessedTableManager =
         bool dayOffsRefs,
         bool attendanceEntriesRefs,
         bool openingBalancesRefs,
+        bool timesheetLinesRefs,
         bool payContractsRefs,
         bool billingContractsRefs,
         bool workerGroupMembersRefs,
@@ -25452,6 +29710,24 @@ final class $$ClientsTableReferences
     final cache = $_typedResult.readTableOrNull(
       _openingBalancesRefsTable($_db),
     );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$TimesheetsTable, List<Timesheet>>
+  _timesheetsRefsTable(_$TenantDatabase db) => MultiTypedResultKey.fromTable(
+    db.timesheets,
+    aliasName: 'clients__id__timesheets__client_id',
+  );
+
+  $$TimesheetsTableProcessedTableManager get timesheetsRefs {
+    final manager = $$TimesheetsTableTableManager(
+      $_db,
+      $_db.timesheets,
+    ).filter((f) => f.clientId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_timesheetsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -25724,6 +30000,31 @@ class $$ClientsTableFilterComposer
           }) => $$OpeningBalancesTableFilterComposer(
             $db: $db,
             $table: $db.openingBalances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> timesheetsRefs(
+    Expression<bool> Function($$TimesheetsTableFilterComposer f) f,
+  ) {
+    final $$TimesheetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheets,
+      getReferencedColumn: (t) => t.clientId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetsTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheets,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -26096,6 +30397,31 @@ class $$ClientsTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> timesheetsRefs<T extends Object>(
+    Expression<T> Function($$TimesheetsTableAnnotationComposer a) f,
+  ) {
+    final $$TimesheetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheets,
+      getReferencedColumn: (t) => t.clientId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timesheets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> billingContractsRefs<T extends Object>(
     Expression<T> Function($$BillingContractsTableAnnotationComposer a) f,
   ) {
@@ -26142,6 +30468,7 @@ class $$ClientsTableTableManager
             bool attendanceBatchesRefs,
             bool attendanceEntriesRefs,
             bool openingBalancesRefs,
+            bool timesheetsRefs,
             bool billingContractsRefs,
           })
         > {
@@ -26260,6 +30587,7 @@ class $$ClientsTableTableManager
                 attendanceBatchesRefs = false,
                 attendanceEntriesRefs = false,
                 openingBalancesRefs = false,
+                timesheetsRefs = false,
                 billingContractsRefs = false,
               }) {
                 return PrefetchHooks(
@@ -26271,6 +30599,7 @@ class $$ClientsTableTableManager
                     if (attendanceBatchesRefs) db.attendanceBatches,
                     if (attendanceEntriesRefs) db.attendanceEntries,
                     if (openingBalancesRefs) db.openingBalances,
+                    if (timesheetsRefs) db.timesheets,
                     if (billingContractsRefs) db.billingContracts,
                   ],
                   addJoins: null,
@@ -26392,6 +30721,26 @@ class $$ClientsTableTableManager
                           referencedColumn: 'client_id',
                           typedResults: items,
                         ),
+                      if (timesheetsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Client,
+                          $ClientsTable,
+                          Timesheet,
+                          $TimesheetsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ClientsTableReferences
+                              ._timesheetsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ClientsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).timesheetsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'client_id',
+                          typedResults: items,
+                        ),
                       if (billingContractsRefs)
                         await $_getPrefetchedDataByColumns<
                           Client,
@@ -26439,6 +30788,7 @@ typedef $$ClientsTableProcessedTableManager =
         bool attendanceBatchesRefs,
         bool attendanceEntriesRefs,
         bool openingBalancesRefs,
+        bool timesheetsRefs,
         bool billingContractsRefs,
       })
     >;
@@ -26577,6 +30927,43 @@ final class $$SitesTableReferences
     final cache = $_typedResult.readTableOrNull(
       _attendanceEntriesRefsTable($_db),
     );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$TimesheetsTable, List<Timesheet>>
+  _timesheetsRefsTable(_$TenantDatabase db) => MultiTypedResultKey.fromTable(
+    db.timesheets,
+    aliasName: 'sites__id__timesheets__site_id',
+  );
+
+  $$TimesheetsTableProcessedTableManager get timesheetsRefs {
+    final manager = $$TimesheetsTableTableManager(
+      $_db,
+      $_db.timesheets,
+    ).filter((f) => f.siteId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_timesheetsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$TimesheetLinesTable, List<TimesheetLine>>
+  _timesheetLinesRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.timesheetLines,
+        aliasName: 'sites__id__timesheet_lines__site_id',
+      );
+
+  $$TimesheetLinesTableProcessedTableManager get timesheetLinesRefs {
+    final manager = $$TimesheetLinesTableTableManager(
+      $_db,
+      $_db.timesheetLines,
+    ).filter((f) => f.siteId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_timesheetLinesRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -26825,6 +31212,56 @@ class $$SitesTableFilterComposer
           }) => $$AttendanceEntriesTableFilterComposer(
             $db: $db,
             $table: $db.attendanceEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> timesheetsRefs(
+    Expression<bool> Function($$TimesheetsTableFilterComposer f) f,
+  ) {
+    final $$TimesheetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheets,
+      getReferencedColumn: (t) => t.siteId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetsTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> timesheetLinesRefs(
+    Expression<bool> Function($$TimesheetLinesTableFilterComposer f) f,
+  ) {
+    final $$TimesheetLinesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.siteId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -27194,6 +31631,56 @@ class $$SitesTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> timesheetsRefs<T extends Object>(
+    Expression<T> Function($$TimesheetsTableAnnotationComposer a) f,
+  ) {
+    final $$TimesheetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheets,
+      getReferencedColumn: (t) => t.siteId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timesheets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> timesheetLinesRefs<T extends Object>(
+    Expression<T> Function($$TimesheetLinesTableAnnotationComposer a) f,
+  ) {
+    final $$TimesheetLinesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.siteId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> payContractsRefs<T extends Object>(
     Expression<T> Function($$PayContractsTableAnnotationComposer a) f,
   ) {
@@ -27264,6 +31751,8 @@ class $$SitesTableTableManager
             bool workerGroupsRefs,
             bool attendanceBatchesRefs,
             bool attendanceEntriesRefs,
+            bool timesheetsRefs,
+            bool timesheetLinesRefs,
             bool payContractsRefs,
             bool billingContractsRefs,
           })
@@ -27374,6 +31863,8 @@ class $$SitesTableTableManager
                 workerGroupsRefs = false,
                 attendanceBatchesRefs = false,
                 attendanceEntriesRefs = false,
+                timesheetsRefs = false,
+                timesheetLinesRefs = false,
                 payContractsRefs = false,
                 billingContractsRefs = false,
               }) {
@@ -27384,6 +31875,8 @@ class $$SitesTableTableManager
                     if (workerGroupsRefs) db.workerGroups,
                     if (attendanceBatchesRefs) db.attendanceBatches,
                     if (attendanceEntriesRefs) db.attendanceEntries,
+                    if (timesheetsRefs) db.timesheets,
+                    if (timesheetLinesRefs) db.timesheetLines,
                     if (payContractsRefs) db.payContracts,
                     if (billingContractsRefs) db.billingContracts,
                   ],
@@ -27499,6 +31992,46 @@ class $$SitesTableTableManager
                           referencedColumn: 'site_id',
                           typedResults: items,
                         ),
+                      if (timesheetsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Site,
+                          $SitesTable,
+                          Timesheet,
+                          $TimesheetsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$SitesTableReferences
+                              ._timesheetsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$SitesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).timesheetsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'site_id',
+                          typedResults: items,
+                        ),
+                      if (timesheetLinesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Site,
+                          $SitesTable,
+                          TimesheetLine,
+                          $TimesheetLinesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$SitesTableReferences
+                              ._timesheetLinesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$SitesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).timesheetLinesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'site_id',
+                          typedResults: items,
+                        ),
                       if (payContractsRefs)
                         await $_getPrefetchedDataByColumns<
                           Site,
@@ -27565,6 +32098,8 @@ typedef $$SitesTableProcessedTableManager =
         bool workerGroupsRefs,
         bool attendanceBatchesRefs,
         bool attendanceEntriesRefs,
+        bool timesheetsRefs,
+        bool timesheetLinesRefs,
         bool payContractsRefs,
         bool billingContractsRefs,
       })
@@ -32015,6 +36550,41 @@ typedef $$DocumentAssetsTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
+final class $$DocumentAssetsTableReferences
+    extends
+        BaseReferences<_$TenantDatabase, $DocumentAssetsTable, DocumentAsset> {
+  $$DocumentAssetsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<$TimesheetRevisionsTable, List<TimesheetRevision>>
+  _timesheetRevisionsRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.timesheetRevisions,
+        aliasName:
+            'document_assets__id__timesheet_revisions__evidence_asset_id',
+      );
+
+  $$TimesheetRevisionsTableProcessedTableManager get timesheetRevisionsRefs {
+    final manager =
+        $$TimesheetRevisionsTableTableManager(
+          $_db,
+          $_db.timesheetRevisions,
+        ).filter(
+          (f) => f.evidenceAssetId.id.sqlEquals($_itemColumn<String>('id')!),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _timesheetRevisionsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
 class $$DocumentAssetsTableFilterComposer
     extends Composer<_$TenantDatabase, $DocumentAssetsTable> {
   $$DocumentAssetsTableFilterComposer({
@@ -32083,6 +36653,31 @@ class $$DocumentAssetsTableFilterComposer
     column: $table.bytes,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> timesheetRevisionsRefs(
+    Expression<bool> Function($$TimesheetRevisionsTableFilterComposer f) f,
+  ) {
+    final $$TimesheetRevisionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheetRevisions,
+      getReferencedColumn: (t) => t.evidenceAssetId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetRevisionsTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheetRevisions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$DocumentAssetsTableOrderingComposer
@@ -32205,6 +36800,32 @@ class $$DocumentAssetsTableAnnotationComposer
 
   GeneratedColumn<Uint8List> get bytes =>
       $composableBuilder(column: $table.bytes, builder: (column) => column);
+
+  Expression<T> timesheetRevisionsRefs<T extends Object>(
+    Expression<T> Function($$TimesheetRevisionsTableAnnotationComposer a) f,
+  ) {
+    final $$TimesheetRevisionsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.timesheetRevisions,
+          getReferencedColumn: (t) => t.evidenceAssetId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$TimesheetRevisionsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.timesheetRevisions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$DocumentAssetsTableTableManager
@@ -32218,16 +36839,9 @@ class $$DocumentAssetsTableTableManager
           $$DocumentAssetsTableAnnotationComposer,
           $$DocumentAssetsTableCreateCompanionBuilder,
           $$DocumentAssetsTableUpdateCompanionBuilder,
-          (
-            DocumentAsset,
-            BaseReferences<
-              _$TenantDatabase,
-              $DocumentAssetsTable,
-              DocumentAsset
-            >,
-          ),
+          (DocumentAsset, $$DocumentAssetsTableReferences),
           DocumentAsset,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool timesheetRevisionsRefs})
         > {
   $$DocumentAssetsTableTableManager(
     _$TenantDatabase db,
@@ -32306,15 +36920,43 @@ class $$DocumentAssetsTableTableManager
               .map(
                 (e) => (
                   e.readTable<$DocumentAssetsTable, DocumentAsset>(table),
-                  BaseReferences<
-                    _$TenantDatabase,
-                    $DocumentAssetsTable,
-                    DocumentAsset
-                  >(db, table, e),
+                  $$DocumentAssetsTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({timesheetRevisionsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (timesheetRevisionsRefs) db.timesheetRevisions,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (timesheetRevisionsRefs)
+                    await $_getPrefetchedDataByColumns<
+                      DocumentAsset,
+                      $DocumentAssetsTable,
+                      TimesheetRevision,
+                      $TimesheetRevisionsTable
+                    >(
+                      currentTable: table,
+                      referencedTable: $$DocumentAssetsTableReferences
+                          ._timesheetRevisionsRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$DocumentAssetsTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).timesheetRevisionsRefs,
+                      currentColumn: 'id',
+                      referencedColumn: 'evidence_asset_id',
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
         ),
       );
 }
@@ -32329,12 +36971,9 @@ typedef $$DocumentAssetsTableProcessedTableManager =
       $$DocumentAssetsTableAnnotationComposer,
       $$DocumentAssetsTableCreateCompanionBuilder,
       $$DocumentAssetsTableUpdateCompanionBuilder,
-      (
-        DocumentAsset,
-        BaseReferences<_$TenantDatabase, $DocumentAssetsTable, DocumentAsset>,
-      ),
+      (DocumentAsset, $$DocumentAssetsTableReferences),
       DocumentAsset,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool timesheetRevisionsRefs})
     >;
 typedef $$DayOffsTableCreateCompanionBuilder = DayOffsCompanion Function({
   required String id,
@@ -34626,6 +39265,25 @@ final class $$AttendanceEntriesTableReferences
       manager.$state.copyWith(prefetchedData: [item]),
     );
   }
+
+  static MultiTypedResultKey<$TimesheetLinesTable, List<TimesheetLine>>
+  _timesheetLinesRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.timesheetLines,
+        aliasName: 'attendance_entries__id__timesheet_lines__entry_id',
+      );
+
+  $$TimesheetLinesTableProcessedTableManager get timesheetLinesRefs {
+    final manager = $$TimesheetLinesTableTableManager(
+      $_db,
+      $_db.timesheetLines,
+    ).filter((f) => f.entryId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_timesheetLinesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$AttendanceEntriesTableFilterComposer
@@ -34961,6 +39619,31 @@ class $$AttendanceEntriesTableFilterComposer
           ),
     );
     return composer;
+  }
+
+  Expression<bool> timesheetLinesRefs(
+    Expression<bool> Function($$TimesheetLinesTableFilterComposer f) f,
+  ) {
+    final $$TimesheetLinesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.entryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 }
 
@@ -35616,6 +40299,31 @@ class $$AttendanceEntriesTableAnnotationComposer
     );
     return composer;
   }
+
+  Expression<T> timesheetLinesRefs<T extends Object>(
+    Expression<T> Function($$TimesheetLinesTableAnnotationComposer a) f,
+  ) {
+    final $$TimesheetLinesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.entryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$AttendanceEntriesTableTableManager
@@ -35639,6 +40347,7 @@ class $$AttendanceEntriesTableTableManager
             bool groupId,
             bool revisesEntryId,
             bool payrollLineId,
+            bool timesheetLinesRefs,
           })
         > {
   $$AttendanceEntriesTableTableManager(
@@ -35846,10 +40555,13 @@ class $$AttendanceEntriesTableTableManager
                 groupId = false,
                 revisesEntryId = false,
                 payrollLineId = false,
+                timesheetLinesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
-                  explicitlyWatchedTables: [],
+                  explicitlyWatchedTables: [
+                    if (timesheetLinesRefs) db.timesheetLines,
+                  ],
                   addJoins:
                       <
                         T extends TableManagerState<
@@ -35947,7 +40659,28 @@ class $$AttendanceEntriesTableTableManager
                         return state;
                       },
                   getPrefetchedDataCallback: (items) async {
-                    return [];
+                    return [
+                      if (timesheetLinesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          AttendanceEntry,
+                          $AttendanceEntriesTable,
+                          TimesheetLine,
+                          $TimesheetLinesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AttendanceEntriesTableReferences
+                              ._timesheetLinesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AttendanceEntriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).timesheetLinesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'entry_id',
+                          typedResults: items,
+                        ),
+                    ];
                   },
                 );
               },
@@ -35975,6 +40708,7 @@ typedef $$AttendanceEntriesTableProcessedTableManager =
         bool groupId,
         bool revisesEntryId,
         bool payrollLineId,
+        bool timesheetLinesRefs,
       })
     >;
 typedef $$OpeningBalancesTableCreateCompanionBuilder =
@@ -36548,6 +41282,3218 @@ typedef $$OpeningBalancesTableProcessedTableManager =
       (OpeningBalance, $$OpeningBalancesTableReferences),
       OpeningBalance,
       PrefetchHooks Function({bool workerId, bool clientId})
+    >;
+typedef $$TimesheetsTableCreateCompanionBuilder = TimesheetsCompanion Function({
+  required String id,
+  required String tenantId,
+  required DateTime createdAtUtc,
+  required DateTime updatedAtUtc,
+  required String actorId,
+  Value<int> version,
+  required String sourceOperationId,
+  required String clientId,
+  Value<String?> siteId,
+  required String fromDate,
+  required String toDate,
+  Value<int?> year,
+  Value<int?> seq,
+  Value<String?> number,
+  Value<int> rowid,
+});
+typedef $$TimesheetsTableUpdateCompanionBuilder = TimesheetsCompanion Function({
+  Value<String> id,
+  Value<String> tenantId,
+  Value<DateTime> createdAtUtc,
+  Value<DateTime> updatedAtUtc,
+  Value<String> actorId,
+  Value<int> version,
+  Value<String> sourceOperationId,
+  Value<String> clientId,
+  Value<String?> siteId,
+  Value<String> fromDate,
+  Value<String> toDate,
+  Value<int?> year,
+  Value<int?> seq,
+  Value<String?> number,
+  Value<int> rowid,
+});
+
+final class $$TimesheetsTableReferences
+    extends BaseReferences<_$TenantDatabase, $TimesheetsTable, Timesheet> {
+  $$TimesheetsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ClientsTable _clientIdTable(_$TenantDatabase db) =>
+      db.clients.createAlias('timesheets__client_id__clients__id');
+
+  $$ClientsTableProcessedTableManager get clientId {
+    final $_column = $_itemColumn<String>('client_id')!;
+
+    final manager = $$ClientsTableTableManager(
+      $_db,
+      $_db.clients,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_clientIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $SitesTable _siteIdTable(_$TenantDatabase db) =>
+      db.sites.createAlias('timesheets__site_id__sites__id');
+
+  $$SitesTableProcessedTableManager? get siteId {
+    final $_column = $_itemColumn<String>('site_id');
+    if ($_column == null) return null;
+    final manager = $$SitesTableTableManager(
+      $_db,
+      $_db.sites,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_siteIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$TimesheetRevisionsTable, List<TimesheetRevision>>
+  _timesheetRevisionsRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.timesheetRevisions,
+        aliasName: 'timesheets__id__timesheet_revisions__timesheet_id',
+      );
+
+  $$TimesheetRevisionsTableProcessedTableManager get timesheetRevisionsRefs {
+    final manager = $$TimesheetRevisionsTableTableManager(
+      $_db,
+      $_db.timesheetRevisions,
+    ).filter((f) => f.timesheetId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _timesheetRevisionsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$TimesheetLinesTable, List<TimesheetLine>>
+  _timesheetLinesRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.timesheetLines,
+        aliasName: 'timesheets__id__timesheet_lines__timesheet_id',
+      );
+
+  $$TimesheetLinesTableProcessedTableManager get timesheetLinesRefs {
+    final manager = $$TimesheetLinesTableTableManager(
+      $_db,
+      $_db.timesheetLines,
+    ).filter((f) => f.timesheetId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_timesheetLinesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$TimesheetsTableFilterComposer
+    extends Composer<_$TenantDatabase, $TimesheetsTable> {
+  $$TimesheetsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fromDate => $composableBuilder(
+    column: $table.fromDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get toDate => $composableBuilder(
+    column: $table.toDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get seq => $composableBuilder(
+    column: $table.seq,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get number => $composableBuilder(
+    column: $table.number,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ClientsTableFilterComposer get clientId {
+    final $$ClientsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableFilterComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SitesTableFilterComposer get siteId {
+    final $$SitesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.siteId,
+      referencedTable: $db.sites,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SitesTableFilterComposer(
+            $db: $db,
+            $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> timesheetRevisionsRefs(
+    Expression<bool> Function($$TimesheetRevisionsTableFilterComposer f) f,
+  ) {
+    final $$TimesheetRevisionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheetRevisions,
+      getReferencedColumn: (t) => t.timesheetId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetRevisionsTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheetRevisions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> timesheetLinesRefs(
+    Expression<bool> Function($$TimesheetLinesTableFilterComposer f) f,
+  ) {
+    final $$TimesheetLinesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.timesheetId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TimesheetsTableOrderingComposer
+    extends Composer<_$TenantDatabase, $TimesheetsTable> {
+  $$TimesheetsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fromDate => $composableBuilder(
+    column: $table.fromDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get toDate => $composableBuilder(
+    column: $table.toDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get seq => $composableBuilder(
+    column: $table.seq,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get number => $composableBuilder(
+    column: $table.number,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ClientsTableOrderingComposer get clientId {
+    final $$ClientsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableOrderingComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SitesTableOrderingComposer get siteId {
+    final $$SitesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.siteId,
+      referencedTable: $db.sites,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SitesTableOrderingComposer(
+            $db: $db,
+            $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TimesheetsTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $TimesheetsTable> {
+  $$TimesheetsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fromDate =>
+      $composableBuilder(column: $table.fromDate, builder: (column) => column);
+
+  GeneratedColumn<String> get toDate =>
+      $composableBuilder(column: $table.toDate, builder: (column) => column);
+
+  GeneratedColumn<int> get year =>
+      $composableBuilder(column: $table.year, builder: (column) => column);
+
+  GeneratedColumn<int> get seq =>
+      $composableBuilder(column: $table.seq, builder: (column) => column);
+
+  GeneratedColumn<String> get number =>
+      $composableBuilder(column: $table.number, builder: (column) => column);
+
+  $$ClientsTableAnnotationComposer get clientId {
+    final $$ClientsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SitesTableAnnotationComposer get siteId {
+    final $$SitesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.siteId,
+      referencedTable: $db.sites,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SitesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> timesheetRevisionsRefs<T extends Object>(
+    Expression<T> Function($$TimesheetRevisionsTableAnnotationComposer a) f,
+  ) {
+    final $$TimesheetRevisionsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.timesheetRevisions,
+          getReferencedColumn: (t) => t.timesheetId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$TimesheetRevisionsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.timesheetRevisions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> timesheetLinesRefs<T extends Object>(
+    Expression<T> Function($$TimesheetLinesTableAnnotationComposer a) f,
+  ) {
+    final $$TimesheetLinesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.timesheetId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TimesheetsTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $TimesheetsTable,
+          Timesheet,
+          $$TimesheetsTableFilterComposer,
+          $$TimesheetsTableOrderingComposer,
+          $$TimesheetsTableAnnotationComposer,
+          $$TimesheetsTableCreateCompanionBuilder,
+          $$TimesheetsTableUpdateCompanionBuilder,
+          (Timesheet, $$TimesheetsTableReferences),
+          Timesheet,
+          PrefetchHooks Function({
+            bool clientId,
+            bool siteId,
+            bool timesheetRevisionsRefs,
+            bool timesheetLinesRefs,
+          })
+        > {
+  $$TimesheetsTableTableManager(_$TenantDatabase db, $TimesheetsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TimesheetsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TimesheetsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TimesheetsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> clientId = const Value.absent(),
+                Value<String?> siteId = const Value.absent(),
+                Value<String> fromDate = const Value.absent(),
+                Value<String> toDate = const Value.absent(),
+                Value<int?> year = const Value.absent(),
+                Value<int?> seq = const Value.absent(),
+                Value<String?> number = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TimesheetsCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                clientId: clientId,
+                siteId: siteId,
+                fromDate: fromDate,
+                toDate: toDate,
+                year: year,
+                seq: seq,
+                number: number,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String clientId,
+                Value<String?> siteId = const Value.absent(),
+                required String fromDate,
+                required String toDate,
+                Value<int?> year = const Value.absent(),
+                Value<int?> seq = const Value.absent(),
+                Value<String?> number = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TimesheetsCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                clientId: clientId,
+                siteId: siteId,
+                fromDate: fromDate,
+                toDate: toDate,
+                year: year,
+                seq: seq,
+                number: number,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$TimesheetsTable, Timesheet>(table),
+                  $$TimesheetsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                clientId = false,
+                siteId = false,
+                timesheetRevisionsRefs = false,
+                timesheetLinesRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (timesheetRevisionsRefs) db.timesheetRevisions,
+                    if (timesheetLinesRefs) db.timesheetLines,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (clientId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.clientId,
+                            referencedTable: $$TimesheetsTableReferences
+                                ._clientIdTable(db),
+                            referencedColumn: $$TimesheetsTableReferences
+                                ._clientIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (siteId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.siteId,
+                            referencedTable: $$TimesheetsTableReferences
+                                ._siteIdTable(db),
+                            referencedColumn: $$TimesheetsTableReferences
+                                ._siteIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (timesheetRevisionsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Timesheet,
+                          $TimesheetsTable,
+                          TimesheetRevision,
+                          $TimesheetRevisionsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TimesheetsTableReferences
+                              ._timesheetRevisionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TimesheetsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).timesheetRevisionsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'timesheet_id',
+                          typedResults: items,
+                        ),
+                      if (timesheetLinesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Timesheet,
+                          $TimesheetsTable,
+                          TimesheetLine,
+                          $TimesheetLinesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TimesheetsTableReferences
+                              ._timesheetLinesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TimesheetsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).timesheetLinesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'timesheet_id',
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$TimesheetsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $TimesheetsTable,
+      Timesheet,
+      $$TimesheetsTableFilterComposer,
+      $$TimesheetsTableOrderingComposer,
+      $$TimesheetsTableAnnotationComposer,
+      $$TimesheetsTableCreateCompanionBuilder,
+      $$TimesheetsTableUpdateCompanionBuilder,
+      (Timesheet, $$TimesheetsTableReferences),
+      Timesheet,
+      PrefetchHooks Function({
+        bool clientId,
+        bool siteId,
+        bool timesheetRevisionsRefs,
+        bool timesheetLinesRefs,
+      })
+    >;
+typedef $$TimesheetRevisionsTableCreateCompanionBuilder =
+    TimesheetRevisionsCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      required String timesheetId,
+      required int revision,
+      Value<String> status,
+      Value<String?> reason,
+      Value<String> adjustments,
+      Value<String?> sharedOn,
+      Value<String?> respondedOn,
+      Value<String?> responseNote,
+      Value<String?> evidenceAssetId,
+      Value<int> rowid,
+    });
+typedef $$TimesheetRevisionsTableUpdateCompanionBuilder =
+    TimesheetRevisionsCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String> timesheetId,
+      Value<int> revision,
+      Value<String> status,
+      Value<String?> reason,
+      Value<String> adjustments,
+      Value<String?> sharedOn,
+      Value<String?> respondedOn,
+      Value<String?> responseNote,
+      Value<String?> evidenceAssetId,
+      Value<int> rowid,
+    });
+
+final class $$TimesheetRevisionsTableReferences
+    extends
+        BaseReferences<
+          _$TenantDatabase,
+          $TimesheetRevisionsTable,
+          TimesheetRevision
+        > {
+  $$TimesheetRevisionsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $TimesheetsTable _timesheetIdTable(_$TenantDatabase db) => db
+      .timesheets
+      .createAlias('timesheet_revisions__timesheet_id__timesheets__id');
+
+  $$TimesheetsTableProcessedTableManager get timesheetId {
+    final $_column = $_itemColumn<String>('timesheet_id')!;
+
+    final manager = $$TimesheetsTableTableManager(
+      $_db,
+      $_db.timesheets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_timesheetIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $DocumentAssetsTable _evidenceAssetIdTable(_$TenantDatabase db) =>
+      db.documentAssets.createAlias(
+        'timesheet_revisions__evidence_asset_id__document_assets__id',
+      );
+
+  $$DocumentAssetsTableProcessedTableManager? get evidenceAssetId {
+    final $_column = $_itemColumn<String>('evidence_asset_id');
+    if ($_column == null) return null;
+    final manager = $$DocumentAssetsTableTableManager(
+      $_db,
+      $_db.documentAssets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_evidenceAssetIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$TimesheetLinesTable, List<TimesheetLine>>
+  _timesheetLinesRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.timesheetLines,
+        aliasName: 'timesheet_revisions__id__timesheet_lines__revision_id',
+      );
+
+  $$TimesheetLinesTableProcessedTableManager get timesheetLinesRefs {
+    final manager = $$TimesheetLinesTableTableManager(
+      $_db,
+      $_db.timesheetLines,
+    ).filter((f) => f.revisionId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_timesheetLinesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$TimesheetRevisionsTableFilterComposer
+    extends Composer<_$TenantDatabase, $TimesheetRevisionsTable> {
+  $$TimesheetRevisionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get adjustments => $composableBuilder(
+    column: $table.adjustments,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sharedOn => $composableBuilder(
+    column: $table.sharedOn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get respondedOn => $composableBuilder(
+    column: $table.respondedOn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get responseNote => $composableBuilder(
+    column: $table.responseNote,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$TimesheetsTableFilterComposer get timesheetId {
+    final $$TimesheetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.timesheetId,
+      referencedTable: $db.timesheets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetsTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableFilterComposer get evidenceAssetId {
+    final $$DocumentAssetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.evidenceAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableFilterComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> timesheetLinesRefs(
+    Expression<bool> Function($$TimesheetLinesTableFilterComposer f) f,
+  ) {
+    final $$TimesheetLinesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.revisionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TimesheetRevisionsTableOrderingComposer
+    extends Composer<_$TenantDatabase, $TimesheetRevisionsTable> {
+  $$TimesheetRevisionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get revision => $composableBuilder(
+    column: $table.revision,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get adjustments => $composableBuilder(
+    column: $table.adjustments,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sharedOn => $composableBuilder(
+    column: $table.sharedOn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get respondedOn => $composableBuilder(
+    column: $table.respondedOn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get responseNote => $composableBuilder(
+    column: $table.responseNote,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TimesheetsTableOrderingComposer get timesheetId {
+    final $$TimesheetsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.timesheetId,
+      referencedTable: $db.timesheets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetsTableOrderingComposer(
+            $db: $db,
+            $table: $db.timesheets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableOrderingComposer get evidenceAssetId {
+    final $$DocumentAssetsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.evidenceAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableOrderingComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TimesheetRevisionsTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $TimesheetRevisionsTable> {
+  $$TimesheetRevisionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get revision =>
+      $composableBuilder(column: $table.revision, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<String> get adjustments => $composableBuilder(
+    column: $table.adjustments,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get sharedOn =>
+      $composableBuilder(column: $table.sharedOn, builder: (column) => column);
+
+  GeneratedColumn<String> get respondedOn => $composableBuilder(
+    column: $table.respondedOn,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get responseNote => $composableBuilder(
+    column: $table.responseNote,
+    builder: (column) => column,
+  );
+
+  $$TimesheetsTableAnnotationComposer get timesheetId {
+    final $$TimesheetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.timesheetId,
+      referencedTable: $db.timesheets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timesheets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DocumentAssetsTableAnnotationComposer get evidenceAssetId {
+    final $$DocumentAssetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.evidenceAssetId,
+      referencedTable: $db.documentAssets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DocumentAssetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.documentAssets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> timesheetLinesRefs<T extends Object>(
+    Expression<T> Function($$TimesheetLinesTableAnnotationComposer a) f,
+  ) {
+    final $$TimesheetLinesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.revisionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TimesheetRevisionsTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $TimesheetRevisionsTable,
+          TimesheetRevision,
+          $$TimesheetRevisionsTableFilterComposer,
+          $$TimesheetRevisionsTableOrderingComposer,
+          $$TimesheetRevisionsTableAnnotationComposer,
+          $$TimesheetRevisionsTableCreateCompanionBuilder,
+          $$TimesheetRevisionsTableUpdateCompanionBuilder,
+          (TimesheetRevision, $$TimesheetRevisionsTableReferences),
+          TimesheetRevision,
+          PrefetchHooks Function({
+            bool timesheetId,
+            bool evidenceAssetId,
+            bool timesheetLinesRefs,
+          })
+        > {
+  $$TimesheetRevisionsTableTableManager(
+    _$TenantDatabase db,
+    $TimesheetRevisionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TimesheetRevisionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TimesheetRevisionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TimesheetRevisionsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> timesheetId = const Value.absent(),
+                Value<int> revision = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<String?> reason = const Value.absent(),
+                Value<String> adjustments = const Value.absent(),
+                Value<String?> sharedOn = const Value.absent(),
+                Value<String?> respondedOn = const Value.absent(),
+                Value<String?> responseNote = const Value.absent(),
+                Value<String?> evidenceAssetId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TimesheetRevisionsCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                timesheetId: timesheetId,
+                revision: revision,
+                status: status,
+                reason: reason,
+                adjustments: adjustments,
+                sharedOn: sharedOn,
+                respondedOn: respondedOn,
+                responseNote: responseNote,
+                evidenceAssetId: evidenceAssetId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String timesheetId,
+                required int revision,
+                Value<String> status = const Value.absent(),
+                Value<String?> reason = const Value.absent(),
+                Value<String> adjustments = const Value.absent(),
+                Value<String?> sharedOn = const Value.absent(),
+                Value<String?> respondedOn = const Value.absent(),
+                Value<String?> responseNote = const Value.absent(),
+                Value<String?> evidenceAssetId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TimesheetRevisionsCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                timesheetId: timesheetId,
+                revision: revision,
+                status: status,
+                reason: reason,
+                adjustments: adjustments,
+                sharedOn: sharedOn,
+                respondedOn: respondedOn,
+                responseNote: responseNote,
+                evidenceAssetId: evidenceAssetId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$TimesheetRevisionsTable, TimesheetRevision>(
+                    table,
+                  ),
+                  $$TimesheetRevisionsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                timesheetId = false,
+                evidenceAssetId = false,
+                timesheetLinesRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (timesheetLinesRefs) db.timesheetLines,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (timesheetId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.timesheetId,
+                            referencedTable: $$TimesheetRevisionsTableReferences
+                                ._timesheetIdTable(db),
+                            referencedColumn:
+                                $$TimesheetRevisionsTableReferences
+                                    ._timesheetIdTable(db)
+                                    .id,
+                          ) as T;
+                        }
+                        if (evidenceAssetId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.evidenceAssetId,
+                            referencedTable: $$TimesheetRevisionsTableReferences
+                                ._evidenceAssetIdTable(db),
+                            referencedColumn:
+                                $$TimesheetRevisionsTableReferences
+                                    ._evidenceAssetIdTable(db)
+                                    .id,
+                          ) as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (timesheetLinesRefs)
+                        await $_getPrefetchedDataByColumns<
+                          TimesheetRevision,
+                          $TimesheetRevisionsTable,
+                          TimesheetLine,
+                          $TimesheetLinesTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TimesheetRevisionsTableReferences
+                              ._timesheetLinesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TimesheetRevisionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).timesheetLinesRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'revision_id',
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$TimesheetRevisionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $TimesheetRevisionsTable,
+      TimesheetRevision,
+      $$TimesheetRevisionsTableFilterComposer,
+      $$TimesheetRevisionsTableOrderingComposer,
+      $$TimesheetRevisionsTableAnnotationComposer,
+      $$TimesheetRevisionsTableCreateCompanionBuilder,
+      $$TimesheetRevisionsTableUpdateCompanionBuilder,
+      (TimesheetRevision, $$TimesheetRevisionsTableReferences),
+      TimesheetRevision,
+      PrefetchHooks Function({
+        bool timesheetId,
+        bool evidenceAssetId,
+        bool timesheetLinesRefs,
+      })
+    >;
+typedef $$TimesheetLinesTableCreateCompanionBuilder =
+    TimesheetLinesCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      required String timesheetId,
+      required String revisionId,
+      required String entryId,
+      required String workKey,
+      required String workDate,
+      required String siteId,
+      required String siteName,
+      required String workerId,
+      required String workerName,
+      required String workerCode,
+      Value<String?> trade,
+      required String attendanceStatus,
+      required int clockMinutes,
+      required int breakMinutes,
+      required int billableMinutes,
+      required String basis,
+      required int rateFils,
+      Value<int?> amountFils,
+      Value<String?> adjustReason,
+      Value<bool> live,
+      Value<int> rowid,
+    });
+typedef $$TimesheetLinesTableUpdateCompanionBuilder =
+    TimesheetLinesCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String> timesheetId,
+      Value<String> revisionId,
+      Value<String> entryId,
+      Value<String> workKey,
+      Value<String> workDate,
+      Value<String> siteId,
+      Value<String> siteName,
+      Value<String> workerId,
+      Value<String> workerName,
+      Value<String> workerCode,
+      Value<String?> trade,
+      Value<String> attendanceStatus,
+      Value<int> clockMinutes,
+      Value<int> breakMinutes,
+      Value<int> billableMinutes,
+      Value<String> basis,
+      Value<int> rateFils,
+      Value<int?> amountFils,
+      Value<String?> adjustReason,
+      Value<bool> live,
+      Value<int> rowid,
+    });
+
+final class $$TimesheetLinesTableReferences
+    extends
+        BaseReferences<_$TenantDatabase, $TimesheetLinesTable, TimesheetLine> {
+  $$TimesheetLinesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $TimesheetsTable _timesheetIdTable(_$TenantDatabase db) => db
+      .timesheets
+      .createAlias('timesheet_lines__timesheet_id__timesheets__id');
+
+  $$TimesheetsTableProcessedTableManager get timesheetId {
+    final $_column = $_itemColumn<String>('timesheet_id')!;
+
+    final manager = $$TimesheetsTableTableManager(
+      $_db,
+      $_db.timesheets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_timesheetIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $TimesheetRevisionsTable _revisionIdTable(_$TenantDatabase db) => db
+      .timesheetRevisions
+      .createAlias('timesheet_lines__revision_id__timesheet_revisions__id');
+
+  $$TimesheetRevisionsTableProcessedTableManager get revisionId {
+    final $_column = $_itemColumn<String>('revision_id')!;
+
+    final manager = $$TimesheetRevisionsTableTableManager(
+      $_db,
+      $_db.timesheetRevisions,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_revisionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AttendanceEntriesTable _entryIdTable(_$TenantDatabase db) => db
+      .attendanceEntries
+      .createAlias('timesheet_lines__entry_id__attendance_entries__id');
+
+  $$AttendanceEntriesTableProcessedTableManager get entryId {
+    final $_column = $_itemColumn<String>('entry_id')!;
+
+    final manager = $$AttendanceEntriesTableTableManager(
+      $_db,
+      $_db.attendanceEntries,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_entryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $SitesTable _siteIdTable(_$TenantDatabase db) =>
+      db.sites.createAlias('timesheet_lines__site_id__sites__id');
+
+  $$SitesTableProcessedTableManager get siteId {
+    final $_column = $_itemColumn<String>('site_id')!;
+
+    final manager = $$SitesTableTableManager(
+      $_db,
+      $_db.sites,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_siteIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WorkersTable _workerIdTable(_$TenantDatabase db) =>
+      db.workers.createAlias('timesheet_lines__worker_id__workers__id');
+
+  $$WorkersTableProcessedTableManager get workerId {
+    final $_column = $_itemColumn<String>('worker_id')!;
+
+    final manager = $$WorkersTableTableManager(
+      $_db,
+      $_db.workers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_workerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$BilledAllocationsTable, List<BilledAllocation>>
+  _billedAllocationsRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.billedAllocations,
+        aliasName: 'timesheet_lines__id__billed_allocations__line_id',
+      );
+
+  $$BilledAllocationsTableProcessedTableManager get billedAllocationsRefs {
+    final manager = $$BilledAllocationsTableTableManager(
+      $_db,
+      $_db.billedAllocations,
+    ).filter((f) => f.lineId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _billedAllocationsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$TimesheetLinesTableFilterComposer
+    extends Composer<_$TenantDatabase, $TimesheetLinesTable> {
+  $$TimesheetLinesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get workKey => $composableBuilder(
+    column: $table.workKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get workDate => $composableBuilder(
+    column: $table.workDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get siteName => $composableBuilder(
+    column: $table.siteName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get workerName => $composableBuilder(
+    column: $table.workerName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get workerCode => $composableBuilder(
+    column: $table.workerCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get trade => $composableBuilder(
+    column: $table.trade,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get attendanceStatus => $composableBuilder(
+    column: $table.attendanceStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get clockMinutes => $composableBuilder(
+    column: $table.clockMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get breakMinutes => $composableBuilder(
+    column: $table.breakMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get billableMinutes => $composableBuilder(
+    column: $table.billableMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get basis => $composableBuilder(
+    column: $table.basis,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get rateFils => $composableBuilder(
+    column: $table.rateFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get adjustReason => $composableBuilder(
+    column: $table.adjustReason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get live => $composableBuilder(
+    column: $table.live,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$TimesheetsTableFilterComposer get timesheetId {
+    final $$TimesheetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.timesheetId,
+      referencedTable: $db.timesheets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetsTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TimesheetRevisionsTableFilterComposer get revisionId {
+    final $$TimesheetRevisionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.revisionId,
+      referencedTable: $db.timesheetRevisions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetRevisionsTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheetRevisions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AttendanceEntriesTableFilterComposer get entryId {
+    final $$AttendanceEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.entryId,
+      referencedTable: $db.attendanceEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttendanceEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.attendanceEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SitesTableFilterComposer get siteId {
+    final $$SitesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.siteId,
+      referencedTable: $db.sites,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SitesTableFilterComposer(
+            $db: $db,
+            $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WorkersTableFilterComposer get workerId {
+    final $$WorkersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workerId,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableFilterComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> billedAllocationsRefs(
+    Expression<bool> Function($$BilledAllocationsTableFilterComposer f) f,
+  ) {
+    final $$BilledAllocationsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.billedAllocations,
+      getReferencedColumn: (t) => t.lineId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BilledAllocationsTableFilterComposer(
+            $db: $db,
+            $table: $db.billedAllocations,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TimesheetLinesTableOrderingComposer
+    extends Composer<_$TenantDatabase, $TimesheetLinesTable> {
+  $$TimesheetLinesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get workKey => $composableBuilder(
+    column: $table.workKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get workDate => $composableBuilder(
+    column: $table.workDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get siteName => $composableBuilder(
+    column: $table.siteName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get workerName => $composableBuilder(
+    column: $table.workerName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get workerCode => $composableBuilder(
+    column: $table.workerCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get trade => $composableBuilder(
+    column: $table.trade,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get attendanceStatus => $composableBuilder(
+    column: $table.attendanceStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get clockMinutes => $composableBuilder(
+    column: $table.clockMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get breakMinutes => $composableBuilder(
+    column: $table.breakMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get billableMinutes => $composableBuilder(
+    column: $table.billableMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get basis => $composableBuilder(
+    column: $table.basis,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get rateFils => $composableBuilder(
+    column: $table.rateFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get adjustReason => $composableBuilder(
+    column: $table.adjustReason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get live => $composableBuilder(
+    column: $table.live,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TimesheetsTableOrderingComposer get timesheetId {
+    final $$TimesheetsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.timesheetId,
+      referencedTable: $db.timesheets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetsTableOrderingComposer(
+            $db: $db,
+            $table: $db.timesheets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TimesheetRevisionsTableOrderingComposer get revisionId {
+    final $$TimesheetRevisionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.revisionId,
+      referencedTable: $db.timesheetRevisions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetRevisionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.timesheetRevisions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AttendanceEntriesTableOrderingComposer get entryId {
+    final $$AttendanceEntriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.entryId,
+      referencedTable: $db.attendanceEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttendanceEntriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.attendanceEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SitesTableOrderingComposer get siteId {
+    final $$SitesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.siteId,
+      referencedTable: $db.sites,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SitesTableOrderingComposer(
+            $db: $db,
+            $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WorkersTableOrderingComposer get workerId {
+    final $$WorkersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workerId,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableOrderingComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TimesheetLinesTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $TimesheetLinesTable> {
+  $$TimesheetLinesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get workKey =>
+      $composableBuilder(column: $table.workKey, builder: (column) => column);
+
+  GeneratedColumn<String> get workDate =>
+      $composableBuilder(column: $table.workDate, builder: (column) => column);
+
+  GeneratedColumn<String> get siteName =>
+      $composableBuilder(column: $table.siteName, builder: (column) => column);
+
+  GeneratedColumn<String> get workerName => $composableBuilder(
+    column: $table.workerName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get workerCode => $composableBuilder(
+    column: $table.workerCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get trade =>
+      $composableBuilder(column: $table.trade, builder: (column) => column);
+
+  GeneratedColumn<String> get attendanceStatus => $composableBuilder(
+    column: $table.attendanceStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get clockMinutes => $composableBuilder(
+    column: $table.clockMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get breakMinutes => $composableBuilder(
+    column: $table.breakMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get billableMinutes => $composableBuilder(
+    column: $table.billableMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get basis =>
+      $composableBuilder(column: $table.basis, builder: (column) => column);
+
+  GeneratedColumn<int> get rateFils =>
+      $composableBuilder(column: $table.rateFils, builder: (column) => column);
+
+  GeneratedColumn<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get adjustReason => $composableBuilder(
+    column: $table.adjustReason,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get live =>
+      $composableBuilder(column: $table.live, builder: (column) => column);
+
+  $$TimesheetsTableAnnotationComposer get timesheetId {
+    final $$TimesheetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.timesheetId,
+      referencedTable: $db.timesheets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timesheets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TimesheetRevisionsTableAnnotationComposer get revisionId {
+    final $$TimesheetRevisionsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.revisionId,
+          referencedTable: $db.timesheetRevisions,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$TimesheetRevisionsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.timesheetRevisions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$AttendanceEntriesTableAnnotationComposer get entryId {
+    final $$AttendanceEntriesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.entryId,
+          referencedTable: $db.attendanceEntries,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$AttendanceEntriesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.attendanceEntries,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$SitesTableAnnotationComposer get siteId {
+    final $$SitesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.siteId,
+      referencedTable: $db.sites,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SitesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.sites,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WorkersTableAnnotationComposer get workerId {
+    final $$WorkersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workerId,
+      referencedTable: $db.workers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.workers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> billedAllocationsRefs<T extends Object>(
+    Expression<T> Function($$BilledAllocationsTableAnnotationComposer a) f,
+  ) {
+    final $$BilledAllocationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.billedAllocations,
+          getReferencedColumn: (t) => t.lineId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$BilledAllocationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.billedAllocations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$TimesheetLinesTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $TimesheetLinesTable,
+          TimesheetLine,
+          $$TimesheetLinesTableFilterComposer,
+          $$TimesheetLinesTableOrderingComposer,
+          $$TimesheetLinesTableAnnotationComposer,
+          $$TimesheetLinesTableCreateCompanionBuilder,
+          $$TimesheetLinesTableUpdateCompanionBuilder,
+          (TimesheetLine, $$TimesheetLinesTableReferences),
+          TimesheetLine,
+          PrefetchHooks Function({
+            bool timesheetId,
+            bool revisionId,
+            bool entryId,
+            bool siteId,
+            bool workerId,
+            bool billedAllocationsRefs,
+          })
+        > {
+  $$TimesheetLinesTableTableManager(
+    _$TenantDatabase db,
+    $TimesheetLinesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TimesheetLinesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TimesheetLinesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TimesheetLinesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> timesheetId = const Value.absent(),
+                Value<String> revisionId = const Value.absent(),
+                Value<String> entryId = const Value.absent(),
+                Value<String> workKey = const Value.absent(),
+                Value<String> workDate = const Value.absent(),
+                Value<String> siteId = const Value.absent(),
+                Value<String> siteName = const Value.absent(),
+                Value<String> workerId = const Value.absent(),
+                Value<String> workerName = const Value.absent(),
+                Value<String> workerCode = const Value.absent(),
+                Value<String?> trade = const Value.absent(),
+                Value<String> attendanceStatus = const Value.absent(),
+                Value<int> clockMinutes = const Value.absent(),
+                Value<int> breakMinutes = const Value.absent(),
+                Value<int> billableMinutes = const Value.absent(),
+                Value<String> basis = const Value.absent(),
+                Value<int> rateFils = const Value.absent(),
+                Value<int?> amountFils = const Value.absent(),
+                Value<String?> adjustReason = const Value.absent(),
+                Value<bool> live = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TimesheetLinesCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                timesheetId: timesheetId,
+                revisionId: revisionId,
+                entryId: entryId,
+                workKey: workKey,
+                workDate: workDate,
+                siteId: siteId,
+                siteName: siteName,
+                workerId: workerId,
+                workerName: workerName,
+                workerCode: workerCode,
+                trade: trade,
+                attendanceStatus: attendanceStatus,
+                clockMinutes: clockMinutes,
+                breakMinutes: breakMinutes,
+                billableMinutes: billableMinutes,
+                basis: basis,
+                rateFils: rateFils,
+                amountFils: amountFils,
+                adjustReason: adjustReason,
+                live: live,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String timesheetId,
+                required String revisionId,
+                required String entryId,
+                required String workKey,
+                required String workDate,
+                required String siteId,
+                required String siteName,
+                required String workerId,
+                required String workerName,
+                required String workerCode,
+                Value<String?> trade = const Value.absent(),
+                required String attendanceStatus,
+                required int clockMinutes,
+                required int breakMinutes,
+                required int billableMinutes,
+                required String basis,
+                required int rateFils,
+                Value<int?> amountFils = const Value.absent(),
+                Value<String?> adjustReason = const Value.absent(),
+                Value<bool> live = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TimesheetLinesCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                timesheetId: timesheetId,
+                revisionId: revisionId,
+                entryId: entryId,
+                workKey: workKey,
+                workDate: workDate,
+                siteId: siteId,
+                siteName: siteName,
+                workerId: workerId,
+                workerName: workerName,
+                workerCode: workerCode,
+                trade: trade,
+                attendanceStatus: attendanceStatus,
+                clockMinutes: clockMinutes,
+                breakMinutes: breakMinutes,
+                billableMinutes: billableMinutes,
+                basis: basis,
+                rateFils: rateFils,
+                amountFils: amountFils,
+                adjustReason: adjustReason,
+                live: live,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$TimesheetLinesTable, TimesheetLine>(table),
+                  $$TimesheetLinesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                timesheetId = false,
+                revisionId = false,
+                entryId = false,
+                siteId = false,
+                workerId = false,
+                billedAllocationsRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (billedAllocationsRefs) db.billedAllocations,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (timesheetId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.timesheetId,
+                            referencedTable: $$TimesheetLinesTableReferences
+                                ._timesheetIdTable(db),
+                            referencedColumn: $$TimesheetLinesTableReferences
+                                ._timesheetIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (revisionId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.revisionId,
+                            referencedTable: $$TimesheetLinesTableReferences
+                                ._revisionIdTable(db),
+                            referencedColumn: $$TimesheetLinesTableReferences
+                                ._revisionIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (entryId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.entryId,
+                            referencedTable: $$TimesheetLinesTableReferences
+                                ._entryIdTable(db),
+                            referencedColumn: $$TimesheetLinesTableReferences
+                                ._entryIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (siteId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.siteId,
+                            referencedTable: $$TimesheetLinesTableReferences
+                                ._siteIdTable(db),
+                            referencedColumn: $$TimesheetLinesTableReferences
+                                ._siteIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+                        if (workerId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.workerId,
+                            referencedTable: $$TimesheetLinesTableReferences
+                                ._workerIdTable(db),
+                            referencedColumn: $$TimesheetLinesTableReferences
+                                ._workerIdTable(db)
+                                .id,
+                          ) as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (billedAllocationsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          TimesheetLine,
+                          $TimesheetLinesTable,
+                          BilledAllocation,
+                          $BilledAllocationsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TimesheetLinesTableReferences
+                              ._billedAllocationsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TimesheetLinesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).billedAllocationsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'line_id',
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$TimesheetLinesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $TimesheetLinesTable,
+      TimesheetLine,
+      $$TimesheetLinesTableFilterComposer,
+      $$TimesheetLinesTableOrderingComposer,
+      $$TimesheetLinesTableAnnotationComposer,
+      $$TimesheetLinesTableCreateCompanionBuilder,
+      $$TimesheetLinesTableUpdateCompanionBuilder,
+      (TimesheetLine, $$TimesheetLinesTableReferences),
+      TimesheetLine,
+      PrefetchHooks Function({
+        bool timesheetId,
+        bool revisionId,
+        bool entryId,
+        bool siteId,
+        bool workerId,
+        bool billedAllocationsRefs,
+      })
+    >;
+typedef $$BilledAllocationsTableCreateCompanionBuilder =
+    BilledAllocationsCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      required String lineId,
+      required String workKey,
+      required String invoiceId,
+      required int amountFils,
+      Value<bool> released,
+      Value<int> rowid,
+    });
+typedef $$BilledAllocationsTableUpdateCompanionBuilder =
+    BilledAllocationsCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String> lineId,
+      Value<String> workKey,
+      Value<String> invoiceId,
+      Value<int> amountFils,
+      Value<bool> released,
+      Value<int> rowid,
+    });
+
+final class $$BilledAllocationsTableReferences
+    extends
+        BaseReferences<
+          _$TenantDatabase,
+          $BilledAllocationsTable,
+          BilledAllocation
+        > {
+  $$BilledAllocationsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $TimesheetLinesTable _lineIdTable(_$TenantDatabase db) => db
+      .timesheetLines
+      .createAlias('billed_allocations__line_id__timesheet_lines__id');
+
+  $$TimesheetLinesTableProcessedTableManager get lineId {
+    final $_column = $_itemColumn<String>('line_id')!;
+
+    final manager = $$TimesheetLinesTableTableManager(
+      $_db,
+      $_db.timesheetLines,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_lineIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$BilledAllocationsTableFilterComposer
+    extends Composer<_$TenantDatabase, $BilledAllocationsTable> {
+  $$BilledAllocationsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get workKey => $composableBuilder(
+    column: $table.workKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get invoiceId => $composableBuilder(
+    column: $table.invoiceId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get released => $composableBuilder(
+    column: $table.released,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$TimesheetLinesTableFilterComposer get lineId {
+    final $$TimesheetLinesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.lineId,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableFilterComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$BilledAllocationsTableOrderingComposer
+    extends Composer<_$TenantDatabase, $BilledAllocationsTable> {
+  $$BilledAllocationsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get workKey => $composableBuilder(
+    column: $table.workKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get invoiceId => $composableBuilder(
+    column: $table.invoiceId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get released => $composableBuilder(
+    column: $table.released,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TimesheetLinesTableOrderingComposer get lineId {
+    final $$TimesheetLinesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.lineId,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableOrderingComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$BilledAllocationsTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $BilledAllocationsTable> {
+  $$BilledAllocationsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get workKey =>
+      $composableBuilder(column: $table.workKey, builder: (column) => column);
+
+  GeneratedColumn<String> get invoiceId =>
+      $composableBuilder(column: $table.invoiceId, builder: (column) => column);
+
+  GeneratedColumn<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get released =>
+      $composableBuilder(column: $table.released, builder: (column) => column);
+
+  $$TimesheetLinesTableAnnotationComposer get lineId {
+    final $$TimesheetLinesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.lineId,
+      referencedTable: $db.timesheetLines,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TimesheetLinesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.timesheetLines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$BilledAllocationsTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $BilledAllocationsTable,
+          BilledAllocation,
+          $$BilledAllocationsTableFilterComposer,
+          $$BilledAllocationsTableOrderingComposer,
+          $$BilledAllocationsTableAnnotationComposer,
+          $$BilledAllocationsTableCreateCompanionBuilder,
+          $$BilledAllocationsTableUpdateCompanionBuilder,
+          (BilledAllocation, $$BilledAllocationsTableReferences),
+          BilledAllocation,
+          PrefetchHooks Function({bool lineId})
+        > {
+  $$BilledAllocationsTableTableManager(
+    _$TenantDatabase db,
+    $BilledAllocationsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BilledAllocationsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BilledAllocationsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BilledAllocationsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> lineId = const Value.absent(),
+                Value<String> workKey = const Value.absent(),
+                Value<String> invoiceId = const Value.absent(),
+                Value<int> amountFils = const Value.absent(),
+                Value<bool> released = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BilledAllocationsCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                lineId: lineId,
+                workKey: workKey,
+                invoiceId: invoiceId,
+                amountFils: amountFils,
+                released: released,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String lineId,
+                required String workKey,
+                required String invoiceId,
+                required int amountFils,
+                Value<bool> released = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BilledAllocationsCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                lineId: lineId,
+                workKey: workKey,
+                invoiceId: invoiceId,
+                amountFils: amountFils,
+                released: released,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$BilledAllocationsTable, BilledAllocation>(table),
+                  $$BilledAllocationsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({lineId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (lineId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.lineId,
+                        referencedTable: $$BilledAllocationsTableReferences
+                            ._lineIdTable(db),
+                        referencedColumn: $$BilledAllocationsTableReferences
+                            ._lineIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$BilledAllocationsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $BilledAllocationsTable,
+      BilledAllocation,
+      $$BilledAllocationsTableFilterComposer,
+      $$BilledAllocationsTableOrderingComposer,
+      $$BilledAllocationsTableAnnotationComposer,
+      $$BilledAllocationsTableCreateCompanionBuilder,
+      $$BilledAllocationsTableUpdateCompanionBuilder,
+      (BilledAllocation, $$BilledAllocationsTableReferences),
+      BilledAllocation,
+      PrefetchHooks Function({bool lineId})
     >;
 typedef $$TenantProfilesTableCreateCompanionBuilder =
     TenantProfilesCompanion Function({
@@ -40374,6 +48320,14 @@ class $TenantDatabaseManager {
       $$AttendanceEntriesTableTableManager(_db, _db.attendanceEntries);
   $$OpeningBalancesTableTableManager get openingBalances =>
       $$OpeningBalancesTableTableManager(_db, _db.openingBalances);
+  $$TimesheetsTableTableManager get timesheets =>
+      $$TimesheetsTableTableManager(_db, _db.timesheets);
+  $$TimesheetRevisionsTableTableManager get timesheetRevisions =>
+      $$TimesheetRevisionsTableTableManager(_db, _db.timesheetRevisions);
+  $$TimesheetLinesTableTableManager get timesheetLines =>
+      $$TimesheetLinesTableTableManager(_db, _db.timesheetLines);
+  $$BilledAllocationsTableTableManager get billedAllocations =>
+      $$BilledAllocationsTableTableManager(_db, _db.billedAllocations);
   $$TenantProfilesTableTableManager get tenantProfiles =>
       $$TenantProfilesTableTableManager(_db, _db.tenantProfiles);
   $$PayContractsTableTableManager get payContracts =>

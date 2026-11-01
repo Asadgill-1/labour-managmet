@@ -1231,5 +1231,229 @@
   },
   "lhBadType": "Only PNG or JPEG images work.",
   "lhTooLarge": "The image is over 5 MB.",
-  "lhSample": "See a sample"
+  "lhSample": "See a sample",
+  "mainBilling": "Billing",
+  "tsTab": "Timesheets",
+  "tsTitle": "Timesheet",
+  "tsNew": "New timesheet",
+  "tsEmpty": "No timesheets yet. Pick a company and dates to make one.",
+  "tsAllSites": "All sites",
+  "tsFrom": "From",
+  "tsTo": "To",
+  "tsBadDates": "The end date is before the start date.",
+  "tsWillHold": "{count, plural, =1{1 row goes on it} other{{count} rows go on it}}",
+  "@tsWillHold": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsNothing": "Nothing in these dates can go on a timesheet.",
+  "tsLeftNoRate": "{count, plural, =1{1 row left out: no company rate. Add it in Rates.} other{{count} rows left out: no company rate. Add it in Rates.}}",
+  "@tsLeftNoRate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsLeftNoWage": "{count, plural, =1{1 row left out: no worker rate yet.} other{{count} rows left out: no worker rate yet.}}",
+  "@tsLeftNoWage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsLeftOther": "{count, plural, =1{1 row left out: already on another timesheet.} other{{count} rows left out: already on another timesheet.}}",
+  "@tsLeftOther": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsCreate": "Make draft",
+  "tsDraftNote": "A draft follows the attendance until you approve it.",
+  "tsStatusDraft": "Draft",
+  "tsStatusApproved": "Approved",
+  "tsStatusShared": "Sent to the company",
+  "tsStatusAccepted": "Accepted, locked",
+  "tsStatusDisputed": "Disputed by the company",
+  "tsNoteApproved": "Make the paper and send it. Then say you sent it.",
+  "tsNoteShared": "Waiting for the company. This never holds up a wage.",
+  "tsNoteDisputed": "Check the hours with the company. Worker pay stays as it is until you correct the attendance.",
+  "tsRevisionLabel": "Revision {number}",
+  "@tsRevisionLabel": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "tsViewDaily": "Daily summary",
+  "tsViewWorkers": "Worker detail",
+  "tsPricedLabel": "with rates",
+  "tsHoursOnlyLabel": "hours only",
+  "tsUniqueWorkers": "Unique workers",
+  "tsWorkerDays": "Worker-days",
+  "tsShiftsWorked": "Shifts worked",
+  "tsHoursBilled": "Billable hours",
+  "tsDaysBilled": "Billable days",
+  "tsShiftsBilled": "Billable shifts",
+  "tsAmount": "Amount",
+  "tsTotalAmount": "Timesheet total",
+  "colPersons": "People",
+  "colShifts": "Shifts",
+  "colClock": "Clock hours",
+  "colTrade": "Trade",
+  "colBillable": "Billable",
+  "tsHoursValue": "{hours} h",
+  "@tsHoursValue": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "tsDaysValue": "{days} days",
+  "@tsDaysValue": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "tsShiftsValue": "{shifts} shifts",
+  "@tsShiftsValue": {
+    "placeholders": {
+      "shifts": {
+        "type": "String"
+      }
+    }
+  },
+  "tsMonthlyRow": "Monthly",
+  "tsNotCharged": "Not charged",
+  "tsMonthlyLine": "{basis}, {rate}: {from} to {to}, {count} people. The fee goes on the invoice once, not from these rows.",
+  "@tsMonthlyLine": {
+    "placeholders": {
+      "basis": {
+        "type": "String"
+      },
+      "rate": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsMonthlyLinePlain": "{basis}: {from} to {to}, {count} people.",
+  "@tsMonthlyLinePlain": {
+    "placeholders": {
+      "basis": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsAgreedHeading": "Agreed with the company",
+  "tsRevisedBecause": "Revised: {reason}",
+  "@tsRevisedBecause": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "tsNotInvoice": "This is a timesheet, not an invoice.",
+  "tsClientSign": "Acknowledged for {client}",
+  "tsApprove": "Approve",
+  "tsApproveBody": "Its attendance freezes and it gets a number. A later change needs a new revision.",
+  "tsDeleteDraft": "Throw away draft",
+  "tsPaper": "Make the paper",
+  "tsPaperPriced": "Show rate and amount",
+  "tsPaperPricedHelp": "Off, the company sees hours only. A worker's wage never prints.",
+  "tsContinue": "Continue",
+  "tsShared": "Sent to the company",
+  "tsAccepted": "Company accepted",
+  "tsDisputed": "Company disputes it",
+  "tsRespondDate": "On what date",
+  "tsRespondNote": "What they said (optional)",
+  "tsEvidence": "Add a photo (optional)",
+  "tsEvidenceAdded": "Photo added",
+  "tsEvidenceNote": "A photo of what came back. It is not a verified digital signature.",
+  "tsNewRevision": "New revision",
+  "tsRevisionHelp": "The old one stays exactly as it was. What changed?",
+  "tsRevisionConfirm": "Start",
+  "tsChanged": "{count, plural, =1{1 row of attendance was corrected after this. A new revision takes it in.} other{{count} rows of attendance were corrected after this. A new revision takes them in.}}",
+  "@tsChanged": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsBillingChanged": "{count, plural, =1{1 row differs from what an invoice charged, by {amount}. The invoice has not changed.} other{{count} rows differ from what an invoice charged, by {amount}. The invoice has not changed.}}",
+  "@tsBillingChanged": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tsRevisionsHeading": "Revisions",
+  "tsOldRevisionNote": "This is an older revision, kept exactly as it was.",
+  "tsAdjustTitle": "What the company agreed",
+  "tsAdjustHelp": "This changes the company's paper only. Attendance and the worker's pay stay as they are.",
+  "tsAdjustHours": "Billable hours",
+  "tsAdjustMinutes": "Minutes",
+  "tsAdjustAmount": "Amount (AED)",
+  "tsAdjustReason": "Why",
+  "tsAdjustClear": "Back to the attendance figure",
+  "tsAdjustSave": "Save",
+  "tsNotTaken": "Not charged",
+  "tsAgreedRow": "Agreed: {reason}",
+  "@tsAgreedRow": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "tsWrongStep": "This has already moved on. Look again.",
+  "tsBasisOnly": "A monthly row has no amount of its own.",
+  "tsPeople": "{count, plural, =1{1 person} other{{count} people}}",
+  "@tsPeople": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@tsClientSign": {
+    "placeholders": {
+      "client": {
+        "type": "String"
+      }
+    }
+  }
 }

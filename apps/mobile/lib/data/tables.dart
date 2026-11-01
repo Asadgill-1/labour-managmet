@@ -227,6 +227,98 @@ class IssuedDocuments extends Table with Common {
   ];
 }
 
+/// One company's work over some dates (TS-01). It gets its number when first approved, so a draft thrown away leaves no gap.
+class Timesheets extends Table with Common {
+  TextColumn get clientId => text().references(Clients, #id)();
+
+  /// Null means every site of the company.
+  TextColumn get siteId => text().nullable().references(Sites, #id)();
+  TextColumn get fromDate => text()();
+  TextColumn get toDate => text()();
+  IntColumn get year => integer().nullable()();
+  IntColumn get seq => integer().nullable()();
+  TextColumn get number => text().nullable()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {tenantId, year, seq},
+  ];
+}
+
+/// One version of a timesheet and how far it has gone (TS-04). A change after approval is a new revision, and the old one
+/// stays (TS-06). Triggers enforce this.
+class TimesheetRevisions extends Table with Common {
+  TextColumn get timesheetId => text().references(Timesheets, #id)();
+  IntColumn get revision => integer()();
+
+  /// A `TsStatus` by name.
+  TextColumn get status => text().withDefault(const Constant('draft'))();
+
+  /// Why this revision exists. Null on the first.
+  TextColumn get reason => text().nullable()();
+
+  /// JSON while a draft, by attendance row: what the company agreed instead, and why. Attendance and pay never change for it (TS-06).
+  TextColumn get adjustments => text().withDefault(const Constant('{}'))();
+  TextColumn get sharedOn => text().nullable()();
+  TextColumn get respondedOn => text().nullable()();
+  TextColumn get responseNote => text().nullable()();
+
+  /// A photo of what the company sent back. Never a verified signature (TS-04).
+  TextColumn get evidenceAssetId => text().nullable().references(DocumentAssets, #id)();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {timesheetId, revision},
+  ];
+}
+
+/// A row of an approved revision as it stood, company side only: no wage has a column here (TS-02). Written once at approval
+/// and never changed. [live] says it belongs to the current revision. Triggers enforce this.
+@TableIndex(name: 'idx_timesheet_lines_revision', columns: {#revisionId})
+@TableIndex(name: 'idx_timesheet_lines_timesheet', columns: {#timesheetId, #live})
+class TimesheetLines extends Table with Common {
+  TextColumn get timesheetId => text().references(Timesheets, #id)();
+  TextColumn get revisionId => text().references(TimesheetRevisions, #id)();
+  TextColumn get entryId => text().references(AttendanceEntries, #id)();
+
+  /// The first row of the entry's correction chain, so a corrected row is still the same work (TS-05).
+  TextColumn get workKey => text()();
+  TextColumn get workDate => text()();
+  TextColumn get siteId => text().references(Sites, #id)();
+  TextColumn get siteName => text()();
+  TextColumn get workerId => text().references(Workers, #id)();
+  TextColumn get workerName => text()();
+  TextColumn get workerCode => text()();
+  TextColumn get trade => text().nullable()();
+
+  /// What the company is charged for: 'present', 'half' or 'absent'.
+  TextColumn get attendanceStatus => text()();
+  IntColumn get clockMinutes => integer()();
+  IntColumn get breakMinutes => integer()();
+  IntColumn get billableMinutes => integer()();
+  TextColumn get basis => text()();
+  IntColumn get rateFils => integer()();
+
+  /// Null on a monthly row, whose fee belongs to the contract (TS-08).
+  IntColumn get amountFils => integer().nullable().check(amountFils.isBiggerOrEqualValue(0))();
+
+  /// Set when this differs from the attendance.
+  TextColumn get adjustReason => text().nullable()();
+  BoolColumn get live => boolean().withDefault(const Constant(true))();
+}
+
+/// Which invoice charged which work (TS-05). One live row per piece of work, so nothing is charged twice. A credit note or
+/// cancelled invoice only flags its rows. Triggers enforce this.
+class BilledAllocations extends Table with Common {
+  TextColumn get lineId => text().references(TimesheetLines, #id)();
+  TextColumn get workKey => text()();
+
+  /// T16's invoice.
+  TextColumn get invoiceId => text()();
+  IntColumn get amountFils => integer().check(amountFils.isBiggerOrEqualValue(0))();
+  BoolColumn get released => boolean().withDefault(const Constant(false))();
+}
+
 /// Rate terms shared by both contract tables (MASTER-06). Dates are YYYY-MM-DD.
 mixin RateTerms on Table {
   TextColumn get basis => text()();

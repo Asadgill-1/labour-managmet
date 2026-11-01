@@ -7,6 +7,7 @@ import 'package:labour_app/data/closing.dart';
 import 'package:labour_app/data/documents.dart';
 import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/data/tenant_database.dart';
+import 'package:labour_app/data/timesheets.dart';
 
 import 'generated/schema.dart';
 
@@ -135,6 +136,36 @@ void main() {
 
     await db.addSalaryPayment(operationId: newUuid(), date: '2026-10-06', workerId: 'w1', amountFils: 2000, parts: {'2026-09': 2000}, extraNote: 'x');
     await expectLater(db.delete(db.salaryAllocations).go(), throwsA(anything));
+  });
+
+  test('a phone on version 11 upgrades: its attendance is untouched, and a timesheet can be made from it (TS-01)', () async {
+    final old = await verifier.schemaAt(11);
+    old.rawDatabase.execute('''
+      INSERT INTO tenant_profiles (id, $commonColumns, legal_name) VALUES ('p1', $common, 'Labour');
+      INSERT INTO clients (id, $commonColumns, name) VALUES ('c1', $common, 'ATE');
+      INSERT INTO sites (id, $commonColumns, client_id, name) VALUES ('s1', $common, 'c1', 'Melboard');
+      INSERT INTO workers (id, $commonColumns, code, name) VALUES ('w1', $common, 'W001', 'Ahmad');
+      INSERT INTO pay_contracts (id, $commonColumns, worker_id, basis, rate_fils, effective_from) VALUES ('k1', $common, 'w1', 'day', 1000, '2026-01-01');
+      INSERT INTO billing_contracts (id, $commonColumns, client_id, basis, rate_fils, effective_from) VALUES ('k2', $common, 'c1', 'day', 1500, '2026-01-01');
+      INSERT INTO attendance_batches (id, $commonColumns, work_date, client_id, site_id) VALUES ('b1', $common, '2026-10-20', 'c1', 's1');
+      INSERT INTO attendance_entries (id, $commonColumns, batch_id, worker_id, client_id, site_id, work_date, clock_minutes, break_minutes, break_paid_client, break_paid_worker,
+        client_billable_minutes, worker_payable_minutes, attendance_status, client_basis, client_rate_fils, client_amount_fils, worker_basis, worker_rate_fils, worker_amount_fils, state)
+      VALUES ('e1', $common, 'b1', 'w1', 'c1', 's1', '2026-10-20', 0, 0, 0, 0, 0, 0, 'present', 'day', 1500, 1500, 'day', 1000, 1000, 'submitted');
+    ''');
+
+    final db = TenantDatabase(old.newConnection(), tenantId: 't', deviceId: 'device');
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, db.schemaVersion);
+
+    expect((await db.select(db.attendanceEntries).getSingle()).state, 'submitted');
+    final id = await db.createTimesheet(clientId: 'c1', from: '2026-10-01', to: '2026-10-31', operationId: newUuid());
+    await db.approveTimesheet((await db.timesheetView(id)).revision.id, operationId: newUuid());
+    expect((await db.timesheetView(id)).totals.amountFils, 1500);
+    final line = await db.select(db.timesheetLines).getSingle();
+    await expectLater(db.customStatement("UPDATE timesheet_lines SET amount_fils = 1 WHERE id = '${line.id}'"), throwsA(anything));
+    await expectLater(db.customStatement("DELETE FROM timesheet_lines WHERE id = '${line.id}'"), throwsA(anything));
+    await db.allocateBilling('i1', [line], operationId: newUuid());
+    await expectLater(db.allocateBilling('i2', [line], operationId: newUuid()), throwsA(isA<AlreadyBilled>()));
   });
 
   test('a phone on version 10 upgrades: it has no template, papers issue with the company details, and nothing else moves (DOC-05)', () async {

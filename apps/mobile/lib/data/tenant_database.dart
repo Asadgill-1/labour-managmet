@@ -53,6 +53,10 @@ String newUuid() {
     DocumentAssets,
     DocumentTemplates,
     IssuedDocuments,
+    Timesheets,
+    TimesheetRevisions,
+    TimesheetLines,
+    BilledAllocations,
     AttendanceBatches,
     AttendanceEntries,
     PayrollRuns,
@@ -71,7 +75,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 12;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -164,6 +168,32 @@ class TenantDatabase extends _$TenantDatabase {
         await m.createTable(schema.issuedDocuments);
         await m.createIndex(schema.idxIssuedSubject);
         for (final trigger in [schema.issuedNoEdit, schema.issuedNoDelete, schema.assetNoEdit, schema.assetNoDelete]) {
+          await m.createTrigger(trigger);
+        }
+      },
+      from11To12: (m, schema) async {
+        await m.createTable(schema.timesheets);
+        await m.createTable(schema.timesheetRevisions);
+        await m.createTable(schema.timesheetLines);
+        await m.createTable(schema.billedAllocations);
+        await m.createIndex(schema.idxTimesheetLinesRevision);
+        await m.createIndex(schema.idxTimesheetLinesTimesheet);
+        await m.createIndex(schema.oneLiveTimesheetLine);
+        await m.createIndex(schema.oneLiveBilling);
+        for (final trigger in [
+          schema.timesheetKeepsNumber,
+          schema.timesheetNoDelete,
+          schema.revisionNoRedraft,
+          schema.revisionKeepsAdjustments,
+          schema.revisionAcceptedLocked,
+          schema.revisionNoDelete,
+          schema.timesheetLineNoEdit,
+          schema.timesheetLineStaysOff,
+          schema.timesheetLineNoDelete,
+          schema.billingNoEdit,
+          schema.billingStaysReleased,
+          schema.billingNoDelete,
+        ]) {
           await m.createTrigger(trigger);
         }
       },

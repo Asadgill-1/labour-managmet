@@ -6,6 +6,7 @@ import '../data/documents.dart';
 import '../data/payroll.dart';
 import '../data/statement.dart';
 import '../data/tenant_database.dart';
+import '../data/timesheets.dart';
 import '../data/visa.dart';
 
 /// Opened in main. Disposing this scope at logout closes the tenant's data (AUTH-04).
@@ -131,6 +132,11 @@ final documentAssetProvider = FutureProvider.family<DocumentAsset?, String>((ref
 });
 
 final issuedDocumentsProvider = StreamProvider<List<IssuedRow>>((ref) => ref.watch(dbProvider).watchIssued());
+
+final timesheetsProvider = StreamProvider<List<TimesheetListRow>>((ref) => ref.watch(dbProvider).watchTimesheets());
+
+/// One revision of a timesheet. A null revision means the newest.
+final timesheetProvider = StreamProvider.autoDispose.family<TimesheetView, ({String id, int? revision})>((ref, key) => ref.watch(dbProvider).watchTimesheet(key.id, revision: key.revision));
 
 final visaAccountsProvider = StreamProvider<List<VisaAccount>>((ref) => ref.watch(dbProvider).watchVisaAccounts());
 

@@ -17,6 +17,7 @@ import '../features/rates/balances_screen.dart';
 import '../features/registers/ledger_screen.dart';
 import '../features/rates/rates_screen.dart';
 import '../features/rooms/rooms_screen.dart';
+import '../features/timesheets/timesheets_screen.dart';
 import '../features/today/today_screen.dart';
 import '../features/visa/visa_screen.dart';
 import '../l10n/app_localizations.dart';
@@ -41,6 +42,7 @@ Widget _screen(Section section) => switch (section) {
   Section.closing => const ClosingScreen(),
   Section.documents => const DocumentsScreen(),
   Section.letterhead => const LetterheadScreen(),
+  Section.timesheets => const TimesheetsScreen(),
   Section.attendanceRegister ||
   Section.workerRegister ||
   Section.visaRegister ||

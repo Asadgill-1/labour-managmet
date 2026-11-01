@@ -4020,6 +4020,540 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See a sample'**
   String get lhSample;
+
+  /// No description provided for @mainBilling.
+  ///
+  /// In en, this message translates to:
+  /// **'Billing'**
+  String get mainBilling;
+
+  /// No description provided for @tsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Timesheets'**
+  String get tsTab;
+
+  /// No description provided for @tsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Timesheet'**
+  String get tsTitle;
+
+  /// No description provided for @tsNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New timesheet'**
+  String get tsNew;
+
+  /// No description provided for @tsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No timesheets yet. Pick a company and dates to make one.'**
+  String get tsEmpty;
+
+  /// No description provided for @tsAllSites.
+  ///
+  /// In en, this message translates to:
+  /// **'All sites'**
+  String get tsAllSites;
+
+  /// No description provided for @tsFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get tsFrom;
+
+  /// No description provided for @tsTo.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get tsTo;
+
+  /// No description provided for @tsBadDates.
+  ///
+  /// In en, this message translates to:
+  /// **'The end date is before the start date.'**
+  String get tsBadDates;
+
+  /// No description provided for @tsWillHold.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row goes on it} other{{count} rows go on it}}'**
+  String tsWillHold(int count);
+
+  /// No description provided for @tsNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in these dates can go on a timesheet.'**
+  String get tsNothing;
+
+  /// No description provided for @tsLeftNoRate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row left out: no company rate. Add it in Rates.} other{{count} rows left out: no company rate. Add it in Rates.}}'**
+  String tsLeftNoRate(int count);
+
+  /// No description provided for @tsLeftNoWage.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row left out: no worker rate yet.} other{{count} rows left out: no worker rate yet.}}'**
+  String tsLeftNoWage(int count);
+
+  /// No description provided for @tsLeftOther.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row left out: already on another timesheet.} other{{count} rows left out: already on another timesheet.}}'**
+  String tsLeftOther(int count);
+
+  /// No description provided for @tsCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Make draft'**
+  String get tsCreate;
+
+  /// No description provided for @tsDraftNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A draft follows the attendance until you approve it.'**
+  String get tsDraftNote;
+
+  /// No description provided for @tsStatusDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get tsStatusDraft;
+
+  /// No description provided for @tsStatusApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get tsStatusApproved;
+
+  /// No description provided for @tsStatusShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to the company'**
+  String get tsStatusShared;
+
+  /// No description provided for @tsStatusAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted, locked'**
+  String get tsStatusAccepted;
+
+  /// No description provided for @tsStatusDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'Disputed by the company'**
+  String get tsStatusDisputed;
+
+  /// No description provided for @tsNoteApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Make the paper and send it. Then say you sent it.'**
+  String get tsNoteApproved;
+
+  /// No description provided for @tsNoteShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the company. This never holds up a wage.'**
+  String get tsNoteShared;
+
+  /// No description provided for @tsNoteDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the hours with the company. Worker pay stays as it is until you correct the attendance.'**
+  String get tsNoteDisputed;
+
+  /// No description provided for @tsRevisionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Revision {number}'**
+  String tsRevisionLabel(int number);
+
+  /// No description provided for @tsViewDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily summary'**
+  String get tsViewDaily;
+
+  /// No description provided for @tsViewWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker detail'**
+  String get tsViewWorkers;
+
+  /// No description provided for @tsPricedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'with rates'**
+  String get tsPricedLabel;
+
+  /// No description provided for @tsHoursOnlyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'hours only'**
+  String get tsHoursOnlyLabel;
+
+  /// No description provided for @tsUniqueWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Unique workers'**
+  String get tsUniqueWorkers;
+
+  /// No description provided for @tsWorkerDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker-days'**
+  String get tsWorkerDays;
+
+  /// No description provided for @tsShiftsWorked.
+  ///
+  /// In en, this message translates to:
+  /// **'Shifts worked'**
+  String get tsShiftsWorked;
+
+  /// No description provided for @tsHoursBilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Billable hours'**
+  String get tsHoursBilled;
+
+  /// No description provided for @tsDaysBilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Billable days'**
+  String get tsDaysBilled;
+
+  /// No description provided for @tsShiftsBilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Billable shifts'**
+  String get tsShiftsBilled;
+
+  /// No description provided for @tsAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get tsAmount;
+
+  /// No description provided for @tsTotalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Timesheet total'**
+  String get tsTotalAmount;
+
+  /// No description provided for @colPersons.
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get colPersons;
+
+  /// No description provided for @colShifts.
+  ///
+  /// In en, this message translates to:
+  /// **'Shifts'**
+  String get colShifts;
+
+  /// No description provided for @colClock.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock hours'**
+  String get colClock;
+
+  /// No description provided for @colTrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade'**
+  String get colTrade;
+
+  /// No description provided for @colBillable.
+  ///
+  /// In en, this message translates to:
+  /// **'Billable'**
+  String get colBillable;
+
+  /// No description provided for @tsHoursValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h'**
+  String tsHoursValue(String hours);
+
+  /// No description provided for @tsDaysValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days'**
+  String tsDaysValue(String days);
+
+  /// No description provided for @tsShiftsValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{shifts} shifts'**
+  String tsShiftsValue(String shifts);
+
+  /// No description provided for @tsMonthlyRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get tsMonthlyRow;
+
+  /// No description provided for @tsNotCharged.
+  ///
+  /// In en, this message translates to:
+  /// **'Not charged'**
+  String get tsNotCharged;
+
+  /// No description provided for @tsMonthlyLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{basis}, {rate}: {from} to {to}, {count} people. The fee goes on the invoice once, not from these rows.'**
+  String tsMonthlyLine(
+    String basis,
+    String rate,
+    String from,
+    String to,
+    int count,
+  );
+
+  /// No description provided for @tsMonthlyLinePlain.
+  ///
+  /// In en, this message translates to:
+  /// **'{basis}: {from} to {to}, {count} people.'**
+  String tsMonthlyLinePlain(String basis, String from, String to, int count);
+
+  /// No description provided for @tsAgreedHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Agreed with the company'**
+  String get tsAgreedHeading;
+
+  /// No description provided for @tsRevisedBecause.
+  ///
+  /// In en, this message translates to:
+  /// **'Revised: {reason}'**
+  String tsRevisedBecause(String reason);
+
+  /// No description provided for @tsNotInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a timesheet, not an invoice.'**
+  String get tsNotInvoice;
+
+  /// No description provided for @tsClientSign.
+  ///
+  /// In en, this message translates to:
+  /// **'Acknowledged for {client}'**
+  String tsClientSign(String client);
+
+  /// No description provided for @tsApprove.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get tsApprove;
+
+  /// No description provided for @tsApproveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Its attendance freezes and it gets a number. A later change needs a new revision.'**
+  String get tsApproveBody;
+
+  /// No description provided for @tsDeleteDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Throw away draft'**
+  String get tsDeleteDraft;
+
+  /// No description provided for @tsPaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Make the paper'**
+  String get tsPaper;
+
+  /// No description provided for @tsPaperPriced.
+  ///
+  /// In en, this message translates to:
+  /// **'Show rate and amount'**
+  String get tsPaperPriced;
+
+  /// No description provided for @tsPaperPricedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Off, the company sees hours only. A worker\'s wage never prints.'**
+  String get tsPaperPricedHelp;
+
+  /// No description provided for @tsContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get tsContinue;
+
+  /// No description provided for @tsShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to the company'**
+  String get tsShared;
+
+  /// No description provided for @tsAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Company accepted'**
+  String get tsAccepted;
+
+  /// No description provided for @tsDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'Company disputes it'**
+  String get tsDisputed;
+
+  /// No description provided for @tsRespondDate.
+  ///
+  /// In en, this message translates to:
+  /// **'On what date'**
+  String get tsRespondDate;
+
+  /// No description provided for @tsRespondNote.
+  ///
+  /// In en, this message translates to:
+  /// **'What they said (optional)'**
+  String get tsRespondNote;
+
+  /// No description provided for @tsEvidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo (optional)'**
+  String get tsEvidence;
+
+  /// No description provided for @tsEvidenceAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo added'**
+  String get tsEvidenceAdded;
+
+  /// No description provided for @tsEvidenceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A photo of what came back. It is not a verified digital signature.'**
+  String get tsEvidenceNote;
+
+  /// No description provided for @tsNewRevision.
+  ///
+  /// In en, this message translates to:
+  /// **'New revision'**
+  String get tsNewRevision;
+
+  /// No description provided for @tsRevisionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The old one stays exactly as it was. What changed?'**
+  String get tsRevisionHelp;
+
+  /// No description provided for @tsRevisionConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get tsRevisionConfirm;
+
+  /// No description provided for @tsChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row of attendance was corrected after this. A new revision takes it in.} other{{count} rows of attendance were corrected after this. A new revision takes them in.}}'**
+  String tsChanged(int count);
+
+  /// No description provided for @tsBillingChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row differs from what an invoice charged, by {amount}. The invoice has not changed.} other{{count} rows differ from what an invoice charged, by {amount}. The invoice has not changed.}}'**
+  String tsBillingChanged(int count, String amount);
+
+  /// No description provided for @tsRevisionsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Revisions'**
+  String get tsRevisionsHeading;
+
+  /// No description provided for @tsOldRevisionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This is an older revision, kept exactly as it was.'**
+  String get tsOldRevisionNote;
+
+  /// No description provided for @tsAdjustTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What the company agreed'**
+  String get tsAdjustTitle;
+
+  /// No description provided for @tsAdjustHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'This changes the company\'s paper only. Attendance and the worker\'s pay stay as they are.'**
+  String get tsAdjustHelp;
+
+  /// No description provided for @tsAdjustHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Billable hours'**
+  String get tsAdjustHours;
+
+  /// No description provided for @tsAdjustMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get tsAdjustMinutes;
+
+  /// No description provided for @tsAdjustAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount (AED)'**
+  String get tsAdjustAmount;
+
+  /// No description provided for @tsAdjustReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why'**
+  String get tsAdjustReason;
+
+  /// No description provided for @tsAdjustClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to the attendance figure'**
+  String get tsAdjustClear;
+
+  /// No description provided for @tsAdjustSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get tsAdjustSave;
+
+  /// No description provided for @tsNotTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Not charged'**
+  String get tsNotTaken;
+
+  /// No description provided for @tsAgreedRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Agreed: {reason}'**
+  String tsAgreedRow(String reason);
+
+  /// No description provided for @tsWrongStep.
+  ///
+  /// In en, this message translates to:
+  /// **'This has already moved on. Look again.'**
+  String get tsWrongStep;
+
+  /// No description provided for @tsBasisOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'A monthly row has no amount of its own.'**
+  String get tsBasisOnly;
+
+  /// No description provided for @tsPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 person} other{{count} people}}'**
+  String tsPeople(int count);
 }
 
 class _AppLocalizationsDelegate

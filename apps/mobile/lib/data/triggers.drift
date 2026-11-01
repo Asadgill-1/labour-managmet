@@ -212,3 +212,77 @@ WHEN OLD.state NOT IN ('draft', 'submitted')
 BEGIN
   SELECT RAISE(ABORT, 'approved attendance cannot be deleted');
 END;
+
+-- A timesheet as approved stays as it was. A change is a new revision, and the old one keeps its lines (TS-04, TS-06, ATT-08).
+CREATE TRIGGER timesheet_keeps_number BEFORE UPDATE OF client_id, site_id, from_date, to_date, year, seq, number ON timesheets
+WHEN OLD.number IS NOT NULL
+BEGIN
+  SELECT RAISE(ABORT, 'an approved timesheet keeps its number and dates');
+END;
+
+CREATE TRIGGER timesheet_no_delete BEFORE DELETE ON timesheets
+WHEN OLD.number IS NOT NULL
+BEGIN
+  SELECT RAISE(ABORT, 'an approved timesheet stays on record');
+END;
+
+CREATE TRIGGER revision_no_redraft BEFORE UPDATE OF status ON timesheet_revisions
+WHEN OLD.status <> 'draft' AND NEW.status = 'draft'
+BEGIN
+  SELECT RAISE(ABORT, 'an approved revision stays approved');
+END;
+
+CREATE TRIGGER revision_keeps_adjustments BEFORE UPDATE OF timesheet_id, revision, adjustments ON timesheet_revisions
+WHEN OLD.status <> 'draft'
+BEGIN
+  SELECT RAISE(ABORT, 'an approved revision never changes');
+END;
+
+CREATE TRIGGER revision_accepted_locked BEFORE UPDATE ON timesheet_revisions
+WHEN OLD.status = 'accepted'
+BEGIN
+  SELECT RAISE(ABORT, 'an accepted revision is locked');
+END;
+
+CREATE TRIGGER revision_no_delete BEFORE DELETE ON timesheet_revisions
+WHEN OLD.status <> 'draft'
+BEGIN
+  SELECT RAISE(ABORT, 'an approved revision stays on record');
+END;
+
+CREATE TRIGGER timesheet_line_no_edit BEFORE UPDATE OF timesheet_id, revision_id, entry_id, work_key, work_date, site_id, site_name, worker_id, worker_name,
+  worker_code, trade, attendance_status, clock_minutes, break_minutes, billable_minutes, basis, rate_fils, amount_fils, adjust_reason ON timesheet_lines
+BEGIN
+  SELECT RAISE(ABORT, 'an approved timesheet line never changes');
+END;
+
+CREATE TRIGGER timesheet_line_stays_off BEFORE UPDATE OF live ON timesheet_lines
+WHEN NOT OLD.live AND NEW.live
+BEGIN
+  SELECT RAISE(ABORT, 'a replaced timesheet line stays replaced');
+END;
+
+CREATE TRIGGER timesheet_line_no_delete BEFORE DELETE ON timesheet_lines BEGIN
+  SELECT RAISE(ABORT, 'an approved timesheet line stays on record');
+END;
+
+-- One piece of work sits on one current timesheet.
+CREATE UNIQUE INDEX one_live_timesheet_line ON timesheet_lines (work_key) WHERE live;
+
+-- What an invoice charged stays on record. A credit note or cancellation only flags it (TS-05, INV-06).
+CREATE TRIGGER billing_no_edit BEFORE UPDATE OF line_id, work_key, invoice_id, amount_fils ON billed_allocations BEGIN
+  SELECT RAISE(ABORT, 'a billed allocation never changes');
+END;
+
+CREATE TRIGGER billing_stays_released BEFORE UPDATE OF released ON billed_allocations
+WHEN OLD.released
+BEGIN
+  SELECT RAISE(ABORT, 'a released allocation stays released');
+END;
+
+CREATE TRIGGER billing_no_delete BEFORE DELETE ON billed_allocations BEGIN
+  SELECT RAISE(ABORT, 'a billed allocation stays on record');
+END;
+
+-- The same work can't be charged twice, whatever any screen or date filter asks for (TS-05).
+CREATE UNIQUE INDEX one_live_billing ON billed_allocations (work_key) WHERE NOT released;

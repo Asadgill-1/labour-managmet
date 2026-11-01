@@ -21,6 +21,27 @@ import 'document_render.dart';
 
 const _files = MethodChannel('labour_app/files');
 
+/// Asks the phone for a PNG or JPEG and checks it. Null means nothing usable came back, and the owner has been told why.
+Future<Uint8List?> pickCheckedImage(BuildContext context) async {
+  final l10n = AppLocalizations.of(context);
+  try {
+    final bytes = await _files.invokeMethod<Uint8List>('pickImage');
+    if (bytes == null || !context.mounted) return null;
+    final problem = checkImage(bytes);
+    if (problem != null) {
+      showFormError(context, problem == ImageProblem.tooLarge ? l10n.lhTooLarge : l10n.lhBadType);
+      return null;
+    }
+    // A file can start like an image and still be broken, so it has to open before it is kept.
+    final codec = await ui.instantiateImageCodec(bytes);
+    codec.dispose();
+    return bytes;
+  } catch (_) {
+    if (context.mounted) showFormError(context, l10n.lhBadType);
+    return null;
+  }
+}
+
 /// An A4 page's printable width in points, for judging an image's sharpness.
 const _printWidth = 539.0;
 
@@ -183,22 +204,9 @@ class _ImageBlockState extends ConsumerState<_ImageBlock> {
   Future<void> _upload() async {
     final l10n = AppLocalizations.of(context);
     final db = ref.read(dbProvider);
+    final bytes = await pickCheckedImage(context);
+    if (bytes == null || !mounted) return;
     try {
-      final bytes = await _files.invokeMethod<Uint8List>('pickImage');
-      if (bytes == null || !mounted) return;
-      final problem = checkImage(bytes);
-      if (problem != null) {
-        showFormError(context, problem == ImageProblem.tooLarge ? l10n.lhTooLarge : l10n.lhBadType);
-        return;
-      }
-      // A file can start like an image and still be broken, so it has to open before it is kept.
-      try {
-        final codec = await ui.instantiateImageCodec(bytes);
-        codec.dispose();
-      } catch (_) {
-        if (mounted) showFormError(context, l10n.lhBadType);
-        return;
-      }
       await db.saveDocumentImage(widget.kind, bytes, operationId: newUuid());
       if (mounted) showSavedOnPhone(context, l10n.savedOnPhone);
     } catch (e) {

@@ -2201,6 +2201,364 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lhSample => 'See a sample';
+
+  @override
+  String get mainBilling => 'Billing';
+
+  @override
+  String get tsTab => 'Timesheets';
+
+  @override
+  String get tsTitle => 'Timesheet';
+
+  @override
+  String get tsNew => 'New timesheet';
+
+  @override
+  String get tsEmpty =>
+      'No timesheets yet. Pick a company and dates to make one.';
+
+  @override
+  String get tsAllSites => 'All sites';
+
+  @override
+  String get tsFrom => 'From';
+
+  @override
+  String get tsTo => 'To';
+
+  @override
+  String get tsBadDates => 'The end date is before the start date.';
+
+  @override
+  String tsWillHold(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows go on it',
+      one: '1 row goes on it',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tsNothing => 'Nothing in these dates can go on a timesheet.';
+
+  @override
+  String tsLeftNoRate(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows left out: no company rate. Add it in Rates.',
+      one: '1 row left out: no company rate. Add it in Rates.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tsLeftNoWage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows left out: no worker rate yet.',
+      one: '1 row left out: no worker rate yet.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tsLeftOther(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows left out: already on another timesheet.',
+      one: '1 row left out: already on another timesheet.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tsCreate => 'Make draft';
+
+  @override
+  String get tsDraftNote =>
+      'A draft follows the attendance until you approve it.';
+
+  @override
+  String get tsStatusDraft => 'Draft';
+
+  @override
+  String get tsStatusApproved => 'Approved';
+
+  @override
+  String get tsStatusShared => 'Sent to the company';
+
+  @override
+  String get tsStatusAccepted => 'Accepted, locked';
+
+  @override
+  String get tsStatusDisputed => 'Disputed by the company';
+
+  @override
+  String get tsNoteApproved =>
+      'Make the paper and send it. Then say you sent it.';
+
+  @override
+  String get tsNoteShared =>
+      'Waiting for the company. This never holds up a wage.';
+
+  @override
+  String get tsNoteDisputed =>
+      'Check the hours with the company. Worker pay stays as it is until you correct the attendance.';
+
+  @override
+  String tsRevisionLabel(int number) {
+    return 'Revision $number';
+  }
+
+  @override
+  String get tsViewDaily => 'Daily summary';
+
+  @override
+  String get tsViewWorkers => 'Worker detail';
+
+  @override
+  String get tsPricedLabel => 'with rates';
+
+  @override
+  String get tsHoursOnlyLabel => 'hours only';
+
+  @override
+  String get tsUniqueWorkers => 'Unique workers';
+
+  @override
+  String get tsWorkerDays => 'Worker-days';
+
+  @override
+  String get tsShiftsWorked => 'Shifts worked';
+
+  @override
+  String get tsHoursBilled => 'Billable hours';
+
+  @override
+  String get tsDaysBilled => 'Billable days';
+
+  @override
+  String get tsShiftsBilled => 'Billable shifts';
+
+  @override
+  String get tsAmount => 'Amount';
+
+  @override
+  String get tsTotalAmount => 'Timesheet total';
+
+  @override
+  String get colPersons => 'People';
+
+  @override
+  String get colShifts => 'Shifts';
+
+  @override
+  String get colClock => 'Clock hours';
+
+  @override
+  String get colTrade => 'Trade';
+
+  @override
+  String get colBillable => 'Billable';
+
+  @override
+  String tsHoursValue(String hours) {
+    return '$hours h';
+  }
+
+  @override
+  String tsDaysValue(String days) {
+    return '$days days';
+  }
+
+  @override
+  String tsShiftsValue(String shifts) {
+    return '$shifts shifts';
+  }
+
+  @override
+  String get tsMonthlyRow => 'Monthly';
+
+  @override
+  String get tsNotCharged => 'Not charged';
+
+  @override
+  String tsMonthlyLine(
+    String basis,
+    String rate,
+    String from,
+    String to,
+    int count,
+  ) {
+    return '$basis, $rate: $from to $to, $count people. The fee goes on the invoice once, not from these rows.';
+  }
+
+  @override
+  String tsMonthlyLinePlain(String basis, String from, String to, int count) {
+    return '$basis: $from to $to, $count people.';
+  }
+
+  @override
+  String get tsAgreedHeading => 'Agreed with the company';
+
+  @override
+  String tsRevisedBecause(String reason) {
+    return 'Revised: $reason';
+  }
+
+  @override
+  String get tsNotInvoice => 'This is a timesheet, not an invoice.';
+
+  @override
+  String tsClientSign(String client) {
+    return 'Acknowledged for $client';
+  }
+
+  @override
+  String get tsApprove => 'Approve';
+
+  @override
+  String get tsApproveBody =>
+      'Its attendance freezes and it gets a number. A later change needs a new revision.';
+
+  @override
+  String get tsDeleteDraft => 'Throw away draft';
+
+  @override
+  String get tsPaper => 'Make the paper';
+
+  @override
+  String get tsPaperPriced => 'Show rate and amount';
+
+  @override
+  String get tsPaperPricedHelp =>
+      'Off, the company sees hours only. A worker\'s wage never prints.';
+
+  @override
+  String get tsContinue => 'Continue';
+
+  @override
+  String get tsShared => 'Sent to the company';
+
+  @override
+  String get tsAccepted => 'Company accepted';
+
+  @override
+  String get tsDisputed => 'Company disputes it';
+
+  @override
+  String get tsRespondDate => 'On what date';
+
+  @override
+  String get tsRespondNote => 'What they said (optional)';
+
+  @override
+  String get tsEvidence => 'Add a photo (optional)';
+
+  @override
+  String get tsEvidenceAdded => 'Photo added';
+
+  @override
+  String get tsEvidenceNote =>
+      'A photo of what came back. It is not a verified digital signature.';
+
+  @override
+  String get tsNewRevision => 'New revision';
+
+  @override
+  String get tsRevisionHelp =>
+      'The old one stays exactly as it was. What changed?';
+
+  @override
+  String get tsRevisionConfirm => 'Start';
+
+  @override
+  String tsChanged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count rows of attendance were corrected after this. A new revision takes them in.',
+      one: '1 row of attendance was corrected after this. A new revision takes it in.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tsBillingChanged(int count, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count rows differ from what an invoice charged, by $amount. The invoice has not changed.',
+      one:
+          '1 row differs from what an invoice charged, by $amount. The invoice has not changed.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tsRevisionsHeading => 'Revisions';
+
+  @override
+  String get tsOldRevisionNote =>
+      'This is an older revision, kept exactly as it was.';
+
+  @override
+  String get tsAdjustTitle => 'What the company agreed';
+
+  @override
+  String get tsAdjustHelp =>
+      'This changes the company\'s paper only. Attendance and the worker\'s pay stay as they are.';
+
+  @override
+  String get tsAdjustHours => 'Billable hours';
+
+  @override
+  String get tsAdjustMinutes => 'Minutes';
+
+  @override
+  String get tsAdjustAmount => 'Amount (AED)';
+
+  @override
+  String get tsAdjustReason => 'Why';
+
+  @override
+  String get tsAdjustClear => 'Back to the attendance figure';
+
+  @override
+  String get tsAdjustSave => 'Save';
+
+  @override
+  String get tsNotTaken => 'Not charged';
+
+  @override
+  String tsAgreedRow(String reason) {
+    return 'Agreed: $reason';
+  }
+
+  @override
+  String get tsWrongStep => 'This has already moved on. Look again.';
+
+  @override
+  String get tsBasisOnly => 'A monthly row has no amount of its own.';
+
+  @override
+  String tsPeople(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count people',
+      one: '1 person',
+    );
+    return '$_temp0';
+  }
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -4389,4 +4747,322 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get lhSample => 'Namoona dekhein';
+
+  @override
+  String get mainBilling => 'Billing';
+
+  @override
+  String get tsTab => 'Timesheet';
+
+  @override
+  String get tsTitle => 'Timesheet';
+
+  @override
+  String get tsNew => 'Nayi timesheet';
+
+  @override
+  String get tsEmpty =>
+      'Abhi koi timesheet nahin. Company aur tareekh chun kar banayein.';
+
+  @override
+  String get tsAllSites => 'Sab sites';
+
+  @override
+  String get tsFrom => 'Kab se';
+
+  @override
+  String get tsTo => 'Kab tak';
+
+  @override
+  String get tsBadDates => 'Aakhri tareekh pehli se pehle hai.';
+
+  @override
+  String tsWillHold(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Is par $count line aayengi',
+      one: 'Is par 1 line aayegi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tsNothing => 'In tareekhon mein timesheet ke liye kuch nahin.';
+
+  @override
+  String tsLeftNoRate(int count) {
+    return '$count line nahin aayin: company ka rate nahin. Rates mein likhein.';
+  }
+
+  @override
+  String tsLeftNoWage(int count) {
+    return '$count line nahin aayin: mazdoor ka rate nahin.';
+  }
+
+  @override
+  String tsLeftOther(int count) {
+    return '$count line nahin aayin: pehle se doosri timesheet par hain.';
+  }
+
+  @override
+  String get tsCreate => 'Draft banayein';
+
+  @override
+  String get tsDraftNote =>
+      'Draft hazri ke saath chalta hai, jab tak aap approve na karein.';
+
+  @override
+  String get tsStatusDraft => 'Draft';
+
+  @override
+  String get tsStatusApproved => 'Approve ho gayi';
+
+  @override
+  String get tsStatusShared => 'Company ko bheji';
+
+  @override
+  String get tsStatusAccepted => 'Company ne maan li, band';
+
+  @override
+  String get tsStatusDisputed => 'Company ko etiraz';
+
+  @override
+  String get tsNoteApproved =>
+      'Kaghaz bana kar bhejein. Phir yahan batayein ke bhej diya.';
+
+  @override
+  String get tsNoteShared =>
+      'Company ke jawab ka intezar. Is se tankhwah nahin rukti.';
+
+  @override
+  String get tsNoteDisputed =>
+      'Company se ghante dekh lein. Mazdoor ki tankhwah wahi rahegi, jab tak aap hazri na badlein.';
+
+  @override
+  String tsRevisionLabel(int number) {
+    return 'Revision $number';
+  }
+
+  @override
+  String get tsViewDaily => 'Rozana summary';
+
+  @override
+  String get tsViewWorkers => 'Har mazdoor';
+
+  @override
+  String get tsPricedLabel => 'rate ke saath';
+
+  @override
+  String get tsHoursOnlyLabel => 'sirf ghante';
+
+  @override
+  String get tsUniqueWorkers => 'Alag alag mazdoor';
+
+  @override
+  String get tsWorkerDays => 'Mazdoor din';
+
+  @override
+  String get tsShiftsWorked => 'Kul shifts';
+
+  @override
+  String get tsHoursBilled => 'Bill ke ghante';
+
+  @override
+  String get tsDaysBilled => 'Bill ke din';
+
+  @override
+  String get tsShiftsBilled => 'Bill ki shifts';
+
+  @override
+  String get tsAmount => 'Raqam';
+
+  @override
+  String get tsTotalAmount => 'Timesheet ka total';
+
+  @override
+  String get colPersons => 'Log';
+
+  @override
+  String get colShifts => 'Shifts';
+
+  @override
+  String get colClock => 'Kul ghante';
+
+  @override
+  String get colTrade => 'Kaam';
+
+  @override
+  String get colBillable => 'Bill';
+
+  @override
+  String tsHoursValue(String hours) {
+    return '$hours ghante';
+  }
+
+  @override
+  String tsDaysValue(String days) {
+    return '$days din';
+  }
+
+  @override
+  String tsShiftsValue(String shifts) {
+    return '$shifts shift';
+  }
+
+  @override
+  String get tsMonthlyRow => 'Mahana';
+
+  @override
+  String get tsNotCharged => 'Bill nahin';
+
+  @override
+  String tsMonthlyLine(
+    String basis,
+    String rate,
+    String from,
+    String to,
+    int count,
+  ) {
+    return '$basis, $rate: $from se $to tak, $count log. Fee invoice par aik dafa lagti hai, in lines se nahin.';
+  }
+
+  @override
+  String tsMonthlyLinePlain(String basis, String from, String to, int count) {
+    return '$basis: $from se $to tak, $count log.';
+  }
+
+  @override
+  String get tsAgreedHeading => 'Company ke saath tay';
+
+  @override
+  String tsRevisedBecause(String reason) {
+    return 'Revision ki wajah: $reason';
+  }
+
+  @override
+  String get tsNotInvoice => 'Yeh timesheet hai, invoice nahin.';
+
+  @override
+  String tsClientSign(String client) {
+    return '$client ki tasdeeq';
+  }
+
+  @override
+  String get tsApprove => 'Approve karein';
+
+  @override
+  String get tsApproveBody =>
+      'Is ki hazri pakki ho jayegi aur number mil jayega. Baad ka farq nayi revision mein aayega.';
+
+  @override
+  String get tsDeleteDraft => 'Draft hata dein';
+
+  @override
+  String get tsPaper => 'Kaghaz banayein';
+
+  @override
+  String get tsPaperPriced => 'Rate aur raqam dikhayein';
+
+  @override
+  String get tsPaperPricedHelp =>
+      'Band ho to company ko sirf ghante dikhenge. Mazdoor ki tankhwah kabhi nahin chhapti.';
+
+  @override
+  String get tsContinue => 'Aage';
+
+  @override
+  String get tsShared => 'Company ko bhej diya';
+
+  @override
+  String get tsAccepted => 'Company ne maan li';
+
+  @override
+  String get tsDisputed => 'Company ko etiraz hai';
+
+  @override
+  String get tsRespondDate => 'Kis tareekh';
+
+  @override
+  String get tsRespondNote => 'Company ne kya kaha (zaroori nahin)';
+
+  @override
+  String get tsEvidence => 'Tasveer lagayein (zaroori nahin)';
+
+  @override
+  String get tsEvidenceAdded => 'Tasveer lag gayi';
+
+  @override
+  String get tsEvidenceNote =>
+      'Company ke jawab ki tasveer. Yeh tasdeeq shuda digital signature nahin.';
+
+  @override
+  String get tsNewRevision => 'Nayi revision';
+
+  @override
+  String get tsRevisionHelp => 'Purani bilkul waisi rahegi. Kya badla?';
+
+  @override
+  String get tsRevisionConfirm => 'Shuru karein';
+
+  @override
+  String tsChanged(int count) {
+    return 'Is ke baad $count line ki hazri badli. Nayi revision mein aayengi.';
+  }
+
+  @override
+  String tsBillingChanged(int count, String amount) {
+    return '$count line invoice se mukhtalif hain, farq $amount. Invoice khud nahin badla.';
+  }
+
+  @override
+  String get tsRevisionsHeading => 'Revisions';
+
+  @override
+  String get tsOldRevisionNote =>
+      'Yeh purani revision hai, bilkul waisi mehfooz.';
+
+  @override
+  String get tsAdjustTitle => 'Company se kya tay hua';
+
+  @override
+  String get tsAdjustHelp =>
+      'Is se sirf company ka kaghaz badlega. Hazri aur mazdoor ki tankhwah wahi rahegi.';
+
+  @override
+  String get tsAdjustHours => 'Bill ke ghante';
+
+  @override
+  String get tsAdjustMinutes => 'Minute';
+
+  @override
+  String get tsAdjustAmount => 'Raqam (AED)';
+
+  @override
+  String get tsAdjustReason => 'Wajah';
+
+  @override
+  String get tsAdjustClear => 'Hazri wala figure wapas';
+
+  @override
+  String get tsAdjustSave => 'Save karein';
+
+  @override
+  String get tsNotTaken => 'Bill nahin';
+
+  @override
+  String tsAgreedRow(String reason) {
+    return 'Tay hua: $reason';
+  }
+
+  @override
+  String get tsWrongStep => 'Yeh pehle hi aage barh chuka. Dobara dekhein.';
+
+  @override
+  String get tsBasisOnly => 'Mahana line ki apni raqam nahin hoti.';
+
+  @override
+  String tsPeople(int count) {
+    return '$count log';
+  }
 }

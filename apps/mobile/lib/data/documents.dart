@@ -20,7 +20,13 @@ class ImageRejected implements Exception {
 enum DocKind {
   payslip('SLIP'),
   paymentReceipt('RCPT'),
-  advanceReceipt('ADV');
+  advanceReceipt('ADV'),
+
+  // One revision of a timesheet can go out in four ways, each kept as issued under the same number (TS-01, TS-02).
+  timesheetDaily('TS'),
+  timesheetDailyPriced('TS'),
+  timesheetWorkers('TS'),
+  timesheetWorkersPriced('TS');
 
   const DocKind(this.prefix);
 
@@ -54,40 +60,46 @@ extension DocumentOps on TenantDatabase {
 
   /// Keeps an uploaded image for good and points the template at it. Papers already issued keep the one they used (DOC-04, DOC-05).
   /// The bytes stay out of the audit log and outbox, which only say what was stored.
-  Future<String> saveDocumentImage(AssetKind kind, Uint8List bytes, {required String operationId}) async {
+  Future<String> saveDocumentImage(AssetKind kind, Uint8List bytes, {required String operationId}) => transaction(() async {
+    final id = await _keepImage(kind.name, bytes, operationId: operationId);
+    await setDocumentImage(kind, id, operationId: newUuid());
+    return id;
+  });
+
+  /// Keeps a photo of what a company sent back. No paper prints it, and it is never a verified signature (TS-04).
+  Future<String> saveEvidenceImage(Uint8List bytes, {required String operationId}) => _keepImage('evidence', bytes, operationId: operationId);
+
+  Future<String> _keepImage(String kind, Uint8List bytes, {required String operationId}) async {
     final problem = checkImage(bytes);
     if (problem != null) throw ImageRejected(problem);
     final facts = readImageFacts(bytes)!;
     final id = newUuid();
-    await transaction(() async {
-      await applyOperation(
-        operationId: operationId,
-        entity: 'document_assets',
-        recordId: id,
-        version: 1,
-        action: 'create',
-        change: () async {
-          final now = DateTime.now().toUtc();
-          await into(documentAssets).insert(
-            DocumentAssetsCompanion.insert(
-              id: id,
-              tenantId: tenantId,
-              createdAtUtc: now,
-              updatedAtUtc: now,
-              actorId: actorId,
-              sourceOperationId: operationId,
-              kind: kind.name,
-              mime: facts.mime,
-              widthPx: facts.width,
-              heightPx: facts.height,
-              bytes: bytes,
-            ),
-          );
-          return {'kind': kind.name, 'mime': facts.mime, 'width': facts.width, 'height': facts.height, 'size': bytes.length};
-        },
-      );
-      await setDocumentImage(kind, id, operationId: newUuid());
-    });
+    await applyOperation(
+      operationId: operationId,
+      entity: 'document_assets',
+      recordId: id,
+      version: 1,
+      action: 'create',
+      change: () async {
+        final now = DateTime.now().toUtc();
+        await into(documentAssets).insert(
+          DocumentAssetsCompanion.insert(
+            id: id,
+            tenantId: tenantId,
+            createdAtUtc: now,
+            updatedAtUtc: now,
+            actorId: actorId,
+            sourceOperationId: operationId,
+            kind: kind,
+            mime: facts.mime,
+            widthPx: facts.width,
+            heightPx: facts.height,
+            bytes: bytes,
+          ),
+        );
+        return {'kind': kind, 'mime': facts.mime, 'width': facts.width, 'height': facts.height, 'size': bytes.length};
+      },
+    );
     return id;
   }
 
@@ -147,6 +159,8 @@ extension DocumentOps on TenantDatabase {
 
   /// The same paper again when nothing on it has changed, or a new revision under the same number when something has.
   /// Each stored file stays exactly as it was issued, whatever changes later (DOC-05). [render] gets the number to print.
+  /// A paper with a number of its own passes [fixed]: asking again gives the stored one, since its facts can't change
+  /// without a new revision of the thing itself.
   Future<IssuedDocument> issueDocument({
     required DocKind kind,
     required String subjectId,
@@ -158,20 +172,27 @@ extension DocumentOps on TenantDatabase {
     required DocumentMeta Function(String number) metaFor,
     required Future<Uint8List> Function(DocumentMeta meta) render,
     required String operationId,
+    ({int year, int seq, int revision})? fixed,
   }) async {
+    if (fixed != null) {
+      final stored = await (select(issuedDocuments)..where((d) => d.kind.equals(kind.name) & d.year.equals(fixed.year) & d.seq.equals(fixed.seq) & d.revision.equals(fixed.revision))).getSingleOrNull();
+      if (stored != null) return stored;
+    }
     final dataJson = jsonEncode(data);
     final identityJson = jsonEncode(identity.toJson());
-    final latest = await (select(issuedDocuments)
-          ..where((d) => d.kind.equals(kind.name) & d.subjectId.equals(subjectId) & (period == null ? d.period.isNull() : d.period.equals(period)))
-          ..orderBy([(d) => OrderingTerm.desc(d.revision)])
-          ..limit(1))
-        .getSingleOrNull();
+    final latest = fixed != null
+        ? null
+        : await (select(issuedDocuments)
+                ..where((d) => d.kind.equals(kind.name) & d.subjectId.equals(subjectId) & (period == null ? d.period.isNull() : d.period.equals(period)))
+                ..orderBy([(d) => OrderingTerm.desc(d.revision)])
+                ..limit(1))
+              .getSingleOrNull();
     // Changing the app's colours alone doesn't make it a different paper.
     String withoutColours(String json) => jsonEncode(jsonDecode(json) as Map<String, Object?>..remove('brand')..remove('soft'));
     if (latest != null && latest.dataJson == dataJson && withoutColours(latest.identityJson) == withoutColours(identityJson)) return latest;
 
-    final year = latest?.year ?? DateTime.now().toUtc().add(const Duration(hours: 4)).year;
-    var seq = latest?.seq;
+    final year = fixed?.year ?? latest?.year ?? DateTime.now().toUtc().add(const Duration(hours: 4)).year;
+    var seq = fixed?.seq ?? latest?.seq;
     if (seq == null) {
       final top = issuedDocuments.seq.max();
       final query = selectOnly(issuedDocuments)
@@ -179,7 +200,7 @@ extension DocumentOps on TenantDatabase {
         ..where(issuedDocuments.kind.equals(kind.name) & issuedDocuments.year.equals(year));
       seq = ((await query.getSingle()).read(top) ?? 0) + 1;
     }
-    final revision = (latest?.revision ?? 0) + 1;
+    final revision = fixed?.revision ?? (latest?.revision ?? 0) + 1;
     final number = documentNumber(kind, year, seq, revision);
     final meta = metaFor(number);
     final pdf = await render(meta);

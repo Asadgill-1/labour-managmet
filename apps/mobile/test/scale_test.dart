@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:domain/calc.dart';
@@ -11,11 +12,14 @@ import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/closing.dart';
 import 'package:labour_app/data/payroll.dart';
 import 'package:labour_app/data/statement.dart';
+import 'package:labour_app/documents/document_frame.dart';
 import 'package:labour_app/data/tenant_database.dart';
+import 'package:labour_app/data/timesheets.dart';
 import 'package:labour_app/features/registers/register_defs.dart';
 import 'package:labour_app/features/registers/register_model.dart';
 import 'package:labour_app/features/registers/register_xlsx.dart';
 import 'package:labour_app/features/registers/salary_sheet.dart';
+import 'package:labour_app/features/timesheets/timesheet_paper.dart';
 import 'package:labour_app/l10n/app_localizations.dart';
 
 import 'support.dart';
@@ -141,6 +145,31 @@ void main() {
     final inputs = [for (var w = 0; w < workers; w++) EntryInput(workerId: 'w$w', shift: const ShiftInput(startMinute: 480, endMinute: 1080, breakMinutes: 60))];
     final previews = await timed('previewing a day', () => db.previewRows(workDate: '$month-27', clientId: 'client0', siteId: 'site0', inputs: inputs));
     expect(previews.where((p) => p.overlaps), isEmpty);
+
+    // One company's two hundred workers, the usual size of a timesheet.
+    final from = monthFirstDay(month);
+    final to = monthLastDay(month);
+    final preview = await timed('timesheet preview', () => db.timesheetPreview(clientId: 'client0', from: from, to: to));
+    expect(preview.rows, hasLength(workers ~/ 5 * days));
+    final timesheet = await timed('making a timesheet', () => db.createTimesheet(clientId: 'client0', from: from, to: to, operationId: newUuid()));
+    final open = await timed('reading a draft', () => db.timesheetView(timesheet));
+    await timed('approving a timesheet', () => db.approveTimesheet(open.revision.id, operationId: newUuid()));
+    final approved = await timed('reading it back', () => db.timesheetView(timesheet));
+    expect(approved.totals.amountFils, workers ~/ 5 * days * 13500);
+    expect(approved.daily, hasLength(days));
+    final unbilled = await timed('what can be billed', () => db.unbilledLines(timesheet));
+    expect(unbilled, hasLength(workers ~/ 5 * days));
+    await timed('billing it', () => db.allocateBilling('i1', unbilled, operationId: newUuid()));
+    expect(await db.unbilledLines(timesheet), isEmpty);
+    const identity = DocumentIdentity(legalName: 'Co');
+    const frame = DocumentMeta(title: 'Timesheet', subtitle: '', number: 'TS-2020-0001', dateLabel: 'd', pagePattern: '{page}/{pages}', madeLabel: 'm');
+    final regular = File('assets/fonts/Roboto-Regular.ttf').readAsBytesSync();
+    final bold = File('assets/fonts/Roboto-Bold.ttf').readAsBytesSync();
+    await timed('summary PDF', () => timesheetPdf(timesheetPaper(approved, workers: false, priced: true, l10n: l10n), identity, frame, regularFont: regular, boldFont: bold));
+    final detail = await timed('detail PDF of every row', () => timesheetPdf(timesheetPaper(approved, workers: true, priced: true, l10n: l10n), identity, frame, regularFont: regular, boldFont: bold));
+    expect(detail.length, greaterThan(1000));
+    final list = await timed('the list of timesheets', () => db.watchTimesheets().first);
+    expect(list.single.amountFils, workers ~/ 5 * days * 13500);
 
     final posted = await timed('posting', () => db.postPayroll(month, operationId: newUuid()));
     expect(posted, workers);

@@ -14,6 +14,7 @@ import '../../documents/document_frame.dart';
 import '../../l10n/app_localizations.dart';
 import '../payroll/salary_slip.dart';
 import '../registers/export_flow.dart';
+import '../timesheets/timesheet_paper.dart';
 import 'receipt.dart';
 
 /// Draws an issued paper on a background isolate, so a long one doesn't freeze the screen.
@@ -24,6 +25,7 @@ Future<Uint8List> renderIssued(DocKind kind, Map<String, Object?> data, Document
     () => switch (kind) {
       DocKind.payslip => slipPdf(SlipContent.fromJson(data), identity, meta, regularFont: regular, boldFont: bold),
       DocKind.paymentReceipt || DocKind.advanceReceipt => receiptPdf(ReceiptContent.fromJson(data), identity, meta, regularFont: regular, boldFont: bold),
+      DocKind.timesheetDaily || DocKind.timesheetDailyPriced || DocKind.timesheetWorkers || DocKind.timesheetWorkersPriced => timesheetPdf(TimesheetPaper.fromJson(data), identity, meta, regularFont: regular, boldFont: bold),
     },
   );
 }
@@ -55,6 +57,8 @@ Future<void> issueAndExport(
   required Map<String, Object?> data,
   required String fileName,
   required ValueChanged<bool> onBusy,
+  ({int year, int seq, int revision})? fixed,
+  int rows = 0,
 }) {
   final l10n = AppLocalizations.of(context);
   return chooseAndExport(
@@ -63,6 +67,7 @@ Future<void> issueAndExport(
     summary: summary,
     detail: detail,
     pdfOnly: true,
+    rows: rows,
     onBusy: onBusy,
     fileName: (_) => fileName,
     make: (_, _) async {
@@ -79,6 +84,7 @@ Future<void> issueAndExport(
         metaFor: (number) => metaForNow(l10n, title: title, subtitle: subtitle, number: number),
         render: (meta) => renderIssued(kind, data, identity, meta),
         operationId: newUuid(),
+        fixed: fixed,
       );
       return doc.pdfBytes;
     },
