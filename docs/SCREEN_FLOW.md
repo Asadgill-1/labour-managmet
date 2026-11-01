@@ -26,10 +26,11 @@ The panel lists main tabs that open to show sub-tabs. The current tab's sub-tabs
 | Visa | Visa ka paisa, Visa register |
 | Companies | Companies, Sites, Rates, Company register |
 | Tankhwah | Tankhwah, Tankhwah register, Advance register |
+| Billing | Timesheet. Invoice and Paisay mile come with T16 and T17 |
 | Hisaab | Rozana hisaab, Pichla baqaya, Hisaab register, Mahina band |
 | Kaghazat | Bane hue kaghaz, Letterhead |
 | Rooms | Rooms, Room register |
-| Jald aa raha hai | Timesheet, Invoice, Paisay mile, Reports, Documents, Team, Backup, Plan, Help |
+| Jald aa raha hai | Invoice, Paisay mile, Reports, Documents, Team, Backup, Plan, Help |
 
 A register has a date range with quick choices, filters that take several values, totals on the band, rows under their dates with every field showing, and one export button (D-038).
 
@@ -65,7 +66,7 @@ Language > email and password > verify email > company name > optional logo and 
 
 **Group (D-042):** Tick a worker > their pay shows under their name: their own, or set for this group, or the group's wage, or a warning that they have none > Badlein to set a rate here, per hour or per day.
 
-**Timesheet (TS-01):** Client > date range > site > daily summary or worker detail > commercial or non-commercial version > approve > share.
+**Timesheet (TS-01):** Client > date range > site > what goes on and what is left out > draft > agree a row if needed > approve > paper: daily summary or worker detail, rates on or off > sent to the company > accepted or disputed > a new revision if anything changes. The next step sits above the rows, so a long list never hides it.
 
 **Invoice (INV-01):** Client > period > site or timesheet items > PO reference > quantities > tax review > preview > issue. The final number is assigned only at issue.
 

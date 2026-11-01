@@ -109,6 +109,20 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 - [ ] Advance wale mazdoor par **Tankhwah** mein **Advance katein** dabayein. **Mazdoor ko dena hai** ab slip ke baqi ke barabar ho. Mazdoor ki screen par us raqam ko badal bhi sakte hain.
 - [ ] **Apni company** mein **Mahine ke baad tankhwah kitne din mein** likhein. Us din tak **abhi late nahin** likha aaye, us ke baad din ginay jayen.
 
+## 5f. Timesheet (T15)
+
+Yeh bhi P3 ka hissa hai, isi APK mein hai.
+
+- [ ] **Menu > Billing > Timesheet > Nayi timesheet.** Company chunein. Pichla mahina khud aa jata hai. Neeche likha aaye kitni line aayengi, aur kaun si nahin aayin aur kyun.
+- [ ] **Draft banayein.** Rozana summary aur Har mazdoor dono dekhein. Mazdoor ki tankhwah kahin na ho.
+- [ ] Har mazdoor mein kisi line par dabayein. Ghante badlein, wajah likhein, Save karein. Line par **Tay hua** aaye. Hazri aur Tankhwah screen par us mazdoor ka figure wahi rahe.
+- [ ] **Approve karein.** TS number mile. Ab usi tareekh ki nayi timesheet banayein: likha aaye ke line pehle se doosri timesheet par hain.
+- [ ] **Kaghaz banayein.** Rate band rakh kar dekhein: PDF mein sirf ghante hon, koi raqam nahin. Rate on kar ke dobara dekhein: rate aur raqam aayen, number wahi ho. **Kaghazat** mein dono alag aayen.
+- [ ] **Company ko bhej diya**, phir **Company ko etiraz hai**, phir **Nayi revision**. Number ke saath R2 aaye. Revision 1 khol kar dekhein, waisi hi ho.
+- [ ] **Company ne maan li** dabayein, tareekh aur note likhein, tasveer lagayein. Mohar aaye, aur likha ho ke tasveer tasdeeq shuda digital signature nahin.
+- [ ] Approve ke baad kisi mazdoor ki hazri theek karein. Timesheet par likha aaye ke hazri badli. Nayi revision mein naya figure aaye, aur purani waisi rahe.
+- [ ] Mahana fixed rate wali company ki timesheet banayein. Lines par raqam na ho, aur neeche fee aik dafa likhi ho.
+
 ## 5e. Letterhead aur kaghazat (T14)
 
 Yeh hissa P3 ka hai, magar isi APK mein hai.
@@ -148,8 +162,9 @@ Yeh hissa P3 ka hai, magar isi APK mein hai.
 Yeh chaaron abhi PROPOSED hain. Aap ka jawab darkar hai. Accountant ko bhi dikhayein.
 
 - [ ] **D-033:** Hisaab statement ki tarah chalta hai. Tankhwah screen par purane post hue mahine ka "ada kiya" tareekh se ginta hai. Khaas mahine slip aur baqi tankhwah mein dikhte hain.
+- [ ] **D-049:** Timesheet par sirf company ka hisaab hota hai, mazdoor ki tankhwah kabhi nahin. Rate pehle band hota hai, aap on karein to dikhta hai. Company se jo ghante tay hon woh sirf company ke kaghaz par badalte hain, hazri aur tankhwah wahi rehti hai. Aik baar bane kaghaz par baad ka letterhead nahin aata, nayi revision par aata hai. Saboot sirf tasveer ki shakal mein hai.
 - [ ] **D-047:** Slip aur raseed ka number aur asal file hamesha mehfooz rehti hai, aur figure badalne par R2 banta hai. Letterhead abhi sab ke liye khula hai, plan aane par yeh paid hoga.
-- [ ] **D-045:** Jab tak koi cheez baqi hai mahina band nahin hota. Baqi tankhwah mahina nahin rokti, kyun ke woh agle mahine jati hai. Agar aap chahte hain ke baqi tankhwah bhi roke to batayein.
+- [ ] **D-045:** Jab tak koi cheez baqi hai mahina band nahin hota. Baqi tankhwah mahina nahin rokti, kyun ke woh agle mahine jati hai. Aap ne 2026-11-02 ko yeh theek kaha. Company ka overdue invoice mahina rokega, jab invoice T16 aur T17 mein aa jayen (D-048). Agar aap chahte hain ke baqi tankhwah bhi roke to batayein.
 - [ ] **D-044:** Band mahine mein kuch nahin badalta. Band mahine mein kuch nahin badalta, farq khule mahine mein allowance ya katoti se likha jata hai. Mahina wajah likh kar dobara khul sakta hai, sirf aakhri band mahina.
 - [ ] **D-043:** Zyada adaigi advance mein jati hai. Advance tab tak Tankhwah se nahin katta jab tak aap **Advance katein** na dabayein, slip mein woh dete hi kat jata hai. Purani adaigiyan khud purane mahine se jorti hain. Late ka hisaab aap ke apne dinon se hota hai, koi qanooni muddat app mein nahin.
 - [ ] **D-034:** Mahana mazdoor ki ghair hazri par tankhwah khud nahin katti, aap wajah likh kar katoti add karte hain. Advance ki wapsi par agreement nahin poocha jata. Katoti ki hadd **Apni company** mein aap chahen to likhein, warna koi hadd nahin.

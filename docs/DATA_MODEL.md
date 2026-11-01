@@ -23,8 +23,9 @@ Money records add `currency` and `posting_date`. An effective date is always sep
 | Visa money | `cash_entries` kinds `visaPaid` and `visaReturned`, `workers.visa_instalment_fils`, `payroll_lines.visa_recovery_fils` | Left = paid - returned - recovered through standing payroll lines. Always derived (D-039) |
 | Rooms | `rooms`, `workers.room_id` | Rent received and paid per room come from the cash book (D-031) |
 | Worker money | `payroll_items`, `salary_allocations` | A salary payment's months, append-only: a row per month with its share, set aside when the payment is undone. `cash_entries.reference` and `receiver` hold the rest of PAY-06, and `tenant_profiles.wage_due_days` the company's own days to pay (D-043). Advance outstanding is opening + given - returned - recovered through posted payroll. A deduction or room charge carries a reason and authorization, enforced by a CHECK. For a room charge that is the worker's note, or the owner's own say-so when ticking them (PAY-05, PAY-07, D-041) |
-| Timesheets | `timesheets`, `timesheet_revisions`, `timesheet_lines` | A revision preserves the original (TS-06) |
-| Invoices | `invoices`, `invoice_lines`, `invoice_source_allocations`, `credit_notes` | Draft has no legal number. Stored as structured data for a later e-invoicing export (D-011) |
+| Timesheets | `timesheets`, `timesheet_revisions`, `timesheet_lines` | A draft holds no lines and reads attendance. Approval stores the lines, company side only, and they never change. A revision preserves the original, and `live` says which lines are current (TS-04, TS-06, D-049) |
+| Billing links | `billed_allocations` | Which invoice charged which work. A credit note or cancellation only flags its rows (TS-05, D-049) |
+| Invoices | `invoices`, `invoice_lines`, `credit_notes` | Draft has no legal number. Stored as structured data for a later e-invoicing export (D-011) |
 | Receipts | `receipts`, `receipt_allocations` | Unapplied credit allowed. Allocation cannot exceed outstanding (INV-05) |
 | Costs | `cash_entries` | Expenses are cash book rows with a category, an optional site and a payment reference. Actual room cost is separate from room charge recovered from a worker (REP-07) |
 | Documents | `document_assets`, `document_templates`, `issued_documents` | Images are kept for good. One template row says how papers look today. An issued paper holds its number, revision, file, what it said and how it looked, and never changes (DOC-05, D-047) |
@@ -44,9 +45,10 @@ No table stores an editable balance. Current balances derive from posted payroll
 | Invoice number unique in tenant | `UNIQUE (tenant_id, invoice_number)`, null while draft |
 | Duplicate operation rejected | Outbox primary key on `operation_id`, checked by `applyOperation` (D-021) |
 | Break within shift | `CHECK (break_minutes BETWEEN 0 AND clock_minutes)` |
-| Same work not billed twice | Guard over `invoice_source_allocations` per attendance entry and billed unit |
+| Same work on one current timesheet | Partial unique index on `timesheet_lines (work_key)` where live. `work_key` is the first row of a correction chain, so a corrected row is the same work |
+| Same work not billed twice | Partial unique index on `billed_allocations (work_key)` where not released |
 | Allocation within outstanding | Checked inside the posting transaction |
-| Posted rows immutable | Triggers rejecting `UPDATE` and `DELETE` on posted payroll, issued invoices and allocations |
+| Posted rows immutable | Triggers rejecting `UPDATE` and `DELETE` on posted payroll, issued invoices, approved timesheet lines and allocations |
 | What a payment settled never changes | Triggers rejecting `UPDATE` and `DELETE` on `salary_allocations`. One row per payment and month, `UNIQUE (payment_id, month)` |
 | A closed month stays as it was | Triggers rejecting writes dated up to the latest live `period_locks.last_day` on `cash_entries`, `attendance_entries`, `payroll_items`, `payroll_lines` and `opening_balances`. Linking a closed row to a later posting or a timesheet changes no figure, and is allowed. `applyOperation` turns the refusal into `PeriodLocked` |
 | One worker paid once per month | Partial unique index on `payroll_lines (worker_id, period_from)` where not reversed |

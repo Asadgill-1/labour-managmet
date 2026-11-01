@@ -54,14 +54,14 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | PAY-07 | 07 | Deductions | T11, T11e | IMPLEMENTED_UNVERIFIED | TC-033, TC-061 | `apps/mobile/test/payroll_test.dart` |
 | PAY-08 | 07 | Compliance | T12 | IMPLEMENTED_UNVERIFIED | TC-071 | - |
 | PAY-09 | 07 | Payslip | T11f, T14 | IMPLEMENTED_UNVERIFIED | TC-064, TC-083 | `apps/mobile/test/statement_test.dart` |
-| TS-01 | 08 | Client/date range/site chunein aur approved attendance se timesheet banayein | T15 | NOT_STARTED | - | - |
-| TS-02 | 08 | Columns | T15 | NOT_STARTED | TC-038 | - |
-| TS-03 | 08 | Daily summary | T15 | NOT_STARTED | TC-039 | - |
-| TS-04 | 08 | Lifecycle | T15 | NOT_STARTED | - | - |
-| TS-05 | 08 | Invoice source | T15 | NOT_STARTED | TC-004 | - |
-| TS-06 | 08 | Revision | T15 | NOT_STARTED | - | - |
-| TS-07 | 08 | Output | T15 | NOT_STARTED | - | - |
-| TS-08 | 08 | Monthly contracts | T15 | NOT_STARTED | TC-020 | - |
+| TS-01 | 08 | Client/date range/site chunein aur approved attendance se timesheet banayein | T15 | IMPLEMENTED_UNVERIFIED | TC-084 | - |
+| TS-02 | 08 | Columns | T15 | IMPLEMENTED_UNVERIFIED | TC-038 | - |
+| TS-03 | 08 | Daily summary | T15 | IMPLEMENTED_UNVERIFIED | TC-039 | - |
+| TS-04 | 08 | Lifecycle | T15 | IMPLEMENTED_UNVERIFIED | TC-085 | - |
+| TS-05 | 08 | Invoice source | T15 | IMPLEMENTED_UNVERIFIED | TC-004, TC-086 | - |
+| TS-06 | 08 | Revision | T15 | IMPLEMENTED_UNVERIFIED | TC-087 | - |
+| TS-07 | 08 | Output | T15 | IMPLEMENTED_UNVERIFIED | TC-088 | - |
+| TS-08 | 08 | Monthly contracts | T15 | IMPLEMENTED_UNVERIFIED | TC-020, TC-089 | - |
 | INV-01 | 09 | Creation | T16 | NOT_STARTED | TC-041 | - |
 | INV-02 | 09 | Minimum fields | T16 | NOT_STARTED | - | - |
 | INV-03 | 09 | VAT | T16 | NOT_STARTED | TC-040 | - |
