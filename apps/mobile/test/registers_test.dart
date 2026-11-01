@@ -241,38 +241,45 @@ void main() {
       expect(worked[l10n.colRate], 'AED 10.00, ${l10n.basisHour}');
       expect(worked[l10n.colEarned], 9000);
 
-      // Visa 3,000 and advance 200 go out first, so the account starts below zero. Two days' work bring it up.
-      expect(asifRows[0][l10n.colBalance], -300000);
-      expect(asifRows[1][l10n.colBalance], -320000);
-      expect(worked[l10n.colBalance], -311000);
-      expect(asifRows[3][l10n.colBalance], -302000);
+      // Visa money the company spends moves nothing yet. The advance of 200 goes out first, then two days' work bring it up.
+      expect(asifRows[0][l10n.colBalance], 0);
+      expect(asifRows[0][l10n.note], contains('AED 3,000.00'));
+      expect(asifRows[1][l10n.colBalance], -20000);
+      expect(worked[l10n.colBalance], -11000);
+      expect(asifRows[3][l10n.colBalance], -2000);
 
-      // Taking money back through pay moves nothing, because it counted when it was given.
+      // The visa instalment counts as it is cut from pay (D-042).
+      final instalment = asifRows.where((r) => r[l10n.colWhat] == l10n.payKindVisa).single;
+      expect(instalment[l10n.payKindDeduction], 10000);
+      expect(instalment[l10n.colBalance], -12000);
+
+      // Taking an advance back through pay moves nothing, because it counted when it was given.
       final recovered = asifRows.where((r) => r[l10n.colWhat] == l10n.payKindRecovery).single;
-      expect(recovered[l10n.colBalance], -302000);
+      expect(recovered[l10n.colBalance], -12000);
       expect(recovered[l10n.note], contains('AED 50.00'));
       expect(asifRows.last[l10n.colWhat], l10n.kindSalaryPaid);
       expect(asifRows.last[l10n.colPaid], 1000);
-      expect(asifRows.last[l10n.colBalance], -303000);
+      expect(asifRows.last[l10n.colBalance], -13000);
 
       final column = data.columns.indexWhere((c) => c.label == l10n.colBalance);
       final asifGroup = groupEntries(data.entries).first.rows;
-      expect(columnFigure(data.columns, asifGroup, column), -303000);
-      expect(columnFigure(data.columns, data.entries, column), -303000 + 7200 + 7200, reason: 'where each worker ended, added up');
+      expect(columnFigure(data.columns, asifGroup, column), -13000);
+      expect(columnFigure(data.columns, data.entries, column), -13000 + 7200 + 7200, reason: 'where each worker ended, added up');
       expect(data.groupHeads['Asif (W1)'], contains('Helper'));
-      expect(data.groupFeet['Asif (W1)'], contains(l10n.regOwedByWorker('AED 3,030.00')));
-      expect(data.groupFeet['Asif (W1)'], contains(l10n.regOwedSplit('AED 20.00', 'AED 150.00', 'AED 2,900.00')));
+      expect(data.groupFeet['Asif (W1)'], contains(l10n.regOwedByWorker('AED 130.00')));
+      expect(data.groupFeet['Asif (W1)'], contains(l10n.regOwedSplit('AED 20.00', 'AED 150.00')));
+      expect(data.groupFeet['Asif (W1)'], contains(l10n.regVisaLeft('AED 2,900.00')));
       expect(data.groupFeet['Imran (W2)'], l10n.regOwedToWorker('AED 144.00'));
     });
 
-    test('balance always equals pay owed plus work not posted, less what is left of advance and visa (REP-08)', () async {
+    test('balance always equals pay owed plus work not posted, less the advance not yet cut (REP-08)', () async {
       final data = await build(Section.workerRegister);
       final months = await db.payrollFor('2020-10');
       for (final (id, label) in [(asif, 'Asif (W1)'), (imran, 'Imran (W2)')]) {
         final left = groupEntries(data.entries).singleWhere((g) => g.group == label).rows.last.cells[data.columns.indexWhere((c) => c.label == l10n.colBalance)]! as int;
         // Someone with nothing new in October stands where September left them.
         final owed = months.where((p) => p.worker.id == id).firstOrNull?.payableFils ?? (await db.payrollFor(sep)).singleWhere((p) => p.worker.id == id).closingFils;
-        expect(left, owed - await db.advanceLeft(id) - await db.visaLeft(id), reason: label);
+        expect(left, owed - await db.advanceLeft(id), reason: label);
       }
     });
 
@@ -280,7 +287,7 @@ void main() {
       final data = await build(Section.workerRegister, from: '2020-10-01', to: '2020-10-31');
       final asifRows = rowsOf(data, 'Asif');
       expect(asifRows.single[l10n.colWhat], l10n.regBrought);
-      expect(asifRows.single[l10n.colBalance], -303000);
+      expect(asifRows.single[l10n.colBalance], -13000);
       expect(asifRows.single[l10n.colEarned], isNull);
 
       final imranRows = rowsOf(data, 'Imran');
@@ -305,9 +312,10 @@ void main() {
       expect(first[l10n.colDays], 2);
       expect(first[l10n.colHours], 18 * 60);
       expect(first[l10n.colEarned], 18000);
-      expect(first[l10n.colAdvanceVisa], 320000);
+      expect(first[l10n.kindAdvanceGiven], 20000);
+      expect(first[l10n.payKindDeduction], 10000);
       expect(first[l10n.colPaid], 1000);
-      expect(first[l10n.colBalance], -303000);
+      expect(first[l10n.colBalance], -13000);
     });
 
     test('allowances, deductions and monthly salary all land on the account, and an undone month stays honest', () async {

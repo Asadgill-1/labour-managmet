@@ -166,7 +166,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailyWageHelp.
   ///
   /// In en, this message translates to:
-  /// **'Optional. Shows beside every worker. Tap an amount there to change it.'**
+  /// **'Optional. Only for a worker with no pay of their own.'**
   String get dailyWageHelp;
 
   /// No description provided for @halfDayIsHalf.
@@ -238,7 +238,7 @@ abstract class AppLocalizations {
   /// No description provided for @wageOf.
   ///
   /// In en, this message translates to:
-  /// **'Daily wage: {name}'**
+  /// **'Pay: {name}'**
   String wageOf(String name);
 
   /// No description provided for @tabRates.
@@ -2833,12 +2833,6 @@ abstract class AppLocalizations {
   /// **'Earned'**
   String get colEarned;
 
-  /// No description provided for @colAdvanceVisa.
-  ///
-  /// In en, this message translates to:
-  /// **'Advance, visa'**
-  String get colAdvanceVisa;
-
   /// No description provided for @colPaid.
   ///
   /// In en, this message translates to:
@@ -2866,7 +2860,7 @@ abstract class AppLocalizations {
   /// No description provided for @regWorkerNote.
   ///
   /// In en, this message translates to:
-  /// **'Balance = earned - advance and visa - deductions - paid. A monthly salary shows once its month is posted.'**
+  /// **'Balance = earned - advance - deductions, room and visa cut - paid. A monthly salary shows once its month is posted.'**
   String get regWorkerNote;
 
   /// No description provided for @regAttendanceNote.
@@ -2896,8 +2890,8 @@ abstract class AppLocalizations {
   /// No description provided for @regOwedSplit.
   ///
   /// In en, this message translates to:
-  /// **'Pay {pay}, less advance left {advance}, less visa left {visa}'**
-  String regOwedSplit(String pay, String advance, String visa);
+  /// **'Pay {pay}, less advance left {advance}'**
+  String regOwedSplit(String pay, String advance);
 
   /// No description provided for @regRecoveryRow.
   ///
@@ -2934,6 +2928,312 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Balance'**
   String get colBalance;
+
+  /// No description provided for @rateIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay: {name}'**
+  String rateIn(String name);
+
+  /// No description provided for @ownRateHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Their own pay is {rate}. Leave empty to keep it.'**
+  String ownRateHelp(String rate);
+
+  /// No description provided for @rateSetHere.
+  ///
+  /// In en, this message translates to:
+  /// **'In this group: {rate}'**
+  String rateSetHere(String rate);
+
+  /// No description provided for @rateOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'Own pay: {rate}'**
+  String rateOwn(String rate);
+
+  /// No description provided for @rateFromGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Group wage: {rate}'**
+  String rateFromGroup(String rate);
+
+  /// No description provided for @rateMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'No pay set. Set it here, or add a group wage.'**
+  String get rateMissing;
+
+  /// No description provided for @rateChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get rateChange;
+
+  /// No description provided for @regVisaRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa money {amount}. It comes off the balance as it is cut from pay.'**
+  String regVisaRow(String amount);
+
+  /// No description provided for @regVisaLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa left {amount}'**
+  String regVisaLeft(String amount);
+
+  /// No description provided for @exportSlowPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'This PDF is long and can take some minutes. Excel is much quicker.'**
+  String get exportSlowPdf;
+
+  /// No description provided for @exportTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many rows for one file. Pick fewer dates or add a filter.'**
+  String get exportTooLong;
+
+  /// No description provided for @payrollAdvanceLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance not yet cut'**
+  String get payrollAdvanceLeft;
+
+  /// No description provided for @payrollAfterAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance on the slip, after advance'**
+  String get payrollAfterAdvance;
+
+  /// No description provided for @slipTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary slip'**
+  String get slipTitle;
+
+  /// No description provided for @slipSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get slipSummary;
+
+  /// No description provided for @slipOpening.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance from before'**
+  String get slipOpening;
+
+  /// No description provided for @slipWork.
+  ///
+  /// In en, this message translates to:
+  /// **'This month\'s work'**
+  String get slipWork;
+
+  /// No description provided for @slipAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance taken'**
+  String get slipAdvance;
+
+  /// No description provided for @slipRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get slipRoom;
+
+  /// No description provided for @slipVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa'**
+  String get slipVisa;
+
+  /// No description provided for @slipOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other deductions'**
+  String get slipOther;
+
+  /// No description provided for @slipPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get slipPaid;
+
+  /// No description provided for @slipOwedToYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance: to be paid to you'**
+  String get slipOwedToYou;
+
+  /// No description provided for @slipYouOwe.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance: you owe'**
+  String get slipYouOwe;
+
+  /// No description provided for @slipSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get slipSettled;
+
+  /// No description provided for @slipDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Day by day'**
+  String get slipDays;
+
+  /// No description provided for @slipMoney.
+  ///
+  /// In en, this message translates to:
+  /// **'Money taken'**
+  String get slipMoney;
+
+  /// No description provided for @slipNoWork.
+  ///
+  /// In en, this message translates to:
+  /// **'No work this month.'**
+  String get slipNoWork;
+
+  /// No description provided for @slipNoMoney.
+  ///
+  /// In en, this message translates to:
+  /// **'No money taken this month.'**
+  String get slipNoMoney;
+
+  /// No description provided for @slipDayCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days'**
+  String slipDayCount(int days);
+
+  /// No description provided for @slipVisaLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa left {amount}: comes out of later pay.'**
+  String slipVisaLeft(String amount);
+
+  /// No description provided for @slipNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This slip is an account, not proof of payment.'**
+  String get slipNote;
+
+  /// No description provided for @ownerSheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner\'s sheet'**
+  String get ownerSheet;
+
+  /// No description provided for @sheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner\'s salary sheet'**
+  String get sheetTitle;
+
+  /// No description provided for @sheetSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'The month in short'**
+  String get sheetSummary;
+
+  /// No description provided for @sheetBill.
+  ///
+  /// In en, this message translates to:
+  /// **'Company bills'**
+  String get sheetBill;
+
+  /// No description provided for @sheetWages.
+  ///
+  /// In en, this message translates to:
+  /// **'Wages for that work'**
+  String get sheetWages;
+
+  /// No description provided for @sheetSalaries.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly salaries, not split by company'**
+  String get sheetSalaries;
+
+  /// No description provided for @sheetAllowances.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowances'**
+  String get sheetAllowances;
+
+  /// No description provided for @sheetCuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Other deductions from pay'**
+  String get sheetCuts;
+
+  /// No description provided for @sheetRoomIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Room money in, from pay and cash'**
+  String get sheetRoomIn;
+
+  /// No description provided for @sheetRoomOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Room rent paid'**
+  String get sheetRoomOut;
+
+  /// No description provided for @sheetExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Other expenses'**
+  String get sheetExpenses;
+
+  /// No description provided for @sheetEstimate.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated profit'**
+  String get sheetEstimate;
+
+  /// No description provided for @sheetByCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'By company'**
+  String get sheetByCompany;
+
+  /// No description provided for @sheetDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Company wise'**
+  String get sheetDetail;
+
+  /// No description provided for @sheetWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers\' accounts'**
+  String get sheetWorkers;
+
+  /// No description provided for @sheetCompanyHead.
+  ///
+  /// In en, this message translates to:
+  /// **'{workers} workers, {sites} sites'**
+  String sheetCompanyHead(int workers, int sites);
+
+  /// No description provided for @sheetNote.
+  ///
+  /// In en, this message translates to:
+  /// **'An estimate from attendance, not audited accounts. A company with no rate or a monthly rate shows no bill here, so its profit looks low. Advance and visa money are not expenses, because workers pay them back.'**
+  String get sheetNote;
+
+  /// No description provided for @colProfit.
+  ///
+  /// In en, this message translates to:
+  /// **'Profit'**
+  String get colProfit;
+
+  /// No description provided for @colVisaLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa left'**
+  String get colVisaLeft;
 }
 
 class _AppLocalizationsDelegate

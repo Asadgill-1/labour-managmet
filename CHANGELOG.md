@@ -10,6 +10,11 @@
 - Calculation engine for hourly, day, shift and monthly contracts.
 - Bulk attendance with exceptions, approval and corrections.
 - New colours and cards, and a side panel of main tabs with sub-tabs.
+- Salary slip for each worker, as a PDF to send on WhatsApp, with no company figures on it.
+- Owner's salary sheet by company, with rates, bill, pay and estimated profit, in PDF and Excel.
+- A worker's own pay shows under their name when you make a group, and you can change it there, per day or per hour. The group's wage is only for someone with no pay of their own.
+- Visa money counts on a worker's account as it is cut from pay.
+- Registers, Excel and payroll keep working at 1,000 workers.
 - Attendance counts in payroll as soon as it is saved, with no approve button. Posting is the approval.
 - A missing company rate no longer holds a worker's pay, and the bill fills in when the rate is added.
 - Room charge goes on the workers you tick, with an amount for each.

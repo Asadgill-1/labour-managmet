@@ -6,15 +6,41 @@ const hourly = RateTerms(basis: RateBasis.hour, rateFils: 800, effectiveFrom: '2
 const monthly = RateTerms(basis: RateBasis.month, rateFils: 200000, effectiveFrom: '2026-01-01');
 
 void main() {
-  test('the group wage replaces an hourly contract and pays per day, whatever the hours', () {
-    final terms = groupPayTerms(hourly, date: date, groupRateFils: 10000)!;
+  test("a worker's own hourly rate comes before the group's daily wage, as the owner asked (D-042)", () {
+    expect(groupPayTerms(hourly, date: date, groupRateFils: 10000), hourly);
+    expect(priceLine(hourly, status: AttendanceStatus.present, minutes: 420, overtimeApproved: false).amountFils, 5600);
+  });
+
+  test('someone with no rate of their own gets the group wage, per day, whatever the hours', () {
+    final terms = groupPayTerms(null, date: date, groupRateFils: 10000)!;
     expect(terms.basis, RateBasis.day);
     expect(priceLine(terms, status: AttendanceStatus.present, minutes: 660, overtimeApproved: false).amountFils, 10000);
     expect(priceLine(terms, status: AttendanceStatus.present, minutes: 300, overtimeApproved: false).amountFils, 10000);
   });
 
-  test("a member's own wage beats the group's", () {
-    expect(groupPayTerms(hourly, date: date, groupRateFils: 10000, memberRateFils: 12000)!.rateFils, 12000);
+  test('a rate set for this worker in the group beats their contract, per day or per hour', () {
+    final daily = groupPayTerms(hourly, date: date, groupRateFils: 10000, memberRateFils: 12000)!;
+    expect(daily.rateFils, 12000);
+    expect(daily.basis, RateBasis.day);
+    final perHour = groupPayTerms(hourly, date: date, groupRateFils: 10000, memberRateFils: 1400, memberBasis: RateBasis.hour)!;
+    expect(perHour.basis, RateBasis.hour);
+    expect(priceLine(perHour, status: AttendanceStatus.present, minutes: 420, overtimeApproved: false).amountFils, 9800);
+  });
+
+  test('a rate set per hour keeps the overtime terms of an hourly contract, and has no half-day amount', () {
+    const withOvertime = RateTerms(basis: RateBasis.hour, rateFils: 800, effectiveFrom: '2026-01-01', includedMinutes: 480, overtimeRateFils: 1200);
+    final terms = groupPayTerms(withOvertime, date: date, memberRateFils: 1000, memberBasis: RateBasis.hour, halfDayIsHalf: true)!;
+    expect(terms.includedMinutes, 480);
+    expect(terms.overtimeRateFils, 1200);
+    expect(terms.halfAmountFils, isNull);
+  });
+
+  test("half pay reaches a worker on their own daily contract, if the group says so", () {
+    const daily = RateTerms(basis: RateBasis.day, rateFils: 9000, effectiveFrom: '2026-01-01');
+    final half = groupPayTerms(daily, date: date, groupRateFils: 10000, halfDayIsHalf: true)!;
+    expect(half.rateFils, 9000);
+    expect(priceLine(half, status: AttendanceStatus.half, minutes: 300, overtimeApproved: false).amountFils, 4500);
+    expect(groupPayTerms(daily, date: date, halfDayIsHalf: false), daily);
   });
 
   test('the group wage never turns a monthly worker daily, but an own wage set on purpose does (ATT-03)', () {

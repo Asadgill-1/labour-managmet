@@ -3,6 +3,20 @@ import 'package:drift/drift.dart';
 
 import 'tenant_database.dart';
 
+/// What a worker earns in one group, set by hand there, per day or per hour (D-042).
+typedef MemberRate = ({int fils, RateBasis basis});
+
+MemberRate? memberRateOf(WorkerGroupMember m) => m.rateFils == null ? null : (fils: m.rateFils!, basis: RateBasis.values.byName(m.rateBasis));
+
+/// Rows by a key, keeping their order. With a thousand workers, scanning every row for each worker takes minutes.
+Map<K, List<T>> groupedBy<K, T>(Iterable<T> rows, K Function(T row) key) {
+  final groups = <K, List<T>>{};
+  for (final row in rows) {
+    (groups[key(row)] ??= []).add(row);
+  }
+  return groups;
+}
+
 /// Adds the common columns to a form's fields without each table repeating them.
 class _Stamped<D> implements Insertable<D> {
   _Stamped(this.fields, this.common);
@@ -65,7 +79,7 @@ extension Masters on TenantDatabase {
   Future<String> saveWorkerGroup({
     required String? id,
     required WorkerGroupsCompanion fields,
-    required Map<String, int?> members,
+    required Map<String, MemberRate?> members,
     required String operationId,
   }) async {
     final rowId = id ?? newUuid();
@@ -113,13 +127,15 @@ extension Masters on TenantDatabase {
                 sourceOperationId: operationId,
                 groupId: rowId,
                 workerId: entry.key,
-                dailyRateFils: Value(entry.value),
+                rateFils: Value(entry.value?.fils),
+                rateBasis: Value((entry.value?.basis ?? RateBasis.day).name),
               ),
             );
-          } else if (old.dailyRateFils != entry.value) {
+          } else if (old.rateFils != entry.value?.fils || (entry.value != null && old.rateBasis != entry.value!.basis.name)) {
             await (update(workerGroupMembers)..where((m) => m.id.equals(old.id))).write(
               WorkerGroupMembersCompanion(
-                dailyRateFils: Value(entry.value),
+                rateFils: Value(entry.value?.fils),
+                rateBasis: Value((entry.value?.basis ?? RateBasis.day).name),
                 updatedAtUtc: Value(moment),
                 actorId: Value(actorId),
                 version: Value(old.version + 1),

@@ -164,7 +164,7 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
           ),
         );
       }
-    }));
+    }, workerId: widget.workerId, clientId: widget.clientId));
     if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();

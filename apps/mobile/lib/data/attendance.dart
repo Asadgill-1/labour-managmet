@@ -2,6 +2,7 @@ import 'package:domain/calc.dart';
 import 'package:domain/dates.dart';
 import 'package:drift/drift.dart';
 
+import 'masters.dart';
 import 'tenant_database.dart';
 
 /// One row in a batch, as entered.
@@ -89,38 +90,44 @@ EntryInput entryToInput(AttendanceEntry e) => EntryInput(
   ),
 );
 
-extension AttendanceOps on TenantDatabase {
-  Future<PricedShift> _price({
-    required String workDate,
-    required String clientId,
-    required String siteId,
-    required EntryInput input,
-  }) async {
-    final billing = await (select(billingContracts)..where((c) => c.clientId.equals(clientId))).get();
-    final pay = await (select(payContracts)..where((c) => c.workerId.equals(input.workerId))).get();
-    final contract = pickRate(pay.map(payTerms), date: workDate, siteId: siteId, workerId: input.workerId);
+/// Every rate a row could need, read once, so pricing a thousand rows does not ask the database thousands of times.
+class _Rates {
+  _Rates(Iterable<BillingContract> billing, Iterable<PayContract> pay, Iterable<WorkerGroup> groups, Iterable<WorkerGroupMember> members)
+    : _billing = groupedBy(billing, (c) => c.clientId).map((client, rows) => MapEntry(client, rows.map(_billingTerms).toList())),
+      _pay = groupedBy(pay, (c) => c.workerId).map((worker, rows) => MapEntry(worker, rows.map(payTerms).toList())),
+      _groups = {for (final g in groups) g.id: g},
+      _members = {for (final m in members) (m.groupId, m.workerId): m};
+
+  final Map<String, List<RateTerms>> _billing;
+  final Map<String, List<RateTerms>> _pay;
+  final Map<String, WorkerGroup> _groups;
+  final Map<(String, String), WorkerGroupMember> _members;
+
+  PricedShift price({required String workDate, required String clientId, required String siteId, required EntryInput input}) {
+    final contract = pickRate(_pay[input.workerId] ?? const [], date: workDate, siteId: siteId, workerId: input.workerId);
+    final group = _groups[input.groupId];
+    final member = _members[(input.groupId, input.workerId)];
     return priceShift(
       workDate,
       input.shift,
-      client: pickRate(billing.map(_billingTerms), date: workDate, siteId: siteId, workerId: input.workerId),
-      worker: await _groupTerms(contract, input, workDate),
+      client: pickRate(_billing[clientId] ?? const [], date: workDate, siteId: siteId, workerId: input.workerId),
+      worker: group == null
+          ? contract
+          : groupPayTerms(
+              contract,
+              date: workDate,
+              groupRateFils: group.dailyRateFils,
+              memberRateFils: member?.rateFils,
+              memberBasis: RateBasis.values.byName(member?.rateBasis ?? RateBasis.day.name),
+              typedFils: input.shift.workerOverrideFils,
+              halfDayIsHalf: group.halfDayIsHalf,
+            ),
     );
   }
+}
 
-  Future<RateTerms?> _groupTerms(RateTerms? contract, EntryInput input, String date) async {
-    final groupId = input.groupId;
-    if (groupId == null) return contract;
-    final group = await (select(workerGroups)..where((g) => g.id.equals(groupId))).getSingle();
-    final member = await (select(workerGroupMembers)..where((m) => m.groupId.equals(groupId) & m.workerId.equals(input.workerId))).getSingleOrNull();
-    return groupPayTerms(
-      contract,
-      date: date,
-      groupRateFils: group.dailyRateFils,
-      memberRateFils: member?.dailyRateFils,
-      typedFils: input.shift.workerOverrideFils,
-      halfDayIsHalf: group.halfDayIsHalf,
-    );
-  }
+extension AttendanceOps on TenantDatabase {
+  Future<_Rates> _rates() async => _Rates(await select(billingContracts).get(), await select(payContracts).get(), await select(workerGroups).get(), await select(workerGroupMembers).get());
 
   /// True if this worker already has live time in this window. A second job at another hour is fine (ATT-05).
   Future<bool> _overlaps(String workerId, PricedShift priced, {String? exceptId}) async {
@@ -144,8 +151,30 @@ extension AttendanceOps on TenantDatabase {
     required EntryInput input,
     String? exceptId,
   }) async {
-    final priced = await _price(workDate: workDate, clientId: clientId, siteId: siteId, input: input);
+    final priced = (await _rates()).price(workDate: workDate, clientId: clientId, siteId: siteId, input: input);
     return RowPreview(input: input, priced: priced, overlaps: await _overlaps(input.workerId, priced, exceptId: exceptId));
+  }
+
+  /// A whole batch in one go. A shift starts on its work date and runs under a day, so only the days around it can overlap.
+  Future<List<RowPreview>> previewRows({
+    required String workDate,
+    required String clientId,
+    required String siteId,
+    required List<EntryInput> inputs,
+  }) async {
+    final rates = await _rates();
+    final nearby = await (select(attendanceEntries)
+          ..where((e) => e.superseded.equals(false) & e.startUtc.isNotNull() & e.workDate.isBetweenValues(addDays(workDate, -1), addDays(workDate, 1))))
+        .get();
+    final byWorker = groupedBy(nearby, (e) => e.workerId);
+    return [
+      for (final input in inputs)
+        () {
+          final priced = rates.price(workDate: workDate, clientId: clientId, siteId: siteId, input: input);
+          final overlaps = priced.startUtc != null && (byWorker[input.workerId] ?? const <AttendanceEntry>[]).any((e) => e.startUtc!.isBefore(priced.endUtc!) && e.endUtc!.isAfter(priced.startUtc!));
+          return RowPreview(input: input, priced: priced, overlaps: overlaps);
+        }(),
+    ];
   }
 
   /// The columns one row writes. A row with no worker pay stays a draft. A row with only the company rate missing
@@ -207,8 +236,8 @@ extension AttendanceOps on TenantDatabase {
         final now = DateTime.now().toUtc();
         final bad = <String>[];
         final rows = <AttendanceEntriesCompanion>[];
-        for (final input in inputs) {
-          final preview = await previewRow(workDate: workDate, clientId: clientId, siteId: siteId, input: input);
+        for (final preview in await previewRows(workDate: workDate, clientId: clientId, siteId: siteId, inputs: inputs)) {
+          final input = preview.input;
           if (preview.blocksSave) bad.add(input.workerId);
           rows.add(
             _stamp(_entryColumns(input, preview.priced), newUuid(), operationId, now).copyWith(
@@ -307,23 +336,28 @@ extension AttendanceOps on TenantDatabase {
       action: 'approve',
       change: () async {
         final ids = <String>[];
-        for (final old in rows.where((e) => e.state == 'draft' || e.state == 'submitted')) {
-          final input = entryToInput(old);
-          final priced = await _price(workDate: old.workDate, clientId: old.clientId, siteId: old.siteId, input: input);
-          final columns = _entryColumns(input, priced);
-          await (update(attendanceEntries)..where((e) => e.id.equals(old.id))).write(
-            columns.copyWith(
-              state: Value(priced.payHeld ? 'draft' : 'approved'),
-              version: Value(old.version + 1),
-              updatedAtUtc: Value(DateTime.now().toUtc()),
-              sourceOperationId: Value(operationId),
-            ),
-          );
-          if (!priced.payHeld) {
-            approved++;
-            ids.add(old.id);
+        final rates = await _rates();
+        final now = DateTime.now().toUtc();
+        await batch((b) {
+          for (final old in rows.where((e) => e.state == 'draft' || e.state == 'submitted')) {
+            final input = entryToInput(old);
+            final priced = rates.price(workDate: old.workDate, clientId: old.clientId, siteId: old.siteId, input: input);
+            b.update(
+              attendanceEntries,
+              _entryColumns(input, priced).copyWith(
+                state: Value(priced.payHeld ? 'draft' : 'approved'),
+                version: Value(old.version + 1),
+                updatedAtUtc: Value(now),
+                sourceOperationId: Value(operationId),
+              ),
+              where: (e) => e.id.equals(old.id),
+            );
+            if (!priced.payHeld) {
+              approved++;
+              ids.add(old.id);
+            }
           }
-        }
+        });
         return {'approved': ids};
       },
     );
@@ -332,12 +366,24 @@ extension AttendanceOps on TenantDatabase {
 
   /// What a rate added or changed later does to stored rows. A row not yet frozen takes it in full. A frozen row only
   /// fills a company rate it never had, so its bill appears and its pay stays put (CALC-06, D-041).
-  Future<List<(AttendanceEntry, AttendanceEntriesCompanion)>> _repriced() async {
-    final rows = await (select(attendanceEntries)..where((e) => e.superseded.equals(false) & (e.state.isIn(const ['draft', 'submitted']) | e.clientRateFils.isNull()))).get();
+  /// The limits keep a thousand workers' rows out of it when one worker's rate changes.
+  Future<List<(AttendanceEntry, AttendanceEntriesCompanion)>> _repriced({String? workerId, String? clientId, String? groupId, String? upTo}) async {
+    final rows = await (select(attendanceEntries)
+          ..where(
+            (e) =>
+                e.superseded.equals(false) &
+                (e.state.isIn(const ['draft', 'submitted']) | e.clientRateFils.isNull()) &
+                (workerId == null ? const Constant(true) : e.workerId.equals(workerId)) &
+                (clientId == null ? const Constant(true) : e.clientId.equals(clientId)) &
+                (groupId == null ? const Constant(true) : e.groupId.equals(groupId)) &
+                (upTo == null ? const Constant(true) : e.workDate.isSmallerOrEqualValue(upTo)),
+          ))
+        .get();
+    final rates = await _rates();
     final changes = <(AttendanceEntry, AttendanceEntriesCompanion)>[];
     for (final old in rows) {
       final input = entryToInput(old);
-      final priced = await _price(workDate: old.workDate, clientId: old.clientId, siteId: old.siteId, input: input);
+      final priced = rates.price(workDate: old.workDate, clientId: old.clientId, siteId: old.siteId, input: input);
       if (old.state == 'draft' || old.state == 'submitted') {
         final same =
             old.state == (priced.payHeld ? 'draft' : 'submitted') &&
@@ -365,8 +411,8 @@ extension AttendanceOps on TenantDatabase {
   }
 
   /// Lets rates reach the rows they change, and returns how many changed. Nothing changed means nothing is recorded.
-  Future<int> repriceRows({required String operationId}) async {
-    final changes = await _repriced();
+  Future<int> repriceRows({required String operationId, String? workerId, String? clientId, String? groupId, String? upTo}) async {
+    final changes = await _repriced(workerId: workerId, clientId: clientId, groupId: groupId, upTo: upTo);
     if (changes.isEmpty) return 0;
     await applyOperation(
       operationId: operationId,
@@ -376,21 +422,26 @@ extension AttendanceOps on TenantDatabase {
       action: 'reprice',
       change: () async {
         final now = DateTime.now().toUtc();
-        for (final (old, columns) in changes) {
-          await (update(attendanceEntries)..where((e) => e.id.equals(old.id))).write(
-            columns.copyWith(version: Value(old.version + 1), updatedAtUtc: Value(now), actorId: Value(actorId), sourceOperationId: Value(operationId)),
-          );
-        }
+        await batch((b) {
+          for (final (old, columns) in changes) {
+            b.update(
+              attendanceEntries,
+              columns.copyWith(version: Value(old.version + 1), updatedAtUtc: Value(now), actorId: Value(actorId), sourceOperationId: Value(operationId)),
+              where: (e) => e.id.equals(old.id),
+            );
+          }
+        });
         return {'repriced': [for (final (old, _) in changes) old.id]};
       },
     );
     return changes.length;
   }
 
-  /// Saves a rate and lets it reach its rows together, so a crash can't leave them apart.
-  Future<void> savingRate(Future<void> Function() save) => transaction(() async {
+  /// Saves a rate and lets it reach its rows together, so a crash can't leave them apart. Name the worker, company or
+  /// group it belongs to when there is one, so only their rows are looked at.
+  Future<void> savingRate(Future<void> Function() save, {String? workerId, String? clientId, String? groupId}) => transaction(() async {
     await save();
-    await repriceRows(operationId: newUuid());
+    await repriceRows(operationId: newUuid(), workerId: workerId, clientId: clientId, groupId: groupId);
   });
 
   /// Removes a row that nobody has approved.

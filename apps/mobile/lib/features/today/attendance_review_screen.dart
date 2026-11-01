@@ -57,9 +57,7 @@ class _AttendanceReviewScreenState extends ConsumerState<AttendanceReviewScreen>
 
   Future<void> _refresh() async {
     final db = ref.read(dbProvider);
-    final rows = await Future.wait(
-      _inputs.map((input) => db.previewRow(workDate: widget.date, clientId: widget.clientId, siteId: widget.siteId, input: input)),
-    );
+    final rows = await db.previewRows(workDate: widget.date, clientId: widget.clientId, siteId: widget.siteId, inputs: _inputs);
     if (mounted) setState(() => _rows = rows);
   }
 

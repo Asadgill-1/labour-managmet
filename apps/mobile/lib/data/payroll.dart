@@ -15,6 +15,9 @@ class LaterMonthPosted implements Exception {
   const LaterMonthPosted();
 }
 
+/// The few columns payroll needs from an unpaid row. A thousand workers' rows as whole objects cost seconds on every look.
+typedef _UnpaidRow = ({String workerId, String workDate, int? amountFils, String state, String? revisesEntryId});
+
 /// One worker's month. A posted month shows its stored line, otherwise a live preview (PAY-01).
 class WorkerPayroll {
   const WorkerPayroll({
@@ -69,8 +72,8 @@ PayrollFigures _postedFigures(PayrollLine l) => PayrollFigures(
 
 extension PayrollOps on TenantDatabase {
   /// What a corrected row's originals were already paid. Only the latest paid version counts, since each holds the whole amount (ATT-08).
-  Future<int> _alreadyPaid(AttendanceEntry row) async {
-    var id = row.revisesEntryId;
+  Future<int> _alreadyPaid(String? revises) async {
+    var id = revises;
     while (id != null) {
       final old = await (select(attendanceEntries)..where((e) => e.id.equals(id!))).getSingle();
       if (old.payrollLineId != null) return old.workerAmountFils ?? 0;
@@ -94,18 +97,30 @@ extension PayrollOps on TenantDatabase {
           ..where((l) => l.reversed.equals(false))
           ..orderBy([(l) => OrderingTerm.asc(l.periodFrom)]))
         .get();
-    final unpaidRows = await (select(attendanceEntries)
-          ..where((e) => e.superseded.equals(false) & e.payrollLineId.isNull() & e.workDate.isSmallerOrEqualValue(to)))
-        .get();
+    final e = attendanceEntries;
+    final unpaidQuery = selectOnly(e)
+      ..addColumns([e.workerId, e.workDate, e.workerAmountFils, e.state, e.revisesEntryId])
+      ..where(e.superseded.equals(false) & e.payrollLineId.isNull() & e.workDate.isSmallerOrEqualValue(to));
+    final unpaidRows = <_UnpaidRow>[
+      for (final r in await unpaidQuery.get())
+        (workerId: r.read(e.workerId)!, workDate: r.read(e.workDate)!, amountFils: r.read(e.workerAmountFils), state: r.read(e.state)!, revisesEntryId: r.read(e.revisesEntryId)),
+    ];
     final openings = await select(openingBalances).get();
     final cash = await (select(cashEntries)..where((c) => c.workerId.isNotNull())).get();
 
+    final contractsOf = groupedBy(contracts, (c) => c.workerId);
+    final itemsOf = groupedBy(items, (i) => i.workerId);
+    final linesOf = groupedBy(lines, (l) => l.workerId);
+    final rowsOf = groupedBy(unpaidRows, (r) => r.workerId);
+    final openingsOf = groupedBy(openings, (b) => b.workerId);
+    final cashOf = groupedBy(cash, (c) => c.workerId);
+
     final result = <WorkerPayroll>[];
     for (final worker in allWorkers) {
-      int openingOf(String kind) => openings.where((b) => b.kind == kind && b.workerId == worker.id).fold(0, (total, b) => total + b.amountFils);
-      final workerLines = lines.where((l) => l.workerId == worker.id).toList();
-      final cashLines = cash.where((c) => c.workerId == worker.id).map(cashLine).toList();
-      final workerItems = items.where((i) => i.workerId == worker.id).toList();
+      int openingOf(String kind) => (openingsOf[worker.id] ?? const <OpeningBalance>[]).where((b) => b.kind == kind).fold(0, (total, b) => total + b.amountFils);
+      final workerLines = linesOf[worker.id] ?? const <PayrollLine>[];
+      final cashLines = (cashOf[worker.id] ?? const <CashEntry>[]).map(cashLine).toList();
+      final workerItems = itemsOf[worker.id] ?? const <PayrollItem>[];
       final paidTotal = salaryPaidTotal(cashLines);
       final recovered = workerLines.fold(0, (total, l) => total + l.recoveryFils);
       final advanceLeft = advanceOutstanding(openingOf('worker_advance'), cashLines, recoveredFils: recovered);
@@ -131,18 +146,18 @@ extension PayrollOps on TenantDatabase {
         continue;
       }
 
-      final rows = unpaidRows.where((e) => e.workerId == worker.id);
+      final rows = rowsOf[worker.id] ?? const <_UnpaidRow>[];
       final work = <WorkLine>[
-        for (final r in rows.where((e) => e.state != 'draft'))
-          WorkLine(r.workDate, r.workerAmountFils ?? 0, alreadyPaidFils: await _alreadyPaid(r)),
+        for (final r in rows.where((r) => r.state != 'draft'))
+          WorkLine(r.workDate, r.amountFils ?? 0, alreadyPaidFils: r.revisesEntryId == null ? 0 : await _alreadyPaid(r.revisesEntryId)),
       ];
-      final unpriced = rows.where((e) => e.state == 'draft').length;
+      final unpriced = rows.where((r) => r.state == 'draft').length;
       final figures = workerPayroll(
         month: month,
         currentMonth: dubaiToday(DateTime.now()).substring(0, 7),
         work: work,
         // ponytail: an archived worker stops earning a monthly salary, so post their last month before archiving. Add an end date check if owners forget.
-        contracts: worker.active ? contracts.where((c) => c.workerId == worker.id).map(payTerms) : const [],
+        contracts: worker.active ? (contractsOf[worker.id] ?? const <PayContract>[]).map(payTerms) : const [],
         items: [for (final i in workerItems) PayItemLine(PayItemKind.values.byName(i.kind), i.amountFils)],
         advanceLeftFils: advanceLeft,
         visaLeftFils: visaLeft,
@@ -202,7 +217,7 @@ extension PayrollOps on TenantDatabase {
       action: 'post',
       change: () async {
         final now = DateTime.now().toUtc();
-        await repriceRows(operationId: newUuid());
+        await repriceRows(operationId: newUuid(), upTo: to);
         final ready = (await payrollFor(month)).where((p) => p.canPost).toList();
         final readyIds = ready.map((p) => p.worker.id).toSet();
         final toFreeze = (await unapprovedUpTo(month)).where((e) => readyIds.contains(e.workerId)).toList();

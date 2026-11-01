@@ -65,20 +65,48 @@ owed now        = opening balance + every posted net and adjustment - all salary
 - Overpayment: classified as a worker advance or credit, never a negative salary (PAY-06).
 - Payment allocation defaults to oldest unpaid first, with owner confirmation (PAY-06).
 
-## Worker account (D-041)
+## Pay on a group row (D-042)
+
+Wage typed for the row, then a rate set for this worker in the group (per day or per hour), then their own contract, then the group's daily wage. The group's wage only reaches someone with no pay of their own. Half pay is half of the daily wage actually used, if the group says so.
+
+## Worker account (D-041, D-042)
 
 The worker register reads every stored row and keeps no balance of its own (REP-08).
 
 ```text
 balance = opening salary owed + work + posted monthly salary + allowances
-          - opening advance - advance given + advance returned - visa paid + visa returned
-          - deductions and room charge - salary paid
+          - opening advance - advance given + advance returned
+          - deductions, room charge and visa instalments - salary paid
 ```
 
-- Money counts when it is given, so advance or visa taken back through pay does not move the balance. The row is still shown.
-- The balance always equals: owed now + work not yet posted - advance left - visa left.
+- An advance counts when it is given, so taking it back through pay does not move the balance. The row is still shown.
+- Visa money counts as it is cut from pay. Money the company spends on a visa moves nothing until then, and what is left shows beside the balance.
+- The balance always equals: owed now + work not yet posted - advance not yet cut.
 - A monthly salary shows once its month is posted. Allowances, deductions and salary are dated on the last day of their month.
 - A date range starts from the balance brought forward, and each worker's total is where they ended, not a sum.
+
+## A worker's month on a slip (D-042)
+
+```text
+closing = opening + work + monthly salary + allowances - advance - room - visa - other deductions - paid
+```
+
+- Each closing is the next opening, and the last closing is the balance above, apart from a monthly salary not yet posted, which the slip counts and the register does not.
+- A salary payment stays whole. It goes on the month before its date while that month still has something owing, otherwise on its own month. T12 replaces this with the owner's own choice.
+- A monthly salary counts before posting at what posting would pay, from the account's first activity.
+- Money from before the app is opening balance, never this month's earnings or advance (MASTER-05).
+
+## Owner's sheet (D-042, REP-03)
+
+```text
+profit on a line = company bill - wage for that work
+estimate         = bills - wages - monthly salaries - allowances + other deductions
+                   + room money in (from pay and cash) - room rent paid - other expenses
+```
+
+- Work rows only, by work date, so it does not wait for an invoice. A company with no rate or a monthly rate shows no bill, and the sheet says its profit looks low.
+- Monthly salaries are not split across companies. Advance and visa money are not expenses (REP-02).
+- It is labelled an estimate, never audited net profit.
 
 ## Advance sub-ledger (PAY-05)
 

@@ -30,6 +30,10 @@ class ExportText {
     required this.rollupSheet,
     this.footer,
     this.note,
+    this.mainSheet,
+    this.summaryFirst = false,
+    this.clientNames = const {},
+    this.siteNames = const {},
   });
 
   final String company;
@@ -46,7 +50,24 @@ class ExportText {
   final String rollupSheet;
   final String? footer;
   final String? note;
+
+  /// Excel's name for the sheet of rows, when it should not be the title.
+  final String? mainSheet;
+
+  /// In Excel, the sums come before the rows.
+  final bool summaryFirst;
+
+  /// For a document that names where each row was worked.
+  final Map<String, String> clientNames;
+  final Map<String, String> siteNames;
 }
+
+/// As far as a phone can take a file in one go. Past this, memory runs out before the file is done.
+const pdfRowLimit = 30000;
+const excelRowLimit = 200000;
+
+/// A PDF this long takes some minutes on a phone, so the owner is told before choosing it.
+const pdfSlowRows = 5000;
 
 /// A file name every app accepts: "Hazri-register_2026-10-01_2026-10-31.pdf".
 String exportFileName(String title, String? from, String? to, ExportFormat format) {
@@ -54,7 +75,8 @@ String exportFileName(String title, String? from, String? to, ExportFormat forma
   return '$name.${format == ExportFormat.pdf ? 'pdf' : 'xlsx'}';
 }
 
-/// Makes the file on a background isolate, so a long register doesn't freeze the screen. 
+/// Makes the file on a background isolate, so a long register doesn't freeze the screen. Filters have done their work
+/// by now, so their tags stay behind instead of being copied across.
 Future<Uint8List> makeExportBytes(
   ExportFormat format,
   ExportText text,
@@ -67,6 +89,7 @@ Future<Uint8List> makeExportBytes(
   Map<String, String> groupFeet = const {},
   bool sections = false,
 }) async {
+  final rows = [for (final e in entries) RegisterEntry(e.cells, group: e.group)];
   if (format == ExportFormat.excel) {
     final brandHex = (brandArgb & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase();
     return Isolate.run(
@@ -75,12 +98,14 @@ Future<Uint8List> makeExportBytes(
         title: text.title,
         filterLine: text.filterLine,
         columns: columns,
-        entries: entries,
+        entries: rows,
         totalLabel: text.totalLabel,
         brandHex: brandHex,
         note: text.note,
         rollups: rollups,
         rollupSheet: text.rollupSheet,
+        mainSheet: text.mainSheet,
+        summaryFirst: text.summaryFirst,
       ),
     );
   }
@@ -93,7 +118,7 @@ Future<Uint8List> makeExportBytes(
       title: text.title,
       filterLine: text.filterLine,
       columns: columns,
-      entries: entries,
+      entries: rows,
       totalLabel: text.totalLabel,
       pageLabel: (page, pages) => text.pagePattern.replaceAll('{page}', '$page').replaceAll('{pages}', '$pages'),
       madeLabel: text.madeLabel,

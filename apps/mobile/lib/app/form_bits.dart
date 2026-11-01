@@ -3,7 +3,6 @@ import 'package:domain/money.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 
-import '../data/tenant_database.dart';
 import '../l10n/app_localizations.dart';
 import 'theme.dart';
 
@@ -436,13 +435,6 @@ Future<({int? fils})?> askDailyWage(BuildContext context, {required String title
         ),
       ],
     ),
-  );
-}
-
-/// True if this worker has a monthly pay contract on this date. Their pay stays monthly (ATT-03).
-bool onMonthlyPay(List<PayContract> contracts, String workerId, String date) {
-  return contracts.any(
-    (c) => c.workerId == workerId && c.basis == 'month' && c.effectiveFrom.compareTo(date) <= 0 && (c.effectiveTo == null || c.effectiveTo!.compareTo(date) >= 0),
   );
 }
 

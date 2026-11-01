@@ -7,8 +7,10 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/attendance.dart';
+import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../rates/rate_labels.dart';
 import 'attendance_review_screen.dart';
 
 /// Step one of attendance (ATT-01): date, a group or single workers, client, site, one shift, and who worked.
@@ -27,8 +29,12 @@ class _AttendanceEntryScreenState extends ConsumerState<AttendanceEntryScreen> {
   late String? _date = widget.date;
   WorkerGroup? _group;
 
-  /// The chosen group's members and their own daily wages.
-  Map<String, int?> _members = const {};
+  /// The chosen group's members, and any rate set for them there.
+  Map<String, MemberRate?> _members = const {};
+
+  /// Every ticked worker's rate is on screen, so contracts are looked up by worker instead of searched each time.
+  List<PayContract>? _contractsFrom;
+  Map<String, List<PayContract>> _contractsOf = const {};
   String? _clientId;
   String? _siteId;
   int? _start;
@@ -86,7 +92,7 @@ class _AttendanceEntryScreenState extends ConsumerState<AttendanceEntryScreen> {
     final active = {for (final w in ref.read(workersProvider).value ?? const <Worker>[]) if (w.active) w.id};
     setState(() {
       _group = group;
-      _members = {for (final m in members) m.workerId: m.dailyRateFils};
+      _members = {for (final m in members) m.workerId: memberRateOf(m)};
       _todayWage.clear();
       _selected
         ..clear()
@@ -104,14 +110,34 @@ class _AttendanceEntryScreenState extends ConsumerState<AttendanceEntryScreen> {
     });
   }
 
+  /// What this worker normally earns on this attendance, by the same rule that prices the row (D-042).
+  RateTerms? _usualTerms(Worker w) {
+    final all = ref.read(allPayContractsProvider).value ?? const <PayContract>[];
+    if (!identical(all, _contractsFrom)) {
+      _contractsFrom = all;
+      _contractsOf = groupedBy(all, (c) => c.workerId);
+    }
+    final contracts = (_contractsOf[w.id] ?? const <PayContract>[]).map(payTerms);
+    final set = _members[w.id];
+    return groupPayTerms(
+      pickRate(contracts, date: _date!, siteId: _siteId ?? '', workerId: w.id),
+      date: _date!,
+      groupRateFils: _group?.dailyRateFils,
+      memberRateFils: set?.fils,
+      memberBasis: set?.basis ?? RateBasis.day,
+    );
+  }
+
   /// False if the owner cancelled.
   Future<bool> _askTodayWage(Worker worker) async {
     final l10n = AppLocalizations.of(context);
-    final usual = _members[worker.id] ?? _group?.dailyRateFils;
+    final terms = _usualTerms(worker);
+    final usual = terms?.rateFils;
     final result = await askDailyWage(
       context,
       title: l10n.wageOf(worker.name),
       helper: l10n.todayWageHelp,
+      label: basisLabel(l10n, terms?.basis ?? RateBasis.day),
       initial: _todayWage[worker.id] ?? usual,
     );
     if (result == null) return false;
@@ -189,7 +215,7 @@ class _AttendanceEntryScreenState extends ConsumerState<AttendanceEntryScreen> {
     final sites = _clientId == null
         ? const <Site>[]
         : (ref.watch(sitesOfClientProvider(_clientId!)).value ?? const <Site>[]).where((s) => s.active).toList();
-    final pay = ref.watch(allPayContractsProvider).value ?? const <PayContract>[];
+    ref.watch(allPayContractsProvider);
     final groupNeedle = _groupSearch.toLowerCase();
     final allGroups = (ref.watch(workerGroupsProvider).value ?? const <WorkerGroup>[]).where((g) => g.active).toList();
     final groups = allGroups.where((g) => g.name.toLowerCase().contains(groupNeedle)).toList();
@@ -203,10 +229,10 @@ class _AttendanceEntryScreenState extends ConsumerState<AttendanceEntryScreen> {
     final ready = _clientId != null && _siteId != null && _selected.isNotEmpty;
 
     String wageLabel(Worker w) {
-      final wage = _todayWage[w.id] ?? _members[w.id];
-      if (wage != null) return formatAed(wage);
-      if (onMonthlyPay(pay, w.id, _date!)) return l10n.monthlyPay;
-      return _group!.dailyRateFils == null ? l10n.setWage : formatAed(_group!.dailyRateFils!);
+      final terms = _usualTerms(w);
+      if (terms == null) return _todayWage[w.id] == null ? l10n.setWage : formatAed(_todayWage[w.id]!);
+      if (isPeriodBasis(terms.basis)) return l10n.monthlyPay;
+      return rateSummary(l10n, terms.basis.name, _todayWage[w.id] ?? terms.rateFils);
     }
 
     return Scaffold(

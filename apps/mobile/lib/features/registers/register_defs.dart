@@ -7,6 +7,7 @@ import 'package:drift/drift.dart';
 
 import '../../app/side_panel.dart';
 import '../../data/cash.dart';
+import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../cash/cash_row.dart';
@@ -78,19 +79,28 @@ Future<RegisterData> buildRegister(TenantDatabase db, AppLocalizations l10n, Sec
   };
 }
 
-Future<List<AttendanceEntry>> _liveEntries(TenantDatabase db, String? from, String? to) {
-  return (db.select(db.attendanceEntries)
-        ..where(
-          (e) =>
-              e.superseded.equals(false) &
-              (from == null ? const Constant(true) : e.workDate.isBiggerOrEqualValue(from)) &
-              (to == null ? const Constant(true) : e.workDate.isSmallerOrEqualValue(to)),
-        ))
-      .get();
+/// Read in slices, because turning a thousand workers' month into objects in one go would freeze the screen.
+Future<List<AttendanceEntry>> _liveEntries(TenantDatabase db, String? from, String? to) async {
+  const slice = 2000;
+  final rows = <AttendanceEntry>[];
+  while (true) {
+    final part = await (db.select(db.attendanceEntries)
+          ..where(
+            (e) =>
+                e.superseded.equals(false) &
+                (from == null ? const Constant(true) : e.workDate.isBiggerOrEqualValue(from)) &
+                (to == null ? const Constant(true) : e.workDate.isSmallerOrEqualValue(to)),
+          )
+          ..orderBy([(e) => OrderingTerm.asc(e.workDate), (e) => OrderingTerm.asc(e.id)])
+          ..limit(slice, offset: rows.length))
+        .get();
+    rows.addAll(part);
+    if (part.length < slice) return rows;
+  }
 }
 
 /// A rate for a row, or a plain flag where someone worked with none. An absent row needs no rate.
-String? _rateCell(AppLocalizations l10n, String status, String? basis, int? rateFils) {
+String? rateCell(AppLocalizations l10n, String status, String? basis, int? rateFils) {
   if (rateFils != null) return rateSummary(l10n, basis!, rateFils);
   return status == AttendanceStatus.absent.name ? null : l10n.issueNoRate;
 }
@@ -247,9 +257,9 @@ Future<RegisterData> _attendance(TenantDatabase db, AppLocalizations l10n, _Mast
             e.clientBillableMinutes,
             e.workerPayableMinutes,
             e.overtimeMinutes,
-            _rateCell(l10n, e.attendanceStatus, e.clientBasis, e.clientRateFils),
+            rateCell(l10n, e.attendanceStatus, e.clientBasis, e.clientRateFils),
             e.clientAmountFils,
-            _rateCell(l10n, e.attendanceStatus, e.workerBasis, e.workerRateFils),
+            rateCell(l10n, e.attendanceStatus, e.workerBasis, e.workerRateFils),
             e.workerAmountFils,
             e.clientAmountFils == null || e.workerAmountFils == null ? null : e.clientAmountFils! - e.workerAmountFils!,
             _stateLabel(l10n, e),
@@ -370,7 +380,7 @@ class _AccountLine {
   /// Work, a monthly salary or an allowance.
   final int? earned;
 
-  /// Advance or visa money the worker has had. It counts when given, so taking it back through pay changes nothing here.
+  /// Advance the worker has had. It counts when given, so taking it back through pay changes nothing here.
   final int? given;
   final int? cut;
   final int? paid;
@@ -395,15 +405,28 @@ const _wPaid = 14;
 const _wLeft = 15;
 
 /// Each worker's account, date by date: where they worked and at what rate, what they earned, what they took, what they
-/// were paid, and what is left (D-041). Balance = earned - advance and visa - deductions - paid, and always derives (REP-08).
+/// were paid, and what is left (D-041, D-042). Balance = earned - advance - deductions, room and visa cut - paid, and
+/// always derives (REP-08). Work before the range is only added up, so years of history cost nothing here.
 Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters m, String? from, String? to) async {
-  final entries = await _liveEntries(db, null, to);
-  final cash = await (db.select(db.cashEntries)..where((c) => c.workerId.isNotNull())).get();
-  final lines = await (db.select(db.payrollLines)..where((l) => l.reversed.equals(false))).get();
-  final items = await db.select(db.payrollItems).get();
-  final openings = await (db.select(db.openingBalances)..where((b) => b.workerId.isNotNull())).get();
-  final members = await db.select(db.workerGroupMembers).get();
-  final contracts = await (db.select(db.payContracts)..orderBy([(c) => OrderingTerm.desc(c.effectiveFrom)])).get();
+  final entries = groupedBy(await _liveEntries(db, from, to), (e) => e.workerId);
+  final earnedBefore = <String, int>{};
+  if (from != null) {
+    final sum = db.attendanceEntries.workerAmountFils.sum();
+    final sums = await (db.selectOnly(db.attendanceEntries)
+          ..addColumns([db.attendanceEntries.workerId, sum])
+          ..where(db.attendanceEntries.superseded.equals(false) & db.attendanceEntries.workDate.isSmallerThanValue(from))
+          ..groupBy([db.attendanceEntries.workerId]))
+        .get();
+    for (final r in sums) {
+      earnedBefore[r.read(db.attendanceEntries.workerId)!] = r.read(sum) ?? 0;
+    }
+  }
+  final cash = groupedBy(await (db.select(db.cashEntries)..where((c) => c.workerId.isNotNull())).get(), (c) => c.workerId);
+  final lines = groupedBy(await (db.select(db.payrollLines)..where((l) => l.reversed.equals(false))).get(), (l) => l.workerId);
+  final items = groupedBy(await db.select(db.payrollItems).get(), (i) => i.workerId);
+  final openings = groupedBy(await (db.select(db.openingBalances)..where((b) => b.workerId.isNotNull())).get(), (b) => b.workerId);
+  final members = groupedBy(await db.select(db.workerGroupMembers).get(), (g) => g.workerId);
+  final contracts = groupedBy(await (db.select(db.payContracts)..orderBy([(c) => OrderingTerm.desc(c.effectiveFrom)])).get(), (c) => c.workerId);
   final trades = {for (final w in m.workers.values) ?w.trade}.toList()..sort();
 
   final rows = <RegisterEntry>[];
@@ -412,12 +435,12 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
   final facts = <String, List<Object?>>{};
   for (final w in m.workers.values) {
     final account = <_AccountLine?>[
-      for (final b in openings.where((b) => b.workerId == w.id))
+      for (final b in openings[w.id] ?? const <OpeningBalance>[])
         if (b.kind == 'worker_salary_owed')
           _AccountLine(b.asOfDate, b.createdAtUtc, l10n.openingHeading, brought: b.amountFils, note: b.sourceNote)
         else if (b.kind == 'worker_advance')
           _AccountLine(b.asOfDate, b.createdAtUtc, '${l10n.openingHeading}, ${l10n.kindAdvanceGiven}', given: b.amountFils, advance: b.amountFils, note: b.sourceNote),
-      for (final e in entries.where((e) => e.workerId == w.id))
+      for (final e in entries[w.id] ?? const <AttendanceEntry>[])
         _AccountLine(
           e.workDate,
           e.createdAtUtc,
@@ -429,13 +452,13 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
           timeOut: _clock(e.endUtc),
           minutes: e.workerPayableMinutes,
           overtime: e.overtimeMinutes,
-          rate: _rateCell(l10n, e.attendanceStatus, e.workerBasis, e.workerRateFils),
+          rate: rateCell(l10n, e.attendanceStatus, e.workerBasis, e.workerRateFils),
           earned: e.workerAmountFils,
           note: [?m.groups[e.groupId]?.name, if (e.revisesEntryId != null) l10n.correctedTag, ?e.notes].join(', '),
         ),
-      for (final l in lines.where((l) => l.workerId == w.id && l.salaryFils != 0))
+      for (final l in (lines[w.id] ?? const <PayrollLine>[]).where((l) => l.salaryFils != 0))
         _AccountLine(monthLastDay(l.periodFrom.substring(0, 7)), l.createdAtUtc, l10n.payrollSalary, earned: l.salaryFils, note: showMonth(l.periodFrom.substring(0, 7))),
-      for (final i in items.where((i) => i.workerId == w.id))
+      for (final i in items[w.id] ?? const <PayrollItem>[])
         () {
           final date = monthLastDay(i.periodFrom.substring(0, 7));
           final kind = PayItemKind.values.byName(i.kind);
@@ -446,10 +469,10 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
             PayItemKind.roomCharge => _AccountLine(date, i.createdAtUtc, l10n.payKindRoom, cut: i.amountFils, note: note),
             // Only a posted recovery has come off what is left. The balance counted the money when it was given.
             PayItemKind.advanceRecovery => _AccountLine(date, i.createdAtUtc, l10n.payKindRecovery, advance: i.lineId == null ? 0 : -i.amountFils, note: l10n.regRecoveryRow(formatAed(i.amountFils))),
-            PayItemKind.visaRecovery => _AccountLine(date, i.createdAtUtc, l10n.payKindVisa, visa: i.lineId == null ? 0 : -i.amountFils, note: l10n.regRecoveryRow(formatAed(i.amountFils))),
+            PayItemKind.visaRecovery => _AccountLine(date, i.createdAtUtc, l10n.payKindVisa, cut: i.amountFils, visa: -i.amountFils, note: note),
           };
         }(),
-      for (final c in cash.where((c) => c.workerId == w.id))
+      for (final c in cash[w.id] ?? const <CashEntry>[])
         () {
           final kind = CashKind.values.byName(c.kind);
           final signed = cashLine(c).signedFils;
@@ -459,8 +482,14 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
             CashKind.salaryPaid => _AccountLine(c.entryDate, c.createdAtUtc, what, paid: signed, note: note),
             CashKind.advanceGiven => _AccountLine(c.entryDate, c.createdAtUtc, what, given: signed, advance: signed, note: note),
             CashKind.advanceReturned => _AccountLine(c.entryDate, c.createdAtUtc, what, given: -signed, advance: -signed, note: note),
-            CashKind.visaPaid => _AccountLine(c.entryDate, c.createdAtUtc, what, given: signed, visa: signed, note: note),
-            CashKind.visaReturned => _AccountLine(c.entryDate, c.createdAtUtc, what, given: -signed, visa: -signed, note: note),
+            // Visa money comes off the balance as it is cut from pay, not when the company spends it.
+            CashKind.visaPaid || CashKind.visaReturned => _AccountLine(
+              c.entryDate,
+              c.createdAtUtc,
+              what,
+              visa: kind == CashKind.visaPaid ? signed : -signed,
+              note: [l10n.regVisaRow(formatAed(signed)), if (note.isNotEmpty) note].join(', '),
+            ),
             // Rent the worker paid in cash is the room's money, not part of their wage.
             _ => null,
           };
@@ -472,7 +501,7 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
       });
 
     final name = '${w.name} (${w.code})';
-    final groupIds = members.where((g) => g.workerId == w.id).map((g) => g.groupId).toSet();
+    final groupIds = (members[w.id] ?? const <WorkerGroupMember>[]).map((g) => g.groupId).toSet();
     final tags = <String, Set<String>>{
       'worker': {w.id},
       'group': groupIds,
@@ -480,7 +509,7 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
       'trade': {?w.trade},
       'active': {w.active ? 'active' : 'archived'},
     };
-    var left = 0;
+    var left = earnedBefore[w.id] ?? 0;
     var advanceLeft = 0;
     var visaLeft = 0;
     void count(_AccountLine line) {
@@ -489,16 +518,16 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
       visaLeft += line.visa;
     }
 
-    final own = <RegisterEntry>[];
+    final shownRows = <RegisterEntry>[];
     if (from != null) {
       account.where((l) => l.date.compareTo(from) < 0).forEach(count);
       if (left != 0) {
-        own.add(RegisterEntry([from, w.name, w.code, l10n.regBrought, null, null, null, null, null, null, null, null, null, null, null, left, null], group: name, tags: tags));
+        shownRows.add(RegisterEntry([from, w.name, w.code, l10n.regBrought, null, null, null, null, null, null, null, null, null, null, null, left, null], group: name, tags: tags));
       }
     }
     for (final line in account.where((l) => _inRange(l.date, from, to))) {
       count(line);
-      own.add(
+      shownRows.add(
         RegisterEntry(
           [
             line.date,
@@ -524,16 +553,18 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
         ),
       );
     }
-    if (own.isEmpty) continue;
-    rows.addAll(own);
-    final contract = contracts.where((c) => c.workerId == w.id && c.siteId == null).firstOrNull ?? contracts.where((c) => c.workerId == w.id).firstOrNull;
+    if (shownRows.isEmpty) continue;
+    rows.addAll(shownRows);
+    final own = contracts[w.id] ?? const <PayContract>[];
+    final contract = own.where((c) => c.siteId == null).firstOrNull ?? own.firstOrNull;
     final rate = contract == null ? null : rateSummary(l10n, contract.basis, contract.rateFils);
     final room = m.rooms[w.roomId]?.name;
     final groupNames = [for (final id in groupIds) ?m.groups[id]?.name].join(', ');
     heads[name] = [?w.trade, ?w.phone, ?room, if (groupNames.isNotEmpty) groupNames, ?rate].join('   ');
     feet[name] = [
       if (left > 0) l10n.regOwedToWorker(formatAed(left)) else if (left < 0) l10n.regOwedByWorker(formatAed(-left)) else l10n.regSettled,
-      if (advanceLeft != 0 || visaLeft != 0) l10n.regOwedSplit(formatAed(left + advanceLeft + visaLeft), formatAed(advanceLeft), formatAed(visaLeft)),
+      if (advanceLeft != 0) l10n.regOwedSplit(formatAed(left + advanceLeft), formatAed(advanceLeft)),
+      if (visaLeft != 0) l10n.regVisaLeft(formatAed(visaLeft)),
     ].join('   ');
     facts[name] = [w.name, w.code, w.trade, w.phone, room, groupNames, rate];
   }
@@ -555,7 +586,7 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
           RegisterColumn(l10n.colDays, kind: CellKind.number, flex: 2, total: true),
           RegisterColumn(l10n.colHours, kind: CellKind.minutes, flex: 2, total: true),
           RegisterColumn(l10n.colEarned, kind: CellKind.money, total: true),
-          RegisterColumn(l10n.colAdvanceVisa, kind: CellKind.money, total: true),
+          RegisterColumn(l10n.kindAdvanceGiven, kind: CellKind.money, total: true),
           RegisterColumn(l10n.payKindDeduction, kind: CellKind.money, total: true),
           RegisterColumn(l10n.colPaid, kind: CellKind.money, total: true),
           RegisterColumn(l10n.colBalance, kind: CellKind.money, total: true),
@@ -601,7 +632,7 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
       RegisterColumn(l10n.colOvertime, kind: CellKind.minutes, total: true),
       RegisterColumn(l10n.colRate, flex: 4),
       RegisterColumn(l10n.colEarned, kind: CellKind.money, total: true, tone: CellTone.plus),
-      RegisterColumn(l10n.colAdvanceVisa, kind: CellKind.money, total: true, tone: CellTone.minus),
+      RegisterColumn(l10n.kindAdvanceGiven, kind: CellKind.money, total: true, tone: CellTone.minus),
       RegisterColumn(l10n.payKindDeduction, kind: CellKind.money, total: true, tone: CellTone.minus),
       RegisterColumn(l10n.colPaid, kind: CellKind.money, total: true, tone: CellTone.minus),
       RegisterColumn(l10n.colBalance, kind: CellKind.money, closing: true),
@@ -911,14 +942,16 @@ Future<RegisterData> _payroll(TenantDatabase db, AppLocalizations l10n, _Masters
   final fromMonth = from?.substring(0, 7);
   final toMonth = to?.substring(0, 7);
   final entries = <RegisterEntry>[];
-  for (var i = 0; i < lines.length; i++) {
-    final l = lines[i];
+  final paidOf = groupedBy(paidCash, (c) => c.workerId);
+  // Walking newest first, so this holds what the worker's next month started from.
+  final paidUntil = <String, int>{};
+  for (final l in lines.reversed) {
     final month = l.periodFrom.substring(0, 7);
-    if (!_inRange(month, fromMonth, toMonth)) continue;
     // Paid derives, as on the payroll screen: everything between this posting and the worker's next one (D-033).
-    final next = lines.skip(i + 1).where((n) => n.workerId == l.workerId).firstOrNull;
-    final paidTotal = salaryPaidTotal(paidCash.where((c) => c.workerId == l.workerId).map(cashLine));
-    final paid = (next?.paidBeforeFils ?? paidTotal) - l.paidBeforeFils;
+    final until = paidUntil[l.workerId] ?? salaryPaidTotal((paidOf[l.workerId] ?? const <CashEntry>[]).map(cashLine));
+    paidUntil[l.workerId] = l.paidBeforeFils;
+    if (!_inRange(month, fromMonth, toMonth)) continue;
+    final paid = until - l.paidBeforeFils;
     final closing = l.payableFils - paid;
     entries.add(
       RegisterEntry(

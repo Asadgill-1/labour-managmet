@@ -11,7 +11,7 @@
   "groupsEmpty": "No groups yet. Make one for workers who usually go together.",
   "noneChoice": "None",
   "dailyWage": "Daily wage (AED)",
-  "dailyWageHelp": "Optional. Shows beside every worker. Tap an amount there to change it.",
+  "dailyWageHelp": "Optional. Only for a worker with no pay of their own.",
   "halfDayIsHalf": "Half day pays half the daily wage",
   "ownWageHelp": "Leave empty to use the group's daily wage.",
   "todayWageHelp": "For this attendance only. The group does not change.",
@@ -37,7 +37,7 @@
       }
     }
   },
-  "wageOf": "Daily wage: {name}",
+  "wageOf": "Pay: {name}",
   "@wageOf": {
     "placeholders": {
       "name": {
@@ -728,12 +728,11 @@
   "roomChargeByOwner": "Added by the owner",
   "issueNoRate": "No rate",
   "colEarned": "Earned",
-  "colAdvanceVisa": "Advance, visa",
   "colPaid": "Paid",
   "colNoRate": "No company rate",
   "colDays": "Days",
   "regBrought": "Brought forward",
-  "regWorkerNote": "Balance = earned - advance and visa - deductions - paid. A monthly salary shows once its month is posted.",
+  "regWorkerNote": "Balance = earned - advance - deductions, room and visa cut - paid. A monthly salary shows once its month is posted.",
   "regAttendanceNote": "Difference = company bill - worker pay, for rows that have both. Monthly salaries are not in worker pay.",
   "regOwedToWorker": "Balance {amount}: to pay the worker",
   "@regOwedToWorker": {
@@ -752,16 +751,13 @@
     }
   },
   "regSettled": "Balance AED 0.00: settled",
-  "regOwedSplit": "Pay {pay}, less advance left {advance}, less visa left {visa}",
+  "regOwedSplit": "Pay {pay}, less advance left {advance}",
   "@regOwedSplit": {
     "placeholders": {
       "pay": {
         "type": "String"
       },
       "advance": {
-        "type": "String"
-      },
-      "visa": {
         "type": "String"
       }
     }
@@ -778,5 +774,129 @@
   "regBySite": "By company and site",
   "regAllWorkers": "All workers",
   "regSummarySheet": "Summary",
-  "colBalance": "Balance"
+  "colBalance": "Balance",
+  "rateIn": "Pay: {name}",
+  "@rateIn": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ownRateHelp": "Their own pay is {rate}. Leave empty to keep it.",
+  "@ownRateHelp": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "rateSetHere": "In this group: {rate}",
+  "@rateSetHere": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "rateOwn": "Own pay: {rate}",
+  "@rateOwn": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "rateFromGroup": "Group wage: {rate}",
+  "@rateFromGroup": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "rateMissing": "No pay set. Set it here, or add a group wage.",
+  "rateChange": "Change",
+  "regVisaRow": "Visa money {amount}. It comes off the balance as it is cut from pay.",
+  "@regVisaRow": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regVisaLeft": "Visa left {amount}",
+  "@regVisaLeft": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "exportSlowPdf": "This PDF is long and can take some minutes. Excel is much quicker.",
+  "exportTooLong": "Too many rows for one file. Pick fewer dates or add a filter.",
+  "payrollAdvanceLeft": "Advance not yet cut",
+  "payrollAfterAdvance": "Balance on the slip, after advance",
+  "slipTitle": "Salary slip",
+  "slipSummary": "Account",
+  "slipOpening": "Balance from before",
+  "slipWork": "This month's work",
+  "slipAdvance": "Advance taken",
+  "slipRoom": "Room",
+  "slipVisa": "Visa",
+  "slipOther": "Other deductions",
+  "slipPaid": "Paid",
+  "slipOwedToYou": "Balance: to be paid to you",
+  "slipYouOwe": "Balance: you owe",
+  "slipSettled": "Balance",
+  "slipDays": "Day by day",
+  "slipMoney": "Money taken",
+  "slipNoWork": "No work this month.",
+  "slipNoMoney": "No money taken this month.",
+  "slipDayCount": "{days} days",
+  "@slipDayCount": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "slipVisaLeft": "Visa left {amount}: comes out of later pay.",
+  "@slipVisaLeft": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "slipNote": "This slip is an account, not proof of payment.",
+  "ownerSheet": "Owner's sheet",
+  "sheetTitle": "Owner's salary sheet",
+  "sheetSummary": "The month in short",
+  "sheetBill": "Company bills",
+  "sheetWages": "Wages for that work",
+  "sheetSalaries": "Monthly salaries, not split by company",
+  "sheetAllowances": "Allowances",
+  "sheetCuts": "Other deductions from pay",
+  "sheetRoomIn": "Room money in, from pay and cash",
+  "sheetRoomOut": "Room rent paid",
+  "sheetExpenses": "Other expenses",
+  "sheetEstimate": "Estimated profit",
+  "sheetByCompany": "By company",
+  "sheetDetail": "Company wise",
+  "sheetWorkers": "Workers' accounts",
+  "sheetCompanyHead": "{workers} workers, {sites} sites",
+  "@sheetCompanyHead": {
+    "placeholders": {
+      "workers": {
+        "type": "int"
+      },
+      "sites": {
+        "type": "int"
+      }
+    }
+  },
+  "sheetNote": "An estimate from attendance, not audited accounts. A company with no rate or a monthly rate shows no bill here, so its profit looks low. Advance and visa money are not expenses, because workers pay them back.",
+  "colProfit": "Profit",
+  "colVisaLeft": "Visa left"
 }

@@ -196,8 +196,11 @@ class WorkerGroupMembers extends Table with Common {
   TextColumn get groupId => text().references(WorkerGroups, #id)();
   TextColumn get workerId => text().references(Workers, #id)();
 
-  /// Null means the group's daily wage.
-  IntColumn get dailyRateFils => integer().nullable().check(dailyRateFils.isBiggerOrEqualValue(0))();
+  /// What this worker earns in this group. Null means their own contract, or the group's daily wage if they have none (D-042).
+  IntColumn get rateFils => integer().named('daily_rate_fils').nullable().check(rateFils.isBiggerOrEqualValue(0))();
+
+  /// 'day' or 'hour'.
+  TextColumn get rateBasis => text().withDefault(const Constant('day'))();
 
   @override
   List<Set<Column>> get uniqueKeys => [

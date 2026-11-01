@@ -40,11 +40,12 @@ Future<Team> seedTeam(TenantDatabase db, {int size = 3}) async {
   return Team(client, site, workers);
 }
 
-Future<String> saveGroup(TenantDatabase db, Team team, Map<String, int?> members, {int? wage = 10000, String? id, String? op}) {
+/// A member's own rate is per day here, unless a test says otherwise.
+Future<String> saveGroup(TenantDatabase db, Team team, Map<String, int?> members, {int? wage = 10000, String? id, String? op, RateBasis basis = RateBasis.day}) {
   return db.saveWorkerGroup(
     id: id,
     operationId: op ?? newUuid(),
-    members: members,
+    members: {for (final MapEntry(key: worker, value: fils) in members.entries) worker: fils == null ? null : (fils: fils, basis: basis)},
     fields: WorkerGroupsCompanion(name: const Value('Emaar West'), clientId: Value(team.client), siteId: Value(team.site), dailyRateFils: Value(wage)),
   );
 }
@@ -65,7 +66,7 @@ void main() {
       expect(await db.select(db.workerGroups).get(), hasLength(1));
       final members = await db.select(db.workerGroupMembers).get();
       expect(members, hasLength(2));
-      expect(members.singleWhere((m) => m.workerId == team.workers[1]).dailyRateFils, 12000);
+      expect(members.singleWhere((m) => m.workerId == team.workers[1]).rateFils, 12000);
     });
 
     test('a member left out of the list leaves the group, and their past rows stay', () async {
@@ -157,6 +158,48 @@ void main() {
       expect(row.workerAmountFils, isNull);
     });
 
+    test("a worker's own rate comes before the group wage, and a rate set in the group comes before that, per day or per hour (D-042)", () async {
+      final team = await seedTeam(db);
+      Future<void> hourly(String worker, int fils) => db.saveRow(
+        db.payContracts,
+        id: null,
+        operationId: newUuid(),
+        fields: PayContractsCompanion(workerId: Value(worker), basis: Value(RateBasis.hour.name), rateFils: Value(fils), effectiveFrom: const Value('2026-01-01')),
+      );
+      await hourly(team.workers[0], 1000);
+      await hourly(team.workers[1], 1000);
+      final id = await db.saveWorkerGroup(
+        id: null,
+        operationId: newUuid(),
+        members: {team.workers[0]: null, team.workers[1]: (fils: 1400, basis: RateBasis.hour), team.workers[2]: null},
+        fields: WorkerGroupsCompanion(name: const Value('Melboard'), clientId: Value(team.client), siteId: Value(team.site), dailyRateFils: const Value(10000)),
+      );
+      await db.saveAttendanceBatch(
+        workDate: date,
+        clientId: team.client,
+        siteId: team.site,
+        operationId: newUuid(),
+        inputs: [for (final w in team.workers.take(3)) EntryInput(workerId: w, groupId: id, shift: const ShiftInput(startMinute: 8 * 60, endMinute: 15 * 60))],
+      );
+      final rows = await db.select(db.attendanceEntries).get();
+      AttendanceEntry of(int i) => rows.singleWhere((r) => r.workerId == team.workers[i]);
+      expect(of(0).workerBasis, 'hour');
+      expect(of(0).workerAmountFils, 7000, reason: 'AED 10 for 7 hours, not the AED 100 a day of the group');
+      expect(of(1).workerBasis, 'hour');
+      expect(of(1).workerAmountFils, 9800);
+      expect(of(2).workerBasis, 'day');
+      expect(of(2).workerAmountFils, 10000);
+    });
+
+    test('a batch of many rows flags only the worker whose time overlaps, the same as one row at a time (ATT-05)', () async {
+      final team = await seedTeam(db);
+      await db.saveAttendanceBatch(workDate: date, clientId: team.client, siteId: team.site, operationId: newUuid(), inputs: [EntryInput(workerId: team.workers[0], shift: shift)]);
+      final previews = await db.previewRows(workDate: date, clientId: team.client, siteId: team.site, inputs: [for (final w in team.workers.take(2)) EntryInput(workerId: w, shift: shift)]);
+      expect(previews.map((p) => p.overlaps), [true, false]);
+      final one = await db.previewRow(workDate: date, clientId: team.client, siteId: team.site, input: EntryInput(workerId: team.workers[0], shift: shift));
+      expect(one.overlaps, isTrue);
+    });
+
     test('a changed group wage reaches unapproved rows, and approved rows keep theirs (D-026)', () async {
       final team = await seedTeam(db);
       final id = await saveGroup(db, team, {team.workers[0]: null, team.workers[1]: null});
@@ -211,14 +254,14 @@ void main() {
       await tester.tap(find.text(name));
       await settle(tester);
     }
-    // Everyone ticked shows the group's wage, and one can be changed from right there.
-    expect(find.text('AED 100.00'), findsNWidgets(3));
-    await tester.tap(find.text('AED 100.00').at(1));
+    // Everyone ticked with no pay of their own shows the group's wage, and one can be changed from right there.
+    expect(find.text('Group ki dehari: AED 100.00, Fi din'), findsNWidgets(3));
+    await tester.tap(find.text('Badlein').at(1));
     await settle(tester);
-    await tester.enterText(find.widgetWithText(TextFormField, 'Dehari (AED)').last, '120');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Raqam (AED)').last, '120');
     await tester.tap(find.text('Theek hai'));
     await settle(tester);
-    expect(find.text('AED 120.00'), findsOneWidget);
+    expect(find.text('Is group mein: AED 120.00, Fi din'), findsOneWidget);
     await tester.tap(find.text('Save karein (3 mazdoor)'));
     await settle(tester);
     expect(find.text('Emaar West'), findsOneWidget);
@@ -243,7 +286,7 @@ void main() {
     await tester.tap(find.text('Worker 4').last);
     await settle(tester);
     expect(find.text('100.00'), findsOneWidget);
-    await tester.enterText(find.widgetWithText(TextFormField, 'Dehari (AED)'), '90');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Fi din'), '90');
     await tester.tap(find.text('Theek hai'));
     await settle(tester);
     await tester.enterText(find.widgetWithText(TextField, 'Mazdoor talash karein'), '');

@@ -57,7 +57,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -107,11 +107,14 @@ class TenantDatabase extends _$TenantDatabase {
         await m.drop(schema.approvedEntryNoEdit);
         await m.createTrigger(schema.approvedEntryNoEdit);
       },
+      from6To7: (m, schema) async {
+        await m.addColumn(schema.workerGroupMembers, schema.workerGroupMembers.rateBasis);
+      },
     ),
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
-      // Rows saved before D-041 held the worker's pay for a missing company rate, so they get priced by today's rule once.
-      if (details.hadUpgrade && details.versionBefore! < 6) {
+      // Rows saved under an older pricing rule (D-041, D-042) get priced by today's rule once. Frozen pay stays as it is.
+      if (details.hadUpgrade && details.versionBefore! < 7) {
         try {
           await repriceRows(operationId: newUuid());
         } catch (_) {

@@ -50,6 +50,12 @@ Language > email and password > verify email > company name > optional logo and 
 
 **Payroll (PAY-01, D-033):** Month > everyone with pay or a problem, with what stops them in words > tick who pays a room charge and how much > a worker's screen for allowances, deductions and advance recovery > post everyone who is ready, after one confirmation > record the payment, which goes through the cash book. Undo with a reason reopens that worker's month.
 
+**Salary slip (PAY-09, D-042):** Tankhwah > month > worker > Salary slip > says whose slip and the balance > see or print, save, WhatsApp, other apps. The owner picks the recipient in WhatsApp. One worker at a time (DOC-07).
+
+**Owner's sheet (REP-03, D-042):** Tankhwah > month > Malik ki sheet > PDF or Excel > see, save, WhatsApp, other apps.
+
+**Group (D-042):** Tick a worker > their pay shows under their name: their own, or set for this group, or the group's wage, or a warning that they have none > Badlein to set a rate here, per hour or per day.
+
 **Timesheet (TS-01):** Client > date range > site > daily summary or worker detail > commercial or non-commercial version > approve > share.
 
 **Invoice (INV-01):** Client > period > site or timesheet items > PO reference > quantities > tax review > preview > issue. The final number is assigned only at issue.

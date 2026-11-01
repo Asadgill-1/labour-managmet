@@ -14,6 +14,7 @@ import '../../l10n/app_localizations.dart';
 import '../cash/cash_entry_form_screen.dart';
 import 'pay_item_form_screen.dart';
 import 'payroll_screen.dart';
+import 'salary_slip.dart';
 
 /// One worker's month, with current earnings and old balance kept apart (PAY-02, PAY-09).
 class PayrollWorkerScreen extends ConsumerWidget {
@@ -57,6 +58,8 @@ class PayrollWorkerScreen extends ConsumerWidget {
     }
     final f = p.figures;
     final closing = p.closingFils;
+    // What the slip counts as taken already. A recovery on this unposted month has not come off the advance yet.
+    final advanceLeft = p.advanceLeftFils - (p.posted ? 0 : f.recoveryFils);
     return Scaffold(
       appBar: AppBar(title: Text(p.worker.name)),
       bottomNavigationBar: p.posted && closing > 0
@@ -87,6 +90,7 @@ class PayrollWorkerScreen extends ConsumerWidget {
               ),
             ),
           ),
+          _SlipButton(workerId: workerId, month: month),
           for (final issue in f.issues)
             ListTile(
               leading: const Icon(Icons.warning_amber, color: due),
@@ -142,9 +146,53 @@ class PayrollWorkerScreen extends ConsumerWidget {
             const Divider(),
             if (closing < 0) InfoRow(l10n.payrollOverpaid, formatAed(-closing)) else InfoRow(l10n.payrollClosing, formatAed(closing)),
             const Divider(),
-            TextButton(onPressed: () => _undo(context, ref, p.line!), child: Text(l10n.payrollUndo)),
           ],
+          if (advanceLeft > 0) ...[
+            InfoRow(l10n.payrollAdvanceLeft, formatAed(advanceLeft)),
+            const Divider(),
+            InfoRow(l10n.payrollAfterAdvance, formatAed(closing - advanceLeft)),
+            const Divider(),
+          ],
+          if (p.posted) TextButton(onPressed: () => _undo(context, ref, p.line!), child: Text(l10n.payrollUndo)),
         ],
+      ),
+    );
+  }
+}
+
+/// Makes this worker's slip, to send them on WhatsApp.
+class _SlipButton extends ConsumerStatefulWidget {
+  const _SlipButton({required this.workerId, required this.month});
+
+  final String workerId;
+  final String month;
+
+  @override
+  ConsumerState<_SlipButton> createState() => _SlipButtonState();
+}
+
+class _SlipButtonState extends ConsumerState<_SlipButton> {
+  bool _busy = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: FilledButton.icon(
+        icon: const Icon(Icons.receipt_long),
+        label: Text(_busy ? l10n.exportMaking : l10n.slipTitle),
+        onPressed: _busy
+            ? null
+            : () => shareSalarySlip(
+                context,
+                ref,
+                workerId: widget.workerId,
+                month: widget.month,
+                onBusy: (busy) {
+                  if (mounted) setState(() => _busy = busy);
+                },
+              ),
       ),
     );
   }

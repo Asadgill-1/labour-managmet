@@ -252,28 +252,47 @@ RateTerms? _withOverride(RateTerms? terms, int? overrideFils) {
   );
 }
 
-/// Pay terms for a row marked through a worker group (D-029). A member's own daily wage beats the group's.
-/// The group's wage never replaces a monthly contract, because monthly pay must not silently turn daily (ATT-03).
-/// [typedFils] is a wage typed for this one row. It keeps a contract's basis, or becomes a daily wage if there is
-/// a group wage or no contract. Half pay is half of the wage actually used, and only if the group says so.
+/// Pay terms for a row marked through a worker group (D-042). A rate set for this worker in the group comes first, per
+/// day or per hour. Then their own contract, which is what they were hired on. The group's daily wage is only for someone
+/// with neither, so it never changes anybody's pay by itself, and monthly pay never silently turns daily (ATT-03).
+/// [typedFils] is a wage typed for this one row. It keeps the basis of the rate it replaces. Half pay is half of the wage
+/// actually used, and only if the group says so.
 RateTerms? groupPayTerms(
   RateTerms? contract, {
   required String date,
   int? groupRateFils,
   int? memberRateFils,
+  RateBasis memberBasis = RateBasis.day,
   int? typedFils,
   bool halfDayIsHalf = false,
 }) {
-  final monthly = contract != null && isPeriodBasis(contract.basis);
-  final groupWage = memberRateFils ?? (monthly ? null : groupRateFils);
-  if (groupWage == null && (contract != null || typedFils == null)) return contract;
-  final wage = typedFils ?? groupWage!;
+  if (memberRateFils == null && contract != null) {
+    final paidByTheDay = contract.basis == RateBasis.day || contract.basis == RateBasis.shift;
+    if (!halfDayIsHalf || !paidByTheDay || contract.halfAmountFils != null) return contract;
+    return RateTerms(
+      basis: contract.basis,
+      rateFils: contract.rateFils,
+      effectiveFrom: contract.effectiveFrom,
+      effectiveTo: contract.effectiveTo,
+      breakPaid: contract.breakPaid,
+      halfAmountFils: divRoundHalfUp(typedFils ?? contract.rateFils, 2),
+      includedMinutes: contract.includedMinutes,
+      overtimeRateFils: contract.overtimeRateFils,
+      siteId: contract.siteId,
+    );
+  }
+  final wage = typedFils ?? memberRateFils ?? groupRateFils;
+  if (wage == null) return null;
+  final basis = memberRateFils == null ? RateBasis.day : memberBasis;
+  final sameBasis = contract?.basis == basis;
   return RateTerms(
-    basis: RateBasis.day,
+    basis: basis,
     rateFils: wage,
     effectiveFrom: date,
     breakPaid: contract?.breakPaid ?? false,
-    halfAmountFils: halfDayIsHalf ? divRoundHalfUp(wage, 2) : null,
+    halfAmountFils: halfDayIsHalf && basis == RateBasis.day ? divRoundHalfUp(wage, 2) : null,
+    includedMinutes: sameBasis ? contract!.includedMinutes : null,
+    overtimeRateFils: sameBasis ? contract!.overtimeRateFils : null,
   );
 }
 

@@ -74,11 +74,26 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 ## 5a. Mazdoor register aur Hazri register
 
 - [ ] **Labour > Mazdoor register** kholein. Har mazdoor ka apna hisaab ho, tareekh ke hisaab se: kis company aur site par, kitne ghante, kis rate par, kitni kamai, kitna advance, kis din kitni adaigi, aur har line ke baad **Baqi**.
-- [ ] Baqi khud jor kar dekhein: kamai - advance aur visa - katoti - adaigi.
+- [ ] Baqi khud jor kar dekhein: kamai - advance - katoti, room aur visa ki qist - adaigi.
 - [ ] Pichla mahina chunein. Pehli line **Pichla baqi** ho.
 - [ ] PDF aur Excel nikalein. PDF mein sab se upar sab mazdooron ka khulasa ho. Excel mein doosri sheet par.
 - [ ] **Hazri > Hazri register** ka PDF nikalein. Upar mazdoor ke hisaab se din, ghante aur pay ho, phir company aur site ke hisaab se bill, pay aur farq.
 - [ ] Jis row ka company rate nahin us par **Rate nahin** likha ho.
+
+## 5b. Group, Salary slip aur Malik ki sheet
+
+- [ ] **Hazri > Mazdoor group** mein group banayein. Jis mazdoor ka apna rate hai, us par tick karte hi neeche **Apni tankhwah** likha aaye.
+- [ ] **Badlein** dabayein, aur is group ke liye fi ghanta ya fi din ka doosra rate likhein. Neeche **Is group mein** likha aaye.
+- [ ] Jis mazdoor ka apna rate nahin, us ke neeche **Group ki dehari** aaye. Hazri lagayein, aur har aik ko sahi raqam mile.
+- [ ] Purani hazri dekhein: Ahmad ke 7 ghante par ab AED 70 hon, AED 10 nahin. Jo mahina post ho chuka hai woh nahin badlega.
+- [ ] **Tankhwah > mazdoor > Salary slip** dabayein, phir **WhatsApp**. Slip PDF mein jaye aur mazdoor khud chunein.
+- [ ] Slip mein company ka rate, bill ya nafa kahin na ho.
+- [ ] Slip ka hisaab khud jor kar dekhein: pichla baqi + kaam - advance - room - visa - katoti - ada kiya = baqi.
+- [ ] Din ba din wale hisse mein har din ki company, site, ghante, rate aur total hon. Neeche **Jo paise liye** tareekh ke saath hon.
+- [ ] Agle mahine ki slip nikalein. Us ka pichla baqi is mahine ke baqi ke barabar ho.
+- [ ] **Tankhwah > Malik ki sheet** ka PDF aur Excel nikalein. Har company ka rate, bill, mazdoor pay aur nafa ho, aur upar **Andazan nafa**.
+- [ ] Excel asal Excel ya Google Sheets mein kholein. Teen sheets hon: Khulasa, Company wise, Mazdooron ka hisaab.
+- [ ] Agar aap ke paas bohat mazdoor hain: Hazri register ka Excel banne mein kitna waqt laga, likh dein.
 
 ## 6. Aap ke faislay
 

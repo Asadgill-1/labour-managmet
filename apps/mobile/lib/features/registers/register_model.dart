@@ -59,13 +59,22 @@ class RegisterFilter {
   final List<({String value, String label})> options;
 }
 
-/// A small table of sums, printed ahead of a register's rows.
+/// A table of sums, printed ahead of a register's rows.
 class RegisterRollup {
-  const RegisterRollup(this.title, this.columns, this.rows);
+  const RegisterRollup(this.title, this.columns, this.rows, {this.totalLabel, this.sheet, this.afterRows = false});
 
   final String title;
   final List<RegisterColumn> columns;
   final List<RegisterEntry> rows;
+
+  /// What this table's total line is called, when "Total" would undersell it.
+  final String? totalLabel;
+
+  /// A sheet of its own in Excel, with its own filter, for a table long enough to need one.
+  final String? sheet;
+
+  /// Printed after the rows, for a table too long to stand in front of them.
+  final bool afterRows;
 }
 
 /// One register, ready to show or export. Rows come newest first, unless they group by name.
@@ -85,6 +94,8 @@ class RegisterData {
     this.groupHeads = const {},
     this.groupFeet = const {},
     this.rollupsOf,
+    this.mainSheet,
+    this.summaryFirst = false,
   });
 
   final String title;
@@ -119,6 +130,12 @@ class RegisterData {
 
   /// The sums for the rows on show, so they follow the filters.
   final List<RegisterRollup> Function(List<RegisterEntry> shown)? rollupsOf;
+
+  /// Excel's name for the sheet of rows, when it should not be the title.
+  final String? mainSheet;
+
+  /// In Excel, the sums come before the rows.
+  final bool summaryFirst;
 
   bool get groupsByName => groupKind == CellKind.text;
 }

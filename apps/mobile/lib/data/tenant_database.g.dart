@@ -16381,17 +16381,29 @@ class $WorkerGroupMembersTable extends WorkerGroupMembers
       'REFERENCES workers (id)',
     ),
   );
-  static const VerificationMeta _dailyRateFilsMeta = const VerificationMeta(
-    'dailyRateFils',
+  static const VerificationMeta _rateFilsMeta = const VerificationMeta(
+    'rateFils',
   );
   @override
-  late final GeneratedColumn<int> dailyRateFils = GeneratedColumn<int>(
+  late final GeneratedColumn<int> rateFils = GeneratedColumn<int>(
     'daily_rate_fils',
     aliasedName,
     true,
-    check: () => ComparableExpr(dailyRateFils).isBiggerOrEqualValue(0),
+    check: () => ComparableExpr(rateFils).isBiggerOrEqualValue(0),
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+  );
+  static const VerificationMeta _rateBasisMeta = const VerificationMeta(
+    'rateBasis',
+  );
+  @override
+  late final GeneratedColumn<String> rateBasis = GeneratedColumn<String>(
+    'rate_basis',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('day'),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -16404,7 +16416,8 @@ class $WorkerGroupMembersTable extends WorkerGroupMembers
     sourceOperationId,
     groupId,
     workerId,
-    dailyRateFils,
+    rateFils,
+    rateBasis,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -16496,11 +16509,14 @@ class $WorkerGroupMembersTable extends WorkerGroupMembers
     }
     if (data.containsKey('daily_rate_fils')) {
       context.handle(
-        _dailyRateFilsMeta,
-        dailyRateFils.isAcceptableOrUnknown(
-          data['daily_rate_fils']!,
-          _dailyRateFilsMeta,
-        ),
+        _rateFilsMeta,
+        rateFils.isAcceptableOrUnknown(data['daily_rate_fils']!, _rateFilsMeta),
+      );
+    }
+    if (data.containsKey('rate_basis')) {
+      context.handle(
+        _rateBasisMeta,
+        rateBasis.isAcceptableOrUnknown(data['rate_basis']!, _rateBasisMeta),
       );
     }
     return context;
@@ -16552,10 +16568,14 @@ class $WorkerGroupMembersTable extends WorkerGroupMembers
         DriftSqlType.string,
         data['${effectivePrefix}worker_id'],
       )!,
-      dailyRateFils: attachedDatabase.typeMapping.read(
+      rateFils: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}daily_rate_fils'],
       ),
+      rateBasis: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rate_basis'],
+      )!,
     );
   }
 
@@ -16577,8 +16597,11 @@ class WorkerGroupMember extends DataClass
   final String groupId;
   final String workerId;
 
-  /// Null means the group's daily wage.
-  final int? dailyRateFils;
+  /// What this worker earns in this group. Null means their own contract, or the group's daily wage if they have none (D-042).
+  final int? rateFils;
+
+  /// 'day' or 'hour'.
+  final String rateBasis;
   const WorkerGroupMember({
     required this.id,
     required this.tenantId,
@@ -16589,7 +16612,8 @@ class WorkerGroupMember extends DataClass
     required this.sourceOperationId,
     required this.groupId,
     required this.workerId,
-    this.dailyRateFils,
+    this.rateFils,
+    required this.rateBasis,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -16603,9 +16627,10 @@ class WorkerGroupMember extends DataClass
     map['source_operation_id'] = Variable<String>(sourceOperationId);
     map['group_id'] = Variable<String>(groupId);
     map['worker_id'] = Variable<String>(workerId);
-    if (!nullToAbsent || dailyRateFils != null) {
-      map['daily_rate_fils'] = Variable<int>(dailyRateFils);
+    if (!nullToAbsent || rateFils != null) {
+      map['daily_rate_fils'] = Variable<int>(rateFils);
     }
+    map['rate_basis'] = Variable<String>(rateBasis);
     return map;
   }
 
@@ -16620,9 +16645,10 @@ class WorkerGroupMember extends DataClass
       sourceOperationId: Value(sourceOperationId),
       groupId: Value(groupId),
       workerId: Value(workerId),
-      dailyRateFils: dailyRateFils == null && nullToAbsent
+      rateFils: rateFils == null && nullToAbsent
           ? const Value.absent()
-          : Value(dailyRateFils),
+          : Value(rateFils),
+      rateBasis: Value(rateBasis),
     );
   }
 
@@ -16641,7 +16667,8 @@ class WorkerGroupMember extends DataClass
       sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
       groupId: serializer.fromJson<String>(json['groupId']),
       workerId: serializer.fromJson<String>(json['workerId']),
-      dailyRateFils: serializer.fromJson<int?>(json['dailyRateFils']),
+      rateFils: serializer.fromJson<int?>(json['rateFils']),
+      rateBasis: serializer.fromJson<String>(json['rateBasis']),
     );
   }
   @override
@@ -16657,7 +16684,8 @@ class WorkerGroupMember extends DataClass
       'sourceOperationId': serializer.toJson<String>(sourceOperationId),
       'groupId': serializer.toJson<String>(groupId),
       'workerId': serializer.toJson<String>(workerId),
-      'dailyRateFils': serializer.toJson<int?>(dailyRateFils),
+      'rateFils': serializer.toJson<int?>(rateFils),
+      'rateBasis': serializer.toJson<String>(rateBasis),
     };
   }
 
@@ -16671,7 +16699,8 @@ class WorkerGroupMember extends DataClass
     String? sourceOperationId,
     String? groupId,
     String? workerId,
-    Value<int?> dailyRateFils = const Value.absent(),
+    Value<int?> rateFils = const Value.absent(),
+    String? rateBasis,
   }) => WorkerGroupMember(
     id: id ?? this.id,
     tenantId: tenantId ?? this.tenantId,
@@ -16682,9 +16711,8 @@ class WorkerGroupMember extends DataClass
     sourceOperationId: sourceOperationId ?? this.sourceOperationId,
     groupId: groupId ?? this.groupId,
     workerId: workerId ?? this.workerId,
-    dailyRateFils: dailyRateFils.present
-        ? dailyRateFils.value
-        : this.dailyRateFils,
+    rateFils: rateFils.present ? rateFils.value : this.rateFils,
+    rateBasis: rateBasis ?? this.rateBasis,
   );
   WorkerGroupMember copyWithCompanion(WorkerGroupMembersCompanion data) {
     return WorkerGroupMember(
@@ -16703,9 +16731,8 @@ class WorkerGroupMember extends DataClass
           : this.sourceOperationId,
       groupId: data.groupId.present ? data.groupId.value : this.groupId,
       workerId: data.workerId.present ? data.workerId.value : this.workerId,
-      dailyRateFils: data.dailyRateFils.present
-          ? data.dailyRateFils.value
-          : this.dailyRateFils,
+      rateFils: data.rateFils.present ? data.rateFils.value : this.rateFils,
+      rateBasis: data.rateBasis.present ? data.rateBasis.value : this.rateBasis,
     );
   }
 
@@ -16721,7 +16748,8 @@ class WorkerGroupMember extends DataClass
           ..write('sourceOperationId: $sourceOperationId, ')
           ..write('groupId: $groupId, ')
           ..write('workerId: $workerId, ')
-          ..write('dailyRateFils: $dailyRateFils')
+          ..write('rateFils: $rateFils, ')
+          ..write('rateBasis: $rateBasis')
           ..write(')'))
         .toString();
   }
@@ -16737,7 +16765,8 @@ class WorkerGroupMember extends DataClass
     sourceOperationId,
     groupId,
     workerId,
-    dailyRateFils,
+    rateFils,
+    rateBasis,
   );
   @override
   bool operator ==(Object other) =>
@@ -16752,7 +16781,8 @@ class WorkerGroupMember extends DataClass
           other.sourceOperationId == this.sourceOperationId &&
           other.groupId == this.groupId &&
           other.workerId == this.workerId &&
-          other.dailyRateFils == this.dailyRateFils);
+          other.rateFils == this.rateFils &&
+          other.rateBasis == this.rateBasis);
 }
 
 class WorkerGroupMembersCompanion extends UpdateCompanion<WorkerGroupMember> {
@@ -16765,7 +16795,8 @@ class WorkerGroupMembersCompanion extends UpdateCompanion<WorkerGroupMember> {
   final Value<String> sourceOperationId;
   final Value<String> groupId;
   final Value<String> workerId;
-  final Value<int?> dailyRateFils;
+  final Value<int?> rateFils;
+  final Value<String> rateBasis;
   final Value<int> rowid;
   const WorkerGroupMembersCompanion({
     this.id = const Value.absent(),
@@ -16777,7 +16808,8 @@ class WorkerGroupMembersCompanion extends UpdateCompanion<WorkerGroupMember> {
     this.sourceOperationId = const Value.absent(),
     this.groupId = const Value.absent(),
     this.workerId = const Value.absent(),
-    this.dailyRateFils = const Value.absent(),
+    this.rateFils = const Value.absent(),
+    this.rateBasis = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   WorkerGroupMembersCompanion.insert({
@@ -16790,7 +16822,8 @@ class WorkerGroupMembersCompanion extends UpdateCompanion<WorkerGroupMember> {
     required String sourceOperationId,
     required String groupId,
     required String workerId,
-    this.dailyRateFils = const Value.absent(),
+    this.rateFils = const Value.absent(),
+    this.rateBasis = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        tenantId = Value(tenantId),
@@ -16810,7 +16843,8 @@ class WorkerGroupMembersCompanion extends UpdateCompanion<WorkerGroupMember> {
     Expression<String>? sourceOperationId,
     Expression<String>? groupId,
     Expression<String>? workerId,
-    Expression<int>? dailyRateFils,
+    Expression<int>? rateFils,
+    Expression<String>? rateBasis,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -16823,7 +16857,8 @@ class WorkerGroupMembersCompanion extends UpdateCompanion<WorkerGroupMember> {
       if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
       if (groupId != null) 'group_id': groupId,
       if (workerId != null) 'worker_id': workerId,
-      if (dailyRateFils != null) 'daily_rate_fils': dailyRateFils,
+      if (rateFils != null) 'daily_rate_fils': rateFils,
+      if (rateBasis != null) 'rate_basis': rateBasis,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -16838,7 +16873,8 @@ class WorkerGroupMembersCompanion extends UpdateCompanion<WorkerGroupMember> {
     Value<String>? sourceOperationId,
     Value<String>? groupId,
     Value<String>? workerId,
-    Value<int?>? dailyRateFils,
+    Value<int?>? rateFils,
+    Value<String>? rateBasis,
     Value<int>? rowid,
   }) {
     return WorkerGroupMembersCompanion(
@@ -16851,7 +16887,8 @@ class WorkerGroupMembersCompanion extends UpdateCompanion<WorkerGroupMember> {
       sourceOperationId: sourceOperationId ?? this.sourceOperationId,
       groupId: groupId ?? this.groupId,
       workerId: workerId ?? this.workerId,
-      dailyRateFils: dailyRateFils ?? this.dailyRateFils,
+      rateFils: rateFils ?? this.rateFils,
+      rateBasis: rateBasis ?? this.rateBasis,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -16886,8 +16923,11 @@ class WorkerGroupMembersCompanion extends UpdateCompanion<WorkerGroupMember> {
     if (workerId.present) {
       map['worker_id'] = Variable<String>(workerId.value);
     }
-    if (dailyRateFils.present) {
-      map['daily_rate_fils'] = Variable<int>(dailyRateFils.value);
+    if (rateFils.present) {
+      map['daily_rate_fils'] = Variable<int>(rateFils.value);
+    }
+    if (rateBasis.present) {
+      map['rate_basis'] = Variable<String>(rateBasis.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -16907,7 +16947,8 @@ class WorkerGroupMembersCompanion extends UpdateCompanion<WorkerGroupMember> {
           ..write('sourceOperationId: $sourceOperationId, ')
           ..write('groupId: $groupId, ')
           ..write('workerId: $workerId, ')
-          ..write('dailyRateFils: $dailyRateFils, ')
+          ..write('rateFils: $rateFils, ')
+          ..write('rateBasis: $rateBasis, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -31105,7 +31146,8 @@ typedef $$WorkerGroupMembersTableCreateCompanionBuilder =
       required String sourceOperationId,
       required String groupId,
       required String workerId,
-      Value<int?> dailyRateFils,
+      Value<int?> rateFils,
+      Value<String> rateBasis,
       Value<int> rowid,
     });
 typedef $$WorkerGroupMembersTableUpdateCompanionBuilder =
@@ -31119,7 +31161,8 @@ typedef $$WorkerGroupMembersTableUpdateCompanionBuilder =
       Value<String> sourceOperationId,
       Value<String> groupId,
       Value<String> workerId,
-      Value<int?> dailyRateFils,
+      Value<int?> rateFils,
+      Value<String> rateBasis,
       Value<int> rowid,
     });
 
@@ -31216,8 +31259,13 @@ class $$WorkerGroupMembersTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get dailyRateFils => $composableBuilder(
-    column: $table.dailyRateFils,
+  ColumnFilters<int> get rateFils => $composableBuilder(
+    column: $table.rateFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rateBasis => $composableBuilder(
+    column: $table.rateBasis,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -31312,8 +31360,13 @@ class $$WorkerGroupMembersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get dailyRateFils => $composableBuilder(
-    column: $table.dailyRateFils,
+  ColumnOrderings<int> get rateFils => $composableBuilder(
+    column: $table.rateFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rateBasis => $composableBuilder(
+    column: $table.rateBasis,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -31400,10 +31453,11 @@ class $$WorkerGroupMembersTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get dailyRateFils => $composableBuilder(
-    column: $table.dailyRateFils,
-    builder: (column) => column,
-  );
+  GeneratedColumn<int> get rateFils =>
+      $composableBuilder(column: $table.rateFils, builder: (column) => column);
+
+  GeneratedColumn<String> get rateBasis =>
+      $composableBuilder(column: $table.rateBasis, builder: (column) => column);
 
   $$WorkerGroupsTableAnnotationComposer get groupId {
     final $$WorkerGroupsTableAnnotationComposer composer = $composerBuilder(
@@ -31494,7 +31548,8 @@ class $$WorkerGroupMembersTableTableManager
                 Value<String> sourceOperationId = const Value.absent(),
                 Value<String> groupId = const Value.absent(),
                 Value<String> workerId = const Value.absent(),
-                Value<int?> dailyRateFils = const Value.absent(),
+                Value<int?> rateFils = const Value.absent(),
+                Value<String> rateBasis = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WorkerGroupMembersCompanion(
                 id: id,
@@ -31506,7 +31561,8 @@ class $$WorkerGroupMembersTableTableManager
                 sourceOperationId: sourceOperationId,
                 groupId: groupId,
                 workerId: workerId,
-                dailyRateFils: dailyRateFils,
+                rateFils: rateFils,
+                rateBasis: rateBasis,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -31520,7 +31576,8 @@ class $$WorkerGroupMembersTableTableManager
                 required String sourceOperationId,
                 required String groupId,
                 required String workerId,
-                Value<int?> dailyRateFils = const Value.absent(),
+                Value<int?> rateFils = const Value.absent(),
+                Value<String> rateBasis = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WorkerGroupMembersCompanion.insert(
                 id: id,
@@ -31532,7 +31589,8 @@ class $$WorkerGroupMembersTableTableManager
                 sourceOperationId: sourceOperationId,
                 groupId: groupId,
                 workerId: workerId,
-                dailyRateFils: dailyRateFils,
+                rateFils: rateFils,
+                rateBasis: rateBasis,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

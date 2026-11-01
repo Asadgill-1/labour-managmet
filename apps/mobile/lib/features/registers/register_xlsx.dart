@@ -100,7 +100,7 @@ String _rollupSheetXml(List<RegisterRollup> rollups, String totalLabel) {
       if (columns[c].total && rollup.rows.isNotEmpty) {
         rows.write(_totalCell(ref, columns[c], columnTotal(rollup.rows, c), '${_letter(c)}$first:${_letter(c)}${at - 1}'));
       } else {
-        rows.write(_textCell(ref, c == 0 ? totalLabel : '', _totalText));
+        rows.write(_textCell(ref, c == 0 ? rollup.totalLabel ?? totalLabel : '', _totalText));
       }
     }
     rows.write('</row>');
@@ -130,25 +130,21 @@ String _sheetName(String title) {
   return clean.length <= 31 ? clean : clean.substring(0, 31);
 }
 
-/// A real XLSX: dates, amounts and hours are values, headings stay on screen, every column can be filtered,
-/// totals follow the filter, and it prints landscape on A4 with the headings on every page (D-038).
-Uint8List registerXlsx({
+/// One table on a sheet of its own: headings stay on screen, every column can be filtered, totals follow the filter,
+/// and it prints landscape on A4 with the headings on every page.
+String _tableSheetXml({
   required String company,
   required String title,
   required String filterLine,
   required List<RegisterColumn> columns,
   required List<RegisterEntry> entries,
   required String totalLabel,
-  required String brandHex,
   String? note,
-  List<RegisterRollup> rollups = const [],
-  String rollupSheet = '',
 }) {
   final lastColumn = _letter(columns.length - 1);
   final firstData = _headRow + 1;
   final lastData = _headRow + entries.length;
   final totalRow = lastData + 1;
-  final sheet = _sheetName(title);
 
   final rows = StringBuffer()
     ..write('<row r="1" ht="24" customHeight="1">${_textCell('A1', company, _title)}</row>')
@@ -193,7 +189,7 @@ Uint8List registerXlsx({
     widths.write('<col min="${c + 1}" max="${c + 1}" width="$width" customWidth="1"/>');
   }
 
-  final sheetXml =
+  return
       '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
       '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
       '<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>'
@@ -210,18 +206,61 @@ Uint8List registerXlsx({
       '<pageSetup paperSize="9" orientation="landscape" fitToWidth="1" fitToHeight="0"/>'
       '<headerFooter><oddFooter>&amp;C&amp;P / &amp;N</oddFooter></headerFooter>'
       '</worksheet>';
+}
 
-  final quoted = "'${sheet.replaceAll("'", "''")}'";
+/// A real XLSX: dates, amounts and hours are values, and each long table has its own sheet (D-038). Sums with no
+/// sheet of their own share one, after the rows or, with [summaryFirst], ahead of them.
+Uint8List registerXlsx({
+  required String company,
+  required String title,
+  required String filterLine,
+  required List<RegisterColumn> columns,
+  required List<RegisterEntry> entries,
+  required String totalLabel,
+  required String brandHex,
+  String? note,
+  List<RegisterRollup> rollups = const [],
+  String rollupSheet = '',
+  String? mainSheet,
+  bool summaryFirst = false,
+}) {
+  final stacked = rollups.where((r) => r.sheet == null).toList();
+  final summary = (name: rollupSheet, xml: stacked.isEmpty ? '' : _rollupSheetXml(stacked, totalLabel), filter: null as String?);
+  final main = (
+    name: mainSheet ?? title,
+    xml: _tableSheetXml(company: company, title: title, filterLine: filterLine, columns: columns, entries: entries, totalLabel: totalLabel, note: note),
+    filter: '${_letter(columns.length - 1)}|${_headRow + entries.length}' as String?,
+  );
+  final sheets = [
+    if (summaryFirst && stacked.isNotEmpty) summary,
+    main,
+    if (!summaryFirst && stacked.isNotEmpty) summary,
+    for (final r in rollups.where((r) => r.sheet != null))
+      (
+        name: r.sheet!,
+        xml: _tableSheetXml(company: company, title: r.title, filterLine: filterLine, columns: r.columns, entries: r.rows, totalLabel: r.totalLabel ?? totalLabel),
+        filter: '${_letter(r.columns.length - 1)}|${_headRow + r.rows.length}' as String?,
+      ),
+  ];
+
+  final names = StringBuffer();
+  final list = StringBuffer();
+  for (var i = 0; i < sheets.length; i++) {
+    final name = _sheetName(sheets[i].name);
+    list.write('<sheet name="${_escape(name)}" sheetId="${i + 1}" r:id="rIdSheet${i + 1}"/>');
+    final filter = sheets[i].filter;
+    if (filter == null) continue;
+    final [lastColumn, lastData] = filter.split('|');
+    final quoted = _escape("'${name.replaceAll("'", "''")}'");
+    names
+      ..write('<definedName name="_xlnm._FilterDatabase" localSheetId="$i" hidden="1">$quoted!\$A\$$_headRow:\$$lastColumn\$$lastData</definedName>')
+      ..write('<definedName name="_xlnm.Print_Titles" localSheetId="$i">$quoted!\$$_headRow:\$$_headRow</definedName>');
+  }
   final workbookXml =
       '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
       '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
-      '<sheets><sheet name="${_escape(sheet)}" sheetId="1" r:id="rId1"/>'
-      '${rollups.isEmpty ? '' : '<sheet name="${_escape(_sheetName(rollupSheet))}" sheetId="2" r:id="rId3"/>'}'
-      '</sheets>'
-      '<definedNames>'
-      '<definedName name="_xlnm._FilterDatabase" localSheetId="0" hidden="1">${_escape(quoted)}!\$A\$$_headRow:\$$lastColumn\$$lastData</definedName>'
-      '<definedName name="_xlnm.Print_Titles" localSheetId="0">${_escape(quoted)}!\$$_headRow:\$$_headRow</definedName>'
-      '</definedNames>'
+      '<sheets>$list</sheets>'
+      '<definedNames>$names</definedNames>'
       '<calcPr fullCalcOnLoad="1"/>'
       '</workbook>';
 
@@ -279,8 +318,7 @@ Uint8List registerXlsx({
         '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
         '<Default Extension="xml" ContentType="application/xml"/>'
         '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
-        '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
-        '${rollups.isEmpty ? '' : '<Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'}'
+        '${[for (var i = 0; i < sheets.length; i++) '<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'].join()}'
         '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'
         '</Types>',
   );
@@ -295,14 +333,14 @@ Uint8List registerXlsx({
     'xl/_rels/workbook.xml.rels',
     '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
-        '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
-        '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
-        '${rollups.isEmpty ? '' : '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/>'}'
+        '${[for (var i = 0; i < sheets.length; i++) '<Relationship Id="rIdSheet${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>'].join()}'
+        '<Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
         '</Relationships>',
   );
   add('xl/workbook.xml', workbookXml);
   add('xl/styles.xml', stylesXml);
-  add('xl/worksheets/sheet1.xml', sheetXml);
-  if (rollups.isNotEmpty) add('xl/worksheets/sheet2.xml', _rollupSheetXml(rollups, totalLabel));
+  for (var i = 0; i < sheets.length; i++) {
+    add('xl/worksheets/sheet${i + 1}.xml', sheets[i].xml);
+  }
   return Uint8List.fromList(ZipEncoder().encode(archive));
 }

@@ -8,8 +8,8 @@ import '../../app/providers.dart';
 import '../../app/side_panel.dart';
 import '../../app/theme.dart';
 import '../../l10n/app_localizations.dart';
+import 'export_flow.dart';
 import 'register_defs.dart';
-import 'register_export.dart';
 import 'register_model.dart';
 
 typedef RegisterQuery = ({Section section, String? from, String? to, AppLocalizations l10n});
@@ -84,61 +84,16 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
     return parts.join('   |   ');
   }
 
-  Future<void> _export(AppLocalizations l10n, RegisterData data, List<RegisterEntry> shown) async {
-    final filterLine = _filterLine(l10n, data);
-    final choice = await showModalBottomSheet<(ExportFormat, ExportAction)>(
-      context: context,
-      builder: (_) => _ExportSheet(title: data.title, rows: shown.length, filterLine: filterLine),
-    );
-    if (choice == null || !mounted) return;
-    final (format, action) = choice;
-    final profile = ref.read(profileProvider).value;
-    final now = DateTime.now().toUtc().add(dubaiOffset);
-    final text = ExportText(
-      company: profile?.tradingName ?? profile?.legalName ?? '',
-      companyLine: [?profile?.address, ?profile?.phone, ?profile?.email].join('   '),
-      title: data.title,
-      filterLine: [if (filterLine.isNotEmpty) filterLine, l10n.regAmountsNote].join('   |   '),
-      totalLabel: l10n.regTotal,
-      madeLabel: l10n.regMade('${showDate(ymd(now))} ${showMinuteOfDay(now.hour * 60 + now.minute)}'),
-      pagePattern: l10n.regPage('{page}', '{pages}'),
-      rollupSheet: l10n.regSummarySheet,
-      footer: profile?.documentFooter,
-      note: data.note,
-    );
-    setState(() => _busy = true);
-    try {
-      final bytes = await makeExportBytes(
-        format,
-        text,
-        data.columns,
-        data.groupsByName ? shown : oldestFirst(shown),
-        brandArgb: brand.toARGB32(),
-        softArgb: brandSoft.toARGB32(),
-        rollups: data.rollupsOf?.call(shown) ?? const [],
-        groupHeads: data.groupHeads,
-        groupFeet: data.groupFeet,
-        sections: data.groupsByName,
-      );
-      final file = await writeExportFile(exportFileName(data.title, data.dated ? _from : null, data.dated ? _to : null, format), bytes);
-      final result = await runExport(action, format, file, bytes);
-      if (!mounted) return;
-      switch (result) {
-        case ExportResult.saved:
-          showSavedOnPhone(context, l10n.exportSaved);
-        case ExportResult.noWhatsApp:
-          showFormError(context, l10n.exportNoWhatsApp);
-        case ExportResult.noApp:
-          showFormError(context, l10n.exportNoApp);
-        case ExportResult.done || ExportResult.cancelled:
-          break;
-      }
-    } catch (_) {
-      if (mounted) showFormError(context, l10n.exportFailed);
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
-  }
+  Future<void> _export(RegisterData data, List<RegisterEntry> shown) => exportRegister(
+    context,
+    ref,
+    data: data,
+    shown: shown,
+    filterLine: _filterLine(AppLocalizations.of(context), data),
+    from: data.dated ? _from : null,
+    to: data.dated ? _to : null,
+    onBusy: (busy) => setState(() => _busy = busy),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -147,22 +102,35 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
     final data = asked.value ?? _last;
     if (asked.hasValue) _last = asked.value;
     final shown = data == null ? const <RegisterEntry>[] : filterEntries(data.entries, _chosen);
-    final groups = groupEntries(shown);
+    // One row at a time, so a date holding a thousand workers doesn't have to be built all at once when it scrolls into view.
+    final items = <Object>[
+      for (final g in groupEntries(shown)) ...[g, ...g.rows, ?data!.groupFeet[g.group]],
+    ];
     return Scaffold(
       appBar: AppBar(leading: const MenuButton(), title: Text(sectionLabel(l10n, widget.section)), bottom: SubTabs(widget.section)),
       bottomNavigationBar: MainActionBar(
         label: _busy ? l10n.exportMaking : l10n.regExport,
-        onPressed: _busy || data == null || shown.isEmpty ? null : () => _export(l10n, data, shown),
+        onPressed: _busy || data == null || shown.isEmpty ? null : () => _export(data, shown),
       ),
       body: data == null
           ? (asked.hasError ? EmptyState(icon: Icons.error_outline, text: l10n.databaseError) : const Center(child: CircularProgressIndicator()))
           : ListView.builder(
               padding: const EdgeInsets.only(bottom: 12),
-              itemCount: groups.length + 1 + (shown.isEmpty ? 1 : 0),
+              itemCount: items.length + 1 + (shown.isEmpty ? 1 : 0),
               itemBuilder: (context, i) {
                 if (i == 0) return _header(l10n, data, shown);
                 if (shown.isEmpty) return EmptyState(icon: Icons.filter_alt_off, text: l10n.regEmpty);
-                return _Group(data: data, group: groups[i - 1].group, rows: groups[i - 1].rows);
+                return switch (items[i - 1]) {
+                  final RegisterEntry entry => _EntryCard(data: data, entry: entry),
+                  final String foot => Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+                    child: Text(foot, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: ink)),
+                  ),
+                  final item => () {
+                    final group = item as ({String group, List<RegisterEntry> rows});
+                    return _GroupHead(data: data, group: group.group, rows: group.rows);
+                  }(),
+                };
               },
             ),
     );
@@ -353,9 +321,9 @@ class _BandButton extends StatelessWidget {
   }
 }
 
-/// One date's heading with its totals, and its rows.
-class _Group extends StatelessWidget {
-  const _Group({required this.data, required this.group, required this.rows});
+/// One date's heading with its totals.
+class _GroupHead extends StatelessWidget {
+  const _GroupHead({required this.data, required this.group, required this.rows});
 
   final RegisterData data;
   final String group;
@@ -370,7 +338,6 @@ class _Group extends StatelessWidget {
       _ => group.isEmpty ? '' : '${dayName(l10n, group)}, ${showDate(group)}',
     };
     final head = data.groupHeads[group];
-    final foot = data.groupFeet[group];
     final lastBand = data.bandColumns.isEmpty ? null : data.bandColumns.last;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -396,12 +363,6 @@ class _Group extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 2),
             child: Text(head, style: const TextStyle(fontSize: 13, color: muted)),
-          ),
-        for (final entry in rows) _EntryCard(data: data, entry: entry),
-        if (foot != null)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-            child: Text(foot, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: ink)),
           ),
       ],
     );
@@ -536,99 +497,6 @@ class _FilterSheetState extends State<_FilterSheet> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// Says what is about to leave the phone, then lets the owner choose how (DOC-07).
-class _ExportSheet extends StatelessWidget {
-  const _ExportSheet({required this.title, required this.rows, required this.filterLine});
-
-  final String title;
-  final int rows;
-  final String filterLine;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    Widget section(String heading, IconData icon, Color color, ExportFormat format, String viewLabel) {
-      Widget action(IconData actionIcon, String label, ExportAction action, {Color? tint}) {
-        return Expanded(
-          child: Material(
-            color: paper,
-            borderRadius: BorderRadius.circular(14),
-            clipBehavior: Clip.antiAlias,
-            child: InkWell(
-              onTap: () => Navigator.of(context).pop((format, action)),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-                child: Column(
-                  children: [
-                    Icon(actionIcon, color: tint ?? brand),
-                    const SizedBox(height: 4),
-                    Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: ink)),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      }
-
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: color, size: 20),
-                const SizedBox(width: 6),
-                Text(heading, style: sectionTitleStyle.copyWith(fontSize: 15)),
-              ],
-            ),
-            const SizedBox(height: 8),
-            IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  action(Icons.visibility, viewLabel, ExportAction.view),
-                  const SizedBox(width: 6),
-                  action(Icons.save_alt, l10n.exportSave, ExportAction.save),
-                  const SizedBox(width: 6),
-                  action(Icons.chat, l10n.exportWhatsApp, ExportAction.whatsapp, tint: const Color(0xFF128C4A)),
-                  const SizedBox(width: 6),
-                  action(Icons.share, l10n.exportOther, ExportAction.other),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: sectionTitleStyle),
-                const SizedBox(height: 2),
-                Text(l10n.regRows(rows), style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: ink)),
-                Text(filterLine, style: const TextStyle(fontSize: 13, color: muted)),
-              ],
-            ),
-          ),
-          section('PDF', Icons.picture_as_pdf, const Color(0xFFC62828), ExportFormat.pdf, l10n.exportView),
-          section('Excel', Icons.table_chart, const Color(0xFF1D7044), ExportFormat.excel, l10n.exportOpen),
-          const SizedBox(height: 16),
-        ],
       ),
     );
   }

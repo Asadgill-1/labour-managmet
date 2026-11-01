@@ -5,6 +5,11 @@ import 'package:pdf/widgets.dart' as pw;
 
 import 'register_model.dart';
 
+const _sliceRows = 300;
+
+/// Room for a title, the headings and a row or two.
+const _keepWithTable = 70.0;
+
 /// A register on A4 landscape: the company and filters on every page, its sums first, headings repeating over the rows,
 /// a line per date with its totals, and page X of Y. With [sections], each name gets its own table under its own heading,
 /// and its name stays in the table's heading on every page it runs to. The text stays real text, not a picture (DOC-03, DOC-08).
@@ -65,15 +70,16 @@ Future<Uint8List> registerPdf({
     );
   }
 
-  /// [name] replaces the first column's heading. A table has no cell spanning columns and clips each cell, so this is
-  /// how a long account still says whose it is on its later pages. The first column holds dates, which name themselves.
+  /// [name] goes in the first column's heading. A table has no cell spanning columns and clips each cell, so this is
+  /// how a long account still says whose it is on its later pages. A column of dates names itself, so the name replaces it.
   pw.TableRow headings(List<RegisterColumn> cols, {String? name}) {
     final shown = kept(cols);
+    String first(RegisterColumn c) => name == null ? c.label : (c.kind == CellKind.date ? name : '$name: ${c.label}');
     return pw.TableRow(
       repeat: true,
       decoration: pw.BoxDecoration(color: brand),
       verticalAlignment: pw.TableCellVerticalAlignment.middle,
-      children: [for (final i in shown) cell(i == shown.first ? name ?? cols[i].label : cols[i].label, pw.Alignment.center, bold: true, color: PdfColors.white, size: 7)],
+      children: [for (final i in shown) cell(i == shown.first ? first(cols[i]) : cols[i].label, pw.Alignment.center, bold: true, color: PdfColors.white, size: 7)],
     );
   }
 
@@ -99,7 +105,7 @@ Future<Uint8List> registerPdf({
     );
   }
 
-  pw.Widget table(List<RegisterColumn> cols, List<pw.TableRow> rows) {
+  pw.Widget oneTable(List<RegisterColumn> cols, List<pw.TableRow> rows) {
     final shown = kept(cols);
     return pw.Table(
       border: const pw.TableBorder(
@@ -114,6 +120,28 @@ Future<Uint8List> registerPdf({
       children: rows,
     );
   }
+
+  /// A table walks all its rows again for every page it fills, so its time grows with the square of its length, and a
+  /// thousand workers' month would take hours. Slices keep it in step with the rows. Up to [_sliceRows] nothing looks
+  /// different, and past that the headings show once more, which they do on every page anyway.
+  List<pw.Widget> tables(List<RegisterColumn> cols, List<pw.TableRow> rows, {String? name}) => [
+    for (var start = 0; start < rows.length; start += _sliceRows)
+      oneTable(cols, [headings(cols, name: name), ...rows.sublist(start, (start + _sliceRows).clamp(0, rows.length))]),
+  ];
+
+  List<pw.Widget> rollup(RegisterRollup r) => [
+    // So a title never sits alone at the foot of a page with its table on the next.
+    pw.NewPage(freeSpace: _keepWithTable),
+    pw.Padding(
+      padding: const pw.EdgeInsets.only(bottom: 3),
+      child: pw.Text(r.title, style: pw.TextStyle(fontSize: 9.5, fontWeight: pw.FontWeight.bold, color: brand)),
+    ),
+    ...tables(r.columns, [
+      for (var i = 0; i < r.rows.length; i++) line(r.columns, r.rows[i], i),
+      totals(r.columns, r.totalLabel ?? totalLabel, r.rows, totalFill),
+    ]),
+    pw.SizedBox(height: 12),
+  ];
 
   /// A name and what else is known about it, across the page.
   pw.Widget nameBand(String name, String? head) => pw.Container(
@@ -130,7 +158,7 @@ Future<Uint8List> registerPdf({
     ),
   );
 
-  final rows = <pw.TableRow>[headings(columns)];
+  final rows = <pw.TableRow>[];
   var index = 0;
   if (!sections) {
     for (final group in groupEntries(entries)) {
@@ -192,26 +220,15 @@ Future<Uint8List> registerPdf({
       ),
       build: (context) => [
         if (note != null) pw.Padding(padding: const pw.EdgeInsets.only(bottom: 6), child: pw.Text(note, style: const pw.TextStyle(fontSize: 8, color: grey))),
-        for (final rollup in rollups) ...[
-          pw.Padding(
-            padding: const pw.EdgeInsets.only(bottom: 3),
-            child: pw.Text(rollup.title, style: pw.TextStyle(fontSize: 9.5, fontWeight: pw.FontWeight.bold, color: brand)),
-          ),
-          table(rollup.columns, [
-            headings(rollup.columns),
-            for (var i = 0; i < rollup.rows.length; i++) line(rollup.columns, rollup.rows[i], i),
-            totals(rollup.columns, totalLabel, rollup.rows, totalFill),
-          ]),
-          pw.SizedBox(height: 12),
-        ],
+        for (final r in rollups.where((r) => !r.afterRows)) ...rollup(r),
         if (sections)
           for (final group in groupEntries(entries)) ...[
+            pw.NewPage(freeSpace: _keepWithTable),
             nameBand(group.group, groupHeads[group.group]),
-            table(columns, [
-              headings(columns, name: group.group),
+            ...tables(columns, [
               for (var i = 0; i < group.rows.length; i++) line(columns, group.rows[i], i),
               totals(columns, totalLabel, group.rows, totalFill),
-            ]),
+            ], name: group.group),
             if (groupFeet[group.group] != null)
               pw.Padding(
                 padding: const pw.EdgeInsets.only(top: 3),
@@ -220,7 +237,8 @@ Future<Uint8List> registerPdf({
             pw.SizedBox(height: 12),
           ]
         else
-          table(columns, rows),
+          ...tables(columns, rows),
+        for (final r in rollups.where((r) => r.afterRows)) ...rollup(r),
       ],
     ),
   );

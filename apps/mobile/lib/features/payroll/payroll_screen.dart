@@ -11,6 +11,8 @@ import '../../app/theme.dart';
 import '../../data/payroll.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../registers/export_flow.dart';
+import '../registers/salary_sheet.dart';
 import 'payroll_worker_screen.dart';
 import 'room_charge_screen.dart';
 
@@ -36,6 +38,8 @@ class PayrollScreen extends ConsumerStatefulWidget {
 
 class _PayrollScreenState extends ConsumerState<PayrollScreen> {
   String? _picked;
+  String _search = '';
+  bool _makingSheet = false;
 
   /// Follows the calendar until the owner picks a month, so an app left open overnight doesn't sit on last month.
   String get _month => _picked ?? dubaiToday(DateTime.now()).substring(0, 7);
@@ -71,10 +75,42 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
     if (saved && mounted) showSavedOnPhone(context, l10n.visaInstalmentsApplied(added));
   }
 
+  /// The owner's own sheet for this month, with what each company pays and what is left over.
+  Future<void> _ownerSheet() async {
+    final l10n = AppLocalizations.of(context);
+    setState(() => _makingSheet = true);
+    final month = _month;
+    try {
+      final data = await buildSalarySheet(ref.read(dbProvider), l10n, month);
+      if (!mounted) return;
+      if (data.entries.isEmpty && data.rollupsOf!(data.entries).last.rows.isEmpty) {
+        showFormError(context, l10n.regEmpty);
+        return;
+      }
+      await exportRegister(
+        context,
+        ref,
+        data: data,
+        shown: data.entries,
+        filterLine: showMonth(month),
+        from: month,
+        onBusy: (busy) {
+          if (mounted) setState(() => _makingSheet = busy);
+        },
+      );
+    } catch (_) {
+      if (mounted) showFormError(context, l10n.exportFailed);
+    } finally {
+      if (mounted) setState(() => _makingSheet = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final rows = ref.watch(payrollProvider(_month)).value ?? const <WorkerPayroll>[];
+    final needle = _search.toLowerCase();
+    final shown = needle.isEmpty ? rows : rows.where((p) => p.worker.name.toLowerCase().contains(needle) || p.worker.code.toLowerCase().contains(needle)).toList();
     final ready = rows.where((p) => p.canPost).toList();
     final visaInstalments = rows.where((p) => p.needsVisaInstalment).length;
     final earned = rows.fold(0, (sum, p) => sum + p.figures.grossFils);
@@ -114,11 +150,17 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
                   child: Text(l10n.applyRoomCharges),
                 ),
                 if (visaInstalments > 0) OutlinedButton(onPressed: _applyVisaInstalments, child: Text(l10n.applyVisaInstalments(visaInstalments))),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.table_chart),
+                  label: Text(_makingSheet ? l10n.exportMaking : l10n.ownerSheet),
+                  onPressed: _makingSheet ? null : _ownerSheet,
+                ),
               ],
             ),
           ),
+          if (rows.length > 6) SearchBox(hint: l10n.searchWorker, onChanged: (v) => setState(() => _search = v)),
           if (rows.isEmpty) EmptyState(icon: Icons.payments, text: l10n.payrollEmpty),
-          for (final p in rows) _PayrollRow(p, month: _month),
+          for (final p in shown) _PayrollRow(p, month: _month),
         ],
       ),
     );

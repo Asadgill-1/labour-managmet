@@ -45,7 +45,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dailyWageHelp =>
-      'Optional. Shows beside every worker. Tap an amount there to change it.';
+      'Optional. Only for a worker with no pay of their own.';
 
   @override
   String get halfDayIsHalf => 'Half day pays half the daily wage';
@@ -87,7 +87,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String wageOf(String name) {
-    return 'Daily wage: $name';
+    return 'Pay: $name';
   }
 
   @override
@@ -1495,9 +1495,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get colEarned => 'Earned';
 
   @override
-  String get colAdvanceVisa => 'Advance, visa';
-
-  @override
   String get colPaid => 'Paid';
 
   @override
@@ -1511,7 +1508,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get regWorkerNote =>
-      'Balance = earned - advance and visa - deductions - paid. A monthly salary shows once its month is posted.';
+      'Balance = earned - advance - deductions, room and visa cut - paid. A monthly salary shows once its month is posted.';
 
   @override
   String get regAttendanceNote =>
@@ -1531,8 +1528,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get regSettled => 'Balance AED 0.00: settled';
 
   @override
-  String regOwedSplit(String pay, String advance, String visa) {
-    return 'Pay $pay, less advance left $advance, less visa left $visa';
+  String regOwedSplit(String pay, String advance) {
+    return 'Pay $pay, less advance left $advance';
   }
 
   @override
@@ -1554,6 +1551,182 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get colBalance => 'Balance';
+
+  @override
+  String rateIn(String name) {
+    return 'Pay: $name';
+  }
+
+  @override
+  String ownRateHelp(String rate) {
+    return 'Their own pay is $rate. Leave empty to keep it.';
+  }
+
+  @override
+  String rateSetHere(String rate) {
+    return 'In this group: $rate';
+  }
+
+  @override
+  String rateOwn(String rate) {
+    return 'Own pay: $rate';
+  }
+
+  @override
+  String rateFromGroup(String rate) {
+    return 'Group wage: $rate';
+  }
+
+  @override
+  String get rateMissing => 'No pay set. Set it here, or add a group wage.';
+
+  @override
+  String get rateChange => 'Change';
+
+  @override
+  String regVisaRow(String amount) {
+    return 'Visa money $amount. It comes off the balance as it is cut from pay.';
+  }
+
+  @override
+  String regVisaLeft(String amount) {
+    return 'Visa left $amount';
+  }
+
+  @override
+  String get exportSlowPdf =>
+      'This PDF is long and can take some minutes. Excel is much quicker.';
+
+  @override
+  String get exportTooLong =>
+      'Too many rows for one file. Pick fewer dates or add a filter.';
+
+  @override
+  String get payrollAdvanceLeft => 'Advance not yet cut';
+
+  @override
+  String get payrollAfterAdvance => 'Balance on the slip, after advance';
+
+  @override
+  String get slipTitle => 'Salary slip';
+
+  @override
+  String get slipSummary => 'Account';
+
+  @override
+  String get slipOpening => 'Balance from before';
+
+  @override
+  String get slipWork => 'This month\'s work';
+
+  @override
+  String get slipAdvance => 'Advance taken';
+
+  @override
+  String get slipRoom => 'Room';
+
+  @override
+  String get slipVisa => 'Visa';
+
+  @override
+  String get slipOther => 'Other deductions';
+
+  @override
+  String get slipPaid => 'Paid';
+
+  @override
+  String get slipOwedToYou => 'Balance: to be paid to you';
+
+  @override
+  String get slipYouOwe => 'Balance: you owe';
+
+  @override
+  String get slipSettled => 'Balance';
+
+  @override
+  String get slipDays => 'Day by day';
+
+  @override
+  String get slipMoney => 'Money taken';
+
+  @override
+  String get slipNoWork => 'No work this month.';
+
+  @override
+  String get slipNoMoney => 'No money taken this month.';
+
+  @override
+  String slipDayCount(int days) {
+    return '$days days';
+  }
+
+  @override
+  String slipVisaLeft(String amount) {
+    return 'Visa left $amount: comes out of later pay.';
+  }
+
+  @override
+  String get slipNote => 'This slip is an account, not proof of payment.';
+
+  @override
+  String get ownerSheet => 'Owner\'s sheet';
+
+  @override
+  String get sheetTitle => 'Owner\'s salary sheet';
+
+  @override
+  String get sheetSummary => 'The month in short';
+
+  @override
+  String get sheetBill => 'Company bills';
+
+  @override
+  String get sheetWages => 'Wages for that work';
+
+  @override
+  String get sheetSalaries => 'Monthly salaries, not split by company';
+
+  @override
+  String get sheetAllowances => 'Allowances';
+
+  @override
+  String get sheetCuts => 'Other deductions from pay';
+
+  @override
+  String get sheetRoomIn => 'Room money in, from pay and cash';
+
+  @override
+  String get sheetRoomOut => 'Room rent paid';
+
+  @override
+  String get sheetExpenses => 'Other expenses';
+
+  @override
+  String get sheetEstimate => 'Estimated profit';
+
+  @override
+  String get sheetByCompany => 'By company';
+
+  @override
+  String get sheetDetail => 'Company wise';
+
+  @override
+  String get sheetWorkers => 'Workers\' accounts';
+
+  @override
+  String sheetCompanyHead(int workers, int sites) {
+    return '$workers workers, $sites sites';
+  }
+
+  @override
+  String get sheetNote =>
+      'An estimate from attendance, not audited accounts. A company with no rate or a monthly rate shows no bill here, so its profit looks low. Advance and visa money are not expenses, because workers pay them back.';
+
+  @override
+  String get colProfit => 'Profit';
+
+  @override
+  String get colVisaLeft => 'Visa left';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -1596,7 +1769,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get dailyWageHelp =>
-      'Zaroori nahin. Har mazdoor ke saamne aa jayegi. Badalne ke liye wahan raqam par dabayein.';
+      'Zaroori nahin. Sirf us mazdoor par lagegi jis ki apni tankhwah nahin.';
 
   @override
   String get halfDayIsHalf => 'Aadhe din par aadhi dehari';
@@ -1637,7 +1810,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String wageOf(String name) {
-    return 'Dehari: $name';
+    return 'Tankhwah: $name';
   }
 
   @override
@@ -3046,9 +3219,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get colEarned => 'Kamai';
 
   @override
-  String get colAdvanceVisa => 'Advance, visa';
-
-  @override
   String get colPaid => 'Adaigi';
 
   @override
@@ -3062,7 +3232,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get regWorkerNote =>
-      'Baqi = kamai - advance aur visa - katoti - adaigi. Mahana tankhwah mahina post hone par aati hai.';
+      'Baqi = kamai - advance - katoti, room aur visa ki qist - adaigi. Mahana tankhwah mahina post hone par aati hai.';
 
   @override
   String get regAttendanceNote =>
@@ -3082,8 +3252,8 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get regSettled => 'Baqi AED 0.00: hisaab barabar';
 
   @override
-  String regOwedSplit(String pay, String advance, String visa) {
-    return 'Tankhwah $pay, is mein se advance baqi $advance, visa baqi $visa';
+  String regOwedSplit(String pay, String advance) {
+    return 'Tankhwah $pay, is mein se advance baqi $advance';
   }
 
   @override
@@ -3105,4 +3275,181 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get colBalance => 'Baqi';
+
+  @override
+  String rateIn(String name) {
+    return 'Tankhwah: $name';
+  }
+
+  @override
+  String ownRateHelp(String rate) {
+    return 'Apni tankhwah $rate hai. Khaali chhorein to yahi lagegi.';
+  }
+
+  @override
+  String rateSetHere(String rate) {
+    return 'Is group mein: $rate';
+  }
+
+  @override
+  String rateOwn(String rate) {
+    return 'Apni tankhwah: $rate';
+  }
+
+  @override
+  String rateFromGroup(String rate) {
+    return 'Group ki dehari: $rate';
+  }
+
+  @override
+  String get rateMissing =>
+      'Tankhwah nahin. Yahan likhein, ya group ki dehari likhein.';
+
+  @override
+  String get rateChange => 'Badlein';
+
+  @override
+  String regVisaRow(String amount) {
+    return 'Visa ke $amount. Baqi se tab kategi jab tankhwah se kategi.';
+  }
+
+  @override
+  String regVisaLeft(String amount) {
+    return 'Visa baqi $amount';
+  }
+
+  @override
+  String get exportSlowPdf =>
+      'Yeh PDF lambi hai, kuch minute lag sakte hain. Excel bohat jaldi banti hai.';
+
+  @override
+  String get exportTooLong =>
+      'Aik file ke liye rows bohat zyada hain. Kam tareekhein chunein ya filter lagayein.';
+
+  @override
+  String get payrollAdvanceLeft => 'Advance jo abhi nahin kata';
+
+  @override
+  String get payrollAfterAdvance => 'Slip ka baqi, advance ke baad';
+
+  @override
+  String get slipTitle => 'Salary slip';
+
+  @override
+  String get slipSummary => 'Hisaab';
+
+  @override
+  String get slipOpening => 'Pichla baqi';
+
+  @override
+  String get slipWork => 'Is mahine ka kaam';
+
+  @override
+  String get slipAdvance => 'Advance liya';
+
+  @override
+  String get slipRoom => 'Room';
+
+  @override
+  String get slipVisa => 'Visa';
+
+  @override
+  String get slipOther => 'Doosri katoti';
+
+  @override
+  String get slipPaid => 'Ada kiya';
+
+  @override
+  String get slipOwedToYou => 'Baqi: aap ko milna hai';
+
+  @override
+  String get slipYouOwe => 'Baqi: aap se lena hai';
+
+  @override
+  String get slipSettled => 'Baqi';
+
+  @override
+  String get slipDays => 'Din ba din kaam';
+
+  @override
+  String get slipMoney => 'Jo paise liye';
+
+  @override
+  String get slipNoWork => 'Is mahine koi kaam nahin.';
+
+  @override
+  String get slipNoMoney => 'Is mahine koi paise nahin liye.';
+
+  @override
+  String slipDayCount(int days) {
+    return '$days din';
+  }
+
+  @override
+  String slipVisaLeft(String amount) {
+    return 'Visa baqi $amount: aage tankhwah se katega.';
+  }
+
+  @override
+  String get slipNote => 'Yeh slip sirf hisaab hai, adaigi ka saboot nahin.';
+
+  @override
+  String get ownerSheet => 'Malik ki sheet';
+
+  @override
+  String get sheetTitle => 'Malik ki tankhwah sheet';
+
+  @override
+  String get sheetSummary => 'Mahine ka khulasa';
+
+  @override
+  String get sheetBill => 'Company ka bill';
+
+  @override
+  String get sheetWages => 'Us kaam ki mazdoori';
+
+  @override
+  String get sheetSalaries => 'Mahana tankhwah, company par nahin bati';
+
+  @override
+  String get sheetAllowances => 'Allowance';
+
+  @override
+  String get sheetCuts => 'Tankhwah se doosri katoti';
+
+  @override
+  String get sheetRoomIn => 'Room se aaya, tankhwah aur cash';
+
+  @override
+  String get sheetRoomOut => 'Room ka kiraya diya';
+
+  @override
+  String get sheetExpenses => 'Doosre kharche';
+
+  @override
+  String get sheetEstimate => 'Andazan nafa';
+
+  @override
+  String get sheetByCompany => 'Company ke hisaab se';
+
+  @override
+  String get sheetDetail => 'Company wise';
+
+  @override
+  String get sheetWorkers => 'Mazdooron ka hisaab';
+
+  @override
+  String sheetCompanyHead(int workers, int sites) {
+    return '$workers mazdoor, $sites site';
+  }
+
+  @override
+  String get sheetNote =>
+      'Yeh hazri se bana andaza hai, audit shuda hisaab nahin. Jis company ka rate nahin ya mahana hai, us ka bill yahan nahin aata, is liye us ka nafa kam dikhta hai. Advance aur visa kharcha nahin, mazdoor wapas dete hain.';
+
+  @override
+  String get colProfit => 'Nafa';
+
+  @override
+  String get colVisaLeft => 'Visa baqi';
 }
