@@ -362,6 +362,93 @@ class InfoRow extends StatelessWidget {
   }
 }
 
+/// A short line saying how things stand, in words as well as colour (UX-04).
+class NoteRow extends StatelessWidget {
+  const NoteRow({required this.icon, required this.text, required this.color, super.key});
+
+  final IconData icon;
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 20, color: color),
+          const SizedBox(width: 10),
+          Expanded(child: Text(text, style: TextStyle(fontSize: 14.5, height: 1.35, fontWeight: FontWeight.w500, color: color))),
+        ],
+      ),
+    );
+  }
+}
+
+/// The bottom line of a sum, under a double rule as in an account book.
+class TotalRow extends StatelessWidget {
+  const TotalRow(this.label, this.value, {super.key});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: Colors.white,
+      child: Column(
+        children: [
+          const Divider(color: ink, height: 1),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+            child: Row(
+              children: [
+                Expanded(child: Text(label, style: sectionTitleStyle.copyWith(fontSize: 16))),
+                RowValue(value),
+              ],
+            ),
+          ),
+          const Divider(color: ink, height: 1),
+          const SizedBox(height: 2),
+          const Divider(color: ink, height: 1),
+        ],
+      ),
+    );
+  }
+}
+
+/// A double-ringed stamp, slightly off true, for a month that is done with.
+class ClosedStamp extends StatelessWidget {
+  const ClosedStamp(this.label, this.date, {super.key});
+
+  final String label;
+  final String date;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = brand;
+    return Transform.rotate(
+      angle: -0.035,
+      child: Container(
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(border: Border.all(color: color, width: 2), borderRadius: BorderRadius.circular(10)),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
+          decoration: BoxDecoration(border: Border.all(color: color), borderRadius: BorderRadius.circular(7)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(label, style: amountStyle.copyWith(fontSize: 18, color: color)),
+              Text(date, style: amountStyle.copyWith(fontSize: 14, fontWeight: FontWeight.w500, color: color)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// What an empty screen shows: what's missing and what to do about it.
 class EmptyState extends StatelessWidget {
   const EmptyState({required this.icon, required this.text, super.key});

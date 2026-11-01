@@ -4,7 +4,7 @@ import 'dates.dart';
 
 /// A salary payment, or the part of one that settles a given month.
 class StatementPayment {
-  const StatementPayment(this.date, this.fils, {this.note, this.parts});
+  const StatementPayment(this.date, this.fils, {this.note, this.parts, this.id});
 
   final String date;
   final int fils;
@@ -12,6 +12,9 @@ class StatementPayment {
 
   /// The months this payment settles, as the owner confirmed them (PAY-06). Null on a payment from before months could be chosen.
   final Map<String, int>? parts;
+
+  /// The stored payment this came from, when something needs to go back to it.
+  final String? id;
 }
 
 /// One month of a worker's account, read like a bank statement: where it started, what the month added, what was paid.
@@ -67,7 +70,7 @@ Map<String, List<StatementPayment>> placePayments(Map<String, int> owedByMonth, 
   final placed = <String, List<StatementPayment>>{};
   void put(StatementPayment p, String month, int fils) {
     net[month] = (net[month] ?? 0) - fils;
-    (placed[month] ??= []).add(StatementPayment(p.date, fils, note: p.note));
+    (placed[month] ??= []).add(StatementPayment(p.date, fils, note: p.note, id: p.id));
   }
 
   for (final p in payments) {

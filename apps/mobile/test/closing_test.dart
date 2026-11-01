@@ -46,6 +46,13 @@ Future<void> seed(TenantDatabase db) async {
   }
 }
 
+/// Says everyone without a row had no work, so only the other findings are left.
+Future<void> restOff(TenantDatabase db, String month) => db.transaction(() async {
+  for (final f in (await db.closingFor(month)).findings.where((f) => f.issue == ClosingIssue.noHazri)) {
+    await db.markDayOff(f.date, [for (final t in f.targets) t.id], operationId: newUuid());
+  }
+});
+
 void main() {
   late TenantDatabase db;
 
@@ -58,19 +65,20 @@ void main() {
 
   Future<void> postAndClose(String month) async {
     await db.postPayroll(month, operationId: newUuid());
+    await restOff(db, month);
     await db.closeMonth(month, operationId: newUuid());
   }
 
   Future<WorkerStatement> statementOf(String month, [String? worker]) async => (await db.statementsFor(month, workerId: worker ?? asif)).single;
 
-  Iterable<ClosingIssue> issues(MonthClosing c) => c.findings.map((f) => f.issue);
-
-  group('what stops a month closing (REP-04)', () {
-    test('pay not posted stops it, and names who, until it is posted', () async {
+  group('nothing closes while anything is left, and each thing shows on its date (D-045)', () {
+    test('pay not posted stops it, on the last day of the month, until it is posted', () async {
+      await restOff(db, oct);
       final before = await db.closingFor(oct);
       expect(before.canClose, isFalse);
-      expect(before.findings.single.issue, ClosingIssue.payrollNotPosted);
-      expect(before.findings.single.names, ['Asif']);
+      final finding = before.findings.single;
+      expect((finding.issue, finding.date), (ClosingIssue.payrollNotPosted, '2020-10-31'));
+      expect(finding.names, ['Asif']);
       await expectLater(db.closeMonth(oct, operationId: newUuid()), throwsA(isA<MonthNotReady>()));
       expect(await db.lockedThrough(), isNull);
 
@@ -80,19 +88,22 @@ void main() {
       expect(await db.lockedThrough(), '2020-10-31');
     });
 
-    test('attendance with no pay rate stops it, because a closed month could never pay it', () async {
+    test('attendance with no pay rate shows on its own date, and stops it', () async {
       final imran = await db.saveRow(db.workers, id: null, operationId: newUuid(), fields: const WorkersCompanion(code: Value('W2'), name: Value('Imran')));
       await work(db, '2020-10-05', worker: imran);
       await db.postPayroll(oct, operationId: newUuid());
+      await restOff(db, oct);
       final c = await db.closingFor(oct);
       expect(c.canClose, isFalse);
-      expect(c.findings.where((f) => f.issue == ClosingIssue.noWorkerRate).single.names, ['Imran']);
+      final finding = c.findings.singleWhere((f) => f.issue == ClosingIssue.noWorkerRate);
+      expect((finding.date, finding.targets.single), ('2020-10-05', (id: imran, name: 'Imran')));
     });
 
     test('a deduction waiting on an earlier open month stops it too', () async {
       await db.savePayItem(id: null, workerId: asif, month: sep, kind: PayItemKind.deduction, amountFils: 500, reason: 'Helmet', authorizedBy: 'Asif', note: null, roomId: null, operationId: newUuid());
       await db.postPayroll(oct, operationId: newUuid());
-      expect(issues(await db.closingFor(oct)), contains(ClosingIssue.payrollNotPosted));
+      final held = (await db.closingFor(oct)).findings.where((f) => f.issue == ClosingIssue.payrollNotPosted).toList();
+      expect(held.single.date, '2020-09-30');
     });
 
     test('a month that has not ended cannot close, and nor can one already closed', () async {
@@ -107,10 +118,8 @@ void main() {
       await expectLater(db.closeMonth(oct, operationId: newUuid()), throwsA(isA<MonthNotReady>()));
       await expectLater(db.closeMonth(sep, operationId: newUuid()), throwsA(isA<MonthNotReady>()));
     });
-  });
 
-  group('what closing only points out (REP-04)', () {
-    test('no company rate, no attendance, an overlap and a payment with no month: named, and the owner can still close', () async {
+    test('a company with no rate, an overlap and a payment with no month each stop it, and each clears', () async {
       final nakheel = await db.saveRow(db.clients, id: null, operationId: newUuid(), fields: const ClientsCompanion(name: Value('Nakheel')));
       final palm = await db.saveRow(db.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(nakheel), name: const Value('Palm')));
       await work(db, '2020-10-07', client: nakheel, site: palm);
@@ -118,33 +127,112 @@ void main() {
       await db.into(db.attendanceEntries).insert(row.toCompanion(false).copyWith(id: Value(newUuid())));
       await db.addCashEntry(operationId: newUuid(), date: '2020-10-20', kind: CashKind.salaryPaid, amountFils: 100, workerId: asif);
       await db.postPayroll(oct, operationId: newUuid());
+      await restOff(db, oct);
 
-      final c = await db.closingFor(oct);
-      expect(c.findings.every((f) => !f.stops), isTrue);
-      expect(c.findings.singleWhere((f) => f.issue == ClosingIssue.noCompanyRate).names, ['Nakheel']);
-      expect(c.findings.singleWhere((f) => f.issue == ClosingIssue.overlap).names, ['Asif']);
-      expect(c.findings.singleWhere((f) => f.issue == ClosingIssue.noMonthChosen).names, ['Asif']);
-      expect(c.canClose, isTrue);
+      var c = await db.closingFor(oct);
+      expect(c.canClose, isFalse);
+      final bill = c.findings.singleWhere((f) => f.issue == ClosingIssue.noCompanyRate);
+      expect((bill.date, bill.names.single), ('2020-10-07', 'Nakheel'));
+      final overlap = c.findings.singleWhere((f) => f.issue == ClosingIssue.overlap);
+      expect((overlap.date, overlap.names.single), ('2020-10-05', 'Asif'));
+      final payment = c.findings.singleWhere((f) => f.issue == ClosingIssue.noMonthChosen);
+      expect(payment.date, '2020-10-20');
+      expect([for (final f in c.findings) f.date], ['2020-10-05', '2020-10-07', '2020-10-20'], reason: 'soonest first');
+
+      await db.savingRate(() => db.saveRow(db.billingContracts, id: null, operationId: newUuid(), fields: BillingContractsCompanion(clientId: Value(nakheel), basis: Value(RateBasis.hour.name), rateFils: const Value(1500), effectiveFrom: const Value('2020-01-01'))), clientId: nakheel);
+      final kept = await db.select(db.attendanceEntries).get();
+      final corrected = kept.firstWhere((e) => e.id == overlap.targets.single.id);
+      await db.correctEntry(corrected, EntryInput(workerId: asif, shift: shift, overlapReason: 'Two sites'), reason: 'Both true', operationId: newUuid());
+      await db.settleOldPayment((await db.select(db.cashEntries).get()).single, operationId: newUuid());
+
+      c = await db.closingFor(oct);
+      expect(c.findings, isEmpty);
       await db.closeMonth(oct, operationId: newUuid());
       expect((await db.closingFor(oct)).closed, isTrue);
     });
 
-    test('an overlap the owner gave a reason for is settled, and a payment with its month chosen is not flagged', () async {
-      await db.addSalaryPayment(operationId: newUuid(), date: '2020-10-20', workerId: asif, amountFils: 100, parts: {sep: 100}, extraNote: 'x');
-      await db.postPayroll(oct, operationId: newUuid());
-      expect((await db.closingFor(oct)).findings, isEmpty);
+    test('settling an old payment writes down what the account already reads, and moves nothing', () async {
+      await db.addCashEntry(operationId: newUuid(), date: '2020-10-20', kind: CashKind.salaryPaid, amountFils: 12000, workerId: asif);
+      final before = await statementOf(oct);
+      await db.settleOldPayment((await db.select(db.cashEntries).get()).single, operationId: newUuid());
+      final after = await statementOf(oct);
+      expect(after.unpaid, before.unpaid);
+      expect(after.paidFils, before.paidFils);
+      expect(after.closingFils, before.closingFils);
+      final parts = await db.select(db.salaryAllocations).get();
+      expect({for (final a in parts) a.month: a.amountFils}, {sep: 9000, oct: 3000});
     });
 
-    test('a worker with no attendance that month is named once they existed by then', () async {
+    test('a payment with its month chosen is not flagged, and unpaid wages do not stop the month', () async {
+      await db.addSalaryPayment(operationId: newUuid(), date: '2020-10-20', workerId: asif, amountFils: 100, parts: {sep: 100}, extraNote: 'x');
       await db.postPayroll(oct, operationId: newUuid());
-      final thisMonth = dubaiToday(DateTime.now()).substring(0, 7);
-      final previous = addMonths(thisMonth, -1);
-      final seen = await db.closingFor(previous);
-      expect(seen.findings.singleWhere((f) => f.issue == ClosingIssue.noHazri, orElse: () => const ClosingFinding(ClosingIssue.noHazri, [])).names, isEmpty, reason: 'made today, so after that month');
+      await restOff(db, oct);
+      final c = await db.closingFor(oct);
+      expect(c.findings, isEmpty);
+      expect(c.closingFils, greaterThan(0));
+      expect(c.canClose, isTrue);
+    });
+  });
+
+  group('attendance left out shows date by date (D-045)', () {
+    /// A worker the app has known since before these months.
+    Future<String> oldWorker(String name, {String? joining}) async {
+      final id = newUuid();
       await db.into(db.workers).insert(
-        WorkersCompanion.insert(id: newUuid(), tenantId: testTenant, createdAtUtc: DateTime.utc(2020, 8), updatedAtUtc: DateTime.utc(2020, 8), actorId: 'a', sourceOperationId: 'op', code: 'W9', name: 'Bilal'),
+        WorkersCompanion.insert(id: id, tenantId: testTenant, createdAtUtc: DateTime.utc(2020, 8), updatedAtUtc: DateTime.utc(2020, 8), actorId: 'a', sourceOperationId: 'op', code: name, name: name, joiningDate: Value(joining)),
       );
-      expect((await db.closingFor(oct)).findings.singleWhere((f) => f.issue == ClosingIssue.noHazri).names, ['Bilal']);
+      return id;
+    }
+
+    Future<List<String>> gapsOf(String name, String month) async => [
+      for (final f in (await db.closingFor(month)).findings)
+        if (f.issue == ClosingIssue.noHazri && f.names.contains(name)) f.date,
+    ];
+
+    test('every day with no row is named on its own date', () async {
+      await oldWorker('Bilal');
+      final gaps = await gapsOf('Bilal', '2020-08');
+      expect(gaps.first, '2020-08-01');
+      expect(gaps.last, '2020-08-31');
+      expect(gaps, hasLength(31));
+    });
+
+    test('an absent row counts as entered, and so does the owner saying there was no work', () async {
+      final bilal = await oldWorker('Bilal');
+      await work(db, '2020-08-10', worker: bilal, input: const ShiftInput(status: AttendanceStatus.absent));
+      await db.markDayOff('2020-08-11', [bilal], operationId: newUuid());
+      final gaps = await gapsOf('Bilal', '2020-08');
+      expect(gaps, hasLength(29));
+      expect(gaps, isNot(contains('2020-08-10')));
+      expect(gaps, isNot(contains('2020-08-11')));
+    });
+
+    test('nobody is asked about days before they joined, or an archived worker at all', () async {
+      await oldWorker('Bilal', joining: '2020-08-20');
+      expect((await gapsOf('Bilal', '2020-08')).first, '2020-08-20');
+      final khan = await oldWorker('Khan');
+      await db.saveRow(db.workers, id: khan, operationId: newUuid(), fields: const WorkersCompanion(active: Value(false)));
+      expect(await gapsOf('Khan', '2020-08'), isEmpty);
+    });
+
+    test('a worker added today is not asked about last year, unless their attendance reaches back that far', () async {
+      final made = await db.saveRow(db.workers, id: null, operationId: newUuid(), fields: const WorkersCompanion(code: Value('W5'), name: Value('Today')));
+      expect(await gapsOf('Today', oct), isEmpty);
+      await rate(db, made, 1000);
+      await work(db, '2020-10-30', worker: made);
+      expect(await gapsOf('Today', oct), ['2020-10-31']);
+    });
+
+    test('a worker on a monthly salary is paid whatever the register says, so their days are not asked for', () async {
+      final bilal = await oldWorker('Bilal');
+      await rate(db, bilal, 300000, from: '2020-01-01', basis: RateBasis.month);
+      expect(await gapsOf('Bilal', '2020-08'), isEmpty);
+    });
+
+    test('a closed month is not asked about again, and a day off cannot be dated in it', () async {
+      await postAndClose(oct);
+      expect((await gapsOf('Asif', nov)).first, '2020-11-01');
+      await expectLater(db.markDayOff('2020-10-20', [asif], operationId: newUuid()), throwsA(isA<PeriodLocked>()));
     });
   });
 
@@ -286,9 +374,7 @@ void main() {
 
     test('only the latest closed month opens, so months never close out of order', () async {
       await postAndClose(sep);
-      await db.closeMonth(oct, operationId: newUuid()).catchError((_) {});
-      await db.postPayroll(oct, operationId: newUuid());
-      await db.closeMonth(oct, operationId: newUuid());
+      await postAndClose(oct);
       final september = await (db.select(db.periodLocks)..where((l) => l.month.equals(sep))).getSingle();
       await expectLater(db.reopenMonth(september, reason: 'x', operationId: newUuid()), throwsA(isA<LaterMonthClosed>()));
       expect((await db.closingFor(sep)).canReopen, isFalse);
@@ -309,6 +395,7 @@ void main() {
     await db.addSalaryPayment(operationId: newUuid(), date: '2020-10-21', workerId: asif, amountFils: 3000, parts: {oct: 3000}, extraNote: 'x');
     await db.applyAdvanceCuts(oct, reason: 'Advance', operationId: newUuid());
     await db.postPayroll(oct, operationId: newUuid());
+    await restOff(db, oct);
 
     final before = await db.closingFor(oct);
     expect(before.closingFils, before.openingFils + before.earnedFils - before.advanceFils - before.cutFils - before.paidFils);
@@ -366,7 +453,7 @@ void main() {
     });
   });
 
-  testWidgets('closing from the screen: what stops it, the confirmation, the note elsewhere, and opening it again', (tester) async {
+  testWidgets('closing from the screen: what is left by date, clearing it, the confirmation, and opening it again', (tester) async {
     final app = memoryDb();
     final last = addMonths(dubaiToday(DateTime.now()).substring(0, 7), -1);
     await real(tester, () async {
@@ -378,11 +465,28 @@ void main() {
     await pumpApp(tester, app);
 
     await goTo(tester, l10n.tabClosing);
-    expect(find.text(l10n.closingStops), findsOneWidget);
-    expect(find.text(l10n.findingNotPosted(1, 'Asif')), findsOneWidget);
-    await tester.tap(find.text(l10n.closeButton(showMonth(last))));
+    final left = (await real(tester, () => app.closingFor(last))).findings;
+    final count = left.fold(0, (total, f) => total + f.targets.length);
+    expect(find.text(l10n.closingLeft(count)), findsOneWidget);
+    expect(find.text(l10n.closeBlocked(count)), findsOneWidget);
+    await tester.tap(find.text(l10n.closeBlocked(count)));
     await settle(tester);
-    expect(find.text(l10n.closeTitle(showMonth(last))), findsNothing, reason: 'nothing happens while something stops it');
+    expect(find.text(l10n.closeTitle(showMonth(last))), findsNothing, reason: 'the button does nothing while anything is left');
+
+    // Clearing one date from its own row.
+    final firstGap = left.firstWhere((f) => f.issue == ClosingIssue.noHazri);
+    await tester.tap(find.text(l10n.findingNoHazri(1, 'Asif')).first);
+    await settle(tester);
+    expect(find.text(l10n.closingDayOffHelp), findsOneWidget);
+    await tester.tap(find.text(l10n.closingDayOff));
+    await settle(tester);
+    final after = (await real(tester, () => app.closingFor(last))).findings;
+    expect(after.any((f) => f.issue == ClosingIssue.noHazri && f.date == firstGap.date), isFalse);
+
+    await real(tester, () => restOff(app, last));
+    await settle(tester);
+    await tester.scrollUntilVisible(find.text(l10n.findingNotPosted(1, 'Asif')), 200, scrollable: find.byType(Scrollable).first);
+    expect(find.text(l10n.findingNotPosted(1, 'Asif')), findsOneWidget);
 
     await real(tester, () => app.postPayroll(last, operationId: newUuid()));
     await settle(tester);
@@ -410,6 +514,7 @@ void main() {
     await settle(tester);
 
     await goTo(tester, l10n.tabClosing);
+    await tester.scrollUntilVisible(find.text(l10n.reopenButton), 200, scrollable: find.byType(Scrollable).first);
     await tester.tap(find.text(l10n.reopenButton));
     await settle(tester);
     await tester.enterText(find.byType(TextField).last, 'Missed a day');

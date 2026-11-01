@@ -10,7 +10,7 @@
 - Calculation engine for hourly, day, shift and monthly contracts.
 - Bulk attendance with exceptions, approval and corrections.
 - New colours and cards, and a side panel of main tabs with sub-tabs.
-- Close a month: what must be fixed first, what to look at, how it adds up, then your confirmation. A closed month stops changing, and can be opened again with a reason.
+- Close a month: everything left shows date by date, each row opens what clears it, and the month closes only when nothing is left. A closed month stops changing, and can be opened again with a reason.
 - Undoing money from a closed month is written with today's date, so the closed month stays as it was.
 - Expenses take a payment reference, and the money register filters by category.
 - Choose which month a salary payment settles, oldest first by default, with reference and who took it.

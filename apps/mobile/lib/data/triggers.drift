@@ -94,6 +94,12 @@ BEGIN
   SELECT RAISE(ABORT, 'period is closed');
 END;
 
+CREATE TRIGGER closed_day_off_no_insert BEFORE INSERT ON day_offs
+WHEN NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
 CREATE TRIGGER closed_entry_no_insert BEFORE INSERT ON attendance_entries
 WHEN NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
 BEGIN

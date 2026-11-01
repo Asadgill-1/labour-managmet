@@ -111,8 +111,12 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 
 ## 5d. Mahina band
 
-- [ ] **Hisaab > Mahina band** kholein. Pichla mahina khule. Jis ki tankhwah post nahin hui, us ka naam **Pehle yeh theek karein** mein aaye, aur band karne ka button na chale.
-- [ ] Tankhwah post karein. Yeh line hat jaye aur button chal jaye.
+- [ ] **Hisaab > Mahina band** kholein. Pichla mahina khule. Upar likha ho kitni cheezain baqi hain, aur neeche har tareekh ke saath woh cheez. Band karne ka button na chale.
+- [ ] Jis din kisi mazdoor ki hazri nahin, woh us tareekh par aaye. Us line par dabayein: **Is tareekh ki hazri lagayein** se hazri lagayein, phir **Baqi sab ka kaam nahin tha** dabayein. Woh tareekh list se hat jaye.
+- [ ] Mahana tankhwah wale mazdoor ki hazri na hone par woh list mein na aaye.
+- [ ] Rate ke baghair hazri ki line par dabayein. Rate ka form khule. Rate likhein, line hat jaye.
+- [ ] **Tankhwah post nahin hui** wali line mahine ki aakhri tareekh par ho. Us par dabayein aur post karein. Line hat jaye.
+- [ ] Sab saaf hone par **Kuch theek karne ko nahin** aaye aur button chal jaye. Baqi tankhwah ho to bhi mahina rukna nahin chahiye.
 - [ ] **Is mahine mazdooron ka hisaab** khud jor kar dekhein: pichla baqi + kamai - advance - katoti - ada kiya = baqi.
 - [ ] **Band karein** dabayein. Paigham parhein aur **Wapas** dabayein. Kuch na badle. Phir dobara dabayein aur band karein.
 - [ ] Us mahine ki kisi tareekh par **Aaj** aur **Rozana hisaab** kholein. Upar **Yeh mahina band hai** ho, aur naya likhne ka button na chale.
@@ -128,7 +132,8 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 Yeh chaaron abhi PROPOSED hain. Aap ka jawab darkar hai. Accountant ko bhi dikhayein.
 
 - [ ] **D-033:** Hisaab statement ki tarah chalta hai. Tankhwah screen par purane post hue mahine ka "ada kiya" tareekh se ginta hai. Khaas mahine slip aur baqi tankhwah mein dikhte hain.
-- [ ] **D-044:** Tankhwah post kiye baghair, ya hazri ka rate likhe baghair, mahina band nahin hota. Band mahine mein kuch nahin badalta, farq khule mahine mein allowance ya katoti se likha jata hai. Mahina wajah likh kar dobara khul sakta hai, sirf aakhri band mahina.
+- [ ] **D-045:** Jab tak koi cheez baqi hai mahina band nahin hota. Baqi tankhwah mahina nahin rokti, kyun ke woh agle mahine jati hai. Agar aap chahte hain ke baqi tankhwah bhi roke to batayein.
+- [ ] **D-044:** Band mahine mein kuch nahin badalta. Band mahine mein kuch nahin badalta, farq khule mahine mein allowance ya katoti se likha jata hai. Mahina wajah likh kar dobara khul sakta hai, sirf aakhri band mahina.
 - [ ] **D-043:** Zyada adaigi advance mein jati hai. Advance tab tak Tankhwah se nahin katta jab tak aap **Advance katein** na dabayein, slip mein woh dete hi kat jata hai. Purani adaigiyan khud purane mahine se jorti hain. Late ka hisaab aap ke apne dinon se hota hai, koi qanooni muddat app mein nahin.
 - [ ] **D-034:** Mahana mazdoor ki ghair hazri par tankhwah khud nahin katti, aap wajah likh kar katoti add karte hain. Advance ki wapsi par agreement nahin poocha jata. Katoti ki hadd **Apni company** mein aap chahen to likhein, warna koi hadd nahin.
 

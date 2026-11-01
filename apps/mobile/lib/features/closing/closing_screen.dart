@@ -8,8 +8,14 @@ import '../../app/providers.dart';
 import '../../app/side_panel.dart';
 import '../../app/theme.dart';
 import '../../data/closing.dart';
+import '../../data/payroll.dart';
+import '../../data/statement.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../payroll/payroll_worker_screen.dart';
+import '../rates/contract_form_screen.dart';
+import '../today/attendance_entry_screen.dart';
+import '../today/row_editor_screen.dart';
 
 String findingText(AppLocalizations l10n, ClosingFinding f) {
   final count = f.names.length;
@@ -24,7 +30,7 @@ String findingText(AppLocalizations l10n, ClosingFinding f) {
   };
 }
 
-/// One month's closing: what is wrong with it, how it adds up, then the owner's confirmation (REP-04).
+/// One month's closing: what is still left, date by date, how the month adds up, then the owner's confirmation (REP-04, D-045).
 class ClosingScreen extends ConsumerStatefulWidget {
   const ClosingScreen({super.key});
 
@@ -40,12 +46,11 @@ class _ClosingScreenState extends ConsumerState<ClosingScreen> {
 
   Future<void> _close(MonthClosing c) async {
     final l10n = AppLocalizations.of(context);
-    final checks = c.findings.length;
     final yes = await showDialog<bool>(
       context: context,
       builder: (dialog) => AlertDialog(
         title: Text(l10n.closeTitle(showMonth(c.month))),
-        content: Text([l10n.closeBody, if (checks > 0) l10n.closeWithChecks(checks)].join('\n\n')),
+        content: Text(l10n.closeBody),
         actions: [
           TextButton(onPressed: () => Navigator.of(dialog).pop(false), child: Text(l10n.cancel)),
           TextButton(onPressed: () => Navigator.of(dialog).pop(true), child: Text(l10n.closeConfirm)),
@@ -65,15 +70,85 @@ class _ClosingScreenState extends ConsumerState<ClosingScreen> {
     if (saved && mounted) showSavedOnPhone(context, l10n.reopenDone(showMonth(c.month)));
   }
 
+  void _open(Widget screen) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
+
+  /// Takes the owner to the place that clears this finding. Where several names share it, they choose one first.
+  Future<void> _fix(ClosingFinding f) async {
+    final l10n = AppLocalizations.of(context);
+    final db = ref.read(dbProvider);
+    Future<void> act(Future<void> Function() work, String done) async {
+      final saved = await saveOrExplain(context, work);
+      if (saved && mounted) showSavedOnPhone(context, done);
+    }
+
+    final (help, actions, onName) = switch (f.issue) {
+      ClosingIssue.noHazri => (
+        l10n.closingDayOffHelp,
+        <_FixAction>[
+          (label: l10n.closingEnterHazri, run: () async => _open(AttendanceEntryScreen(date: f.date))),
+          (label: l10n.closingDayOff, run: () => act(() => db.markDayOff(f.date, [for (final t in f.targets) t.id], operationId: newUuid()), l10n.closingDayOffDone)),
+        ],
+        null,
+      ),
+      ClosingIssue.payrollNotPosted => (
+        l10n.closingPostHelp,
+        <_FixAction>[
+          (label: l10n.closingPostReady, run: () => act(() => db.postPayroll(f.date.substring(0, 7), operationId: newUuid()), l10n.savedOnPhone)),
+        ],
+        (ClosingTarget t) async => _open(PayrollWorkerScreen(workerId: t.id, month: f.date.substring(0, 7))),
+      ),
+      ClosingIssue.noMonthChosen => (
+        l10n.closingSettleHelp,
+        <_FixAction>[
+          (
+            label: l10n.closingSettle,
+            run: () => act(() async {
+              for (final t in f.targets) {
+                final payment = await (db.select(db.cashEntries)..where((c) => c.id.equals(t.id))).getSingle();
+                await db.settleOldPayment(payment, operationId: newUuid());
+              }
+            }, l10n.closingSettled),
+          ),
+        ],
+        null,
+      ),
+      ClosingIssue.noWorkerRate => (null, const <_FixAction>[], (ClosingTarget t) async => _open(ContractFormScreen.pay(workerId: t.id))),
+      ClosingIssue.noCompanyRate => (null, const <_FixAction>[], (ClosingTarget t) async => _open(ContractFormScreen.billing(clientId: t.id))),
+      ClosingIssue.overlap => (
+        null,
+        const <_FixAction>[],
+        (ClosingTarget t) async {
+          final row = await (db.select(db.attendanceEntries)..where((e) => e.id.equals(t.id))).getSingle();
+          if (mounted) await openAttendanceRow(context, ref, row, t.name);
+        },
+      ),
+    };
+
+    if (actions.isEmpty && f.targets.length == 1) return onName!(f.targets.single);
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheet) => _FixSheet(
+        title: '${dayName(l10n, f.date)}, ${showDate(f.date)}',
+        help: help,
+        actions: actions,
+        targets: f.targets,
+        onName: onName,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final c = ref.watch(closingProvider(_month)).value;
-    final stops = c?.findings.where((f) => f.stops).toList() ?? const <ClosingFinding>[];
-    final checks = c?.findings.where((f) => !f.stops).toList() ?? const <ClosingFinding>[];
+    final findings = c?.findings ?? const <ClosingFinding>[];
+    final left = findings.fold(0, (total, f) => total + f.targets.length);
+    final (label, press) = c == null || !c.finished ? (l10n.closeButton(showMonth(_month)), null) : (left > 0 ? (l10n.closeBlocked(left), null) : (l10n.closeButton(showMonth(_month)), () => _close(c)));
+    String? lastDate;
     return Scaffold(
       appBar: AppBar(leading: const MenuButton(), title: Text(l10n.tabClosing), bottom: const SubTabs(Section.closing)),
-      bottomNavigationBar: c == null || c.closed ? null : MainActionBar(label: l10n.closeButton(showMonth(_month)), onPressed: c.canClose ? () => _close(c) : null),
+      bottomNavigationBar: c == null || c.closed ? null : MainActionBar(label: label, onPressed: press),
       body: ListView(
         children: [
           TopBand(
@@ -91,33 +166,38 @@ class _ClosingScreenState extends ConsumerState<ClosingScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 8),
-          if (c != null && !c.finished) _Line(Icons.schedule, l10n.closingNotOver, muted),
-          if (c?.closed == true) _Line(Icons.lock, l10n.closingIsClosed, settled),
-          if (stops.isNotEmpty) ...[
-            SectionHeader(l10n.closingStops),
-            for (final f in stops) _Line(Icons.error_outline, findingText(l10n, f), due),
+          if (c != null && !c.finished) NoteRow(icon: Icons.schedule, text: l10n.closingNotOver, color: muted),
+          if (c?.closed == true) ...[
+            const SizedBox(height: 20),
+            Center(child: ClosedStamp(l10n.closingClosed, showDate(monthLastDay(_month)))),
+            const SizedBox(height: 12),
+            NoteRow(icon: Icons.lock, text: l10n.closingIsClosed, color: muted),
           ],
-          if (checks.isNotEmpty) ...[
-            SectionHeader(l10n.closingChecks),
-            for (final f in checks) _Line(Icons.info_outline, findingText(l10n, f), warn),
+          if (left > 0) NoteRow(icon: Icons.error_outline, text: l10n.closingLeft(left), color: due),
+          for (final f in findings) ...[
+            if (f.date != lastDate) SectionHeader('${dayName(l10n, lastDate = f.date)}, ${showDate(f.date)}'),
+            RowCard(
+              child: ListTile(
+                title: Text(findingText(l10n, f), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: ink)),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => _fix(f),
+              ),
+            ),
           ],
-          if (c != null && c.canClose && checks.isEmpty) _Line(Icons.task_alt, l10n.closingAllClear, settled),
+          if (c != null && c.canClose) NoteRow(icon: Icons.task_alt, text: l10n.closingAllClear, color: settled),
           if (c != null) ...[
             SectionHeader(l10n.closingSummary),
-            const Divider(),
             for (final (label, fils) in [
               (l10n.slipOpening, c.openingFils),
               (l10n.colEarned, c.earnedFils),
               (l10n.slipAdvance, c.advanceFils),
               (l10n.closingCuts, c.cutFils),
               (l10n.slipPaid, c.paidFils),
-              (l10n.closingWorkersLeft, c.closingFils),
               (l10n.closingExpenses, c.expensesFils),
-            ]) ...[
-              InfoRow(label, formatAed(fils)),
-              const Divider(),
-            ],
+            ])
+              RowCard(child: InfoRow(label, formatAed(fils))),
+            TotalRow(l10n.closingWorkersLeft, formatAed(c.closingFils)),
+            if (c.closingFils > 0 && !c.closed) NoteRow(icon: Icons.info_outline, text: l10n.closingUnpaidNote, color: muted),
           ],
           if (c != null && c.canReopen) TextButton(onPressed: () => _reopen(c), child: Text(l10n.reopenButton)),
         ],
@@ -126,19 +206,72 @@ class _ClosingScreenState extends ConsumerState<ClosingScreen> {
   }
 }
 
-class _Line extends StatelessWidget {
-  const _Line(this.icon, this.text, this.color);
+typedef _FixAction = ({String label, Future<void> Function() run});
 
-  final IconData icon;
-  final String text;
-  final Color color;
+/// Everything one finding covers, and what clears it. Closes after an action, since the list behind it has changed.
+class _FixSheet extends StatelessWidget {
+  const _FixSheet({required this.title, required this.help, required this.actions, required this.targets, required this.onName});
+
+  final String title;
+  final String? help;
+  final List<_FixAction> actions;
+  final List<ClosingTarget> targets;
+  final Future<void> Function(ClosingTarget)? onName;
 
   @override
   Widget build(BuildContext context) {
-    return RowCard(
-      child: ListTile(
-        leading: Icon(icon, color: color),
-        title: Text(text, style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600, color: color)),
+    final media = MediaQuery.of(context);
+    return SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: media.size.height * 0.8),
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.only(bottom: 12),
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 18, 16, 6),
+              child: Text(title, style: sectionTitleStyle),
+            ),
+            if (help != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: Text(help!, style: const TextStyle(fontSize: 14, height: 1.4, color: muted)),
+              ),
+            for (final (index, action) in actions.indexed)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: index == actions.length - 1
+                    ? FilledButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          action.run();
+                        },
+                        child: Text(action.label),
+                      )
+                    : OutlinedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          action.run();
+                        },
+                        child: Text(action.label),
+                      ),
+              ),
+            for (final target in targets) ...[
+              const Divider(),
+              ListTile(
+                tileColor: Colors.transparent,
+                title: Text(target.name),
+                trailing: onName == null ? null : const Icon(Icons.chevron_right),
+                onTap: onName == null
+                    ? null
+                    : () {
+                        Navigator.of(context).pop();
+                        onName!(target);
+                      },
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

@@ -159,6 +159,18 @@ class PeriodLocks extends Table with Common {
   BoolColumn get reopened => boolean().withDefault(const Constant(false))();
 }
 
+/// The owner's word that a worker had no work on a date, so closing does not ask for their attendance (D-045). It moves
+/// no money and shows on no bill.
+class DayOffs extends Table with Common {
+  TextColumn get workerId => text().references(Workers, #id)();
+  TextColumn get workDate => text()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {tenantId, workerId, workDate},
+  ];
+}
+
 /// Rate terms shared by both contract tables (MASTER-06). Dates are YYYY-MM-DD.
 mixin RateTerms on Table {
   TextColumn get basis => text()();

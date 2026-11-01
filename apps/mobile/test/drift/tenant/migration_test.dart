@@ -135,11 +135,27 @@ void main() {
     await expectLater(db.delete(db.salaryAllocations).go(), throwsA(anything));
   });
 
+  test('a phone on version 9 upgrades: a closed month stays closed, and a day off can be marked after it (D-045)', () async {
+    final old = await verifier.schemaAt(9);
+    old.rawDatabase.execute('''
+      INSERT INTO workers (id, $commonColumns, code, name) VALUES ('w1', $common, 'W001', 'Ahmad');
+      INSERT INTO period_locks (id, $commonColumns, month, last_day) VALUES ('l1', $common, '2026-09', '2026-09-30');
+    ''');
+
+    final db = TenantDatabase(old.newConnection(), tenantId: 't', deviceId: 'device');
+    addTearDown(db.close);
+    expect(await db.lockedThrough(), '2026-09-30');
+    await expectLater(db.markDayOff('2026-09-20', ['w1'], operationId: newUuid()), throwsA(isA<PeriodLocked>()));
+    await db.markDayOff('2026-10-02', ['w1'], operationId: newUuid());
+    await db.markDayOff('2026-10-02', ['w1'], operationId: newUuid());
+    expect(await db.select(db.dayOffs).get(), hasLength(1), reason: 'marking twice is one mark');
+  });
+
   test('a phone on version 8 upgrades: its money stays, nothing is closed, and a month closed afterwards holds (REP-04)', () async {
     final old = await verifier.schemaAt(8);
     old.rawDatabase.execute('''
       INSERT INTO tenant_profiles (id, $commonColumns, legal_name) VALUES ('p1', $common, 'Labour');
-      INSERT INTO workers (id, $commonColumns, code, name) VALUES ('w1', $common, 'W001', 'Ahmad');
+      INSERT INTO workers (id, $commonColumns, code, name, active) VALUES ('w1', $common, 'W001', 'Ahmad', 0);
       INSERT INTO cash_entries (id, $commonColumns, entry_date, kind, amount_fils, worker_id) VALUES ('c1', $common, '2026-09-05', 'advanceGiven', 3000, 'w1');
     ''');
 

@@ -7,7 +7,6 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/side_panel.dart';
 import '../../app/theme.dart';
-import '../../data/attendance.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../payroll/wages_due_screen.dart';
@@ -32,40 +31,6 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
   Future<void> _chooseDate() async {
     final picked = await pickDate(context, _date);
     if (picked != null) setState(() => _date = picked);
-  }
-
-  /// Rows change in place until their payroll is posted. After that they get a correction that keeps the original (ATT-08).
-  Future<void> _openEntry(AttendanceEntry entry, String title) async {
-    final l10n = AppLocalizations.of(context);
-    if (isClosed(entry.workDate, ref.read(lockedThroughProvider).value)) {
-      showFormError(context, l10n.periodLockedError);
-      return;
-    }
-    final db = ref.read(dbProvider);
-    final locked = entry.state == 'approved' || entry.state == 'linked';
-    final input = entryToInput(entry);
-    final preview = await db.previewRow(workDate: entry.workDate, clientId: entry.clientId, siteId: entry.siteId, input: input, exceptId: entry.id);
-    if (!mounted) return;
-    final edit = await Navigator.of(context).push<RowEdit>(
-      MaterialPageRoute(
-        builder: (_) => RowEditorScreen(title: title, input: input, overlaps: preview.overlaps, correcting: locked, canDelete: !locked),
-      ),
-    );
-    if (edit == null) return;
-    try {
-      if (edit.delete) {
-        await db.deleteUnapprovedEntry(entry, operationId: newUuid());
-      } else if (locked) {
-        await db.correctEntry(entry, edit.input!, reason: edit.correctionReason!, operationId: newUuid());
-      } else {
-        await db.updateUnapprovedEntry(entry, edit.input!, operationId: newUuid());
-      }
-      if (mounted) showSavedOnPhone(context, l10n.savedOnPhone);
-    } on AttendanceInvalid {
-      if (mounted) showFormError(context, l10n.rowsNeedFix);
-    } catch (e) {
-      if (mounted) showFormError(context, saveErrorText(l10n, e));
-    }
   }
 
   @override
@@ -150,7 +115,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               entry: entry,
               worker: workers[entry.workerId],
               site: sites[entry.siteId],
-              onTap: () => _openEntry(entry, workers[entry.workerId]?.name ?? ''),
+              onTap: () => openAttendanceRow(context, ref, entry, workers[entry.workerId]?.name ?? ''),
             ),
           Padding(
             padding: const EdgeInsets.all(16),

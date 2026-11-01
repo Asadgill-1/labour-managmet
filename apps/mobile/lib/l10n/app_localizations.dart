@@ -2533,17 +2533,77 @@ abstract class AppLocalizations {
   /// **'This month is closed. A change now goes into an open month as an allowance, deduction or reversal.'**
   String get closingIsClosed;
 
-  /// No description provided for @closingStops.
+  /// No description provided for @closingLeft.
   ///
   /// In en, this message translates to:
-  /// **'Fix these first'**
-  String get closingStops;
+  /// **'{count} things left. The month closes only when all are cleared.'**
+  String closingLeft(int count);
 
-  /// No description provided for @closingChecks.
+  /// No description provided for @closingUnpaidNote.
   ///
   /// In en, this message translates to:
-  /// **'Have a look at these'**
-  String get closingChecks;
+  /// **'Unpaid wages do not hold a month up. They carry into the next month.'**
+  String get closingUnpaidNote;
+
+  /// No description provided for @closeBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear {count} things first'**
+  String closeBlocked(int count);
+
+  /// No description provided for @closingEnterHazri.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark attendance for this date'**
+  String get closingEnterHazri;
+
+  /// No description provided for @closingDayOff.
+  ///
+  /// In en, this message translates to:
+  /// **'No work for the rest'**
+  String get closingDayOff;
+
+  /// No description provided for @closingDayOffHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark attendance for those who worked. Then say the rest had no work, and this date clears.'**
+  String get closingDayOffHelp;
+
+  /// No description provided for @closingDayOffDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. This date is clear.'**
+  String get closingDayOffDone;
+
+  /// No description provided for @closingPostReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Post pay that is ready'**
+  String get closingPostReady;
+
+  /// No description provided for @closingPostHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay that cannot post stays here. Open a name to see why.'**
+  String get closingPostHelp;
+
+  /// No description provided for @closingSettle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settle against the oldest months'**
+  String get closingSettle;
+
+  /// No description provided for @closingSettleHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'These figures stay the same. The months are only written down.'**
+  String get closingSettleHelp;
+
+  /// No description provided for @closingSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'Months written down'**
+  String get closingSettled;
 
   /// No description provided for @closingAllClear.
   ///
@@ -2590,7 +2650,7 @@ abstract class AppLocalizations {
   /// No description provided for @findingNoHazri.
   ///
   /// In en, this message translates to:
-  /// **'{count} workers have no attendance: {names}.'**
+  /// **'{count} workers with no attendance: {names}.'**
   String findingNoHazri(int count, String names);
 
   /// No description provided for @findingOverlap.
@@ -2622,12 +2682,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Attendance, expenses and payroll up to this month will stop changing. A later change goes into an open month as an allowance, deduction or reversal.'**
   String get closeBody;
-
-  /// No description provided for @closeWithChecks.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} points above are still worth a look.'**
-  String closeWithChecks(int count);
 
   /// No description provided for @closeConfirm.
   ///

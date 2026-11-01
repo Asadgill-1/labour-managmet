@@ -27,7 +27,7 @@ Money records add `currency` and `posting_date`. An effective date is always sep
 | Invoices | `invoices`, `invoice_lines`, `invoice_source_allocations`, `credit_notes` | Draft has no legal number. Stored as structured data for a later e-invoicing export (D-011) |
 | Receipts | `receipts`, `receipt_allocations` | Unapplied credit allowed. Allocation cannot exceed outstanding (INV-05) |
 | Costs | `cash_entries` | Expenses are cash book rows with a category, an optional site and a payment reference. Actual room cost is separate from room charge recovered from a worker (REP-07) |
-| Closing | `period_locks` | One row per closed month, with its last day. Everything up to the latest live row is locked. Opening a month again only flags its row, and the reason is in the audit log (REP-04, D-044) |
+| Closing | `period_locks`, `day_offs` | One row per closed month, with its last day. Everything up to the latest live row is locked. Opening a month again only flags its row, and the reason is in the audit log (REP-04, D-044). A day off is the owner's word that a worker had no work on a date, one row per worker and date, and moves no money (D-045) |
 | Documents | `document_snapshots` | PDF plus data and template snapshot. Later logo changes never alter an issued copy (DOC-05) |
 | System | `audit_events`, `outbox`, `backup_manifests` | See below |
 

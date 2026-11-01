@@ -1,3 +1,6 @@
+# Hallmark's working files
+.hallmark/
+
 # Secrets and signing assets (AI-05): never commit
 .env
 .env.*

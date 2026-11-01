@@ -1,11 +1,48 @@
 import 'package:domain/calc.dart';
 import 'package:domain/money.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/form_bits.dart';
+import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/attendance.dart';
+import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+
+/// Opens a saved row. Rows change in place until their payroll is posted. After that they get a correction that keeps the original (ATT-08).
+Future<void> openAttendanceRow(BuildContext context, WidgetRef ref, AttendanceEntry entry, String title) async {
+  final l10n = AppLocalizations.of(context);
+  if (isClosed(entry.workDate, ref.read(lockedThroughProvider).value)) {
+    showFormError(context, l10n.periodLockedError);
+    return;
+  }
+  final db = ref.read(dbProvider);
+  final locked = entry.state == 'approved' || entry.state == 'linked';
+  final input = entryToInput(entry);
+  final preview = await db.previewRow(workDate: entry.workDate, clientId: entry.clientId, siteId: entry.siteId, input: input, exceptId: entry.id);
+  if (!context.mounted) return;
+  final edit = await Navigator.of(context).push<RowEdit>(
+    MaterialPageRoute(
+      builder: (_) => RowEditorScreen(title: title, input: input, overlaps: preview.overlaps, correcting: locked, canDelete: !locked),
+    ),
+  );
+  if (edit == null) return;
+  try {
+    if (edit.delete) {
+      await db.deleteUnapprovedEntry(entry, operationId: newUuid());
+    } else if (locked) {
+      await db.correctEntry(entry, edit.input!, reason: edit.correctionReason!, operationId: newUuid());
+    } else {
+      await db.updateUnapprovedEntry(entry, edit.input!, operationId: newUuid());
+    }
+    if (context.mounted) showSavedOnPhone(context, l10n.savedOnPhone);
+  } on AttendanceInvalid {
+    if (context.mounted) showFormError(context, l10n.rowsNeedFix);
+  } catch (e) {
+    if (context.mounted) showFormError(context, saveErrorText(l10n, e));
+  }
+}
 
 /// What the editor hands back. [delete] means remove the entry.
 typedef RowEdit = ({EntryInput? input, String? correctionReason, bool delete});

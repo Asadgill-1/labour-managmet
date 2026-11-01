@@ -82,7 +82,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | REP-01 | 11 | Reports | T18, T18a, T11e, T11f | IN_PROGRESS | TC-057, TC-058, TC-062, TC-063, TC-067 | - |
 | REP-02 | 11 | Hisaab ki separation | T18 | NOT_STARTED | TC-044 | - |
 | REP-03 | 11 | Margin | T11f, T18 | IN_PROGRESS | TC-044, TC-065 | `apps/mobile/test/statement_test.dart` |
-| REP-04 | 11 | Closing | T13 | IMPLEMENTED_UNVERIFIED | TC-037, TC-072, TC-073, TC-074 | - |
+| REP-04 | 11 | Closing | T13, T13b | IMPLEMENTED_UNVERIFIED | TC-037, TC-072, TC-073, TC-074, TC-076 | - |
 | REP-05 | 11 | Historical integrity | T13 | IMPLEMENTED_UNVERIFIED | TC-075 | - |
 | REP-06 | 11 | Backup/export | T18, T18a | IN_PROGRESS | TC-058 | - |
 | REP-07 | 11 | Expenses | T13, T12a | IMPLEMENTED_UNVERIFIED | TC-052 | - |

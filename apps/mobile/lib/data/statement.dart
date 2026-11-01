@@ -57,6 +57,7 @@ class WorkerStatement {
     required this.money,
     required this.unpaid,
     required this.owing,
+    this.placed = const {},
   });
 
   final Worker worker;
@@ -87,6 +88,9 @@ class WorkerStatement {
 
   /// The same less any advance not yet cut, which is what the worker is really still waiting for (PAY-08).
   final Map<String, int> owing;
+
+  /// Which payment settled what, month by month, as the account reads it now.
+  final Map<String, List<StatementPayment>> placed;
 
   int get earnedFils => workFils + salaryFils + allowanceFils;
   int get takenFils => advanceFils + roomFils + visaFils + otherFils + paidFils;
@@ -213,7 +217,7 @@ extension StatementOps on TenantDatabase {
         final fils = c.reversesEntryId == null ? c.amountFils : -c.amountFils;
         switch (CashKind.values.byName(c.kind)) {
           case CashKind.salaryPaid:
-            payments.add(StatementPayment(c.entryDate, fils, note: c.note ?? c.reference ?? c.method, parts: c.reversesEntryId == null ? partsOf[c.id] : {m: fils}));
+            payments.add(StatementPayment(c.entryDate, fils, note: c.note ?? c.reference ?? c.method, parts: c.reversesEntryId == null ? partsOf[c.id] : {m: fils}, id: c.id));
           case CashKind.advanceGiven:
             if (m.compareTo(month) > 0) break;
             add(m, -fils);
@@ -294,6 +298,7 @@ extension StatementOps on TenantDatabase {
         money: money,
         unpaid: unpaidAfter(wages, placed, through: month),
         owing: unpaidAfter(account, placed, through: month),
+        placed: placed,
       );
       if (workerId != null || one.hasSomething) result.add(one);
     }
@@ -366,6 +371,42 @@ extension StatementOps on TenantDatabase {
         }
         if (amountFils > paid) saved.add((await line(paid > 0 ? newUuid() : id, CashKind.advanceGiven, amountFils - paid, extraNote)).toJson());
         return {'lines': saved, 'parts': parts};
+      },
+    );
+  }
+
+  /// Writes down the months an old payment settled, exactly as the account already reads it, so no figure moves (PAY-06).
+  Future<void> settleOldPayment(CashEntry payment, {required String operationId}) {
+    return applyOperation(
+      operationId: operationId,
+      entity: 'cash_entries',
+      recordId: payment.id,
+      version: payment.version,
+      action: 'allocate',
+      change: () async {
+        final statement = (await statementsFor(dubaiToday(DateTime.now()).substring(0, 7), workerId: payment.workerId, withWork: false)).single;
+        final parts = {
+          for (final e in statement.placed.entries)
+            for (final piece in e.value)
+              if (piece.id == payment.id) e.key: piece.fils,
+        };
+        final now = DateTime.now().toUtc();
+        for (final part in parts.entries) {
+          await into(salaryAllocations).insert(
+            SalaryAllocationsCompanion.insert(
+              id: newUuid(),
+              tenantId: tenantId,
+              createdAtUtc: now,
+              updatedAtUtc: now,
+              actorId: actorId,
+              sourceOperationId: operationId,
+              paymentId: payment.id,
+              month: part.key,
+              amountFils: part.value,
+            ),
+          );
+        }
+        return {'payment': payment.id, 'parts': parts};
       },
     );
   }

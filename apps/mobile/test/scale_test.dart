@@ -147,6 +147,14 @@ void main() {
     final after = await timed('slip after posting', () => db.statementsFor(month, workerId: 'w7'));
     expect(after.single.closingFils, days * 9000);
 
+    final gaps = await timed('closing check with days left out', () => db.closingFor(month));
+    expect(gaps.findings.every((f) => f.issue == ClosingIssue.noHazri), isTrue);
+    await timed('saying nobody worked those days', () async {
+      for (final f in gaps.findings) {
+        await db.markDayOff(f.date, [for (final t in f.targets) t.id], operationId: newUuid());
+      }
+    });
+
     final closing = await timed('closing check', () => db.closingFor(month));
     expect(closing.canClose, isTrue);
     expect(closing.closingFils, workers * days * 9000);

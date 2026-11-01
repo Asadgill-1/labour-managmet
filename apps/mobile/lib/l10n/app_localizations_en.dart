@@ -1348,10 +1348,48 @@ class AppLocalizationsEn extends AppLocalizations {
       'This month is closed. A change now goes into an open month as an allowance, deduction or reversal.';
 
   @override
-  String get closingStops => 'Fix these first';
+  String closingLeft(int count) {
+    return '$count things left. The month closes only when all are cleared.';
+  }
 
   @override
-  String get closingChecks => 'Have a look at these';
+  String get closingUnpaidNote =>
+      'Unpaid wages do not hold a month up. They carry into the next month.';
+
+  @override
+  String closeBlocked(int count) {
+    return 'Clear $count things first';
+  }
+
+  @override
+  String get closingEnterHazri => 'Mark attendance for this date';
+
+  @override
+  String get closingDayOff => 'No work for the rest';
+
+  @override
+  String get closingDayOffHelp =>
+      'Mark attendance for those who worked. Then say the rest had no work, and this date clears.';
+
+  @override
+  String get closingDayOffDone => 'Saved. This date is clear.';
+
+  @override
+  String get closingPostReady => 'Post pay that is ready';
+
+  @override
+  String get closingPostHelp =>
+      'Pay that cannot post stays here. Open a name to see why.';
+
+  @override
+  String get closingSettle => 'Settle against the oldest months';
+
+  @override
+  String get closingSettleHelp =>
+      'These figures stay the same. The months are only written down.';
+
+  @override
+  String get closingSettled => 'Months written down';
 
   @override
   String get closingAllClear => 'Nothing to fix. This month can be closed.';
@@ -1382,7 +1420,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String findingNoHazri(int count, String names) {
-    return '$count workers have no attendance: $names.';
+    return '$count workers with no attendance: $names.';
   }
 
   @override
@@ -1408,11 +1446,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get closeBody =>
       'Attendance, expenses and payroll up to this month will stop changing. A later change goes into an open month as an allowance, deduction or reversal.';
-
-  @override
-  String closeWithChecks(int count) {
-    return '$count points above are still worth a look.';
-  }
 
   @override
   String get closeConfirm => 'Close';
@@ -3314,10 +3347,48 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
       'Yeh mahina band hai. Ab farq khule mahine mein allowance, katoti ya wapsi se likha jata hai.';
 
   @override
-  String get closingStops => 'Pehle yeh theek karein';
+  String closingLeft(int count) {
+    return '$count cheezain baqi hain. Sab saaf hone par hi mahina band hoga.';
+  }
 
   @override
-  String get closingChecks => 'Yeh dekh lein';
+  String get closingUnpaidNote =>
+      'Baqi tankhwah mahina nahin rokti. Woh agle mahine mein chali jati hai.';
+
+  @override
+  String closeBlocked(int count) {
+    return 'Pehle $count cheezain saaf karein';
+  }
+
+  @override
+  String get closingEnterHazri => 'Is tareekh ki hazri lagayein';
+
+  @override
+  String get closingDayOff => 'Baqi sab ka kaam nahin tha';
+
+  @override
+  String get closingDayOffHelp =>
+      'Jin ne kaam kiya un ki hazri lagayein. Phir baqi ke liye yeh button dabayein, aur yeh tareekh saaf ho jayegi.';
+
+  @override
+  String get closingDayOffDone => 'Likh diya. Yeh tareekh saaf hai.';
+
+  @override
+  String get closingPostReady => 'Jo tayyar hain un ki tankhwah post karein';
+
+  @override
+  String get closingPostHelp =>
+      'Jo post nahin ho sakti woh yahin rahegi. Naam kholein to wajah dikhegi.';
+
+  @override
+  String get closingSettle => 'Sab se purane mahine mein likh dein';
+
+  @override
+  String get closingSettleHelp =>
+      'Hisaab wahi rahega. Sirf mahine likhe jayenge.';
+
+  @override
+  String get closingSettled => 'Mahine likh diye';
 
   @override
   String get closingAllClear =>
@@ -3344,12 +3415,12 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String findingNoCompanyRate(int count, String names) {
-    return '$count company ka rate nahin, is liye bill adhoora hai: $names.';
+    return '$count company ka rate nahin: $names. Rate likhein.';
   }
 
   @override
   String findingNoHazri(int count, String names) {
-    return '$count mazdoor ki koi hazri nahin: $names.';
+    return '$count mazdoor ki hazri nahin: $names.';
   }
 
   @override
@@ -3359,7 +3430,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String findingNoMonth(int count, String names) {
-    return '$count mazdoor ki adaigi mein mahina nahin chuna, woh purane mahine se judi hai: $names.';
+    return '$count adaigi mein mahina nahin likha: $names.';
   }
 
   @override
@@ -3375,11 +3446,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String get closeBody =>
       'Is mahine tak ki hazri, kharche aur tankhwah ab nahin badlenge. Baad ka farq khule mahine mein allowance, katoti ya wapsi se likha jayega.';
-
-  @override
-  String closeWithChecks(int count) {
-    return 'Upar $count baatein abhi dekhne wali hain.';
-  }
 
   @override
   String get closeConfirm => 'Band karein';
