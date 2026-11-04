@@ -64,7 +64,21 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
   }
 
   Future<void> _deleteDraft(TimesheetView v) async {
+    final l10n = AppLocalizations.of(context);
     final navigator = Navigator.of(context);
+    // The hours agreed in a draft live only in it, so they go with it.
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        title: Text(l10n.tsDeleteDraft),
+        content: Text(l10n.tsDeleteDraftBody),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialog).pop(false), child: Text(l10n.cancel)),
+          TextButton(onPressed: () => Navigator.of(dialog).pop(true), child: Text(l10n.tsDeleteDraft)),
+        ],
+      ),
+    );
+    if (yes != true || !mounted) return;
     final saved = await saveOrExplain(context, () => _db.deleteTimesheetDraft(v.revision.id, operationId: newUuid()));
     if (saved && mounted && v.revision.revision == 1) navigator.pop();
   }
@@ -77,7 +91,7 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
 
   Future<void> _revise(TimesheetView v) async {
     final l10n = AppLocalizations.of(context);
-    final reason = await askReason(context, title: l10n.tsNewRevision, helper: l10n.tsRevisionHelp, confirm: l10n.tsRevisionConfirm);
+    final reason = await askReason(context, title: l10n.tsNewRevision, label: l10n.tsRevisionReason, helper: l10n.tsRevisionHelp, confirm: l10n.tsRevisionConfirm);
     if (reason != null && mounted) await _step(() => _db.startTimesheetRevision(v.sheet.id, reason: reason, operationId: newUuid()));
   }
 

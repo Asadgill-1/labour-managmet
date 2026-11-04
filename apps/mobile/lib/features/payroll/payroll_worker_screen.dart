@@ -27,7 +27,7 @@ class PayrollWorkerScreen extends ConsumerWidget {
 
   Future<void> _undo(BuildContext context, WidgetRef ref, PayrollLine line) async {
     final l10n = AppLocalizations.of(context);
-    final reason = await askReason(context, title: l10n.payrollUndoTitle, helper: l10n.payrollUndoHelp, confirm: l10n.reverseConfirm);
+    final reason = await askReason(context, title: l10n.payrollUndoTitle, label: l10n.reverseReason, helper: l10n.payrollUndoHelp, confirm: l10n.reverseConfirm);
     if (reason == null || !context.mounted) return;
     try {
       await ref.read(dbProvider).reversePayrollLine(line, reason: reason, operationId: newUuid());

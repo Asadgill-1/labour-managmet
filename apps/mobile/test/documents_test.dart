@@ -7,6 +7,7 @@ import 'package:domain/cash.dart';
 import 'package:domain/payroll.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/cash.dart';
@@ -16,6 +17,7 @@ import 'package:labour_app/data/payroll.dart';
 import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/data/tenant_database.dart';
 import 'package:labour_app/documents/document_frame.dart';
+import 'package:labour_app/features/documents/letterhead_screen.dart';
 import 'package:labour_app/features/documents/receipt.dart';
 import 'package:labour_app/features/payroll/salary_slip.dart';
 import 'package:labour_app/features/registers/register_export.dart';
@@ -398,5 +400,33 @@ void main() {
     expect(find.text(loc.lhLogo), findsNothing, reason: 'nothing of the company prints on pre-printed paper');
     expect(find.text(loc.lhSignature), findsOneWidget);
     await shutDown(tester, app);
+  });
+
+  testWidgets('a picker that fails says so, and only a bad file is called the wrong type', (tester) async {
+    const channel = MethodChannel('labour_app/files');
+    Object? answer;
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (call) async {
+      if (answer is Exception) throw answer;
+      return answer;
+    });
+    addTearDown(() => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, null));
+    final loc = await real(tester, () => AppLocalizations.delegate.load(const Locale('en', 'PK')));
+    await tester.pumpWidget(MaterialApp(
+      locale: const Locale('en', 'PK'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(body: Builder(builder: (context) => TextButton(onPressed: () => pickCheckedImage(context), child: const Text('pick')))),
+    ));
+
+    answer = PlatformException(code: 'no_picker');
+    await tester.tap(find.text('pick'));
+    await tester.pumpAndSettle();
+    expect(find.text(loc.imagePickFailed), findsOneWidget);
+    expect(find.text(loc.lhBadType), findsNothing);
+
+    answer = Uint8List.fromList(utf8.encode('%PDF-1.4 not a picture'));
+    await tester.tap(find.text('pick'));
+    await tester.pumpAndSettle();
+    expect(find.text(loc.lhBadType), findsOneWidget);
   });
 }

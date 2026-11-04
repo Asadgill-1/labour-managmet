@@ -1471,6 +1471,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reopenHelp => 'Why it must change. The reason stays on record.';
 
   @override
+  String get reopenReason => 'Why the month is being reopened';
+
+  @override
   String get reopenConfirm => 'Open';
 
   @override
@@ -2197,6 +2200,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lhBadType => 'Only PNG or JPEG images work.';
 
   @override
+  String get imagePickFailed => 'The picture could not be opened. Try again.';
+
+  @override
   String get lhTooLarge => 'The image is over 5 MB.';
 
   @override
@@ -2431,6 +2437,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tsDeleteDraft => 'Throw away draft';
 
   @override
+  String get tsDeleteDraftBody =>
+      'The draft goes, with any hours agreed in it. Attendance does not change.';
+
+  @override
   String get tsPaper => 'Make the paper';
 
   @override
@@ -2474,6 +2484,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tsRevisionHelp =>
       'The old one stays exactly as it was. What changed?';
+
+  @override
+  String get tsRevisionReason => 'Why a new revision';
 
   @override
   String get tsRevisionConfirm => 'Start';
@@ -4016,6 +4029,9 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get reopenHelp => 'Kyun badalna hai. Yeh wajah record mein rahegi.';
 
   @override
+  String get reopenReason => 'Dobara kholne ki wajah';
+
+  @override
   String get reopenConfirm => 'Kholein';
 
   @override
@@ -4743,6 +4759,10 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get lhBadType => 'Sirf PNG ya JPEG tasveer chalegi.';
 
   @override
+  String get imagePickFailed =>
+      'Tasveer nahin khul saki. Dobara koshish karein.';
+
+  @override
   String get lhTooLarge => 'Tasveer 5 MB se bari hai.';
 
   @override
@@ -4959,6 +4979,10 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get tsDeleteDraft => 'Draft hata dein';
 
   @override
+  String get tsDeleteDraftBody =>
+      'Draft hat jayega, aur us mein company se tay kiye ghante bhi. Hazri nahin badlegi.';
+
+  @override
   String get tsPaper => 'Kaghaz banayein';
 
   @override
@@ -5003,11 +5027,21 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get tsRevisionHelp => 'Purani bilkul waisi rahegi. Kya badla?';
 
   @override
+  String get tsRevisionReason => 'Nayi revision ki wajah';
+
+  @override
   String get tsRevisionConfirm => 'Shuru karein';
 
   @override
   String tsChanged(int count) {
-    return 'Is ke baad $count line ki hazri badli. Nayi revision mein aayengi.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Is ke baad $count line ki hazri badli. Nayi revision mein aayengi.',
+      one: 'Is ke baad 1 line ki hazri badli. Nayi revision mein aayegi.',
+    );
+    return '$_temp0';
   }
 
   @override

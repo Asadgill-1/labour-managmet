@@ -283,6 +283,11 @@ void main() {
     });
   });
 
+  test('the note on corrected rows agrees with how many there are', () {
+    expect(l10n.tsChanged(1), endsWith('aayegi.'));
+    expect(l10n.tsChanged(3), allOf(contains('3 line'), endsWith('aayengi.')));
+  });
+
   testWidgets('from a company and dates to an accepted timesheet and a new revision, through the screens', (tester) async {
     final app = memoryDb();
     final last = addMonths(dubaiToday(DateTime.now()).substring(0, 7), -1);
@@ -363,7 +368,8 @@ void main() {
     // A new revision leaves the old one on record.
     await tester.tap(find.text(words.tsNewRevision));
     await settle(tester);
-    await tester.enterText(find.byType(TextFormField), 'Company asked again');
+    expect(find.text(words.reverseReason), findsNothing, reason: 'nothing is being undone');
+    await tester.enterText(find.widgetWithText(TextFormField, words.tsRevisionReason), 'Company asked again');
     await tester.tap(find.text(words.tsRevisionConfirm));
     await settle(tester);
     expect(find.textContaining(words.tsRevisedBecause('Company asked again')), findsOneWidget);
@@ -375,8 +381,16 @@ void main() {
     Navigator.of(tester.element(find.text(words.tsOldRevisionNote))).pop();
     await settle(tester);
 
-    // Throwing the new draft away goes back to the accepted one.
+    // Throwing the new draft away asks first, then goes back to the accepted one.
     await tester.tap(find.text(words.tsDeleteDraft));
+    await settle(tester);
+    expect(find.text(words.tsDeleteDraftBody), findsOneWidget);
+    await tester.tap(find.text(words.cancel));
+    await settle(tester);
+    expect(find.textContaining(words.tsRevisedBecause('Company asked again')), findsOneWidget);
+    await tester.tap(find.text(words.tsDeleteDraft));
+    await settle(tester);
+    await tester.tap(find.text(words.tsDeleteDraft).last);
     await settle(tester);
     expect(find.text(words.tsStatusAccepted), findsOneWidget);
     await shutDown(tester, app);

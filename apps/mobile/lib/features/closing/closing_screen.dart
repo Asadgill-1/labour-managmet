@@ -64,7 +64,7 @@ class _ClosingScreenState extends ConsumerState<ClosingScreen> {
 
   Future<void> _reopen(MonthClosing c) async {
     final l10n = AppLocalizations.of(context);
-    final reason = await askReason(context, title: l10n.reopenTitle(showMonth(c.month)), helper: l10n.reopenHelp, confirm: l10n.reopenConfirm);
+    final reason = await askReason(context, title: l10n.reopenTitle(showMonth(c.month)), label: l10n.reopenReason, helper: l10n.reopenHelp, confirm: l10n.reopenConfirm);
     if (reason == null || !mounted) return;
     final saved = await saveOrExplain(context, () => ref.read(dbProvider).reopenMonth(c.lock!, reason: reason, operationId: newUuid()));
     if (saved && mounted) showSavedOnPhone(context, l10n.reopenDone(showMonth(c.month)));

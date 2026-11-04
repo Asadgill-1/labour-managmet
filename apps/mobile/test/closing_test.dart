@@ -517,7 +517,8 @@ void main() {
     await tester.scrollUntilVisible(find.text(l10n.reopenButton), 200, scrollable: find.byType(Scrollable).first);
     await tester.tap(find.text(l10n.reopenButton));
     await settle(tester);
-    await tester.enterText(find.byType(TextField).last, 'Missed a day');
+    expect(find.text(l10n.reverseReason), findsNothing, reason: 'reopening undoes nothing');
+    await tester.enterText(find.widgetWithText(TextFormField, l10n.reopenReason), 'Missed a day');
     await tester.tap(find.text(l10n.reopenConfirm));
     await settle(tester);
     expect(await real(tester, app.lockedThrough), isNull);

@@ -180,8 +180,8 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-/// Asks for the reason behind an undo. Null means the owner backed out.
-Future<String?> askReason(BuildContext context, {required String title, required String helper, required String confirm}) async {
+/// Asks for the reason behind an undo, a reopening or a new revision. Null means the owner backed out.
+Future<String?> askReason(BuildContext context, {required String title, required String label, required String helper, required String confirm}) async {
   final l10n = AppLocalizations.of(context);
   final reason = TextEditingController();
   final form = GlobalKey<FormState>();
@@ -191,7 +191,7 @@ Future<String?> askReason(BuildContext context, {required String title, required
       title: Text(title),
       content: Form(
         key: form,
-        child: Field(l10n.reverseReason, reason, helper: helper, validator: (v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null),
+        child: Field(label, reason, helper: helper, validator: (v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null),
       ),
       actions: [
         TextButton(onPressed: () => Navigator.of(dialog).pop(false), child: Text(l10n.cancel)),

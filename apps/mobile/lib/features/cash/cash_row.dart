@@ -57,7 +57,7 @@ class CashEntryRow extends ConsumerWidget {
   Future<void> _undo(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
     final closed = isClosed(entry.entryDate, ref.read(lockedThroughProvider).value);
-    final reason = await askReason(context, title: l10n.reverseTitle, helper: closed ? l10n.reverseHelpClosed : l10n.reverseHelp, confirm: l10n.reverseConfirm);
+    final reason = await askReason(context, title: l10n.reverseTitle, label: l10n.reverseReason, helper: closed ? l10n.reverseHelpClosed : l10n.reverseHelp, confirm: l10n.reverseConfirm);
     if (reason == null || !context.mounted) return;
     try {
       await ref.read(dbProvider).reverseCashEntry(entry, reason: reason, operationId: newUuid());

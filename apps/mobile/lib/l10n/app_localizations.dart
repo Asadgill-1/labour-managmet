@@ -2719,6 +2719,12 @@ abstract class AppLocalizations {
   /// **'Why it must change. The reason stays on record.'**
   String get reopenHelp;
 
+  /// No description provided for @reopenReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why the month is being reopened'**
+  String get reopenReason;
+
   /// No description provided for @reopenConfirm.
   ///
   /// In en, this message translates to:
@@ -4009,6 +4015,12 @@ abstract class AppLocalizations {
   /// **'Only PNG or JPEG images work.'**
   String get lhBadType;
 
+  /// No description provided for @imagePickFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The picture could not be opened. Try again.'**
+  String get imagePickFailed;
+
   /// No description provided for @lhTooLarge.
   ///
   /// In en, this message translates to:
@@ -4363,6 +4375,12 @@ abstract class AppLocalizations {
   /// **'Throw away draft'**
   String get tsDeleteDraft;
 
+  /// No description provided for @tsDeleteDraftBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The draft goes, with any hours agreed in it. Attendance does not change.'**
+  String get tsDeleteDraftBody;
+
   /// No description provided for @tsPaper.
   ///
   /// In en, this message translates to:
@@ -4446,6 +4464,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The old one stays exactly as it was. What changed?'**
   String get tsRevisionHelp;
+
+  /// No description provided for @tsRevisionReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why a new revision'**
+  String get tsRevisionReason;
 
   /// No description provided for @tsRevisionConfirm.
   ///

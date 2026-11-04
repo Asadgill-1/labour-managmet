@@ -24,9 +24,16 @@ const _files = MethodChannel('labour_app/files');
 /// Asks the phone for a PNG or JPEG and checks it. Null means nothing usable came back, and the owner has been told why.
 Future<Uint8List?> pickCheckedImage(BuildContext context) async {
   final l10n = AppLocalizations.of(context);
+  final Uint8List? bytes;
   try {
-    final bytes = await _files.invokeMethod<Uint8List>('pickImage');
-    if (bytes == null || !context.mounted) return null;
+    bytes = await _files.invokeMethod<Uint8List>('pickImage');
+  } catch (_) {
+    // The picker itself failed, so the file was never looked at: calling it the wrong type would mislead.
+    if (context.mounted) showFormError(context, l10n.imagePickFailed);
+    return null;
+  }
+  if (bytes == null || !context.mounted) return null;
+  try {
     final problem = checkImage(bytes);
     if (problem != null) {
       showFormError(context, problem == ImageProblem.tooLarge ? l10n.lhTooLarge : l10n.lhBadType);

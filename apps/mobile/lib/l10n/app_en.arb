@@ -797,6 +797,7 @@
     }
   },
   "reopenHelp": "Why it must change. The reason stays on record.",
+  "reopenReason": "Why the month is being reopened",
   "reopenConfirm": "Open",
   "reopenDone": "{month} is open again",
   "@reopenDone": {
@@ -1230,6 +1231,7 @@
     }
   },
   "lhBadType": "Only PNG or JPEG images work.",
+  "imagePickFailed": "The picture could not be opened. Try again.",
   "lhTooLarge": "The image is over 5 MB.",
   "lhSample": "See a sample",
   "mainBilling": "Billing",
@@ -1386,6 +1388,7 @@
   "tsApprove": "Approve",
   "tsApproveBody": "Its attendance freezes and it gets a number. A later change needs a new revision.",
   "tsDeleteDraft": "Throw away draft",
+  "tsDeleteDraftBody": "The draft goes, with any hours agreed in it. Attendance does not change.",
   "tsPaper": "Make the paper",
   "tsPaperPriced": "Show rate and amount",
   "tsPaperPricedHelp": "Off, the company sees hours only. A worker's wage never prints.",
@@ -1400,6 +1403,7 @@
   "tsEvidenceNote": "A photo of what came back. It is not a verified digital signature.",
   "tsNewRevision": "New revision",
   "tsRevisionHelp": "The old one stays exactly as it was. What changed?",
+  "tsRevisionReason": "Why a new revision",
   "tsRevisionConfirm": "Start",
   "tsChanged": "{count, plural, =1{1 row of attendance was corrected after this. A new revision takes it in.} other{{count} rows of attendance were corrected after this. A new revision takes them in.}}",
   "@tsChanged": {

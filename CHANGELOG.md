@@ -11,6 +11,8 @@
 - Bulk attendance with exceptions, approval and corrections.
 - New look: a bound account book, with a dark cover, cream ruled pages and three colours to choose from. A side panel of main tabs with sub-tabs.
 - Timesheets for a company: daily summary or each worker, with or without rates, from approval through the company's answer, with revisions that keep the old one. The same work can't go on two timesheets or be charged twice.
+- Throwing a timesheet draft away asks first, since hours agreed in it go too. A new revision and reopening a month each ask for their own reason, not an undo's.
+- A picture picker that fails says so, instead of calling the file the wrong type.
 - Your letterhead on every paper: logo, header and footer images, signature, stamp, or pre-printed paper, with a sample to check.
 - Salary slips and receipts keep a number and an exact stored copy, and a new revision when a figure changes.
 - See a paper on screen, then save, print or send it.
