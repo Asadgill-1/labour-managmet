@@ -4,6 +4,7 @@ apps/mobile/lib/l10n/app_localizations*.dart
 apps/mobile/test/drift/tenant/generated/
 apps/mobile/build/
 apps/mobile/android/
+apps/mobile/windows/
 apps/mobile/.dart_tool/
 packages/domain/.dart_tool/
 drift_schemas/
