@@ -643,12 +643,6 @@ abstract class AppLocalizations {
   /// **'Received {received}, paid {paid}'**
   String rentSplit(String received, String paid);
 
-  /// No description provided for @menuReceived.
-  ///
-  /// In en, this message translates to:
-  /// **'Money received'**
-  String get menuReceived;
-
   /// No description provided for @menuReports.
   ///
   /// In en, this message translates to:

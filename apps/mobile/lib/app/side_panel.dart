@@ -276,7 +276,6 @@ class SidePanel extends ConsumerWidget {
                   open: false,
                   children: [
                     for (final label in [
-                      l10n.menuReceived,
                       l10n.menuReports,
                       l10n.menuTeam,
                       l10n.menuBackup,

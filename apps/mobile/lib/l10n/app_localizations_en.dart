@@ -307,9 +307,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get menuReceived => 'Money received';
-
-  @override
   String get menuReports => 'Reports';
 
   @override
@@ -3586,9 +3583,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String rentSplit(String received, String paid) {
     return 'Mila $received, diya $paid';
   }
-
-  @override
-  String get menuReceived => 'Paisay mile';
 
   @override
   String get menuReports => 'Reports';
