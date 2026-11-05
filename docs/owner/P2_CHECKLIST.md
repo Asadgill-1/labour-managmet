@@ -116,12 +116,15 @@ Yeh bhi P3 ka hissa hai. Pehle **Apni company** mein VAT registered aur TRN bhar
 - [ ] **Menu > Billing > Invoice > Naya invoice.** Company chunein, pichla mahina khud aa jata hai. **Draft banayein.** Agar approved timesheet nahin to paigham aaye ke pehle timesheet approve karein.
 - [ ] Draft mein timesheet tick ho, us ki line ginti ho, aur neeche har site aur kaam ki aik line. Raqam timesheet wali hi ho. Number abhi na ho.
 - [ ] Kisi line par dabayein, discount likhein. Kul aur VAT dono kam hon. VAT 5% discount ke baad lage.
+- [ ] **Line jodein**: "Transport", 5, aur 120 likhein. Neeche aik line AED 600 ki aaye, us par bhi VAT lage. Us par dabayein, **Yeh line hatayein** se hat jaye. Phir dobara jodein.
 - [ ] **VAT ki qisam** mein Zero-rated chunein: VAT 0 ho. Wapas Standard karein. **Rates mein VAT shamil hai** on karein: kul wahi rahe, VAT andar se nikle.
 - [ ] **Draft dekhein**: PDF par DRAFT ki mohar ho aur number na ho. Sab English mein ho.
 - [ ] **Jari karein.** INV number aur aaj ki tareekh mile, aur lene ki tareekh company ke dinon se. Usi company ka naya invoice banayein: paigham aaye ke kuch baqi nahin.
 - [ ] **Kaghaz** se PDF dekhein: Tax Invoice, dono TRN, har line ka VAT, bank details, aur neeche likha ho ke yeh UAE structured e-invoice nahin.
 - [ ] **Timesheet ke saath bhejein** > WhatsApp. Aik hi message mein invoice aur timesheet dono PDF jayen. Yeh abhi phone par kabhi nahin chala, zaroor dekhein.
-- [ ] **Credit note banayein**, wajah likhein. CN number aaye, invoice par **Wapas liya** ki mohar ho, aur ab naya invoice ban sake.
+- [ ] **Credit note banayein** > **Kuch raqam**, 200 aur wajah likhein. CN number aaye, invoice par likha ho kitna wapas gaya aur kitna baqi. Mohar na lage.
+- [ ] Phir **Credit note banayein** > **Poora invoice**. Sirf baqi raqam ka CN aaye, invoice par **Wapas liya** ki mohar ho, aur **In tareekhon ka naya invoice** dabane se naya draft khule.
+- [ ] Naya invoice jari karein. Phir is ke kisi mazdoor ki hazri ghatayein. **Mahina band** mein timesheet ka naam aaye. Timesheet ka naya revision approve karein: ab invoice ka naam aaye, aur invoice par laal mein farq likha ho. Poora credit note aur naya invoice banayein: mahina khul jaye.
 - [ ] **Invoice register** mein har line aaye, credit note minus mein. Excel nikal kar dekhein.
 - [ ] **Mahina band** kholein jahan kaam ka invoice nahin bana. Company ka naam mahine ki aakhri tareekh par aaye. Invoice ke baad hat jaye.
 - [ ] Mahana fixed fee wali company ka invoice banayein. Aik line fee ki ho, aur line par dabane se fee badal sake.
@@ -179,7 +182,8 @@ Yeh hissa P3 ka hai, magar isi APK mein hai.
 Yeh chaaron abhi PROPOSED hain. Aap ka jawab darkar hai. Accountant ko bhi dikhayein.
 
 - [ ] **D-033:** Hisaab statement ki tarah chalta hai. Tankhwah screen par purane post hue mahine ka "ada kiya" tareekh se ginta hai. Khaas mahine slip aur baqi tankhwah mein dikhte hain.
-- [ ] **D-050:** Invoice sirf approved timesheet se banta hai, aur draft timesheet ko jaisay hai waisay parhta hai. VAT sirf aap ki apni registration se lagta hai, company ke TRN se nahin. Number jari karte waqt milta hai, tareekh aaj ki, pichli tareekh nahin. Ghalti ho to poora credit note bana kar naya invoice banta hai, adha credit note abhi nahin. Kaghaz hamesha English mein. Jis kaam ka invoice nahin bana woh mahina rokta hai. Tax adviser ko bhi dikhayein.
+- [ ] **D-051:** Invoice mein haath se line (jaise transport) jud sakti hai, us par bhi VAT. Credit note kuch raqam ka bhi ban sakta hai, kaam invoice par hi rehta hai. Invoice ke baad hazri se raqam badle to mahina rukta hai, jab tak poora credit note aur naya invoice na bane. Sirf farq ka credit note ya invoice nahin banta. Tax adviser ko bhi dikhayein.
+- [ ] **D-050:** Invoice sirf approved timesheet se banta hai, aur draft timesheet ko jaisay hai waisay parhta hai. VAT sirf aap ki apni registration se lagta hai, company ke TRN se nahin. Number jari karte waqt milta hai, tareekh aaj ki, pichli tareekh nahin. Ghalti ho to poora credit note bana kar naya invoice banta hai. Kaghaz hamesha English mein. Jis kaam ka invoice nahin bana woh mahina rokta hai. Tax adviser ko bhi dikhayein.
 - [ ] **D-049:** Timesheet par sirf company ka hisaab hota hai, mazdoor ki tankhwah kabhi nahin. Rate pehle band hota hai, aap on karein to dikhta hai. Company se jo ghante tay hon woh sirf company ke kaghaz par badalte hain, hazri aur tankhwah wahi rehti hai. Aik baar bane kaghaz par baad ka letterhead nahin aata, nayi revision par aata hai. Saboot sirf tasveer ki shakal mein hai.
 - [ ] **D-047:** Slip aur raseed ka number aur asal file hamesha mehfooz rehti hai, aur figure badalne par R2 banta hai. Letterhead abhi sab ke liye khula hai, plan aane par yeh paid hoga.
 - [ ] **D-045:** Jab tak koi cheez baqi hai mahina band nahin hota. Baqi tankhwah mahina nahin rokti, kyun ke woh agle mahine jati hai. Aap ne 2026-11-02 ko yeh theek kaha. Company ka overdue invoice mahina rokega, jab invoice T16 aur T17 mein aa jayen (D-048). Agar aap chahte hain ke baqi tankhwah bhi roke to batayein.

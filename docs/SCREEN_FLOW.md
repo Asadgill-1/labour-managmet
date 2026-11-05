@@ -69,7 +69,7 @@ Language > email and password > verify email > company name > optional logo and 
 
 **Timesheet (TS-01):** Client > date range > site > what goes on and what is left out > draft > agree a row if needed > approve > paper: daily summary or worker detail, rates on or off > sent to the company > accepted or disputed > a new revision if anything changes. The next step sits above the rows, so a long list never hides it.
 
-**Invoice (INV-01, D-050):** Company > dates > site > draft: the timesheets it reads, ticked, and what waits > lines, with a discount or a monthly fee > VAT treatment, PO and due date > see the draft > issue, which gives the number and today's date > paper, or send with its timesheet > a credit note takes it back whole, with a reason.
+**Invoice (INV-01, D-050):** Company > dates > site > draft: the timesheets it reads, ticked, and what waits > lines, with a discount or a monthly fee, and lines typed by hand > VAT treatment, PO and due date > see the draft > issue, which gives the number and today's date > paper, or send with its timesheet > a credit note takes it back whole or an amount of it, with a reason. Work changed after it issued shows on the invoice, and once it is taken back whole it offers a new invoice for the same dates (D-051).
 
 **Share (DOC-06, DOC-07):** Preview > recipient and document summary > save, print, share sheet or WhatsApp. The user picks the recipient and sends. "Share opened" is never shown as "delivered".
 
