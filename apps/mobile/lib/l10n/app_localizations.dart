@@ -4300,7 +4300,7 @@ abstract class AppLocalizations {
   /// No description provided for @tsMonthlyLine.
   ///
   /// In en, this message translates to:
-  /// **'{basis}, {rate}: {from} to {to}, {count} people. The fee goes on the invoice once, not from these rows.'**
+  /// **'{basis}, {rate}: {from} to {to}, {count} people. The contract amount goes on the invoice once, not from these rows.'**
   String tsMonthlyLine(
     String basis,
     String rate,
@@ -4732,7 +4732,7 @@ abstract class AppLocalizations {
   /// No description provided for @invDeleteDraftBody.
   ///
   /// In en, this message translates to:
-  /// **'The draft goes, with its discounts and fees. The timesheets don\'t change.'**
+  /// **'The draft goes, with its discounts and changed contract amounts. The timesheets don\'t change.'**
   String get invDeleteDraftBody;
 
   /// No description provided for @invPaper.
@@ -4906,13 +4906,13 @@ abstract class AppLocalizations {
   /// No description provided for @invFee.
   ///
   /// In en, this message translates to:
-  /// **'Fee for these dates (AED)'**
+  /// **'Contract amount for these dates (AED)'**
   String get invFee;
 
   /// No description provided for @invFeeHelp.
   ///
   /// In en, this message translates to:
-  /// **'Starts at the contract\'s monthly fee. Change it for part of a month.'**
+  /// **'Starts at the monthly contract amount. Change it for part of a month.'**
   String get invFeeHelp;
 
   /// No description provided for @invDiscountTooBig.
@@ -5161,10 +5161,10 @@ abstract class AppLocalizations {
   /// **'Manpower supply'**
   String get invPLineLabour;
 
-  /// A monthly contract line on an invoice names the month its fee covers (TS-08).
+  /// A monthly contract line on an invoice names the month its contract amount covers (TS-08).
   ///
   /// In en, this message translates to:
-  /// **'Monthly fee for {month}'**
+  /// **'Monthly contract amount for {month}'**
   String invPLineFee(String month);
 
   /// No description provided for @invPTotalNet.
@@ -5794,7 +5794,7 @@ abstract class AppLocalizations {
   /// No description provided for @regWorkNote.
   ///
   /// In en, this message translates to:
-  /// **'By work date. Invoiced means an issued invoice charges it. Work on a monthly rate shows no amount, because the month\'s fee is the charge. With no company rate, work can\'t be billed until a rate is set.'**
+  /// **'By work date. Invoiced means an issued invoice charges it. Work on a monthly rate shows no amount, because the month\'s contract amount is the charge. With no company rate, work can\'t be billed until a rate is set.'**
   String get regWorkNote;
 
   /// No description provided for @colWorth.

@@ -2393,7 +2393,7 @@ class AppLocalizationsEn extends AppLocalizations {
     String to,
     int count,
   ) {
-    return '$basis, $rate: $from to $to, $count people. The fee goes on the invoice once, not from these rows.';
+    return '$basis, $rate: $from to $to, $count people. The contract amount goes on the invoice once, not from these rows.';
   }
 
   @override
@@ -2668,7 +2668,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invDeleteDraftBody =>
-      'The draft goes, with its discounts and fees. The timesheets don\'t change.';
+      'The draft goes, with its discounts and changed contract amounts. The timesheets don\'t change.';
 
   @override
   String get invPaper => 'Paper';
@@ -2784,11 +2784,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invDiscount => 'Discount (AED)';
 
   @override
-  String get invFee => 'Fee for these dates (AED)';
+  String get invFee => 'Contract amount for these dates (AED)';
 
   @override
   String get invFeeHelp =>
-      'Starts at the contract\'s monthly fee. Change it for part of a month.';
+      'Starts at the monthly contract amount. Change it for part of a month.';
 
   @override
   String get invDiscountTooBig => 'A discount can\'t be more than its line.';
@@ -2918,7 +2918,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String invPLineFee(String month) {
-    return 'Monthly fee for $month';
+    return 'Monthly contract amount for $month';
   }
 
   @override
@@ -3324,7 +3324,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get regWorkNote =>
-      'By work date. Invoiced means an issued invoice charges it. Work on a monthly rate shows no amount, because the month\'s fee is the charge. With no company rate, work can\'t be billed until a rate is set.';
+      'By work date. Invoiced means an issued invoice charges it. Work on a monthly rate shows no amount, because the month\'s contract amount is the charge. With no company rate, work can\'t be billed until a rate is set.';
 
   @override
   String get colWorth => 'Worth';
@@ -5958,7 +5958,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
     String to,
     int count,
   ) {
-    return '$basis, $rate: $from se $to tak, $count log. Fee invoice par aik dafa lagti hai, in lines se nahin.';
+    return '$basis, $rate: $from se $to tak, $count log. Contract ki raqam invoice par aik dafa lagti hai, in lines se nahin.';
   }
 
   @override
@@ -6219,7 +6219,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get invDeleteDraftBody =>
-      'Draft hat jayega, aur us ki discount aur fees bhi. Timesheets nahin badlenge.';
+      'Draft hat jayega, aur us ke discount aur badli hui contract ki raqam bhi. Timesheets nahin badlenge.';
 
   @override
   String get invPaper => 'Kaghaz';
@@ -6334,11 +6334,11 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get invDiscount => 'Discount (AED)';
 
   @override
-  String get invFee => 'In tareekhon ki fee (AED)';
+  String get invFee => 'In tareekhon ki contract raqam (AED)';
 
   @override
   String get invFeeHelp =>
-      'Contract ki mahana fee se shuru. Adhay mahine ke liye badlein.';
+      'Contract ki mahana raqam se shuru. Adhay mahine ke liye badlein.';
 
   @override
   String get invDiscountTooBig => 'Discount line se zyada nahin ho sakta.';
@@ -6734,7 +6734,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get regWorkNote =>
-      'Kaam ki tareekh se. Invoice hua matlab jari invoice mein shamil hai. Mahana rate wale kaam ki raqam nahin dikhti, kyunke mahine ki fee hi bill hai. Company rate na ho to rate lagne tak bill nahin ho sakta.';
+      'Kaam ki tareekh se. Invoice hua matlab jari invoice mein shamil hai. Mahana rate wale kaam ki raqam nahin dikhti, kyunke mahine ki contract raqam hi bill hai. Company rate na ho to rate lagne tak bill nahin ho sakta.';
 
   @override
   String get colWorth => 'Kaam ki qeemat';

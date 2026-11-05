@@ -420,7 +420,7 @@ void main() {
       final again = await db.createInvoice(clientId: fixed, from: ts.from, to: ts.to, operationId: newUuid());
       final line = (await db.invoiceView(again)).lines.single;
       expect((line.amountFils, line.sources.length), (500000, 4));
-      expect(invoiceLineText(paperWords, line), startsWith('Monthly fee for 10-2020, '), reason: 'the paper names the month the fee covers');
+      expect(invoiceLineText(paperWords, line), startsWith('Monthly contract amount for 10-2020 ('), reason: 'the paper names the month the amount covers, and says contract once');
     });
 
     test('a fee per worker charges each worker once a month', () async {
@@ -444,6 +444,7 @@ void main() {
       final second = await db.createInvoice(clientId: crew, from: ts.from, to: ts.to, operationId: newUuid());
       final line = (await db.invoiceView(second)).lines.single;
       expect((line.quantity, line.amountFils), (1, 200000), reason: 'Asif is charged for October already');
+      expect(invoiceLineText(paperWords, line), startsWith('Monthly contract amount for 10-2020, Per month, each worker ('));
     });
   });
 

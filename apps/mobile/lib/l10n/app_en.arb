@@ -1334,7 +1334,7 @@
   },
   "tsMonthlyRow": "Monthly",
   "tsNotCharged": "Not charged",
-  "tsMonthlyLine": "{basis}, {rate}: {from} to {to}, {count} people. The fee goes on the invoice once, not from these rows.",
+  "tsMonthlyLine": "{basis}, {rate}: {from} to {to}, {count} people. The contract amount goes on the invoice once, not from these rows.",
   "@tsMonthlyLine": {
     "placeholders": {
       "basis": {
@@ -1526,7 +1526,7 @@
   "invIssueBody": "It gets the next number and today's date. After this it can't be changed, only taken back whole with a credit note.",
   "invPreview": "See draft",
   "invDeleteDraft": "Delete draft",
-  "invDeleteDraftBody": "The draft goes, with its discounts and fees. The timesheets don't change.",
+  "invDeleteDraftBody": "The draft goes, with its discounts and changed contract amounts. The timesheets don't change.",
   "invPaper": "Paper",
   "invShareBoth": "Send with timesheet",
   "invShareBothBody": "Invoice {number} and each timesheet it charges go together in one message. You pick who gets it.",
@@ -1583,8 +1583,8 @@
   "invNoLines": "Nothing ticked can be invoiced.",
   "invLineSheetTitle": "Change this line",
   "invDiscount": "Discount (AED)",
-  "invFee": "Fee for these dates (AED)",
-  "invFeeHelp": "Starts at the contract's monthly fee. Change it for part of a month.",
+  "invFee": "Contract amount for these dates (AED)",
+  "invFeeHelp": "Starts at the monthly contract amount. Change it for part of a month.",
   "invDiscountTooBig": "A discount can't be more than its line.",
   "findingNotInvoiced": "{count} companies have work no invoice charges yet: {names}. Make their invoices in Billing.",
   "@findingNotInvoiced": {
@@ -1636,9 +1636,9 @@
   "invPUnitMonth": "Month",
   "invPUnitWorkerMonth": "Worker-month",
   "invPLineLabour": "Manpower supply",
-  "invPLineFee": "Monthly fee for {month}",
+  "invPLineFee": "Monthly contract amount for {month}",
   "@invPLineFee": {
-    "description": "A monthly contract line on an invoice names the month its fee covers (TS-08).",
+    "description": "A monthly contract line on an invoice names the month its contract amount covers (TS-08).",
     "placeholders": {
       "month": {
         "type": "String"
@@ -2000,7 +2000,7 @@
   "colIssued": "Issued",
   "colDaysLate": "Days late",
   "colAge": "How late",
-  "regWorkNote": "By work date. Invoiced means an issued invoice charges it. Work on a monthly rate shows no amount, because the month's fee is the charge. With no company rate, work can't be billed until a rate is set.",
+  "regWorkNote": "By work date. Invoiced means an issued invoice charges it. Work on a monthly rate shows no amount, because the month's contract amount is the charge. With no company rate, work can't be billed until a rate is set.",
   "colWorth": "Worth",
   "colNotInvoiced": "Not invoiced",
   "colDaysNotInvoiced": "Days not invoiced",

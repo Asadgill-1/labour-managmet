@@ -151,8 +151,8 @@ Yeh bhi P3 ka hissa hai. Pehle **Apni company** mein VAT registered aur TRN bhar
 - [ ] Naya invoice jari karein. Phir is ke kisi mazdoor ki hazri ghatayein. **Mahina band** mein timesheet ka naam aaye. Timesheet ka naya revision approve karein: ab invoice ka naam aaye, aur invoice par laal mein farq likha ho. Poora credit note aur naya invoice banayein: mahina khul jaye.
 - [ ] **Invoice register** mein har line aaye, credit note minus mein. Excel nikal kar dekhein.
 - [ ] **Mahina band** kholein jahan kaam ka invoice nahin bana. Company ka naam mahine ki aakhri tareekh par aaye. Invoice ke baad hat jaye.
-- [ ] Mahana fixed fee wali company ka invoice banayein. Aik line fee ki ho, aur line par dabane se fee badal sake.
-- [ ] Usi company ka invoice sirf 1 se 15 tareekh tak ka banayein aur jari karein. Phir 16 se mahine ke aakhir tak ka banayein: paigham aaye ke kuch baqi nahin, kyun ke us mahine ki fee lag chuki. Fee ki line par mahina likha ho, jaise "Monthly fee for 10-2026" (D-054).
+- [ ] Mahana fixed contract wali company ka invoice banayein. Aik line contract ki raqam ki ho, aur line par dabane se raqam badal sake.
+- [ ] Usi company ka invoice sirf 1 se 15 tareekh tak ka banayein aur jari karein. Phir 16 se mahine ke aakhir tak ka banayein: paigham aaye ke kuch baqi nahin, kyun ke us mahine ki contract raqam lag chuki. Us line par mahina likha ho, jaise "Monthly contract amount for 10-2026" (D-054).
 
 ## 5f. Timesheet (T15)
 
@@ -166,7 +166,7 @@ Yeh bhi P3 ka hissa hai, isi APK mein hai.
 - [ ] **Company ko bhej diya**, phir **Company ko etiraz hai**, phir **Nayi revision**. Number ke saath R2 aaye. Revision 1 khol kar dekhein, waisi hi ho.
 - [ ] **Company ne maan li** dabayein, tareekh aur note likhein, tasveer lagayein. Mohar aaye, aur likha ho ke tasveer tasdeeq shuda digital signature nahin.
 - [ ] Approve ke baad kisi mazdoor ki hazri theek karein. Timesheet par likha aaye ke hazri badli. Nayi revision mein naya figure aaye, aur purani waisi rahe.
-- [ ] Mahana fixed rate wali company ki timesheet banayein. Lines par raqam na ho, aur neeche fee aik dafa likhi ho.
+- [ ] Mahana fixed rate wali company ki timesheet banayein. Lines par raqam na ho, aur neeche contract ki raqam aik dafa likhi ho.
 
 ## 5e. Letterhead aur kaghazat (T14)
 
@@ -207,7 +207,7 @@ Yeh hissa P3 ka hai, magar isi APK mein hai.
 Yeh chaaron abhi PROPOSED hain. Aap ka jawab darkar hai. Accountant ko bhi dikhayein.
 
 - [ ] **D-033:** Hisaab statement ki tarah chalta hai. Tankhwah screen par purane post hue mahine ka "ada kiya" tareekh se ginta hai. Khaas mahine slip aur baqi tankhwah mein dikhte hain.
-- [ ] **D-054:** Mahana fee har mahine aik hi baar lagti hai, chahe invoice do hisson mein banein ya kaam baad mein aaye. Fixed fee aik baar, fi mazdoor fee har mazdoor ki aik baar. Poora credit note woh mahina wapas khol deta hai. Fee ki line par mahina likha hota hai. Letterhead landscape register par bhi A4 ke size ka chhapta hai. Tax adviser ko bhi dikhayein.
+- [ ] **D-054:** Contract ki mahana raqam har mahine aik hi baar lagti hai, chahe invoice do hisson mein banein ya kaam baad mein aaye. Fixed contract aik baar, fi mazdoor contract har mazdoor ki aik baar. Poora credit note woh mahina wapas khol deta hai. Us line par mahina likha hota hai. App mein "fee" ki jagah ab "contract ki raqam" likha hai. Letterhead landscape register par bhi A4 ke size ka chhapta hai. Tax adviser ko bhi dikhayein.
 - [ ] **D-053:** Reports tab mein sab reports aik jagah. Purana baqaya aur "Kaam: bill hua ya nahin" nayi reports hain. Malik ki sheet hazri ke rate se bill leti hai, VAT ke baghair; invoice ki raqam se lena ho to batayein. CSV se mazdoor, companies aur sites aa sakte hain, sab line theek hon to hi save hota hai. Mahana tankhwah wala rate app mein lagana hoga. Import se pehle backup T20 ke baad aayega.
 - [ ] **D-052:** Company ki raseed cash book mein hi rehti hai, aur batati hai kis invoice ka paisa hai, sab se purana pehle. Zyada paisa company ka credit rehta hai. Due date guzarne ke baad paisa baqi ho to invoice overdue, aur mahina tab tak nahin band hota jab tak paisa na aaye ya aap wajah likh kar baqi ko nuqsan maan kar band na karein. Paid invoice ka credit note paisa credit mein wapas daalta hai. Credit wapas karna (refund) abhi nahin bana. Accountant ko bhi dikhayein.
 - [ ] **D-051:** Invoice mein haath se line (jaise transport) jud sakti hai, us par bhi VAT. Credit note kuch raqam ka bhi ban sakta hai, kaam invoice par hi rehta hai. Invoice ke baad hazri se raqam badle to mahina rukta hai, jab tak poora credit note aur naya invoice na bane. Sirf farq ka credit note ya invoice nahin banta. Tax adviser ko bhi dikhayein.

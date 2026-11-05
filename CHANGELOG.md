@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- A monthly fee is charged once a month, however that month's work is split across invoices or timesheets. Its invoice line names the month.
+- A monthly contract amount is charged once a month, however that month's work is split across invoices or timesheets. Its invoice line names the month, and the app no longer calls it a fee.
 - A letterhead prints the same size on a landscape register as on an upright paper.
 - The invoice register keeps each invoice's lines together.
 - A Reports tab lists every report with what it shows and which date it goes by.
