@@ -11,7 +11,8 @@ Hidden until the Menu button at the top left of a main screen opens it. The arro
 | Rozana | Aaj: attendance for any date, by group or by worker, copy last team, missing entries. Rozana hisaab: money in and out for any date | Built |
 | Register | Companies, Sites, Labour, Mazdoor group, Rooms, Rates, Pichla baqaya | Built |
 | Tankhwah aur billing | Tankhwah | Built |
-| Tankhwah aur billing | Timesheet, Invoice, Paisay mile (P3) | Jald |
+| Tankhwah aur billing | Timesheet, Invoice | Built |
+| Tankhwah aur billing | Paisay mile (P3) | Jald |
 | Aur | Reports, Documents (P3), Backup, Plan (P4), Help (P5), Team (P6) | Jald |
 | Fixed at the bottom | Apni company, Settings | Built |
 
@@ -26,11 +27,11 @@ The panel lists main tabs that open to show sub-tabs. The current tab's sub-tabs
 | Visa | Visa ka paisa, Visa register |
 | Companies | Companies, Sites, Rates, Company register |
 | Tankhwah | Tankhwah, Tankhwah register, Advance register |
-| Billing | Timesheet. Invoice and Paisay mile come with T16 and T17 |
+| Billing | Timesheet, Invoice, Invoice register. Paisay mile comes with T17 |
 | Hisaab | Rozana hisaab, Pichla baqaya, Hisaab register, Mahina band |
 | Kaghazat | Bane hue kaghaz, Letterhead |
 | Rooms | Rooms, Room register |
-| Jald aa raha hai | Invoice, Paisay mile, Reports, Documents, Team, Backup, Plan, Help |
+| Jald aa raha hai | Paisay mile, Reports, Team, Backup, Plan, Help |
 
 A register has a date range with quick choices, filters that take several values, totals on the band, rows under their dates with every field showing, and one export button (D-038).
 
@@ -68,7 +69,7 @@ Language > email and password > verify email > company name > optional logo and 
 
 **Timesheet (TS-01):** Client > date range > site > what goes on and what is left out > draft > agree a row if needed > approve > paper: daily summary or worker detail, rates on or off > sent to the company > accepted or disputed > a new revision if anything changes. The next step sits above the rows, so a long list never hides it.
 
-**Invoice (INV-01):** Client > period > site or timesheet items > PO reference > quantities > tax review > preview > issue. The final number is assigned only at issue.
+**Invoice (INV-01, D-050):** Company > dates > site > draft: the timesheets it reads, ticked, and what waits > lines, with a discount or a monthly fee > VAT treatment, PO and due date > see the draft > issue, which gives the number and today's date > paper, or send with its timesheet > a credit note takes it back whole, with a reason.
 
 **Share (DOC-06, DOC-07):** Preview > recipient and document summary > save, print, share sheet or WhatsApp. The user picks the recipient and sends. "Share opened" is never shown as "delivered".
 

@@ -2,9 +2,9 @@
 
 Read this first each session (AI-04). Replace it, do not append; git holds the history.
 
-**Phase:** P3 started on the owner's word on 2026-11-02, with P2's sign-off and the P1 gate's phone checks (D-035) still open. T14 and T15 are built
-**Branch:** `p3/t15-timesheets` (stacked: ... > p2/t13 > p2/t13b > p3/t14 > p3/t15, none merged)
-**Next task:** T16 (invoices), in sequence on the owner's word. The owner's phone test is still open
+**Phase:** P3 started on the owner's word on 2026-11-02, with P2's sign-off and the P1 gate's phone checks (D-035) still open. T14, T15 and T16 are built
+**Branch:** `p3/t16-invoices` (stacked: ... > p2/t13b > p3/t14 > p3/t15 > p3/t16, none merged)
+**Next task:** T17 (receipts, invoice status, client statement), in sequence on the owner's word. The owner's phone test is still open
 
 ## Done
 
@@ -14,6 +14,7 @@ Read this first each session (AI-04). Replace it, do not append; git holds the h
 | T04 | OWNER_ACCEPTED | Policy defaults D-101 to D-105 approved 2026-10-31 |
 | T05 to T10b, T12a | IMPLEMENTED_UNVERIFIED | CI green. The owner said "Theek hain" on 2026-10-31 to worker groups and the cash book on the phone. The checklist results are not reported yet |
 | T11 | IMPLEMENTED_UNVERIFIED | `dart test`: 82 passing. `flutter test`: 73 passing, including PRD examples, a crash during posting, and one full flow through the screens. `flutter analyze` clean. Owner has not seen it, and D-033 and D-034 are waiting for an answer |
+| T16 | IMPLEMENTED_UNVERIFIED | `dart test`: 138 passing, with the PRD's VAT figures. `flutter test`: 299 passing, including an upgrade from schema v12, a draft that reads its timesheets and bills nothing twice, VAT only from the company's own registration, a discount and prices with VAT in, numbers with no gap and a retry that changes nothing, every path to change an issued invoice refused, a credit note that frees the work, a monthly fee charged once, the month stopped by work with no invoice, the invoice register, the whole path from an approved timesheet to an issued invoice and a credit note through the screens, and invoicing at the 1,000-worker size. Screens, the tax invoice, the credit note and a draft drawn and read by eye. Not on a phone: "Send with timesheet" uses an Android share of several files that has only been compiled |
 | T15 | IMPLEMENTED_UNVERIFIED | `dart test`: 129 passing. `flutter test`: 269 passing, including an upgrade from schema v11, the whole path from a company and dates to an accepted timesheet and a new revision through the screens, no wage or hidden rate in what a company gets, the same work refused twice by the app and the database, a retry of every step, and 5,200 rows at the 1,000-worker size. Screens and papers drawn and read by eye. On 2026-11-04 a Windows build was driven with agent-desktop from an empty app to an accepted R2, a refused second timesheet, a correction after approval, R3, and closing October, with every figure right. It found four faults, now fixed with tests: a picker failure called the file the wrong type, a revision asked for an undo's reason, the corrected-rows note was plural for one row, and a draft went without asking. Not on a phone. The billing calls have no screen until T16 |
 | T14 | IMPLEMENTED_UNVERIFIED | `dart test`: 114 passing. `flutter test`: 210 passing, including an upgrade from schema v10, images refused by their bytes, a tall image shrinking whole, issued papers unchanged by a later logo, revisions under one number, a copy from what was stored, triggers refusing any change, and no blank last page. Slip, letterhead, COPY, receipt, pre-printed and register PDFs drawn with the Windows PDF engine and read by eye. Excel read back with openpyxl. Not on a phone, so the Android image picker, preview and print have only been compiled |
 | T13c | IMPLEMENTED_UNVERIFIED | The whole app redesigned with Hallmark (D-046). No route or action changed. 20 screens drawn and read by eye. Hallmark's linter reads CSS, so it could not run on Flutter, and the waiver is stamped in `lib/app/theme.dart`. Not on a phone |
@@ -31,7 +32,7 @@ Test evidence is host only. Encryption on Android, UX-06 timing and BUILD-04 on 
 Details in `docs/owner/P2_CHECKLIST.md`.
 
 1. Encryption check result, and seconds for the 10-worker entry (D-035).
-2. An answer on D-033, D-034, D-043, D-044, D-047 and D-049 after trying Tankhwah, Mahina band, Kaghazat and Timesheet on the phone.
+2. An answer on D-033, D-034, D-043, D-044, D-047, D-049 and D-050 after trying Tankhwah, Mahina band, Kaghazat, Timesheet and Invoice on the phone. A tax adviser should see D-050.
 3. Run `gh auth login`. The public repo made CI readable, but PRs and merges still need it.
 
 ## Open
@@ -43,8 +44,13 @@ Details in `docs/owner/P2_CHECKLIST.md`.
 - T21 must gate letterhead uploads, which DOC-02 makes a paid feature, and keep logo and basic identity free. T25 must give each device its own paper numbers, and carry images and stored files itself, since the audit log and outbox leave the bytes out on purpose (D-047). T20's backup holds them, because they sit in the database.
 - Issued papers sit in the database for good. A slip is about 60 KB, so a thousand workers' slips for a year would be about 700 MB if every one were issued. Measure on a phone before pilots.
 - A register's date line can sit alone at the foot of a page, with its rows on the next. A table row can't be told to stay with the next one. Split tables by date if owners mind.
-- T16 and T17 draw their papers on `documentPage` and add their kinds to `DocKind` and `renderIssued`.
-- T16 calls `allocateBilling` as it issues and `releaseBilling` on a credit note or cancellation, shows `billingChanges` as work to correct, adds "share both" (TS-07), and builds the monthly fee from `monthlyContracts`. `billed_allocations.invoice_id` has no foreign key until invoices exist. T16 stops a month for work with no invoice, and T17 for an overdue invoice, until paid or closed with a reason (D-048).
+- T17 draws its papers on `documentPage` and adds their kinds to `DocKind` and `renderIssued`. An invoice paper is English whatever the app's language (D-050). A timesheet sent with it still follows the app's language.
+- T17 allocates company receipts to invoices and derives partly paid, paid and overdue (INV-05, INV-07). An overdue invoice then stops a month until paid or closed with a reason (D-048). Work with no invoice already does (D-050).
+- "Send with timesheet" uses an Android share of several files, which has only been compiled. Check it on the phone first.
+- Part credit notes and lines typed by hand, such as transport, are not built. A credit note takes a whole invoice back. Add when owners ask.
+- `billed_allocations.invoice_id` still has no foreign key, since adding one rebuilds the table and its triggers. Issuing is the only writer.
+- T25 must give Team tenants invoice numbers from the server (INV-08), as it must for papers and timesheets.
+- Attendance corrected after an invoice shows on the timesheet as a billing difference, and the fix is a credit note and a new invoice. Closing does not flag that difference. Add it if owners miss it.
 - T25 must give each device its own timesheet numbers, as it must for papers. An approved timesheet's lines go in one outbox row, which reaches megabytes at thousands of rows.
 - A timesheet paper over 5,000 rows warns it will be slow, and over 30,000 is refused, as registers are. Measure the detail paper on a phone. A timesheet has no Excel, since TS-07 asks for a PDF. Add it if owners ask.
 - A paper keeps the letterhead it was first issued with, for that revision. If owners want a new look on an accepted timesheet without a revision, that needs a rule (D-049).
@@ -55,10 +61,10 @@ Details in `docs/owner/P2_CHECKLIST.md`.
 - The unpaid list adds up every worker on each change. It is fast on this laptop at 1,000 workers and has not been measured on a phone. Debounce it if a phone shows lag.
 - A 26,000-row PDF took 1.2 GB and 90 seconds on this laptop, so a phone may run out of memory below the 30,000-row limit. Measure on a phone. Excel is fine at that size.
 - Slips go one worker at a time, as DOC-07 asks. WhatsApp still asks for the contact each time. Opening a worker's chat from their stored number needs an unofficial WhatsApp extra, so it waits until asked.
-- A closed month's attendance has no correction of its own: the difference goes in an open month as an allowance or deduction, or the month is opened again. T16's credit notes will cover a bill that changes. Company receipts with no invoice are not checked at closing until T17. T24 must keep closing and opening with the owner.
+- A closed month's attendance has no correction of its own: the difference goes in an open month as an allowance or deduction, or the month is opened again. A credit note and a new invoice cover a bill that changes. Company receipts with no invoice are not checked at closing until T17. T24 must keep closing and opening with the owner.
 - Unpaid wages do not stop a month closing, because they carry forward (D-045). The owner confirmed this on 2026-11-02 and added the invoice rule in D-048.
 - T17 must allocate `clientReceipt` rows to invoices (INV-05). T18 takes wage expense from posted lines, never from payments (REP-02).
-- A client company that pays for a visa and cuts it from an invoice is not covered. Visa money runs against the worker only (D-039). Add when invoices exist (T16) if the owner says that happens.
+- A client company that pays for a visa and cuts it from an invoice is not covered. Visa money runs against the worker only (D-039). Add to invoices if the owner says that happens.
 - PDFs use Roboto, which has Latin letters only, so a name typed in Urdu or Arabic script prints as boxes. Margin reports and CSV import are still T18.
 - Rozana hisaab has no running cash-in-hand figure, because no opening cash exists yet. Group wages have no overtime. Payroll periods are calendar months only, though the tables store from and to. Add when asked.
 - UX-02 is local only until T19 adds accounts. UX-07's sync statuses arrive with T25.
@@ -90,4 +96,7 @@ Details in `docs/owner/P2_CHECKLIST.md`.
 - `partial_method` holds a `PartialMethod` name such as `calendarDays`. The old comment on the column said `calendar_days`, and a test had copied it.
 - A Windows build can be driven with agent-desktop, but Flutter on Windows exposes MSAA only, so agent-desktop sees an empty view. `apps/mobile/windows/` (local, in `.git/info/exclude`) holds the runner and a headed driver that finds widgets through MSAA. It can't type punctuation, and Flutter ignores a synthesized ctrl+a or ctrl+v. `analysis_options.yaml` excludes `windows/**`, since the Flutter tool adds it back whenever that folder exists. It found four faults the widget tests missed.
 - A shared dialog took its field label for granted: `askReason` said "undo" on a new revision and on reopening a month. A helper used for more than one job takes its words from the caller.
-- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Refresh the graph after every task, as the owner asked on 2026-10-31. Current graph: 3,260 nodes, 5,089 edges, 119 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.
+- A test that walks the side panel can find the sub-tab it wants below the fold once more main tabs are open. `goTo` scrolls to it and pumps a frame before tapping, or the tap lands on the old spot.
+- A capture test froze for five minutes when it wrote to the database a screen was watching. Draw papers from a database of their own.
+- A rule that stops a month reaches every test that closes one. D-048 (3) needed `invoiceUpTo` in `test/support.dart`.
+- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Refresh the graph after every task, as the owner asked on 2026-10-31. Current graph: 3,534 nodes, 5,521 edges, 128 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.

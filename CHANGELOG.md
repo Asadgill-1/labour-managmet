@@ -13,6 +13,9 @@
 - Timesheets for a company: daily summary or each worker, with or without rates, from approval through the company's answer, with revisions that keep the old one. The same work can't go on two timesheets or be charged twice.
 - Throwing a timesheet draft away asks first, since hours agreed in it go too. A new revision and reopening a month each ask for their own reason, not an undo's.
 - A picture picker that fails says so, instead of calling the file the wrong type.
+- Invoices from approved timesheets: VAT when your company is registered, a number given only when issued, a discount on a line, and a monthly fee charged once. A paper in English that says it is no e-invoice, sent alone or with its timesheet.
+- A credit note takes an invoice back whole, so its work can be invoiced again. The invoice register lists every line issued, for PDF or Excel.
+- A month can't close while work with a company rate has no invoice.
 - Your letterhead on every paper: logo, header and footer images, signature, stamp, or pre-printed paper, with a sample to check.
 - Salary slips and receipts keep a number and an exact stored copy, and a new revision when a figure changes.
 - See a paper on screen, then save, print or send it.
