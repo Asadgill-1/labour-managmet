@@ -24,17 +24,24 @@ class _Line {
 }
 
 /// The month the owner reads and nobody else sees: what each company brought in against what its workers earned, at
-/// which rates, then how each worker's account stands. An estimate from attendance, and it says so (REP-03). Monthly
-/// salaries stay outside the companies, because no way of splitting them across companies has been chosen.
+/// which rates, then how each worker's account stands. An estimate from attendance, and it says so (REP-03). A monthly
+/// contract counts its amount for the month (D-055). Monthly salaries stay outside the companies, because no way of
+/// splitting them across companies has been chosen.
 Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, String month) async {
   final statements = await db.statementsFor(month);
   final clients = {for (final c in await db.select(db.clients).get()) c.id: c.name};
   final sites = {for (final s in await db.select(db.sites).get()) s.id: s.name};
 
   final byKey = <(String, String, String, String?, int?, String?, int?), _Line>{};
+  // A monthly contract's days carry no amount, so its amount for the month is the company's bill, invoiced or not: once
+  // on a fixed contract, once a worker on one per worker (D-055). Each contract is a line of its own under its company.
+  final contracts = <(String, String, int), Set<String>>{};
   for (final s in statements) {
     for (final e in s.work) {
       if (e.attendanceStatus == AttendanceStatus.absent.name) continue;
+      if (e.clientBasis case final basis? when e.clientRateFils != null && isPeriodBasis(RateBasis.values.byName(basis))) {
+        (contracts[(e.clientId, basis, e.clientRateFils!)] ??= {}).add(e.workerId);
+      }
       final line = byKey[(e.clientId, e.siteId, e.workerId, e.clientBasis, e.clientRateFils, e.workerBasis, e.workerRateFils)] ??= _Line(e.clientId, e.siteId, s, e);
       line.days++;
       line.clientMinutes += e.clientBillableMinutes;
@@ -59,6 +66,17 @@ Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, 
   }
   int sum(Iterable<_Line> rows, int Function(_Line) of) => rows.fold(0, (total, l) => total + of(l));
   int people(Iterable<_Line> rows) => rows.map((l) => l.statement.worker.id).toSet().length;
+  final contractLines = [
+    for (final MapEntry(key: (clientId, basis, rate), value: workers) in contracts.entries)
+      (
+        company: clients[clientId] ?? '',
+        basis: basis,
+        rateFils: rate,
+        workers: workers.length,
+        amount: clientMonthlyCharge(RateBasis.values.byName(basis), rateFils: rate, workerCount: workers.length),
+      ),
+  ];
+  int contractBill(String? company) => contractLines.where((c) => company == null || c.company == company).fold(0, (total, c) => total + c.amount);
 
   final cash = await (db.select(db.cashEntries)..where((c) => c.kind.isIn([CashKind.roomRentReceived.name, CashKind.roomRentPaid.name, CashKind.expense.name]))).get();
   final undone = {for (final c in cash) ?c.reversesEntryId};
@@ -67,7 +85,7 @@ Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, 
       .fold(0, (total, c) => total + c.amountFils);
   int of(int Function(WorkerStatement) figure) => statements.fold(0, (total, s) => total + figure(s));
 
-  final bill = sum(lines, (l) => l.bill);
+  final bill = sum(lines, (l) => l.bill) + contractBill(null);
   final wages = sum(lines, (l) => l.pay);
 
   // First what the work itself left, then the estimate after everything else, kept apart as REP-03 asks. VAT is never
@@ -119,9 +137,9 @@ Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, 
             people(rows),
             sum(rows, (l) => l.days),
             sum(rows, (l) => l.clientMinutes),
-            sum(rows, (l) => l.bill),
+            sum(rows, (l) => l.bill) + contractBill(name),
             sum(rows, (l) => l.pay),
-            sum(rows, (l) => l.bill - l.pay),
+            sum(rows, (l) => l.bill - l.pay) + contractBill(name),
             sum(rows, (l) => l.noRate),
           ]),
       ],
@@ -178,24 +196,44 @@ Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, 
       RegisterColumn(l10n.colProfit, kind: CellKind.money, total: true),
     ],
     entries: [
-      for (final l in lines)
-        RegisterEntry(
-          [
-            company(l),
-            sites[l.siteId],
-            l.statement.worker.name,
-            l.statement.worker.code,
-            l.days,
-            l.clientMinutes,
-            rateCell(l10n, l.first.attendanceStatus, l.first.clientBasis, l.first.clientRateFils),
-            l.bill,
-            l.workerMinutes,
-            rateCell(l10n, l.first.attendanceStatus, l.first.workerBasis, l.first.workerRateFils),
-            l.pay,
-            l.bill - l.pay,
-          ],
-          group: company(l),
-        ),
+      for (final MapEntry(key: name, value: rows) in byCompany.entries) ...[
+        for (final l in rows)
+          RegisterEntry(
+            [
+              name,
+              sites[l.siteId],
+              l.statement.worker.name,
+              l.statement.worker.code,
+              l.days,
+              l.clientMinutes,
+              rateCell(l10n, l.first.attendanceStatus, l.first.clientBasis, l.first.clientRateFils),
+              l.bill,
+              l.workerMinutes,
+              rateCell(l10n, l.first.attendanceStatus, l.first.workerBasis, l.first.workerRateFils),
+              l.pay,
+              l.bill - l.pay,
+            ],
+            group: name,
+          ),
+        for (final c in contractLines.where((c) => c.company == name))
+          RegisterEntry(
+            [
+              name,
+              null,
+              c.basis == RateBasis.monthFixed.name ? l10n.sheetContract : '${l10n.sheetContract}, ${l10n.tsPeople(c.workers)}',
+              null,
+              null,
+              null,
+              rateCell(l10n, AttendanceStatus.present.name, c.basis, c.rateFils),
+              c.amount,
+              null,
+              null,
+              null,
+              c.amount,
+            ],
+            group: name,
+          ),
+      ],
     ],
   );
 }

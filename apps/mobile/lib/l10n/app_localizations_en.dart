@@ -2001,7 +2001,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sheetNote =>
-      'An estimate from attendance, not audited accounts. A company with no rate or a monthly rate shows no bill here, so its profit looks low. Advance and visa money are not expenses, because workers pay them back.';
+      'An estimate from attendance, not audited accounts. A company on a monthly contract has its contract amount for the month on a line of its own, invoiced or not. A company with no rate shows no bill here, so its profit looks low. Advance and visa money are not expenses, because workers pay them back.';
+
+  @override
+  String get sheetContract => 'Monthly contract amount';
 
   @override
   String get colProfit => 'Profit';
@@ -5583,7 +5586,10 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get sheetNote =>
-      'Yeh hazri se bana andaza hai, audit shuda hisaab nahin. Jis company ka rate nahin ya mahana hai, us ka bill yahan nahin aata, is liye us ka nafa kam dikhta hai. Advance aur visa kharcha nahin, mazdoor wapas dete hain.';
+      'Yeh hazri se bana andaza hai, audit shuda hisaab nahin. Mahana contract wali company ki mahine ki contract raqam alag line mein aati hai, invoice bana ho ya nahin. Jis company ka rate nahin, us ka bill yahan nahin aata, is liye us ka nafa kam dikhta hai. Advance aur visa kharcha nahin, mazdoor wapas dete hain.';
+
+  @override
+  String get sheetContract => 'Contract ki raqam';
 
   @override
   String get colProfit => 'Nafa';

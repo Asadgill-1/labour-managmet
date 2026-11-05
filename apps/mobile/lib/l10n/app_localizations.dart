@@ -3646,8 +3646,14 @@ abstract class AppLocalizations {
   /// No description provided for @sheetNote.
   ///
   /// In en, this message translates to:
-  /// **'An estimate from attendance, not audited accounts. A company with no rate or a monthly rate shows no bill here, so its profit looks low. Advance and visa money are not expenses, because workers pay them back.'**
+  /// **'An estimate from attendance, not audited accounts. A company on a monthly contract has its contract amount for the month on a line of its own, invoiced or not. A company with no rate shows no bill here, so its profit looks low. Advance and visa money are not expenses, because workers pay them back.'**
   String get sheetNote;
+
+  /// No description provided for @sheetContract.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly contract amount'**
+  String get sheetContract;
 
   /// No description provided for @colProfit.
   ///

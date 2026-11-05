@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- The owner's sheet counts a monthly contract's amount for the month on a line of its own, invoiced or not, so such a company no longer looks like a loss.
 - A monthly contract amount is charged once a month, however that month's work is split across invoices or timesheets. Its invoice line names the month, and the app no longer calls it a fee.
 - A letterhead prints the same size on a landscape register as on an upright paper.
 - The invoice register keeps each invoice's lines together.

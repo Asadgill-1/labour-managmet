@@ -115,6 +115,7 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 - [ ] **Purana baqaya**: har company ke invoice aur purana baqi, kitne din der, aur upar aaj ki tareekh. Jo credit kisi invoice par nahin laga woh company ke neeche likha ho. PDF aur Excel nikal kar dekhein.
 - [ ] **Kaam: bill hua ya nahin**: pichla mahina chunein. Jis site ka invoice jari hua us mein "Invoice hua" ho, baqi mein "Invoice baqi" laal. **Bill > Bill baqi** filter se sirf baqi kaam rahe.
 - [ ] **Malik ki sheet** (Tankhwah ya Reports se): pehle bill minus mazdoori, phir baqi kharche, aakhir mein "Andazan nafa, audit shuda nahin".
+- [ ] Mahana contract wali company ke neeche aik line **Contract ki raqam** ho, poori mahana raqam ke saath, chahe invoice abhi na bana ho. Us company ka nafa ab minus na ho (D-055).
 - [ ] **Labour > File se** (search ke saath) **> Khaali file lein** se file save karein. Excel mein do teen mazdoor bharein, aik ka code purana rakhein, CSV ki tarah save karein, phir **CSV file chunein**. Ghalat line ka number aur wajah aaye, aur kuch save na ho.
 - [ ] File theek karke dobara chunein, **save** dabayein. Mazdoor list mein aa jayein, aur jis ka pay rate likha tha us ka rate bhi lag jaye.
 - [ ] **Companies** aur **Sites** mein bhi **File se** se aik do line la kar dekhein.

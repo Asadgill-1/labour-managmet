@@ -267,4 +267,24 @@ void main() {
     expect(words, isNot(contains('net profit')));
     expect(summary.totalLabel, contains('not audited'));
   });
+
+  test("the owner's sheet counts a monthly contract's amount for the month, invoiced or not: once fixed, once a worker (D-055)", () async {
+    Future<void> contract(String name, RateBasis basis, int fils, List<(String, String)> work) async {
+      final client = await db.saveRow(db.clients, id: null, operationId: newUuid(), fields: ClientsCompanion(name: Value(name)));
+      final site = await db.saveRow(db.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(client), name: const Value('Yard')));
+      await db.saveRow(db.billingContracts, id: null, operationId: newUuid(), fields: BillingContractsCompanion(clientId: Value(client), basis: Value(basis.name), rateFils: Value(fils), effectiveFrom: const Value('2020-01-01')));
+      for (final (date, worker) in work) {
+        await db.saveAttendanceBatch(workDate: date, clientId: client, siteId: site, inputs: [EntryInput(workerId: worker, shift: ts.shift)], operationId: newUuid());
+      }
+    }
+
+    await contract('Fixed', RateBasis.monthFixed, 500000, [('2020-10-05', ts.asif), ('2020-10-05', ts.bilal), ('2020-10-20', ts.asif)]);
+    await contract('Crew', RateBasis.monthPerWorker, 200000, [('2020-10-06', ts.asif), ('2020-10-21', ts.asif), ('2020-10-21', ts.bilal)]);
+    final sheet = await buildSalarySheet(db, l10n, '2020-10');
+    final [contribution, _, byCompany, _] = sheet.rollupsOf!(sheet.entries);
+    expect({for (final r in contribution.rows) r.cells[0]: r.cells[1]}, {l10n.sheetBill: 500000 + 400000, l10n.sheetWages: -6 * 9000});
+    expect({for (final r in byCompany.rows) '${r.cells[0]}': (r.cells[4], r.cells[6])}, {'Crew': (400000, 400000 - 27000), 'Fixed': (500000, 500000 - 27000)});
+    expect([for (final e in sheet.entries) if (e.cells[7] != 0) '${e.group}: ${e.cells[2]}, ${e.cells[7]}'], ['Crew: ${l10n.sheetContract}, ${l10n.tsPeople(2)}, 400000', 'Fixed: ${l10n.sheetContract}, 500000']);
+    expect(columnTotal(sheet.entries, 7), 900000, reason: 'the detail adds up to the same bill');
+  });
 }

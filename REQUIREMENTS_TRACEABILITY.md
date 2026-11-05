@@ -81,7 +81,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | DOC-08 | 10 | Tests | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-058, TC-082 | - |
 | REP-01 | 11 | Reports | T18, T18a, T11e, T11f | IMPLEMENTED_UNVERIFIED | TC-057, TC-058, TC-062, TC-063, TC-067, TC-106, TC-107, TC-108 | `apps/mobile/test/reports_test.dart` |
 | REP-02 | 11 | Hisaab ki separation | T18 | IMPLEMENTED_UNVERIFIED | TC-044 | `apps/mobile/test/reports_test.dart` |
-| REP-03 | 11 | Margin | T11f, T18 | IMPLEMENTED_UNVERIFIED | TC-044, TC-065 | `apps/mobile/test/statement_test.dart`, `apps/mobile/test/reports_test.dart` |
+| REP-03 | 11 | Margin | T11f, T18 | IMPLEMENTED_UNVERIFIED | TC-044, TC-065, TC-112 | `apps/mobile/test/statement_test.dart`, `apps/mobile/test/reports_test.dart` |
 | REP-04 | 11 | Closing | T13, T13b, T16 | IMPLEMENTED_UNVERIFIED | TC-037, TC-072, TC-073, TC-074, TC-076, TC-095, TC-098 | - |
 | REP-05 | 11 | Historical integrity | T13 | IMPLEMENTED_UNVERIFIED | TC-075 | - |
 | REP-06 | 11 | Backup/export | T18, T18a, T20 | IN_PROGRESS | TC-058, TC-103 | - |
