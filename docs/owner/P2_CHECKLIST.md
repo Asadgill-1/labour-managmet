@@ -109,6 +109,16 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 - [ ] Advance wale mazdoor par **Tankhwah** mein **Advance katein** dabayein. **Mazdoor ko dena hai** ab slip ke baqi ke barabar ho. Mazdoor ki screen par us raqam ko badal bhi sakte hain.
 - [ ] **Apni company** mein **Mahine ke baad tankhwah kitne din mein** likhein. Us din tak **abhi late nahin** likha aaye, us ke baad din ginay jayen.
 
+## 5i. Reports aur CSV import (T18)
+
+- [ ] **Menu > Reports > Sab reports**: har report ke neeche likha ho woh kya dikhati hai aur kis tareekh se. Har aik par dabayein, sahi register khule. **Companies se mila paisa** aur **Kharche** par sirf wohi lines hon.
+- [ ] **Purana baqaya**: har company ke invoice aur purana baqi, kitne din der, aur upar aaj ki tareekh. Jo credit kisi invoice par nahin laga woh company ke neeche likha ho. PDF aur Excel nikal kar dekhein.
+- [ ] **Kaam: bill hua ya nahin**: pichla mahina chunein. Jis site ka invoice jari hua us mein "Invoice hua" ho, baqi mein "Invoice baqi" laal. **Bill > Bill baqi** filter se sirf baqi kaam rahe.
+- [ ] **Malik ki sheet** (Tankhwah ya Reports se): pehle bill minus mazdoori, phir baqi kharche, aakhir mein "Andazan nafa, audit shuda nahin".
+- [ ] **Labour > File se** (search ke saath) **> Khaali file lein** se file save karein. Excel mein do teen mazdoor bharein, aik ka code purana rakhein, CSV ki tarah save karein, phir **CSV file chunein**. Ghalat line ka number aur wajah aaye, aur kuch save na ho.
+- [ ] File theek karke dobara chunein, **save** dabayein. Mazdoor list mein aa jayein, aur jis ka pay rate likha tha us ka rate bhi lag jaye.
+- [ ] **Companies** aur **Sites** mein bhi **File se** se aik do line la kar dekhein.
+
 ## 5h. Raseed aur overdue (T17)
 
 Pehle 5g ke mutabiq aik invoice jari karein.
@@ -196,6 +206,7 @@ Yeh hissa P3 ka hai, magar isi APK mein hai.
 Yeh chaaron abhi PROPOSED hain. Aap ka jawab darkar hai. Accountant ko bhi dikhayein.
 
 - [ ] **D-033:** Hisaab statement ki tarah chalta hai. Tankhwah screen par purane post hue mahine ka "ada kiya" tareekh se ginta hai. Khaas mahine slip aur baqi tankhwah mein dikhte hain.
+- [ ] **D-053:** Reports tab mein sab reports aik jagah. Purana baqaya aur "Kaam: bill hua ya nahin" nayi reports hain. Malik ki sheet hazri ke rate se bill leti hai, VAT ke baghair; invoice ki raqam se lena ho to batayein. CSV se mazdoor, companies aur sites aa sakte hain, sab line theek hon to hi save hota hai. Mahana tankhwah wala rate app mein lagana hoga. Import se pehle backup T20 ke baad aayega.
 - [ ] **D-052:** Company ki raseed cash book mein hi rehti hai, aur batati hai kis invoice ka paisa hai, sab se purana pehle. Zyada paisa company ka credit rehta hai. Due date guzarne ke baad paisa baqi ho to invoice overdue, aur mahina tab tak nahin band hota jab tak paisa na aaye ya aap wajah likh kar baqi ko nuqsan maan kar band na karein. Paid invoice ka credit note paisa credit mein wapas daalta hai. Credit wapas karna (refund) abhi nahin bana. Accountant ko bhi dikhayein.
 - [ ] **D-051:** Invoice mein haath se line (jaise transport) jud sakti hai, us par bhi VAT. Credit note kuch raqam ka bhi ban sakta hai, kaam invoice par hi rehta hai. Invoice ke baad hazri se raqam badle to mahina rukta hai, jab tak poora credit note aur naya invoice na bane. Sirf farq ka credit note ya invoice nahin banta. Tax adviser ko bhi dikhayein.
 - [ ] **D-050:** Invoice sirf approved timesheet se banta hai, aur draft timesheet ko jaisay hai waisay parhta hai. VAT sirf aap ki apni registration se lagta hai, company ke TRN se nahin. Number jari karte waqt milta hai, tareekh aaj ki, pichli tareekh nahin. Ghalti ho to poora credit note bana kar naya invoice banta hai. Kaghaz hamesha English mein. Jis kaam ka invoice nahin bana woh mahina rokta hai. Tax adviser ko bhi dikhayein.

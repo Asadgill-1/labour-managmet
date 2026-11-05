@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- A Reports tab lists every report with what it shows and which date it goes by.
+- Two new reports: what each company owes by how late, and each company's work by site and month with what is still to bill.
+- The owner's sheet shows the labour contribution before the other costs, and calls the result an estimate, not audited.
+- Workers, companies and sites can come in from a CSV file, checked line by line first and saved all together or not at all.
+
 - Repository bootstrap: PRD in Markdown, source-of-truth docs, requirements traceability check.
 - Encrypted per-tenant local database.
 - App in Roman Urdu and English, with large text.

@@ -28,7 +28,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | MASTER-05 | 04 | Opening balances | T08 | IMPLEMENTED_UNVERIFIED | TC-030 | - |
 | MASTER-06 | 04 | Rate cards | T08 | IMPLEMENTED_UNVERIFIED | - | - |
 | MASTER-07 | 04 | Archive | T07 | IMPLEMENTED_UNVERIFIED | TC-029 | - |
-| MASTER-08 | 04 | Import | T18 | NOT_STARTED | - | - |
+| MASTER-08 | 04 | Import | T18, T20 | IMPLEMENTED_UNVERIFIED | TC-103, TC-104, TC-105, TC-108 | `apps/mobile/test/reports_test.dart` |
 | ATT-01 | 05 | Flow | T10 | IMPLEMENTED_UNVERIFIED | - | - |
 | ATT-02 | 05 | Entry fields | T10 | IMPLEMENTED_UNVERIFIED | - | - |
 | ATT-03 | 05 | Bulk apply | T10 | IMPLEMENTED_UNVERIFIED | TC-023 | - |
@@ -79,12 +79,12 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | DOC-06 | 10 | Actions | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-059, TC-081 | - |
 | DOC-07 | 10 | Data safety | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-059, TC-081 | - |
 | DOC-08 | 10 | Tests | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-058, TC-082 | - |
-| REP-01 | 11 | Reports | T18, T18a, T11e, T11f | IN_PROGRESS | TC-057, TC-058, TC-062, TC-063, TC-067 | - |
-| REP-02 | 11 | Hisaab ki separation | T18 | NOT_STARTED | TC-044 | - |
-| REP-03 | 11 | Margin | T11f, T18 | IN_PROGRESS | TC-044, TC-065 | `apps/mobile/test/statement_test.dart` |
+| REP-01 | 11 | Reports | T18, T18a, T11e, T11f | IMPLEMENTED_UNVERIFIED | TC-057, TC-058, TC-062, TC-063, TC-067, TC-106, TC-107, TC-108 | `apps/mobile/test/reports_test.dart` |
+| REP-02 | 11 | Hisaab ki separation | T18 | IMPLEMENTED_UNVERIFIED | TC-044 | `apps/mobile/test/reports_test.dart` |
+| REP-03 | 11 | Margin | T11f, T18 | IMPLEMENTED_UNVERIFIED | TC-044, TC-065 | `apps/mobile/test/statement_test.dart`, `apps/mobile/test/reports_test.dart` |
 | REP-04 | 11 | Closing | T13, T13b, T16 | IMPLEMENTED_UNVERIFIED | TC-037, TC-072, TC-073, TC-074, TC-076, TC-095, TC-098 | - |
 | REP-05 | 11 | Historical integrity | T13 | IMPLEMENTED_UNVERIFIED | TC-075 | - |
-| REP-06 | 11 | Backup/export | T18, T18a | IN_PROGRESS | TC-058 | - |
+| REP-06 | 11 | Backup/export | T18, T18a, T20 | IN_PROGRESS | TC-058, TC-103 | - |
 | REP-07 | 11 | Expenses | T13, T12a | IMPLEMENTED_UNVERIFIED | TC-052 | - |
 | REP-08 | 11 | Ledger design | T11, T12a | IMPLEMENTED_UNVERIFIED | TC-036, TC-051, TC-055 | `apps/mobile/test/payroll_test.dart`, `apps/mobile/test/cash_test.dart` |
 | PLAN-01 | 12 | Trial 14 din; Team feature trial owner ki clear | T24 | NOT_STARTED | - | - |

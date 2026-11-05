@@ -56,7 +56,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 | T15 | Timesheets, revisions, billed allocation (D-049) | TS-01..08 | IMPLEMENTED_UNVERIFIED | `p3/t15-timesheets` |
 | T16 | Invoices, VAT, numbering, credit notes, e-invoice labelling and structured export, "send with timesheet" (TS-07), a month stopped by work with no invoice (D-048, D-050), lines typed by hand, credit notes for an amount, and a month stopped by work changed after it was invoiced (D-051) | INV-01..04, INV-06, INV-08, INV-09 | IMPLEMENTED_UNVERIFIED | `p3/t16-invoices` |
 | T17 | Receipts, status, client statement. An overdue invoice stops a month until paid or closed with a reason (D-048, D-052) | INV-05, INV-07 | IMPLEMENTED_UNVERIFIED | `p3/t17-receipts` |
-| T18 | Tenant reports, export, CSV import | REP-01..03, REP-06, MASTER-08 | NOT_STARTED | - |
+| T18 | Tenant reports, export, CSV import (D-053). Backup before an import waits for T20 | REP-01..03, REP-06, MASTER-08 | IMPLEMENTED_UNVERIFIED | `p3/t18-reports` |
 
 **Gate:** PDF review, duplicate-billing and numbering tests pass.
 
