@@ -314,3 +314,12 @@ END;
 CREATE TRIGGER invoice_line_no_delete BEFORE DELETE ON invoice_lines BEGIN
   SELECT RAISE(ABORT, 'an invoice line stays on record');
 END;
+
+-- What settled an invoice stays on record. A negative row gives some back (INV-05, REP-08).
+CREATE TRIGGER invoice_allocation_no_update BEFORE UPDATE ON invoice_allocations BEGIN
+  SELECT RAISE(ABORT, 'invoice allocations are append-only');
+END;
+
+CREATE TRIGGER invoice_allocation_no_delete BEFORE DELETE ON invoice_allocations BEGIN
+  SELECT RAISE(ABORT, 'invoice allocations are append-only');
+END;

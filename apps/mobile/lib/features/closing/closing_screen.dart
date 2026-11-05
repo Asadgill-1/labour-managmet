@@ -33,6 +33,7 @@ String findingText(AppLocalizations l10n, ClosingFinding f) {
     ClosingIssue.notInvoiced => l10n.findingNotInvoiced(count, names),
     ClosingIssue.changedAfterInvoice => l10n.findingChangedAfterInvoice(count, names),
     ClosingIssue.invoiceOutOfDate => l10n.findingInvoiceOutOfDate(count, names),
+    ClosingIssue.overdue => l10n.findingOverdue(count, names),
   };
 }
 
@@ -122,7 +123,7 @@ class _ClosingScreenState extends ConsumerState<ClosingScreen> {
       ClosingIssue.noCompanyRate => (null, const <_FixAction>[], (ClosingTarget t) async => _open(ContractFormScreen.billing(clientId: t.id))),
       ClosingIssue.notInvoiced => (null, const <_FixAction>[], (ClosingTarget t) async => _open(NewInvoiceScreen(clientId: t.id, month: f.date.substring(0, 7)))),
       ClosingIssue.changedAfterInvoice => (null, const <_FixAction>[], (ClosingTarget t) async => _open(TimesheetScreen(timesheetId: t.id))),
-      ClosingIssue.invoiceOutOfDate => (null, const <_FixAction>[], (ClosingTarget t) async => _open(InvoiceScreen(invoiceId: t.id))),
+      ClosingIssue.invoiceOutOfDate || ClosingIssue.overdue => (null, const <_FixAction>[], (ClosingTarget t) async => _open(InvoiceScreen(invoiceId: t.id))),
       ClosingIssue.overlap => (
         null,
         const <_FixAction>[],

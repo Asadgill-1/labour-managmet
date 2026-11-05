@@ -5424,6 +5424,312 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Credit notes took back {amount}. {left} is left.'**
   String invNotePartCredited(String amount, String left);
+
+  /// No description provided for @invRecordReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Record a receipt'**
+  String get invRecordReceipt;
+
+  /// No description provided for @invUseCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Use company credit, {amount}'**
+  String invUseCredit(String amount);
+
+  /// No description provided for @invCloseLost.
+  ///
+  /// In en, this message translates to:
+  /// **'Close the rest as lost'**
+  String get invCloseLost;
+
+  /// No description provided for @invCloseLostTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Close {amount} as lost?'**
+  String invCloseLostTitle(String amount);
+
+  /// No description provided for @invCloseLostHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For money that will not come. The month is no longer held up, and you can open it again. Ask your accountant about the VAT.'**
+  String get invCloseLostHelp;
+
+  /// No description provided for @invUndoLost.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the closed amount again'**
+  String get invUndoLost;
+
+  /// No description provided for @invUndoLostTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the closed amount again?'**
+  String get invUndoLostTitle;
+
+  /// No description provided for @invUndoLostHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'It is owed again. Past its due date, it stops closing the month until paid.'**
+  String get invUndoLostHelp;
+
+  /// No description provided for @invNoteOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue since {due}: {amount} still to pay. The month cannot close until it is paid, or closed as lost with a reason.'**
+  String invNoteOverdue(String due, String amount);
+
+  /// No description provided for @invNotePartPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'{received} received, {left} still to pay.'**
+  String invNotePartPaid(String received, String left);
+
+  /// No description provided for @invNotePaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid in full.'**
+  String get invNotePaid;
+
+  /// No description provided for @invNoteClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} closed as lost. Nothing is left to pay.'**
+  String invNoteClosed(String amount);
+
+  /// No description provided for @invReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get invReceived;
+
+  /// No description provided for @invLost.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed as lost'**
+  String get invLost;
+
+  /// No description provided for @invToPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Still to pay'**
+  String get invToPay;
+
+  /// No description provided for @invReceiptsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipts'**
+  String get invReceiptsHeading;
+
+  /// No description provided for @invStatusPartlyPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Partly paid'**
+  String get invStatusPartlyPaid;
+
+  /// No description provided for @invStatusOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get invStatusOverdue;
+
+  /// No description provided for @invStatusPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get invStatusPaid;
+
+  /// No description provided for @invStatusClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed, part lost'**
+  String get invStatusClosed;
+
+  /// No description provided for @invToPayShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} to pay'**
+  String invToPayShort(String amount);
+
+  /// No description provided for @receiptPaysHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'What it pays'**
+  String get receiptPaysHeading;
+
+  /// No description provided for @receiptNothingOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is owed. The whole amount waits as the company\'s credit for its next invoice.'**
+  String get receiptNothingOwed;
+
+  /// No description provided for @receiptOldBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance from before the app'**
+  String get receiptOldBalance;
+
+  /// No description provided for @receiptInvoiceLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} left, due {due}'**
+  String receiptInvoiceLeft(String amount, String due);
+
+  /// No description provided for @receiptPartTooHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'More than is left on it'**
+  String get receiptPartTooHigh;
+
+  /// No description provided for @receiptKeptLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} stays as the company\'s credit for later invoices.'**
+  String receiptKeptLine(String amount);
+
+  /// No description provided for @receiptCreditAlready.
+  ///
+  /// In en, this message translates to:
+  /// **'This company already has {amount} of credit not used. Use it from the invoice\'s screen.'**
+  String receiptCreditAlready(String amount);
+
+  /// No description provided for @receiptForInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice {number}'**
+  String receiptForInvoice(String number);
+
+  /// No description provided for @receiptKeptAsCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept as credit'**
+  String get receiptKeptAsCredit;
+
+  /// No description provided for @receiptReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get receiptReceived;
+
+  /// No description provided for @receiptClientNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This receipt is the supplier\'s own record of money received. It is not a tax invoice.'**
+  String get receiptClientNote;
+
+  /// No description provided for @receiptReceivedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Received by'**
+  String get receiptReceivedBy;
+
+  /// No description provided for @receiptPaidBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid by'**
+  String get receiptPaidBy;
+
+  /// No description provided for @receiptClientTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt'**
+  String get receiptClientTitle;
+
+  /// No description provided for @findingOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{An invoice is} other{{count} invoices are}} past the due date with money left: {names}. Record what was paid, or close the rest as lost with a reason.'**
+  String findingOverdue(int count, String names);
+
+  /// No description provided for @regLostUndone.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed amount opened again'**
+  String get regLostUndone;
+
+  /// No description provided for @regCompanyOwes.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance {amount}: the company owes'**
+  String regCompanyOwes(String amount);
+
+  /// No description provided for @regCompanyCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance {amount}: credit to the company'**
+  String regCompanyCredit(String amount);
+
+  /// No description provided for @regOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue {amount}'**
+  String regOverdue(String amount);
+
+  /// No description provided for @regUnusedCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit not used {amount}'**
+  String regUnusedCredit(String amount);
+
+  /// No description provided for @regAllCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'All companies'**
+  String get regAllCompanies;
+
+  /// No description provided for @regInvoiced.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoiced'**
+  String get regInvoiced;
+
+  /// No description provided for @regStatement.
+  ///
+  /// In en, this message translates to:
+  /// **'Company statement'**
+  String get regStatement;
+
+  /// No description provided for @regStatementNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoices, credit notes, receipts and amounts closed as lost, with the balance after each. Not a tax invoice.'**
+  String get regStatementNote;
+
+  /// No description provided for @clientMoneyHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get clientMoneyHeading;
+
+  /// No description provided for @clientCreditUnused.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit not used'**
+  String get clientCreditUnused;
+
+  /// No description provided for @invLostReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why the money will not come'**
+  String get invLostReason;
+
+  /// No description provided for @invUndoLostReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it is owed again'**
+  String get invUndoLostReason;
+
+  /// No description provided for @invCloseLostConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Close as lost'**
+  String get invCloseLostConfirm;
+
+  /// No description provided for @invUndoLostConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Open again'**
+  String get invUndoLostConfirm;
 }
 
 class _AppLocalizationsDelegate

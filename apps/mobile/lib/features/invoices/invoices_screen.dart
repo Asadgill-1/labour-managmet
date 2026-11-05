@@ -8,15 +8,24 @@ import '../../app/providers.dart';
 import '../../app/side_panel.dart';
 import '../../app/theme.dart';
 import '../../data/invoices.dart';
+import '../../data/receipts.dart';
+import 'package:domain/invoice.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import 'invoice_screen.dart';
 
-String invoiceStatusLabel(AppLocalizations l10n, Invoice i) => switch ((i.kind, InvoiceStatus.values.byName(i.status))) {
+/// Draft, issued, partly paid, paid, overdue, closed or credited (INV-07). Without [money] an issued invoice is only issued.
+String invoiceStatusLabel(AppLocalizations l10n, Invoice i, [InvoiceMoney? money]) => switch ((i.kind, InvoiceStatus.values.byName(i.status))) {
   ('credit', _) => l10n.invCreditNoteLabel,
   (_, InvoiceStatus.draft) => l10n.invDraftLabel,
-  (_, InvoiceStatus.issued) => l10n.invStatusIssued,
   (_, InvoiceStatus.credited) => l10n.invStatusCredited,
+  (_, InvoiceStatus.issued) => switch (money?.state(dubaiToday(DateTime.now()))) {
+    null || PayState.unpaid => l10n.invStatusIssued,
+    PayState.partlyPaid => l10n.invStatusPartlyPaid,
+    PayState.overdue => l10n.invStatusOverdue,
+    PayState.paid => l10n.invStatusPaid,
+    PayState.closed => l10n.invStatusClosed,
+  },
 };
 
 /// Every invoice and credit note, newest first (INV-07).
@@ -36,6 +45,7 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final rows = ref.watch(invoicesProvider).value ?? const <InvoiceListRow>[];
+    final today = dubaiToday(DateTime.now());
     final needle = _search.toLowerCase();
     final shown = needle.isEmpty ? rows : rows.where((r) => '${r.clientName} ${r.invoice.number ?? ''}'.toLowerCase().contains(needle)).toList();
     return Scaffold(
@@ -51,14 +61,20 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
                 title: Text(row.clientName),
                 subtitle: Text(
                   [
-                    [?row.invoice.number, invoiceStatusLabel(l10n, row.invoice)].join(', '),
+                    [?row.invoice.number, invoiceStatusLabel(l10n, row.invoice, row.money)].join(', '),
                     [
                       if (row.invoice.issueDate != null) showDate(row.invoice.issueDate!) else l10n.dateFromTo(showDate(row.invoice.fromDate), showDate(row.invoice.toDate)),
                       if (row.invoice.status == InvoiceStatus.issued.name && row.invoice.kind == 'invoice') l10n.invDue(showDate(row.invoice.dueDate!)),
+                      if (row.money case final m? when row.invoice.status == InvoiceStatus.issued.name && m.leftFils > 0 && m.leftFils < m.totalFils) l10n.invToPayShort(formatAed(m.leftFils)),
                     ].join(', '),
                   ].join('\n'),
                 ),
-                trailing: row.totalFils == null ? const Icon(Icons.chevron_right) : RowValue(formatAed(row.invoice.kind == 'credit' ? -row.totalFils! : row.totalFils!)),
+                trailing: row.totalFils == null
+                    ? const Icon(Icons.chevron_right)
+                    : RowValue(
+                        formatAed(row.invoice.kind == 'credit' ? -row.totalFils! : row.totalFils!),
+                        style: row.invoice.status == InvoiceStatus.issued.name && row.money?.state(today) == PayState.overdue ? amountStyle.copyWith(color: due) : amountStyle,
+                      ),
                 onTap: () => _open(InvoiceScreen(invoiceId: row.invoice.id)),
               ),
             ),

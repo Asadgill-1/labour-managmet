@@ -66,6 +66,11 @@ Future<void> goTo(WidgetTester tester, String section) async {
   final sub = find.byKey(ValueKey('sub-$section'));
   for (final main in const ['Hazri', 'Labour', 'Visa', 'Companies', 'Tankhwah', 'Billing', 'Hisaab', 'Rooms', 'Kaghazat']) {
     if (sub.evaluate().isNotEmpty) break;
+    // Tabs opened on the way push later ones down the panel.
+    if (find.text(main).hitTestable().evaluate().isEmpty) {
+      await tester.ensureVisible(find.text(main).last);
+      await tester.pump();
+    }
     await tester.tap(find.text(main).hitTestable().first);
     await settle(tester);
   }

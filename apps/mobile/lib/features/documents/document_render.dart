@@ -25,7 +25,7 @@ Future<Uint8List> renderIssued(DocKind kind, Map<String, Object?> data, Document
   return Isolate.run(
     () => switch (kind) {
       DocKind.payslip => slipPdf(SlipContent.fromJson(data), identity, meta, regularFont: regular, boldFont: bold),
-      DocKind.paymentReceipt || DocKind.advanceReceipt => receiptPdf(ReceiptContent.fromJson(data), identity, meta, regularFont: regular, boldFont: bold),
+      DocKind.paymentReceipt || DocKind.advanceReceipt || DocKind.clientReceipt => receiptPdf(ReceiptContent.fromJson(data), identity, meta, regularFont: regular, boldFont: bold),
       DocKind.timesheetDaily || DocKind.timesheetDailyPriced || DocKind.timesheetWorkers || DocKind.timesheetWorkersPriced => timesheetPdf(TimesheetPaper.fromJson(data), identity, meta, regularFont: regular, boldFont: bold),
       DocKind.invoice || DocKind.creditNote => invoicePdf(InvoicePaper.fromJson(data), identity, meta, regularFont: regular, boldFont: bold),
     },

@@ -40,3 +40,13 @@ LineTax invoiceTotals(Iterable<LineTax> lines) => LineTax(
   netFils: lines.fold(0, (total, l) => total + l.netFils),
   vatFils: lines.fold(0, (total, l) => total + l.vatFils),
 );
+
+/// Where an issued invoice stands with its money (INV-07). [leftFils] is what is still owed once credit notes, receipts
+/// and anything the owner closed as lost come off. Money left the day after its due date makes it overdue, even when
+/// part is paid. Nothing left is paid, or closed when the owner wrote some of it off (D-048).
+enum PayState { unpaid, partlyPaid, overdue, paid, closed }
+
+PayState payState({required int leftFils, required int receivedFils, required int lostFils, required String dueDate, required String today}) {
+  if (leftFils > 0) return today.compareTo(dueDate) > 0 ? PayState.overdue : (receivedFils > 0 ? PayState.partlyPaid : PayState.unpaid);
+  return lostFils > 0 ? PayState.closed : PayState.paid;
+}

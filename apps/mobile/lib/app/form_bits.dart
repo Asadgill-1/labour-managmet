@@ -58,7 +58,7 @@ class Field extends StatelessWidget {
       onChanged: onChanged,
       keyboardType: keyboardType,
       maxLines: lines,
-      decoration: InputDecoration(labelText: label, helperText: helper, helperMaxLines: 2),
+      decoration: InputDecoration(labelText: label, helperText: helper, helperMaxLines: 4),
     );
   }
 }

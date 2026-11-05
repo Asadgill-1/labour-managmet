@@ -1,3 +1,4 @@
+import 'package:domain/calc.dart';
 import 'package:domain/dates.dart';
 import 'package:domain/invoice.dart';
 import 'package:domain/money.dart';
@@ -9,8 +10,12 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/invoices.dart';
+import '../../data/receipts.dart';
+import 'package:domain/cash.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../cash/cash_entry_form_screen.dart';
+import '../cash/cash_row.dart' show methodLabel;
 import '../documents/document_preview_screen.dart';
 import '../rates/rate_labels.dart';
 import '../registers/register_export.dart';
@@ -119,6 +124,16 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
     if (answer != null && mounted) await _step(() => _db.creditInvoice(v.invoice.id, reason: answer.reason, amountFils: answer.amount, operationId: newUuid()));
   }
 
+  /// What is left is lost, such as a company that shut down. It no longer stops a month, and can be opened again (D-048).
+  Future<void> _closeLost(InvoiceView v, {required bool undo}) async {
+    final l10n = AppLocalizations.of(context);
+    final reason = undo
+        ? await askReason(context, title: l10n.invUndoLostTitle, label: l10n.invUndoLostReason, helper: l10n.invUndoLostHelp, confirm: l10n.invUndoLostConfirm)
+        : await askReason(context, title: l10n.invCloseLostTitle(formatAed(v.money!.leftFils)), label: l10n.invLostReason, helper: l10n.invCloseLostHelp, confirm: l10n.invCloseLostConfirm);
+    if (reason == null || !mounted) return;
+    await _step(() => undo ? _db.undoInvoiceLoss(v.invoice.id, reason: reason, operationId: newUuid()) : _db.closeInvoiceAsLost(v.invoice.id, reason: reason, operationId: newUuid()));
+  }
+
   /// A new draft for the same company and dates, which reads the timesheets as they stand now.
   Future<void> _reissue(InvoiceView v) async {
     final navigator = Navigator.of(context);
@@ -179,7 +194,9 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
     );
   }
 
-  void _open(String id) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => InvoiceScreen(invoiceId: id)));
+  void _open(String id) => _openScreen(InvoiceScreen(invoiceId: id));
+
+  void _openScreen(Widget screen) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
 
   Future<void> _toggle(InvoiceView v, InvoiceSource s) => _saveChoices(v, (d) => d.copyWith(skipped: s.skipped ? ({...d.skipped}..remove(s.timesheet.id)) : {...d.skipped, s.timesheet.id}));
 
@@ -197,16 +214,23 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
 
     final inv = v.invoice;
     final isDraft = v.status == InvoiceStatus.draft;
+    final money = v.money;
+    final owed = v.status == InvoiceStatus.issued ? (money?.leftFils ?? 0) : 0;
+    final today = dubaiToday(DateTime.now());
     final profile = ref.watch(profileProvider).value;
     final needsTrn = isDraft && v.vatRegistered && (profile?.trn ?? '').trim().isEmpty;
     final (label, press) = isDraft ? (l10n.invIssue, v.lines.isEmpty || needsTrn ? null : () => _issue(v)) : (l10n.invPaper, () => shareInvoice(context, ref, v, onBusy: _setBusy));
     final more = <(String, VoidCallback)>[
       if (isDraft) ...[(l10n.invPreview, () => _preview(v)), (l10n.invDeleteDraft, () => _delete(v))],
+      if (owed > 0) (l10n.invRecordReceipt, () => _openScreen(CashEntryFormScreen(kind: CashKind.clientReceipt, clientId: inv.clientId, invoiceId: inv.id, amountFils: owed))),
+      if (owed > 0 && v.clientCreditFils > 0) (l10n.invUseCredit(formatAed(v.clientCreditFils < owed ? v.clientCreditFils : owed)), () => _step(() => _db.useClientCredit(inv.id, operationId: newUuid()))),
       if (v.status == InvoiceStatus.issued && !v.isCreditNote && v.lines.any((l) => l.timesheetId != null)) (l10n.invShareBoth, () => _sendWithTimesheets(v)),
       if (v.status == InvoiceStatus.issued && !v.isCreditNote && v.leftFils > 0) (l10n.invCredit, () => _credit(v)),
       if (v.status == InvoiceStatus.credited) (l10n.invReissue, () => _reissue(v)),
       for (final note in v.creditNotes) (l10n.invOpenCreditNote(note.number!), () => _open(note.id)),
       if (v.original case final original?) (l10n.invOpenInvoice(original.number!), () => _open(original.id)),
+      if (owed > 0 && v.status == InvoiceStatus.issued) (l10n.invCloseLost, () => _closeLost(v, undo: false)),
+      if ((v.money?.lostFils ?? 0) > 0) (l10n.invUndoLost, () => _closeLost(v, undo: true)),
     ];
     final lastNote = v.creditNotes.lastOrNull?.number ?? '';
     final changedBy = v.changes.fold(0, (total, c) => total + c.differenceFils);
@@ -249,6 +273,14 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
           InvoiceStatus.credited => l10n.invNoteCredited(lastNote),
         },
       ),
+      if (money != null && v.status == InvoiceStatus.issued)
+        switch (money.state(today)) {
+          PayState.overdue => NoteRow(icon: Icons.error_outline, text: l10n.invNoteOverdue(showDate(inv.dueDate!), formatAed(owed)), color: due),
+          PayState.partlyPaid => NoteRow(icon: Icons.info_outline, text: l10n.invNotePartPaid(formatAed(money.receivedFils), formatAed(owed)), color: muted),
+          PayState.paid => NoteRow(icon: Icons.check_circle_outline, text: l10n.invNotePaid, color: muted),
+          PayState.closed => NoteRow(icon: Icons.info_outline, text: l10n.invNoteClosed(formatAed(money.lostFils)), color: muted),
+          PayState.unpaid => const SizedBox.shrink(),
+        },
       if (v.status == InvoiceStatus.issued && v.creditNotes.isNotEmpty)
         NoteRow(icon: Icons.info_outline, text: l10n.invNotePartCredited(formatAed(v.credited.totalFils), formatAed(v.leftFils)), color: muted),
       if (v.changes.isNotEmpty) NoteRow(icon: Icons.error_outline, text: l10n.invChanged(v.changes.length, formatAed(changedBy)), color: due),
@@ -290,7 +322,13 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
             title: Text(_lineTitle(l10n, line)),
             subtitle: Text(
               [
-                if (line.basis case final basis?) '${quantityLabel(l10n, line)}, ${rateSummary(l10n, basis.name, line.unitPriceFils)}' else quantityLabel(l10n, line),
+                // A fixed monthly fee's rate already names its unit.
+                if (line.basis == RateBasis.monthFixed)
+                  rateSummary(l10n, line.basis!.name, line.unitPriceFils)
+                else if (line.basis case final basis?)
+                  '${quantityLabel(l10n, line)}, ${rateSummary(l10n, basis.name, line.unitPriceFils)}'
+                else
+                  quantityLabel(l10n, line),
                 if (line.description == null) [if (line.fromDate != null) l10n.dateFromTo(showDate(line.fromDate!), showDate(line.toDate!)), ?line.timesheetNumber].join(', '),
                 if (line.isFee && line.description == null) l10n.invFeeHelp,
                 if (line.discountFils > 0) l10n.invLessDiscount(formatAed(line.discountFils)),
@@ -318,6 +356,22 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
           RowCard(child: InfoRow(l10n.invCreditedSoFar(v.creditNotes.length), formatAed(-v.credited.totalFils))),
           TotalRow(l10n.invLeft, formatAed(v.leftFils)),
         ],
+        if (money != null && (money.receivedFils != 0 || money.lostFils != 0)) ...[
+          if (money.receivedFils != 0) RowCard(child: InfoRow(l10n.invReceived, formatAed(-money.receivedFils))),
+          if (money.lostFils != 0) RowCard(child: InfoRow(l10n.invLost, formatAed(-money.lostFils))),
+          TotalRow(l10n.invToPay, formatAed(money.leftFils)),
+        ],
+      ],
+      if (v.receipts.isNotEmpty) ...[
+        SectionHeader(l10n.invReceiptsHeading),
+        for (final r in v.receipts)
+          RowCard(
+            child: ListTile(
+              title: Text(showDate(r.receipt.entryDate)),
+              subtitle: Text([methodLabel(l10n, r.receipt.method), ?r.receipt.reference].join(', ')),
+              trailing: RowValue(formatAed(r.fils)),
+            ),
+          ),
       ],
       // Timesheets and lines first, then the tax and terms, in the order INV-01 sets.
       SectionHeader(l10n.invSettingsHeading),

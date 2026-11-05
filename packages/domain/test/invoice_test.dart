@@ -57,4 +57,25 @@ void main() {
     expect(isTaxInvoice(VatCategory.outOfScope, registered: true), isFalse);
     expect(isTaxInvoice(VatCategory.standard, registered: false), isFalse);
   });
+
+  group('how an issued invoice stands (INV-05, INV-07)', () {
+    PayState state(int left, {int received = 0, int lost = 0, String today = '2026-11-10'}) =>
+        payState(leftFils: left, receivedFils: received, lostFils: lost, dueDate: '2026-11-10', today: today);
+
+    test('the PRD receipt: 1,155 with 500 received leaves 655, partly paid until it falls due', () {
+      expect(115500 - 50000, 65500);
+      expect(state(65500, received: 50000), PayState.partlyPaid);
+      expect(state(65500, received: 50000, today: '2026-11-11'), PayState.overdue);
+    });
+
+    test('nothing received is unpaid, and overdue only the day after its due date', () {
+      expect(state(115500), PayState.unpaid);
+      expect(state(115500, today: '2026-11-11'), PayState.overdue);
+    });
+
+    test('nothing left is paid, or closed once the owner wrote part off (D-048)', () {
+      expect(state(0, received: 115500, today: '2027-01-01'), PayState.paid);
+      expect(state(0, received: 40000, lost: 60000, today: '2027-01-01'), PayState.closed);
+    });
+  });
 }

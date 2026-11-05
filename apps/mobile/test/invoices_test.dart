@@ -9,6 +9,9 @@ import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/closing.dart';
 import 'package:labour_app/data/invoices.dart';
 import 'package:labour_app/data/masters.dart';
+import 'package:labour_app/data/cash.dart';
+import 'package:labour_app/data/receipts.dart';
+import 'package:domain/cash.dart';
 import 'package:labour_app/data/tenant_database.dart';
 import 'package:labour_app/data/timesheets.dart';
 import 'package:labour_app/features/registers/register_defs.dart';
@@ -372,6 +375,99 @@ void main() {
     });
   });
 
+  group('receipts (INV-05, INV-07)', () {
+    Future<String> issued() async {
+      await register();
+      await ts.work(db, '2020-10-05');
+      await approved();
+      final id = await draft();
+      await issue(id);
+      return id;
+    }
+
+    Future<String> receive(int fils, Map<String?, int> parts, {String? operationId}) =>
+        db.addClientReceipt(operationId: operationId ?? newUuid(), date: '2020-11-10', clientId: ts.emaar, amountFils: fils, parts: parts, method: 'bank', reference: 'TT 4471');
+
+    Future<InvoiceMoney> money(String id) async => (await db.receivables()).invoices[id]!;
+    Future<int> credit() async => (await db.receivables()).creditOf(ts.emaar);
+    final today = dubaiToday(DateTime.now());
+
+    test('part received leaves the rest owed, a receipt holds its date, method and reference, and a retry changes nothing', () async {
+      final id = await issued();
+      expect((await money(id)).totalFils, 14175);
+      final op = newUuid();
+      final receipt = await receive(6000, {id: 5000}, operationId: op);
+      await receive(6000, {id: 5000}, operationId: op);
+
+      final m = await money(id);
+      expect((m.receivedFils, m.leftFils, m.state(today)), (5000, 9175, PayState.partlyPaid));
+      expect(await credit(), 1000, reason: 'what the receipt left waits as credit, never as more revenue');
+      final row = await (db.select(db.cashEntries)..where((c) => c.id.equals(receipt))).getSingle();
+      expect((row.kind, row.entryDate, row.method, row.reference, row.amountFils), (CashKind.clientReceipt.name, '2020-11-10', 'bank', 'TT 4471', 6000));
+      final v = await db.invoiceView(id);
+      expect((v.receipts.single.fils, v.clientCreditFils, v.money!.leftFils), (5000, 1000, 9175));
+    });
+
+    test('more than an invoice still owes, more than was received, or nothing, is refused and nothing is written', () async {
+      final id = await issued();
+      await expectLater(receive(20000, {id: 14176}), throwsA(isA<ReceiptTooHigh>()));
+      await expectLater(receive(1000, {id: 2000}), throwsA(isA<ReceiptTooHigh>()));
+      await expectLater(receive(1000, {id: 0}), throwsA(isA<ReceiptTooHigh>()));
+      await expectLater(receive(0, {}), throwsA(isA<ReceiptTooHigh>()));
+      expect(await db.select(db.cashEntries).get(), isEmpty);
+      expect(await db.select(db.invoiceAllocations).get(), isEmpty);
+    });
+
+    test('money received before the invoice waits as credit, then settles it when used', () async {
+      await receive(20000, {});
+      expect(await credit(), 20000);
+      final id = await issued();
+      await db.useClientCredit(id, operationId: newUuid());
+      expect(((await money(id)).state(today), await credit()), (PayState.paid, 20000 - 14175));
+      await expectLater(db.useClientCredit(id, operationId: newUuid()), throwsA(isA<ReceiptTooHigh>()), reason: 'nothing is left to settle');
+    });
+
+    test('undoing a receipt in the cash book sets aside what it settled', () async {
+      final id = await issued();
+      final receipt = await receive(14175, {id: 14175});
+      expect((await money(id)).state(today), PayState.paid);
+      final row = await (db.select(db.cashEntries)..where((c) => c.id.equals(receipt))).getSingle();
+      await db.reverseCashEntry(row, reason: 'Cheque bounced', operationId: newUuid());
+      expect(((await money(id)).leftFils, await credit()), (14175, 0));
+    });
+
+    test('a credit note on a paid invoice gives the money back as credit, which the new invoice can use', () async {
+      final id = await issued();
+      await receive(14175, {id: 14175});
+      await db.creditInvoice(id, reason: 'Rate agreed lower', amountFils: 3000, operationId: newUuid());
+      expect(((await money(id)).leftFils, await credit()), (0, 3150));
+
+      await db.creditInvoice(id, reason: 'Wrong hours', operationId: newUuid());
+      expect(((await money(id)).leftFils, await credit()), (0, 14175));
+      final again = await draft();
+      await issue(again);
+      await db.useClientCredit(again, operationId: newUuid());
+      expect(((await money(again)).state(today), await credit()), (PayState.paid, 0));
+    });
+
+    test("the company's balance from before the app is owed first, and takes receipts like an invoice", () async {
+      await db.saveRow(db.openingBalances, id: null, operationId: newUuid(), fields: OpeningBalancesCompanion(kind: const Value('client_receivable'), clientId: Value(ts.emaar), amountFils: const Value(10000), asOfDate: const Value('2020-09-30'), sourceNote: const Value('Old ledger')));
+      final id = await issued();
+      final open = (await db.receivables()).openOf(ts.emaar);
+      expect([for (final o in open) (o.invoiceId, o.leftFils)], [(null, 10000), (id, 14175)]);
+      await receive(12000, {null: 10000, id: 2000});
+      final after = await db.receivables();
+      expect((after.openingLeftFils[ts.emaar], after.invoices[id]!.leftFils, after.creditOf(ts.emaar)), (0, 12175, 0));
+    });
+
+    test('what settled an invoice never changes or goes', () async {
+      final id = await issued();
+      await receive(5000, {id: 5000});
+      await expectLater(db.update(db.invoiceAllocations).write(const InvoiceAllocationsCompanion(amountFils: Value(1))), throwsA(anything));
+      await expectLater(db.delete(db.invoiceAllocations).go(), throwsA(anything));
+    });
+  });
+
   group('closing a month (D-048)', () {
     Future<List<ClosingFinding>> notInvoiced() async => [for (final f in (await db.closingFor('2020-10')).findings) if (f.issue == ClosingIssue.notInvoiced) f];
 
@@ -407,6 +503,35 @@ void main() {
       await issue(again);
       expect(await billing(), isEmpty);
       expect((await db.invoiceView(again)).totals.totalFils, 10500);
+    });
+
+    test("an invoice due by the month's last day with money left stops it, until paid or closed as lost with a reason (D-048)", () async {
+      final month = dubaiToday(DateTime.now()).substring(0, 7);
+      Future<List<ClosingFinding>> overdue(String m) async => [for (final f in (await db.closingFor(m)).findings) if (f.issue == ClosingIssue.overdue) f];
+      await ts.work(db, '2020-10-05');
+      await approved();
+      final id = await draft();
+      await issue(id);
+      final due = (await db.invoiceView(id)).invoice.dueDate;
+      expect(await overdue('2020-10'), isEmpty, reason: 'it falls due long after October 2020');
+      final found = (await overdue(month)).single;
+      expect((found.date, found.names.join()), (due, 'INV-$_year-0001 (Emaar)'), reason: 'counted from the last day, whatever day the owner closes');
+
+      await db.addClientReceipt(operationId: newUuid(), date: dubaiToday(DateTime.now()), clientId: ts.emaar, amountFils: 5000, parts: {id: 5000});
+      expect(await overdue(month), hasLength(1), reason: 'part paid is still money left');
+
+      await db.closeInvoiceAsLost(id, reason: 'Company shut down', operationId: newUuid());
+      final closed = (await db.receivables()).invoices[id]!;
+      expect((closed.receivedFils, closed.lostFils, closed.leftFils, closed.state(dubaiToday(DateTime.now()))), (5000, 8500, 0, PayState.closed));
+      expect(await overdue(month), isEmpty);
+      await expectLater(db.closeInvoiceAsLost(id, reason: 'Again', operationId: newUuid()), refused(InvoiceProblem.wrongStep));
+      expect((await db.invoiceView(id)).status, InvoiceStatus.issued, reason: 'the invoice stays as issued');
+
+      await db.undoInvoiceLoss(id, reason: 'They paid after all', operationId: newUuid());
+      expect(await overdue(month), hasLength(1));
+      await db.addClientReceipt(operationId: newUuid(), date: dubaiToday(DateTime.now()), clientId: ts.emaar, amountFils: 8500, parts: {id: 8500});
+      expect(await overdue(month), isEmpty);
+      expect((await db.receivables()).invoices[id]!.state(dubaiToday(DateTime.now())), PayState.paid);
     });
 
     test('a credit note for an amount does not put changed work right', () async {
@@ -473,6 +598,41 @@ void main() {
     expect([for (final e in data.entries) (e.cells[1], e.cells[12], e.cells[15], e.cells[16])], unorderedEquals([('INV-$_year-0001', 13500, 675, 14175), ('CN-$_year-0001', -13500, -675, -14175)]));
     expect(data.entries.first.cells[3], isNull, reason: 'Emaar has no TRN');
     expect(columnTotal(data.entries, 16), 0);
+  });
+
+  test('the invoice register keeps a line the owner wrote and a credit for an amount, which have no unit', () async {
+    await ts.work(db, '2020-10-05');
+    await approved();
+    final id = await draft();
+    const transport = InvoiceItem(key: 'item|1', description: 'Transport', quantity: 2, unitPriceFils: 2500);
+    await db.saveInvoiceDraft(id, InvoicesCompanion(draft: Value(const InvoiceDraft(items: [transport]).toJson())), operationId: newUuid());
+    await issue(id);
+    await db.creditInvoice(id, reason: 'Rate agreed lower', amountFils: 1000, operationId: newUuid());
+    final l10n = await AppLocalizations.delegate.load(const Locale('en', 'PK'));
+    final data = await buildRegister(db, l10n, Section.invoiceRegister);
+    expect([for (final e in data.entries) if (e.cells[9] == '') (e.cells[7], e.cells[8], e.cells[16])], unorderedEquals([('Transport', '2', 5000), ('Rate agreed lower', '1', -1000)]));
+  });
+
+  test('a company statement runs invoice, receipt and credit note to a balance that agrees with what is owed less credit (INV-07)', () async {
+    final today = dubaiToday(DateTime.now());
+    await ts.work(db, '2020-10-05');
+    await approved();
+    final id = await draft();
+    await issue(id);
+    await db.addClientReceipt(operationId: newUuid(), date: today, clientId: ts.emaar, amountFils: 6000, parts: {id: 5000}, reference: 'CHQ 12');
+    await db.creditInvoice(id, reason: 'Rate agreed lower', amountFils: 1000, operationId: newUuid());
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    final data = await buildRegister(db, l10n, Section.statementRegister);
+    // All three fall today, and a test writes them within one second, so only the balance at the end is in a fixed order.
+    expect([for (final e in data.entries) (e.cells[2], e.cells[3], e.cells[4], e.cells[5], e.cells[6])], unorderedEquals([
+      (l10n.invTab, 'INV-$_year-0001', 13500, null, null),
+      (l10n.kindClientReceipt, 'CHQ 12', null, null, 6000),
+      (l10n.invCreditNoteLabel, 'CN-$_year-0001', null, 1000, null),
+    ]));
+    expect(data.entries.last.cells[8], 6500);
+    final money = await db.receivables();
+    expect(money.invoices[id]!.leftFils - money.creditOf(ts.emaar), 6500, reason: '7,500 still owed less 1,000 of credit');
+    expect(data.groupFeet['Emaar'], contains(l10n.regCompanyOwes('AED 65.00')));
   });
 
   test('quantities print in their own unit', () {

@@ -53,7 +53,7 @@ Widget _screen(Section section) => switch (section) {
   Section.advanceRegister ||
   Section.cashRegister ||
   Section.roomRegister ||
-  Section.invoiceRegister => LedgerScreen(section),
+  Section.invoiceRegister || Section.statementRegister => LedgerScreen(section),
 };
 
 final _routerProvider = Provider(

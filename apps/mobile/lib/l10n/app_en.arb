@@ -1799,5 +1799,173 @@
         "type": "String"
       }
     }
-  }
+  },
+  "invRecordReceipt": "Record a receipt",
+  "invUseCredit": "Use company credit, {amount}",
+  "@invUseCredit": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invCloseLost": "Close the rest as lost",
+  "invCloseLostTitle": "Close {amount} as lost?",
+  "@invCloseLostTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invCloseLostHelp": "For money that will not come. The month is no longer held up, and you can open it again. Ask your accountant about the VAT.",
+  "invUndoLost": "Open the closed amount again",
+  "invUndoLostTitle": "Open the closed amount again?",
+  "invUndoLostHelp": "It is owed again. Past its due date, it stops closing the month until paid.",
+  "invNoteOverdue": "Overdue since {due}: {amount} still to pay. The month cannot close until it is paid, or closed as lost with a reason.",
+  "@invNoteOverdue": {
+    "placeholders": {
+      "due": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invNotePartPaid": "{received} received, {left} still to pay.",
+  "@invNotePartPaid": {
+    "placeholders": {
+      "received": {
+        "type": "String"
+      },
+      "left": {
+        "type": "String"
+      }
+    }
+  },
+  "invNotePaid": "Paid in full.",
+  "invNoteClosed": "{amount} closed as lost. Nothing is left to pay.",
+  "@invNoteClosed": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invReceived": "Received",
+  "invLost": "Closed as lost",
+  "invToPay": "Still to pay",
+  "invReceiptsHeading": "Receipts",
+  "invStatusPartlyPaid": "Partly paid",
+  "invStatusOverdue": "Overdue",
+  "invStatusPaid": "Paid",
+  "invStatusClosed": "Closed, part lost",
+  "invToPayShort": "{amount} to pay",
+  "@invToPayShort": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptPaysHeading": "What it pays",
+  "receiptNothingOwed": "Nothing is owed. The whole amount waits as the company's credit for its next invoice.",
+  "receiptOldBalance": "Balance from before the app",
+  "receiptInvoiceLeft": "{amount} left, due {due}",
+  "@receiptInvoiceLeft": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "due": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptPartTooHigh": "More than is left on it",
+  "receiptKeptLine": "{amount} stays as the company's credit for later invoices.",
+  "@receiptKeptLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptCreditAlready": "This company already has {amount} of credit not used. Use it from the invoice's screen.",
+  "@receiptCreditAlready": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptForInvoice": "Invoice {number}",
+  "@receiptForInvoice": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptKeptAsCredit": "Kept as credit",
+  "receiptReceived": "Received",
+  "receiptClientNote": "This receipt is the supplier's own record of money received. It is not a tax invoice.",
+  "receiptReceivedBy": "Received by",
+  "receiptPaidBy": "Paid by",
+  "receiptClientTitle": "Receipt",
+  "findingOverdue": "{count, plural, =1{An invoice is} other{{count} invoices are}} past the due date with money left: {names}. Record what was paid, or close the rest as lost with a reason.",
+  "@findingOverdue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "regLostUndone": "Closed amount opened again",
+  "regCompanyOwes": "Balance {amount}: the company owes",
+  "@regCompanyOwes": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regCompanyCredit": "Balance {amount}: credit to the company",
+  "@regCompanyCredit": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regOverdue": "Overdue {amount}",
+  "@regOverdue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regUnusedCredit": "Credit not used {amount}",
+  "@regUnusedCredit": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regAllCompanies": "All companies",
+  "regInvoiced": "Invoiced",
+  "regStatement": "Company statement",
+  "regStatementNote": "Invoices, credit notes, receipts and amounts closed as lost, with the balance after each. Not a tax invoice.",
+  "clientMoneyHeading": "Money",
+  "clientCreditUnused": "Credit not used",
+  "invLostReason": "Why the money will not come",
+  "invUndoLostReason": "Why it is owed again",
+  "invCloseLostConfirm": "Close as lost",
+  "invUndoLostConfirm": "Open again"
 }

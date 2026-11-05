@@ -23167,6 +23167,794 @@ class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLine> {
   }
 }
 
+class $InvoiceAllocationsTable extends InvoiceAllocations
+    with TableInfo<$InvoiceAllocationsTable, InvoiceAllocation> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InvoiceAllocationsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtUtcMeta = const VerificationMeta(
+    'createdAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAtUtc = GeneratedColumn<DateTime>(
+    'created_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtUtcMeta = const VerificationMeta(
+    'updatedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAtUtc = GeneratedColumn<DateTime>(
+    'updated_at_utc',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actorIdMeta = const VerificationMeta(
+    'actorId',
+  );
+  @override
+  late final GeneratedColumn<String> actorId = GeneratedColumn<String>(
+    'actor_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _sourceOperationIdMeta = const VerificationMeta(
+    'sourceOperationId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceOperationId =
+      GeneratedColumn<String>(
+        'source_operation_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _clientIdMeta = const VerificationMeta(
+    'clientId',
+  );
+  @override
+  late final GeneratedColumn<String> clientId = GeneratedColumn<String>(
+    'client_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES clients (id)',
+    ),
+  );
+  static const VerificationMeta _invoiceIdMeta = const VerificationMeta(
+    'invoiceId',
+  );
+  @override
+  late final GeneratedColumn<String> invoiceId = GeneratedColumn<String>(
+    'invoice_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES invoices (id)',
+    ),
+  );
+  static const VerificationMeta _paymentIdMeta = const VerificationMeta(
+    'paymentId',
+  );
+  @override
+  late final GeneratedColumn<String> paymentId = GeneratedColumn<String>(
+    'payment_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES cash_entries (id)',
+    ),
+  );
+  static const VerificationMeta _entryDateMeta = const VerificationMeta(
+    'entryDate',
+  );
+  @override
+  late final GeneratedColumn<String> entryDate = GeneratedColumn<String>(
+    'entry_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountFilsMeta = const VerificationMeta(
+    'amountFils',
+  );
+  @override
+  late final GeneratedColumn<int> amountFils = GeneratedColumn<int>(
+    'amount_fils',
+    aliasedName,
+    false,
+    check: () => BooleanExpressionOperators(amountFils.equals(0)).not(),
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+    'reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    clientId,
+    invoiceId,
+    paymentId,
+    entryDate,
+    amountFils,
+    reason,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'invoice_allocations';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InvoiceAllocation> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_at_utc')) {
+      context.handle(
+        _createdAtUtcMeta,
+        createdAtUtc.isAcceptableOrUnknown(
+          data['created_at_utc']!,
+          _createdAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtUtcMeta);
+    }
+    if (data.containsKey('updated_at_utc')) {
+      context.handle(
+        _updatedAtUtcMeta,
+        updatedAtUtc.isAcceptableOrUnknown(
+          data['updated_at_utc']!,
+          _updatedAtUtcMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtUtcMeta);
+    }
+    if (data.containsKey('actor_id')) {
+      context.handle(
+        _actorIdMeta,
+        actorId.isAcceptableOrUnknown(data['actor_id']!, _actorIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actorIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    }
+    if (data.containsKey('source_operation_id')) {
+      context.handle(
+        _sourceOperationIdMeta,
+        sourceOperationId.isAcceptableOrUnknown(
+          data['source_operation_id']!,
+          _sourceOperationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceOperationIdMeta);
+    }
+    if (data.containsKey('client_id')) {
+      context.handle(
+        _clientIdMeta,
+        clientId.isAcceptableOrUnknown(data['client_id']!, _clientIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_clientIdMeta);
+    }
+    if (data.containsKey('invoice_id')) {
+      context.handle(
+        _invoiceIdMeta,
+        invoiceId.isAcceptableOrUnknown(data['invoice_id']!, _invoiceIdMeta),
+      );
+    }
+    if (data.containsKey('payment_id')) {
+      context.handle(
+        _paymentIdMeta,
+        paymentId.isAcceptableOrUnknown(data['payment_id']!, _paymentIdMeta),
+      );
+    }
+    if (data.containsKey('entry_date')) {
+      context.handle(
+        _entryDateMeta,
+        entryDate.isAcceptableOrUnknown(data['entry_date']!, _entryDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entryDateMeta);
+    }
+    if (data.containsKey('amount_fils')) {
+      context.handle(
+        _amountFilsMeta,
+        amountFils.isAcceptableOrUnknown(data['amount_fils']!, _amountFilsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountFilsMeta);
+    }
+    if (data.containsKey('reason')) {
+      context.handle(
+        _reasonMeta,
+        reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  InvoiceAllocation map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InvoiceAllocation(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      createdAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at_utc'],
+      )!,
+      updatedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at_utc'],
+      )!,
+      actorId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actor_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      sourceOperationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_operation_id'],
+      )!,
+      clientId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}client_id'],
+      )!,
+      invoiceId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}invoice_id'],
+      ),
+      paymentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payment_id'],
+      ),
+      entryDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entry_date'],
+      )!,
+      amountFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_fils'],
+      )!,
+      reason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}reason'],
+      ),
+    );
+  }
+
+  @override
+  $InvoiceAllocationsTable createAlias(String alias) {
+    return $InvoiceAllocationsTable(attachedDatabase, alias);
+  }
+}
+
+class InvoiceAllocation extends DataClass
+    implements Insertable<InvoiceAllocation> {
+  final String id;
+  final String tenantId;
+  final DateTime createdAtUtc;
+  final DateTime updatedAtUtc;
+  final String actorId;
+  final int version;
+  final String sourceOperationId;
+  final String clientId;
+
+  /// Null means the company's balance from before this app.
+  final String? invoiceId;
+
+  /// The company's receipt. Null on what the owner closed as lost.
+  final String? paymentId;
+
+  /// The day it was written: the receipt's own date when entered with it.
+  final String entryDate;
+  final int amountFils;
+
+  /// Why the owner closed it, or the credit note that gave it back.
+  final String? reason;
+  const InvoiceAllocation({
+    required this.id,
+    required this.tenantId,
+    required this.createdAtUtc,
+    required this.updatedAtUtc,
+    required this.actorId,
+    required this.version,
+    required this.sourceOperationId,
+    required this.clientId,
+    this.invoiceId,
+    this.paymentId,
+    required this.entryDate,
+    required this.amountFils,
+    this.reason,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['created_at_utc'] = Variable<DateTime>(createdAtUtc);
+    map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc);
+    map['actor_id'] = Variable<String>(actorId);
+    map['version'] = Variable<int>(version);
+    map['source_operation_id'] = Variable<String>(sourceOperationId);
+    map['client_id'] = Variable<String>(clientId);
+    if (!nullToAbsent || invoiceId != null) {
+      map['invoice_id'] = Variable<String>(invoiceId);
+    }
+    if (!nullToAbsent || paymentId != null) {
+      map['payment_id'] = Variable<String>(paymentId);
+    }
+    map['entry_date'] = Variable<String>(entryDate);
+    map['amount_fils'] = Variable<int>(amountFils);
+    if (!nullToAbsent || reason != null) {
+      map['reason'] = Variable<String>(reason);
+    }
+    return map;
+  }
+
+  InvoiceAllocationsCompanion toCompanion(bool nullToAbsent) {
+    return InvoiceAllocationsCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      createdAtUtc: Value(createdAtUtc),
+      updatedAtUtc: Value(updatedAtUtc),
+      actorId: Value(actorId),
+      version: Value(version),
+      sourceOperationId: Value(sourceOperationId),
+      clientId: Value(clientId),
+      invoiceId: invoiceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(invoiceId),
+      paymentId: paymentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(paymentId),
+      entryDate: Value(entryDate),
+      amountFils: Value(amountFils),
+      reason: reason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reason),
+    );
+  }
+
+  factory InvoiceAllocation.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InvoiceAllocation(
+      id: serializer.fromJson<String>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdAtUtc: serializer.fromJson<DateTime>(json['createdAtUtc']),
+      updatedAtUtc: serializer.fromJson<DateTime>(json['updatedAtUtc']),
+      actorId: serializer.fromJson<String>(json['actorId']),
+      version: serializer.fromJson<int>(json['version']),
+      sourceOperationId: serializer.fromJson<String>(json['sourceOperationId']),
+      clientId: serializer.fromJson<String>(json['clientId']),
+      invoiceId: serializer.fromJson<String?>(json['invoiceId']),
+      paymentId: serializer.fromJson<String?>(json['paymentId']),
+      entryDate: serializer.fromJson<String>(json['entryDate']),
+      amountFils: serializer.fromJson<int>(json['amountFils']),
+      reason: serializer.fromJson<String?>(json['reason']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'createdAtUtc': serializer.toJson<DateTime>(createdAtUtc),
+      'updatedAtUtc': serializer.toJson<DateTime>(updatedAtUtc),
+      'actorId': serializer.toJson<String>(actorId),
+      'version': serializer.toJson<int>(version),
+      'sourceOperationId': serializer.toJson<String>(sourceOperationId),
+      'clientId': serializer.toJson<String>(clientId),
+      'invoiceId': serializer.toJson<String?>(invoiceId),
+      'paymentId': serializer.toJson<String?>(paymentId),
+      'entryDate': serializer.toJson<String>(entryDate),
+      'amountFils': serializer.toJson<int>(amountFils),
+      'reason': serializer.toJson<String?>(reason),
+    };
+  }
+
+  InvoiceAllocation copyWith({
+    String? id,
+    String? tenantId,
+    DateTime? createdAtUtc,
+    DateTime? updatedAtUtc,
+    String? actorId,
+    int? version,
+    String? sourceOperationId,
+    String? clientId,
+    Value<String?> invoiceId = const Value.absent(),
+    Value<String?> paymentId = const Value.absent(),
+    String? entryDate,
+    int? amountFils,
+    Value<String?> reason = const Value.absent(),
+  }) => InvoiceAllocation(
+    id: id ?? this.id,
+    tenantId: tenantId ?? this.tenantId,
+    createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+    updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    actorId: actorId ?? this.actorId,
+    version: version ?? this.version,
+    sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+    clientId: clientId ?? this.clientId,
+    invoiceId: invoiceId.present ? invoiceId.value : this.invoiceId,
+    paymentId: paymentId.present ? paymentId.value : this.paymentId,
+    entryDate: entryDate ?? this.entryDate,
+    amountFils: amountFils ?? this.amountFils,
+    reason: reason.present ? reason.value : this.reason,
+  );
+  InvoiceAllocation copyWithCompanion(InvoiceAllocationsCompanion data) {
+    return InvoiceAllocation(
+      id: data.id.present ? data.id.value : this.id,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      createdAtUtc: data.createdAtUtc.present
+          ? data.createdAtUtc.value
+          : this.createdAtUtc,
+      updatedAtUtc: data.updatedAtUtc.present
+          ? data.updatedAtUtc.value
+          : this.updatedAtUtc,
+      actorId: data.actorId.present ? data.actorId.value : this.actorId,
+      version: data.version.present ? data.version.value : this.version,
+      sourceOperationId: data.sourceOperationId.present
+          ? data.sourceOperationId.value
+          : this.sourceOperationId,
+      clientId: data.clientId.present ? data.clientId.value : this.clientId,
+      invoiceId: data.invoiceId.present ? data.invoiceId.value : this.invoiceId,
+      paymentId: data.paymentId.present ? data.paymentId.value : this.paymentId,
+      entryDate: data.entryDate.present ? data.entryDate.value : this.entryDate,
+      amountFils: data.amountFils.present
+          ? data.amountFils.value
+          : this.amountFils,
+      reason: data.reason.present ? data.reason.value : this.reason,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvoiceAllocation(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('clientId: $clientId, ')
+          ..write('invoiceId: $invoiceId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('entryDate: $entryDate, ')
+          ..write('amountFils: $amountFils, ')
+          ..write('reason: $reason')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    tenantId,
+    createdAtUtc,
+    updatedAtUtc,
+    actorId,
+    version,
+    sourceOperationId,
+    clientId,
+    invoiceId,
+    paymentId,
+    entryDate,
+    amountFils,
+    reason,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InvoiceAllocation &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.createdAtUtc == this.createdAtUtc &&
+          other.updatedAtUtc == this.updatedAtUtc &&
+          other.actorId == this.actorId &&
+          other.version == this.version &&
+          other.sourceOperationId == this.sourceOperationId &&
+          other.clientId == this.clientId &&
+          other.invoiceId == this.invoiceId &&
+          other.paymentId == this.paymentId &&
+          other.entryDate == this.entryDate &&
+          other.amountFils == this.amountFils &&
+          other.reason == this.reason);
+}
+
+class InvoiceAllocationsCompanion extends UpdateCompanion<InvoiceAllocation> {
+  final Value<String> id;
+  final Value<String> tenantId;
+  final Value<DateTime> createdAtUtc;
+  final Value<DateTime> updatedAtUtc;
+  final Value<String> actorId;
+  final Value<int> version;
+  final Value<String> sourceOperationId;
+  final Value<String> clientId;
+  final Value<String?> invoiceId;
+  final Value<String?> paymentId;
+  final Value<String> entryDate;
+  final Value<int> amountFils;
+  final Value<String?> reason;
+  final Value<int> rowid;
+  const InvoiceAllocationsCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.createdAtUtc = const Value.absent(),
+    this.updatedAtUtc = const Value.absent(),
+    this.actorId = const Value.absent(),
+    this.version = const Value.absent(),
+    this.sourceOperationId = const Value.absent(),
+    this.clientId = const Value.absent(),
+    this.invoiceId = const Value.absent(),
+    this.paymentId = const Value.absent(),
+    this.entryDate = const Value.absent(),
+    this.amountFils = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  InvoiceAllocationsCompanion.insert({
+    required String id,
+    required String tenantId,
+    required DateTime createdAtUtc,
+    required DateTime updatedAtUtc,
+    required String actorId,
+    this.version = const Value.absent(),
+    required String sourceOperationId,
+    required String clientId,
+    this.invoiceId = const Value.absent(),
+    this.paymentId = const Value.absent(),
+    required String entryDate,
+    required int amountFils,
+    this.reason = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       tenantId = Value(tenantId),
+       createdAtUtc = Value(createdAtUtc),
+       updatedAtUtc = Value(updatedAtUtc),
+       actorId = Value(actorId),
+       sourceOperationId = Value(sourceOperationId),
+       clientId = Value(clientId),
+       entryDate = Value(entryDate),
+       amountFils = Value(amountFils);
+  static Insertable<InvoiceAllocation> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<DateTime>? createdAtUtc,
+    Expression<DateTime>? updatedAtUtc,
+    Expression<String>? actorId,
+    Expression<int>? version,
+    Expression<String>? sourceOperationId,
+    Expression<String>? clientId,
+    Expression<String>? invoiceId,
+    Expression<String>? paymentId,
+    Expression<String>? entryDate,
+    Expression<int>? amountFils,
+    Expression<String>? reason,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (createdAtUtc != null) 'created_at_utc': createdAtUtc,
+      if (updatedAtUtc != null) 'updated_at_utc': updatedAtUtc,
+      if (actorId != null) 'actor_id': actorId,
+      if (version != null) 'version': version,
+      if (sourceOperationId != null) 'source_operation_id': sourceOperationId,
+      if (clientId != null) 'client_id': clientId,
+      if (invoiceId != null) 'invoice_id': invoiceId,
+      if (paymentId != null) 'payment_id': paymentId,
+      if (entryDate != null) 'entry_date': entryDate,
+      if (amountFils != null) 'amount_fils': amountFils,
+      if (reason != null) 'reason': reason,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  InvoiceAllocationsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? tenantId,
+    Value<DateTime>? createdAtUtc,
+    Value<DateTime>? updatedAtUtc,
+    Value<String>? actorId,
+    Value<int>? version,
+    Value<String>? sourceOperationId,
+    Value<String>? clientId,
+    Value<String?>? invoiceId,
+    Value<String?>? paymentId,
+    Value<String>? entryDate,
+    Value<int>? amountFils,
+    Value<String?>? reason,
+    Value<int>? rowid,
+  }) {
+    return InvoiceAllocationsCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+      actorId: actorId ?? this.actorId,
+      version: version ?? this.version,
+      sourceOperationId: sourceOperationId ?? this.sourceOperationId,
+      clientId: clientId ?? this.clientId,
+      invoiceId: invoiceId ?? this.invoiceId,
+      paymentId: paymentId ?? this.paymentId,
+      entryDate: entryDate ?? this.entryDate,
+      amountFils: amountFils ?? this.amountFils,
+      reason: reason ?? this.reason,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (createdAtUtc.present) {
+      map['created_at_utc'] = Variable<DateTime>(createdAtUtc.value);
+    }
+    if (updatedAtUtc.present) {
+      map['updated_at_utc'] = Variable<DateTime>(updatedAtUtc.value);
+    }
+    if (actorId.present) {
+      map['actor_id'] = Variable<String>(actorId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (sourceOperationId.present) {
+      map['source_operation_id'] = Variable<String>(sourceOperationId.value);
+    }
+    if (clientId.present) {
+      map['client_id'] = Variable<String>(clientId.value);
+    }
+    if (invoiceId.present) {
+      map['invoice_id'] = Variable<String>(invoiceId.value);
+    }
+    if (paymentId.present) {
+      map['payment_id'] = Variable<String>(paymentId.value);
+    }
+    if (entryDate.present) {
+      map['entry_date'] = Variable<String>(entryDate.value);
+    }
+    if (amountFils.present) {
+      map['amount_fils'] = Variable<int>(amountFils.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InvoiceAllocationsCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdAtUtc: $createdAtUtc, ')
+          ..write('updatedAtUtc: $updatedAtUtc, ')
+          ..write('actorId: $actorId, ')
+          ..write('version: $version, ')
+          ..write('sourceOperationId: $sourceOperationId, ')
+          ..write('clientId: $clientId, ')
+          ..write('invoiceId: $invoiceId, ')
+          ..write('paymentId: $paymentId, ')
+          ..write('entryDate: $entryDate, ')
+          ..write('amountFils: $amountFils, ')
+          ..write('reason: $reason, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $TenantProfilesTable extends TenantProfiles
     with TableInfo<$TenantProfilesTable, TenantProfile> {
   @override
@@ -29197,6 +29985,16 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     'CREATE TRIGGER invoice_line_no_delete BEFORE DELETE ON invoice_lines BEGIN SELECT RAISE (ABORT, \'an invoice line stays on record\');END',
     'invoice_line_no_delete',
   );
+  late final $InvoiceAllocationsTable invoiceAllocations =
+      $InvoiceAllocationsTable(this);
+  late final Trigger invoiceAllocationNoUpdate = Trigger(
+    'CREATE TRIGGER invoice_allocation_no_update BEFORE UPDATE ON invoice_allocations BEGIN SELECT RAISE (ABORT, \'invoice allocations are append-only\');END',
+    'invoice_allocation_no_update',
+  );
+  late final Trigger invoiceAllocationNoDelete = Trigger(
+    'CREATE TRIGGER invoice_allocation_no_delete BEFORE DELETE ON invoice_allocations BEGIN SELECT RAISE (ABORT, \'invoice allocations are append-only\');END',
+    'invoice_allocation_no_delete',
+  );
   late final $TenantProfilesTable tenantProfiles = $TenantProfilesTable(this);
   late final $PayContractsTable payContracts = $PayContractsTable(this);
   late final $BillingContractsTable billingContracts = $BillingContractsTable(
@@ -29234,6 +30032,10 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
   late final Index idxInvoiceLinesInvoice = Index(
     'idx_invoice_lines_invoice',
     'CREATE INDEX idx_invoice_lines_invoice ON invoice_lines (invoice_id)',
+  );
+  late final Index idxInvoiceAllocationsClient = Index(
+    'idx_invoice_allocations_client',
+    'CREATE INDEX idx_invoice_allocations_client ON invoice_allocations (client_id)',
   );
   late final Index idxEntriesWorkerDate = Index(
     'idx_entries_worker_date',
@@ -29337,6 +30139,9 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     invoiceLines,
     invoiceLineNoEdit,
     invoiceLineNoDelete,
+    invoiceAllocations,
+    invoiceAllocationNoUpdate,
+    invoiceAllocationNoDelete,
     tenantProfiles,
     payContracts,
     billingContracts,
@@ -29350,6 +30155,7 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     idxTimesheetLinesRevision,
     idxTimesheetLinesTimesheet,
     idxInvoiceLinesInvoice,
+    idxInvoiceAllocationsClient,
     idxEntriesWorkerDate,
     idxEntriesDate,
     idxPayrollLinesWorker,
@@ -29724,6 +30530,20 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     WritePropagation(
       on: TableUpdateQuery.onTableName(
         'invoice_lines',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'invoice_allocations',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'invoice_allocations',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [],
@@ -32334,6 +33154,27 @@ final class $$ClientsTableReferences
     );
   }
 
+  static MultiTypedResultKey<$InvoiceAllocationsTable, List<InvoiceAllocation>>
+  _invoiceAllocationsRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.invoiceAllocations,
+        aliasName: 'clients__id__invoice_allocations__client_id',
+      );
+
+  $$InvoiceAllocationsTableProcessedTableManager get invoiceAllocationsRefs {
+    final manager = $$InvoiceAllocationsTableTableManager(
+      $_db,
+      $_db.invoiceAllocations,
+    ).filter((f) => f.clientId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _invoiceAllocationsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<$BillingContractsTable, List<BillingContract>>
   _billingContractsRefsTable(_$TenantDatabase db) =>
       MultiTypedResultKey.fromTable(
@@ -32651,6 +33492,31 @@ class $$ClientsTableFilterComposer
           }) => $$InvoicesTableFilterComposer(
             $db: $db,
             $table: $db.invoices,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> invoiceAllocationsRefs(
+    Expression<bool> Function($$InvoiceAllocationsTableFilterComposer f) f,
+  ) {
+    final $$InvoiceAllocationsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.invoiceAllocations,
+      getReferencedColumn: (t) => t.clientId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InvoiceAllocationsTableFilterComposer(
+            $db: $db,
+            $table: $db.invoiceAllocations,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -33073,6 +33939,32 @@ class $$ClientsTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> invoiceAllocationsRefs<T extends Object>(
+    Expression<T> Function($$InvoiceAllocationsTableAnnotationComposer a) f,
+  ) {
+    final $$InvoiceAllocationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.invoiceAllocations,
+          getReferencedColumn: (t) => t.clientId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InvoiceAllocationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.invoiceAllocations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
   Expression<T> billingContractsRefs<T extends Object>(
     Expression<T> Function($$BillingContractsTableAnnotationComposer a) f,
   ) {
@@ -33121,6 +34013,7 @@ class $$ClientsTableTableManager
             bool openingBalancesRefs,
             bool timesheetsRefs,
             bool invoicesRefs,
+            bool invoiceAllocationsRefs,
             bool billingContractsRefs,
           })
         > {
@@ -33241,6 +34134,7 @@ class $$ClientsTableTableManager
                 openingBalancesRefs = false,
                 timesheetsRefs = false,
                 invoicesRefs = false,
+                invoiceAllocationsRefs = false,
                 billingContractsRefs = false,
               }) {
                 return PrefetchHooks(
@@ -33254,6 +34148,7 @@ class $$ClientsTableTableManager
                     if (openingBalancesRefs) db.openingBalances,
                     if (timesheetsRefs) db.timesheets,
                     if (invoicesRefs) db.invoices,
+                    if (invoiceAllocationsRefs) db.invoiceAllocations,
                     if (billingContractsRefs) db.billingContracts,
                   ],
                   addJoins: null,
@@ -33415,6 +34310,26 @@ class $$ClientsTableTableManager
                           referencedColumn: 'client_id',
                           typedResults: items,
                         ),
+                      if (invoiceAllocationsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Client,
+                          $ClientsTable,
+                          InvoiceAllocation,
+                          $InvoiceAllocationsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ClientsTableReferences
+                              ._invoiceAllocationsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ClientsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).invoiceAllocationsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'client_id',
+                          typedResults: items,
+                        ),
                       if (billingContractsRefs)
                         await $_getPrefetchedDataByColumns<
                           Client,
@@ -33464,6 +34379,7 @@ typedef $$ClientsTableProcessedTableManager =
         bool openingBalancesRefs,
         bool timesheetsRefs,
         bool invoicesRefs,
+        bool invoiceAllocationsRefs,
         bool billingContractsRefs,
       })
     >;
@@ -35033,6 +35949,27 @@ final class $$CashEntriesTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$InvoiceAllocationsTable, List<InvoiceAllocation>>
+  _invoiceAllocationsRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.invoiceAllocations,
+        aliasName: 'cash_entries__id__invoice_allocations__payment_id',
+      );
+
+  $$InvoiceAllocationsTableProcessedTableManager get invoiceAllocationsRefs {
+    final manager = $$InvoiceAllocationsTableTableManager(
+      $_db,
+      $_db.invoiceAllocations,
+    ).filter((f) => f.paymentId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _invoiceAllocationsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CashEntriesTableFilterComposer
@@ -35255,6 +36192,31 @@ class $$CashEntriesTableFilterComposer
           }) => $$SalaryAllocationsTableFilterComposer(
             $db: $db,
             $table: $db.salaryAllocations,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> invoiceAllocationsRefs(
+    Expression<bool> Function($$InvoiceAllocationsTableFilterComposer f) f,
+  ) {
+    final $$InvoiceAllocationsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.invoiceAllocations,
+      getReferencedColumn: (t) => t.paymentId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InvoiceAllocationsTableFilterComposer(
+            $db: $db,
+            $table: $db.invoiceAllocations,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -35675,6 +36637,32 @@ class $$CashEntriesTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> invoiceAllocationsRefs<T extends Object>(
+    Expression<T> Function($$InvoiceAllocationsTableAnnotationComposer a) f,
+  ) {
+    final $$InvoiceAllocationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.invoiceAllocations,
+          getReferencedColumn: (t) => t.paymentId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InvoiceAllocationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.invoiceAllocations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$CashEntriesTableTableManager
@@ -35697,6 +36685,7 @@ class $$CashEntriesTableTableManager
             bool siteId,
             bool reversesEntryId,
             bool salaryAllocationsRefs,
+            bool invoiceAllocationsRefs,
           })
         > {
   $$CashEntriesTableTableManager(_$TenantDatabase db, $CashEntriesTable table)
@@ -35822,11 +36811,13 @@ class $$CashEntriesTableTableManager
                 siteId = false,
                 reversesEntryId = false,
                 salaryAllocationsRefs = false,
+                invoiceAllocationsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (salaryAllocationsRefs) db.salaryAllocations,
+                    if (invoiceAllocationsRefs) db.invoiceAllocations,
                   ],
                   addJoins:
                       <
@@ -35924,6 +36915,26 @@ class $$CashEntriesTableTableManager
                           referencedColumn: 'payment_id',
                           typedResults: items,
                         ),
+                      if (invoiceAllocationsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          CashEntry,
+                          $CashEntriesTable,
+                          InvoiceAllocation,
+                          $InvoiceAllocationsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CashEntriesTableReferences
+                              ._invoiceAllocationsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CashEntriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).invoiceAllocationsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'payment_id',
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -35951,6 +36962,7 @@ typedef $$CashEntriesTableProcessedTableManager =
         bool siteId,
         bool reversesEntryId,
         bool salaryAllocationsRefs,
+        bool invoiceAllocationsRefs,
       })
     >;
 typedef $$SalaryAllocationsTableCreateCompanionBuilder =
@@ -47488,6 +48500,27 @@ final class $$InvoicesTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$InvoiceAllocationsTable, List<InvoiceAllocation>>
+  _invoiceAllocationsRefsTable(_$TenantDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.invoiceAllocations,
+        aliasName: 'invoices__id__invoice_allocations__invoice_id',
+      );
+
+  $$InvoiceAllocationsTableProcessedTableManager get invoiceAllocationsRefs {
+    final manager = $$InvoiceAllocationsTableTableManager(
+      $_db,
+      $_db.invoiceAllocations,
+    ).filter((f) => f.invoiceId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _invoiceAllocationsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$InvoicesTableFilterComposer
@@ -47704,6 +48737,31 @@ class $$InvoicesTableFilterComposer
           }) => $$InvoiceLinesTableFilterComposer(
             $db: $db,
             $table: $db.invoiceLines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> invoiceAllocationsRefs(
+    Expression<bool> Function($$InvoiceAllocationsTableFilterComposer f) f,
+  ) {
+    final $$InvoiceAllocationsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.invoiceAllocations,
+      getReferencedColumn: (t) => t.invoiceId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InvoiceAllocationsTableFilterComposer(
+            $db: $db,
+            $table: $db.invoiceAllocations,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -48101,6 +49159,32 @@ class $$InvoicesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> invoiceAllocationsRefs<T extends Object>(
+    Expression<T> Function($$InvoiceAllocationsTableAnnotationComposer a) f,
+  ) {
+    final $$InvoiceAllocationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.invoiceAllocations,
+          getReferencedColumn: (t) => t.invoiceId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$InvoiceAllocationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.invoiceAllocations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$InvoicesTableTableManager
@@ -48121,6 +49205,7 @@ class $$InvoicesTableTableManager
             bool creditsInvoiceId,
             bool siteId,
             bool invoiceLinesRefs,
+            bool invoiceAllocationsRefs,
           })
         > {
   $$InvoicesTableTableManager(_$TenantDatabase db, $InvoicesTable table)
@@ -48268,11 +49353,13 @@ class $$InvoicesTableTableManager
                 creditsInvoiceId = false,
                 siteId = false,
                 invoiceLinesRefs = false,
+                invoiceAllocationsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (invoiceLinesRefs) db.invoiceLines,
+                    if (invoiceAllocationsRefs) db.invoiceAllocations,
                   ],
                   addJoins:
                       <
@@ -48348,6 +49435,26 @@ class $$InvoicesTableTableManager
                           referencedColumn: 'invoice_id',
                           typedResults: items,
                         ),
+                      if (invoiceAllocationsRefs)
+                        await $_getPrefetchedDataByColumns<
+                          Invoice,
+                          $InvoicesTable,
+                          InvoiceAllocation,
+                          $InvoiceAllocationsTable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InvoicesTableReferences
+                              ._invoiceAllocationsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InvoicesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).invoiceAllocationsRefs,
+                          currentColumn: 'id',
+                          referencedColumn: 'invoice_id',
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -48373,6 +49480,7 @@ typedef $$InvoicesTableProcessedTableManager =
         bool creditsInvoiceId,
         bool siteId,
         bool invoiceLinesRefs,
+        bool invoiceAllocationsRefs,
       })
     >;
 typedef $$InvoiceLinesTableCreateCompanionBuilder =
@@ -49034,6 +50142,674 @@ typedef $$InvoiceLinesTableProcessedTableManager =
       (InvoiceLine, $$InvoiceLinesTableReferences),
       InvoiceLine,
       PrefetchHooks Function({bool invoiceId, bool timesheetId})
+    >;
+typedef $$InvoiceAllocationsTableCreateCompanionBuilder =
+    InvoiceAllocationsCompanion Function({
+      required String id,
+      required String tenantId,
+      required DateTime createdAtUtc,
+      required DateTime updatedAtUtc,
+      required String actorId,
+      Value<int> version,
+      required String sourceOperationId,
+      required String clientId,
+      Value<String?> invoiceId,
+      Value<String?> paymentId,
+      required String entryDate,
+      required int amountFils,
+      Value<String?> reason,
+      Value<int> rowid,
+    });
+typedef $$InvoiceAllocationsTableUpdateCompanionBuilder =
+    InvoiceAllocationsCompanion Function({
+      Value<String> id,
+      Value<String> tenantId,
+      Value<DateTime> createdAtUtc,
+      Value<DateTime> updatedAtUtc,
+      Value<String> actorId,
+      Value<int> version,
+      Value<String> sourceOperationId,
+      Value<String> clientId,
+      Value<String?> invoiceId,
+      Value<String?> paymentId,
+      Value<String> entryDate,
+      Value<int> amountFils,
+      Value<String?> reason,
+      Value<int> rowid,
+    });
+
+final class $$InvoiceAllocationsTableReferences
+    extends
+        BaseReferences<
+          _$TenantDatabase,
+          $InvoiceAllocationsTable,
+          InvoiceAllocation
+        > {
+  $$InvoiceAllocationsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ClientsTable _clientIdTable(_$TenantDatabase db) =>
+      db.clients.createAlias('invoice_allocations__client_id__clients__id');
+
+  $$ClientsTableProcessedTableManager get clientId {
+    final $_column = $_itemColumn<String>('client_id')!;
+
+    final manager = $$ClientsTableTableManager(
+      $_db,
+      $_db.clients,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_clientIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $InvoicesTable _invoiceIdTable(_$TenantDatabase db) =>
+      db.invoices.createAlias('invoice_allocations__invoice_id__invoices__id');
+
+  $$InvoicesTableProcessedTableManager? get invoiceId {
+    final $_column = $_itemColumn<String>('invoice_id');
+    if ($_column == null) return null;
+    final manager = $$InvoicesTableTableManager(
+      $_db,
+      $_db.invoices,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_invoiceIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $CashEntriesTable _paymentIdTable(_$TenantDatabase db) => db
+      .cashEntries
+      .createAlias('invoice_allocations__payment_id__cash_entries__id');
+
+  $$CashEntriesTableProcessedTableManager? get paymentId {
+    final $_column = $_itemColumn<String>('payment_id');
+    if ($_column == null) return null;
+    final manager = $$CashEntriesTableTableManager(
+      $_db,
+      $_db.cashEntries,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_paymentIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$InvoiceAllocationsTableFilterComposer
+    extends Composer<_$TenantDatabase, $InvoiceAllocationsTable> {
+  $$InvoiceAllocationsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entryDate => $composableBuilder(
+    column: $table.entryDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ClientsTableFilterComposer get clientId {
+    final $$ClientsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableFilterComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$InvoicesTableFilterComposer get invoiceId {
+    final $$InvoicesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.invoiceId,
+      referencedTable: $db.invoices,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InvoicesTableFilterComposer(
+            $db: $db,
+            $table: $db.invoices,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CashEntriesTableFilterComposer get paymentId {
+    final $$CashEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paymentId,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$InvoiceAllocationsTableOrderingComposer
+    extends Composer<_$TenantDatabase, $InvoiceAllocationsTable> {
+  $$InvoiceAllocationsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actorId => $composableBuilder(
+    column: $table.actorId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entryDate => $composableBuilder(
+    column: $table.entryDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+    column: $table.reason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ClientsTableOrderingComposer get clientId {
+    final $$ClientsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableOrderingComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$InvoicesTableOrderingComposer get invoiceId {
+    final $$InvoicesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.invoiceId,
+      referencedTable: $db.invoices,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InvoicesTableOrderingComposer(
+            $db: $db,
+            $table: $db.invoices,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CashEntriesTableOrderingComposer get paymentId {
+    final $$CashEntriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paymentId,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$InvoiceAllocationsTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $InvoiceAllocationsTable> {
+  $$InvoiceAllocationsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAtUtc => $composableBuilder(
+    column: $table.createdAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAtUtc => $composableBuilder(
+    column: $table.updatedAtUtc,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get actorId =>
+      $composableBuilder(column: $table.actorId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceOperationId => $composableBuilder(
+    column: $table.sourceOperationId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get entryDate =>
+      $composableBuilder(column: $table.entryDate, builder: (column) => column);
+
+  GeneratedColumn<int> get amountFils => $composableBuilder(
+    column: $table.amountFils,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  $$ClientsTableAnnotationComposer get clientId {
+    final $$ClientsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.clientId,
+      referencedTable: $db.clients,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ClientsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.clients,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$InvoicesTableAnnotationComposer get invoiceId {
+    final $$InvoicesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.invoiceId,
+      referencedTable: $db.invoices,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InvoicesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.invoices,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CashEntriesTableAnnotationComposer get paymentId {
+    final $$CashEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paymentId,
+      referencedTable: $db.cashEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CashEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cashEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$InvoiceAllocationsTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $InvoiceAllocationsTable,
+          InvoiceAllocation,
+          $$InvoiceAllocationsTableFilterComposer,
+          $$InvoiceAllocationsTableOrderingComposer,
+          $$InvoiceAllocationsTableAnnotationComposer,
+          $$InvoiceAllocationsTableCreateCompanionBuilder,
+          $$InvoiceAllocationsTableUpdateCompanionBuilder,
+          (InvoiceAllocation, $$InvoiceAllocationsTableReferences),
+          InvoiceAllocation,
+          PrefetchHooks Function({
+            bool clientId,
+            bool invoiceId,
+            bool paymentId,
+          })
+        > {
+  $$InvoiceAllocationsTableTableManager(
+    _$TenantDatabase db,
+    $InvoiceAllocationsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InvoiceAllocationsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$InvoiceAllocationsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$InvoiceAllocationsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<DateTime> createdAtUtc = const Value.absent(),
+                Value<DateTime> updatedAtUtc = const Value.absent(),
+                Value<String> actorId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> sourceOperationId = const Value.absent(),
+                Value<String> clientId = const Value.absent(),
+                Value<String?> invoiceId = const Value.absent(),
+                Value<String?> paymentId = const Value.absent(),
+                Value<String> entryDate = const Value.absent(),
+                Value<int> amountFils = const Value.absent(),
+                Value<String?> reason = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InvoiceAllocationsCompanion(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                clientId: clientId,
+                invoiceId: invoiceId,
+                paymentId: paymentId,
+                entryDate: entryDate,
+                amountFils: amountFils,
+                reason: reason,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String tenantId,
+                required DateTime createdAtUtc,
+                required DateTime updatedAtUtc,
+                required String actorId,
+                Value<int> version = const Value.absent(),
+                required String sourceOperationId,
+                required String clientId,
+                Value<String?> invoiceId = const Value.absent(),
+                Value<String?> paymentId = const Value.absent(),
+                required String entryDate,
+                required int amountFils,
+                Value<String?> reason = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InvoiceAllocationsCompanion.insert(
+                id: id,
+                tenantId: tenantId,
+                createdAtUtc: createdAtUtc,
+                updatedAtUtc: updatedAtUtc,
+                actorId: actorId,
+                version: version,
+                sourceOperationId: sourceOperationId,
+                clientId: clientId,
+                invoiceId: invoiceId,
+                paymentId: paymentId,
+                entryDate: entryDate,
+                amountFils: amountFils,
+                reason: reason,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$InvoiceAllocationsTable, InvoiceAllocation>(
+                    table,
+                  ),
+                  $$InvoiceAllocationsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({clientId = false, invoiceId = false, paymentId = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (clientId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.clientId,
+                            referencedTable: $$InvoiceAllocationsTableReferences
+                                ._clientIdTable(db),
+                            referencedColumn:
+                                $$InvoiceAllocationsTableReferences
+                                    ._clientIdTable(db)
+                                    .id,
+                          ) as T;
+                        }
+                        if (invoiceId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.invoiceId,
+                            referencedTable: $$InvoiceAllocationsTableReferences
+                                ._invoiceIdTable(db),
+                            referencedColumn:
+                                $$InvoiceAllocationsTableReferences
+                                    ._invoiceIdTable(db)
+                                    .id,
+                          ) as T;
+                        }
+                        if (paymentId) {
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.paymentId,
+                            referencedTable: $$InvoiceAllocationsTableReferences
+                                ._paymentIdTable(db),
+                            referencedColumn:
+                                $$InvoiceAllocationsTableReferences
+                                    ._paymentIdTable(db)
+                                    .id,
+                          ) as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$InvoiceAllocationsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $InvoiceAllocationsTable,
+      InvoiceAllocation,
+      $$InvoiceAllocationsTableFilterComposer,
+      $$InvoiceAllocationsTableOrderingComposer,
+      $$InvoiceAllocationsTableAnnotationComposer,
+      $$InvoiceAllocationsTableCreateCompanionBuilder,
+      $$InvoiceAllocationsTableUpdateCompanionBuilder,
+      (InvoiceAllocation, $$InvoiceAllocationsTableReferences),
+      InvoiceAllocation,
+      PrefetchHooks Function({bool clientId, bool invoiceId, bool paymentId})
     >;
 typedef $$TenantProfilesTableCreateCompanionBuilder =
     TenantProfilesCompanion Function({
@@ -52872,6 +54648,8 @@ class $TenantDatabaseManager {
       $$InvoicesTableTableManager(_db, _db.invoices);
   $$InvoiceLinesTableTableManager get invoiceLines =>
       $$InvoiceLinesTableTableManager(_db, _db.invoiceLines);
+  $$InvoiceAllocationsTableTableManager get invoiceAllocations =>
+      $$InvoiceAllocationsTableTableManager(_db, _db.invoiceAllocations);
   $$TenantProfilesTableTableManager get tenantProfiles =>
       $$TenantProfilesTableTableManager(_db, _db.tenantProfiles);
   $$PayContractsTableTableManager get payContracts =>

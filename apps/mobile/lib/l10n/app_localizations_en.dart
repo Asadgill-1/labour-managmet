@@ -3091,6 +3091,200 @@ class AppLocalizationsEn extends AppLocalizations {
   String invNotePartCredited(String amount, String left) {
     return 'Credit notes took back $amount. $left is left.';
   }
+
+  @override
+  String get invRecordReceipt => 'Record a receipt';
+
+  @override
+  String invUseCredit(String amount) {
+    return 'Use company credit, $amount';
+  }
+
+  @override
+  String get invCloseLost => 'Close the rest as lost';
+
+  @override
+  String invCloseLostTitle(String amount) {
+    return 'Close $amount as lost?';
+  }
+
+  @override
+  String get invCloseLostHelp =>
+      'For money that will not come. The month is no longer held up, and you can open it again. Ask your accountant about the VAT.';
+
+  @override
+  String get invUndoLost => 'Open the closed amount again';
+
+  @override
+  String get invUndoLostTitle => 'Open the closed amount again?';
+
+  @override
+  String get invUndoLostHelp =>
+      'It is owed again. Past its due date, it stops closing the month until paid.';
+
+  @override
+  String invNoteOverdue(String due, String amount) {
+    return 'Overdue since $due: $amount still to pay. The month cannot close until it is paid, or closed as lost with a reason.';
+  }
+
+  @override
+  String invNotePartPaid(String received, String left) {
+    return '$received received, $left still to pay.';
+  }
+
+  @override
+  String get invNotePaid => 'Paid in full.';
+
+  @override
+  String invNoteClosed(String amount) {
+    return '$amount closed as lost. Nothing is left to pay.';
+  }
+
+  @override
+  String get invReceived => 'Received';
+
+  @override
+  String get invLost => 'Closed as lost';
+
+  @override
+  String get invToPay => 'Still to pay';
+
+  @override
+  String get invReceiptsHeading => 'Receipts';
+
+  @override
+  String get invStatusPartlyPaid => 'Partly paid';
+
+  @override
+  String get invStatusOverdue => 'Overdue';
+
+  @override
+  String get invStatusPaid => 'Paid';
+
+  @override
+  String get invStatusClosed => 'Closed, part lost';
+
+  @override
+  String invToPayShort(String amount) {
+    return '$amount to pay';
+  }
+
+  @override
+  String get receiptPaysHeading => 'What it pays';
+
+  @override
+  String get receiptNothingOwed =>
+      'Nothing is owed. The whole amount waits as the company\'s credit for its next invoice.';
+
+  @override
+  String get receiptOldBalance => 'Balance from before the app';
+
+  @override
+  String receiptInvoiceLeft(String amount, String due) {
+    return '$amount left, due $due';
+  }
+
+  @override
+  String get receiptPartTooHigh => 'More than is left on it';
+
+  @override
+  String receiptKeptLine(String amount) {
+    return '$amount stays as the company\'s credit for later invoices.';
+  }
+
+  @override
+  String receiptCreditAlready(String amount) {
+    return 'This company already has $amount of credit not used. Use it from the invoice\'s screen.';
+  }
+
+  @override
+  String receiptForInvoice(String number) {
+    return 'Invoice $number';
+  }
+
+  @override
+  String get receiptKeptAsCredit => 'Kept as credit';
+
+  @override
+  String get receiptReceived => 'Received';
+
+  @override
+  String get receiptClientNote =>
+      'This receipt is the supplier\'s own record of money received. It is not a tax invoice.';
+
+  @override
+  String get receiptReceivedBy => 'Received by';
+
+  @override
+  String get receiptPaidBy => 'Paid by';
+
+  @override
+  String get receiptClientTitle => 'Receipt';
+
+  @override
+  String findingOverdue(int count, String names) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count invoices are',
+      one: 'An invoice is',
+    );
+    return '$_temp0 past the due date with money left: $names. Record what was paid, or close the rest as lost with a reason.';
+  }
+
+  @override
+  String get regLostUndone => 'Closed amount opened again';
+
+  @override
+  String regCompanyOwes(String amount) {
+    return 'Balance $amount: the company owes';
+  }
+
+  @override
+  String regCompanyCredit(String amount) {
+    return 'Balance $amount: credit to the company';
+  }
+
+  @override
+  String regOverdue(String amount) {
+    return 'Overdue $amount';
+  }
+
+  @override
+  String regUnusedCredit(String amount) {
+    return 'Credit not used $amount';
+  }
+
+  @override
+  String get regAllCompanies => 'All companies';
+
+  @override
+  String get regInvoiced => 'Invoiced';
+
+  @override
+  String get regStatement => 'Company statement';
+
+  @override
+  String get regStatementNote =>
+      'Invoices, credit notes, receipts and amounts closed as lost, with the balance after each. Not a tax invoice.';
+
+  @override
+  String get clientMoneyHeading => 'Money';
+
+  @override
+  String get clientCreditUnused => 'Credit not used';
+
+  @override
+  String get invLostReason => 'Why the money will not come';
+
+  @override
+  String get invUndoLostReason => 'Why it is owed again';
+
+  @override
+  String get invCloseLostConfirm => 'Close as lost';
+
+  @override
+  String get invUndoLostConfirm => 'Open again';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -5999,4 +6193,198 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String invNotePartCredited(String amount, String left) {
     return 'Credit notes ne $amount wapas liya. Baqi $left.';
   }
+
+  @override
+  String get invRecordReceipt => 'Raseed darj karein';
+
+  @override
+  String invUseCredit(String amount) {
+    return 'Company ka credit lagayein, $amount';
+  }
+
+  @override
+  String get invCloseLost => 'Baqi ko nuqsan maan kar band karein';
+
+  @override
+  String invCloseLostTitle(String amount) {
+    return '$amount nuqsan maan kar band karein?';
+  }
+
+  @override
+  String get invCloseLostHelp =>
+      'Jo paisa nahin aayega. Mahina phir nahin rukta, aur dobara khol sakte hain. VAT accountant se poochein.';
+
+  @override
+  String get invUndoLost => 'Band raqam dobara kholein';
+
+  @override
+  String get invUndoLostTitle => 'Band raqam dobara kholein?';
+
+  @override
+  String get invUndoLostHelp =>
+      'Raqam phir baqi ho jayegi. Due date guzar chuki ho to paisa aane tak mahina band nahin hoga.';
+
+  @override
+  String invNoteOverdue(String due, String amount) {
+    return '$due se overdue: $amount abhi baqi. Paisa aane tak, ya wajah likh kar nuqsan maan kar band karne tak, mahina band nahin hoga.';
+  }
+
+  @override
+  String invNotePartPaid(String received, String left) {
+    return '$received mil gaye, $left abhi baqi.';
+  }
+
+  @override
+  String get invNotePaid => 'Poora paisa mil gaya.';
+
+  @override
+  String invNoteClosed(String amount) {
+    return '$amount nuqsan maan kar band kiya. Kuch baqi nahin.';
+  }
+
+  @override
+  String get invReceived => 'Mila';
+
+  @override
+  String get invLost => 'Nuqsan maan kar band';
+
+  @override
+  String get invToPay => 'Abhi baqi';
+
+  @override
+  String get invReceiptsHeading => 'Raseedein';
+
+  @override
+  String get invStatusPartlyPaid => 'Kuch paisa mila';
+
+  @override
+  String get invStatusOverdue => 'Overdue';
+
+  @override
+  String get invStatusPaid => 'Paisa mil gaya';
+
+  @override
+  String get invStatusClosed => 'Band, kuch nuqsan';
+
+  @override
+  String invToPayShort(String amount) {
+    return '$amount baqi';
+  }
+
+  @override
+  String get receiptPaysHeading => 'Kis ka paisa hai';
+
+  @override
+  String get receiptNothingOwed =>
+      'Kuch baqi nahin. Poori raqam company ke agle invoice ke liye credit rahegi.';
+
+  @override
+  String get receiptOldBalance => 'App se pehle ka baqi';
+
+  @override
+  String receiptInvoiceLeft(String amount, String due) {
+    return '$amount baqi, due $due';
+  }
+
+  @override
+  String get receiptPartTooHigh => 'Is par itna baqi nahin';
+
+  @override
+  String receiptKeptLine(String amount) {
+    return '$amount company ka credit rahega, agle invoices ke liye.';
+  }
+
+  @override
+  String receiptCreditAlready(String amount) {
+    return 'Is company ka $amount credit pehle se pada hai. Invoice ki screen se usay lagayein.';
+  }
+
+  @override
+  String receiptForInvoice(String number) {
+    return 'Invoice $number';
+  }
+
+  @override
+  String get receiptKeptAsCredit => 'Credit mein rakha';
+
+  @override
+  String get receiptReceived => 'Mila';
+
+  @override
+  String get receiptClientNote =>
+      'Yeh raseed paisa milne ka company ka apna record hai. Yeh tax invoice nahin.';
+
+  @override
+  String get receiptReceivedBy => 'Lene wala';
+
+  @override
+  String get receiptPaidBy => 'Dene wala';
+
+  @override
+  String get receiptClientTitle => 'Raseed';
+
+  @override
+  String findingOverdue(int count, String names) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count invoices ki',
+      one: 'Aik invoice ki',
+    );
+    return '$_temp0 due date guzar gayi aur paisa baqi hai: $names. Jo mila woh darj karein, ya wajah likh kar baqi nuqsan maan kar band karein.';
+  }
+
+  @override
+  String get regLostUndone => 'Band raqam dobara khuli';
+
+  @override
+  String regCompanyOwes(String amount) {
+    return 'Baqi $amount: company ne dena hai';
+  }
+
+  @override
+  String regCompanyCredit(String amount) {
+    return 'Baqi $amount: company ka credit';
+  }
+
+  @override
+  String regOverdue(String amount) {
+    return 'Overdue $amount';
+  }
+
+  @override
+  String regUnusedCredit(String amount) {
+    return 'Na laga credit $amount';
+  }
+
+  @override
+  String get regAllCompanies => 'Sab companies';
+
+  @override
+  String get regInvoiced => 'Invoice';
+
+  @override
+  String get regStatement => 'Company ka hisaab';
+
+  @override
+  String get regStatementNote =>
+      'Invoice, credit note, raseedein aur nuqsan maan kar band raqam, har ek ke baad baqi ke saath. Yeh tax invoice nahin.';
+
+  @override
+  String get clientMoneyHeading => 'Paisa';
+
+  @override
+  String get clientCreditUnused => 'Na laga credit';
+
+  @override
+  String get invLostReason => 'Paisa kyun nahin aayega';
+
+  @override
+  String get invUndoLostReason => 'Dobara kyun khol rahe hain';
+
+  @override
+  String get invCloseLostConfirm => 'Band karein';
+
+  @override
+  String get invUndoLostConfirm => 'Dobara kholein';
 }

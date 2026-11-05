@@ -8,10 +8,11 @@ import 'package:domain/timesheet.dart';
 import 'package:drift/drift.dart';
 
 import 'masters.dart';
+import 'receipts.dart';
 import 'tenant_database.dart';
 import 'timesheets.dart';
 
-/// How far an invoice has gone (INV-07). Paid and overdue come with receipts in T17.
+/// How far an invoice has gone (INV-07). Paid, partly paid and overdue derive from its receipts (`PayState`).
 enum InvoiceStatus { draft, issued, credited }
 
 /// Why an invoice can't be made or issued as it stands. Nothing was written.
@@ -65,6 +66,9 @@ class InvoiceDraft {
 
 /// How an item line, or a credit for an amount, is stored in place of a `RateBasis`.
 const itemBasis = 'item';
+
+/// A stored line's unit, or null for a line the owner wrote or a credit for an amount.
+RateBasis? basisOf(String stored) => stored == itemBasis ? null : RateBasis.values.byName(stored);
 
 /// One invoice line: in a draft, worked out from timesheet rows that can still be billed; once issued, as stored.
 class InvoiceLineView {
@@ -144,6 +148,9 @@ class InvoiceView {
     this.credited = const LineTax(netFils: 0, vatFils: 0),
     this.original,
     this.changes = const [],
+    this.money,
+    this.receipts = const [],
+    this.clientCreditFils = 0,
   });
 
   final Invoice invoice;
@@ -171,6 +178,15 @@ class InvoiceView {
 
   /// Work this invoice charged whose timesheet now says another figure. A credit note and a new invoice put it right.
   final List<BillingChange> changes;
+
+  /// What was received on an issued invoice and what is still owed. Null on a draft or a credit note.
+  final InvoiceMoney? money;
+
+  /// The receipts that settled it, each with what of it went here, oldest first.
+  final List<({CashEntry receipt, int fils})> receipts;
+
+  /// The company's money received and set against nothing yet, which this invoice could use (INV-05).
+  final int clientCreditFils;
 
   InvoiceStatus get status => InvoiceStatus.values.byName(invoice.status);
   bool get isCreditNote => invoice.kind == 'credit';
@@ -221,13 +237,16 @@ class InvoiceParties {
 
 /// One line of the list of invoices.
 class InvoiceListRow {
-  const InvoiceListRow({required this.invoice, required this.clientName, required this.totalFils});
+  const InvoiceListRow({required this.invoice, required this.clientName, required this.totalFils, this.money});
 
   final Invoice invoice;
   final String clientName;
 
   /// Null on a draft, whose lines are not fixed yet.
   final int? totalFils;
+
+  /// What is received and still owed, on an issued invoice.
+  final InvoiceMoney? money;
 }
 
 /// INV-2026-0012, or CN-2026-0003 for a credit note. Counted by year on this phone (INV-08).
@@ -395,6 +414,11 @@ extension InvoiceOps on TenantDatabase {
           ..where((i) => i.creditsInvoiceId.equals(id))
           ..orderBy([(i) => OrderingTerm.asc(i.year), (i) => OrderingTerm.asc(i.seq)]))
         .get();
+    final money = inv.kind == 'invoice' ? await receivables(clientId: inv.clientId) : null;
+    final paid = <String, int>{};
+    for (final a in money?.parts ?? const <InvoiceAllocation>[]) {
+      if (a.invoiceId == id && a.paymentId != null) paid[a.paymentId!] = (paid[a.paymentId!] ?? 0) + a.amountFils;
+    }
     return InvoiceView(
       invoice: inv,
       client: client,
@@ -407,7 +431,7 @@ extension InvoiceOps on TenantDatabase {
             timesheetNumber: numbers[l.timesheetId],
             siteName: null,
             trade: null,
-            basis: l.basis == itemBasis ? null : RateBasis.values.byName(l.basis),
+            basis: basisOf(l.basis),
             quantity: l.quantity,
             unitPriceFils: l.unitPriceFils,
             amountFils: l.amountFils,
@@ -425,6 +449,12 @@ extension InvoiceOps on TenantDatabase {
       credited: await _creditedBy(notes),
       original: original,
       changes: inv.kind == 'invoice' ? await billingChanges(invoiceId: id) : const [],
+      money: money?.invoices[id],
+      receipts: [
+        for (final MapEntry(:key, :value) in paid.entries)
+          if (value > 0) (receipt: money!.receipts[key]!.receipt, fils: value),
+      ]..sort((a, b) => a.receipt.entryDate.compareTo(b.receipt.entryDate)),
+      clientCreditFils: money?.creditOf(inv.clientId) ?? 0,
     );
   }
 
@@ -438,7 +468,9 @@ extension InvoiceOps on TenantDatabase {
   /// Sends a fresh copy whenever anything behind it changes.
   Stream<InvoiceView> watchInvoice(String id) async* {
     yield await invoiceView(id);
-    final changes = tableUpdates(TableUpdateQuery.onAllTables([invoices, invoiceLines, billedAllocations, timesheets, timesheetRevisions, timesheetLines, attendanceEntries, tenantProfiles, clients]));
+    final changes = tableUpdates(
+      TableUpdateQuery.onAllTables([invoices, invoiceLines, billedAllocations, timesheets, timesheetRevisions, timesheetLines, attendanceEntries, tenantProfiles, clients, invoiceAllocations, cashEntries]),
+    );
     await for (final _ in changes) {
       // A draft thrown away goes while the screen is closing.
       if (await (select(invoices)..where((i) => i.id.equals(id))).getSingleOrNull() == null) return;
@@ -461,11 +493,12 @@ extension InvoiceOps on TenantDatabase {
           r.read(l.invoiceId)!: (r.read(net) ?? 0) + (r.read(vat) ?? 0),
       };
       final rows = await (select(invoices)..orderBy([(i) => OrderingTerm.desc(i.createdAtUtc)])).get();
-      return [for (final i in rows) InvoiceListRow(invoice: i, clientName: names[i.clientId] ?? '', totalFils: totals[i.id])];
+      final money = (await receivables()).invoices;
+      return [for (final i in rows) InvoiceListRow(invoice: i, clientName: names[i.clientId] ?? '', totalFils: totals[i.id], money: money[i.id])];
     }
 
     yield await read();
-    await for (final _ in tableUpdates(TableUpdateQuery.onAllTables([invoices, invoiceLines, clients]))) {
+    await for (final _ in tableUpdates(TableUpdateQuery.onAllTables([invoices, invoiceLines, clients, invoiceAllocations, cashEntries]))) {
       yield await read();
     }
   }
@@ -689,6 +722,7 @@ extension InvoiceOps on TenantDatabase {
           ),
         );
         await _storeLines(creditId, lines, describe: (l) => l.description!, operationId: operationId);
+        await releaseOverpaid(inv, creditNumber: invoiceNumber(creditNotePrefix, year, seq), operationId: operationId);
         if (whole) {
           // The issued row itself is the one other write: the status trigger lets nothing else through.
           await (update(invoices)..where((i) => i.id.equals(id))).write(

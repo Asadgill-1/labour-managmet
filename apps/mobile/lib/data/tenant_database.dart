@@ -59,6 +59,7 @@ String newUuid() {
     BilledAllocations,
     Invoices,
     InvoiceLines,
+    InvoiceAllocations,
     AttendanceBatches,
     AttendanceEntries,
     PayrollRuns,
@@ -77,7 +78,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 14;
+  int get schemaVersion => 15;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -210,6 +211,13 @@ class TenantDatabase extends _$TenantDatabase {
       },
       // An invoice can now have several credit notes, each for part of it (INV-06).
       from13To14: (m, schema) => m.drop(Index('one_credit_note', '')),
+      // Receipts settle invoices, and an owner can close what is left as lost (INV-05, D-048).
+      from14To15: (m, schema) async {
+        await m.createTable(schema.invoiceAllocations);
+        await m.createIndex(schema.idxInvoiceAllocationsClient);
+        await m.createTrigger(schema.invoiceAllocationNoUpdate);
+        await m.createTrigger(schema.invoiceAllocationNoDelete);
+      },
     ),
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');

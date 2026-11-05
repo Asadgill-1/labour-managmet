@@ -9,6 +9,7 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/cash.dart';
+import '../../data/receipts.dart';
 import '../../data/statement.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
@@ -19,12 +20,16 @@ const _inKinds = [CashKind.roomRentReceived, CashKind.advanceReturned, CashKind.
 
 /// One money entry. The owner says what the money was for and the line goes where it belongs (D-030).
 class CashEntryFormScreen extends ConsumerStatefulWidget {
-  const CashEntryFormScreen({this.date, this.kind, this.workerId, this.roomId, this.amountFils, super.key});
+  const CashEntryFormScreen({this.date, this.kind, this.workerId, this.roomId, this.clientId, this.invoiceId, this.amountFils, super.key});
 
   final String? date;
   final CashKind? kind;
   final String? workerId;
   final String? roomId;
+  final String? clientId;
+
+  /// A company's receipt opened from this invoice goes on it first.
+  final String? invoiceId;
   final int? amountFils;
 
   @override
@@ -40,7 +45,7 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
   late CashKind _kind = widget.kind ?? CashKind.advanceGiven;
   late String? _workerId = widget.workerId;
   late String? _roomId = widget.roomId;
-  String? _clientId;
+  late String? _clientId = widget.clientId;
   String? _siteId;
   String _category = 'other';
   String _method = 'cash';
@@ -56,6 +61,12 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
   /// Once the owner types a month's share, the amount stops sharing itself out over it.
   bool _partsEdited = false;
 
+  /// What the company still owes, oldest first, and how much of this receipt goes on each (INV-05). The invoice the
+  /// screen was opened from comes first.
+  List<OpenItem> _owed = const [];
+  final _receiptParts = <String?, TextEditingController>{};
+  int _companyCredit = 0;
+
   @override
   void initState() {
     super.initState();
@@ -64,6 +75,7 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
 
   /// Months up to the payment's date, so a late correction to an older month shows here at once.
   Future<void> _loadUnpaid() async {
+    if (_kind == CashKind.clientReceipt) return _loadOwed();
     final workerId = _workerId;
     final month = _date?.substring(0, 7);
     if (_kind != CashKind.salaryPaid || workerId == null || month == null) return;
@@ -79,7 +91,33 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
     });
   }
 
+  Future<void> _loadOwed() async {
+    final clientId = _clientId;
+    if (clientId == null) return;
+    final money = await ref.read(dbProvider).receivables(clientId: clientId);
+    if (!mounted || clientId != _clientId) return;
+    final open = money.openOf(clientId);
+    setState(() {
+      _owed = [...open.where((o) => o.invoiceId != null && o.invoiceId == widget.invoiceId), ...open.where((o) => o.invoiceId == null || o.invoiceId != widget.invoiceId)];
+      for (final o in _owed) {
+        _receiptParts[o.invoiceId] ??= TextEditingController();
+      }
+      _companyCredit = money.creditOf(clientId);
+      _partsEdited = false;
+      _shareOut();
+    });
+  }
+
   void _shareOut() {
+    if (_kind == CashKind.clientReceipt) {
+      var left = parseAed(_amount.text) ?? 0;
+      for (final o in _owed) {
+        final fils = left < o.leftFils ? left : o.leftFils;
+        _receiptParts[o.invoiceId]!.text = fils > 0 ? plainAmount(fils) : '';
+        left -= fils;
+      }
+      return;
+    }
     final split = splitOldestFirst(_unpaid, parseAed(_amount.text) ?? 0);
     for (final m in _unpaid.keys) {
       _parts[m]!.text = split.parts[m] == null ? '' : plainAmount(split.parts[m]!);
@@ -98,6 +136,13 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
   };
 
   int get _extraFils => (parseAed(_amount.text) ?? 0) - _partsTyped.values.fold(0, (total, fils) => total + fils);
+
+  Map<String?, int> get _receiptTyped => {
+    for (final o in _owed)
+      if ((parseAed(_receiptParts[o.invoiceId]!.text) ?? 0) > 0) o.invoiceId: parseAed(_receiptParts[o.invoiceId]!.text)!,
+  };
+
+  int get _receiptLeftFils => (parseAed(_amount.text) ?? 0) - _receiptTyped.values.fold(0, (total, fils) => total + fils);
 
   /// Paying beyond what is owed is a clear yes from the owner, never a surprise on the worker's account (PAY-06).
   Future<bool> _confirmExtra(int extra) async {
@@ -144,6 +189,11 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
     final clientId = _kind == CashKind.clientReceipt ? _clientId : null;
     final isExpense = _kind == CashKind.expense;
     final isSalary = _kind == CashKind.salaryPaid;
+    final isReceipt = _kind == CashKind.clientReceipt;
+    if (isReceipt && _receiptLeftFils < 0) {
+      showFormError(context, l10n.salaryPartsTooMuch);
+      return;
+    }
     if (isSalary) {
       final extra = _extraFils;
       if (extra < 0) {
@@ -154,8 +204,20 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
       if (!mounted) return;
     }
     final note = _note.text.trim().isEmpty ? null : _note.text.trim();
+    final reference = _reference.text.trim().isEmpty ? null : _reference.text.trim();
     try {
-      if (isSalary) {
+      if (isReceipt) {
+        await ref.read(dbProvider).addClientReceipt(
+          operationId: _operationId,
+          date: _date!,
+          clientId: clientId!,
+          amountFils: parseAed(_amount.text)!,
+          parts: _receiptTyped,
+          method: _method,
+          reference: reference,
+          note: note,
+        );
+      } else if (isSalary) {
         await ref.read(dbProvider).addSalaryPayment(
           operationId: _operationId,
           date: _date!,
@@ -184,6 +246,10 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
           reference: isExpense && _reference.text.trim().isNotEmpty ? _reference.text.trim() : null,
         );
       }
+    } on ReceiptTooHigh {
+      if (mounted) showFormError(context, l10n.receiptPartTooHigh);
+      await _loadOwed();
+      return;
     } on AllocationTooHigh {
       if (mounted) showFormError(context, l10n.salaryPartTooHigh);
       await _loadUnpaid();
@@ -283,7 +349,13 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
                 l10n.chooseClient,
                 selected: _clientId,
                 options: [for (final c in clients) (value: c.id, label: c.name)],
-                onChanged: (v) => setState(() => _clientId = v),
+                onChanged: (v) {
+                  setState(() {
+                    _clientId = v;
+                    _owed = const [];
+                  });
+                  _loadOwed();
+                },
               ),
               fieldGap,
             ],
@@ -322,6 +394,62 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
               onChanged: (_) => _amountChanged(),
             ),
             fieldGap,
+            if (_kind == CashKind.clientReceipt && _clientId != null) ...[
+              Row(
+                children: [
+                  Expanded(child: Text(l10n.receiptPaysHeading, style: sectionTitleStyle)),
+                  if (_partsEdited)
+                    TextButton(
+                      onPressed: () => setState(() {
+                        _partsEdited = false;
+                        _shareOut();
+                      }),
+                      child: Text(l10n.salaryOldestFirst),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              if (_owed.isEmpty) Text(l10n.receiptNothingOwed, style: const TextStyle(color: muted)),
+              for (final o in _owed)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 14),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(o.number ?? l10n.receiptOldBalance, style: const TextStyle(fontWeight: FontWeight.w600)),
+                            Text(
+                              o.dueDate == null ? l10n.salaryMonthLeft(formatAed(o.leftFils)) : l10n.receiptInvoiceLeft(formatAed(o.leftFils), showDate(o.dueDate!)),
+                              style: const TextStyle(color: muted, fontSize: 13),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      SizedBox(
+                        width: 130,
+                        child: Field(
+                          l10n.amountAed,
+                          _receiptParts[o.invoiceId]!,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          onChanged: (_) => setState(() => _partsEdited = true),
+                          validator: (v) {
+                            if ((v ?? '').trim().isEmpty) return null;
+                            final fils = parseAed(v!);
+                            if (fils == null || fils < 0) return l10n.amountInvalid;
+                            return fils > o.leftFils ? l10n.receiptPartTooHigh : null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              if (_receiptLeftFils > 0) Text(l10n.receiptKeptLine(formatAed(_receiptLeftFils)), style: const TextStyle(color: muted)),
+              if (_companyCredit > 0) Text(l10n.receiptCreditAlready(formatAed(_companyCredit)), style: const TextStyle(color: muted)),
+              fieldGap,
+            ],
             if (isSalary) ...[
               Row(
                 children: [
@@ -396,7 +524,7 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
               onSelectionChanged: (s) => setState(() => _method = s.single),
             ),
             fieldGap,
-            if (isSalary || _kind == CashKind.expense) ...[
+            if (isSalary || _kind == CashKind.expense || _kind == CashKind.clientReceipt) ...[
               Field(l10n.salaryReference, _reference),
               fieldGap,
             ],

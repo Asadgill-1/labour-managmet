@@ -6,6 +6,7 @@ import 'package:labour_app/data/cash.dart';
 import 'package:labour_app/data/closing.dart';
 import 'package:labour_app/data/documents.dart';
 import 'package:labour_app/data/invoices.dart';
+import 'package:labour_app/data/receipts.dart';
 import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/data/tenant_database.dart';
 import 'package:labour_app/data/timesheets.dart';
@@ -137,6 +138,28 @@ void main() {
 
     await db.addSalaryPayment(operationId: newUuid(), date: '2026-10-06', workerId: 'w1', amountFils: 2000, parts: {'2026-09': 2000}, extraNote: 'x');
     await expectLater(db.delete(db.salaryAllocations).go(), throwsA(anything));
+  });
+
+  test('a phone on version 14 upgrades: its invoice and the company receipt in its cash book stay, and the receipt then settles it (INV-05)', () async {
+    final old = await verifier.schemaAt(14);
+    old.rawDatabase.execute('''
+      INSERT INTO tenant_profiles (id, $commonColumns, legal_name) VALUES ('p1', $common, 'Labour');
+      INSERT INTO clients (id, $commonColumns, name) VALUES ('c1', $common, 'ATE');
+      INSERT INTO invoices (id, $commonColumns, client_id, status, from_date, to_date, issue_date, due_date, year, seq, number, parties)
+      VALUES ('i1', $common, 'c1', 'issued', '2026-10-01', '2026-10-31', '2026-11-01', '2026-11-01', 2026, 1, 'INV-2026-0001', '{"supplierName":"Labour","customerName":"ATE"}');
+      INSERT INTO invoice_lines (id, $commonColumns, invoice_id, position, description, basis, quantity, unit_price_fils, amount_fils, net_fils, vat_fils)
+      VALUES ('l1', $common, 'i1', 1, 'Manpower supply', 'day', 2, 1500, 3000, 3000, 0);
+      INSERT INTO cash_entries (id, $commonColumns, entry_date, kind, amount_fils, client_id) VALUES ('r1', $common, '2026-11-02', 'clientReceipt', 1200, 'c1');
+    ''');
+
+    final db = TenantDatabase(old.newConnection(), tenantId: 't', deviceId: 'device');
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, db.schemaVersion);
+
+    expect((await db.receivables()).creditOf('c1'), 1200, reason: 'an old receipt waits as credit');
+    await db.useClientCredit('i1', operationId: newUuid());
+    final money = await db.receivables();
+    expect((money.invoices['i1']!.leftFils, money.creditOf('c1')), (1800, 0));
   });
 
   test('a phone on version 13 upgrades: its invoice stays as issued, and can take several credit notes for amounts (INV-06)', () async {

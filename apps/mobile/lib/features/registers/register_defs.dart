@@ -10,6 +10,7 @@ import '../../app/side_panel.dart';
 import '../../data/cash.dart';
 import '../../data/invoices.dart';
 import '../../data/masters.dart';
+import '../../data/receipts.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../cash/cash_row.dart';
@@ -51,12 +52,6 @@ bool _inRange(String date, String? from, String? to) => (from == null || date.co
 
 String _clock(DateTime? utc) => utc == null ? '' : showMinuteOfDay(dubaiMinuteOfDay(utc));
 
-String _methodLabel(AppLocalizations l10n, String? method) => switch (method) {
-  'cash' => l10n.methodCash,
-  'bank' => l10n.methodBank,
-  _ => '',
-};
-
 /// What a stored attendance row's state means to the owner. A paid row carries its payroll line (D-033).
 String _stateLabel(AppLocalizations l10n, AttendanceEntry e) {
   if (e.payrollLineId != null) return l10n.stateLinked;
@@ -81,6 +76,7 @@ Future<RegisterData> buildRegister(TenantDatabase db, AppLocalizations l10n, Sec
     Section.cashRegister => _cash(db, l10n, masters, from, to),
     Section.roomRegister => _rooms(db, l10n, masters, from, to),
     Section.invoiceRegister => _invoices(db, l10n, masters, from, to),
+    Section.statementRegister => _statement(db, l10n, masters, from, to),
     _ => throw ArgumentError.value(section, 'section', 'is not a register'),
   };
 }
@@ -484,7 +480,7 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
           final kind = CashKind.values.byName(c.kind);
           final signed = cashLine(c).signedFils;
           final what = _withReversal(l10n, kindLabel(l10n, kind), c);
-          final note = [_methodLabel(l10n, c.method), ...salaryPartLabels(parts[c.id] ?? const []), ?c.reference, ?c.receiver, ?c.note].join(', ');
+          final note = [methodLabel(l10n, c.method), ...salaryPartLabels(parts[c.id] ?? const []), ?c.reference, ?c.receiver, ?c.note].join(', ');
           return switch (kind) {
             CashKind.salaryPaid => _AccountLine(c.entryDate, c.createdAtUtc, what, paid: signed, note: note),
             CashKind.advanceGiven => _AccountLine(c.entryDate, c.createdAtUtc, what, given: signed, advance: signed, note: note),
@@ -704,7 +700,7 @@ Future<RegisterData> _cash(TenantDatabase db, AppLocalizations l10n, _Masters m,
               [kindLabel(l10n, kind), if (c.reversesEntryId != null) l10n.reversalTag, if (undone.contains(c.id)) l10n.reversedTag].join(', '),
               m.rooms[c.roomId]?.name,
               m.sites[c.siteId]?.name,
-              _methodLabel(l10n, c.method),
+              methodLabel(l10n, c.method),
               isMoneyIn(kind) ? line.signedFils : null,
               isMoneyIn(kind) ? null : line.signedFils,
               [...salaryPartLabels(parts[c.id] ?? const []), ?c.reference, ?c.receiver, ?c.note].join(', '),
@@ -767,7 +763,7 @@ RegisterData _account({
           m.workers[move.workerId]?.name,
           m.workers[move.workerId]?.code,
           move.what,
-          _methodLabel(l10n, move.method),
+          methodLabel(l10n, move.method),
           move.given == 0 ? null : move.given,
           move.back == 0 ? null : move.back,
           left[move.workerId],
@@ -861,6 +857,171 @@ Future<RegisterData> _visa(TenantDatabase db, AppLocalizations l10n, _Masters m,
 
 String _withReversal(AppLocalizations l10n, String what, CashEntry c) => c.reversesEntryId == null ? what : '$what, ${l10n.reversalTag}';
 
+// Where each figure sits on a company's statement row.
+const _sInvoiced = 4;
+const _sCredited = 5;
+const _sReceived = 6;
+const _sLost = 7;
+const _sBalance = 8;
+
+/// One line of a company's account, in date order.
+typedef _StatementLine = ({String date, DateTime at, String what, String? number, int invoiced, int credited, int received, int lost, String? note});
+
+/// Each company's account, date by date: its balance from before the app, invoices, credit notes, receipts and what the
+/// owner closed as lost, with the balance after each (INV-07). It always derives from those rows, so it reconciles with
+/// what each invoice still owes less the company's unused credit (REP-08). Lines before the range are only added up.
+Future<RegisterData> _statement(TenantDatabase db, AppLocalizations l10n, _Masters m, String? from, String? to) async {
+  final money = await db.receivables();
+  final today = dubaiToday(DateTime.now());
+  final issued = await (db.select(db.invoices)..where((i) => i.status.equals(InvoiceStatus.draft.name).not())).get();
+  final numbers = {for (final i in issued) i.id: i.number};
+  final totals = <String, int>{
+    for (final i in issued)
+      i.id: i.kind == 'credit' ? 0 : (money.invoices[i.id]?.totalFils ?? 0),
+  };
+  final lineSums = groupedBy(await (db.select(db.invoiceLines)..where((l) => l.invoiceId.isIn([for (final i in issued) if (i.kind == 'credit') i.id]))).get(), (l) => l.invoiceId);
+  for (final MapEntry(:key, :value) in lineSums.entries) {
+    totals[key] = value.fold(0, (total, l) => total + l.netFils + l.vatFils);
+  }
+  final receipts = await (db.select(db.cashEntries)..where((c) => c.kind.equals(CashKind.clientReceipt.name))).get();
+  final parts = <String, List<ReceiptPart>>{for (final c in receipts.where((c) => c.reversesEntryId == null)) c.id: await db.receiptParts(c.id)};
+  final openings = await (db.select(db.openingBalances)..where((b) => b.kind.equals('client_receivable'))).get();
+  final lost = await (db.select(db.invoiceAllocations)..where((a) => a.paymentId.isNull())).get();
+
+  final byClient = <String, List<_StatementLine>>{};
+  void add(String clientId, _StatementLine line) => (byClient[clientId] ??= []).add(line);
+  for (final b in openings) {
+    add(b.clientId!, (date: b.asOfDate, at: b.createdAtUtc, what: l10n.receiptOldBalance, number: null, invoiced: b.amountFils, credited: 0, received: 0, lost: 0, note: b.sourceNote));
+  }
+  for (final i in issued) {
+    final credit = i.kind == 'credit';
+    add(i.clientId, (
+      date: i.issueDate!,
+      at: i.createdAtUtc,
+      what: credit ? l10n.invCreditNoteLabel : l10n.invTab,
+      number: i.number,
+      invoiced: credit ? 0 : totals[i.id]!,
+      credited: credit ? totals[i.id]! : 0,
+      received: 0,
+      lost: 0,
+      note: credit ? [?numbers[i.creditsInvoiceId], ?i.reason].join(', ') : (i.dueDate == null ? null : l10n.invDue(showDate(i.dueDate!))),
+    ));
+  }
+  for (final c in receipts) {
+    add(c.clientId!, (
+      date: c.entryDate,
+      at: c.createdAtUtc,
+      what: _withReversal(l10n, kindLabel(l10n, CashKind.clientReceipt), c),
+      number: c.reference,
+      invoiced: 0,
+      credited: 0,
+      received: cashLine(c).signedFils,
+      lost: 0,
+      note: [methodLabel(l10n, c.method), ...receiptPartLabels(l10n, parts[c.id] ?? const []), ?c.note].join(', '),
+    ));
+  }
+  for (final a in lost) {
+    add(a.clientId, (date: a.entryDate, at: a.createdAtUtc, what: a.amountFils > 0 ? l10n.invLost : l10n.regLostUndone, number: numbers[a.invoiceId], invoiced: 0, credited: 0, received: 0, lost: a.amountFils, note: a.reason));
+  }
+
+  final rows = <RegisterEntry>[];
+  final feet = <String, String>{};
+  final facts = <String, List<Object?>>{};
+  for (final c in m.clients.values) {
+    final account = (byClient[c.id] ?? const <_StatementLine>[]).toList()
+      ..sort((a, b) {
+        final date = a.date.compareTo(b.date);
+        return date != 0 ? date : a.at.compareTo(b.at);
+      });
+    var balance = 0;
+    void count(_StatementLine l) => balance += l.invoiced - l.credited - l.received - l.lost;
+    final shown = <RegisterEntry>[];
+    final tags = <String, Set<String>>{
+      'client': {c.id},
+    };
+    if (from != null) {
+      account.where((l) => l.date.compareTo(from) < 0).forEach(count);
+      if (balance != 0) shown.add(RegisterEntry([from, c.name, l10n.regBrought, null, null, null, null, null, balance, null], group: c.name, tags: tags));
+    }
+    for (final l in account.where((l) => _inRange(l.date, from, to))) {
+      count(l);
+      shown.add(
+        RegisterEntry(
+          [l.date, c.name, l.what, l.number, l.invoiced == 0 ? null : l.invoiced, l.credited == 0 ? null : l.credited, l.received == 0 ? null : l.received, l.lost == 0 ? null : l.lost, balance, l.note],
+          group: c.name,
+          tags: tags,
+        ),
+      );
+    }
+    if (shown.isEmpty) continue;
+    rows.addAll(shown);
+    final overdue = money.invoices.values.where((i) => i.invoice.clientId == c.id && i.invoice.status == InvoiceStatus.issued.name && i.state(today) == PayState.overdue).fold(0, (total, i) => total + i.leftFils);
+    final credit = money.creditOf(c.id);
+    feet[c.name] = [
+      if (balance > 0) l10n.regCompanyOwes(formatAed(balance)) else if (balance < 0) l10n.regCompanyCredit(formatAed(-balance)) else l10n.regSettled,
+      if (overdue > 0) l10n.regOverdue(formatAed(overdue)),
+      if (credit > 0 && balance > 0) l10n.regUnusedCredit(formatAed(credit)),
+    ].join('   ');
+    facts[c.name] = [c.name, c.trn];
+  }
+
+  List<RegisterRollup> rollups(List<RegisterEntry> shown) {
+    final groups = groupEntries(shown);
+    if (groups.length < 2) return const [];
+    return [
+      RegisterRollup(
+        l10n.regAllCompanies,
+        [
+          RegisterColumn(l10n.colCompany, flex: 5),
+          RegisterColumn(l10n.trn, flex: 3),
+          RegisterColumn(l10n.regInvoiced, kind: CellKind.money, total: true),
+          RegisterColumn(l10n.invCreditNoteLabel, kind: CellKind.money, total: true),
+          RegisterColumn(l10n.invReceived, kind: CellKind.money, total: true),
+          RegisterColumn(l10n.invLost, kind: CellKind.money, total: true),
+          RegisterColumn(l10n.colBalance, kind: CellKind.money, total: true),
+        ],
+        [
+          for (final g in groups)
+            RegisterEntry([
+              ...facts[g.group]!,
+              columnTotal(g.rows, _sInvoiced),
+              columnTotal(g.rows, _sCredited),
+              columnTotal(g.rows, _sReceived),
+              columnTotal(g.rows, _sLost),
+              g.rows.last.cells[_sBalance],
+            ]),
+        ],
+      ),
+    ];
+  }
+
+  return RegisterData(
+    title: l10n.regStatement,
+    titleColumn: 2,
+    amountColumns: const [_sInvoiced, _sCredited, _sReceived, _sLost],
+    bandColumns: const [_sInvoiced, _sReceived, _sBalance],
+    groupKind: CellKind.text,
+    netted: false,
+    note: l10n.regStatementNote,
+    groupFeet: feet,
+    rollupsOf: rollups,
+    columns: [
+      RegisterColumn(l10n.colDate, kind: CellKind.date),
+      RegisterColumn(l10n.colCompany, flex: 5, inPdf: false, onScreen: false),
+      RegisterColumn(l10n.colWhat, flex: 4),
+      RegisterColumn(l10n.colNumber, flex: 3),
+      RegisterColumn(l10n.regInvoiced, kind: CellKind.money, total: true, tone: CellTone.plus),
+      RegisterColumn(l10n.invCreditNoteLabel, kind: CellKind.money, total: true, tone: CellTone.minus),
+      RegisterColumn(l10n.invReceived, kind: CellKind.money, total: true, tone: CellTone.minus),
+      RegisterColumn(l10n.invLost, kind: CellKind.money, total: true, tone: CellTone.minus),
+      RegisterColumn(l10n.colBalance, kind: CellKind.money, closing: true),
+      RegisterColumn(l10n.note, flex: 5),
+    ],
+    filters: [RegisterFilter('client', l10n.colCompany, m.clientOptions)],
+    entries: rows,
+  );
+}
+
 Future<RegisterData> _rooms(TenantDatabase db, AppLocalizations l10n, _Masters m, String? from, String? to) async {
   final posting = await _postingDates(db);
   final cash = await (db.select(db.cashEntries)..where((c) => c.roomId.isNotNull())).get();
@@ -880,7 +1041,7 @@ Future<RegisterData> _rooms(TenantDatabase db, AppLocalizations l10n, _Masters m
           m.rooms[c.roomId]?.name,
           _withReversal(l10n, kindLabel(l10n, kind), c),
           m.workers[c.workerId]?.name,
-          _methodLabel(l10n, c.method),
+          methodLabel(l10n, c.method),
           isMoneyIn(kind) ? signed : null,
           isMoneyIn(kind) ? null : signed,
           c.note,
@@ -1094,8 +1255,8 @@ Future<RegisterData> _invoices(TenantDatabase db, AppLocalizations l10n, _Master
               invoiceStatusLabel(l10n, inv),
               inv.poReference,
               l.description,
-              quantityText(RateBasis.values.byName(l.basis), l.quantity),
-              unitText(paperWords, RateBasis.values.byName(l.basis)),
+              quantityText(basisOf(l.basis), l.quantity),
+              unitText(paperWords, basisOf(l.basis)),
               l.unitPriceFils,
               sign * l.discountFils,
               sign * l.netFils,

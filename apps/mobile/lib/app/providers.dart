@@ -5,6 +5,7 @@ import '../data/closing.dart';
 import '../data/documents.dart';
 import '../data/invoices.dart';
 import '../data/payroll.dart';
+import '../data/receipts.dart';
 import '../data/statement.dart';
 import '../data/tenant_database.dart';
 import '../data/timesheets.dart';
@@ -97,6 +98,12 @@ final closingProvider = StreamProvider.autoDispose.family<MonthClosing, String>(
 final wagesDueProvider = StreamProvider<List<WorkerWagesDue>>((ref) => ref.watch(dbProvider).watchWagesDue());
 
 /// The months one salary payment settled (PAY-06).
+/// What one company owes and holds (INV-07).
+final clientMoneyProvider = StreamProvider.family<Receivables, String>((ref, clientId) => ref.watch(dbProvider).watchReceivables(clientId: clientId));
+
+/// What a company's receipt settles (INV-05).
+final receiptPartsProvider = StreamProvider.family<List<ReceiptPart>, String>((ref, paymentId) => ref.watch(dbProvider).watchReceiptParts(paymentId));
+
 final allocationsOfPaymentProvider = StreamProvider.family<List<SalaryAllocation>, String>((ref, paymentId) {
   final db = ref.watch(dbProvider);
   return (db.select(db.salaryAllocations)

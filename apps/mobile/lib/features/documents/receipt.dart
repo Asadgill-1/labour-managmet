@@ -10,9 +10,11 @@ import 'package:pdf/widgets.dart' as pw;
 
 import '../../app/providers.dart';
 import '../../data/documents.dart';
+import '../../data/receipts.dart';
 import '../../data/tenant_database.dart';
 import '../../documents/document_frame.dart';
 import '../../l10n/app_localizations.dart';
+import '../invoices/invoice_paper.dart' show paperWords;
 import '../registers/register_export.dart';
 import '../registers/register_model.dart';
 import 'document_render.dart';
@@ -75,6 +77,29 @@ ReceiptContent receiptContent(CashEntry entry, Worker worker, List<SalaryAllocat
   );
 }
 
+/// What a company paid and what it settled, in English like its invoices (D-050). Anything not set against an invoice
+/// says it is kept as the company's credit (INV-05).
+ReceiptContent clientReceiptContent(CashEntry entry, Client client, List<ReceiptPart> parts, AppLocalizations words) {
+  final used = parts.fold(0, (total, p) => total + p.fils);
+  return ReceiptContent(
+    party: client.name,
+    partyLine: client.trn == null ? '' : '${words.trn} ${client.trn}',
+    lines: [
+      (words.colDate, showDate(entry.entryDate)),
+      (words.receiptMethod, entry.method == 'bank' ? words.methodBank : words.methodCash),
+      if (entry.reference != null) (words.receiptReference, entry.reference!),
+      for (final p in parts) (p.number == null ? words.receiptOldBalance : words.receiptForInvoice(p.number!), plainMoney(p.fils)),
+      if (entry.amountFils > used) (words.receiptKeptAsCredit, plainMoney(entry.amountFils - used)),
+      if (entry.note != null) (words.note, entry.note!),
+    ],
+    amountLabel: words.receiptReceived,
+    amount: formatAed(entry.amountFils),
+    notes: [words.receiptClientNote],
+    companyLabel: words.receiptReceivedBy,
+    receiverLabel: words.receiptPaidBy,
+  );
+}
+
 /// One payment on a short A4 page, the same frame as every other paper (DOC-01).
 Future<Uint8List> receiptPdf(ReceiptContent r, DocumentIdentity identity, DocumentMeta meta, {required Uint8List regularFont, required Uint8List boldFont}) {
   final brand = PdfColor.fromInt(identity.brandArgb);
@@ -119,6 +144,31 @@ Future<Uint8List> receiptPdf(ReceiptContent r, DocumentIdentity identity, Docume
     ),
   );
   return doc.save();
+}
+
+/// A receipt for a company's payment, kept as issued (INV-05, DOC-05).
+Future<void> shareClientReceipt(BuildContext context, WidgetRef ref, CashEntry entry, {required ValueChanged<bool> onBusy}) async {
+  final db = ref.read(dbProvider);
+  final client = await (db.select(db.clients)..where((c) => c.id.equals(entry.clientId!))).getSingle();
+  final parts = await db.receiptParts(entry.id);
+  if (!context.mounted) return;
+  final content = clientReceiptContent(entry, client, parts, paperWords);
+  final title = paperWords.receiptClientTitle;
+  await issueAndExport(
+    context,
+    ref,
+    kind: DocKind.clientReceipt,
+    words: paperWords,
+    subjectId: entry.id,
+    period: null,
+    title: title,
+    subtitle: showDate(entry.entryDate),
+    summary: '${client.name}, ${content.amount}',
+    detail: showDate(entry.entryDate),
+    data: content.toJson(),
+    fileName: exportFileName('$title ${client.name}', entry.entryDate, null, ExportFormat.pdf),
+    onBusy: onBusy,
+  );
 }
 
 /// A receipt for one salary payment or advance, kept as issued (DOC-01, DOC-05).

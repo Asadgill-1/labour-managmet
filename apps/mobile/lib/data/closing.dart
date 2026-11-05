@@ -9,6 +9,7 @@ import 'cash.dart';
 import 'invoices.dart';
 import 'masters.dart';
 import 'payroll.dart';
+import 'receipts.dart';
 import 'statement.dart';
 import 'tenant_database.dart';
 import 'timesheets.dart';
@@ -26,8 +27,9 @@ class LaterMonthClosed implements Exception {
 /// What closing looks for (REP-04). Anything of these left stops the month, because a closed month could never take it
 /// in. Unpaid wages do not: they carry forward (PAY-03, D-045). Work no invoice charges does, or skipping the invoice
 /// would get round the rule on overdue ones (D-048). So does an invoice whose work changed after it issued: its
-/// timesheet needs a new revision, then the invoice a credit note and a new invoice (D-051).
-enum ClosingIssue { noHazri, noWorkerRate, noCompanyRate, overlap, payrollNotPosted, noMonthChosen, notInvoiced, changedAfterInvoice, invoiceOutOfDate }
+/// timesheet needs a new revision, then the invoice a credit note and a new invoice (D-051). An invoice due by the
+/// month's last day with money left stops it until paid or closed with a reason, whatever day the owner closes (D-048).
+enum ClosingIssue { noHazri, noWorkerRate, noCompanyRate, overlap, payrollNotPosted, noMonthChosen, notInvoiced, changedAfterInvoice, invoiceOutOfDate, overdue }
 
 /// The worker, company, attendance row or payment to open, and the name to show for it.
 typedef ClosingTarget = ({String id, String name});
@@ -154,6 +156,13 @@ extension ClosingOps on TenantDatabase {
       }
     }
 
+    for (final m in (await receivables()).invoices.values) {
+      final inv = m.invoice;
+      if (inv.status == InvoiceStatus.issued.name && m.leftFils > 0 && inv.dueDate!.compareTo(to) <= 0) {
+        add(ClosingIssue.overdue, inv.dueDate!, inv.id, '${inv.number} (${clients[inv.clientId] ?? ''})');
+      }
+    }
+
     final byName = [
       for (final f in found.entries) ClosingFinding(f.key.$1, f.key.$2, [for (final t in f.value.entries) (id: t.key, name: t.value)]..sort((a, b) => a.name.compareTo(b.name))),
     ];
@@ -247,7 +256,7 @@ extension ClosingOps on TenantDatabase {
   Stream<MonthClosing> watchClosing(String month) async* {
     yield await closingFor(month);
     final changes = tableUpdates(
-      TableUpdateQuery.onAllTables([attendanceEntries, payContracts, payrollItems, payrollLines, cashEntries, salaryAllocations, openingBalances, workers, periodLocks, dayOffs, billedAllocations, timesheetLines, timesheets, invoices, clients]),
+      TableUpdateQuery.onAllTables([attendanceEntries, payContracts, payrollItems, payrollLines, cashEntries, salaryAllocations, openingBalances, workers, periodLocks, dayOffs, billedAllocations, timesheetLines, timesheets, invoices, invoiceLines, invoiceAllocations, clients]),
     );
     await for (final _ in changes) {
       yield await closingFor(month);

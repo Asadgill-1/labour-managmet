@@ -391,6 +391,31 @@ class InvoiceLines extends Table with Common {
   IntColumn get vatFils => integer()();
 }
 
+/// What settles a company's invoice, or its balance from before the app (INV-05): part of a receipt in the cash book, or
+/// what the owner closed as lost with a reason (D-048). Rows never change. A negative row gives some back, when a credit
+/// note leaves less to pay or a closing is undone. Only receipts still standing in the cash book count, so undoing one
+/// there sets its rows aside (REP-08). Triggers enforce this.
+@TableIndex(name: 'idx_invoice_allocations_client', columns: {#clientId})
+class InvoiceAllocations extends Table with Common {
+  TextColumn get clientId => text().references(Clients, #id)();
+
+  /// Null means the company's balance from before this app.
+  TextColumn get invoiceId => text().nullable().references(Invoices, #id)();
+
+  /// The company's receipt. Null on what the owner closed as lost.
+  TextColumn get paymentId => text().nullable().references(CashEntries, #id)();
+
+  /// The day it was written: the receipt's own date when entered with it.
+  TextColumn get entryDate => text()();
+  IntColumn get amountFils => integer().check(amountFils.equals(0).not())();
+
+  /// Why the owner closed it, or the credit note that gave it back.
+  TextColumn get reason => text().nullable()();
+
+  @override
+  List<String> get customConstraints => ['CHECK (payment_id IS NOT NULL OR (invoice_id IS NOT NULL AND reason IS NOT NULL))'];
+}
+
 /// Rate terms shared by both contract tables (MASTER-06). Dates are YYYY-MM-DD.
 mixin RateTerms on Table {
   TextColumn get basis => text()();

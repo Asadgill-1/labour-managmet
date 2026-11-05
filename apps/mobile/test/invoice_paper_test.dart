@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/documents.dart';
 import 'package:labour_app/data/invoices.dart';
+import 'package:labour_app/data/receipts.dart';
 import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/tenant_database.dart';
 import 'package:labour_app/data/timesheets.dart';
@@ -235,6 +236,17 @@ void main() {
     expect(find.text(words.invOpenCreditNote('CN-$year-0001')), findsOneWidget);
     expect(find.text(words.invStatusCredited), findsNothing);
 
+    // A receipt from the invoice opens on its company with what is left, and settles this invoice first (INV-05).
+    await tester.tap(find.text(words.invRecordReceipt));
+    await settle(tester);
+    expect(find.textContaining(words.receiptInvoiceLeft('AED 147.00', '')), findsOneWidget);
+    await tester.enterText(find.widgetWithText(TextFormField, words.amountAed).first, '100');
+    await tester.pump();
+    await tester.tap(find.text(words.save));
+    await settle(tester);
+    expect(find.text(words.invNotePartPaid('AED 100.00', 'AED 47.00')), findsOneWidget);
+    expect(find.text(words.invReceiptsHeading), findsOneWidget);
+
     await tester.tap(find.text(words.invCredit));
     await settle(tester);
     await tester.tap(find.text(words.invCreditWhole));
@@ -247,6 +259,7 @@ void main() {
     expect(find.textContaining(words.invNoteCredited('CN-$year-0002')), findsOneWidget);
     expect(find.text(words.invCredit), findsNothing);
     expect(find.text(words.invReissue), findsOneWidget);
+    expect(await real(tester, () async => (await app.receivables()).creditOf(emaar)), 10000, reason: 'what was paid waits as credit for the next invoice');
     await shutDown(tester, app);
   });
 }

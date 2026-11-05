@@ -8,6 +8,7 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/cash.dart';
+import '../../data/receipts.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../documents/receipt.dart';
@@ -21,6 +22,12 @@ String categoryLabel(AppLocalizations l10n, String? category) => switch (categor
   'tools' => l10n.catTools,
   'office' => l10n.catOffice,
   _ => l10n.catOther,
+};
+
+String methodLabel(AppLocalizations l10n, String? method) => switch (method) {
+  'cash' => l10n.methodCash,
+  'bank' => l10n.methodBank,
+  _ => '',
 };
 
 String kindLabel(AppLocalizations l10n, CashKind kind) => switch (kind) {
@@ -37,6 +44,9 @@ String kindLabel(AppLocalizations l10n, CashKind kind) => switch (kind) {
 
 /// "09-2026: AED 500.00" for each month a salary payment settled (PAY-06).
 List<String> salaryPartLabels(Iterable<SalaryAllocation> parts) => [for (final p in parts) '${dates.showMonth(p.month)}: ${formatAed(p.amountFils)}'];
+
+/// "INV-2026-0001: AED 500.00" for each invoice a company's receipt settled (INV-05).
+List<String> receiptPartLabels(AppLocalizations l10n, Iterable<ReceiptPart> parts) => [for (final p in parts) '${p.number ?? l10n.receiptOldBalance}: ${formatAed(p.fils)}'];
 
 /// Everything in a list that has been undone. Pass the list's own rows.
 Set<String> undoneIds(Iterable<CashEntry> rows) => {for (final e in rows) ?e.reversesEntryId};
@@ -71,9 +81,11 @@ class CashEntryRow extends ConsumerWidget {
     }
   }
 
-  /// Money handed to a worker can give them a receipt. Anything else only has the undo.
+  /// Money handed to a worker, or paid by a company, can have a receipt. Anything else only has the undo.
   Future<void> _tap(BuildContext context, WidgetRef ref, CashKind kind) async {
-    if ((kind != CashKind.salaryPaid && kind != CashKind.advanceGiven) || entry.workerId == null) return _undo(context, ref);
+    final forWorker = (kind == CashKind.salaryPaid || kind == CashKind.advanceGiven) && entry.workerId != null;
+    final fromCompany = kind == CashKind.clientReceipt && entry.reversesEntryId == null;
+    if (!forWorker && !fromCompany) return _undo(context, ref);
     final l10n = AppLocalizations.of(context);
     final receipt = await showModalBottomSheet<bool>(
       context: context,
@@ -89,7 +101,9 @@ class CashEntryRow extends ConsumerWidget {
       ),
     );
     if (receipt == null || !context.mounted) return;
-    if (receipt) {
+    if (receipt && fromCompany) {
+      await shareClientReceipt(context, ref, entry, onBusy: (_) {});
+    } else if (receipt) {
       await shareReceipt(context, ref, entry, onBusy: (_) {});
     } else {
       await _undo(context, ref);
@@ -108,6 +122,9 @@ class CashEntryRow extends ConsumerWidget {
     final site = (ref.watch(allSitesProvider).value ?? const <Site>[]).where((s) => s.id == entry.siteId).firstOrNull;
     final what = reversal ? l10n.reversalTag : kindLabel(l10n, kind);
     final settles = kind == CashKind.salaryPaid && !reversal ? ref.watch(allocationsOfPaymentProvider(entry.id)).value ?? const <SalaryAllocation>[] : const <SalaryAllocation>[];
+    final parts = kind == CashKind.clientReceipt && !reversal ? ref.watch(receiptPartsProvider(entry.id)).value : null;
+    final invoiced = parts ?? const <ReceiptPart>[];
+    final credit = parts == null ? 0 : entry.amountFils - parts.fold<int>(0, (total, p) => total + p.fils);
     final title = onWorkerScreen ? what : (worker?.name ?? room?.name ?? client?.name ?? categoryLabel(l10n, entry.category));
     final signIsPlus = moneyIn != reversal;
     final amount = '${signIsPlus ? '+' : '-'}${formatAed(entry.amountFils)}';
@@ -126,6 +143,8 @@ class CashEntryRow extends ConsumerWidget {
             if (showDate) dates.showDate(entry.entryDate),
             if (entry.method == 'bank') l10n.methodBank,
             ...salaryPartLabels(settles),
+            ...receiptPartLabels(l10n, invoiced),
+            if (credit > 0 && !undone) '${l10n.receiptKeptAsCredit}: ${formatAed(credit)}',
             ?entry.reference,
             ?entry.receiver,
             ?entry.note,

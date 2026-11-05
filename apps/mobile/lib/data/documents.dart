@@ -28,6 +28,9 @@ enum DocKind {
   timesheetWorkers('TS'),
   timesheetWorkersPriced('TS'),
 
+  // Money a company paid, and what it settled (INV-05).
+  clientReceipt('RV'),
+
   // An invoice's number is its own, given as it issues, so these print that one (INV-01).
   invoice('INV'),
   creditNote('CN');

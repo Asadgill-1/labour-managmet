@@ -27,18 +27,24 @@ final registerProvider = StreamProvider.autoDispose.family<RegisterData, Registe
 
 /// One register: date range, filters, rows under their dates with every field showing, and export (D-038).
 class LedgerScreen extends ConsumerStatefulWidget {
-  const LedgerScreen(this.section, {super.key});
+  const LedgerScreen(this.section, {this.chosen = const {}, this.allDates = false, super.key});
 
   final Section section;
+
+  /// Filters already picked, such as one company's statement opened from that company.
+  final Map<String, Set<String>> chosen;
+
+  /// Opens on every date instead of this month.
+  final bool allDates;
 
   @override
   ConsumerState<LedgerScreen> createState() => _LedgerScreenState();
 }
 
 class _LedgerScreenState extends ConsumerState<LedgerScreen> {
-  late String? _from = monthFirstDay(_thisMonth);
-  late String? _to = monthLastDay(_thisMonth);
-  final _chosen = <String, Set<String>>{};
+  late String? _from = widget.allDates ? null : monthFirstDay(_thisMonth);
+  late String? _to = widget.allDates ? null : monthLastDay(_thisMonth);
+  late final _chosen = <String, Set<String>>{...widget.chosen};
   RegisterData? _last;
   bool _busy = false;
 

@@ -1,5 +1,8 @@
 import 'dart:collection';
 
+import 'package:domain/dates.dart';
+import 'package:domain/invoice.dart';
+import 'package:domain/money.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,7 +13,9 @@ import '../../app/theme.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../../app/side_panel.dart';
 import '../rates/rate_sections.dart';
+import '../registers/ledger_screen.dart';
 import 'client_form_screen.dart';
 import 'site_form_screen.dart';
 
@@ -29,6 +34,11 @@ class ClientDetailScreen extends ConsumerWidget {
     final client = ref.watch(clientsProvider).value?.where((c) => c.id == clientId).firstOrNull;
     if (client == null) return Scaffold(appBar: AppBar());
     final sites = ref.watch(sitesOfClientProvider(clientId)).value ?? const <Site>[];
+    final money = ref.watch(clientMoneyProvider(clientId)).value;
+    final today = dubaiToday(DateTime.now());
+    final owed = money?.openOf(clientId).fold(0, (total, o) => total + o.leftFils) ?? 0;
+    final overdue = money?.invoices.values.where((m) => m.invoice.status == 'issued' && m.state(today) == PayState.overdue).fold(0, (total, m) => total + m.leftFils) ?? 0;
+    final credit = money?.creditOf(clientId) ?? 0;
     return Scaffold(
       appBar: AppBar(
         title: Text(client.name),
@@ -43,6 +53,16 @@ class ClientDetailScreen extends ConsumerWidget {
       body: ListView(
         children: [
           if (!client.active) ListTile(title: Text(l10n.archivedLabel)),
+          SectionHeader(
+            l10n.clientMoneyHeading,
+            action: TextButton(
+              onPressed: () => _open(context, LedgerScreen(Section.statementRegister, chosen: {'client': {clientId}}, allDates: true)),
+              child: Text(l10n.regStatement),
+            ),
+          ),
+          RowCard(child: InfoRow(l10n.invToPay, formatAed(owed))),
+          if (overdue > 0) RowCard(child: InfoRow(l10n.invStatusOverdue, formatAed(overdue))),
+          if (credit > 0) RowCard(child: InfoRow(l10n.clientCreditUnused, formatAed(credit))),
           SectionHeader(
             l10n.sitesHeading,
             action: TextButton(
