@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- A monthly fee is charged once a month, however that month's work is split across invoices or timesheets. Its invoice line names the month.
+- A letterhead prints the same size on a landscape register as on an upright paper.
+- The invoice register keeps each invoice's lines together.
 - A Reports tab lists every report with what it shows and which date it goes by.
 - Two new reports: what each company owes by how late, and each company's work by site and month with what is still to bill.
 - The owner's sheet shows the labour contribution before the other costs, and calls the result an estimate, not audited.

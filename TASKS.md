@@ -60,6 +60,8 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 
 **Gate:** PDF review, duplicate-billing and numbering tests pass.
 
+**Gate run, 2026-11-06,** on `p3/gate`: the tests and the paper review pass on this computer. The duplicate-billing tests found a monthly fee charged twice when its month was invoiced in parts, now fixed (D-054). Numbering gained tests for a new year, a failure part way and the database refusing a number twice. 19 papers were drawn through the app's own issue paths, with words only, a letterhead image with signature and stamp, and pre-printed paper, and read by eye. The owner's phone test of T14 to T18 is still open, so the phase is not OWNER_ACCEPTED.
+
 ## P4: Auth, isolation, backup, Solo licence
 
 | Task | Title | Requirements | Status | Branch / PR |
