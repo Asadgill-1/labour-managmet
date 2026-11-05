@@ -12,7 +12,6 @@ import '../../data/payroll.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../registers/export_flow.dart';
-import '../registers/salary_sheet.dart';
 import 'payroll_worker_screen.dart';
 import 'room_charge_screen.dart';
 import 'wages_due_screen.dart';
@@ -86,35 +85,9 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
     if (saved && mounted) showSavedOnPhone(context, l10n.advanceCutsApplied(added));
   }
 
-  /// The owner's own sheet for this month, with what each company pays and what is left over.
-  Future<void> _ownerSheet() async {
-    final l10n = AppLocalizations.of(context);
-    setState(() => _makingSheet = true);
-    final month = _month;
-    try {
-      final data = await buildSalarySheet(ref.read(dbProvider), l10n, month);
-      if (!mounted) return;
-      if (data.entries.isEmpty && data.rollupsOf!(data.entries).last.rows.isEmpty) {
-        showFormError(context, l10n.regEmpty);
-        return;
-      }
-      await exportRegister(
-        context,
-        ref,
-        data: data,
-        shown: data.entries,
-        filterLine: showMonth(month),
-        from: month,
-        onBusy: (busy) {
-          if (mounted) setState(() => _makingSheet = busy);
-        },
-      );
-    } catch (_) {
-      if (mounted) showFormError(context, l10n.exportFailed);
-    } finally {
-      if (mounted) setState(() => _makingSheet = false);
-    }
-  }
+  Future<void> _ownerSheet() => exportOwnerSheet(context, ref, _month, onBusy: (busy) {
+    if (mounted) setState(() => _makingSheet = busy);
+  });
 
   @override
   Widget build(BuildContext context) {

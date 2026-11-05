@@ -5,8 +5,10 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/register_screen.dart';
 import '../../app/side_panel.dart';
+import '../../data/import.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../more/import_screen.dart';
 import 'client_detail_screen.dart';
 import 'client_form_screen.dart';
 
@@ -24,6 +26,7 @@ class CompaniesScreen extends ConsumerWidget {
       emptyText: l10n.companiesEmpty,
       addLabel: l10n.addClient,
       onAdd: () => open(const ClientFormScreen()),
+      onImport: () => open(const ImportScreen(ImportKind.companies)),
       rows: [
         for (final c in ref.watch(clientsProvider).value ?? const <Client>[])
           RegisterRow(

@@ -5,8 +5,10 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/register_screen.dart';
 import '../../app/side_panel.dart';
+import '../../data/import.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../more/import_screen.dart';
 import 'site_form_screen.dart';
 
 /// Every site of every company, in one place (D-027).
@@ -31,6 +33,7 @@ class SitesScreen extends ConsumerWidget {
         ]);
         if (clientId != null && context.mounted) open(SiteFormScreen(clientId: clientId));
       },
+      onImport: () => open(const ImportScreen(ImportKind.sites)),
       rows: [
         for (final s in ref.watch(allSitesProvider).value ?? const <Site>[])
           RegisterRow(

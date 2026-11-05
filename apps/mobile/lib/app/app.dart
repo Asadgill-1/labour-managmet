@@ -15,6 +15,7 @@ import '../features/more/settings_screen.dart';
 import '../features/payroll/payroll_screen.dart';
 import '../features/rates/balances_screen.dart';
 import '../features/registers/ledger_screen.dart';
+import '../features/registers/reports_screen.dart';
 import '../features/rates/rates_screen.dart';
 import '../features/rooms/rooms_screen.dart';
 import '../features/invoices/invoices_screen.dart';
@@ -53,7 +54,8 @@ Widget _screen(Section section) => switch (section) {
   Section.advanceRegister ||
   Section.cashRegister ||
   Section.roomRegister ||
-  Section.invoiceRegister || Section.statementRegister => LedgerScreen(section),
+  Section.invoiceRegister || Section.statementRegister || Section.agingRegister || Section.workRegister => LedgerScreen(section),
+  Section.reports => const ReportsScreen(),
 };
 
 final _routerProvider = Provider(

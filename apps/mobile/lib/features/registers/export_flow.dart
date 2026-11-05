@@ -11,6 +11,7 @@ import '../../l10n/app_localizations.dart';
 import '../documents/document_preview_screen.dart';
 import 'register_export.dart';
 import 'register_model.dart';
+import 'salary_sheet.dart';
 
 /// What every file says about who made it and when (DOC-01).
 ExportText exportTextFor(
@@ -125,6 +126,25 @@ Future<void> exportRegister(
       sections: data.groupsByName,
     ),
   );
+}
+
+/// The owner's own sheet for a month, with what each company pays and what is left over (REP-03).
+Future<void> exportOwnerSheet(BuildContext context, WidgetRef ref, String month, {required ValueChanged<bool> onBusy}) async {
+  final l10n = AppLocalizations.of(context);
+  onBusy(true);
+  try {
+    final data = await buildSalarySheet(ref.read(dbProvider), l10n, month);
+    if (!context.mounted) return;
+    if (data.entries.isEmpty && data.rollupsOf!(data.entries).last.rows.isEmpty) {
+      showFormError(context, l10n.regEmpty);
+      return;
+    }
+    await exportRegister(context, ref, data: data, shown: data.entries, filterLine: showMonth(month), from: month, onBusy: onBusy);
+  } catch (_) {
+    if (context.mounted) showFormError(context, l10n.exportFailed);
+  } finally {
+    onBusy(false);
+  }
 }
 
 /// Says what is about to leave the phone, then lets the owner choose how (DOC-07).

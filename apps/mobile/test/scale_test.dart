@@ -126,7 +126,7 @@ void main() {
 
     final sheet = await timed('owner sheet', () => buildSalarySheet(db, l10n, month));
     expect(sheet.entries, hasLength(workers), reason: 'one line a worker when each stays at one site on one rate');
-    final [_, byCompany, people] = sheet.rollupsOf!(sheet.entries);
+    final [_, _, byCompany, people] = sheet.rollupsOf!(sheet.entries);
     expect(byCompany.rows, hasLength(5));
     expect(people.rows, hasLength(workers));
     expect(columnTotal(byCompany.rows, 4), workers * days * 13500);

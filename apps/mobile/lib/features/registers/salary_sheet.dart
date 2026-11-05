@@ -70,9 +70,11 @@ Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, 
   final bill = sum(lines, (l) => l.bill);
   final wages = sum(lines, (l) => l.pay);
 
+  // First what the work itself left, then the estimate after everything else, kept apart as REP-03 asks. VAT is never
+  // in the bill, and advances and visa money are not costs, since workers pay them back (REP-02).
+  final contributionRows = [(l10n.sheetBill, bill), (l10n.sheetWages, -wages)];
   final summaryRows = [
-    (l10n.sheetBill, bill),
-    (l10n.sheetWages, -wages),
+    (l10n.sheetContribution, bill - wages),
     (l10n.sheetSalaries, -of((s) => s.salaryFils)),
     (l10n.sheetAllowances, -of((s) => s.allowanceFils)),
     (l10n.sheetCuts, of((s) => s.otherFils)),
@@ -84,6 +86,14 @@ Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, 
   final rollups = [
     RegisterRollup(
       l10n.sheetSummary,
+      [RegisterColumn(l10n.colWhat, flex: 14), RegisterColumn(l10n.amountAed, kind: CellKind.money, flex: 4, total: true)],
+      [
+        for (final (label, fils) in contributionRows) RegisterEntry([label, fils]),
+      ],
+      totalLabel: l10n.sheetContribution,
+    ),
+    RegisterRollup(
+      l10n.sheetOperating,
       [RegisterColumn(l10n.colWhat, flex: 14), RegisterColumn(l10n.amountAed, kind: CellKind.money, flex: 4, total: true)],
       [
         for (final (label, fils) in summaryRows) RegisterEntry([label, fils]),

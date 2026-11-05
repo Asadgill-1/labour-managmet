@@ -64,11 +64,11 @@ Future<void> goTo(WidgetTester tester, String section) async {
   await settle(tester);
   // A sub-tab shows once its main tab is open.
   final sub = find.byKey(ValueKey('sub-$section'));
-  for (final main in const ['Hazri', 'Labour', 'Visa', 'Companies', 'Tankhwah', 'Billing', 'Hisaab', 'Rooms', 'Kaghazat']) {
+  for (final main in const ['Hazri', 'Labour', 'Visa', 'Companies', 'Tankhwah', 'Billing', 'Hisaab', 'Reports', 'Rooms', 'Kaghazat']) {
     if (sub.evaluate().isNotEmpty) break;
-    // Tabs opened on the way push later ones down the panel.
+    // Tabs opened on the way push later ones down the panel, past where the list has built them yet.
     if (find.text(main).hitTestable().evaluate().isEmpty) {
-      await tester.ensureVisible(find.text(main).last);
+      await tester.scrollUntilVisible(find.text(main), 150, scrollable: find.descendant(of: find.byType(Drawer), matching: find.byType(Scrollable)).first);
       await tester.pump();
     }
     await tester.tap(find.text(main).hitTestable().first);

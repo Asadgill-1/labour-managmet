@@ -242,12 +242,15 @@ void main() {
       }
     });
 
-    test('the month in short adds up to the estimate, and keeps monthly pay outside the companies (REP-03)', () async {
+    test('the month in short gives the labour contribution, then the estimate after other costs, and keeps monthly pay outside the companies (REP-03)', () async {
       final sheet = await buildSalarySheet(db, l10n, oct);
-      final [summary, byCompany, workers] = sheet.rollupsOf!(sheet.entries);
+      final [contribution, summary, byCompany, workers] = sheet.rollupsOf!(sheet.entries);
+      final work = {for (final r in contribution.rows) r.cells[0]: r.cells[1]};
+      expect(work[l10n.sheetBill], 3 * 13500);
+      expect(work[l10n.sheetWages], -18000, reason: 'Imran is monthly, so no wage on the row');
+      expect(contribution.totalLabel, l10n.sheetContribution);
       final figures = {for (final r in summary.rows) r.cells[0]: r.cells[1]};
-      expect(figures[l10n.sheetBill], 3 * 13500);
-      expect(figures[l10n.sheetWages], -18000, reason: 'Imran is monthly, so no wage on the row');
+      expect(figures[l10n.sheetContribution], 40500 - 18000);
       expect(figures[l10n.sheetSalaries], -200000);
       expect(figures[l10n.sheetCuts], 500);
       expect(figures[l10n.sheetRoomIn], 1000);
@@ -282,7 +285,7 @@ void main() {
       expect(line[l10n.colCompany], 'ATE');
       expect(line[l10n.colCompanyRate], l10n.issueNoRate);
       expect(line[l10n.colProfit], -9000);
-      final byCompany = sheet.rollupsOf!(sheet.entries)[1];
+      final byCompany = sheet.rollupsOf!(sheet.entries)[2];
       expect(byCompany.rows.first.cells.last, 1);
     });
 

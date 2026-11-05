@@ -35,6 +35,9 @@ enum Section {
   roomRegister,
   documents,
   letterhead,
+  reports,
+  agingRegister,
+  workRegister,
   settings,
 }
 
@@ -65,6 +68,9 @@ String sectionLabel(AppLocalizations l10n, Section section) => switch (section) 
   Section.roomRegister => l10n.regRooms,
   Section.documents => l10n.docsTab,
   Section.letterhead => l10n.lhTab,
+  Section.reports => l10n.reportsTab,
+  Section.agingRegister => l10n.regAging,
+  Section.workRegister => l10n.regWork,
   Section.settings => l10n.tabSettings,
 };
 
@@ -85,6 +91,7 @@ final mainTabs = [
   MainTab((l) => l.menuPayroll, Icons.payments, const [Section.payroll, Section.payrollRegister, Section.advanceRegister]),
   MainTab((l) => l.mainBilling, Icons.receipt_long, const [Section.timesheets, Section.invoices, Section.invoiceRegister, Section.statementRegister]),
   MainTab((l) => l.mainMoney, Icons.account_balance_wallet, const [Section.cash, Section.balances, Section.cashRegister, Section.closing]),
+  MainTab((l) => l.menuReports, Icons.insights, const [Section.reports, Section.agingRegister, Section.workRegister]),
   MainTab((l) => l.tabRooms, Icons.bed, const [Section.rooms, Section.roomRegister]),
   MainTab((l) => l.mainDocuments, Icons.description, const [Section.documents, Section.letterhead]),
 ];
@@ -276,7 +283,6 @@ class SidePanel extends ConsumerWidget {
                   open: false,
                   children: [
                     for (final label in [
-                      l10n.menuReports,
                       l10n.menuTeam,
                       l10n.menuBackup,
                       l10n.menuPlan,

@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../app/register_screen.dart';
 import '../../app/side_panel.dart';
+import '../../data/import.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../more/import_screen.dart';
 import 'worker_detail_screen.dart';
 import 'worker_form_screen.dart';
 
@@ -23,6 +25,7 @@ class LabourScreen extends ConsumerWidget {
       emptyText: l10n.labourEmpty,
       addLabel: l10n.addWorker,
       onAdd: () => open(const WorkerFormScreen()),
+      onImport: () => open(const ImportScreen(ImportKind.workers)),
       rows: [
         for (final w in ref.watch(workersProvider).value ?? const <Worker>[])
           RegisterRow(

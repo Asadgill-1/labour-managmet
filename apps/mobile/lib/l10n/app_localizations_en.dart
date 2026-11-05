@@ -1983,7 +1983,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sheetExpenses => 'Other expenses';
 
   @override
-  String get sheetEstimate => 'Estimated profit';
+  String get sheetEstimate => 'Operating estimate, not audited';
 
   @override
   String get sheetByCompany => 'By company';
@@ -3282,6 +3282,317 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invUndoLostConfirm => 'Open again';
+
+  @override
+  String get reportsTab => 'All reports';
+
+  @override
+  String get regAging => 'Owed by age';
+
+  @override
+  String get regWork => 'Work billed or not';
+
+  @override
+  String regAgingNote(String date) {
+    return 'As of $date. Each invoice counts from its due date, and the balance from before the app from its own date. Credit not yet set against an invoice is shown under each company.';
+  }
+
+  @override
+  String get regByAge => 'Each company by age';
+
+  @override
+  String get ageNotDue => 'Not due yet';
+
+  @override
+  String ageDays(String days) {
+    return '$days days late';
+  }
+
+  @override
+  String get ageOver90 => 'Over 90 days late';
+
+  @override
+  String get colIssued => 'Issued';
+
+  @override
+  String get colDaysLate => 'Days late';
+
+  @override
+  String get colAge => 'How late';
+
+  @override
+  String get regWorkNote =>
+      'By work date. Invoiced means an issued invoice charges it. Work on a monthly rate shows no amount, because the month\'s fee is the charge. With no company rate, work can\'t be billed until a rate is set.';
+
+  @override
+  String get colWorth => 'Worth';
+
+  @override
+  String get colNotInvoiced => 'Not invoiced';
+
+  @override
+  String get colDaysNotInvoiced => 'Days not invoiced';
+
+  @override
+  String get filterBilled => 'Billing';
+
+  @override
+  String get billedOpen => 'Still to bill';
+
+  @override
+  String get billedDone => 'All billed';
+
+  @override
+  String get sheetContribution => 'Labour contribution: bills less wages';
+
+  @override
+  String get sheetOperating => 'After other costs';
+
+  @override
+  String get reportsIntro =>
+      'Each report opens on its own screen with dates and filters. The file it makes says which dates and filters it shows.';
+
+  @override
+  String get reportsHeadWork => 'Attendance and work';
+
+  @override
+  String get reportsHeadCompanies => 'Company money';
+
+  @override
+  String get reportsHeadWorkers => 'Workers\' money';
+
+  @override
+  String get reportsHeadBusiness => 'Expenses and margin';
+
+  @override
+  String get repAttendance =>
+      'Each day\'s attendance, with totals by worker, company and site. By work date.';
+
+  @override
+  String get repWork =>
+      'What each company\'s work is worth, what is invoiced and what is still to bill. By work date.';
+
+  @override
+  String get repAging =>
+      'What each company owes, by how late. As of today, from due dates.';
+
+  @override
+  String get repInvoices =>
+      'Every invoice and credit note line, with VAT. By issue date.';
+
+  @override
+  String get repReceiptsTitle => 'Company receipts';
+
+  @override
+  String get repReceipts =>
+      'Money received from companies, as the cash book has it. By receipt date.';
+
+  @override
+  String get repStatement =>
+      'Each company\'s invoices, receipts and balance. By date, with the balance brought forward.';
+
+  @override
+  String get repWorkers =>
+      'What each worker earned, was paid and is owed. By date, with a running balance.';
+
+  @override
+  String get repPayroll =>
+      'Each month\'s pay: earned, deductions, recoveries and net. By pay month.';
+
+  @override
+  String get repAdvance => 'Advances given, recovered and left. By date.';
+
+  @override
+  String get repExpensesTitle => 'Expenses';
+
+  @override
+  String get repExpenses =>
+      'Expenses from the cash book, with their category. By entry date.';
+
+  @override
+  String get repMargin =>
+      'A month\'s bills less wages, then other costs. An estimate, not audited accounts. By work month.';
+
+  @override
+  String get repChooseMonth => 'Which month?';
+
+  @override
+  String get importCsv => 'Import CSV';
+
+  @override
+  String get importWorkersTitle => 'Import workers';
+
+  @override
+  String get importCompaniesTitle => 'Import companies';
+
+  @override
+  String get importSitesTitle => 'Import sites';
+
+  @override
+  String get importSteps =>
+      '1. Get the blank file, or use your own with these headings.\n2. Fill it in Excel and save it as CSV.\n3. Choose the file. Nothing is saved until you have checked the lines and pressed save.';
+
+  @override
+  String get importBlankFile => 'Get the blank file';
+
+  @override
+  String get importColumns => 'Columns';
+
+  @override
+  String get importRequired => 'needed';
+
+  @override
+  String get importBackupNote =>
+      'Backup before an import is not in the app yet. A file is saved whole or not at all, and a wrong line can be archived afterwards.';
+
+  @override
+  String get importChoose => 'Choose CSV file';
+
+  @override
+  String get importChooseAgain => 'Choose another file';
+
+  @override
+  String importSave(int count) {
+    return 'Save $count lines';
+  }
+
+  @override
+  String importSaved(int count) {
+    return '$count saved on this phone';
+  }
+
+  @override
+  String importSummary(int total, int bad, int warned) {
+    return '$total lines: $bad with mistakes, $warned to check';
+  }
+
+  @override
+  String get importFix =>
+      'Fix these lines in the file and choose it again. Nothing has been saved.';
+
+  @override
+  String get importReady =>
+      'Every line can be saved. Check the names, then save.';
+
+  @override
+  String importMissingColumns(String names) {
+    return 'The file has no column for: $names';
+  }
+
+  @override
+  String importIgnored(String names) {
+    return 'Not read: $names';
+  }
+
+  @override
+  String get importEmpty => 'The file has no lines under its headings.';
+
+  @override
+  String importRow(int row) {
+    return 'Row $row';
+  }
+
+  @override
+  String get importHintDate => 'date, day first: 05/11/2026';
+
+  @override
+  String get importHintBasis => 'hour, day or shift';
+
+  @override
+  String get importHintAmount => 'AED amount: 120.50';
+
+  @override
+  String get importHintYesNo => 'yes or no';
+
+  @override
+  String get importHintTime => '24-hour time: 08:00';
+
+  @override
+  String get importHintNumber => 'whole number';
+
+  @override
+  String get importHintCompany => 'company name as in the app';
+
+  @override
+  String get importHintTrn => '15 digits, when VAT registered';
+
+  @override
+  String problemMissing(String column) {
+    return '$column is empty';
+  }
+
+  @override
+  String problemRepeated(String column) {
+    return '$column is in the file twice';
+  }
+
+  @override
+  String problemExists(String column) {
+    return '$column is already in the app';
+  }
+
+  @override
+  String problemBadDate(String column) {
+    return '$column is not a date, day first: 05/11/2026';
+  }
+
+  @override
+  String problemBadAmount(String column) {
+    return '$column is not an amount';
+  }
+
+  @override
+  String problemBadNumber(String column) {
+    return '$column is not a whole number';
+  }
+
+  @override
+  String problemBadTime(String column) {
+    return '$column is not a time like 08:00';
+  }
+
+  @override
+  String problemBadYesNo(String column) {
+    return '$column should be yes or no';
+  }
+
+  @override
+  String problemBadTrn(String column) {
+    return '$column needs 15 digits';
+  }
+
+  @override
+  String problemBadBasis(String column) {
+    return '$column should be hour, day or shift';
+  }
+
+  @override
+  String get problemMonthly =>
+      'Monthly pay needs a rule for part months: set it in the app';
+
+  @override
+  String get problemRateAndBasis => 'Pay basis and pay rate go together';
+
+  @override
+  String get problemRateDate =>
+      'The rate needs a rate from date or a joining date';
+
+  @override
+  String get problemNoCompany => 'No company with this name in the app';
+
+  @override
+  String get problemTwoCompanies => 'Two companies have this name';
+
+  @override
+  String get problemSameName =>
+      'A worker with this name is already there. This line makes a new worker';
+
+  @override
+  String get problemTrnWithoutVat =>
+      'TRN is kept only when VAT registered is yes';
+
+  @override
+  String get importShort => 'From file';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -5252,7 +5563,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get sheetExpenses => 'Doosre kharche';
 
   @override
-  String get sheetEstimate => 'Andazan nafa';
+  String get sheetEstimate => 'Andazan nafa, audit shuda nahin';
 
   @override
   String get sheetByCompany => 'Company ke hisaab se';
@@ -6381,4 +6692,316 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get invUndoLostConfirm => 'Dobara kholein';
+
+  @override
+  String get reportsTab => 'Sab reports';
+
+  @override
+  String get regAging => 'Purana baqaya';
+
+  @override
+  String get regWork => 'Kaam: bill hua ya nahin';
+
+  @override
+  String regAgingNote(String date) {
+    return '$date tak. Har invoice apni due date se gini gayi, aur app se pehle ka baqi apni tareekh se. Jo credit kisi invoice par nahin laga, woh har company ke neeche likha hai.';
+  }
+
+  @override
+  String get regByAge => 'Har company, kitna purana';
+
+  @override
+  String get ageNotDue => 'Abhi due nahin';
+
+  @override
+  String ageDays(String days) {
+    return '$days din der';
+  }
+
+  @override
+  String get ageOver90 => '90 din se zyada der';
+
+  @override
+  String get colIssued => 'Jari hua';
+
+  @override
+  String get colDaysLate => 'Kitne din der';
+
+  @override
+  String get colAge => 'Kitna purana';
+
+  @override
+  String get regWorkNote =>
+      'Kaam ki tareekh se. Invoice hua matlab jari invoice mein shamil hai. Mahana rate wale kaam ki raqam nahin dikhti, kyunke mahine ki fee hi bill hai. Company rate na ho to rate lagne tak bill nahin ho sakta.';
+
+  @override
+  String get colWorth => 'Kaam ki qeemat';
+
+  @override
+  String get colNotInvoiced => 'Invoice baqi';
+
+  @override
+  String get colDaysNotInvoiced => 'Din, invoice baqi';
+
+  @override
+  String get filterBilled => 'Bill';
+
+  @override
+  String get billedOpen => 'Bill baqi';
+
+  @override
+  String get billedDone => 'Sab bill ho gaya';
+
+  @override
+  String get sheetContribution => 'Mazdoori ke baad bacha: bill minus mazdoori';
+
+  @override
+  String get sheetOperating => 'Baqi kharchon ke baad';
+
+  @override
+  String get reportsIntro =>
+      'Har report apni screen par tareekh aur filter ke saath khulti hai. Jo file banti hai us par likha hota hai kaun si tareekhein aur filter hain.';
+
+  @override
+  String get reportsHeadWork => 'Hazri aur kaam';
+
+  @override
+  String get reportsHeadCompanies => 'Companies ka paisa';
+
+  @override
+  String get reportsHeadWorkers => 'Mazdooron ka paisa';
+
+  @override
+  String get reportsHeadBusiness => 'Kharche aur nafa';
+
+  @override
+  String get repAttendance =>
+      'Har din ki hazri, mazdoor, company aur site ke jod ke saath. Kaam ki tareekh se.';
+
+  @override
+  String get repWork =>
+      'Har company ke kaam ki qeemat, kitna invoice hua aur kitna baqi. Kaam ki tareekh se.';
+
+  @override
+  String get repAging =>
+      'Har company ka baqaya, kitni der se. Aaj tak, due date se.';
+
+  @override
+  String get repInvoices =>
+      'Har invoice aur credit note ki line, VAT ke saath. Jari hone ki tareekh se.';
+
+  @override
+  String get repReceiptsTitle => 'Companies se mila paisa';
+
+  @override
+  String get repReceipts =>
+      'Companies se aaya paisa, cash book se. Raseed ki tareekh se.';
+
+  @override
+  String get repStatement =>
+      'Har company ke invoice, raseedein aur baqi. Tareekh se, pichla baqi aage la kar.';
+
+  @override
+  String get repWorkers =>
+      'Har mazdoor ne kitna kamaya, kitna mila, kitna baqi. Tareekh se, chalte baqi ke saath.';
+
+  @override
+  String get repPayroll =>
+      'Har mahine ki tankhwah: kamai, katoti, wapsi aur net. Tankhwah ke mahine se.';
+
+  @override
+  String get repAdvance =>
+      'Diya gaya advance, wapas aaya aur baqi. Tareekh se.';
+
+  @override
+  String get repExpensesTitle => 'Kharche';
+
+  @override
+  String get repExpenses =>
+      'Cash book ke kharche, qism ke saath. Entry ki tareekh se.';
+
+  @override
+  String get repMargin =>
+      'Mahine ka bill minus mazdoori, phir baqi kharche. Andaza hai, audit shuda hisaab nahin. Kaam ke mahine se.';
+
+  @override
+  String get repChooseMonth => 'Kaun sa mahina?';
+
+  @override
+  String get importCsv => 'CSV se laayein';
+
+  @override
+  String get importWorkersTitle => 'Mazdoor file se laayein';
+
+  @override
+  String get importCompaniesTitle => 'Companies file se laayein';
+
+  @override
+  String get importSitesTitle => 'Sites file se laayein';
+
+  @override
+  String get importSteps =>
+      '1. Khaali file lein, ya apni file mein yehi headings rakhein.\n2. Excel mein bharein aur CSV ki tarah save karein.\n3. File chunein. Jab tak aap lines dekh kar save na dabayein, kuch save nahin hota.';
+
+  @override
+  String get importBlankFile => 'Khaali file lein';
+
+  @override
+  String get importColumns => 'Columns';
+
+  @override
+  String get importRequired => 'zaroori';
+
+  @override
+  String get importBackupNote =>
+      'Import se pehle backup abhi app mein nahin. File poori save hoti hai ya bilkul nahin, aur ghalat line baad mein archive ho sakti hai.';
+
+  @override
+  String get importChoose => 'CSV file chunein';
+
+  @override
+  String get importChooseAgain => 'Doosri file chunein';
+
+  @override
+  String importSave(int count) {
+    return '$count lines save karein';
+  }
+
+  @override
+  String importSaved(int count) {
+    return '$count is phone par save ho gaye';
+  }
+
+  @override
+  String importSummary(int total, int bad, int warned) {
+    return '$total lines: $bad mein ghalti, $warned dekh lein';
+  }
+
+  @override
+  String get importFix =>
+      'In lines ko file mein theek karein aur dobara chunein. Abhi kuch save nahin hua.';
+
+  @override
+  String get importReady =>
+      'Har line save ho sakti hai. Naam dekh lein, phir save karein.';
+
+  @override
+  String importMissingColumns(String names) {
+    return 'File mein in ka column nahin: $names';
+  }
+
+  @override
+  String importIgnored(String names) {
+    return 'Yeh columns nahin parhe: $names';
+  }
+
+  @override
+  String get importEmpty => 'File mein headings ke neeche koi line nahin.';
+
+  @override
+  String importRow(int row) {
+    return 'Line $row';
+  }
+
+  @override
+  String get importHintDate => 'tareekh, din pehle: 05/11/2026';
+
+  @override
+  String get importHintBasis => 'hour, day ya shift';
+
+  @override
+  String get importHintAmount => 'AED raqam: 120.50';
+
+  @override
+  String get importHintYesNo => 'yes ya no';
+
+  @override
+  String get importHintTime => '24 ghante ka waqt: 08:00';
+
+  @override
+  String get importHintNumber => 'poora number';
+
+  @override
+  String get importHintCompany => 'company ka naam jaisa app mein hai';
+
+  @override
+  String get importHintTrn => '15 digit, jab VAT registered ho';
+
+  @override
+  String problemMissing(String column) {
+    return '$column khaali hai';
+  }
+
+  @override
+  String problemRepeated(String column) {
+    return '$column file mein do baar hai';
+  }
+
+  @override
+  String problemExists(String column) {
+    return '$column pehle se app mein hai';
+  }
+
+  @override
+  String problemBadDate(String column) {
+    return '$column tareekh nahin, din pehle likhein: 05/11/2026';
+  }
+
+  @override
+  String problemBadAmount(String column) {
+    return '$column raqam nahin';
+  }
+
+  @override
+  String problemBadNumber(String column) {
+    return '$column poora number nahin';
+  }
+
+  @override
+  String problemBadTime(String column) {
+    return '$column 08:00 jaisa waqt nahin';
+  }
+
+  @override
+  String problemBadYesNo(String column) {
+    return '$column mein yes ya no likhein';
+  }
+
+  @override
+  String problemBadTrn(String column) {
+    return '$column mein 15 digit chahiye';
+  }
+
+  @override
+  String problemBadBasis(String column) {
+    return '$column mein hour, day ya shift likhein';
+  }
+
+  @override
+  String get problemMonthly =>
+      'Mahana tankhwah mein adhoore mahine ka tareeqa app mein chunein';
+
+  @override
+  String get problemRateAndBasis => 'Pay basis aur pay rate dono likhein';
+
+  @override
+  String get problemRateDate =>
+      'Rate ke liye rate from ya joining date chahiye';
+
+  @override
+  String get problemNoCompany => 'Is naam ki company app mein nahin';
+
+  @override
+  String get problemTwoCompanies => 'Is naam ki do companies hain';
+
+  @override
+  String get problemSameName =>
+      'Is naam ka mazdoor pehle se hai. Yeh line naya mazdoor banayegi';
+
+  @override
+  String get problemTrnWithoutVat =>
+      'TRN tabhi rakha jata hai jab VAT registered yes ho';
+
+  @override
+  String get importShort => 'File se';
 }

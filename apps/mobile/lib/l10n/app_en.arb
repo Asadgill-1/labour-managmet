@@ -1120,7 +1120,7 @@
   "sheetRoomIn": "Room money in, from pay and cash",
   "sheetRoomOut": "Room rent paid",
   "sheetExpenses": "Other expenses",
-  "sheetEstimate": "Estimated profit",
+  "sheetEstimate": "Operating estimate, not audited",
   "sheetByCompany": "By company",
   "sheetDetail": "Company wise",
   "sheetWorkers": "Workers' accounts",
@@ -1966,5 +1966,222 @@
   "invLostReason": "Why the money will not come",
   "invUndoLostReason": "Why it is owed again",
   "invCloseLostConfirm": "Close as lost",
-  "invUndoLostConfirm": "Open again"
+  "invUndoLostConfirm": "Open again",
+  "reportsTab": "All reports",
+  "regAging": "Owed by age",
+  "regWork": "Work billed or not",
+  "regAgingNote": "As of {date}. Each invoice counts from its due date, and the balance from before the app from its own date. Credit not yet set against an invoice is shown under each company.",
+  "@regAgingNote": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "regByAge": "Each company by age",
+  "ageNotDue": "Not due yet",
+  "ageDays": "{days} days late",
+  "@ageDays": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "ageOver90": "Over 90 days late",
+  "colIssued": "Issued",
+  "colDaysLate": "Days late",
+  "colAge": "How late",
+  "regWorkNote": "By work date. Invoiced means an issued invoice charges it. Work on a monthly rate shows no amount, because the month's fee is the charge. With no company rate, work can't be billed until a rate is set.",
+  "colWorth": "Worth",
+  "colNotInvoiced": "Not invoiced",
+  "colDaysNotInvoiced": "Days not invoiced",
+  "filterBilled": "Billing",
+  "billedOpen": "Still to bill",
+  "billedDone": "All billed",
+  "sheetContribution": "Labour contribution: bills less wages",
+  "sheetOperating": "After other costs",
+  "reportsIntro": "Each report opens on its own screen with dates and filters. The file it makes says which dates and filters it shows.",
+  "reportsHeadWork": "Attendance and work",
+  "reportsHeadCompanies": "Company money",
+  "reportsHeadWorkers": "Workers' money",
+  "reportsHeadBusiness": "Expenses and margin",
+  "repAttendance": "Each day's attendance, with totals by worker, company and site. By work date.",
+  "repWork": "What each company's work is worth, what is invoiced and what is still to bill. By work date.",
+  "repAging": "What each company owes, by how late. As of today, from due dates.",
+  "repInvoices": "Every invoice and credit note line, with VAT. By issue date.",
+  "repReceiptsTitle": "Company receipts",
+  "repReceipts": "Money received from companies, as the cash book has it. By receipt date.",
+  "repStatement": "Each company's invoices, receipts and balance. By date, with the balance brought forward.",
+  "repWorkers": "What each worker earned, was paid and is owed. By date, with a running balance.",
+  "repPayroll": "Each month's pay: earned, deductions, recoveries and net. By pay month.",
+  "repAdvance": "Advances given, recovered and left. By date.",
+  "repExpensesTitle": "Expenses",
+  "repExpenses": "Expenses from the cash book, with their category. By entry date.",
+  "repMargin": "A month's bills less wages, then other costs. An estimate, not audited accounts. By work month.",
+  "repChooseMonth": "Which month?",
+  "importCsv": "Import CSV",
+  "importWorkersTitle": "Import workers",
+  "importCompaniesTitle": "Import companies",
+  "importSitesTitle": "Import sites",
+  "importSteps": "1. Get the blank file, or use your own with these headings.\n2. Fill it in Excel and save it as CSV.\n3. Choose the file. Nothing is saved until you have checked the lines and pressed save.",
+  "importBlankFile": "Get the blank file",
+  "importColumns": "Columns",
+  "importRequired": "needed",
+  "importBackupNote": "Backup before an import is not in the app yet. A file is saved whole or not at all, and a wrong line can be archived afterwards.",
+  "importChoose": "Choose CSV file",
+  "importChooseAgain": "Choose another file",
+  "importSave": "Save {count} lines",
+  "@importSave": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importSaved": "{count} saved on this phone",
+  "@importSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importSummary": "{total} lines: {bad} with mistakes, {warned} to check",
+  "@importSummary": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "bad": {
+        "type": "int"
+      },
+      "warned": {
+        "type": "int"
+      }
+    }
+  },
+  "importFix": "Fix these lines in the file and choose it again. Nothing has been saved.",
+  "importReady": "Every line can be saved. Check the names, then save.",
+  "importMissingColumns": "The file has no column for: {names}",
+  "@importMissingColumns": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "importIgnored": "Not read: {names}",
+  "@importIgnored": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "importEmpty": "The file has no lines under its headings.",
+  "importRow": "Row {row}",
+  "@importRow": {
+    "placeholders": {
+      "row": {
+        "type": "int"
+      }
+    }
+  },
+  "importHintDate": "date, day first: 05/11/2026",
+  "importHintBasis": "hour, day or shift",
+  "importHintAmount": "AED amount: 120.50",
+  "importHintYesNo": "yes or no",
+  "importHintTime": "24-hour time: 08:00",
+  "importHintNumber": "whole number",
+  "importHintCompany": "company name as in the app",
+  "importHintTrn": "15 digits, when VAT registered",
+  "problemMissing": "{column} is empty",
+  "@problemMissing": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemRepeated": "{column} is in the file twice",
+  "@problemRepeated": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemExists": "{column} is already in the app",
+  "@problemExists": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadDate": "{column} is not a date, day first: 05/11/2026",
+  "@problemBadDate": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadAmount": "{column} is not an amount",
+  "@problemBadAmount": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadNumber": "{column} is not a whole number",
+  "@problemBadNumber": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadTime": "{column} is not a time like 08:00",
+  "@problemBadTime": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadYesNo": "{column} should be yes or no",
+  "@problemBadYesNo": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadTrn": "{column} needs 15 digits",
+  "@problemBadTrn": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadBasis": "{column} should be hour, day or shift",
+  "@problemBadBasis": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemMonthly": "Monthly pay needs a rule for part months: set it in the app",
+  "problemRateAndBasis": "Pay basis and pay rate go together",
+  "problemRateDate": "The rate needs a rate from date or a joining date",
+  "problemNoCompany": "No company with this name in the app",
+  "problemTwoCompanies": "Two companies have this name",
+  "problemSameName": "A worker with this name is already there. This line makes a new worker",
+  "problemTrnWithoutVat": "TRN is kept only when VAT registered is yes",
+  "importShort": "From file"
 }

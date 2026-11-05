@@ -27,6 +27,7 @@ class RegisterScreen extends StatefulWidget {
     required this.emptyText,
     required this.addLabel,
     required this.onAdd,
+    this.onImport,
     super.key,
   });
 
@@ -37,6 +38,9 @@ class RegisterScreen extends StatefulWidget {
   final String emptyText;
   final String addLabel;
   final VoidCallback onAdd;
+
+  /// Brings many rows in from a file, beside adding one by hand (MASTER-08).
+  final VoidCallback? onImport;
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -62,7 +66,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TopBand(padding: EdgeInsets.zero, child: SearchBox(onChanged: (v) => setState(() => _search = v))),
+          TopBand(
+            padding: EdgeInsets.zero,
+            child: Row(
+              children: [
+                Expanded(child: SearchBox(onChanged: (v) => setState(() => _search = v))),
+                // Beside the search, since the header has no room left on a narrow phone.
+                if (widget.onImport != null)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 8, 8),
+                    child: Semantics(
+                      button: true,
+                      label: l10n.importCsv,
+                      excludeSemantics: true,
+                      child: InkWell(
+                        onTap: widget.onImport,
+                        borderRadius: BorderRadius.circular(10),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.upload_file, color: Colors.white),
+                              Text(l10n.importShort, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
           const SizedBox(height: 6),
           Expanded(
             child: shown.isEmpty

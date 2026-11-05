@@ -77,6 +77,8 @@ Future<RegisterData> buildRegister(TenantDatabase db, AppLocalizations l10n, Sec
     Section.roomRegister => _rooms(db, l10n, masters, from, to),
     Section.invoiceRegister => _invoices(db, l10n, masters, from, to),
     Section.statementRegister => _statement(db, l10n, masters, from, to),
+    Section.agingRegister => _aging(db, l10n, masters),
+    Section.workRegister => _work(db, l10n, masters, from, to),
     _ => throw ArgumentError.value(section, 'section', 'is not a register'),
   };
 }
@@ -1273,5 +1275,220 @@ Future<RegisterData> _invoices(TenantDatabase db, AppLocalizations l10n, _Master
           );
         }(),
     ],
+  );
+}
+
+/// How late money still owed is, in the usual steps.
+enum _Age { notDue, upTo30, upTo60, upTo90, over90 }
+
+_Age _ageOf(int daysLate) => switch (daysLate) {
+  <= 0 => _Age.notDue,
+  <= 30 => _Age.upTo30,
+  <= 60 => _Age.upTo60,
+  <= 90 => _Age.upTo90,
+  _ => _Age.over90,
+};
+
+String _ageLabel(AppLocalizations l10n, _Age age) => switch (age) {
+  _Age.notDue => l10n.ageNotDue,
+  _Age.upTo30 => l10n.ageDays('1-30'),
+  _Age.upTo60 => l10n.ageDays('31-60'),
+  _Age.upTo90 => l10n.ageDays('61-90'),
+  _Age.over90 => l10n.ageOver90,
+};
+
+const _aLate = 6;
+const _aLeft = 7;
+
+/// What each company still owes as of today, each invoice by how late it is. Its balance from before the app counts
+/// from its own date. Read from the stored rows, so it agrees with the statement (REP-01, REP-08).
+Future<RegisterData> _aging(TenantDatabase db, AppLocalizations l10n, _Masters m) async {
+  final today = dubaiToday(DateTime.now());
+  final money = await db.receivables();
+  final openingDates = {
+    for (final b in await (db.select(db.openingBalances)..where((b) => b.kind.equals('client_receivable'))).get()) b.clientId!: b.asOfDate,
+  };
+  final rows = <RegisterEntry>[];
+  final feet = <String, String>{};
+  for (final c in m.clients.values) {
+    final open = money.openOf(c.id);
+    if (open.isEmpty) continue;
+    for (final o in open) {
+      final invoice = o.invoiceId == null ? null : money.invoices[o.invoiceId]!.invoice;
+      final due = o.dueDate ?? openingDates[c.id] ?? today;
+      final late = daysBetween(due, today);
+      final age = _ageOf(late);
+      rows.add(
+        RegisterEntry(
+          [c.name, o.number ?? l10n.receiptOldBalance, invoice?.issueDate ?? openingDates[c.id], due, late > 0 ? late : null, _ageLabel(l10n, age), late > 0 ? o.leftFils : null, o.leftFils],
+          group: c.name,
+          tags: {
+            'client': {c.id},
+            'age': {age.name},
+          },
+        ),
+      );
+    }
+    final credit = money.creditOf(c.id);
+    if (credit > 0) feet[c.name] = l10n.regUnusedCredit(formatAed(credit));
+  }
+
+  List<RegisterRollup> rollups(List<RegisterEntry> shown) => [
+    RegisterRollup(
+      l10n.regByAge,
+      [
+        RegisterColumn(l10n.colCompany, flex: 5),
+        for (final age in _Age.values) RegisterColumn(_ageLabel(l10n, age), kind: CellKind.money, total: true),
+        RegisterColumn(l10n.invToPay, kind: CellKind.money, total: true),
+      ],
+      [
+        for (final g in groupEntries(shown))
+          RegisterEntry([
+            g.group,
+            for (final age in _Age.values) columnTotal(g.rows.where((r) => r.tags['age']!.contains(age.name)), _aLeft),
+            columnTotal(g.rows, _aLeft),
+          ]),
+      ],
+    ),
+  ];
+
+  return RegisterData(
+    title: l10n.regAging,
+    titleColumn: 1,
+    amountColumns: const [_aLeft],
+    bandColumns: const [_aLate, _aLeft],
+    groupKind: CellKind.text,
+    dated: false,
+    netted: false,
+    note: l10n.regAgingNote(showDate(today)),
+    groupFeet: feet,
+    rollupsOf: rollups,
+    summaryFirst: true,
+    columns: [
+      RegisterColumn(l10n.colCompany, flex: 5, inPdf: false, onScreen: false),
+      RegisterColumn(l10n.colNumber, flex: 4),
+      RegisterColumn(l10n.colIssued, kind: CellKind.date),
+      RegisterColumn(l10n.invDueDate, kind: CellKind.date),
+      RegisterColumn(l10n.colDaysLate, kind: CellKind.number, flex: 2),
+      RegisterColumn(l10n.colAge, flex: 3),
+      RegisterColumn(l10n.invStatusOverdue, kind: CellKind.money, total: true, tone: CellTone.minus, onScreen: false),
+      RegisterColumn(l10n.invToPay, kind: CellKind.money, total: true),
+    ],
+    filters: [
+      RegisterFilter('client', l10n.colCompany, m.clientOptions),
+      RegisterFilter('age', l10n.colAge, [for (final age in _Age.values) (value: age.name, label: _ageLabel(l10n, age))]),
+    ],
+    entries: rows,
+  );
+}
+
+const _wWorth = 5;
+const _wInvoiced = 6;
+const _wOpen = 7;
+const _wOpenDays = 8;
+const _wNoRate = 9;
+
+/// Work each company owes for, by site and month: what it is worth at the company's rate, what an invoice already
+/// charges and what is still to bill. By work date, as attendance has it (REP-01, D-048).
+Future<RegisterData> _work(TenantDatabase db, AppLocalizations l10n, _Masters m, String? from, String? to) async {
+  final lines = <(String, String, String), List<WorkCharge>>{};
+  for (final w in await db.workCharges(from: from, to: to)) {
+    (lines[(w.clientId, w.workDate.substring(0, 7), w.siteId)] ??= []).add(w);
+  }
+  String company(String id) => m.clients[id]?.name ?? '';
+  final keys = lines.keys.toList()
+    ..sort((a, b) {
+      final byCompany = company(a.$1).compareTo(company(b.$1));
+      if (byCompany != 0) return byCompany;
+      final byMonth = a.$2.compareTo(b.$2);
+      return byMonth != 0 ? byMonth : (m.sites[a.$3]?.name ?? '').compareTo(m.sites[b.$3]?.name ?? '');
+    });
+  int sum(Iterable<WorkCharge> rows) => rows.fold(0, (total, w) => total + w.amountFils);
+  final rows = [
+    for (final key in keys)
+      () {
+        final all = lines[key]!;
+        final rated = all.where((w) => w.rated);
+        final open = rated.where((w) => !w.settled);
+        final noRate = all.length - rated.length;
+        final invoiced = sum(rated.where((w) => w.invoiceId != null));
+        return RegisterEntry(
+          [
+            company(key.$1),
+            key.$2,
+            m.sites[key.$3]?.name,
+            // Every day worked counts, rated or not. Only its worth needs a rate.
+            all.length,
+            all.fold<int>(0, (total, w) => total + w.minutes),
+            sum(rated),
+            // Nothing invoiced shows nothing, so work with no rate never reads as billed.
+            invoiced == 0 ? null : invoiced,
+            open.isEmpty ? null : sum(open),
+            open.isEmpty ? null : open.length,
+            noRate == 0 ? null : noRate,
+          ],
+          group: company(key.$1),
+          tags: {
+            'client': {key.$1},
+            'site': {key.$3},
+            'billed': {open.isEmpty && noRate == 0 ? 'done' : 'open'},
+          },
+        );
+      }(),
+  ];
+
+  List<RegisterRollup> rollups(List<RegisterEntry> shown) {
+    final groups = groupEntries(shown);
+    if (groups.length < 2) return const [];
+    return [
+      RegisterRollup(
+        l10n.regAllCompanies,
+        [
+          RegisterColumn(l10n.colCompany, flex: 5),
+          RegisterColumn(l10n.colWorth, kind: CellKind.money, total: true),
+          RegisterColumn(l10n.regInvoiced, kind: CellKind.money, total: true),
+          RegisterColumn(l10n.colNotInvoiced, kind: CellKind.money, total: true),
+          RegisterColumn(l10n.colDaysNotInvoiced, kind: CellKind.number, flex: 2, total: true),
+          RegisterColumn(l10n.colNoRate, kind: CellKind.number, flex: 2, total: true),
+        ],
+        [
+          for (final g in groups)
+            RegisterEntry([
+              g.group,
+              for (final c in const [_wWorth, _wInvoiced, _wOpen, _wOpenDays, _wNoRate]) columnTotal(g.rows, c),
+            ]),
+        ],
+      ),
+    ];
+  }
+
+  return RegisterData(
+    title: l10n.regWork,
+    titleColumn: 2,
+    amountColumns: const [_wOpen, _wInvoiced],
+    bandColumns: const [_wInvoiced, _wOpen],
+    groupKind: CellKind.text,
+    netted: false,
+    note: l10n.regWorkNote,
+    rollupsOf: rollups,
+    summaryFirst: true,
+    columns: [
+      RegisterColumn(l10n.colCompany, flex: 5, inPdf: false, onScreen: false),
+      RegisterColumn(l10n.colMonth, kind: CellKind.month),
+      RegisterColumn(l10n.colSite, flex: 4),
+      RegisterColumn(l10n.colDays, kind: CellKind.number, flex: 2, total: true),
+      RegisterColumn(l10n.colCompanyHours, kind: CellKind.minutes, total: true),
+      RegisterColumn(l10n.colWorth, kind: CellKind.money, total: true),
+      RegisterColumn(l10n.regInvoiced, kind: CellKind.money, total: true, tone: CellTone.plus),
+      RegisterColumn(l10n.colNotInvoiced, kind: CellKind.money, total: true, tone: CellTone.minus),
+      RegisterColumn(l10n.colDaysNotInvoiced, kind: CellKind.number, flex: 2, total: true),
+      RegisterColumn(l10n.colNoRate, kind: CellKind.number, total: true),
+    ],
+    filters: [
+      RegisterFilter('client', l10n.colCompany, m.clientOptions),
+      RegisterFilter('site', l10n.colSite, m.siteOptions),
+      RegisterFilter('billed', l10n.filterBilled, [(value: 'open', label: l10n.billedOpen), (value: 'done', label: l10n.billedDone)]),
+    ],
+    entries: rows,
   );
 }

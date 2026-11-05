@@ -10,7 +10,7 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
 private const val SAVE_REQUEST = 4101
-private const val PICK_IMAGE_REQUEST = 4102
+private const val PICK_REQUEST = 4102
 
 /** Sends, opens or saves an exported register. The user picks the recipient and sends it themselves (DOC-06). */
 class MainActivity : FlutterActivity() {
@@ -21,7 +21,12 @@ class MainActivity : FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "labour_app/files").setMethodCallHandler { call, result ->
             if (call.method == "pickImage") {
-                pickImage(result)
+                pick(result, "image/*", arrayOf("image/png", "image/jpeg"))
+                return@setMethodCallHandler
+            }
+            if (call.method == "pickCsv") {
+                // Phones label a CSV file in several ways, so the picker offers all of them (MASTER-08).
+                pick(result, "*/*", arrayOf("text/csv", "text/comma-separated-values", "application/csv", "text/plain", "application/vnd.ms-excel"))
                 return@setMethodCallHandler
             }
             if (call.method == "sendAll") {
@@ -104,14 +109,14 @@ class MainActivity : FlutterActivity() {
         startActivityForResult(intent, SAVE_REQUEST)
     }
 
-    /** Android's own picker, so the app needs no storage permission. Dart checks what comes back (DOC-04). */
-    private fun pickImage(result: MethodChannel.Result) {
+    /** Android's own picker, so the app needs no storage permission. Dart checks what comes back (DOC-04, MASTER-08). */
+    private fun pick(result: MethodChannel.Result, type: String, mimes: Array<String>) {
         pendingPick = result
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
             .addCategory(Intent.CATEGORY_OPENABLE)
-            .setType("image/*")
-            .putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/png", "image/jpeg"))
-        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+            .setType(type)
+            .putExtra(Intent.EXTRA_MIME_TYPES, mimes)
+        startActivityForResult(intent, PICK_REQUEST)
     }
 
     private fun finishPick(resultCode: Int, data: Intent?) {
@@ -132,7 +137,7 @@ class MainActivity : FlutterActivity() {
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST) {
+        if (requestCode == PICK_REQUEST) {
             finishPick(resultCode, data)
             return
         }

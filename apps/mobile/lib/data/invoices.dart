@@ -748,21 +748,28 @@ extension InvoiceOps on TenantDatabase {
   }
 
   /// Companies with work up to [to], after [after], that no invoice charges yet, each with the month it falls in (D-048).
-  /// A row agreed or rated at nothing has nothing to charge.
-  Future<Set<(String, String)>> uninvoicedWork({required String to, String? after}) async {
+  Future<Set<(String, String)>> uninvoicedWork({required String to, String? after}) async => {
+    for (final w in await workCharges(to: to, after: after))
+      if (w.rated && !w.settled) (w.clientId, w.workDate.substring(0, 7)),
+  };
+
+  /// Every live row of work from [from] to [to], or after [after], and the invoice that charges it (REP-01, D-048).
+  /// A row agreed or rated at nothing has nothing to charge, so it counts as settled. A row with no company rate can't be
+  /// charged yet, and says so.
+  Future<List<WorkCharge>> workCharges({String? from, String? to, String? after}) async {
     final e = attendanceEntries;
+    Expression<bool> limit(Expression<bool> Function(String) test, String? value) => value == null ? const Constant(true) : test(value);
     final rows = await (selectOnly(e)
-          ..addColumns([e.id, e.revisesEntryId, e.clientId, e.workDate])
+          ..addColumns([e.id, e.revisesEntryId, e.clientId, e.siteId, e.workDate, e.clientBillableMinutes, e.clientAmountFils, e.clientRateFils, e.clientBasis])
           ..where(
             e.superseded.equals(false) &
-                e.workDate.isSmallerOrEqualValue(to) &
-                (after == null ? const Constant(true) : e.workDate.isBiggerThanValue(after)) &
-                e.attendanceStatus.equals(AttendanceStatus.absent.name).not() &
-                e.clientRateFils.isNotNull() &
-                (e.clientAmountFils.isBiggerThanValue(0) | e.clientBasis.isIn([for (final b in RateBasis.values) if (isPeriodBasis(b)) b.name])),
+                limit(e.workDate.isBiggerOrEqualValue, from) &
+                limit(e.workDate.isSmallerOrEqualValue, to) &
+                limit(e.workDate.isBiggerThanValue, after) &
+                e.attendanceStatus.equals(AttendanceStatus.absent.name).not(),
           ))
         .get();
-    if (rows.isEmpty) return const {};
+    if (rows.isEmpty) return const [];
 
     // A corrected row is still the same work, so it is known by the first row of its chain (TS-05).
     final parent = {for (final r in rows) r.read(e.id)!: r.read(e.revisesEntryId)};
@@ -787,24 +794,46 @@ extension InvoiceOps on TenantDatabase {
 
     final b = billedAllocations;
     final l = timesheetLines;
-    final settled = {
+    final charged = {
       for (final r in await (selectOnly(b)
-            ..addColumns([b.workKey])
+            ..addColumns([b.workKey, b.invoiceId])
             ..where(b.released.equals(false)))
           .get())
-        r.read(b.workKey)!,
+        r.read(b.workKey)!: r.read(b.invoiceId)!,
+    };
+    final agreedAtNothing = {
       for (final r in await (selectOnly(l)
             ..addColumns([l.workKey])
             ..where(l.live.equals(true) & l.amountFils.equals(0)))
           .get())
         r.read(l.workKey)!,
     };
-    return {
+    final periodBases = [for (final b in RateBasis.values) if (isPeriodBasis(b)) b.name];
+    return [
       for (final r in rows)
-        if (!settled.contains(keyOf(r.read(e.id)!))) (r.read(e.clientId)!, r.read(e.workDate)!.substring(0, 7)),
-    };
+        () {
+          final key = keyOf(r.read(e.id)!);
+          final amount = r.read(e.clientAmountFils) ?? 0;
+          final rated = r.read(e.clientRateFils) != null;
+          final chargeable = rated && (amount > 0 || periodBases.contains(r.read(e.clientBasis)));
+          return (
+            clientId: r.read(e.clientId)!,
+            siteId: r.read(e.siteId)!,
+            workDate: r.read(e.workDate)!,
+            minutes: r.read(e.clientBillableMinutes) ?? 0,
+            amountFils: amount,
+            rated: rated,
+            invoiceId: charged[key],
+            settled: charged.containsKey(key) || agreedAtNothing.contains(key) || (rated && !chargeable),
+          );
+        }(),
+    ];
   }
 }
+
+/// One row of work as billing sees it: [rated] when the company has a rate for it, [invoiceId] when an invoice charges it,
+/// [settled] when nothing more is to be charged.
+typedef WorkCharge = ({String clientId, String siteId, String workDate, int minutes, int amountFils, bool rated, String? invoiceId, bool settled});
 
 /// How many of a line's unit it bills, as printed: 525.50 hours, 12.5 days, 3 workers.
 String quantityText(RateBasis? basis, int quantity) => switch (basis) {

@@ -3616,7 +3616,7 @@ abstract class AppLocalizations {
   /// No description provided for @sheetEstimate.
   ///
   /// In en, this message translates to:
-  /// **'Estimated profit'**
+  /// **'Operating estimate, not audited'**
   String get sheetEstimate;
 
   /// No description provided for @sheetByCompany.
@@ -5724,6 +5724,516 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open again'**
   String get invUndoLostConfirm;
+
+  /// No description provided for @reportsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'All reports'**
+  String get reportsTab;
+
+  /// No description provided for @regAging.
+  ///
+  /// In en, this message translates to:
+  /// **'Owed by age'**
+  String get regAging;
+
+  /// No description provided for @regWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Work billed or not'**
+  String get regWork;
+
+  /// No description provided for @regAgingNote.
+  ///
+  /// In en, this message translates to:
+  /// **'As of {date}. Each invoice counts from its due date, and the balance from before the app from its own date. Credit not yet set against an invoice is shown under each company.'**
+  String regAgingNote(String date);
+
+  /// No description provided for @regByAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Each company by age'**
+  String get regByAge;
+
+  /// No description provided for @ageNotDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Not due yet'**
+  String get ageNotDue;
+
+  /// No description provided for @ageDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days late'**
+  String ageDays(String days);
+
+  /// No description provided for @ageOver90.
+  ///
+  /// In en, this message translates to:
+  /// **'Over 90 days late'**
+  String get ageOver90;
+
+  /// No description provided for @colIssued.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued'**
+  String get colIssued;
+
+  /// No description provided for @colDaysLate.
+  ///
+  /// In en, this message translates to:
+  /// **'Days late'**
+  String get colDaysLate;
+
+  /// No description provided for @colAge.
+  ///
+  /// In en, this message translates to:
+  /// **'How late'**
+  String get colAge;
+
+  /// No description provided for @regWorkNote.
+  ///
+  /// In en, this message translates to:
+  /// **'By work date. Invoiced means an issued invoice charges it. Work on a monthly rate shows no amount, because the month\'s fee is the charge. With no company rate, work can\'t be billed until a rate is set.'**
+  String get regWorkNote;
+
+  /// No description provided for @colWorth.
+  ///
+  /// In en, this message translates to:
+  /// **'Worth'**
+  String get colWorth;
+
+  /// No description provided for @colNotInvoiced.
+  ///
+  /// In en, this message translates to:
+  /// **'Not invoiced'**
+  String get colNotInvoiced;
+
+  /// No description provided for @colDaysNotInvoiced.
+  ///
+  /// In en, this message translates to:
+  /// **'Days not invoiced'**
+  String get colDaysNotInvoiced;
+
+  /// No description provided for @filterBilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Billing'**
+  String get filterBilled;
+
+  /// No description provided for @billedOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Still to bill'**
+  String get billedOpen;
+
+  /// No description provided for @billedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'All billed'**
+  String get billedDone;
+
+  /// No description provided for @sheetContribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Labour contribution: bills less wages'**
+  String get sheetContribution;
+
+  /// No description provided for @sheetOperating.
+  ///
+  /// In en, this message translates to:
+  /// **'After other costs'**
+  String get sheetOperating;
+
+  /// No description provided for @reportsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Each report opens on its own screen with dates and filters. The file it makes says which dates and filters it shows.'**
+  String get reportsIntro;
+
+  /// No description provided for @reportsHeadWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance and work'**
+  String get reportsHeadWork;
+
+  /// No description provided for @reportsHeadCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'Company money'**
+  String get reportsHeadCompanies;
+
+  /// No description provided for @reportsHeadWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers\' money'**
+  String get reportsHeadWorkers;
+
+  /// No description provided for @reportsHeadBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses and margin'**
+  String get reportsHeadBusiness;
+
+  /// No description provided for @repAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Each day\'s attendance, with totals by worker, company and site. By work date.'**
+  String get repAttendance;
+
+  /// No description provided for @repWork.
+  ///
+  /// In en, this message translates to:
+  /// **'What each company\'s work is worth, what is invoiced and what is still to bill. By work date.'**
+  String get repWork;
+
+  /// No description provided for @repAging.
+  ///
+  /// In en, this message translates to:
+  /// **'What each company owes, by how late. As of today, from due dates.'**
+  String get repAging;
+
+  /// No description provided for @repInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Every invoice and credit note line, with VAT. By issue date.'**
+  String get repInvoices;
+
+  /// No description provided for @repReceiptsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Company receipts'**
+  String get repReceiptsTitle;
+
+  /// No description provided for @repReceipts.
+  ///
+  /// In en, this message translates to:
+  /// **'Money received from companies, as the cash book has it. By receipt date.'**
+  String get repReceipts;
+
+  /// No description provided for @repStatement.
+  ///
+  /// In en, this message translates to:
+  /// **'Each company\'s invoices, receipts and balance. By date, with the balance brought forward.'**
+  String get repStatement;
+
+  /// No description provided for @repWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'What each worker earned, was paid and is owed. By date, with a running balance.'**
+  String get repWorkers;
+
+  /// No description provided for @repPayroll.
+  ///
+  /// In en, this message translates to:
+  /// **'Each month\'s pay: earned, deductions, recoveries and net. By pay month.'**
+  String get repPayroll;
+
+  /// No description provided for @repAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Advances given, recovered and left. By date.'**
+  String get repAdvance;
+
+  /// No description provided for @repExpensesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses'**
+  String get repExpensesTitle;
+
+  /// No description provided for @repExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses from the cash book, with their category. By entry date.'**
+  String get repExpenses;
+
+  /// No description provided for @repMargin.
+  ///
+  /// In en, this message translates to:
+  /// **'A month\'s bills less wages, then other costs. An estimate, not audited accounts. By work month.'**
+  String get repMargin;
+
+  /// No description provided for @repChooseMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Which month?'**
+  String get repChooseMonth;
+
+  /// No description provided for @importCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Import CSV'**
+  String get importCsv;
+
+  /// No description provided for @importWorkersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import workers'**
+  String get importWorkersTitle;
+
+  /// No description provided for @importCompaniesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import companies'**
+  String get importCompaniesTitle;
+
+  /// No description provided for @importSitesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import sites'**
+  String get importSitesTitle;
+
+  /// No description provided for @importSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Get the blank file, or use your own with these headings.\n2. Fill it in Excel and save it as CSV.\n3. Choose the file. Nothing is saved until you have checked the lines and pressed save.'**
+  String get importSteps;
+
+  /// No description provided for @importBlankFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Get the blank file'**
+  String get importBlankFile;
+
+  /// No description provided for @importColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'Columns'**
+  String get importColumns;
+
+  /// No description provided for @importRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'needed'**
+  String get importRequired;
+
+  /// No description provided for @importBackupNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup before an import is not in the app yet. A file is saved whole or not at all, and a wrong line can be archived afterwards.'**
+  String get importBackupNote;
+
+  /// No description provided for @importChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose CSV file'**
+  String get importChoose;
+
+  /// No description provided for @importChooseAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another file'**
+  String get importChooseAgain;
+
+  /// No description provided for @importSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save {count} lines'**
+  String importSave(int count);
+
+  /// No description provided for @importSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} saved on this phone'**
+  String importSaved(int count);
+
+  /// No description provided for @importSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{total} lines: {bad} with mistakes, {warned} to check'**
+  String importSummary(int total, int bad, int warned);
+
+  /// No description provided for @importFix.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix these lines in the file and choose it again. Nothing has been saved.'**
+  String get importFix;
+
+  /// No description provided for @importReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Every line can be saved. Check the names, then save.'**
+  String get importReady;
+
+  /// No description provided for @importMissingColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'The file has no column for: {names}'**
+  String importMissingColumns(String names);
+
+  /// No description provided for @importIgnored.
+  ///
+  /// In en, this message translates to:
+  /// **'Not read: {names}'**
+  String importIgnored(String names);
+
+  /// No description provided for @importEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'The file has no lines under its headings.'**
+  String get importEmpty;
+
+  /// No description provided for @importRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Row {row}'**
+  String importRow(int row);
+
+  /// No description provided for @importHintDate.
+  ///
+  /// In en, this message translates to:
+  /// **'date, day first: 05/11/2026'**
+  String get importHintDate;
+
+  /// No description provided for @importHintBasis.
+  ///
+  /// In en, this message translates to:
+  /// **'hour, day or shift'**
+  String get importHintBasis;
+
+  /// No description provided for @importHintAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'AED amount: 120.50'**
+  String get importHintAmount;
+
+  /// No description provided for @importHintYesNo.
+  ///
+  /// In en, this message translates to:
+  /// **'yes or no'**
+  String get importHintYesNo;
+
+  /// No description provided for @importHintTime.
+  ///
+  /// In en, this message translates to:
+  /// **'24-hour time: 08:00'**
+  String get importHintTime;
+
+  /// No description provided for @importHintNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'whole number'**
+  String get importHintNumber;
+
+  /// No description provided for @importHintCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'company name as in the app'**
+  String get importHintCompany;
+
+  /// No description provided for @importHintTrn.
+  ///
+  /// In en, this message translates to:
+  /// **'15 digits, when VAT registered'**
+  String get importHintTrn;
+
+  /// No description provided for @problemMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is empty'**
+  String problemMissing(String column);
+
+  /// No description provided for @problemRepeated.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is in the file twice'**
+  String problemRepeated(String column);
+
+  /// No description provided for @problemExists.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is already in the app'**
+  String problemExists(String column);
+
+  /// No description provided for @problemBadDate.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is not a date, day first: 05/11/2026'**
+  String problemBadDate(String column);
+
+  /// No description provided for @problemBadAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is not an amount'**
+  String problemBadAmount(String column);
+
+  /// No description provided for @problemBadNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is not a whole number'**
+  String problemBadNumber(String column);
+
+  /// No description provided for @problemBadTime.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is not a time like 08:00'**
+  String problemBadTime(String column);
+
+  /// No description provided for @problemBadYesNo.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} should be yes or no'**
+  String problemBadYesNo(String column);
+
+  /// No description provided for @problemBadTrn.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} needs 15 digits'**
+  String problemBadTrn(String column);
+
+  /// No description provided for @problemBadBasis.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} should be hour, day or shift'**
+  String problemBadBasis(String column);
+
+  /// No description provided for @problemMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly pay needs a rule for part months: set it in the app'**
+  String get problemMonthly;
+
+  /// No description provided for @problemRateAndBasis.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay basis and pay rate go together'**
+  String get problemRateAndBasis;
+
+  /// No description provided for @problemRateDate.
+  ///
+  /// In en, this message translates to:
+  /// **'The rate needs a rate from date or a joining date'**
+  String get problemRateDate;
+
+  /// No description provided for @problemNoCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'No company with this name in the app'**
+  String get problemNoCompany;
+
+  /// No description provided for @problemTwoCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'Two companies have this name'**
+  String get problemTwoCompanies;
+
+  /// No description provided for @problemSameName.
+  ///
+  /// In en, this message translates to:
+  /// **'A worker with this name is already there. This line makes a new worker'**
+  String get problemSameName;
+
+  /// No description provided for @problemTrnWithoutVat.
+  ///
+  /// In en, this message translates to:
+  /// **'TRN is kept only when VAT registered is yes'**
+  String get problemTrnWithoutVat;
+
+  /// No description provided for @importShort.
+  ///
+  /// In en, this message translates to:
+  /// **'From file'**
+  String get importShort;
 }
 
 class _AppLocalizationsDelegate

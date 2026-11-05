@@ -67,3 +67,31 @@ String showMonth(String month) {
 
 /// 660 -> "11:00".
 String showDuration(int minutes) => '${minutes ~/ 60}:${_two(minutes % 60)}';
+
+final _dayFirst = RegExp(r'^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$');
+final _yearFirst = RegExp(r'^(\d{4})-(\d{1,2})-(\d{1,2})$');
+
+/// A typed date as stored, or null if it is no real date. Day first, as in the UAE: "5/1/2026" is 5 January.
+/// "2026-01-05" reads too.
+String? parseDate(String input) {
+  final text = input.trim();
+  final dayFirst = _dayFirst.firstMatch(text);
+  final yearFirst = _yearFirst.firstMatch(text);
+  final (year, month, day) = dayFirst != null
+      ? (int.parse(dayFirst[3]!), int.parse(dayFirst[2]!), int.parse(dayFirst[1]!))
+      : yearFirst != null
+      ? (int.parse(yearFirst[1]!), int.parse(yearFirst[2]!), int.parse(yearFirst[3]!))
+      : (0, 0, 0);
+  final date = DateTime.utc(year, month, day);
+  return year > 0 && date.month == month && date.day == day ? ymd(date) : null;
+}
+
+final _clock = RegExp(r'^(\d{1,2}):(\d{2})$');
+
+/// "8:30" or "20:05" -> minutes from midnight, or null.
+int? parseClock(String input) {
+  final match = _clock.firstMatch(input.trim());
+  if (match == null) return null;
+  final (hour, minute) = (int.parse(match[1]!), int.parse(match[2]!));
+  return hour < 24 && minute < 60 ? hour * 60 + minute : null;
+}
