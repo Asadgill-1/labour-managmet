@@ -15,7 +15,7 @@ import 'timesheets.dart';
 enum InvoiceStatus { draft, issued, credited }
 
 /// Why an invoice can't be made or issued as it stands. Nothing was written.
-enum InvoiceProblem { nothingToBill, noCompanyDetails, noTrn, discountTooBig, wrongStep }
+enum InvoiceProblem { nothingToBill, noCompanyDetails, noTrn, discountTooBig, wrongStep, creditTooBig }
 
 class InvoiceRefused implements Exception {
   const InvoiceRefused(this.problem);
@@ -23,10 +23,24 @@ class InvoiceRefused implements Exception {
   final InvoiceProblem problem;
 }
 
-/// What a draft remembers besides its dates: timesheets the owner left out, and each line's discount or monthly fee,
-/// by line key. Everything else is read from the timesheets as they stand.
+/// A line the owner writes on a draft, such as transport, that no timesheet holds (INV-01).
+class InvoiceItem {
+  const InvoiceItem({required this.key, required this.description, required this.quantity, required this.unitPriceFils});
+
+  factory InvoiceItem.fromJson(Map<String, Object?> j) => InvoiceItem(key: j['key'] as String, description: j['description'] as String, quantity: j['quantity'] as int, unitPriceFils: j['price'] as int);
+
+  final String key;
+  final String description;
+  final int quantity;
+  final int unitPriceFils;
+
+  Map<String, Object?> toJson() => {'key': key, 'description': description, 'quantity': quantity, 'price': unitPriceFils};
+}
+
+/// What a draft remembers besides its dates: timesheets the owner left out, each line's discount or monthly fee by line
+/// key, and lines the owner wrote. Everything else is read from the timesheets as they stand.
 class InvoiceDraft {
-  const InvoiceDraft({this.skipped = const {}, this.discounts = const {}, this.fees = const {}});
+  const InvoiceDraft({this.skipped = const {}, this.discounts = const {}, this.fees = const {}, this.items = const []});
 
   factory InvoiceDraft.fromJson(String json) {
     final j = jsonDecode(json) as Map<String, Object?>;
@@ -34,15 +48,23 @@ class InvoiceDraft {
       skipped: {...(j['skipped'] as List? ?? const []).cast<String>()},
       discounts: (j['discounts'] as Map? ?? const {}).cast<String, int>(),
       fees: (j['fees'] as Map? ?? const {}).cast<String, int>(),
+      items: [for (final i in j['items'] as List? ?? const []) InvoiceItem.fromJson((i as Map).cast<String, Object?>())],
     );
   }
 
   final Set<String> skipped;
   final Map<String, int> discounts;
   final Map<String, int> fees;
+  final List<InvoiceItem> items;
 
-  String toJson() => jsonEncode({'skipped': [...skipped], 'discounts': discounts, 'fees': fees});
+  InvoiceDraft copyWith({Set<String>? skipped, Map<String, int>? discounts, Map<String, int>? fees, List<InvoiceItem>? items}) =>
+      InvoiceDraft(skipped: skipped ?? this.skipped, discounts: discounts ?? this.discounts, fees: fees ?? this.fees, items: items ?? this.items);
+
+  String toJson() => jsonEncode({'skipped': [...skipped], 'discounts': discounts, 'fees': fees, 'items': [for (final i in items) i.toJson()]});
 }
+
+/// How an item line, or a credit for an amount, is stored in place of a `RateBasis`.
+const itemBasis = 'item';
 
 /// One invoice line: in a draft, worked out from timesheet rows that can still be billed; once issued, as stored.
 class InvoiceLineView {
@@ -70,9 +92,11 @@ class InvoiceLineView {
   final String? timesheetNumber;
   final String? siteName;
   final String? trade;
-  final RateBasis basis;
 
-  /// Minutes of hours, half days, half shifts, or workers on a monthly fee.
+  /// Null on a line the owner wrote, or a credit for an amount.
+  final RateBasis? basis;
+
+  /// Minutes of hours, half days, half shifts, workers on a monthly fee, or items.
   final int quantity;
   final int unitPriceFils;
   final int amountFils;
@@ -81,13 +105,14 @@ class InvoiceLineView {
   final String? toDate;
   final LineTax tax;
 
-  /// Set once issued, as it was printed.
+  /// Set once issued, as it was printed, and on a line the owner wrote.
   final String? description;
 
   /// The timesheet rows a draft line would charge.
   final List<TimesheetLine> sources;
 
-  bool get isFee => isPeriodBasis(basis);
+  bool get isFee => basis != null && isPeriodBasis(basis!);
+  bool get isItem => basis == null;
 }
 
 /// A timesheet a draft reads from, and what it holds in the draft's dates.
@@ -107,7 +132,19 @@ class InvoiceSource {
 
 /// One invoice or credit note as the screen and the paper show it. Totals always derive from its lines (REP-08).
 class InvoiceView {
-  const InvoiceView({required this.invoice, required this.client, required this.siteName, required this.lines, required this.sources, required this.vatRegistered, required this.parties, this.creditNote, this.credited});
+  const InvoiceView({
+    required this.invoice,
+    required this.client,
+    required this.siteName,
+    required this.lines,
+    required this.sources,
+    required this.vatRegistered,
+    required this.parties,
+    this.creditNotes = const [],
+    this.credited = const LineTax(netFils: 0, vatFils: 0),
+    this.original,
+    this.changes = const [],
+  });
 
   final Invoice invoice;
   final Client client;
@@ -123,11 +160,17 @@ class InvoiceView {
   /// Both parties as issued, or as they stand today for a draft.
   final InvoiceParties parties;
 
-  /// The credit note that took this invoice back.
-  final Invoice? creditNote;
+  /// The credit notes that took this invoice back, in part or whole, oldest first.
+  final List<Invoice> creditNotes;
+
+  /// What they took back between them.
+  final LineTax credited;
 
   /// The invoice this credit note took back.
-  final Invoice? credited;
+  final Invoice? original;
+
+  /// Work this invoice charged whose timesheet now says another figure. A credit note and a new invoice put it right.
+  final List<BillingChange> changes;
 
   InvoiceStatus get status => InvoiceStatus.values.byName(invoice.status);
   bool get isCreditNote => invoice.kind == 'credit';
@@ -135,6 +178,9 @@ class InvoiceView {
   int get bps => status != InvoiceStatus.draft ? invoice.vatBps : (vatRegistered ? vatBpsOf(category) : 0);
   bool get taxInvoice => isTaxInvoice(category, registered: vatRegistered);
   LineTax get totals => invoiceTotals(lines.map((l) => l.tax));
+
+  /// What is left of an invoice once its credit notes are taken off.
+  int get leftFils => totals.totalFils - credited.totalFils;
 }
 
 /// Who an invoice is from and to, as it stood on the day it issued (INV-02).
@@ -274,7 +320,27 @@ extension InvoiceOps on TenantDatabase {
       return 0;
     }
 
-    return (lines..sort(order), sources);
+    final items = [
+      for (final item in draft.items)
+        InvoiceLineView(
+          key: item.key,
+          timesheetId: null,
+          timesheetNumber: null,
+          siteName: null,
+          trade: null,
+          basis: null,
+          quantity: item.quantity,
+          unitPriceFils: item.unitPriceFils,
+          amountFils: item.quantity * item.unitPriceFils,
+          discountFils: 0,
+          fromDate: null,
+          toDate: null,
+          tax: lineTax(item.quantity * item.unitPriceFils, bps: bps, inclusive: inv.pricesIncludeVat),
+          description: item.description,
+        ),
+    ];
+    // Lines the owner wrote come last, in the order written.
+    return ([...lines..sort(order), ...items], sources);
   }
 
   TsLine _tsLine(TimesheetLine l) => TsLine(
@@ -313,10 +379,7 @@ extension InvoiceOps on TenantDatabase {
     final inv = await _invoice(id);
     final client = await (select(clients)..where((c) => c.id.equals(inv.clientId))).getSingle();
     final site = inv.siteId == null ? null : await (select(sites)..where((s) => s.id.equals(inv.siteId!))).getSingle();
-    final linked = await (select(invoices)..where((i) => i.creditsInvoiceId.equals(id) | i.id.equalsNullable(inv.creditsInvoiceId))).get();
-    Invoice? find(bool Function(Invoice i) test) => linked.where(test).firstOrNull;
-    final creditNote = find((i) => i.creditsInvoiceId == id);
-    final credited = find((i) => i.id == inv.creditsInvoiceId);
+    final original = inv.creditsInvoiceId == null ? null : await _invoice(inv.creditsInvoiceId!);
 
     if (inv.status == InvoiceStatus.draft.name) {
       final (registered, parties) = await _partiesToday(client);
@@ -328,6 +391,10 @@ extension InvoiceOps on TenantDatabase {
           ..orderBy([(l) => OrderingTerm.asc(l.position)]))
         .get();
     final numbers = {for (final t in await (select(timesheets)..where((t) => t.id.isIn(stored.map((l) => l.timesheetId).nonNulls))).get()) t.id: t.number};
+    final notes = await (select(invoices)
+          ..where((i) => i.creditsInvoiceId.equals(id))
+          ..orderBy([(i) => OrderingTerm.asc(i.year), (i) => OrderingTerm.asc(i.seq)]))
+        .get();
     return InvoiceView(
       invoice: inv,
       client: client,
@@ -340,7 +407,7 @@ extension InvoiceOps on TenantDatabase {
             timesheetNumber: numbers[l.timesheetId],
             siteName: null,
             trade: null,
-            basis: RateBasis.values.byName(l.basis),
+            basis: l.basis == itemBasis ? null : RateBasis.values.byName(l.basis),
             quantity: l.quantity,
             unitPriceFils: l.unitPriceFils,
             amountFils: l.amountFils,
@@ -354,9 +421,18 @@ extension InvoiceOps on TenantDatabase {
       sources: const [],
       vatRegistered: inv.vatRegistered,
       parties: InvoiceParties.fromJson(inv.parties!),
-      creditNote: creditNote,
-      credited: credited,
+      creditNotes: notes,
+      credited: await _creditedBy(notes),
+      original: original,
+      changes: inv.kind == 'invoice' ? await billingChanges(invoiceId: id) : const [],
     );
+  }
+
+  /// What these credit notes took back between them.
+  Future<LineTax> _creditedBy(List<Invoice> notes) async {
+    if (notes.isEmpty) return const LineTax(netFils: 0, vatFils: 0);
+    final lines = await (select(invoiceLines)..where((l) => l.invoiceId.isIn(notes.map((n) => n.id)))).get();
+    return invoiceTotals(lines.map((l) => LineTax(netFils: l.netFils, vatFils: l.vatFils)));
   }
 
   /// Sends a fresh copy whenever anything behind it changes.
@@ -524,8 +600,8 @@ extension InvoiceOps on TenantDatabase {
             invoiceId: invoiceId,
             position: i + 1,
             timesheetId: Value(l.timesheetId),
-            description: describe(l),
-            basis: l.basis.name,
+            description: l.description ?? describe(l),
+            basis: l.basis?.name ?? itemBasis,
             quantity: l.quantity,
             unitPriceFils: l.unitPriceFils,
             amountFils: l.amountFils,
@@ -537,9 +613,11 @@ extension InvoiceOps on TenantDatabase {
     });
   }
 
-  /// Takes an issued invoice back whole with a credit note dated today, CN-2026-0003, which carries the same lines and
-  /// VAT. The work it charged can go on a new invoice (INV-06). The invoice itself stays as issued.
-  Future<String> creditInvoice(String id, {required String reason, required String operationId}) async {
+  /// Takes back an issued invoice with a credit note dated today, CN-2026-0003 (INV-06). Whole, it carries the same
+  /// lines and VAT, or one line for what earlier credit notes left, and the work it charged can go on a new invoice.
+  /// For [amountFils], before VAT unless the invoice's prices include it, it is one line worded as [reason], and the
+  /// work stays charged. The invoice itself stays as issued.
+  Future<String> creditInvoice(String id, {required String reason, int? amountFils, required String operationId}) async {
     final creditId = newUuid();
     await applyOperation(
       operationId: operationId,
@@ -552,6 +630,32 @@ extension InvoiceOps on TenantDatabase {
         final inv = await _invoice(id);
         if (inv.status != InvoiceStatus.issued.name || inv.kind != 'invoice') throw const InvoiceRefused(InvoiceProblem.wrongStep);
         final view = await invoiceView(id);
+        InvoiceLineView single(LineTax tax) => InvoiceLineView(
+          key: '',
+          timesheetId: null,
+          timesheetNumber: null,
+          siteName: null,
+          trade: null,
+          basis: null,
+          quantity: 1,
+          unitPriceFils: inv.pricesIncludeVat ? tax.totalFils : tax.netFils,
+          amountFils: inv.pricesIncludeVat ? tax.totalFils : tax.netFils,
+          discountFils: 0,
+          fromDate: null,
+          toDate: null,
+          tax: tax,
+          description: reason,
+        );
+        final left = LineTax(netFils: view.totals.netFils - view.credited.netFils, vatFils: view.totals.vatFils - view.credited.vatFils);
+        final whole = amountFils == null;
+        final lines = switch (amountFils) {
+          null when view.creditNotes.isEmpty => view.lines,
+          null => [single(left)],
+          final int fils => [single(lineTax(fils, bps: inv.vatBps, inclusive: inv.pricesIncludeVat))],
+        };
+        final taken = invoiceTotals(lines.map((l) => l.tax)).totalFils;
+        if (taken <= 0 || taken > left.totalFils) throw const InvoiceRefused(InvoiceProblem.creditTooBig);
+
         final now = DateTime.now().toUtc();
         final today = dubaiToday(now);
         final year = int.parse(today.substring(0, 4));
@@ -584,12 +688,14 @@ extension InvoiceOps on TenantDatabase {
             reason: Value(reason),
           ),
         );
-        await _storeLines(creditId, view.lines, describe: (l) => l.description!, operationId: operationId);
-        // The issued row itself is the one other write: the status trigger lets nothing else through.
-        await (update(invoices)..where((i) => i.id.equals(id))).write(
-          InvoicesCompanion(status: Value(InvoiceStatus.credited.name), version: Value(inv.version + 1), updatedAtUtc: Value(now)),
-        );
-        await releaseBilling(id, reason: reason, operationId: newUuid());
+        await _storeLines(creditId, lines, describe: (l) => l.description!, operationId: operationId);
+        if (whole) {
+          // The issued row itself is the one other write: the status trigger lets nothing else through.
+          await (update(invoices)..where((i) => i.id.equals(id))).write(
+            InvoicesCompanion(status: Value(InvoiceStatus.credited.name), version: Value(inv.version + 1), updatedAtUtc: Value(now)),
+          );
+          await releaseBilling(id, reason: reason, operationId: newUuid());
+        }
         return (await _invoice(creditId)).toJson();
       },
     );
@@ -667,7 +773,8 @@ extension InvoiceOps on TenantDatabase {
 }
 
 /// How many of a line's unit it bills, as printed: 525.50 hours, 12.5 days, 3 workers.
-String quantityText(RateBasis basis, int quantity) => switch (basis) {
+String quantityText(RateBasis? basis, int quantity) => switch (basis) {
+  null => '$quantity',
   RateBasis.hour => '${quantity ~/ 60}.${divRoundHalfUp(quantity % 60 * 100, 60).toString().padLeft(2, '0')}',
   RateBasis.day || RateBasis.shift => showHalves(quantity),
   RateBasis.month || RateBasis.monthPerWorker || RateBasis.monthFixed => '$quantity',

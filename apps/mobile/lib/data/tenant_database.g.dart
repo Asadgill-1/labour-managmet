@@ -21356,7 +21356,7 @@ class Invoice extends DataClass implements Insertable<Invoice> {
   final String fromDate;
   final String toDate;
 
-  /// JSON while a draft: timesheets left out, and each line's discount or monthly fee.
+  /// JSON while a draft: timesheets left out, each line's discount or monthly fee, and lines the owner wrote.
   final String draft;
   final String? poReference;
 
@@ -22631,10 +22631,10 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
   final String? timesheetId;
   final String description;
 
-  /// A `RateBasis` by name, which is the unit.
+  /// A `RateBasis` by name, which is the unit, or 'item' for a line the owner wrote or a credit for an amount.
   final String basis;
 
-  /// In the unit's own count: minutes of hours, half days, half shifts, or workers on a monthly fee.
+  /// In the unit's own count: minutes of hours, half days, half shifts, workers on a monthly fee, or items.
   final int quantity;
   final int unitPriceFils;
 
@@ -29197,10 +29197,6 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     'CREATE TRIGGER invoice_line_no_delete BEFORE DELETE ON invoice_lines BEGIN SELECT RAISE (ABORT, \'an invoice line stays on record\');END',
     'invoice_line_no_delete',
   );
-  late final Index oneCreditNote = Index(
-    'one_credit_note',
-    'CREATE UNIQUE INDEX one_credit_note ON invoices (credits_invoice_id) WHERE credits_invoice_id IS NOT NULL',
-  );
   late final $TenantProfilesTable tenantProfiles = $TenantProfilesTable(this);
   late final $PayContractsTable payContracts = $PayContractsTable(this);
   late final $BillingContractsTable billingContracts = $BillingContractsTable(
@@ -29341,7 +29337,6 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     invoiceLines,
     invoiceLineNoEdit,
     invoiceLineNoDelete,
-    oneCreditNote,
     tenantProfiles,
     payContracts,
     billingContracts,

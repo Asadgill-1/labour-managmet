@@ -314,6 +314,3 @@ END;
 CREATE TRIGGER invoice_line_no_delete BEFORE DELETE ON invoice_lines BEGIN
   SELECT RAISE(ABORT, 'an invoice line stays on record');
 END;
-
--- A credit note takes back a whole invoice, so one is enough (INV-06).
-CREATE UNIQUE INDEX one_credit_note ON invoices (credits_invoice_id) WHERE credits_invoice_id IS NOT NULL;

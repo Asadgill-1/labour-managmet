@@ -77,7 +77,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 14;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -208,6 +208,8 @@ class TenantDatabase extends _$TenantDatabase {
           await m.createTrigger(trigger);
         }
       },
+      // An invoice can now have several credit notes, each for part of it (INV-06).
+      from13To14: (m, schema) => m.drop(Index('one_credit_note', '')),
     ),
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');

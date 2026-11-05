@@ -1539,7 +1539,7 @@
     }
   },
   "invCredit": "Credit note",
-  "invCreditTitle": "Take back the whole invoice",
+  "invCreditTitle": "Credit note",
   "invCreditReason": "Why it is taken back",
   "invCreditHelp": "A credit note dated today takes back every line and its VAT. The invoice stays on record, and its work can go on a new invoice.",
   "invCreditConfirm": "Make credit note",
@@ -1693,6 +1693,109 @@
   "@invOpenInvoice": {
     "placeholders": {
       "number": {
+        "type": "String"
+      }
+    }
+  },
+  "invItemQuantity": "{count} × {price}",
+  "@invItemQuantity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "invAddLine": "Add a line",
+  "invItemTitle": "Line",
+  "invItemHelp": "For something no timesheet holds, such as transport. VAT goes on it at this invoice's rate.",
+  "invItemDescription": "What it is for",
+  "invItemCount": "How many",
+  "invItemCountInvalid": "Write a whole number, 1 or more",
+  "invItemPrice": "Price of one (AED)",
+  "invItemRemove": "Remove this line",
+  "invReissue": "New invoice for these dates",
+  "invChanged": "{count, plural, =1{1 row changed} other{{count} rows changed}} after this invoice was issued, by {amount} in all. Make a credit note for the whole invoice, then a new invoice. If the timesheet shows changed attendance, approve its new revision first.",
+  "@invChanged": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invCreditedSoFar": "{count, plural, =1{Credit note} other{{count} credit notes}}",
+  "@invCreditedSoFar": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invLeft": "Left after credit notes",
+  "invCreditWhole": "Whole invoice",
+  "invCreditPart": "An amount",
+  "invCreditRestHelp": "Takes back the {amount} that earlier credit notes left. Its work can then go on a new invoice.",
+  "@invCreditRestHelp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invCreditPartHelp": "Takes back part of the invoice, up to {amount}, such as a rate agreed lower later. The work stays charged on this invoice.",
+  "@invCreditPartHelp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invCreditAmount": "Amount (AED)",
+  "invCreditAmountBeforeVat": "Amount before VAT (AED)",
+  "invCreditAmountWithVat": "Amount with VAT (AED)",
+  "invCreditTooBig": "More than is left of this invoice: {amount} with VAT.",
+  "@invCreditTooBig": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invCreditNothingLeft": "There is not that much left of this invoice to take back.",
+  "findingChangedAfterInvoice": "{count} timesheets have attendance that changed after it was invoiced: {names}. Approve their new revisions, then put the invoices right.",
+  "@findingChangedAfterInvoice": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "findingInvoiceOutOfDate": "{count} invoices charge other figures than their timesheets now say: {names}. Make a credit note for each, then a new invoice.",
+  "@findingInvoiceOutOfDate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "invNotePartCredited": "Credit notes took back {amount}. {left} is left.",
+  "@invNotePartCredited": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "left": {
         "type": "String"
       }
     }

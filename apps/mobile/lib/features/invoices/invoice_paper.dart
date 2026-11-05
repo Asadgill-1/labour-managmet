@@ -36,13 +36,15 @@ String invoiceTitle(AppLocalizations words, InvoiceView v) => switch ((v.isCredi
 
 /// How a line is worded on the paper, and stored as it was printed.
 String invoiceLineText(AppLocalizations words, InvoiceLineView l) {
+  if (l.isItem) return l.description!;
   final dates = l.fromDate == null ? null : words.dateFromTo(showDate(l.fromDate!), showDate(l.toDate!));
-  final what = l.isFee ? [words.invPLineFee, basisLabel(words, l.basis)] : [words.invPLineLabour, ?l.siteName, ?l.trade];
+  final what = l.isFee ? [words.invPLineFee, basisLabel(words, l.basis!)] : [words.invPLineLabour, ?l.siteName, ?l.trade];
   return '${what.join(', ')} (${[?dates, ?l.timesheetNumber].join(', ')})';
 }
 
-/// The unit a line counts in.
-String unitText(AppLocalizations words, RateBasis basis) => switch (basis) {
+/// The unit a line counts in. A line the owner wrote counts in nothing named.
+String unitText(AppLocalizations words, RateBasis? basis) => switch (basis) {
+  null => '',
   RateBasis.hour => words.invPUnitHour,
   RateBasis.day => words.invPUnitDay,
   RateBasis.shift => words.invPUnitShift,
@@ -51,13 +53,17 @@ String unitText(AppLocalizations words, RateBasis basis) => switch (basis) {
 };
 
 /// A line's quantity on screen, in the app's language.
-String quantityLabel(AppLocalizations l10n, InvoiceLineView l) => switch (l.basis) {
-  RateBasis.hour => billableText(l10n, l.basis, TsUnits(minutes: l.quantity)),
-  RateBasis.day => billableText(l10n, l.basis, TsUnits(dayHalves: l.quantity)),
-  RateBasis.shift => billableText(l10n, l.basis, TsUnits(shiftHalves: l.quantity)),
-  RateBasis.monthFixed => basisLabel(l10n, l.basis),
-  RateBasis.month || RateBasis.monthPerWorker => '${basisLabel(l10n, l.basis)}, ${l10n.tsPeople(l.quantity)}',
-};
+String quantityLabel(AppLocalizations l10n, InvoiceLineView l) {
+  final basis = l.basis;
+  if (basis == null) return l10n.invItemQuantity(l.quantity, formatAed(l.unitPriceFils));
+  return switch (basis) {
+    RateBasis.hour => billableText(l10n, basis, TsUnits(minutes: l.quantity)),
+    RateBasis.day => billableText(l10n, basis, TsUnits(dayHalves: l.quantity)),
+    RateBasis.shift => billableText(l10n, basis, TsUnits(shiftHalves: l.quantity)),
+    RateBasis.monthFixed => basisLabel(l10n, basis),
+    RateBasis.month || RateBasis.monthPerWorker => '${basisLabel(l10n, basis)}, ${l10n.tsPeople(l.quantity)}',
+  };
+}
 
 String _categoryText(AppLocalizations words, VatCategory c) => switch (c) {
   VatCategory.standard => '',
@@ -162,7 +168,7 @@ InvoicePaper invoicePaper(InvoiceView v, AppLocalizations words) {
       if (vat && p.supplierTrn != null) (words.invPSupplierTrn, p.supplierTrn!),
       if (inv.issueDate != null) (words.invPIssueDate, showDate(inv.issueDate!)),
       (words.invPSupplyPeriod, words.dateFromTo(showDate(inv.fromDate), showDate(inv.toDate))),
-      if (v.credited != null) (words.invPAgainst, '${v.credited!.number} ${showDate(v.credited!.issueDate!)}'),
+      if (v.original != null) (words.invPAgainst, '${v.original!.number} ${showDate(v.original!.issueDate!)}'),
       if (!v.isCreditNote && inv.dueDate != null) (words.invPDueDate, showDate(inv.dueDate!)),
       if (inv.poReference != null) (words.invPReference, inv.poReference!),
     ],

@@ -125,6 +125,31 @@ void main() {
       expect((p.bottomLabel, p.bottomAmount, p.bank), ('Total credited', 'AED 141.75', null));
     });
 
+    test('a line the owner wrote prints as written, with no unit', () async {
+      await seed(db);
+      await work(db, '2020-10-05');
+      final sheet = await db.createTimesheet(clientId: emaar, from: from, to: to, operationId: newUuid());
+      await db.approveTimesheet((await db.timesheetView(sheet)).revision.id, operationId: newUuid());
+      final id = await db.createInvoice(clientId: emaar, from: from, to: to, operationId: newUuid());
+      const items = [InvoiceItem(key: 'item|1', description: 'Transport, October', quantity: 2, unitPriceFils: 25000)];
+      await db.saveInvoiceDraft(id, InvoicesCompanion(draft: Value(const InvoiceDraft(items: items).toJson())), operationId: newUuid());
+      await db.issueInvoice(id, describe: (l) => invoiceLineText(paperWords, l), operationId: newUuid());
+      final p = invoicePaper(await db.invoiceView(id), paperWords);
+      expect(p.rows.last, ['2', 'Transport, October', '2', '', '250.00', '500.00', '5%', '25.00', '525.00']);
+      expect(p.bottomAmount, 'AED 666.75');
+    });
+
+    test('a credit note for an amount prints one line, worded as its reason', () async {
+      await seed(db);
+      await work(db, '2020-10-05');
+      final credit = await db.creditInvoice(await issued(db), reason: 'Rate agreed lower', amountFils: 3000, operationId: newUuid());
+      final v = await db.invoiceView(credit);
+      final p = invoicePaper(v, paperWords);
+      expect(invoiceTitle(paperWords, v), 'Tax Credit Note');
+      expect(p.rows.single, ['1', 'Rate agreed lower', '1', '', '30.00', '30.00', '5%', '1.50', '31.50']);
+      expect(p.bottomAmount, 'AED 31.50');
+    });
+
     test('the PDF draws on one page in the shared frame, and keeps its number', () async {
       await seed(db);
       await work(db, '2020-10-05');
@@ -175,6 +200,17 @@ void main() {
     await settle(tester);
     expect(find.text('AED 105.00'), findsWidgets, reason: '100 and 5% VAT');
 
+    // A line no timesheet holds, such as transport.
+    await tester.ensureVisible(find.text(words.invAddLine));
+    await tester.tap(find.text(words.invAddLine));
+    await settle(tester);
+    await tester.enterText(find.widgetWithText(TextFormField, words.invItemDescription), 'Transport');
+    await tester.enterText(find.widgetWithText(TextFormField, words.invItemPrice), '50');
+    await tester.tap(find.text(words.save));
+    await settle(tester);
+    expect(find.text('Transport'), findsOneWidget);
+    expect(find.text('AED 157.50'), findsWidgets, reason: '150 and 5% VAT');
+
     // Issuing asks first, then gives the number.
     await tester.tap(find.text(words.invIssue));
     await settle(tester);
@@ -186,16 +222,31 @@ void main() {
     expect(find.text(words.invShareBoth), findsOneWidget);
     expect(find.text(words.invPreview), findsNothing);
 
-    // Taken back whole, with a reason.
+    // Part of it taken back, with a reason, then the rest.
     await tester.tap(find.text(words.invCredit));
     await settle(tester);
     expect(find.text(words.invCreditHelp), findsOneWidget);
+    await tester.tap(find.text(words.invCreditPart));
+    await settle(tester);
+    await tester.enterText(find.widgetWithText(TextFormField, words.invCreditAmountBeforeVat), '10');
+    await tester.enterText(find.widgetWithText(TextFormField, words.invCreditReason), 'Rate agreed lower');
+    await tester.tap(find.text(words.invCreditConfirm).last);
+    await settle(tester);
+    expect(find.text(words.invOpenCreditNote('CN-$year-0001')), findsOneWidget);
+    expect(find.text(words.invStatusCredited), findsNothing);
+
+    await tester.tap(find.text(words.invCredit));
+    await settle(tester);
+    await tester.tap(find.text(words.invCreditWhole));
+    await settle(tester);
+    expect(find.text(words.invCreditRestHelp('AED 147.00')), findsOneWidget, reason: '157.50 less 10.50');
     await tester.enterText(find.widgetWithText(TextFormField, words.invCreditReason), 'Wrong rate');
     await tester.tap(find.text(words.invCreditConfirm).last);
     await settle(tester);
     expect(find.text(words.invStatusCredited), findsWidgets);
-    expect(find.textContaining(words.invNoteCredited('CN-$year-0001')), findsOneWidget);
+    expect(find.textContaining(words.invNoteCredited('CN-$year-0002')), findsOneWidget);
     expect(find.text(words.invCredit), findsNothing);
+    expect(find.text(words.invReissue), findsOneWidget);
     await shutDown(tester, app);
   });
 }

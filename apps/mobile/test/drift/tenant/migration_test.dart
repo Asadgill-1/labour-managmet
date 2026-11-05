@@ -139,6 +139,28 @@ void main() {
     await expectLater(db.delete(db.salaryAllocations).go(), throwsA(anything));
   });
 
+  test('a phone on version 13 upgrades: its invoice stays as issued, and can take several credit notes for amounts (INV-06)', () async {
+    final old = await verifier.schemaAt(13);
+    old.rawDatabase.execute('''
+      INSERT INTO tenant_profiles (id, $commonColumns, legal_name) VALUES ('p1', $common, 'Labour');
+      INSERT INTO clients (id, $commonColumns, name) VALUES ('c1', $common, 'ATE');
+      INSERT INTO invoices (id, $commonColumns, client_id, status, from_date, to_date, issue_date, due_date, year, seq, number, parties)
+      VALUES ('i1', $common, 'c1', 'issued', '2026-10-01', '2026-10-31', '2026-11-01', '2026-11-01', 2026, 1, 'INV-2026-0001', '{"supplierName":"Labour","customerName":"ATE"}');
+      INSERT INTO invoice_lines (id, $commonColumns, invoice_id, position, description, basis, quantity, unit_price_fils, amount_fils, net_fils, vat_fils)
+      VALUES ('l1', $common, 'i1', 1, 'Manpower supply', 'day', 2, 1500, 3000, 3000, 0);
+    ''');
+
+    final db = TenantDatabase(old.newConnection(), tenantId: 't', deviceId: 'device');
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, db.schemaVersion);
+
+    expect((await db.invoiceView('i1')).totals.totalFils, 3000);
+    await db.creditInvoice('i1', reason: 'Rate agreed lower', amountFils: 500, operationId: newUuid());
+    await db.creditInvoice('i1', reason: 'Rate agreed lower again', amountFils: 500, operationId: newUuid());
+    final v = await db.invoiceView('i1');
+    expect((v.status, v.creditNotes.length, v.leftFils), (InvoiceStatus.issued, 2, 2000));
+  });
+
   test('a phone on version 12 upgrades: its attendance stays, and an invoice bills it once, for good (INV-01, INV-06)', () async {
     final old = await verifier.schemaAt(12);
     old.rawDatabase.execute('''

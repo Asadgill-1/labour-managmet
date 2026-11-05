@@ -2688,7 +2688,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invCredit => 'Credit note';
 
   @override
-  String get invCreditTitle => 'Take back the whole invoice';
+  String get invCreditTitle => 'Credit note';
 
   @override
   String get invCreditReason => 'Why it is taken back';
@@ -2983,6 +2983,113 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String invOpenInvoice(String number) {
     return 'See invoice $number';
+  }
+
+  @override
+  String invItemQuantity(int count, String price) {
+    return '$count × $price';
+  }
+
+  @override
+  String get invAddLine => 'Add a line';
+
+  @override
+  String get invItemTitle => 'Line';
+
+  @override
+  String get invItemHelp =>
+      'For something no timesheet holds, such as transport. VAT goes on it at this invoice\'s rate.';
+
+  @override
+  String get invItemDescription => 'What it is for';
+
+  @override
+  String get invItemCount => 'How many';
+
+  @override
+  String get invItemCountInvalid => 'Write a whole number, 1 or more';
+
+  @override
+  String get invItemPrice => 'Price of one (AED)';
+
+  @override
+  String get invItemRemove => 'Remove this line';
+
+  @override
+  String get invReissue => 'New invoice for these dates';
+
+  @override
+  String invChanged(int count, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows changed',
+      one: '1 row changed',
+    );
+    return '$_temp0 after this invoice was issued, by $amount in all. Make a credit note for the whole invoice, then a new invoice. If the timesheet shows changed attendance, approve its new revision first.';
+  }
+
+  @override
+  String invCreditedSoFar(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count credit notes',
+      one: 'Credit note',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get invLeft => 'Left after credit notes';
+
+  @override
+  String get invCreditWhole => 'Whole invoice';
+
+  @override
+  String get invCreditPart => 'An amount';
+
+  @override
+  String invCreditRestHelp(String amount) {
+    return 'Takes back the $amount that earlier credit notes left. Its work can then go on a new invoice.';
+  }
+
+  @override
+  String invCreditPartHelp(String amount) {
+    return 'Takes back part of the invoice, up to $amount, such as a rate agreed lower later. The work stays charged on this invoice.';
+  }
+
+  @override
+  String get invCreditAmount => 'Amount (AED)';
+
+  @override
+  String get invCreditAmountBeforeVat => 'Amount before VAT (AED)';
+
+  @override
+  String get invCreditAmountWithVat => 'Amount with VAT (AED)';
+
+  @override
+  String invCreditTooBig(String amount) {
+    return 'More than is left of this invoice: $amount with VAT.';
+  }
+
+  @override
+  String get invCreditNothingLeft =>
+      'There is not that much left of this invoice to take back.';
+
+  @override
+  String findingChangedAfterInvoice(int count, String names) {
+    return '$count timesheets have attendance that changed after it was invoiced: $names. Approve their new revisions, then put the invoices right.';
+  }
+
+  @override
+  String findingInvoiceOutOfDate(int count, String names) {
+    return '$count invoices charge other figures than their timesheets now say: $names. Make a credit note for each, then a new invoice.';
+  }
+
+  @override
+  String invNotePartCredited(String amount, String left) {
+    return 'Credit notes took back $amount. $left is left.';
   }
 }
 
@@ -5628,7 +5735,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get invCredit => 'Credit note banayein';
 
   @override
-  String get invCreditTitle => 'Poora invoice wapas lein';
+  String get invCreditTitle => 'Credit note';
 
   @override
   String get invCreditReason => 'Wapas lene ki wajah';
@@ -5784,5 +5891,112 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String invOpenInvoice(String number) {
     return 'Invoice $number dekhein';
+  }
+
+  @override
+  String invItemQuantity(int count, String price) {
+    return '$count × $price';
+  }
+
+  @override
+  String get invAddLine => 'Line jodein';
+
+  @override
+  String get invItemTitle => 'Line';
+
+  @override
+  String get invItemHelp =>
+      'Jo kisi timesheet mein nahin, jaise transport. Is par is invoice ke rate se VAT lagta hai.';
+
+  @override
+  String get invItemDescription => 'Kis cheez ka';
+
+  @override
+  String get invItemCount => 'Kitne';
+
+  @override
+  String get invItemCountInvalid => '1 ya zyada, poora number likhein';
+
+  @override
+  String get invItemPrice => 'Aik ki qeemat (AED)';
+
+  @override
+  String get invItemRemove => 'Yeh line hatayein';
+
+  @override
+  String get invReissue => 'In tareekhon ka naya invoice';
+
+  @override
+  String invChanged(int count, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows badlin',
+      one: '1 row badli',
+    );
+    return 'Is invoice ke baad $_temp0, kul farq $amount. Poore invoice ka credit note banayein, phir naya invoice. Agar timesheet par badli hazri dikhe to pehle us ka naya revision approve karein.';
+  }
+
+  @override
+  String invCreditedSoFar(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count credit notes',
+      one: 'Credit note',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get invLeft => 'Credit notes ke baad baqi';
+
+  @override
+  String get invCreditWhole => 'Poora invoice';
+
+  @override
+  String get invCreditPart => 'Kuch raqam';
+
+  @override
+  String invCreditRestHelp(String amount) {
+    return 'Pichle credit notes ke baad baqi $amount wapas leta hai. Phir is ka kaam naye invoice par ja sakta hai.';
+  }
+
+  @override
+  String invCreditPartHelp(String amount) {
+    return 'Invoice ka kuch hissa wapas leta hai, $amount tak, jaise baad mein kam tay hua rate. Kaam isi invoice par rehta hai.';
+  }
+
+  @override
+  String get invCreditAmount => 'Raqam (AED)';
+
+  @override
+  String get invCreditAmountBeforeVat => 'Raqam, VAT se pehle (AED)';
+
+  @override
+  String get invCreditAmountWithVat => 'Raqam, VAT samait (AED)';
+
+  @override
+  String invCreditTooBig(String amount) {
+    return 'Is invoice mein itna baqi nahin. Baqi $amount, VAT samait.';
+  }
+
+  @override
+  String get invCreditNothingLeft =>
+      'Is invoice mein itni raqam baqi nahin jo wapas ho sake.';
+
+  @override
+  String findingChangedAfterInvoice(int count, String names) {
+    return '$count timesheets ki hazri invoice ke baad badli: $names. Un ke naye revision approve karein, phir invoice theek karein.';
+  }
+
+  @override
+  String findingInvoiceOutOfDate(int count, String names) {
+    return '$count invoices par timesheet se alag raqam hai: $names. Har ek ka credit note banayein, phir naya invoice.';
+  }
+
+  @override
+  String invNotePartCredited(String amount, String left) {
+    return 'Credit notes ne $amount wapas liya. Baqi $left.';
   }
 }

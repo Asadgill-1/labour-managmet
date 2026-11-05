@@ -18,7 +18,7 @@ import 'package:labour_app/l10n/app_localizations.dart';
 import 'support.dart';
 import 'timesheets_test.dart' as ts;
 
-String _describe(InvoiceLineView l) => 'Manpower ${l.basis.name} ${l.unitPriceFils}';
+String _describe(InvoiceLineView l) => 'Manpower ${l.basis?.name} ${l.unitPriceFils}';
 
 final _year = int.parse(dubaiToday(DateTime.now()).substring(0, 4));
 
@@ -269,8 +269,8 @@ void main() {
       final original = await db.invoiceView(id);
       final note = await db.invoiceView(credit);
       expect(original.status, InvoiceStatus.credited);
-      expect(original.creditNote!.id, credit);
-      expect((note.isCreditNote, note.invoice.number, note.invoice.reason, note.credited!.id), (true, 'CN-$_year-0001', 'Wrong hours', id));
+      expect(original.creditNotes.single.id, credit);
+      expect((note.isCreditNote, note.invoice.number, note.invoice.reason, note.original!.id), (true, 'CN-$_year-0001', 'Wrong hours', id));
       expect((note.totals.netFils, note.totals.vatFils, note.parties.customerName), (original.totals.netFils, original.totals.vatFils, 'Emaar'));
       expect(await db.unbilledLines(sheet), hasLength(1));
 
@@ -280,6 +280,59 @@ void main() {
       await expectLater(db.creditInvoice(id, reason: 'Twice', operationId: newUuid()), refused(InvoiceProblem.wrongStep));
       await expectLater(db.creditInvoice(credit, reason: 'A credit of a credit', operationId: newUuid()), refused(InvoiceProblem.wrongStep));
       await expectLater(db.customStatement("UPDATE invoices SET status = 'issued' WHERE id = '$id'"), throwsA(anything));
+    });
+
+    test('for an amount takes back part with its VAT, leaves the work charged, and the rest can follow', () async {
+      await register();
+      await ts.work(db, '2020-10-05');
+      final sheet = await approved();
+      final id = await draft();
+      await issue(id);
+      final part = await db.creditInvoice(id, reason: 'Rate agreed lower', amountFils: 3000, operationId: newUuid());
+
+      final note = await db.invoiceView(part);
+      expect((note.invoice.number, note.lines.single.description, note.lines.single.isItem, note.totals.netFils, note.totals.vatFils), ('CN-$_year-0001', 'Rate agreed lower', true, 3000, 150));
+      var v = await db.invoiceView(id);
+      expect((v.status, v.creditNotes.length, v.credited.totalFils, v.leftFils), (InvoiceStatus.issued, 1, 3150, 11025));
+      expect(await db.unbilledLines(sheet), isEmpty, reason: 'the work stays charged');
+      // 105.01 and its 5.25 of VAT is a fils more than is left.
+      await expectLater(db.creditInvoice(id, reason: 'Too much', amountFils: 10501, operationId: newUuid()), refused(InvoiceProblem.creditTooBig));
+      await expectLater(db.creditInvoice(id, reason: 'Nothing', amountFils: 0, operationId: newUuid()), refused(InvoiceProblem.creditTooBig));
+
+      final rest = await db.creditInvoice(id, reason: 'Cancelled', operationId: newUuid());
+      final last = await db.invoiceView(rest);
+      expect((last.invoice.number, last.lines.length, last.totals.netFils, last.totals.vatFils), ('CN-$_year-0002', 1, 10500, 525));
+      v = await db.invoiceView(id);
+      expect((v.status, v.leftFils, v.creditNotes.length), (InvoiceStatus.credited, 0, 2));
+      expect(await db.unbilledLines(sheet), hasLength(1), reason: 'taken back whole, the work is free again');
+    });
+  });
+
+  group('a line the owner writes (INV-01)', () {
+    test('goes on after the timesheet lines, with VAT at the invoice rate, and is stored as written', () async {
+      await register();
+      await ts.work(db, '2020-10-05');
+      await approved();
+      final id = await draft();
+      const transport = InvoiceItem(key: 'item|1', description: 'Transport, October', quantity: 2, unitPriceFils: 25000);
+      await db.saveInvoiceDraft(id, InvoicesCompanion(draft: Value(const InvoiceDraft(items: [transport]).toJson())), operationId: newUuid());
+      final v = await db.invoiceView(id);
+      expect([for (final l in v.lines) (l.isItem, l.amountFils, l.tax.vatFils)], [(false, 13500, 675), (true, 50000, 2500)]);
+
+      await issue(id);
+      final issued = await db.invoiceView(id);
+      final item = issued.lines.last;
+      expect((item.isItem, item.description, item.quantity, item.unitPriceFils, item.timesheetId), (true, 'Transport, October', 2, 25000, null));
+      expect(issued.totals.totalFils, 14175 + 52500);
+      expect(await db.select(db.billedAllocations).get(), hasLength(1), reason: 'a written line charges no work');
+    });
+
+    test('a draft keeps its written lines when a timesheet is left out or a discount set', () {
+      const draft = InvoiceDraft(items: [InvoiceItem(key: 'item|1', description: 'Transport', quantity: 1, unitPriceFils: 100)]);
+      final again = InvoiceDraft.fromJson(draft.copyWith(skipped: {'t1'}, discounts: {'k': 5}).toJson());
+      expect(again.items.single.description, 'Transport');
+      expect(again.skipped, {'t1'});
+      expect(again.discounts, {'k': 5});
     });
   });
 
@@ -321,6 +374,53 @@ void main() {
 
   group('closing a month (D-048)', () {
     Future<List<ClosingFinding>> notInvoiced() async => [for (final f in (await db.closingFor('2020-10')).findings) if (f.issue == ClosingIssue.notInvoiced) f];
+
+    Future<List<(ClosingIssue, String)>> billing() async => [
+      for (final f in (await db.closingFor('2020-10')).findings)
+        if (const {ClosingIssue.notInvoiced, ClosingIssue.changedAfterInvoice, ClosingIssue.invoiceOutOfDate}.contains(f.issue)) (f.issue, f.names.join(', ')),
+    ];
+
+    test('work changed after it was invoiced stops the month until the timesheet is revised and the invoice put right (D-051)', () async {
+      await ts.work(db, '2020-10-05');
+      final sheet = await approved();
+      final id = await draft();
+      await issue(id);
+      expect(await billing(), isEmpty);
+
+      final old = await db.select(db.attendanceEntries).getSingle();
+      final same = await db.correctEntry(old, EntryInput(workerId: old.workerId, shift: ts.shift, overlapReason: 'Two sites'), reason: 'Noted', operationId: newUuid());
+      expect(await billing(), isEmpty, reason: 'the charge did not change');
+      final current = await (db.select(db.attendanceEntries)..where((e) => e.id.equals(same))).getSingle();
+      await db.correctEntry(current, EntryInput(workerId: old.workerId, shift: const ShiftInput(startMinute: 8 * 60, endMinute: 16 * 60, breakMinutes: 60)), reason: 'Left early', operationId: newUuid());
+      final number = (await db.timesheetView(sheet)).sheet.number!;
+      expect(await billing(), [(ClosingIssue.changedAfterInvoice, number)]);
+
+      await db.startTimesheetRevision(sheet, reason: 'Left early', operationId: newUuid());
+      await db.approveTimesheet((await db.timesheetView(sheet)).revision.id, operationId: newUuid());
+      expect(await billing(), [(ClosingIssue.invoiceOutOfDate, 'INV-$_year-0001 (Emaar)')]);
+      final change = (await db.invoiceView(id)).changes.single;
+      expect((change.billedFils, change.nowFils), (13500, 10500));
+
+      await db.creditInvoice(id, reason: 'Left early', operationId: newUuid());
+      expect(await billing(), [(ClosingIssue.notInvoiced, 'Emaar')]);
+      final again = await draft();
+      await issue(again);
+      expect(await billing(), isEmpty);
+      expect((await db.invoiceView(again)).totals.totalFils, 10500);
+    });
+
+    test('a credit note for an amount does not put changed work right', () async {
+      await ts.work(db, '2020-10-05');
+      final sheet = await approved();
+      final id = await draft();
+      await issue(id);
+      final old = await db.select(db.attendanceEntries).getSingle();
+      await db.correctEntry(old, EntryInput(workerId: old.workerId, shift: const ShiftInput(startMinute: 8 * 60, endMinute: 16 * 60, breakMinutes: 60)), reason: 'Left early', operationId: newUuid());
+      await db.startTimesheetRevision(sheet, reason: 'Left early', operationId: newUuid());
+      await db.approveTimesheet((await db.timesheetView(sheet)).revision.id, operationId: newUuid());
+      await db.creditInvoice(id, reason: 'Left early', amountFils: 3000, operationId: newUuid());
+      expect([for (final (issue, _) in await billing()) issue], [ClosingIssue.invoiceOutOfDate]);
+    });
 
     test('work with a company rate that no invoice charges stops the month, by company, until it is invoiced', () async {
       await ts.work(db, '2020-10-05');
@@ -380,5 +480,6 @@ void main() {
     expect(quantityText(RateBasis.hour, 545), '9.08');
     expect(quantityText(RateBasis.day, 25), '12.5');
     expect(quantityText(RateBasis.monthPerWorker, 3), '3');
+    expect(quantityText(null, 2), '2');
   });
 }

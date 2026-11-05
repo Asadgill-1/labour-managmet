@@ -12,9 +12,11 @@ import '../../data/payroll.dart';
 import '../../data/statement.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../invoices/invoice_screen.dart';
 import '../invoices/invoices_screen.dart';
 import '../payroll/payroll_worker_screen.dart';
 import '../rates/contract_form_screen.dart';
+import '../timesheets/timesheet_screen.dart';
 import '../today/attendance_entry_screen.dart';
 import '../today/row_editor_screen.dart';
 
@@ -29,6 +31,8 @@ String findingText(AppLocalizations l10n, ClosingFinding f) {
     ClosingIssue.overlap => l10n.findingOverlap(count, names),
     ClosingIssue.noMonthChosen => l10n.findingNoMonth(count, names),
     ClosingIssue.notInvoiced => l10n.findingNotInvoiced(count, names),
+    ClosingIssue.changedAfterInvoice => l10n.findingChangedAfterInvoice(count, names),
+    ClosingIssue.invoiceOutOfDate => l10n.findingInvoiceOutOfDate(count, names),
   };
 }
 
@@ -117,6 +121,8 @@ class _ClosingScreenState extends ConsumerState<ClosingScreen> {
       ClosingIssue.noWorkerRate => (null, const <_FixAction>[], (ClosingTarget t) async => _open(ContractFormScreen.pay(workerId: t.id))),
       ClosingIssue.noCompanyRate => (null, const <_FixAction>[], (ClosingTarget t) async => _open(ContractFormScreen.billing(clientId: t.id))),
       ClosingIssue.notInvoiced => (null, const <_FixAction>[], (ClosingTarget t) async => _open(NewInvoiceScreen(clientId: t.id, month: f.date.substring(0, 7)))),
+      ClosingIssue.changedAfterInvoice => (null, const <_FixAction>[], (ClosingTarget t) async => _open(TimesheetScreen(timesheetId: t.id))),
+      ClosingIssue.invoiceOutOfDate => (null, const <_FixAction>[], (ClosingTarget t) async => _open(InvoiceScreen(invoiceId: t.id))),
       ClosingIssue.overlap => (
         null,
         const <_FixAction>[],

@@ -320,7 +320,7 @@ class BilledAllocations extends Table with Common {
   BoolColumn get released => boolean().withDefault(const Constant(false))();
 }
 
-/// A company invoice, or a credit note that takes one back whole (INV-01, INV-06). A draft has no number and no lines:
+/// A company invoice, or a credit note that takes back all or part of one (INV-01, INV-06). A draft has no number and no lines:
 /// it reads its timesheets as they stand, so it can't go stale. Issuing stores everything as it stood, and from then on
 /// nothing changes but the step to credited. Triggers enforce this.
 class Invoices extends Table with Common {
@@ -340,7 +340,7 @@ class Invoices extends Table with Common {
   TextColumn get fromDate => text()();
   TextColumn get toDate => text()();
 
-  /// JSON while a draft: timesheets left out, and each line's discount or monthly fee.
+  /// JSON while a draft: timesheets left out, each line's discount or monthly fee, and lines the owner wrote.
   TextColumn get draft => text().withDefault(const Constant('{}'))();
   TextColumn get poReference => text().nullable()();
 
@@ -377,10 +377,10 @@ class InvoiceLines extends Table with Common {
   TextColumn get timesheetId => text().nullable().references(Timesheets, #id)();
   TextColumn get description => text()();
 
-  /// A `RateBasis` by name, which is the unit.
+  /// A `RateBasis` by name, which is the unit, or 'item' for a line the owner wrote or a credit for an amount.
   TextColumn get basis => text()();
 
-  /// In the unit's own count: minutes of hours, half days, half shifts, or workers on a monthly fee.
+  /// In the unit's own count: minutes of hours, half days, half shifts, workers on a monthly fee, or items.
   IntColumn get quantity => integer()();
   IntColumn get unitPriceFils => integer()();
 

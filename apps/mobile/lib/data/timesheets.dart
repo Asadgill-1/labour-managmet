@@ -78,8 +78,10 @@ class TimesheetRow {
 /// A row an invoice charged at a different figure from the current revision. The invoice stays as it was until a credit
 /// note takes it back and a new invoice charges the new figure (TS-06, INV-06).
 class BillingChange {
-  const BillingChange({required this.workKey, required this.workDate, required this.workerName, required this.billedFils, required this.nowFils});
+  const BillingChange({required this.invoiceId, required this.timesheetId, required this.workKey, required this.workDate, required this.workerName, required this.billedFils, required this.nowFils});
 
+  final String invoiceId;
+  final String timesheetId;
   final String workKey;
   final String workDate;
   final String workerName;
@@ -501,7 +503,7 @@ extension TimesheetOps on TenantDatabase {
       rows: draft?.rows ?? [for (final l in stored) _rowOf(l)],
       leftOut: draft?.leftOut,
       changedRows: stored.isEmpty || shown.id != revisions.first.id ? 0 : await _changedRows(shown.id),
-      billingChanges: shown.id == revisions.first.id ? await _billingChanges(id) : const [],
+      billingChanges: shown.id == revisions.first.id ? await billingChanges(timesheetId: id) : const [],
     );
   }
 
@@ -684,23 +686,75 @@ extension TimesheetOps on TenantDatabase {
     );
   }
 
-  Future<List<BillingChange>> _billingChanges(String timesheetId) async {
+  /// Work a live invoice charged at another figure than its timesheet's current revision now says, by timesheet, by
+  /// invoice, or by work date (INV-06).
+  Future<List<BillingChange>> billingChanges({String? timesheetId, String? invoiceId, String? to, String? after}) async {
     final l = timesheetLines;
     final b = billedAllocations;
-    final query = select(b).join([innerJoin(l, l.id.equalsExp(b.lineId))])..where(b.released.equals(false) & l.timesheetId.equals(timesheetId));
+    final query = select(b).join([innerJoin(l, l.id.equalsExp(b.lineId))])
+      ..where(
+        b.released.equals(false) &
+            (timesheetId == null ? const Constant(true) : l.timesheetId.equals(timesheetId)) &
+            (invoiceId == null ? const Constant(true) : b.invoiceId.equals(invoiceId)) &
+            (to == null ? const Constant(true) : l.workDate.isSmallerOrEqualValue(to)) &
+            (after == null ? const Constant(true) : l.workDate.isBiggerThanValue(after)),
+      );
     final billed = await query.get();
     if (billed.isEmpty) return const [];
-    final current = {for (final line in await (select(l)..where((x) => x.timesheetId.equals(timesheetId) & x.live.equals(true))).get()) line.workKey: line};
+    final sheets = {for (final row in billed) row.readTable(l).timesheetId};
+    final current = {for (final line in await (select(l)..where((x) => x.timesheetId.isIn(sheets) & x.live.equals(true))).get()) (line.timesheetId, line.workKey): line};
     return [
       for (final row in billed)
-        if ((current[row.readTable(b).workKey]?.amountFils ?? 0) != row.readTable(b).amountFils)
+        if ((current[(row.readTable(l).timesheetId, row.readTable(b).workKey)]?.amountFils ?? 0) case final now when now != row.readTable(b).amountFils)
           BillingChange(
+            invoiceId: row.readTable(b).invoiceId,
+            timesheetId: row.readTable(l).timesheetId,
             workKey: row.readTable(b).workKey,
             workDate: row.readTable(l).workDate,
             workerName: row.readTable(l).workerName,
             billedFils: row.readTable(b).amountFils,
-            nowFils: current[row.readTable(b).workKey]?.amountFils ?? 0,
+            nowFils: now,
           ),
     ];
+  }
+
+  /// Billed work whose attendance changed what the company is charged after its timesheet's current revision, so the
+  /// timesheet needs a new one before the invoice can be put right (TS-05). Each with its timesheet and date. A change
+  /// that leaves the charge as it was, such as an overlap reason, holds nothing up.
+  Future<Set<(String, String)>> billedWorkChanged({required String to, String? after}) async {
+    final l = timesheetLines;
+    final e = attendanceEntries;
+    final b = billedAllocations;
+    final query = selectOnly(l, distinct: true).join([
+      innerJoin(e, e.id.equalsExp(l.entryId)),
+      innerJoin(b, b.workKey.equalsExp(l.workKey) & b.released.equals(false)),
+    ])
+      ..addColumns([l.timesheetId, l.workDate, e.id, e.clientAmountFils])
+      ..where(l.live.equals(true) & e.superseded.equals(true) & l.workDate.isSmallerOrEqualValue(to) & (after == null ? const Constant(true) : l.workDate.isBiggerThanValue(after)));
+    final stale = await query.get();
+    if (stale.isEmpty) return const {};
+
+    // Each row's correction, and that one's, to the row that stands now. A row removed has none.
+    final next = <String, AttendanceEntry>{};
+    var ids = {for (final r in stale) r.read(e.id)!};
+    while (ids.isNotEmpty) {
+      final found = await (select(e)..where((x) => x.revisesEntryId.isIn(ids))).get();
+      for (final f in found) {
+        next[f.revisesEntryId!] = f;
+      }
+      ids = {for (final f in found) if (f.superseded) f.id};
+    }
+    AttendanceEntry? standing(String id) {
+      var at = next[id];
+      while (at != null && next[at.id] != null) {
+        at = next[at.id];
+      }
+      return at;
+    }
+
+    return {
+      for (final r in stale)
+        if (standing(r.read(e.id)!)?.clientAmountFils != r.read(e.clientAmountFils)) (r.read(l.timesheetId)!, r.read(l.workDate)!),
+    };
   }
 }

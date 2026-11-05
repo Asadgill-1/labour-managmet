@@ -115,9 +115,26 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
   }
 
   Future<void> _credit(InvoiceView v) async {
-    final l10n = AppLocalizations.of(context);
-    final reason = await askReason(context, title: l10n.invCreditTitle, label: l10n.invCreditReason, helper: l10n.invCreditHelp, confirm: l10n.invCreditConfirm);
-    if (reason != null && mounted) await _step(() => _db.creditInvoice(v.invoice.id, reason: reason, operationId: newUuid()));
+    final answer = await showModalBottomSheet<({int? amount, String reason})>(context: context, isScrollControlled: true, builder: (_) => _CreditSheet(view: v));
+    if (answer != null && mounted) await _step(() => _db.creditInvoice(v.invoice.id, reason: answer.reason, amountFils: answer.amount, operationId: newUuid()));
+  }
+
+  /// A new draft for the same company and dates, which reads the timesheets as they stand now.
+  Future<void> _reissue(InvoiceView v) async {
+    final navigator = Navigator.of(context);
+    final inv = v.invoice;
+    String? id;
+    final saved = await saveOrExplain(context, () async => id = await _db.createInvoice(clientId: inv.clientId, siteId: inv.siteId, from: inv.fromDate, to: inv.toDate, operationId: newUuid()));
+    if (saved && id != null && mounted) await navigator.push(MaterialPageRoute<void>(builder: (_) => InvoiceScreen(invoiceId: id!)));
+  }
+
+  Future<void> _editItem(InvoiceView v, [InvoiceItem? item]) async {
+    final answer = await showModalBottomSheet<({InvoiceItem item, bool remove})>(context: context, isScrollControlled: true, builder: (_) => _ItemSheet(item: item));
+    if (answer == null || !mounted) return;
+    await _saveChoices(v, (d) {
+      final others = [for (final i in d.items) if (i.key != answer.item.key) i];
+      return d.copyWith(items: answer.remove ? others : [for (final i in d.items) i.key == answer.item.key ? answer.item : i, if (item == null) answer.item]);
+    });
   }
 
   Future<void> _editPo(InvoiceView v) async {
@@ -150,12 +167,12 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
   }
 
   Future<void> _editLine(InvoiceView v, InvoiceLineView line) async {
+    if (line.isItem) return _editItem(v, InvoiceDraft.fromJson(v.invoice.draft).items.firstWhere((i) => i.key == line.key));
     final answer = await showModalBottomSheet<({int discount, int? fee})>(context: context, isScrollControlled: true, builder: (_) => _LineSheet(line: line));
     if (answer == null || !mounted) return;
     await _saveChoices(
       v,
-      (d) => InvoiceDraft(
-        skipped: d.skipped,
+      (d) => d.copyWith(
         discounts: {...d.discounts, line.key: answer.discount}..removeWhere((_, fils) => fils == 0),
         fees: {...d.fees, if (answer.fee != null) line.key: answer.fee!},
       ),
@@ -164,14 +181,11 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
 
   void _open(String id) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => InvoiceScreen(invoiceId: id)));
 
-  Future<void> _toggle(InvoiceView v, InvoiceSource s) => _saveChoices(
-    v,
-    (d) => InvoiceDraft(skipped: s.skipped ? ({...d.skipped}..remove(s.timesheet.id)) : {...d.skipped, s.timesheet.id}, discounts: d.discounts, fees: d.fees),
-  );
+  Future<void> _toggle(InvoiceView v, InvoiceSource s) => _saveChoices(v, (d) => d.copyWith(skipped: s.skipped ? ({...d.skipped}..remove(s.timesheet.id)) : {...d.skipped, s.timesheet.id}));
 
   String _lineTitle(AppLocalizations l10n, InvoiceLineView l) {
     if (l.description != null) return l.description!;
-    if (l.isFee) return basisLabel(l10n, l.basis);
+    if (l.isFee) return basisLabel(l10n, l.basis!);
     return [?l.siteName, ?l.trade, if (l.siteName == null && l.trade == null) l10n.tsAllSites].join(', ');
   }
 
@@ -189,10 +203,13 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
     final more = <(String, VoidCallback)>[
       if (isDraft) ...[(l10n.invPreview, () => _preview(v)), (l10n.invDeleteDraft, () => _delete(v))],
       if (v.status == InvoiceStatus.issued && !v.isCreditNote && v.lines.any((l) => l.timesheetId != null)) (l10n.invShareBoth, () => _sendWithTimesheets(v)),
-      if (v.status == InvoiceStatus.issued && !v.isCreditNote) (l10n.invCredit, () => _credit(v)),
-      if (v.creditNote case final note?) (l10n.invOpenCreditNote(note.number!), () => _open(note.id)),
-      if (v.credited case final original?) (l10n.invOpenInvoice(original.number!), () => _open(original.id)),
+      if (v.status == InvoiceStatus.issued && !v.isCreditNote && v.leftFils > 0) (l10n.invCredit, () => _credit(v)),
+      if (v.status == InvoiceStatus.credited) (l10n.invReissue, () => _reissue(v)),
+      for (final note in v.creditNotes) (l10n.invOpenCreditNote(note.number!), () => _open(note.id)),
+      if (v.original case final original?) (l10n.invOpenInvoice(original.number!), () => _open(original.id)),
     ];
+    final lastNote = v.creditNotes.lastOrNull?.number ?? '';
+    final changedBy = v.changes.fold(0, (total, c) => total + c.differenceFils);
     final sign = v.isCreditNote ? -1 : 1;
 
     final head = <Widget>[
@@ -219,19 +236,22 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
       if (_busy) const LinearProgressIndicator(),
       if (v.status == InvoiceStatus.credited) ...[
         const SizedBox(height: 20),
-        Center(child: ClosedStamp(l10n.invStatusCredited, v.creditNote?.number ?? '')),
+        Center(child: ClosedStamp(l10n.invStatusCredited, lastNote)),
         const SizedBox(height: 12),
       ],
       NoteRow(
         icon: Icons.info_outline,
         color: muted,
         text: switch (v.status) {
-          _ when v.isCreditNote => l10n.invNoteCreditNote(v.credited?.number ?? '', inv.reason ?? ''),
+          _ when v.isCreditNote => l10n.invNoteCreditNote(v.original?.number ?? '', inv.reason ?? ''),
           InvoiceStatus.draft => l10n.invNoteDraft,
           InvoiceStatus.issued => l10n.invNoteIssued(showDate(inv.issueDate!), showDate(inv.dueDate!)),
-          InvoiceStatus.credited => l10n.invNoteCredited(v.creditNote?.number ?? ''),
+          InvoiceStatus.credited => l10n.invNoteCredited(lastNote),
         },
       ),
+      if (v.status == InvoiceStatus.issued && v.creditNotes.isNotEmpty)
+        NoteRow(icon: Icons.info_outline, text: l10n.invNotePartCredited(formatAed(v.credited.totalFils), formatAed(v.leftFils)), color: muted),
+      if (v.changes.isNotEmpty) NoteRow(icon: Icons.error_outline, text: l10n.invChanged(v.changes.length, formatAed(changedBy)), color: due),
       if (isDraft && !v.vatRegistered) NoteRow(icon: Icons.info_outline, text: l10n.invNotRegistered, color: muted),
       if (needsTrn) NoteRow(icon: Icons.error_outline, text: l10n.invNeedsTrn, color: due),
       if (isDraft && v.lines.any((l) => l.discountFils > l.amountFils)) NoteRow(icon: Icons.error_outline, text: l10n.invDiscountTooBig, color: due),
@@ -270,7 +290,7 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
             title: Text(_lineTitle(l10n, line)),
             subtitle: Text(
               [
-                '${quantityLabel(l10n, line)}, ${rateSummary(l10n, line.basis.name, line.unitPriceFils)}',
+                if (line.basis case final basis?) '${quantityLabel(l10n, line)}, ${rateSummary(l10n, basis.name, line.unitPriceFils)}' else quantityLabel(l10n, line),
                 if (line.description == null) [if (line.fromDate != null) l10n.dateFromTo(showDate(line.fromDate!), showDate(line.toDate!)), ?line.timesheetNumber].join(', '),
                 if (line.isFee && line.description == null) l10n.invFeeHelp,
                 if (line.discountFils > 0) l10n.invLessDiscount(formatAed(line.discountFils)),
@@ -279,6 +299,11 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
             trailing: RowValue(formatAed(sign * line.tax.netFils)),
             onTap: isDraft ? () => _editLine(v, line) : null,
           ),
+        ),
+      if (isDraft)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+          child: OutlinedButton.icon(onPressed: _busy ? null : () => _editItem(v), icon: const Icon(Icons.add), label: Text(l10n.invAddLine)),
         ),
     ];
 
@@ -289,6 +314,10 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
           RowCard(child: InfoRow(l10n.invVatAt(vatPercent(v.bps)), formatAed(sign * v.totals.vatFils))),
         ],
         TotalRow(l10n.invTotal, formatAed(sign * v.totals.totalFils)),
+        if (v.creditNotes.isNotEmpty) ...[
+          RowCard(child: InfoRow(l10n.invCreditedSoFar(v.creditNotes.length), formatAed(-v.credited.totalFils))),
+          TotalRow(l10n.invLeft, formatAed(v.leftFils)),
+        ],
       ],
       // Timesheets and lines first, then the tax and terms, in the order INV-01 sets.
       SectionHeader(l10n.invSettingsHeading),
@@ -420,6 +449,175 @@ class _LineSheetState extends State<_LineSheet> {
                 },
                 child: Text(l10n.save),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A credit note for the whole invoice, or what is left of it, or for an amount (INV-06).
+class _CreditSheet extends StatefulWidget {
+  const _CreditSheet({required this.view});
+
+  final InvoiceView view;
+
+  @override
+  State<_CreditSheet> createState() => _CreditSheetState();
+}
+
+class _CreditSheetState extends State<_CreditSheet> {
+  final _form = GlobalKey<FormState>();
+  final _amount = TextEditingController();
+  final _reason = TextEditingController();
+  late bool _whole = widget.view.creditNotes.isEmpty || widget.view.changes.isNotEmpty;
+
+  @override
+  void dispose() {
+    _amount.dispose();
+    _reason.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final v = widget.view;
+    final inv = v.invoice;
+    final left = formatAed(v.leftFils);
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(16, 18, 16, 12 + MediaQuery.viewInsetsOf(context).bottom),
+        child: Form(
+          key: _form,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(l10n.invCreditTitle, style: sectionTitleStyle),
+              const SizedBox(height: 12),
+              SegmentedButton<bool>(
+                segments: [ButtonSegment(value: true, label: Text(l10n.invCreditWhole)), ButtonSegment(value: false, label: Text(l10n.invCreditPart))],
+                selected: {_whole},
+                onSelectionChanged: (picked) => setState(() => _whole = picked.single),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 12),
+                child: Text(
+                  _whole ? (v.creditNotes.isEmpty ? l10n.invCreditHelp : l10n.invCreditRestHelp(left)) : l10n.invCreditPartHelp(left),
+                  style: const TextStyle(fontSize: 13.5, height: 1.35, color: muted),
+                ),
+              ),
+              if (!_whole) ...[
+                Field(
+                  inv.vatBps == 0 ? l10n.invCreditAmount : (inv.pricesIncludeVat ? l10n.invCreditAmountWithVat : l10n.invCreditAmountBeforeVat),
+                  _amount,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  validator: (text) {
+                    final fils = parseAed(text ?? '');
+                    if (fils == null || fils <= 0) return l10n.amountInvalid;
+                    return lineTax(fils, bps: inv.vatBps, inclusive: inv.pricesIncludeVat).totalFils > v.leftFils ? l10n.invCreditTooBig(left) : null;
+                  },
+                ),
+                fieldGap,
+              ],
+              Field(l10n.invCreditReason, _reason, validator: (text) => (text ?? '').trim().isEmpty ? l10n.fieldRequired : null),
+              const SizedBox(height: 12),
+              FilledButton(
+                onPressed: () {
+                  if (!validateAndReveal(_form)) return;
+                  Navigator.of(context).pop((amount: _whole ? null : parseAed(_amount.text), reason: _reason.text.trim()));
+                },
+                child: Text(l10n.invCreditConfirm),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A line the owner writes, such as transport. VAT goes on it at the invoice's rate (INV-01).
+class _ItemSheet extends StatefulWidget {
+  const _ItemSheet({this.item});
+
+  final InvoiceItem? item;
+
+  @override
+  State<_ItemSheet> createState() => _ItemSheetState();
+}
+
+class _ItemSheetState extends State<_ItemSheet> {
+  final _form = GlobalKey<FormState>();
+  late final _description = TextEditingController(text: widget.item?.description ?? '');
+  late final _quantity = TextEditingController(text: '${widget.item?.quantity ?? 1}');
+  late final _price = TextEditingController(text: widget.item == null ? '' : plainAmount(widget.item!.unitPriceFils));
+
+  @override
+  void dispose() {
+    _description.dispose();
+    _quantity.dispose();
+    _price.dispose();
+    super.dispose();
+  }
+
+  InvoiceItem get _item => InvoiceItem(key: widget.item?.key ?? 'item|${newUuid()}', description: _description.text.trim(), quantity: int.parse(_quantity.text.trim()), unitPriceFils: parseAed(_price.text)!);
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(16, 18, 16, 12 + MediaQuery.viewInsetsOf(context).bottom),
+        child: Form(
+          key: _form,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(widget.item == null ? l10n.invAddLine : l10n.invItemTitle, style: sectionTitleStyle),
+              Padding(
+                padding: const EdgeInsets.only(top: 4, bottom: 12),
+                child: Text(l10n.invItemHelp, style: const TextStyle(fontSize: 13.5, height: 1.35, color: muted)),
+              ),
+              Field(l10n.invItemDescription, _description, validator: (text) => (text ?? '').trim().isEmpty ? l10n.fieldRequired : null),
+              fieldGap,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Field(
+                      l10n.invItemCount,
+                      _quantity,
+                      keyboardType: TextInputType.number,
+                      validator: (text) => (int.tryParse((text ?? '').trim()) ?? 0) < 1 ? l10n.invItemCountInvalid : null,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Field(
+                      l10n.invItemPrice,
+                      _price,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      validator: (text) => (parseAed(text ?? '') ?? 0) <= 0 ? l10n.amountInvalid : null,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              FilledButton(
+                onPressed: () {
+                  if (!validateAndReveal(_form)) return;
+                  Navigator.of(context).pop((item: _item, remove: false));
+                },
+                child: Text(l10n.save),
+              ),
+              if (widget.item != null) ...[
+                const SizedBox(height: 8),
+                OutlinedButton(onPressed: () => Navigator.of(context).pop((item: widget.item!, remove: true)), child: Text(l10n.invItemRemove)),
+              ],
             ],
           ),
         ),

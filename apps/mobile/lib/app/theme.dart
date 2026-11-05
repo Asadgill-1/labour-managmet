@@ -320,6 +320,7 @@ String saveErrorText(AppLocalizations l10n, Object error) => switch (error) {
   InvoiceRefused(problem: InvoiceProblem.noTrn) => l10n.invNeedsTrn,
   InvoiceRefused(problem: InvoiceProblem.discountTooBig) => l10n.invDiscountTooBig,
   InvoiceRefused(problem: InvoiceProblem.wrongStep) => l10n.invWrongStep,
+  InvoiceRefused(problem: InvoiceProblem.creditTooBig) => l10n.invCreditNothingLeft,
   AlreadyBilled() => l10n.invWrongStep,
   _ => l10n.saveFailed,
 };

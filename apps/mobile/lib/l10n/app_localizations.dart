@@ -4768,7 +4768,7 @@ abstract class AppLocalizations {
   /// No description provided for @invCreditTitle.
   ///
   /// In en, this message translates to:
-  /// **'Take back the whole invoice'**
+  /// **'Credit note'**
   String get invCreditTitle;
 
   /// No description provided for @invCreditReason.
@@ -5274,6 +5274,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See invoice {number}'**
   String invOpenInvoice(String number);
+
+  /// No description provided for @invItemQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} × {price}'**
+  String invItemQuantity(int count, String price);
+
+  /// No description provided for @invAddLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a line'**
+  String get invAddLine;
+
+  /// No description provided for @invItemTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Line'**
+  String get invItemTitle;
+
+  /// No description provided for @invItemHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For something no timesheet holds, such as transport. VAT goes on it at this invoice\'s rate.'**
+  String get invItemHelp;
+
+  /// No description provided for @invItemDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'What it is for'**
+  String get invItemDescription;
+
+  /// No description provided for @invItemCount.
+  ///
+  /// In en, this message translates to:
+  /// **'How many'**
+  String get invItemCount;
+
+  /// No description provided for @invItemCountInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a whole number, 1 or more'**
+  String get invItemCountInvalid;
+
+  /// No description provided for @invItemPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price of one (AED)'**
+  String get invItemPrice;
+
+  /// No description provided for @invItemRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this line'**
+  String get invItemRemove;
+
+  /// No description provided for @invReissue.
+  ///
+  /// In en, this message translates to:
+  /// **'New invoice for these dates'**
+  String get invReissue;
+
+  /// No description provided for @invChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row changed} other{{count} rows changed}} after this invoice was issued, by {amount} in all. Make a credit note for the whole invoice, then a new invoice. If the timesheet shows changed attendance, approve its new revision first.'**
+  String invChanged(int count, String amount);
+
+  /// No description provided for @invCreditedSoFar.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Credit note} other{{count} credit notes}}'**
+  String invCreditedSoFar(int count);
+
+  /// No description provided for @invLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left after credit notes'**
+  String get invLeft;
+
+  /// No description provided for @invCreditWhole.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole invoice'**
+  String get invCreditWhole;
+
+  /// No description provided for @invCreditPart.
+  ///
+  /// In en, this message translates to:
+  /// **'An amount'**
+  String get invCreditPart;
+
+  /// No description provided for @invCreditRestHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes back the {amount} that earlier credit notes left. Its work can then go on a new invoice.'**
+  String invCreditRestHelp(String amount);
+
+  /// No description provided for @invCreditPartHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes back part of the invoice, up to {amount}, such as a rate agreed lower later. The work stays charged on this invoice.'**
+  String invCreditPartHelp(String amount);
+
+  /// No description provided for @invCreditAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount (AED)'**
+  String get invCreditAmount;
+
+  /// No description provided for @invCreditAmountBeforeVat.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount before VAT (AED)'**
+  String get invCreditAmountBeforeVat;
+
+  /// No description provided for @invCreditAmountWithVat.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount with VAT (AED)'**
+  String get invCreditAmountWithVat;
+
+  /// No description provided for @invCreditTooBig.
+  ///
+  /// In en, this message translates to:
+  /// **'More than is left of this invoice: {amount} with VAT.'**
+  String invCreditTooBig(String amount);
+
+  /// No description provided for @invCreditNothingLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'There is not that much left of this invoice to take back.'**
+  String get invCreditNothingLeft;
+
+  /// No description provided for @findingChangedAfterInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} timesheets have attendance that changed after it was invoiced: {names}. Approve their new revisions, then put the invoices right.'**
+  String findingChangedAfterInvoice(int count, String names);
+
+  /// No description provided for @findingInvoiceOutOfDate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} invoices charge other figures than their timesheets now say: {names}. Make a credit note for each, then a new invoice.'**
+  String findingInvoiceOutOfDate(int count, String names);
+
+  /// No description provided for @invNotePartCredited.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit notes took back {amount}. {left} is left.'**
+  String invNotePartCredited(String amount, String left);
 }
 
 class _AppLocalizationsDelegate
