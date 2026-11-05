@@ -57,8 +57,13 @@ class TsLeftOut {
   final int onOtherTimesheet;
 }
 
-/// What stops a current timesheet line going on an invoice. A row agreed at nothing has nothing to charge.
+/// What stops a current timesheet line going on an invoice. A row agreed at nothing has nothing to charge. A monthly row
+/// whose month, or worker in that month, a live invoice's fee already charged counts as billed (TS-05, TS-08).
 enum BillHold { billed, notCharged, disputed, changed }
+
+/// What one monthly fee charges for: the month on a fixed fee, each worker in it on a fee per worker (TS-08).
+String feeCover(String clientId, String basis, String workDate, String workerId) =>
+    '$clientId|$basis|${workDate.substring(0, 7)}${basis == RateBasis.monthFixed.name ? '' : '|$workerId'}';
 
 typedef BillableLine = ({TimesheetLine line, BillHold? hold});
 
@@ -611,12 +616,14 @@ extension TimesheetOps on TenantDatabase {
       )
       ..orderBy([OrderingTerm.asc(l.workDate), OrderingTerm.asc(l.workerName)]);
     final billed = await _liveBillingKeys();
+    final fees = await feesCharged();
+    bool feeCharged(TimesheetLine line, AttendanceEntry entry) => line.amountFils == null && fees.contains(feeCover(entry.clientId, line.basis, line.workDate, line.workerId));
     return [
       for (final row in await query.get())
         (
           line: row.readTable(l),
           hold: switch (row) {
-            _ when billed.contains(row.readTable(l).workKey) => BillHold.billed,
+            _ when billed.contains(row.readTable(l).workKey) || feeCharged(row.readTable(l), row.readTable(e)) => BillHold.billed,
             _ when row.readTable(l).amountFils == 0 => BillHold.notCharged,
             _ when row.readTable(r).status == TsStatus.disputed.name => BillHold.disputed,
             _ when row.readTable(e).superseded => BillHold.changed,
@@ -633,6 +640,17 @@ extension TimesheetOps on TenantDatabase {
     for (final b in await billableLines([timesheetId]))
       if (b.hold == null && (b.line.amountFils == null) == monthly) b.line,
   ];
+
+  /// Every [feeCover] a live invoice charged, so a month's fee is charged once however its work is split (TS-05, TS-08).
+  Future<Set<String>> feesCharged() async {
+    final b = billedAllocations;
+    final l = timesheetLines;
+    final t = timesheets;
+    final query = selectOnly(b).join([innerJoin(l, l.id.equalsExp(b.lineId)), innerJoin(t, t.id.equalsExp(l.timesheetId))])
+      ..addColumns([t.clientId, l.basis, l.workDate, l.workerId])
+      ..where(b.released.equals(false) & l.amountFils.isNull());
+    return {for (final r in await query.get()) feeCover(r.read(t.clientId)!, r.read(l.basis)!, r.read(l.workDate)!, r.read(l.workerId)!)};
+  }
 
   Future<Set<String>> _liveBillingKeys() async {
     final b = billedAllocations;

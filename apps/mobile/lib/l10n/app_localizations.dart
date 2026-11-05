@@ -5161,11 +5161,11 @@ abstract class AppLocalizations {
   /// **'Manpower supply'**
   String get invPLineLabour;
 
-  /// No description provided for @invPLineFee.
+  /// A monthly contract line on an invoice names the month its fee covers (TS-08).
   ///
   /// In en, this message translates to:
-  /// **'Monthly fee'**
-  String get invPLineFee;
+  /// **'Monthly fee for {month}'**
+  String invPLineFee(String month);
 
   /// No description provided for @invPTotalNet.
   ///

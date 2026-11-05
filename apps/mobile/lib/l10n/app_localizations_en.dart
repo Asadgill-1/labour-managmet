@@ -2917,7 +2917,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invPLineLabour => 'Manpower supply';
 
   @override
-  String get invPLineFee => 'Monthly fee';
+  String invPLineFee(String month) {
+    return 'Monthly fee for $month';
+  }
 
   @override
   String get invPTotalNet => 'Total before VAT';

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:pdf/pdf.dart';
@@ -293,6 +294,8 @@ pw.MultiPage documentPage({
   final brand = PdfColor.fromInt(identity.brandArgb);
   const side = 28.0;
   final width = format.width - side * 2;
+  // A letterhead is drawn for A4 upright, so it prints that size on a landscape register too, as its DPI check assumes.
+  final letterWidth = min(width, PdfPageFormat.a4.width - side * 2);
   final letterhead = identity.printLetterhead;
 
   pw.Widget companyBlock() => pw.Row(
@@ -351,7 +354,7 @@ pw.MultiPage documentPage({
         crossAxisAlignment: pw.CrossAxisAlignment.stretch,
         children: [
           if (letterhead) ...[
-            if (identity.header != null) placedImage(identity.header!, width, maxHeight: format.height * 0.22) else companyBlock(),
+            if (identity.header != null) placedImage(identity.header!, letterWidth, maxHeight: format.height * 0.22) else companyBlock(),
             pw.SizedBox(height: 8),
           ],
           titleBlock(),
@@ -363,7 +366,7 @@ pw.MultiPage documentPage({
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.stretch,
         children: [
-          if (letterhead && identity.footer != null) ...[placedImage(identity.footer!, width, maxHeight: format.height * 0.14), pw.SizedBox(height: 3)],
+          if (letterhead && identity.footer != null) ...[placedImage(identity.footer!, letterWidth, maxHeight: format.height * 0.14), pw.SizedBox(height: 3)],
           pw.Row(
             crossAxisAlignment: pw.CrossAxisAlignment.end,
             children: [

@@ -1636,7 +1636,15 @@
   "invPUnitMonth": "Month",
   "invPUnitWorkerMonth": "Worker-month",
   "invPLineLabour": "Manpower supply",
-  "invPLineFee": "Monthly fee",
+  "invPLineFee": "Monthly fee for {month}",
+  "@invPLineFee": {
+    "description": "A monthly contract line on an invoice names the month its fee covers (TS-08).",
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
   "invPTotalNet": "Total before VAT",
   "invPTotalVat": "VAT at {rate}",
   "@invPTotalVat": {

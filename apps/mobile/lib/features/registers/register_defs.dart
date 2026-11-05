@@ -1212,7 +1212,10 @@ Future<RegisterData> _invoices(TenantDatabase db, AppLocalizations l10n, _Master
       final date = y.issueDate!.compareTo(x.issueDate!);
       if (date != 0) return date;
       final made = y.createdAtUtc.compareTo(x.createdAtUtc);
-      return made != 0 ? made : a.position - b.position;
+      if (made != 0) return made;
+      // Times are to the second, so the number keeps two papers made in one second apart.
+      final number = y.number!.compareTo(x.number!);
+      return number != 0 ? number : a.position - b.position;
     });
   return RegisterData(
     title: l10n.regInvoices,

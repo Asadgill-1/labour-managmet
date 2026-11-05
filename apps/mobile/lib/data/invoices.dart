@@ -290,7 +290,8 @@ extension InvoiceOps on TenantDatabase {
       if (skipped) continue;
       for (final b in ready) {
         final l = b.line;
-        final key = l.amountFils == null ? 'fee|${t.id}|${l.basis}|${l.rateFils}|${l.workDate.substring(0, 7)}' : 'ts|${t.id}|${l.siteId}|${l.trade ?? ''}|${l.basis}|${l.rateFils}';
+        // One fee a month, whichever timesheets hold its work (TS-08).
+        final key = l.amountFils == null ? 'fee|${l.basis}|${l.rateFils}|${l.workDate.substring(0, 7)}' : 'ts|${t.id}|${l.siteId}|${l.trade ?? ''}|${l.basis}|${l.rateFils}';
         (byKey[key] ??= []).add(l);
       }
     }
@@ -760,7 +761,7 @@ extension InvoiceOps on TenantDatabase {
     final e = attendanceEntries;
     Expression<bool> limit(Expression<bool> Function(String) test, String? value) => value == null ? const Constant(true) : test(value);
     final rows = await (selectOnly(e)
-          ..addColumns([e.id, e.revisesEntryId, e.clientId, e.siteId, e.workDate, e.clientBillableMinutes, e.clientAmountFils, e.clientRateFils, e.clientBasis])
+          ..addColumns([e.id, e.revisesEntryId, e.clientId, e.siteId, e.workerId, e.workDate, e.clientBillableMinutes, e.clientAmountFils, e.clientRateFils, e.clientBasis])
           ..where(
             e.superseded.equals(false) &
                 limit(e.workDate.isBiggerOrEqualValue, from) &
@@ -809,13 +810,17 @@ extension InvoiceOps on TenantDatabase {
         r.read(l.workKey)!,
     };
     final periodBases = [for (final b in RateBasis.values) if (isPeriodBasis(b)) b.name];
+    final fees = await feesCharged();
     return [
       for (final r in rows)
         () {
           final key = keyOf(r.read(e.id)!);
           final amount = r.read(e.clientAmountFils) ?? 0;
           final rated = r.read(e.clientRateFils) != null;
-          final chargeable = rated && (amount > 0 || periodBases.contains(r.read(e.clientBasis)));
+          final basis = r.read(e.clientBasis);
+          final monthly = basis != null && periodBases.contains(basis);
+          final chargeable = rated && (amount > 0 || monthly);
+          final feeCharged = monthly && fees.contains(feeCover(r.read(e.clientId)!, basis, r.read(e.workDate)!, r.read(e.workerId)!));
           return (
             clientId: r.read(e.clientId)!,
             siteId: r.read(e.siteId)!,
@@ -824,7 +829,7 @@ extension InvoiceOps on TenantDatabase {
             amountFils: amount,
             rated: rated,
             invoiceId: charged[key],
-            settled: charged.containsKey(key) || agreedAtNothing.contains(key) || (rated && !chargeable),
+            settled: charged.containsKey(key) || feeCharged || agreedAtNothing.contains(key) || (rated && !chargeable),
           );
         }(),
     ];

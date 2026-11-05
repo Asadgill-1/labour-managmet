@@ -14,6 +14,7 @@ import 'package:labour_app/data/receipts.dart';
 import 'package:domain/cash.dart';
 import 'package:labour_app/data/tenant_database.dart';
 import 'package:labour_app/data/timesheets.dart';
+import 'package:labour_app/features/invoices/invoice_paper.dart';
 import 'package:labour_app/features/registers/register_defs.dart';
 import 'package:labour_app/features/registers/register_model.dart';
 import 'package:labour_app/l10n/app_localizations.dart';
@@ -239,6 +240,33 @@ void main() {
       expect(await db.select(db.invoiceLines).get(), hasLength(1));
     });
 
+    test('numbers run by year with no gap: a failure part way uses none, and the database refuses one twice (INV-08)', () async {
+      await ts.work(db, '2020-10-05');
+      await approved();
+      final id = await draft();
+      await expectLater(db.issueInvoice(id, describe: (_) => throw StateError('printer'), operationId: newUuid()), throwsStateError);
+      final left = await db.invoiceView(id);
+      expect((left.status, left.invoice.number), (InvoiceStatus.draft, null));
+      expect(await db.select(db.invoiceLines).get(), isEmpty);
+      expect(await db.select(db.billedAllocations).get(), isEmpty);
+      await issue(id);
+      final first = await (db.select(db.invoices)..where((i) => i.id.equals(id))).getSingle();
+      expect(first.number, 'INV-$_year-0001');
+
+      // Last year's numbers don't count, and this year's can't be used twice, whatever path writes it.
+      await db.into(db.invoices).insert(first.copyWith(id: newUuid(), year: Value(_year - 1), seq: const Value(41), number: Value('INV-${_year - 1}-0041')));
+      await expectLater(db.into(db.invoices).insert(first.copyWith(id: newUuid())), throwsA(predicate((e) => '$e'.contains('UNIQUE'))));
+      await ts.work(db, '2020-10-06');
+      await approved();
+      final second = await draft();
+      await issue(second);
+      expect((await db.invoiceView(second)).invoice.number, 'INV-$_year-0002');
+      await db.creditInvoice(second, reason: 'Wrong', operationId: newUuid());
+      final note = await (db.select(db.invoices)..where((i) => i.kind.equals('credit'))).getSingle();
+      expect(note.number, 'CN-$_year-0001', reason: 'credit notes count on their own');
+      await expectLater(db.into(db.invoices).insert(note.copyWith(id: newUuid())), throwsA(predicate((e) => '$e'.contains('UNIQUE'))));
+    });
+
     test('an issued invoice never changes, by any path (INV-06)', () async {
       await ts.work(db, '2020-10-05');
       await approved();
@@ -372,6 +400,50 @@ void main() {
       await issue(id);
       expect((await db.select(db.billedAllocations).get()).map((b) => b.amountFils), [0, 0, 0]);
       await expectLater(db.createInvoice(clientId: fixed, from: ts.from, to: ts.to, operationId: newUuid()), refused(InvoiceProblem.nothingToBill));
+    });
+
+    test('a month invoiced in two parts, or with work added later, charges its fee once (TS-05)', () async {
+      final first = await db.createInvoice(clientId: fixed, from: ts.from, to: '2020-10-15', operationId: newUuid());
+      expect((await db.invoiceView(first)).lines.single.amountFils, 500000);
+      await issue(first);
+      await expectLater(db.createInvoice(clientId: fixed, from: '2020-10-16', to: ts.to, operationId: newUuid()), refused(InvoiceProblem.nothingToBill));
+
+      // Work entered after the fee was charged goes on a timesheet of its own.
+      await db.saveAttendanceBatch(workDate: '2020-10-25', clientId: fixed, siteId: tower, inputs: [EntryInput(workerId: ts.bilal, shift: ts.shift)], operationId: newUuid());
+      final late = await db.createTimesheet(clientId: fixed, from: ts.from, to: ts.to, operationId: newUuid());
+      await db.approveTimesheet((await db.timesheetView(late)).revision.id, operationId: newUuid());
+      await expectLater(db.createInvoice(clientId: fixed, from: ts.from, to: ts.to, operationId: newUuid()), refused(InvoiceProblem.nothingToBill));
+      expect([for (final f in (await db.closingFor('2020-10')).findings) if (f.issue == ClosingIssue.notInvoiced) f], isEmpty, reason: 'the fee charged covers the month');
+
+      // A credit note gives the month back, and one fee then covers both timesheets.
+      await db.creditInvoice(first, reason: 'Wrong dates', operationId: newUuid());
+      final again = await db.createInvoice(clientId: fixed, from: ts.from, to: ts.to, operationId: newUuid());
+      final line = (await db.invoiceView(again)).lines.single;
+      expect((line.amountFils, line.sources.length), (500000, 4));
+      expect(invoiceLineText(paperWords, line), startsWith('Monthly fee for 10-2020, '), reason: 'the paper names the month the fee covers');
+    });
+
+    test('a fee per worker charges each worker once a month', () async {
+      final crew = await db.saveRow(db.clients, id: null, operationId: newUuid(), fields: const ClientsCompanion(name: Value('Crew')));
+      final yard = await db.saveRow(db.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(crew), name: const Value('Yard')));
+      await db.saveRow(
+        db.billingContracts,
+        id: null,
+        operationId: newUuid(),
+        fields: BillingContractsCompanion(clientId: Value(crew), basis: Value(RateBasis.monthPerWorker.name), rateFils: const Value(200000), effectiveFrom: const Value('2020-01-01')),
+      );
+      Future<void> billed(String date, List<String> workers) async {
+        await db.saveAttendanceBatch(workDate: date, clientId: crew, siteId: yard, inputs: [for (final w in workers) EntryInput(workerId: w, shift: ts.shift)], operationId: newUuid());
+        final sheet = await db.createTimesheet(clientId: crew, from: ts.from, to: ts.to, operationId: newUuid());
+        await db.approveTimesheet((await db.timesheetView(sheet)).revision.id, operationId: newUuid());
+      }
+
+      await billed('2020-10-06', [ts.asif]);
+      await issue(await db.createInvoice(clientId: crew, from: ts.from, to: ts.to, operationId: newUuid()));
+      await billed('2020-10-21', [ts.asif, ts.bilal]);
+      final second = await db.createInvoice(clientId: crew, from: ts.from, to: ts.to, operationId: newUuid());
+      final line = (await db.invoiceView(second)).lines.single;
+      expect((line.quantity, line.amountFils), (1, 200000), reason: 'Asif is charged for October already');
     });
   });
 
@@ -598,6 +670,19 @@ void main() {
     expect([for (final e in data.entries) (e.cells[1], e.cells[12], e.cells[15], e.cells[16])], unorderedEquals([('INV-$_year-0001', 13500, 675, 14175), ('CN-$_year-0001', -13500, -675, -14175)]));
     expect(data.entries.first.cells[3], isNull, reason: 'Emaar has no TRN');
     expect(columnTotal(data.entries, 16), 0);
+  });
+
+  test("the invoice register keeps each paper's lines together, even when two are made in one second", () async {
+    await ts.work(db, '2020-10-05');
+    await ts.work(db, '2020-10-05', worker: ts.bilal, site: ts.creek);
+    await approved();
+    final id = await draft();
+    await issue(id);
+    await db.creditInvoice(id, reason: 'Wrong', operationId: newUuid());
+    final data = await buildRegister(db, await AppLocalizations.delegate.load(const Locale('en', 'PK')), Section.invoiceRegister);
+    final numbers = [for (final e in data.entries) e.cells[1]];
+    expect(numbers, hasLength(4));
+    expect([for (var i = 1; i < numbers.length; i++) if (numbers[i] != numbers[i - 1]) i], hasLength(1), reason: '$numbers');
   });
 
   test('the invoice register keeps a line the owner wrote and a credit for an amount, which have no unit', () async {

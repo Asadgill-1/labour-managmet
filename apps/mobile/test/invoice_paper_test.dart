@@ -14,9 +14,11 @@ import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/tenant_database.dart';
 import 'package:labour_app/data/timesheets.dart';
 import 'package:labour_app/documents/document_frame.dart';
+import 'package:labour_app/features/documents/document_render.dart';
 import 'package:labour_app/features/invoices/invoice_paper.dart';
 import 'package:labour_app/l10n/app_localizations.dart';
 
+import 'documents_test.dart' show png1;
 import 'support.dart';
 
 const from = '2020-10-01';
@@ -159,6 +161,25 @@ void main() {
       final meta = DocumentMeta(title: 'Tax Invoice', number: v.invoice.number, dateLabel: '04-11-2026', pagePattern: 'Page {page} of {pages}', madeLabel: 'Made');
       final bytes = await invoicePdf(invoicePaper(v, paperWords), identity, meta, regularFont: regular, boldFont: bold);
       expect(RegExp(r'/Type\s*/Page\b').allMatches(latin1.decode(bytes)).length, 1);
+    });
+
+    test('a later logo and address leave the issued paper as it was, and a copy keeps its number and says COPY (DOC-05, TC-042)', () async {
+      await seed(db);
+      await work(db, '2020-10-05');
+      final v = await db.invoiceView(await issued(db));
+      final first = await issueInvoicePaper(db, v);
+      await db.saveDocumentImage(AssetKind.logo, png1, operationId: newUuid());
+      final profile = await db.select(db.tenantProfiles).getSingle();
+      await db.saveRow(db.tenantProfiles, id: profile.id, operationId: newUuid(), fields: const TenantProfilesCompanion(address: Value('Business Bay, Dubai')));
+      final again = await issueInvoicePaper(db, await db.invoiceView(v.invoice.id));
+      expect(again.id, first.id);
+      expect(again.pdfBytes, first.pdfBytes);
+      expect(first.identityJson, isNot(contains('Business Bay')));
+      final meta = DocumentMeta.fromJson(jsonDecode(first.metaJson) as Map<String, Object?>, copyLabel: 'COPY');
+      expect((meta.number, meta.copyLabel), (v.invoice.number, 'COPY'));
+      final copy = await issuedBytes(db, first.id, copyLabel: 'COPY');
+      expect(copy, isNot(first.pdfBytes));
+      expect(RegExp(r'/Type\s*/Page\b').allMatches(latin1.decode(copy)).length, 1);
     });
   });
 

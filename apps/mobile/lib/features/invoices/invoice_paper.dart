@@ -38,7 +38,8 @@ String invoiceTitle(AppLocalizations words, InvoiceView v) => switch ((v.isCredi
 String invoiceLineText(AppLocalizations words, InvoiceLineView l) {
   if (l.isItem) return l.description!;
   final dates = l.fromDate == null ? null : words.dateFromTo(showDate(l.fromDate!), showDate(l.toDate!));
-  final what = l.isFee ? [words.invPLineFee, basisLabel(words, l.basis!)] : [words.invPLineLabour, ?l.siteName, ?l.trade];
+  // A monthly fee names its month, since it covers all of it whichever days the brackets show (TS-08).
+  final what = l.isFee ? [words.invPLineFee(showMonth(l.fromDate!.substring(0, 7))), basisLabel(words, l.basis!)] : [words.invPLineLabour, ?l.siteName, ?l.trade];
   return '${what.join(', ')} (${[?dates, ?l.timesheetNumber].join(', ')})';
 }
 
