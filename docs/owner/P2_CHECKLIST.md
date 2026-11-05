@@ -109,6 +109,20 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 - [ ] Advance wale mazdoor par **Tankhwah** mein **Advance katein** dabayein. **Mazdoor ko dena hai** ab slip ke baqi ke barabar ho. Mazdoor ki screen par us raqam ko badal bhi sakte hain.
 - [ ] **Apni company** mein **Mahine ke baad tankhwah kitne din mein** likhein. Us din tak **abhi late nahin** likha aaye, us ke baad din ginay jayen.
 
+## 5h. Raseed aur overdue (T17)
+
+Pehle 5g ke mutabiq aik invoice jari karein.
+
+- [ ] Invoice kholein, **Raseed darj karein** dabayein. Company aur poori baqi raqam khud bhari ho, aur **Kis ka paisa hai** mein yahi invoice pehle ho. Raqam aadhi kar dein, **Bank** chunein, reference likhein, save karein.
+- [ ] Invoice par likha ho kitna mila aur kitna baqi, neeche **Raseedein** mein yeh raseed ho. Invoice list mein **Kuch paisa mila** aur baqi raqam aaye.
+- [ ] **Hisaab > Hisaab likhein > Paisay mile > Company se mila**: usi company ki raqam invoice ke baqi se zyada likhein. Neeche likha aaye kitna company ka credit rahega. Save karein. Cash book mein raseed par invoice number aur **Credit mein rakha** nazar aaye.
+- [ ] Raseed par dabayein > **Raseed banayein**. PDF English mein ho, invoice number, credit, aur "not a tax invoice" likha ho.
+- [ ] Naya invoice jari karein. Us par **Company ka credit lagayein** ka button aaye, dabane se credit us par lag jaye.
+- [ ] Jis invoice ki due date guzar gayi ho: list mein laal raqam aur **Overdue**, invoice par laal paigham. **Mahina band** mein woh invoice due date par aaye.
+- [ ] **Baqi ko nuqsan maan kar band karein**, wajah likhein. Mahina band se hat jaye, invoice par likha ho kitna band kiya. **Band raqam dobara kholein** se wapas aaye.
+- [ ] Paid invoice ka poora credit note banayein. Paisa company ke credit mein chala jaye, naye invoice par lag sake.
+- [ ] **Billing > Company ka hisaab**: har company ka hisaab, har line ke baad baqi. **Companies** mein company kholein: **Paisa** mein baqi, overdue aur credit ho, aur wahan se usi company ka hisaab khule. PDF aur Excel nikal kar dekhein.
+
 ## 5g. Invoice (T16)
 
 Yeh bhi P3 ka hissa hai. Pehle **Apni company** mein VAT registered aur TRN bharein, agar aap ki company registered hai.
@@ -182,6 +196,7 @@ Yeh hissa P3 ka hai, magar isi APK mein hai.
 Yeh chaaron abhi PROPOSED hain. Aap ka jawab darkar hai. Accountant ko bhi dikhayein.
 
 - [ ] **D-033:** Hisaab statement ki tarah chalta hai. Tankhwah screen par purane post hue mahine ka "ada kiya" tareekh se ginta hai. Khaas mahine slip aur baqi tankhwah mein dikhte hain.
+- [ ] **D-052:** Company ki raseed cash book mein hi rehti hai, aur batati hai kis invoice ka paisa hai, sab se purana pehle. Zyada paisa company ka credit rehta hai. Due date guzarne ke baad paisa baqi ho to invoice overdue, aur mahina tab tak nahin band hota jab tak paisa na aaye ya aap wajah likh kar baqi ko nuqsan maan kar band na karein. Paid invoice ka credit note paisa credit mein wapas daalta hai. Credit wapas karna (refund) abhi nahin bana. Accountant ko bhi dikhayein.
 - [ ] **D-051:** Invoice mein haath se line (jaise transport) jud sakti hai, us par bhi VAT. Credit note kuch raqam ka bhi ban sakta hai, kaam invoice par hi rehta hai. Invoice ke baad hazri se raqam badle to mahina rukta hai, jab tak poora credit note aur naya invoice na bane. Sirf farq ka credit note ya invoice nahin banta. Tax adviser ko bhi dikhayein.
 - [ ] **D-050:** Invoice sirf approved timesheet se banta hai, aur draft timesheet ko jaisay hai waisay parhta hai. VAT sirf aap ki apni registration se lagta hai, company ke TRN se nahin. Number jari karte waqt milta hai, tareekh aaj ki, pichli tareekh nahin. Ghalti ho to poora credit note bana kar naya invoice banta hai. Kaghaz hamesha English mein. Jis kaam ka invoice nahin bana woh mahina rokta hai. Tax adviser ko bhi dikhayein.
 - [ ] **D-049:** Timesheet par sirf company ka hisaab hota hai, mazdoor ki tankhwah kabhi nahin. Rate pehle band hota hai, aap on karein to dikhta hai. Company se jo ghante tay hon woh sirf company ke kaghaz par badalte hain, hazri aur tankhwah wahi rehti hai. Aik baar bane kaghaz par baad ka letterhead nahin aata, nayi revision par aata hai. Saboot sirf tasveer ki shakal mein hai.

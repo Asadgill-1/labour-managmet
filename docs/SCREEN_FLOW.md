@@ -27,11 +27,11 @@ The panel lists main tabs that open to show sub-tabs. The current tab's sub-tabs
 | Visa | Visa ka paisa, Visa register |
 | Companies | Companies, Sites, Rates, Company register |
 | Tankhwah | Tankhwah, Tankhwah register, Advance register |
-| Billing | Timesheet, Invoice, Invoice register. Paisay mile comes with T17 |
+| Billing | Timesheet, Invoice, Invoice register, Company ka hisaab |
 | Hisaab | Rozana hisaab, Pichla baqaya, Hisaab register, Mahina band |
 | Kaghazat | Bane hue kaghaz, Letterhead |
 | Rooms | Rooms, Room register |
-| Jald aa raha hai | Paisay mile, Reports, Team, Backup, Plan, Help |
+| Jald aa raha hai | Reports, Team, Backup, Plan, Help |
 
 A register has a date range with quick choices, filters that take several values, totals on the band, rows under their dates with every field showing, and one export button (D-038).
 
@@ -69,7 +69,9 @@ Language > email and password > verify email > company name > optional logo and 
 
 **Timesheet (TS-01):** Client > date range > site > what goes on and what is left out > draft > agree a row if needed > approve > paper: daily summary or worker detail, rates on or off > sent to the company > accepted or disputed > a new revision if anything changes. The next step sits above the rows, so a long list never hides it.
 
-**Invoice (INV-01, D-050):** Company > dates > site > draft: the timesheets it reads, ticked, and what waits > lines, with a discount or a monthly fee, and lines typed by hand > VAT treatment, PO and due date > see the draft > issue, which gives the number and today's date > paper, or send with its timesheet > a credit note takes it back whole or an amount of it, with a reason. Work changed after it issued shows on the invoice, and once it is taken back whole it offers a new invoice for the same dates (D-051).
+**Invoice (INV-01, D-050):** Company > dates > site > draft: the timesheets it reads, ticked, and what waits > lines, with a discount or a monthly fee, and lines typed by hand > VAT treatment, PO and due date > see the draft > issue, which gives the number and today's date > paper, or send with its timesheet > a credit note takes it back whole or an amount of it, with a reason. Work changed after it issued shows on the invoice, and once it is taken back whole it offers a new invoice for the same dates (D-051). An issued invoice shows partly paid, paid, overdue or closed, and offers a receipt, the company's credit, or closing the rest as lost with a reason (D-052).
+
+**Receipt (INV-05, D-052):** Hisaab > Hisaab likhein > Paisay mile > Company se mila, or Invoice > Raseed darj karein > company > amount > what it pays, oldest first, each share can change > what is left stays as credit > date, cash or bank, reference > save. Tapping it in the cash book gives a receipt paper or undoes it. Company > Paisa shows what is owed, overdue and unused, and opens Company ka hisaab.
 
 **Share (DOC-06, DOC-07):** Preview > recipient and document summary > save, print, share sheet or WhatsApp. The user picks the recipient and sends. "Share opened" is never shown as "delivered".
 

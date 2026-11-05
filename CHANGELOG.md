@@ -18,6 +18,8 @@
 - An invoice draft takes lines typed by hand, such as transport.
 - A month can't close while an invoice charges other figures than its corrected timesheet. The invoice shows the difference, and a new invoice for the same dates is one tap after the credit note.
 - A month can't close while work with a company rate has no invoice.
+- A company's payment says which invoices it settles, oldest first, and what is left waits as credit for the next invoice. Invoices show partly paid, paid or overdue, and an overdue one holds up its month until paid or closed as lost with a reason. A receipt paper for the company, and a company statement as PDF or Excel.
+- The invoice register no longer fails on a line typed by hand or a credit note for an amount.
 - Your letterhead on every paper: logo, header and footer images, signature, stamp, or pre-printed paper, with a sample to check.
 - Salary slips and receipts keep a number and an exact stored copy, and a new revision when a figure changes.
 - See a paper on screen, then save, print or send it.

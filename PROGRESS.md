@@ -2,9 +2,9 @@
 
 Read this first each session (AI-04). Replace it, do not append; git holds the history.
 
-**Phase:** P3 started on the owner's word on 2026-11-02, with P2's sign-off and the P1 gate's phone checks (D-035) still open. T14, T15 and T16 are built
-**Branch:** `p3/t16-invoices` (stacked: ... > p2/t13b > p3/t14 > p3/t15 > p3/t16, none merged)
-**Next task:** T17 (receipts, invoice status, client statement), in sequence on the owner's word. The owner's phone test is still open
+**Phase:** P3 started on the owner's word on 2026-11-02, with P2's sign-off and the P1 gate's phone checks (D-035) still open. T14 to T17 are built
+**Branch:** `p3/t17-receipts` (stacked: ... > p2/t13b > p3/t14 > p3/t15 > p3/t16 > p3/t17, none merged)
+**Next task:** T18 (tenant reports, export, CSV import), in sequence on the owner's word. The owner's phone test is still open
 
 ## Done
 
@@ -14,6 +14,7 @@ Read this first each session (AI-04). Replace it, do not append; git holds the h
 | T04 | OWNER_ACCEPTED | Policy defaults D-101 to D-105 approved 2026-10-31 |
 | T05 to T10b, T12a | IMPLEMENTED_UNVERIFIED | CI green. The owner said "Theek hain" on 2026-10-31 to worker groups and the cash book on the phone. The checklist results are not reported yet |
 | T11 | IMPLEMENTED_UNVERIFIED | `dart test`: 82 passing. `flutter test`: 73 passing, including PRD examples, a crash during posting, and one full flow through the screens. `flutter analyze` clean. Owner has not seen it, and D-033 and D-034 are waiting for an answer |
+| T17 | IMPLEMENTED_UNVERIFIED | `dart test`: 141 passing, with the PRD's receipt figures. `flutter test`: 318 passing, including an upgrade from schema v14, a receipt for part with credit left over and a retry that changes nothing, every refusal writing nothing, credit received before an invoice and used on it, a receipt undone in the cash book, a credit note on a paid invoice giving the money back as credit, a balance from before the app owed first, an overdue invoice stopping the month until paid or closed as lost and opened again, the company statement reconciling with what is owed less credit, and a receipt recorded from the invoice through the screens. On 2026-11-05 the list, closing, receipt form, a part-paid, overdue and closed invoice, the closing dialog, the company statement, the company screen and the cash book were drawn and read by eye, with the receipt paper and the statement PDF. That review fixed the closing dialog's wrong label, its cut help text and its wrapped button, added the credit to the cash book line, coloured an overdue amount, and stopped a fixed monthly line naming its unit twice. The invoice register no longer fails on a line typed by hand or a credit for an amount, which T16 missed. Not on a phone |
 | T16 | IMPLEMENTED_UNVERIFIED | `dart test`: 138 passing, with the PRD's VAT figures. `flutter test`: 307 passing, including upgrades from schema v12 and v13, lines typed by hand, credit notes for an amount then the rest, a month stopped by work changed after it was invoiced (D-051), a draft that reads its timesheets and bills nothing twice, VAT only from the company's own registration, a discount and prices with VAT in, numbers with no gap and a retry that changes nothing, every path to change an issued invoice refused, a credit note that frees the work, a monthly fee charged once, the month stopped by work with no invoice, the invoice register, the whole path from an approved timesheet to an issued invoice and a credit note through the screens, and invoicing at the 1,000-worker size. Screens, the tax invoice, the credit note and a draft drawn and read by eye, and on 2026-11-05 the added line, the credit note sheets, a part credit, the changed-work note and both new papers. That review moved the part-credit totals up the screen and made "1 rows" singular. Not on a phone: "Send with timesheet" uses an Android share of several files that has only been compiled |
 | T15 | IMPLEMENTED_UNVERIFIED | `dart test`: 129 passing. `flutter test`: 269 passing, including an upgrade from schema v11, the whole path from a company and dates to an accepted timesheet and a new revision through the screens, no wage or hidden rate in what a company gets, the same work refused twice by the app and the database, a retry of every step, and 5,200 rows at the 1,000-worker size. Screens and papers drawn and read by eye. On 2026-11-04 a Windows build was driven with agent-desktop from an empty app to an accepted R2, a refused second timesheet, a correction after approval, R3, and closing October, with every figure right. It found four faults, now fixed with tests: a picker failure called the file the wrong type, a revision asked for an undo's reason, the corrected-rows note was plural for one row, and a draft went without asking. Not on a phone. The billing calls have no screen until T16 |
 | T14 | IMPLEMENTED_UNVERIFIED | `dart test`: 114 passing. `flutter test`: 210 passing, including an upgrade from schema v10, images refused by their bytes, a tall image shrinking whole, issued papers unchanged by a later logo, revisions under one number, a copy from what was stored, triggers refusing any change, and no blank last page. Slip, letterhead, COPY, receipt, pre-printed and register PDFs drawn with the Windows PDF engine and read by eye. Excel read back with openpyxl. Not on a phone, so the Android image picker, preview and print have only been compiled |
@@ -32,7 +33,7 @@ Test evidence is host only. Encryption on Android, UX-06 timing and BUILD-04 on 
 Details in `docs/owner/P2_CHECKLIST.md`.
 
 1. Encryption check result, and seconds for the 10-worker entry (D-035).
-2. An answer on D-033, D-034, D-043, D-044, D-047, D-049, D-050 and D-051 after trying Tankhwah, Mahina band, Kaghazat, Timesheet and Invoice on the phone. A tax adviser should see D-050 and D-051.
+2. An answer on D-033, D-034, D-043, D-044, D-047, D-049, D-050, D-051 and D-052 after trying Tankhwah, Mahina band, Kaghazat, Timesheet, Invoice and receipts on the phone. A tax adviser should see D-050 and D-051, and an accountant D-052.
 3. Run `gh auth login`. The public repo made CI readable, but PRs and merges still need it.
 4. Plug the phone in by USB with USB debugging on, so the share of several files can be checked from here. This computer has virtualisation off, so it can't run an emulator.
 
@@ -41,12 +42,14 @@ Details in `docs/owner/P2_CHECKLIST.md`.
 - After login: open the stacked PRs in order, confirm the Android job passes on the first PR, merge. Turn on branch protection for `main`, which is off now and is available on public repos (AI-05, D-032).
 - `db_check_screen.dart` and `spike_checks.dart` are the T03 proof. Delete both once the phone test passes.
 - When a "Jald" section in `lib/app/side_panel.dart` gets built, give it a `Section` value, a screen in `app.dart`, and move it out of the "Jald" row in `docs/SCREEN_FLOW.md`.
-- The owner's phone holds real test data, so D-025 no longer applies: schema is now v14, and every change needs a version bump and a migration. `migration_test.dart` upgrades v1 data.
+- The owner's phone holds real test data, so D-025 no longer applies: schema is now v15, and every change needs a version bump and a migration. `migration_test.dart` upgrades v1 data.
 - T21 must gate letterhead uploads, which DOC-02 makes a paid feature, and keep logo and basic identity free. T25 must give each device its own paper numbers, and carry images and stored files itself, since the audit log and outbox leave the bytes out on purpose (D-047). T20's backup holds them, because they sit in the database.
 - Issued papers sit in the database for good. A slip is about 60 KB, so a thousand workers' slips for a year would be about 700 MB if every one were issued. Measure on a phone before pilots.
 - A register's date line can sit alone at the foot of a page, with its rows on the next. A table row can't be told to stay with the next one. Split tables by date if owners mind.
-- T17 draws its papers on `documentPage` and adds their kinds to `DocKind` and `renderIssued`. An invoice paper is English whatever the app's language (D-050). A timesheet sent with it still follows the app's language.
-- T17 allocates company receipts to invoices and derives partly paid, paid and overdue (INV-05, INV-07). An overdue invoice then stops a month until paid or closed with a reason (D-048). Work with no invoice already does (D-050).
+- An invoice or receipt paper is English whatever the app's language (D-050, D-052). A timesheet sent with it still follows the app's language.
+- What companies owe is read from all their history each time, which is a few thousand rows over years. Keep running totals if a phone shows lag. Not measured at scale yet.
+- A refund of a company's credit, a receipt in another currency, and a reminder before an invoice falls due are not built (D-052). Add when owners ask.
+- Statement rows written within one second sort in the order they were read, since times are stored to the second. Only the balance at the end is certain then.
 - "Send with timesheet" uses an Android share of several files, which has only been compiled. Check it on the phone first.
 - `billed_allocations.invoice_id` still has no foreign key, since adding one rebuilds the table and its triggers. Issuing is the only writer.
 - T25 must give Team tenants invoice numbers from the server (INV-08), as it must for papers and timesheets.
@@ -99,4 +102,4 @@ Details in `docs/owner/P2_CHECKLIST.md`.
 - A test that walks the side panel can find the sub-tab it wants below the fold once more main tabs are open. `goTo` scrolls to it and pumps a frame before tapping, or the tap lands on the old spot.
 - A capture test froze for five minutes when it wrote to the database a screen was watching. Draw papers from a database of their own.
 - A rule that stops a month reaches every test that closes one. D-048 (3) needed `invoiceUpTo` in `test/support.dart`.
-- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Refresh the graph after every task, as the owner asked on 2026-10-31. Current graph: 3,565 nodes, 5,560 edges, 118 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.
+- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Refresh the graph after every task, as the owner asked on 2026-10-31. Current graph: 3,636 nodes, 5,680 edges, 122 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.
