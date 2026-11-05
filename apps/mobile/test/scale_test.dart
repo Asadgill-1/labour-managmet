@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/app/side_panel.dart';
 import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/closing.dart';
+import 'package:labour_app/data/invoices.dart';
 import 'package:labour_app/data/payroll.dart';
 import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/documents/document_frame.dart';
@@ -159,7 +160,9 @@ void main() {
     expect(approved.daily, hasLength(days));
     final unbilled = await timed('what can be billed', () => db.unbilledLines(timesheet));
     expect(unbilled, hasLength(workers ~/ 5 * days));
-    await timed('billing it', () => db.allocateBilling('i1', unbilled, operationId: newUuid()));
+    final invoice = await timed('a draft invoice of every row', () => db.createInvoice(clientId: 'client0', from: from, to: to, operationId: newUuid()));
+    await timed('issuing it', () => db.issueInvoice(invoice, describe: (_) => 'Manpower supply', operationId: newUuid()));
+    expect((await timed('reading the invoice', () => db.invoiceView(invoice))).totals.totalFils, workers ~/ 5 * days * 13500);
     expect(await db.unbilledLines(timesheet), isEmpty);
     const identity = DocumentIdentity(legalName: 'Co');
     const frame = DocumentMeta(title: 'Timesheet', subtitle: '', number: 'TS-2020-0001', dateLabel: 'd', pagePattern: '{page}/{pages}', madeLabel: 'm');
@@ -176,6 +179,7 @@ void main() {
     final after = await timed('slip after posting', () => db.statementsFor(month, workerId: 'w7'));
     expect(after.single.closingFils, days * 9000);
 
+    await timed('billing the other four companies', () => invoiceUpTo(db, month));
     final gaps = await timed('closing check with days left out', () => db.closingFor(month));
     expect(gaps.findings.every((f) => f.issue == ClosingIssue.noHazri), isTrue);
     await timed('saying nobody worked those days', () async {

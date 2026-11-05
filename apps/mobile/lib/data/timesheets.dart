@@ -57,6 +57,11 @@ class TsLeftOut {
   final int onOtherTimesheet;
 }
 
+/// What stops a current timesheet line going on an invoice. A row agreed at nothing has nothing to charge.
+enum BillHold { billed, notCharged, disputed, changed }
+
+typedef BillableLine = ({TimesheetLine line, BillHold? hold});
+
 /// One row of a timesheet: read from live attendance in a draft, from its stored line after that.
 class TimesheetRow {
   const TimesheetRow({required this.entryId, required this.workKey, required this.line, required this.workerName, required this.workerCode, required this.siteName, this.adjustReason});
@@ -70,8 +75,8 @@ class TimesheetRow {
   final String? adjustReason;
 }
 
-/// A row an invoice charged at a different figure from the current revision. The invoice stays as it was until T16's
-/// correction reaches it (TS-06).
+/// A row an invoice charged at a different figure from the current revision. The invoice stays as it was until a credit
+/// note takes it back and a new invoice charges the new figure (TS-06, INV-06).
 class BillingChange {
   const BillingChange({required this.workKey, required this.workDate, required this.workerName, required this.billedFils, required this.nowFils});
 
@@ -585,9 +590,9 @@ extension TimesheetOps on TenantDatabase {
     }
   }
 
-  /// Approved work an invoice can still charge (TS-05). A disputed revision waits until it is settled, a monthly row's fee
-  /// belongs to its contract (TS-08), and a row whose attendance has changed waits for a new revision.
-  Future<List<TimesheetLine>> unbilledLines(String timesheetId) async {
+  /// Every current line of these timesheets, and what stops it going on an invoice now, if anything (TS-05). One place
+  /// holds the rules, so the invoice and the timesheet never disagree.
+  Future<List<BillableLine>> billableLines(Iterable<String> timesheetIds, {String? from, String? to, String? siteId}) async {
     final l = timesheetLines;
     final r = timesheetRevisions;
     final e = attendanceEntries;
@@ -595,14 +600,37 @@ extension TimesheetOps on TenantDatabase {
       innerJoin(r, r.id.equalsExp(l.revisionId)),
       innerJoin(e, e.id.equalsExp(l.entryId)),
     ])
-      ..where(l.timesheetId.equals(timesheetId) & l.live.equals(true) & r.status.isIn(const ['approved', 'shared', 'accepted']) & l.amountFils.isBiggerThanValue(0) & e.superseded.equals(false))
+      ..where(
+        l.timesheetId.isIn(timesheetIds) &
+            l.live.equals(true) &
+            (from == null ? const Constant(true) : l.workDate.isBiggerOrEqualValue(from)) &
+            (to == null ? const Constant(true) : l.workDate.isSmallerOrEqualValue(to)) &
+            (siteId == null ? const Constant(true) : l.siteId.equals(siteId)),
+      )
       ..orderBy([OrderingTerm.asc(l.workDate), OrderingTerm.asc(l.workerName)]);
     final billed = await _liveBillingKeys();
     return [
       for (final row in await query.get())
-        if (!billed.contains(row.readTable(l).workKey)) row.readTable(l),
+        (
+          line: row.readTable(l),
+          hold: switch (row) {
+            _ when billed.contains(row.readTable(l).workKey) => BillHold.billed,
+            _ when row.readTable(l).amountFils == 0 => BillHold.notCharged,
+            _ when row.readTable(r).status == TsStatus.disputed.name => BillHold.disputed,
+            _ when row.readTable(e).superseded => BillHold.changed,
+            _ => null,
+          },
+        ),
     ];
   }
+
+  /// Approved work an invoice can still charge (TS-05). A disputed revision waits until it is settled, a monthly row's fee
+  /// belongs to its contract (TS-08), and a row whose attendance has changed waits for a new revision. [monthly] gives the
+  /// monthly rows instead, whose fee is charged once on its own line.
+  Future<List<TimesheetLine>> unbilledLines(String timesheetId, {bool monthly = false}) async => [
+    for (final b in await billableLines([timesheetId]))
+      if (b.hold == null && (b.line.amountFils == null) == monthly) b.line,
+  ];
 
   Future<Set<String>> _liveBillingKeys() async {
     final b = billedAllocations;
@@ -612,7 +640,8 @@ extension TimesheetOps on TenantDatabase {
     return {for (final row in await query.get()) row.read(b.workKey)!};
   }
 
-  /// Records which work an invoice charged, all of it or none (TS-05). T16 calls this as it issues.
+  /// Records which work an invoice charged, all of it or none (TS-05). A monthly row goes on at 0, since its contract's
+  /// fee is the charge (TS-08). Issuing calls this.
   Future<void> allocateBilling(String invoiceId, List<TimesheetLine> lines, {required String operationId}) {
     return applyOperation(
       operationId: operationId,
@@ -631,7 +660,7 @@ extension TimesheetOps on TenantDatabase {
         await batch((b) {
           b.insertAll(billedAllocations, [
             for (final l in lines)
-              BilledAllocationsCompanion.insert(id: newUuid(), tenantId: tenantId, createdAtUtc: now, updatedAtUtc: now, actorId: actorId, sourceOperationId: operationId, lineId: l.id, workKey: l.workKey, invoiceId: invoiceId, amountFils: l.amountFils!),
+              BilledAllocationsCompanion.insert(id: newUuid(), tenantId: tenantId, createdAtUtc: now, updatedAtUtc: now, actorId: actorId, sourceOperationId: operationId, lineId: l.id, workKey: l.workKey, invoiceId: invoiceId, amountFils: l.amountFils ?? 0),
           ]);
         });
         return {'invoice': invoiceId, 'lines': [for (final l in lines) l.id]};
@@ -639,7 +668,7 @@ extension TimesheetOps on TenantDatabase {
     );
   }
 
-  /// Frees what a credit note or cancelled invoice charged. The rows stay, flagged (INV-06). T16 calls this.
+  /// Frees what a credit note took back. The rows stay, flagged (INV-06).
   Future<void> releaseBilling(String invoiceId, {required String reason, required String operationId}) {
     return applyOperation(
       operationId: operationId,

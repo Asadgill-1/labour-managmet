@@ -1,16 +1,21 @@
 import 'package:domain/calc.dart';
 import 'package:domain/cash.dart';
 import 'package:domain/dates.dart';
+import 'package:domain/invoice.dart';
 import 'package:domain/money.dart';
 import 'package:domain/payroll.dart';
 import 'package:drift/drift.dart';
 
 import '../../app/side_panel.dart';
 import '../../data/cash.dart';
+import '../../data/invoices.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../cash/cash_row.dart';
+import '../invoices/invoice_paper.dart';
+import '../invoices/invoice_screen.dart' show vatCategoryLabel;
+import '../invoices/invoices_screen.dart' show invoiceStatusLabel;
 import '../rates/rate_labels.dart';
 import '../today/attendance_review_screen.dart' show statusLabel;
 import 'register_model.dart';
@@ -75,6 +80,7 @@ Future<RegisterData> buildRegister(TenantDatabase db, AppLocalizations l10n, Sec
     Section.advanceRegister => _advance(db, l10n, masters, from, to),
     Section.cashRegister => _cash(db, l10n, masters, from, to),
     Section.roomRegister => _rooms(db, l10n, masters, from, to),
+    Section.invoiceRegister => _invoices(db, l10n, masters, from, to),
     _ => throw ArgumentError.value(section, 'section', 'is not a register'),
   };
 }
@@ -1025,5 +1031,86 @@ Future<RegisterData> _payroll(TenantDatabase db, AppLocalizations l10n, _Masters
       RegisterFilter('owed', l10n.filterOwed, [(value: 'owed', label: l10n.owedYes), (value: 'clear', label: l10n.owedNo)]),
     ],
     entries: entries,
+  );
+}
+
+/// Every line of every invoice and credit note issued, with each figure as it went out: the structured record a later
+/// e-invoicing export starts from (D-011). A credit note counts against, so the totals net out.
+Future<RegisterData> _invoices(TenantDatabase db, AppLocalizations l10n, _Masters m, String? from, String? to) async {
+  final issued = {
+    for (final i in await (db.select(db.invoices)..where((i) => i.issueDate.isNotNull())).get())
+      if (_inRange(i.issueDate!, from, to)) i.id: i,
+  };
+  // Newest first, and each invoice's lines in their printed order.
+  final lines = (await (db.select(db.invoiceLines)..where((l) => l.invoiceId.isIn(issued.keys))).get())
+    ..sort((a, b) {
+      final x = issued[a.invoiceId]!;
+      final y = issued[b.invoiceId]!;
+      final date = y.issueDate!.compareTo(x.issueDate!);
+      if (date != 0) return date;
+      final made = y.createdAtUtc.compareTo(x.createdAtUtc);
+      return made != 0 ? made : a.position - b.position;
+    });
+  return RegisterData(
+    title: l10n.regInvoices,
+    titleColumn: 2,
+    amountColumns: const [16],
+    bandColumns: const [12, 15, 16],
+    note: l10n.regInvoiceNote,
+    columns: [
+      RegisterColumn(l10n.colDate, kind: CellKind.date),
+      RegisterColumn(l10n.colNumber, flex: 3),
+      RegisterColumn(l10n.colCompany, flex: 4),
+      RegisterColumn('TRN', inPdf: false),
+      RegisterColumn(l10n.colKind, inPdf: false),
+      RegisterColumn(l10n.colStatus, inPdf: false),
+      RegisterColumn(l10n.invPo, inPdf: false),
+      RegisterColumn(l10n.colDescription, flex: 7),
+      RegisterColumn(l10n.colQty, flex: 2),
+      RegisterColumn(l10n.colUnit, flex: 2),
+      RegisterColumn(l10n.colUnitPrice, kind: CellKind.money),
+      RegisterColumn(l10n.invDiscount, kind: CellKind.money, total: true, inPdf: false),
+      RegisterColumn(l10n.invNet, kind: CellKind.money, total: true),
+      RegisterColumn(l10n.invVatTreatment, inPdf: false),
+      RegisterColumn(l10n.colVatRate, flex: 2, inPdf: false),
+      RegisterColumn(l10n.invVat, kind: CellKind.money, total: true),
+      RegisterColumn(l10n.invTotal, kind: CellKind.money, total: true),
+      RegisterColumn(l10n.invDueDate, kind: CellKind.date, inPdf: false),
+    ],
+    filters: [RegisterFilter('client', l10n.colCompany, m.clientOptions)],
+    entries: [
+      for (final l in lines)
+        () {
+          final inv = issued[l.invoiceId]!;
+          final sign = inv.kind == 'credit' ? -1 : 1;
+          final parties = InvoiceParties.fromJson(inv.parties!);
+          return RegisterEntry(
+            [
+              inv.issueDate,
+              inv.number,
+              parties.customerName,
+              parties.customerTrn,
+              inv.kind == 'credit' ? l10n.invCreditNoteLabel : l10n.invTab,
+              invoiceStatusLabel(l10n, inv),
+              inv.poReference,
+              l.description,
+              quantityText(RateBasis.values.byName(l.basis), l.quantity),
+              unitText(paperWords, RateBasis.values.byName(l.basis)),
+              l.unitPriceFils,
+              sign * l.discountFils,
+              sign * l.netFils,
+              inv.vatRegistered ? vatCategoryLabel(l10n, VatCategory.values.byName(inv.vatCategory)) : null,
+              inv.vatRegistered ? vatPercent(inv.vatBps) : null,
+              sign * l.vatFils,
+              sign * (l.netFils + l.vatFils),
+              inv.dueDate,
+            ],
+            group: inv.issueDate!,
+            tags: {
+              'client': {inv.clientId},
+            },
+          );
+        }(),
+    ],
   );
 }

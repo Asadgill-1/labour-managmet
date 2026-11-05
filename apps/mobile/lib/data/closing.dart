@@ -6,6 +6,7 @@ import 'package:drift/drift.dart';
 
 import 'attendance.dart';
 import 'cash.dart';
+import 'invoices.dart';
 import 'masters.dart';
 import 'payroll.dart';
 import 'statement.dart';
@@ -22,8 +23,9 @@ class LaterMonthClosed implements Exception {
 }
 
 /// What closing looks for (REP-04). Anything of these left stops the month, because a closed month could never take it
-/// in. Unpaid wages do not: they carry forward (PAY-03, D-045).
-enum ClosingIssue { noHazri, noWorkerRate, noCompanyRate, overlap, payrollNotPosted, noMonthChosen }
+/// in. Unpaid wages do not: they carry forward (PAY-03, D-045). Work no invoice charges does, or skipping the invoice
+/// would get round the rule on overdue ones (D-048).
+enum ClosingIssue { noHazri, noWorkerRate, noCompanyRate, overlap, payrollNotPosted, noMonthChosen, notInvoiced }
 
 /// The worker, company, attendance row or payment to open, and the name to show for it.
 typedef ClosingTarget = ({String id, String name});
@@ -131,6 +133,10 @@ extension ClosingOps on TenantDatabase {
       add(ClosingIssue.noMonthChosen, c.entryDate, c.id, '${nameOf[c.workerId] ?? ''} ${formatAed(c.amountFils)}');
     }
 
+    for (final (client, month) in await uninvoicedWork(to: to, after: closedThrough)) {
+      add(ClosingIssue.notInvoiced, monthLastDay(month), client, clients[client] ?? client);
+    }
+
     final byName = [
       for (final f in found.entries) ClosingFinding(f.key.$1, f.key.$2, [for (final t in f.value.entries) (id: t.key, name: t.value)]..sort((a, b) => a.name.compareTo(b.name))),
     ];
@@ -224,7 +230,7 @@ extension ClosingOps on TenantDatabase {
   Stream<MonthClosing> watchClosing(String month) async* {
     yield await closingFor(month);
     final changes = tableUpdates(
-      TableUpdateQuery.onAllTables([attendanceEntries, payContracts, payrollItems, payrollLines, cashEntries, salaryAllocations, openingBalances, workers, periodLocks, dayOffs]),
+      TableUpdateQuery.onAllTables([attendanceEntries, payContracts, payrollItems, payrollLines, cashEntries, salaryAllocations, openingBalances, workers, periodLocks, dayOffs, billedAllocations, timesheetLines, clients]),
     );
     await for (final _ in changes) {
       yield await closingFor(month);

@@ -643,18 +643,6 @@ abstract class AppLocalizations {
   /// **'Received {received}, paid {paid}'**
   String rentSplit(String received, String paid);
 
-  /// No description provided for @menuTimesheets.
-  ///
-  /// In en, this message translates to:
-  /// **'Timesheets'**
-  String get menuTimesheets;
-
-  /// No description provided for @menuInvoices.
-  ///
-  /// In en, this message translates to:
-  /// **'Invoices'**
-  String get menuInvoices;
-
   /// No description provided for @menuReceived.
   ///
   /// In en, this message translates to:
@@ -4578,6 +4566,714 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 person} other{{count} people}}'**
   String tsPeople(int count);
+
+  /// No description provided for @invTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoices'**
+  String get invTab;
+
+  /// No description provided for @invNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New invoice'**
+  String get invNew;
+
+  /// No description provided for @invEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No invoices yet. Approve a timesheet, then make an invoice from it.'**
+  String get invEmpty;
+
+  /// No description provided for @invCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Make draft'**
+  String get invCreate;
+
+  /// No description provided for @invNewHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The draft takes every approved timesheet of this company in these dates that still has work to bill. You can leave one out next.'**
+  String get invNewHelp;
+
+  /// No description provided for @invNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in these dates can be invoiced. Approve a timesheet for them first.'**
+  String get invNothing;
+
+  /// No description provided for @invNoCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in your company\'s legal name in Apni company first.'**
+  String get invNoCompany;
+
+  /// No description provided for @invWrongStep.
+  ///
+  /// In en, this message translates to:
+  /// **'This invoice has moved on. Look at it again.'**
+  String get invWrongStep;
+
+  /// No description provided for @invDraftLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get invDraftLabel;
+
+  /// No description provided for @invDraftTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice draft'**
+  String get invDraftTitle;
+
+  /// No description provided for @invStatusIssued.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued'**
+  String get invStatusIssued;
+
+  /// No description provided for @invStatusCredited.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken back'**
+  String get invStatusCredited;
+
+  /// No description provided for @invCreditNoteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit note'**
+  String get invCreditNoteLabel;
+
+  /// No description provided for @invDue.
+  ///
+  /// In en, this message translates to:
+  /// **'due {date}'**
+  String invDue(String date);
+
+  /// No description provided for @invTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get invTotal;
+
+  /// No description provided for @invVat.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT'**
+  String get invVat;
+
+  /// No description provided for @invNet.
+  ///
+  /// In en, this message translates to:
+  /// **'Before VAT'**
+  String get invNet;
+
+  /// No description provided for @invVatAt.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT {rate}'**
+  String invVatAt(String rate);
+
+  /// No description provided for @invNoteDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft. It has no number until you issue it, and reads its timesheets as they stand.'**
+  String get invNoteDraft;
+
+  /// No description provided for @invNoteIssued.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued on {date}. Due on {due}.'**
+  String invNoteIssued(String date, String due);
+
+  /// No description provided for @invNoteCredited.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken back whole by credit note {number}. Its work can go on a new invoice.'**
+  String invNoteCredited(String number);
+
+  /// No description provided for @invNoteCreditNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes back invoice {number}: {reason}'**
+  String invNoteCreditNote(String number, String reason);
+
+  /// No description provided for @invNotRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Your company is not VAT registered on today\'s date, so no VAT is charged and the paper says Invoice, not Tax Invoice. Change it in Apni company.'**
+  String get invNotRegistered;
+
+  /// No description provided for @invNeedsTrn.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your TRN in Apni company before issuing a tax invoice.'**
+  String get invNeedsTrn;
+
+  /// No description provided for @invIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue'**
+  String get invIssue;
+
+  /// No description provided for @invIssueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It gets the next number and today\'s date. After this it can\'t be changed, only taken back whole with a credit note.'**
+  String get invIssueBody;
+
+  /// No description provided for @invPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'See draft'**
+  String get invPreview;
+
+  /// No description provided for @invDeleteDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete draft'**
+  String get invDeleteDraft;
+
+  /// No description provided for @invDeleteDraftBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The draft goes, with its discounts and fees. The timesheets don\'t change.'**
+  String get invDeleteDraftBody;
+
+  /// No description provided for @invPaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Paper'**
+  String get invPaper;
+
+  /// No description provided for @invShareBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Send with timesheet'**
+  String get invShareBoth;
+
+  /// No description provided for @invShareBothBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice {number} and each timesheet it charges go together in one message. You pick who gets it.'**
+  String invShareBothBody(String number);
+
+  /// No description provided for @invCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit note'**
+  String get invCredit;
+
+  /// No description provided for @invCreditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Take back the whole invoice'**
+  String get invCreditTitle;
+
+  /// No description provided for @invCreditReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it is taken back'**
+  String get invCreditReason;
+
+  /// No description provided for @invCreditHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A credit note dated today takes back every line and its VAT. The invoice stays on record, and its work can go on a new invoice.'**
+  String get invCreditHelp;
+
+  /// No description provided for @invCreditConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Make credit note'**
+  String get invCreditConfirm;
+
+  /// No description provided for @invSettingsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get invSettingsHeading;
+
+  /// No description provided for @invPo.
+  ///
+  /// In en, this message translates to:
+  /// **'PO / reference'**
+  String get invPo;
+
+  /// No description provided for @invDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get invDueDate;
+
+  /// No description provided for @invDueAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Set on issue, from the company\'s days'**
+  String get invDueAuto;
+
+  /// No description provided for @invVatTreatment.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT treatment'**
+  String get invVatTreatment;
+
+  /// No description provided for @invCatStandard.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard rate, 5%'**
+  String get invCatStandard;
+
+  /// No description provided for @invCatZero.
+  ///
+  /// In en, this message translates to:
+  /// **'Zero-rated'**
+  String get invCatZero;
+
+  /// No description provided for @invCatExempt.
+  ///
+  /// In en, this message translates to:
+  /// **'Exempt'**
+  String get invCatExempt;
+
+  /// No description provided for @invCatOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Outside the scope of VAT'**
+  String get invCatOut;
+
+  /// No description provided for @invCatHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A tax adviser should confirm any treatment other than standard.'**
+  String get invCatHelp;
+
+  /// No description provided for @invInclusive.
+  ///
+  /// In en, this message translates to:
+  /// **'Rates include VAT'**
+  String get invInclusive;
+
+  /// No description provided for @invInclusiveHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Off: VAT is added on top.'**
+  String get invInclusiveHelp;
+
+  /// No description provided for @invTimesheetsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Timesheets'**
+  String get invTimesheetsHeading;
+
+  /// No description provided for @invSourceRows.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row to bill} other{{count} rows to bill}}'**
+  String invSourceRows(int count);
+
+  /// No description provided for @invSourceDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row waits: the company disputed it} other{{count} rows wait: the company disputed them}}'**
+  String invSourceDisputed(int count);
+
+  /// No description provided for @invSourceChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row waits: its attendance changed, so make a new revision} other{{count} rows wait: their attendance changed, so make a new revision}}'**
+  String invSourceChanged(int count);
+
+  /// No description provided for @invLinesHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Lines'**
+  String get invLinesHeading;
+
+  /// No description provided for @invNoLines.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing ticked can be invoiced.'**
+  String get invNoLines;
+
+  /// No description provided for @invLineSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change this line'**
+  String get invLineSheetTitle;
+
+  /// No description provided for @invDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount (AED)'**
+  String get invDiscount;
+
+  /// No description provided for @invFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Fee for these dates (AED)'**
+  String get invFee;
+
+  /// No description provided for @invFeeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts at the contract\'s monthly fee. Change it for part of a month.'**
+  String get invFeeHelp;
+
+  /// No description provided for @invDiscountTooBig.
+  ///
+  /// In en, this message translates to:
+  /// **'A discount can\'t be more than its line.'**
+  String get invDiscountTooBig;
+
+  /// No description provided for @findingNotInvoiced.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} companies have work no invoice charges yet: {names}. Make their invoices in Billing.'**
+  String findingNotInvoiced(int count, String names);
+
+  /// No description provided for @regInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice register'**
+  String get regInvoices;
+
+  /// No description provided for @regInvoiceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'One row for each line of each invoice and credit note, as issued. Credit notes count against. This is a record, not a UAE structured e-invoice.'**
+  String get regInvoiceNote;
+
+  /// No description provided for @colNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Number'**
+  String get colNumber;
+
+  /// No description provided for @colKind.
+  ///
+  /// In en, this message translates to:
+  /// **'Kind'**
+  String get colKind;
+
+  /// No description provided for @colStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get colStatus;
+
+  /// No description provided for @colDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get colDescription;
+
+  /// No description provided for @colQty.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty'**
+  String get colQty;
+
+  /// No description provided for @colUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get colUnit;
+
+  /// No description provided for @colUnitPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit price'**
+  String get colUnitPrice;
+
+  /// No description provided for @colVatRate.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT %'**
+  String get colVatRate;
+
+  /// No description provided for @invPTaxInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax Invoice'**
+  String get invPTaxInvoice;
+
+  /// No description provided for @invPInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice'**
+  String get invPInvoice;
+
+  /// No description provided for @invPTaxCreditNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax Credit Note'**
+  String get invPTaxCreditNote;
+
+  /// No description provided for @invPCreditNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit Note'**
+  String get invPCreditNote;
+
+  /// No description provided for @invPBillTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Bill to'**
+  String get invPBillTo;
+
+  /// No description provided for @invPCreditTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit to'**
+  String get invPCreditTo;
+
+  /// No description provided for @invPSupplierTrn.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplier TRN'**
+  String get invPSupplierTrn;
+
+  /// No description provided for @invPIssueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of issue'**
+  String get invPIssueDate;
+
+  /// No description provided for @invPSupplyPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Period of supply'**
+  String get invPSupplyPeriod;
+
+  /// No description provided for @invPAgainst.
+  ///
+  /// In en, this message translates to:
+  /// **'Against invoice'**
+  String get invPAgainst;
+
+  /// No description provided for @invPDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get invPDueDate;
+
+  /// No description provided for @invPReference.
+  ///
+  /// In en, this message translates to:
+  /// **'PO / reference'**
+  String get invPReference;
+
+  /// No description provided for @invPColNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No.'**
+  String get invPColNo;
+
+  /// No description provided for @invPColDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get invPColDescription;
+
+  /// No description provided for @invPColQty.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty'**
+  String get invPColQty;
+
+  /// No description provided for @invPColUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get invPColUnit;
+
+  /// No description provided for @invPColRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit price'**
+  String get invPColRate;
+
+  /// No description provided for @invPColDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount'**
+  String get invPColDiscount;
+
+  /// No description provided for @invPColNet.
+  ///
+  /// In en, this message translates to:
+  /// **'Taxable amount'**
+  String get invPColNet;
+
+  /// No description provided for @invPColAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get invPColAmount;
+
+  /// No description provided for @invPColVatRate.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT %'**
+  String get invPColVatRate;
+
+  /// No description provided for @invPColVat.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT'**
+  String get invPColVat;
+
+  /// No description provided for @invPColTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get invPColTotal;
+
+  /// No description provided for @invPUnitHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Hour'**
+  String get invPUnitHour;
+
+  /// No description provided for @invPUnitDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get invPUnitDay;
+
+  /// No description provided for @invPUnitShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift'**
+  String get invPUnitShift;
+
+  /// No description provided for @invPUnitMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get invPUnitMonth;
+
+  /// No description provided for @invPUnitWorkerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker-month'**
+  String get invPUnitWorkerMonth;
+
+  /// No description provided for @invPLineLabour.
+  ///
+  /// In en, this message translates to:
+  /// **'Manpower supply'**
+  String get invPLineLabour;
+
+  /// No description provided for @invPLineFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly fee'**
+  String get invPLineFee;
+
+  /// No description provided for @invPTotalNet.
+  ///
+  /// In en, this message translates to:
+  /// **'Total before VAT'**
+  String get invPTotalNet;
+
+  /// No description provided for @invPTotalVat.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT at {rate}'**
+  String invPTotalVat(String rate);
+
+  /// No description provided for @invPTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total due'**
+  String get invPTotal;
+
+  /// No description provided for @invPCredited.
+  ///
+  /// In en, this message translates to:
+  /// **'Total credited'**
+  String get invPCredited;
+
+  /// No description provided for @invPZeroRated.
+  ///
+  /// In en, this message translates to:
+  /// **'Zero-rated supply.'**
+  String get invPZeroRated;
+
+  /// No description provided for @invPExempt.
+  ///
+  /// In en, this message translates to:
+  /// **'Exempt supply.'**
+  String get invPExempt;
+
+  /// No description provided for @invPOutOfScope.
+  ///
+  /// In en, this message translates to:
+  /// **'Outside the scope of UAE VAT.'**
+  String get invPOutOfScope;
+
+  /// No description provided for @invPReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason: {reason}'**
+  String invPReason(String reason);
+
+  /// No description provided for @invPTimesheets.
+  ///
+  /// In en, this message translates to:
+  /// **'Supported by timesheet {numbers}, which is a separate paper.'**
+  String invPTimesheets(String numbers);
+
+  /// No description provided for @invPInclusive.
+  ///
+  /// In en, this message translates to:
+  /// **'The rates included VAT, shown here apart.'**
+  String get invPInclusive;
+
+  /// No description provided for @invPNotEInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'This PDF is not a UAE structured e-invoice.'**
+  String get invPNotEInvoice;
+
+  /// No description provided for @invPBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank details'**
+  String get invPBank;
+
+  /// No description provided for @invPDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'DRAFT'**
+  String get invPDraft;
+
+  /// No description provided for @invPDraftNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Not issued and has no number'**
+  String get invPDraftNote;
+
+  /// No description provided for @invLessDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount {amount}'**
+  String invLessDiscount(String amount);
+
+  /// No description provided for @invOpenCreditNote.
+  ///
+  /// In en, this message translates to:
+  /// **'See credit note {number}'**
+  String invOpenCreditNote(String number);
+
+  /// No description provided for @invOpenInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'See invoice {number}'**
+  String invOpenInvoice(String number);
 }
 
 class _AppLocalizationsDelegate

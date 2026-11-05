@@ -46,12 +46,15 @@ Future<void> seed(TenantDatabase db) async {
   }
 }
 
-/// Says everyone without a row had no work, so only the other findings are left.
-Future<void> restOff(TenantDatabase db, String month) => db.transaction(() async {
-  for (final f in (await db.closingFor(month)).findings.where((f) => f.issue == ClosingIssue.noHazri)) {
-    await db.markDayOff(f.date, [for (final t in f.targets) t.id], operationId: newUuid());
-  }
-});
+/// Says everyone without a row had no work, and bills every company's work, so only the other findings are left.
+Future<void> restOff(TenantDatabase db, String month) async {
+  await invoiceUpTo(db, month);
+  await db.transaction(() async {
+    for (final f in (await db.closingFor(month)).findings.where((f) => f.issue == ClosingIssue.noHazri)) {
+      await db.markDayOff(f.date, [for (final t in f.targets) t.id], operationId: newUuid());
+    }
+  });
+}
 
 void main() {
   late TenantDatabase db;
@@ -144,6 +147,9 @@ void main() {
       final corrected = kept.firstWhere((e) => e.id == overlap.targets.single.id);
       await db.correctEntry(corrected, EntryInput(workerId: asif, shift: shift, overlapReason: 'Two sites'), reason: 'Both true', operationId: newUuid());
       await db.settleOldPayment((await db.select(db.cashEntries).get()).single, operationId: newUuid());
+      // With its rate in, Nakheel's day has a bill to send (D-048).
+      expect((await db.closingFor(oct)).findings.single.issue, ClosingIssue.notInvoiced);
+      await invoiceUpTo(db, oct);
 
       c = await db.closingFor(oct);
       expect(c.findings, isEmpty);

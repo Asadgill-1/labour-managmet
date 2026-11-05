@@ -36,9 +36,13 @@ void main() {
     await tester.tap(find.text('Jald aa raha hai'));
     await settle(tester);
     expect(find.text('Jald'), findsWidgets);
-    await tester.tap(find.text('Timesheet'));
+    // The list is longer than the screen now, so bring the row up first.
+    await tester.ensureVisible(find.text('Reports'));
+    await tester.pump();
+    await tester.tap(find.text('Reports'));
     await settle(tester);
-    expect(find.text('Timesheet'), findsOneWidget);
+    expect(find.text('Reports'), findsOneWidget);
+    expect(find.text('Invoice'), findsNothing, reason: 'built now, so it left the list');
 
     await tester.tap(find.byTooltip('Menu band karein'));
     await settle(tester);

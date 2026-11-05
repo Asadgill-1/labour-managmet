@@ -205,15 +205,19 @@ void main() {
       await expectLater(db.deleteTimesheetDraft(rev.id, operationId: newUuid()), throwsA(isA<TimesheetWrongStep>()));
     });
 
-    test('a timesheet for a closed month changes nothing in it', () async {
+    test('a timesheet of a closed month can still take a new revision, and its attendance stays as it was', () async {
       await work(db, '2020-10-05');
       await db.postPayroll('2020-10', operationId: newUuid());
+      await invoiceUpTo(db, '2020-10');
       for (final f in (await db.closingFor('2020-10')).findings) {
         await db.markDayOff(f.date, [for (final t in f.targets) t.id], operationId: newUuid());
       }
       await db.closeMonth('2020-10', operationId: newUuid());
-      final view = await db.timesheetView(await approved());
-      expect(view.status, TsStatus.approved);
+      final id = (await db.select(db.timesheets).getSingle()).id;
+      await db.startTimesheetRevision(id, reason: 'Company asked again', operationId: newUuid());
+      await db.approveTimesheet((await latest(id)).id, operationId: newUuid());
+      final view = await db.timesheetView(id);
+      expect((view.status, view.revision.revision), (TsStatus.approved, 2));
       expect(view.rows, hasLength(1));
     });
   });

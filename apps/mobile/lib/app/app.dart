@@ -17,6 +17,7 @@ import '../features/rates/balances_screen.dart';
 import '../features/registers/ledger_screen.dart';
 import '../features/rates/rates_screen.dart';
 import '../features/rooms/rooms_screen.dart';
+import '../features/invoices/invoices_screen.dart';
 import '../features/timesheets/timesheets_screen.dart';
 import '../features/today/today_screen.dart';
 import '../features/visa/visa_screen.dart';
@@ -43,6 +44,7 @@ Widget _screen(Section section) => switch (section) {
   Section.documents => const DocumentsScreen(),
   Section.letterhead => const LetterheadScreen(),
   Section.timesheets => const TimesheetsScreen(),
+  Section.invoices => const InvoicesScreen(),
   Section.attendanceRegister ||
   Section.workerRegister ||
   Section.visaRegister ||
@@ -50,7 +52,8 @@ Widget _screen(Section section) => switch (section) {
   Section.payrollRegister ||
   Section.advanceRegister ||
   Section.cashRegister ||
-  Section.roomRegister => LedgerScreen(section),
+  Section.roomRegister ||
+  Section.invoiceRegister => LedgerScreen(section),
 };
 
 final _routerProvider = Provider(

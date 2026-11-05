@@ -286,3 +286,34 @@ END;
 
 -- The same work can't be charged twice, whatever any screen or date filter asks for (TS-05).
 CREATE UNIQUE INDEX one_live_billing ON billed_allocations (work_key) WHERE NOT released;
+
+-- Only a draft can change or go. An issued invoice keeps every figure, and its one step left is to be credited (INV-06).
+CREATE TRIGGER invoice_keeps_issue BEFORE UPDATE OF client_id, kind, credits_invoice_id, site_id, from_date, to_date, draft,
+  po_reference, vat_category, vat_bps, prices_include_vat, vat_registered, due_date, issue_date, year, seq, number, parties, reason ON invoices
+WHEN OLD.status <> 'draft'
+BEGIN
+  SELECT RAISE(ABORT, 'an issued invoice never changes');
+END;
+
+CREATE TRIGGER invoice_status_forward BEFORE UPDATE OF status ON invoices
+WHEN NEW.status <> OLD.status AND NOT ((OLD.status = 'draft' AND NEW.status = 'issued') OR (OLD.status = 'issued' AND NEW.status = 'credited'))
+BEGIN
+  SELECT RAISE(ABORT, 'an invoice only moves from draft to issued to credited');
+END;
+
+CREATE TRIGGER invoice_no_delete BEFORE DELETE ON invoices
+WHEN OLD.status <> 'draft'
+BEGIN
+  SELECT RAISE(ABORT, 'an issued invoice stays on record');
+END;
+
+CREATE TRIGGER invoice_line_no_edit BEFORE UPDATE ON invoice_lines BEGIN
+  SELECT RAISE(ABORT, 'an invoice line never changes');
+END;
+
+CREATE TRIGGER invoice_line_no_delete BEFORE DELETE ON invoice_lines BEGIN
+  SELECT RAISE(ABORT, 'an invoice line stays on record');
+END;
+
+-- A credit note takes back a whole invoice, so one is enough (INV-06).
+CREATE UNIQUE INDEX one_credit_note ON invoices (credits_invoice_id) WHERE credits_invoice_id IS NOT NULL;

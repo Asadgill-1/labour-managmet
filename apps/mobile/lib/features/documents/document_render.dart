@@ -14,6 +14,7 @@ import '../../documents/document_frame.dart';
 import '../../l10n/app_localizations.dart';
 import '../payroll/salary_slip.dart';
 import '../registers/export_flow.dart';
+import '../invoices/invoice_paper.dart';
 import '../timesheets/timesheet_paper.dart';
 import 'receipt.dart';
 
@@ -26,6 +27,7 @@ Future<Uint8List> renderIssued(DocKind kind, Map<String, Object?> data, Document
       DocKind.payslip => slipPdf(SlipContent.fromJson(data), identity, meta, regularFont: regular, boldFont: bold),
       DocKind.paymentReceipt || DocKind.advanceReceipt => receiptPdf(ReceiptContent.fromJson(data), identity, meta, regularFont: regular, boldFont: bold),
       DocKind.timesheetDaily || DocKind.timesheetDailyPriced || DocKind.timesheetWorkers || DocKind.timesheetWorkersPriced => timesheetPdf(TimesheetPaper.fromJson(data), identity, meta, regularFont: regular, boldFont: bold),
+      DocKind.invoice || DocKind.creditNote => invoicePdf(InvoicePaper.fromJson(data), identity, meta, regularFont: regular, boldFont: bold),
     },
   );
 }
@@ -40,6 +42,38 @@ DocumentMeta metaForNow(AppLocalizations l10n, {required String title, required 
     dateLabel: showDate(ymd(now)),
     pagePattern: l10n.regPage('{page}', '{pages}'),
     madeLabel: l10n.regMade('${showDate(ymd(now))} ${showMinuteOfDay(now.hour * 60 + now.minute)}'),
+  );
+}
+
+/// Issues a paper with today's company details and look, or gives the one already stored (DOC-05). [words] sets the
+/// language of the page numbers and the "made" line, which is English on an invoice whatever the app's language.
+Future<IssuedDocument> issuePaper(
+  TenantDatabase db,
+  AppLocalizations words, {
+  required DocKind kind,
+  required String subjectId,
+  required String? period,
+  required String title,
+  required String subtitle,
+  required String summary,
+  required Map<String, Object?> data,
+  ({int year, int seq, int revision})? fixed,
+  String? number,
+}) async {
+  final identity = await db.currentIdentity(brandArgb: brand.toARGB32(), softArgb: brandSoft.toARGB32());
+  return db.issueDocument(
+    kind: kind,
+    subjectId: subjectId,
+    period: period,
+    title: title,
+    summary: summary,
+    data: data,
+    identity: identity,
+    metaFor: (printed) => metaForNow(words, title: title, subtitle: subtitle, number: printed),
+    render: (meta) => renderIssued(kind, data, identity, meta),
+    operationId: newUuid(),
+    fixed: fixed,
+    number: number,
   );
 }
 
@@ -58,6 +92,8 @@ Future<void> issueAndExport(
   required String fileName,
   required ValueChanged<bool> onBusy,
   ({int year, int seq, int revision})? fixed,
+  String? number,
+  AppLocalizations? words,
   int rows = 0,
 }) {
   final l10n = AppLocalizations.of(context);
@@ -71,20 +107,18 @@ Future<void> issueAndExport(
     onBusy: onBusy,
     fileName: (_) => fileName,
     make: (_, _) async {
-      final db = ref.read(dbProvider);
-      final identity = await db.currentIdentity(brandArgb: brand.toARGB32(), softArgb: brandSoft.toARGB32());
-      final doc = await db.issueDocument(
+      final doc = await issuePaper(
+        ref.read(dbProvider),
+        words ?? l10n,
         kind: kind,
         subjectId: subjectId,
         period: period,
         title: title,
+        subtitle: subtitle,
         summary: summary,
         data: data,
-        identity: identity,
-        metaFor: (number) => metaForNow(l10n, title: title, subtitle: subtitle, number: number),
-        render: (meta) => renderIssued(kind, data, identity, meta),
-        operationId: newUuid(),
         fixed: fixed,
+        number: number,
       );
       return doc.pdfBytes;
     },

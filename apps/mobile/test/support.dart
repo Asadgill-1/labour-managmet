@@ -1,3 +1,4 @@
+import 'package:domain/dates.dart';
 import 'package:drift/drift.dart' show Value, driftRuntimeOptions;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/app/app.dart';
 import 'package:labour_app/app/providers.dart';
+import 'package:labour_app/data/invoices.dart';
 import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/tenant_database.dart';
+import 'package:labour_app/data/timesheets.dart';
 
 const testTenant = '00000000-0000-4000-8000-00000000000a';
 
@@ -23,6 +26,18 @@ Future<void> seedProfile(TenantDatabase db) async {
     operationId: newUuid(),
     fields: const TenantProfilesCompanion(legalName: Value('Test Labour LLC')),
   );
+}
+
+/// Bills every company's open work up to the end of [month], a timesheet and an invoice for each month, so closing finds
+/// only what a test is about (D-048).
+Future<void> invoiceUpTo(TenantDatabase db, String month) async {
+  for (final (client, m) in await db.uninvoicedWork(to: monthLastDay(month), after: await db.lockedThrough())) {
+    final (from, to) = (monthFirstDay(m), monthLastDay(m));
+    final sheet = await db.createTimesheet(clientId: client, from: from, to: to, operationId: newUuid());
+    await db.approveTimesheet((await db.timesheetView(sheet)).revision.id, operationId: newUuid());
+    final invoice = await db.createInvoice(clientId: client, from: from, to: to, operationId: newUuid());
+    await db.issueInvoice(invoice, describe: (_) => 'Manpower supply', operationId: newUuid());
+  }
 }
 
 /// Runs database work on the real clock. Inside testWidgets the fake clock would never let it finish.
@@ -53,6 +68,11 @@ Future<void> goTo(WidgetTester tester, String section) async {
     if (sub.evaluate().isNotEmpty) break;
     await tester.tap(find.text(main).hitTestable().first);
     await settle(tester);
+  }
+  // Every main tab opened on the way stays open, so the one wanted can sit below the fold.
+  if (sub.evaluate().isNotEmpty) {
+    await tester.ensureVisible(sub);
+    await tester.pump();
   }
   await tester.tap(sub.evaluate().isNotEmpty ? sub : find.text(section).hitTestable().last);
   await settle(tester);

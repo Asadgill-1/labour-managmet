@@ -150,8 +150,6 @@
       }
     }
   },
-  "menuTimesheets": "Timesheets",
-  "menuInvoices": "Invoices",
   "menuReceived": "Money received",
   "menuReports": "Reports",
   "menuDocuments": "Documents",
@@ -1456,6 +1454,245 @@
   "@tsClientSign": {
     "placeholders": {
       "client": {
+        "type": "String"
+      }
+    }
+  },
+  "invTab": "Invoices",
+  "invNew": "New invoice",
+  "invEmpty": "No invoices yet. Approve a timesheet, then make an invoice from it.",
+  "invCreate": "Make draft",
+  "invNewHelp": "The draft takes every approved timesheet of this company in these dates that still has work to bill. You can leave one out next.",
+  "invNothing": "Nothing in these dates can be invoiced. Approve a timesheet for them first.",
+  "invNoCompany": "Fill in your company's legal name in Apni company first.",
+  "invWrongStep": "This invoice has moved on. Look at it again.",
+  "invDraftLabel": "Draft",
+  "invDraftTitle": "Invoice draft",
+  "invStatusIssued": "Issued",
+  "invStatusCredited": "Taken back",
+  "invCreditNoteLabel": "Credit note",
+  "invDue": "due {date}",
+  "@invDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "invTotal": "Total",
+  "invVat": "VAT",
+  "invNet": "Before VAT",
+  "invVatAt": "VAT {rate}",
+  "@invVatAt": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "invNoteDraft": "Draft. It has no number until you issue it, and reads its timesheets as they stand.",
+  "invNoteIssued": "Issued on {date}. Due on {due}.",
+  "@invNoteIssued": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "due": {
+        "type": "String"
+      }
+    }
+  },
+  "invNoteCredited": "Taken back whole by credit note {number}. Its work can go on a new invoice.",
+  "@invNoteCredited": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "invNoteCreditNote": "Takes back invoice {number}: {reason}",
+  "@invNoteCreditNote": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "invNotRegistered": "Your company is not VAT registered on today's date, so no VAT is charged and the paper says Invoice, not Tax Invoice. Change it in Apni company.",
+  "invNeedsTrn": "Add your TRN in Apni company before issuing a tax invoice.",
+  "invIssue": "Issue",
+  "invIssueBody": "It gets the next number and today's date. After this it can't be changed, only taken back whole with a credit note.",
+  "invPreview": "See draft",
+  "invDeleteDraft": "Delete draft",
+  "invDeleteDraftBody": "The draft goes, with its discounts and fees. The timesheets don't change.",
+  "invPaper": "Paper",
+  "invShareBoth": "Send with timesheet",
+  "invShareBothBody": "Invoice {number} and each timesheet it charges go together in one message. You pick who gets it.",
+  "@invShareBothBody": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "invCredit": "Credit note",
+  "invCreditTitle": "Take back the whole invoice",
+  "invCreditReason": "Why it is taken back",
+  "invCreditHelp": "A credit note dated today takes back every line and its VAT. The invoice stays on record, and its work can go on a new invoice.",
+  "invCreditConfirm": "Make credit note",
+  "invSettingsHeading": "Details",
+  "invPo": "PO / reference",
+  "invDueDate": "Due date",
+  "invDueAuto": "Set on issue, from the company's days",
+  "invVatTreatment": "VAT treatment",
+  "invCatStandard": "Standard rate, 5%",
+  "invCatZero": "Zero-rated",
+  "invCatExempt": "Exempt",
+  "invCatOut": "Outside the scope of VAT",
+  "invCatHelp": "A tax adviser should confirm any treatment other than standard.",
+  "invInclusive": "Rates include VAT",
+  "invInclusiveHelp": "Off: VAT is added on top.",
+  "invTimesheetsHeading": "Timesheets",
+  "invSourceRows": "{count, plural, =1{1 row to bill} other{{count} rows to bill}}",
+  "@invSourceRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invSourceDisputed": "{count, plural, =1{1 row waits: the company disputed it} other{{count} rows wait: the company disputed them}}",
+  "@invSourceDisputed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invSourceChanged": "{count, plural, =1{1 row waits: its attendance changed, so make a new revision} other{{count} rows wait: their attendance changed, so make a new revision}}",
+  "@invSourceChanged": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invLinesHeading": "Lines",
+  "invNoLines": "Nothing ticked can be invoiced.",
+  "invLineSheetTitle": "Change this line",
+  "invDiscount": "Discount (AED)",
+  "invFee": "Fee for these dates (AED)",
+  "invFeeHelp": "Starts at the contract's monthly fee. Change it for part of a month.",
+  "invDiscountTooBig": "A discount can't be more than its line.",
+  "findingNotInvoiced": "{count} companies have work no invoice charges yet: {names}. Make their invoices in Billing.",
+  "@findingNotInvoiced": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "regInvoices": "Invoice register",
+  "regInvoiceNote": "One row for each line of each invoice and credit note, as issued. Credit notes count against. This is a record, not a UAE structured e-invoice.",
+  "colNumber": "Number",
+  "colKind": "Kind",
+  "colStatus": "Status",
+  "colDescription": "Description",
+  "colQty": "Qty",
+  "colUnit": "Unit",
+  "colUnitPrice": "Unit price",
+  "colVatRate": "VAT %",
+  "invPTaxInvoice": "Tax Invoice",
+  "invPInvoice": "Invoice",
+  "invPTaxCreditNote": "Tax Credit Note",
+  "invPCreditNote": "Credit Note",
+  "invPBillTo": "Bill to",
+  "invPCreditTo": "Credit to",
+  "invPSupplierTrn": "Supplier TRN",
+  "invPIssueDate": "Date of issue",
+  "invPSupplyPeriod": "Period of supply",
+  "invPAgainst": "Against invoice",
+  "invPDueDate": "Due date",
+  "invPReference": "PO / reference",
+  "invPColNo": "No.",
+  "invPColDescription": "Description",
+  "invPColQty": "Qty",
+  "invPColUnit": "Unit",
+  "invPColRate": "Unit price",
+  "invPColDiscount": "Discount",
+  "invPColNet": "Taxable amount",
+  "invPColAmount": "Amount",
+  "invPColVatRate": "VAT %",
+  "invPColVat": "VAT",
+  "invPColTotal": "Total",
+  "invPUnitHour": "Hour",
+  "invPUnitDay": "Day",
+  "invPUnitShift": "Shift",
+  "invPUnitMonth": "Month",
+  "invPUnitWorkerMonth": "Worker-month",
+  "invPLineLabour": "Manpower supply",
+  "invPLineFee": "Monthly fee",
+  "invPTotalNet": "Total before VAT",
+  "invPTotalVat": "VAT at {rate}",
+  "@invPTotalVat": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "invPTotal": "Total due",
+  "invPCredited": "Total credited",
+  "invPZeroRated": "Zero-rated supply.",
+  "invPExempt": "Exempt supply.",
+  "invPOutOfScope": "Outside the scope of UAE VAT.",
+  "invPReason": "Reason: {reason}",
+  "@invPReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "invPTimesheets": "Supported by timesheet {numbers}, which is a separate paper.",
+  "@invPTimesheets": {
+    "placeholders": {
+      "numbers": {
+        "type": "String"
+      }
+    }
+  },
+  "invPInclusive": "The rates included VAT, shown here apart.",
+  "invPNotEInvoice": "This PDF is not a UAE structured e-invoice.",
+  "invPBank": "Bank details",
+  "invPDraft": "DRAFT",
+  "invPDraftNote": "Not issued and has no number",
+  "invLessDiscount": "Discount {amount}",
+  "@invLessDiscount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invOpenCreditNote": "See credit note {number}",
+  "@invOpenCreditNote": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "invOpenInvoice": "See invoice {number}",
+  "@invOpenInvoice": {
+    "placeholders": {
+      "number": {
         "type": "String"
       }
     }

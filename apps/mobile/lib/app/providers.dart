@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/closing.dart';
 import '../data/documents.dart';
+import '../data/invoices.dart';
 import '../data/payroll.dart';
 import '../data/statement.dart';
 import '../data/tenant_database.dart';
@@ -137,6 +138,10 @@ final timesheetsProvider = StreamProvider<List<TimesheetListRow>>((ref) => ref.w
 
 /// One revision of a timesheet. A null revision means the newest.
 final timesheetProvider = StreamProvider.autoDispose.family<TimesheetView, ({String id, int? revision})>((ref, key) => ref.watch(dbProvider).watchTimesheet(key.id, revision: key.revision));
+
+final invoicesProvider = StreamProvider<List<InvoiceListRow>>((ref) => ref.watch(dbProvider).watchInvoices());
+
+final invoiceProvider = StreamProvider.autoDispose.family<InvoiceView, String>((ref, id) => ref.watch(dbProvider).watchInvoice(id));
 
 final visaAccountsProvider = StreamProvider<List<VisaAccount>>((ref) => ref.watch(dbProvider).watchVisaAccounts());
 

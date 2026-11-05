@@ -57,6 +57,8 @@ String newUuid() {
     TimesheetRevisions,
     TimesheetLines,
     BilledAllocations,
+    Invoices,
+    InvoiceLines,
     AttendanceBatches,
     AttendanceEntries,
     PayrollRuns,
@@ -75,7 +77,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -194,6 +196,15 @@ class TenantDatabase extends _$TenantDatabase {
           schema.billingStaysReleased,
           schema.billingNoDelete,
         ]) {
+          await m.createTrigger(trigger);
+        }
+      },
+      from12To13: (m, schema) async {
+        await m.createTable(schema.invoices);
+        await m.createTable(schema.invoiceLines);
+        await m.createIndex(schema.idxInvoiceLinesInvoice);
+        await m.createIndex(schema.oneCreditNote);
+        for (final trigger in [schema.invoiceKeepsIssue, schema.invoiceStatusForward, schema.invoiceNoDelete, schema.invoiceLineNoEdit, schema.invoiceLineNoDelete]) {
           await m.createTrigger(trigger);
         }
       },

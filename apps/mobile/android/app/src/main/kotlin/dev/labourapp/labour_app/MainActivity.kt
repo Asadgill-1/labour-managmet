@@ -24,6 +24,11 @@ class MainActivity : FlutterActivity() {
                 pickImage(result)
                 return@setMethodCallHandler
             }
+            if (call.method == "sendAll") {
+                val files = call.argument<List<String>>("paths")!!.map(::File)
+                result.success(sendAll(files, call.argument<String>("mime")!!, call.argument<Boolean>("whatsapp") == true))
+                return@setMethodCallHandler
+            }
             val file = File(call.argument<String>("path")!!)
             val mime = call.argument<String>("mime")!!
             when (call.method) {
@@ -54,6 +59,26 @@ class MainActivity : FlutterActivity() {
             }
         }
         startActivity(Intent.createChooser(intent, file.name))
+        return !whatsapp
+    }
+
+    /** Several files in one message, such as an invoice with its timesheet (TS-07). Same answer as [send]. */
+    private fun sendAll(files: List<File>, mime: String, whatsapp: Boolean): Boolean {
+        val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
+            .setType(mime)
+            .putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(files.map(::uriOf)))
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        if (whatsapp) {
+            for (app in listOf("com.whatsapp", "com.whatsapp.w4b")) {
+                try {
+                    startActivity(Intent(intent).setPackage(app))
+                    return true
+                } catch (_: ActivityNotFoundException) {
+                    // Not installed. Try the next one, then the share sheet.
+                }
+            }
+        }
+        startActivity(Intent.createChooser(intent, files.first().name))
         return !whatsapp
     }
 

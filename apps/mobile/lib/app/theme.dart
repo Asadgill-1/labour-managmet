@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../data/closing.dart';
+import '../data/invoices.dart';
 import '../data/tenant_database.dart';
 import '../data/timesheets.dart';
 import '../l10n/app_localizations.dart';
@@ -314,5 +315,11 @@ String saveErrorText(AppLocalizations l10n, Object error) => switch (error) {
   MonthNotReady() => l10n.closeNotReady,
   TimesheetEmpty() => l10n.tsNothing,
   TimesheetWrongStep() => l10n.tsWrongStep,
+  InvoiceRefused(problem: InvoiceProblem.nothingToBill) => l10n.invNothing,
+  InvoiceRefused(problem: InvoiceProblem.noCompanyDetails) => l10n.invNoCompany,
+  InvoiceRefused(problem: InvoiceProblem.noTrn) => l10n.invNeedsTrn,
+  InvoiceRefused(problem: InvoiceProblem.discountTooBig) => l10n.invDiscountTooBig,
+  InvoiceRefused(problem: InvoiceProblem.wrongStep) => l10n.invWrongStep,
+  AlreadyBilled() => l10n.invWrongStep,
   _ => l10n.saveFailed,
 };

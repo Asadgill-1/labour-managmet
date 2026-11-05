@@ -9,6 +9,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../../data/documents.dart';
+import '../../data/tenant_database.dart';
 import '../../data/timesheets.dart';
 import '../../documents/document_frame.dart';
 import '../../l10n/app_localizations.dart';
@@ -275,12 +276,20 @@ Future<Uint8List> timesheetPdf(TimesheetPaper p, DocumentIdentity identity, Docu
 /// The way this paper goes out: all four are the same revision under the same number, each kept as issued (DOC-05).
 DocKind timesheetKind({required bool workers, required bool priced}) => workers ? (priced ? DocKind.timesheetWorkersPriced : DocKind.timesheetWorkers) : (priced ? DocKind.timesheetDailyPriced : DocKind.timesheetDaily);
 
+({String subtitle, String summary, TimesheetPaper paper}) _paperOf(TimesheetView v, AppLocalizations l10n, {required bool workers, required bool priced}) {
+  final view = workers ? l10n.tsViewWorkers : l10n.tsViewDaily;
+  return (
+    subtitle: '$view, ${priced ? l10n.tsPricedLabel : l10n.tsHoursOnlyLabel}',
+    summary: '${v.clientName}, $view',
+    paper: timesheetPaper(v, workers: workers, priced: priced, l10n: l10n),
+  );
+}
+
 /// Issues this revision's paper the way the owner chose, or gives the one already issued that way. A later letterhead
 /// doesn't reach it: the revision is what went to the company (DOC-05, TS-06).
 Future<void> shareTimesheet(BuildContext context, WidgetRef ref, TimesheetView v, {required bool workers, required bool priced, required ValueChanged<bool> onBusy}) {
   final l10n = AppLocalizations.of(context);
-  final view = workers ? l10n.tsViewWorkers : l10n.tsViewDaily;
-  final paper = timesheetPaper(v, workers: workers, priced: priced, l10n: l10n);
+  final made = _paperOf(v, l10n, workers: workers, priced: priced);
   return issueAndExport(
     context,
     ref,
@@ -289,12 +298,29 @@ Future<void> shareTimesheet(BuildContext context, WidgetRef ref, TimesheetView v
     subjectId: v.revision.id,
     period: null,
     title: l10n.tsTitle,
-    subtitle: '$view, ${priced ? l10n.tsPricedLabel : l10n.tsHoursOnlyLabel}',
-    summary: '${v.clientName}, $view',
-    detail: paper.period,
-    data: paper.toJson(),
+    subtitle: made.subtitle,
+    summary: made.summary,
+    detail: made.paper.period,
+    data: made.paper.toJson(),
     fileName: exportFileName('${l10n.tsTitle} ${v.clientName}', v.sheet.fromDate, v.sheet.toDate, ExportFormat.pdf),
-    rows: paper.rows.length,
+    rows: made.paper.rows.length,
     onBusy: onBusy,
+  );
+}
+
+/// The same paper with nothing asked, to go with an invoice (TS-07).
+Future<IssuedDocument> issueTimesheetPaper(TenantDatabase db, AppLocalizations l10n, TimesheetView v, {required bool workers, required bool priced}) {
+  final made = _paperOf(v, l10n, workers: workers, priced: priced);
+  return issuePaper(
+    db,
+    l10n,
+    kind: timesheetKind(workers: workers, priced: priced),
+    fixed: (year: v.sheet.year!, seq: v.sheet.seq!, revision: v.revision.revision),
+    subjectId: v.revision.id,
+    period: null,
+    title: l10n.tsTitle,
+    subtitle: made.subtitle,
+    summary: made.summary,
+    data: made.paper.toJson(),
   );
 }

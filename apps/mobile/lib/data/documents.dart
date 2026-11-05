@@ -26,7 +26,11 @@ enum DocKind {
   timesheetDaily('TS'),
   timesheetDailyPriced('TS'),
   timesheetWorkers('TS'),
-  timesheetWorkersPriced('TS');
+  timesheetWorkersPriced('TS'),
+
+  // An invoice's number is its own, given as it issues, so these print that one (INV-01).
+  invoice('INV'),
+  creditNote('CN');
 
   const DocKind(this.prefix);
 
@@ -160,7 +164,7 @@ extension DocumentOps on TenantDatabase {
   /// The same paper again when nothing on it has changed, or a new revision under the same number when something has.
   /// Each stored file stays exactly as it was issued, whatever changes later (DOC-05). [render] gets the number to print.
   /// A paper with a number of its own passes [fixed]: asking again gives the stored one, since its facts can't change
-  /// without a new revision of the thing itself.
+  /// without a new revision of the thing itself. An invoice passes the [number] it was issued with.
   Future<IssuedDocument> issueDocument({
     required DocKind kind,
     required String subjectId,
@@ -173,6 +177,7 @@ extension DocumentOps on TenantDatabase {
     required Future<Uint8List> Function(DocumentMeta meta) render,
     required String operationId,
     ({int year, int seq, int revision})? fixed,
+    String? number,
   }) async {
     if (fixed != null) {
       final stored = await (select(issuedDocuments)..where((d) => d.kind.equals(kind.name) & d.year.equals(fixed.year) & d.seq.equals(fixed.seq) & d.revision.equals(fixed.revision))).getSingleOrNull();
@@ -201,8 +206,8 @@ extension DocumentOps on TenantDatabase {
       seq = ((await query.getSingle()).read(top) ?? 0) + 1;
     }
     final revision = fixed?.revision ?? (latest?.revision ?? 0) + 1;
-    final number = documentNumber(kind, year, seq, revision);
-    final meta = metaFor(number);
+    final printed = number ?? documentNumber(kind, year, seq, revision);
+    final meta = metaFor(printed);
     final pdf = await render(meta);
     final id = newUuid();
     await applyOperation(
@@ -225,7 +230,7 @@ extension DocumentOps on TenantDatabase {
             year: year,
             seq: seq!,
             revision: revision,
-            number: number,
+            number: printed,
             subjectId: subjectId,
             period: Value(period),
             title: title,
@@ -236,7 +241,7 @@ extension DocumentOps on TenantDatabase {
             pdfBytes: pdf,
           ),
         );
-        return {'number': number, 'kind': kind.name, 'subject': subjectId, 'period': period, 'data': data};
+        return {'number': printed, 'kind': kind.name, 'subject': subjectId, 'period': period, 'data': data};
       },
     );
     return (select(issuedDocuments)..where((d) => d.id.equals(id))).getSingle();

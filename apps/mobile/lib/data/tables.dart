@@ -313,10 +313,82 @@ class BilledAllocations extends Table with Common {
   TextColumn get lineId => text().references(TimesheetLines, #id)();
   TextColumn get workKey => text()();
 
-  /// T16's invoice.
+  /// The invoice that charged it. A monthly row is charged at 0, since its contract's fee is the charge (TS-08).
+  /// ponytail: no foreign key, since adding one rebuilds the table and its triggers. Issuing is the only writer.
   TextColumn get invoiceId => text()();
   IntColumn get amountFils => integer().check(amountFils.isBiggerOrEqualValue(0))();
   BoolColumn get released => boolean().withDefault(const Constant(false))();
+}
+
+/// A company invoice, or a credit note that takes one back whole (INV-01, INV-06). A draft has no number and no lines:
+/// it reads its timesheets as they stand, so it can't go stale. Issuing stores everything as it stood, and from then on
+/// nothing changes but the step to credited. Triggers enforce this.
+class Invoices extends Table with Common {
+  TextColumn get clientId => text().references(Clients, #id)();
+
+  /// 'invoice' or 'credit'.
+  TextColumn get kind => text().withDefault(const Constant('invoice'))();
+
+  /// The invoice a credit note takes back.
+  TextColumn get creditsInvoiceId => text().nullable().references(Invoices, #id)();
+
+  /// 'draft', 'issued' or 'credited'.
+  TextColumn get status => text().withDefault(const Constant('draft'))();
+
+  /// Null means every site of the company.
+  TextColumn get siteId => text().nullable().references(Sites, #id)();
+  TextColumn get fromDate => text()();
+  TextColumn get toDate => text()();
+
+  /// JSON while a draft: timesheets left out, and each line's discount or monthly fee.
+  TextColumn get draft => text().withDefault(const Constant('{}'))();
+  TextColumn get poReference => text().nullable()();
+
+  /// A `VatCategory` by name, and the rate it charged.
+  TextColumn get vatCategory => text().withDefault(const Constant('standard'))();
+  IntColumn get vatBps => integer().withDefault(const Constant(0))();
+  BoolColumn get pricesIncludeVat => boolean().withDefault(const Constant(false))();
+
+  /// Whether the supplier charged VAT on the day it issued (INV-03).
+  BoolColumn get vatRegistered => boolean().withDefault(const Constant(false))();
+  TextColumn get dueDate => text().nullable()();
+  TextColumn get issueDate => text().nullable()();
+  IntColumn get year => integer().nullable()();
+  IntColumn get seq => integer().nullable()();
+  TextColumn get number => text().nullable()();
+
+  /// JSON: both parties as they stood on the day it issued (INV-02, DOC-05).
+  TextColumn get parties => text().nullable()();
+
+  /// Why a credit note was made.
+  TextColumn get reason => text().nullable()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {tenantId, kind, year, seq},
+  ];
+}
+
+/// One line of an issued invoice or credit note, as it stood (INV-02). Never changes. Triggers enforce this.
+@TableIndex(name: 'idx_invoice_lines_invoice', columns: {#invoiceId})
+class InvoiceLines extends Table with Common {
+  TextColumn get invoiceId => text().references(Invoices, #id)();
+  IntColumn get position => integer()();
+  TextColumn get timesheetId => text().nullable().references(Timesheets, #id)();
+  TextColumn get description => text()();
+
+  /// A `RateBasis` by name, which is the unit.
+  TextColumn get basis => text()();
+
+  /// In the unit's own count: minutes of hours, half days, half shifts, or workers on a monthly fee.
+  IntColumn get quantity => integer()();
+  IntColumn get unitPriceFils => integer()();
+
+  /// Before the discount. The sum of its timesheet rows, each rounded on its own (D-101), or a monthly fee.
+  IntColumn get amountFils => integer().check(amountFils.isBiggerOrEqualValue(0))();
+  IntColumn get discountFils => integer().withDefault(const Constant(0)).check(discountFils.isBiggerOrEqualValue(0))();
+  IntColumn get netFils => integer()();
+  IntColumn get vatFils => integer()();
 }
 
 /// Rate terms shared by both contract tables (MASTER-06). Dates are YYYY-MM-DD.

@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/data/cash.dart';
 import 'package:labour_app/data/closing.dart';
 import 'package:labour_app/data/documents.dart';
+import 'package:labour_app/data/invoices.dart';
 import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/data/tenant_database.dart';
 import 'package:labour_app/data/timesheets.dart';
@@ -136,6 +137,38 @@ void main() {
 
     await db.addSalaryPayment(operationId: newUuid(), date: '2026-10-06', workerId: 'w1', amountFils: 2000, parts: {'2026-09': 2000}, extraNote: 'x');
     await expectLater(db.delete(db.salaryAllocations).go(), throwsA(anything));
+  });
+
+  test('a phone on version 12 upgrades: its attendance stays, and an invoice bills it once, for good (INV-01, INV-06)', () async {
+    final old = await verifier.schemaAt(12);
+    old.rawDatabase.execute('''
+      INSERT INTO tenant_profiles (id, $commonColumns, legal_name) VALUES ('p1', $common, 'Labour');
+      INSERT INTO clients (id, $commonColumns, name) VALUES ('c1', $common, 'ATE');
+      INSERT INTO sites (id, $commonColumns, client_id, name) VALUES ('s1', $common, 'c1', 'Melboard');
+      INSERT INTO workers (id, $commonColumns, code, name) VALUES ('w1', $common, 'W001', 'Ahmad');
+      INSERT INTO pay_contracts (id, $commonColumns, worker_id, basis, rate_fils, effective_from) VALUES ('k1', $common, 'w1', 'day', 1000, '2026-01-01');
+      INSERT INTO billing_contracts (id, $commonColumns, client_id, basis, rate_fils, effective_from) VALUES ('k2', $common, 'c1', 'day', 1500, '2026-01-01');
+      INSERT INTO attendance_batches (id, $commonColumns, work_date, client_id, site_id) VALUES ('b1', $common, '2026-10-20', 'c1', 's1');
+      INSERT INTO attendance_entries (id, $commonColumns, batch_id, worker_id, client_id, site_id, work_date, clock_minutes, break_minutes, break_paid_client, break_paid_worker,
+        client_billable_minutes, worker_payable_minutes, attendance_status, client_basis, client_rate_fils, client_amount_fils, worker_basis, worker_rate_fils, worker_amount_fils, state)
+      VALUES ('e1', $common, 'b1', 'w1', 'c1', 's1', '2026-10-20', 0, 0, 0, 0, 0, 0, 'present', 'day', 1500, 1500, 'day', 1000, 1000, 'submitted');
+    ''');
+
+    final db = TenantDatabase(old.newConnection(), tenantId: 't', deviceId: 'device');
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, db.schemaVersion);
+
+    expect(await db.select(db.invoices).get(), isEmpty);
+    expect(await db.uninvoicedWork(to: '2026-10-31'), {('c1', '2026-10')});
+    final sheet = await db.createTimesheet(clientId: 'c1', from: '2026-10-01', to: '2026-10-31', operationId: newUuid());
+    await db.approveTimesheet((await db.timesheetView(sheet)).revision.id, operationId: newUuid());
+    final id = await db.createInvoice(clientId: 'c1', from: '2026-10-01', to: '2026-10-31', operationId: newUuid());
+    await db.issueInvoice(id, describe: (_) => 'Manpower supply', operationId: newUuid());
+    expect((await db.invoiceView(id)).totals.totalFils, 1500);
+    expect(await db.uninvoicedWork(to: '2026-10-31'), isEmpty);
+    await expectLater(db.customStatement("UPDATE invoices SET po_reference = 'x'"), throwsA(anything));
+    await expectLater(db.customStatement('DELETE FROM invoice_lines'), throwsA(anything));
+    await expectLater(db.createInvoice(clientId: 'c1', from: '2026-10-01', to: '2026-10-31', operationId: newUuid()), throwsA(isA<InvoiceRefused>()));
   });
 
   test('a phone on version 11 upgrades: its attendance is untouched, and a timesheet can be made from it (TS-01)', () async {

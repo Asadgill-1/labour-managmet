@@ -159,3 +159,10 @@ Future<ExportResult> runExport(ExportAction action, ExportFormat format, File fi
       return ExportResult.done;
   }
 }
+
+/// Sends PDFs together, as one message, such as an invoice with its timesheet (TS-07). Opening WhatsApp says nothing
+/// about delivery (DOC-07).
+Future<ExportResult> sendFiles(List<File> files, {required bool whatsapp}) async {
+  final opened = await _channel.invokeMethod<bool>('sendAll', {'paths': [for (final f in files) f.path], 'mime': _mime(ExportFormat.pdf), 'whatsapp': whatsapp});
+  return whatsapp && opened != true ? ExportResult.noWhatsApp : ExportResult.done;
+}

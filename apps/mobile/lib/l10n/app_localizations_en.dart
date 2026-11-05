@@ -307,12 +307,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get menuTimesheets => 'Timesheets';
-
-  @override
-  String get menuInvoices => 'Invoices';
-
-  @override
   String get menuReceived => 'Money received';
 
   @override
@@ -2572,6 +2566,424 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get invTab => 'Invoices';
+
+  @override
+  String get invNew => 'New invoice';
+
+  @override
+  String get invEmpty =>
+      'No invoices yet. Approve a timesheet, then make an invoice from it.';
+
+  @override
+  String get invCreate => 'Make draft';
+
+  @override
+  String get invNewHelp =>
+      'The draft takes every approved timesheet of this company in these dates that still has work to bill. You can leave one out next.';
+
+  @override
+  String get invNothing =>
+      'Nothing in these dates can be invoiced. Approve a timesheet for them first.';
+
+  @override
+  String get invNoCompany =>
+      'Fill in your company\'s legal name in Apni company first.';
+
+  @override
+  String get invWrongStep => 'This invoice has moved on. Look at it again.';
+
+  @override
+  String get invDraftLabel => 'Draft';
+
+  @override
+  String get invDraftTitle => 'Invoice draft';
+
+  @override
+  String get invStatusIssued => 'Issued';
+
+  @override
+  String get invStatusCredited => 'Taken back';
+
+  @override
+  String get invCreditNoteLabel => 'Credit note';
+
+  @override
+  String invDue(String date) {
+    return 'due $date';
+  }
+
+  @override
+  String get invTotal => 'Total';
+
+  @override
+  String get invVat => 'VAT';
+
+  @override
+  String get invNet => 'Before VAT';
+
+  @override
+  String invVatAt(String rate) {
+    return 'VAT $rate';
+  }
+
+  @override
+  String get invNoteDraft =>
+      'Draft. It has no number until you issue it, and reads its timesheets as they stand.';
+
+  @override
+  String invNoteIssued(String date, String due) {
+    return 'Issued on $date. Due on $due.';
+  }
+
+  @override
+  String invNoteCredited(String number) {
+    return 'Taken back whole by credit note $number. Its work can go on a new invoice.';
+  }
+
+  @override
+  String invNoteCreditNote(String number, String reason) {
+    return 'Takes back invoice $number: $reason';
+  }
+
+  @override
+  String get invNotRegistered =>
+      'Your company is not VAT registered on today\'s date, so no VAT is charged and the paper says Invoice, not Tax Invoice. Change it in Apni company.';
+
+  @override
+  String get invNeedsTrn =>
+      'Add your TRN in Apni company before issuing a tax invoice.';
+
+  @override
+  String get invIssue => 'Issue';
+
+  @override
+  String get invIssueBody =>
+      'It gets the next number and today\'s date. After this it can\'t be changed, only taken back whole with a credit note.';
+
+  @override
+  String get invPreview => 'See draft';
+
+  @override
+  String get invDeleteDraft => 'Delete draft';
+
+  @override
+  String get invDeleteDraftBody =>
+      'The draft goes, with its discounts and fees. The timesheets don\'t change.';
+
+  @override
+  String get invPaper => 'Paper';
+
+  @override
+  String get invShareBoth => 'Send with timesheet';
+
+  @override
+  String invShareBothBody(String number) {
+    return 'Invoice $number and each timesheet it charges go together in one message. You pick who gets it.';
+  }
+
+  @override
+  String get invCredit => 'Credit note';
+
+  @override
+  String get invCreditTitle => 'Take back the whole invoice';
+
+  @override
+  String get invCreditReason => 'Why it is taken back';
+
+  @override
+  String get invCreditHelp =>
+      'A credit note dated today takes back every line and its VAT. The invoice stays on record, and its work can go on a new invoice.';
+
+  @override
+  String get invCreditConfirm => 'Make credit note';
+
+  @override
+  String get invSettingsHeading => 'Details';
+
+  @override
+  String get invPo => 'PO / reference';
+
+  @override
+  String get invDueDate => 'Due date';
+
+  @override
+  String get invDueAuto => 'Set on issue, from the company\'s days';
+
+  @override
+  String get invVatTreatment => 'VAT treatment';
+
+  @override
+  String get invCatStandard => 'Standard rate, 5%';
+
+  @override
+  String get invCatZero => 'Zero-rated';
+
+  @override
+  String get invCatExempt => 'Exempt';
+
+  @override
+  String get invCatOut => 'Outside the scope of VAT';
+
+  @override
+  String get invCatHelp =>
+      'A tax adviser should confirm any treatment other than standard.';
+
+  @override
+  String get invInclusive => 'Rates include VAT';
+
+  @override
+  String get invInclusiveHelp => 'Off: VAT is added on top.';
+
+  @override
+  String get invTimesheetsHeading => 'Timesheets';
+
+  @override
+  String invSourceRows(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows to bill',
+      one: '1 row to bill',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String invSourceDisputed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows wait: the company disputed them',
+      one: '1 row waits: the company disputed it',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String invSourceChanged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count rows wait: their attendance changed, so make a new revision',
+      one: '1 row waits: its attendance changed, so make a new revision',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get invLinesHeading => 'Lines';
+
+  @override
+  String get invNoLines => 'Nothing ticked can be invoiced.';
+
+  @override
+  String get invLineSheetTitle => 'Change this line';
+
+  @override
+  String get invDiscount => 'Discount (AED)';
+
+  @override
+  String get invFee => 'Fee for these dates (AED)';
+
+  @override
+  String get invFeeHelp =>
+      'Starts at the contract\'s monthly fee. Change it for part of a month.';
+
+  @override
+  String get invDiscountTooBig => 'A discount can\'t be more than its line.';
+
+  @override
+  String findingNotInvoiced(int count, String names) {
+    return '$count companies have work no invoice charges yet: $names. Make their invoices in Billing.';
+  }
+
+  @override
+  String get regInvoices => 'Invoice register';
+
+  @override
+  String get regInvoiceNote =>
+      'One row for each line of each invoice and credit note, as issued. Credit notes count against. This is a record, not a UAE structured e-invoice.';
+
+  @override
+  String get colNumber => 'Number';
+
+  @override
+  String get colKind => 'Kind';
+
+  @override
+  String get colStatus => 'Status';
+
+  @override
+  String get colDescription => 'Description';
+
+  @override
+  String get colQty => 'Qty';
+
+  @override
+  String get colUnit => 'Unit';
+
+  @override
+  String get colUnitPrice => 'Unit price';
+
+  @override
+  String get colVatRate => 'VAT %';
+
+  @override
+  String get invPTaxInvoice => 'Tax Invoice';
+
+  @override
+  String get invPInvoice => 'Invoice';
+
+  @override
+  String get invPTaxCreditNote => 'Tax Credit Note';
+
+  @override
+  String get invPCreditNote => 'Credit Note';
+
+  @override
+  String get invPBillTo => 'Bill to';
+
+  @override
+  String get invPCreditTo => 'Credit to';
+
+  @override
+  String get invPSupplierTrn => 'Supplier TRN';
+
+  @override
+  String get invPIssueDate => 'Date of issue';
+
+  @override
+  String get invPSupplyPeriod => 'Period of supply';
+
+  @override
+  String get invPAgainst => 'Against invoice';
+
+  @override
+  String get invPDueDate => 'Due date';
+
+  @override
+  String get invPReference => 'PO / reference';
+
+  @override
+  String get invPColNo => 'No.';
+
+  @override
+  String get invPColDescription => 'Description';
+
+  @override
+  String get invPColQty => 'Qty';
+
+  @override
+  String get invPColUnit => 'Unit';
+
+  @override
+  String get invPColRate => 'Unit price';
+
+  @override
+  String get invPColDiscount => 'Discount';
+
+  @override
+  String get invPColNet => 'Taxable amount';
+
+  @override
+  String get invPColAmount => 'Amount';
+
+  @override
+  String get invPColVatRate => 'VAT %';
+
+  @override
+  String get invPColVat => 'VAT';
+
+  @override
+  String get invPColTotal => 'Total';
+
+  @override
+  String get invPUnitHour => 'Hour';
+
+  @override
+  String get invPUnitDay => 'Day';
+
+  @override
+  String get invPUnitShift => 'Shift';
+
+  @override
+  String get invPUnitMonth => 'Month';
+
+  @override
+  String get invPUnitWorkerMonth => 'Worker-month';
+
+  @override
+  String get invPLineLabour => 'Manpower supply';
+
+  @override
+  String get invPLineFee => 'Monthly fee';
+
+  @override
+  String get invPTotalNet => 'Total before VAT';
+
+  @override
+  String invPTotalVat(String rate) {
+    return 'VAT at $rate';
+  }
+
+  @override
+  String get invPTotal => 'Total due';
+
+  @override
+  String get invPCredited => 'Total credited';
+
+  @override
+  String get invPZeroRated => 'Zero-rated supply.';
+
+  @override
+  String get invPExempt => 'Exempt supply.';
+
+  @override
+  String get invPOutOfScope => 'Outside the scope of UAE VAT.';
+
+  @override
+  String invPReason(String reason) {
+    return 'Reason: $reason';
+  }
+
+  @override
+  String invPTimesheets(String numbers) {
+    return 'Supported by timesheet $numbers, which is a separate paper.';
+  }
+
+  @override
+  String get invPInclusive => 'The rates included VAT, shown here apart.';
+
+  @override
+  String get invPNotEInvoice => 'This PDF is not a UAE structured e-invoice.';
+
+  @override
+  String get invPBank => 'Bank details';
+
+  @override
+  String get invPDraft => 'DRAFT';
+
+  @override
+  String get invPDraftNote => 'Not issued and has no number';
+
+  @override
+  String invLessDiscount(String amount) {
+    return 'Discount $amount';
+  }
+
+  @override
+  String invOpenCreditNote(String number) {
+    return 'See credit note $number';
+  }
+
+  @override
+  String invOpenInvoice(String number) {
+    return 'See invoice $number';
+  }
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -2873,12 +3285,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String rentSplit(String received, String paid) {
     return 'Mila $received, diya $paid';
   }
-
-  @override
-  String get menuTimesheets => 'Timesheet';
-
-  @override
-  String get menuInvoices => 'Invoice';
 
   @override
   String get menuReceived => 'Paisay mile';
@@ -5098,5 +5504,285 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String tsPeople(int count) {
     return '$count log';
+  }
+
+  @override
+  String get invTab => 'Invoice';
+
+  @override
+  String get invNew => 'Naya invoice';
+
+  @override
+  String get invEmpty =>
+      'Abhi koi invoice nahin. Pehle timesheet approve karein, phir us se invoice banayein.';
+
+  @override
+  String get invCreate => 'Draft banayein';
+
+  @override
+  String get invNewHelp =>
+      'Draft is company ke in tareekhon ke har approved timesheet ka bacha hua kaam le ga. Agle qadam par koi bhi chhor sakte hain.';
+
+  @override
+  String get invNothing =>
+      'In tareekhon mein invoice ke liye kuch nahin. Pehle in ka timesheet approve karein.';
+
+  @override
+  String get invNoCompany =>
+      'Pehle Apni company mein company ka qanooni naam likhein.';
+
+  @override
+  String get invWrongStep =>
+      'Yeh invoice aagay barh chuka hai. Dobara dekhein.';
+
+  @override
+  String get invDraftLabel => 'Draft';
+
+  @override
+  String get invDraftTitle => 'Invoice draft';
+
+  @override
+  String get invStatusIssued => 'Jari';
+
+  @override
+  String get invStatusCredited => 'Wapas liya';
+
+  @override
+  String get invCreditNoteLabel => 'Credit note';
+
+  @override
+  String invDue(String date) {
+    return '$date tak lena';
+  }
+
+  @override
+  String get invTotal => 'Kul';
+
+  @override
+  String get invVat => 'VAT';
+
+  @override
+  String get invNet => 'VAT se pehle';
+
+  @override
+  String invVatAt(String rate) {
+    return 'VAT $rate';
+  }
+
+  @override
+  String get invNoteDraft =>
+      'Draft hai. Jari karne tak is ka number nahin, aur yeh timesheets ko jaisay hain waisay parhta hai.';
+
+  @override
+  String invNoteIssued(String date, String due) {
+    return '$date ko jari hua. $due tak lena hai.';
+  }
+
+  @override
+  String invNoteCredited(String number) {
+    return 'Credit note $number se poora wapas liya. Is ka kaam naye invoice par ja sakta hai.';
+  }
+
+  @override
+  String invNoteCreditNote(String number, String reason) {
+    return 'Invoice $number wapas leta hai: $reason';
+  }
+
+  @override
+  String get invNotRegistered =>
+      'Aaj ki tareekh par aap ki company VAT registered nahin, is liye VAT nahin lagega aur kaghaz par Tax Invoice nahin, Invoice likha hoga. Apni company mein badlein.';
+
+  @override
+  String get invNeedsTrn =>
+      'Tax invoice jari karne se pehle Apni company mein apna TRN likhein.';
+
+  @override
+  String get invIssue => 'Jari karein';
+
+  @override
+  String get invIssueBody =>
+      'Is ko agla number aur aaj ki tareekh milegi. Is ke baad yeh badal nahin sakta, sirf credit note se poora wapas ho sakta hai.';
+
+  @override
+  String get invPreview => 'Draft dekhein';
+
+  @override
+  String get invDeleteDraft => 'Draft hatayein';
+
+  @override
+  String get invDeleteDraftBody =>
+      'Draft hat jayega, aur us ki discount aur fees bhi. Timesheets nahin badlenge.';
+
+  @override
+  String get invPaper => 'Kaghaz';
+
+  @override
+  String get invShareBoth => 'Timesheet ke saath bhejein';
+
+  @override
+  String invShareBothBody(String number) {
+    return 'Invoice $number aur us ke har timesheet ka kaghaz aik hi message mein jayein ge. Kis ko bhejna hai, aap chunein ge.';
+  }
+
+  @override
+  String get invCredit => 'Credit note banayein';
+
+  @override
+  String get invCreditTitle => 'Poora invoice wapas lein';
+
+  @override
+  String get invCreditReason => 'Wapas lene ki wajah';
+
+  @override
+  String get invCreditHelp =>
+      'Aaj ki tareekh ka credit note har line aur us ka VAT wapas leta hai. Invoice record mein rehta hai, aur us ka kaam naye invoice par ja sakta hai.';
+
+  @override
+  String get invCreditConfirm => 'Credit note banayein';
+
+  @override
+  String get invSettingsHeading => 'Tafseel';
+
+  @override
+  String get invPo => 'PO / reference';
+
+  @override
+  String get invDueDate => 'Lene ki tareekh';
+
+  @override
+  String get invDueAuto => 'Jari hone par company ke dinon se';
+
+  @override
+  String get invVatTreatment => 'VAT ki qisam';
+
+  @override
+  String get invCatStandard => 'Standard, 5%';
+
+  @override
+  String get invCatZero => 'Zero-rated';
+
+  @override
+  String get invCatExempt => 'Exempt';
+
+  @override
+  String get invCatOut => 'VAT se bahar';
+
+  @override
+  String get invCatHelp =>
+      'Standard ke ilawa koi bhi qisam tax adviser se tasdeeq karayein.';
+
+  @override
+  String get invInclusive => 'Rates mein VAT shamil hai';
+
+  @override
+  String get invInclusiveHelp => 'Band ho to VAT upar se lagta hai.';
+
+  @override
+  String get invTimesheetsHeading => 'Timesheets';
+
+  @override
+  String invSourceRows(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count line bill ke liye',
+      one: '1 line bill ke liye',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String invSourceDisputed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count line ruki hain: company ne aitraaz kiya',
+      one: '1 line ruki hai: company ne aitraaz kiya',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String invSourceChanged(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count line ruki hain: hazri badli, nayi revision banayein',
+      one: '1 line ruki hai: hazri badli, nayi revision banayein',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get invLinesHeading => 'Lines';
+
+  @override
+  String get invNoLines => 'Jo tick hain un mein invoice ke liye kuch nahin.';
+
+  @override
+  String get invLineSheetTitle => 'Yeh line badlein';
+
+  @override
+  String get invDiscount => 'Discount (AED)';
+
+  @override
+  String get invFee => 'In tareekhon ki fee (AED)';
+
+  @override
+  String get invFeeHelp =>
+      'Contract ki mahana fee se shuru. Adhay mahine ke liye badlein.';
+
+  @override
+  String get invDiscountTooBig => 'Discount line se zyada nahin ho sakta.';
+
+  @override
+  String findingNotInvoiced(int count, String names) {
+    return '$count companies ka kaam abhi kisi invoice par nahin: $names. Billing mein invoice banayein.';
+  }
+
+  @override
+  String get regInvoices => 'Invoice register';
+
+  @override
+  String get regInvoiceNote =>
+      'Har invoice aur credit note ki har line, jaisay jari hui. Credit note minus mein hai. Yeh record hai, UAE structured e-invoice nahin.';
+
+  @override
+  String get colNumber => 'Number';
+
+  @override
+  String get colKind => 'Qisam';
+
+  @override
+  String get colStatus => 'Halat';
+
+  @override
+  String get colDescription => 'Tafseel';
+
+  @override
+  String get colQty => 'Miqdar';
+
+  @override
+  String get colUnit => 'Unit';
+
+  @override
+  String get colUnitPrice => 'Rate';
+
+  @override
+  String get colVatRate => 'VAT %';
+
+  @override
+  String invLessDiscount(String amount) {
+    return 'Discount $amount';
+  }
+
+  @override
+  String invOpenCreditNote(String number) {
+    return 'Credit note $number dekhein';
+  }
+
+  @override
+  String invOpenInvoice(String number) {
+    return 'Invoice $number dekhein';
   }
 }
