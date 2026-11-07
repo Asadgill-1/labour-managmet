@@ -4,7 +4,7 @@ Read this first each session (AI-04). Replace it, do not append; git holds the h
 
 **Phase:** P3 started on the owner's word on 2026-11-02, with P2's sign-off and the P1 gate's phone checks (D-035) still open. T14 to T18 are built, and the P3 gate's tests and paper review passed on this computer on 2026-11-06
 **Branch:** `p3/t18b-edit-delete` (stacked: ... > p2/t13b > p3/t14 > p3/t15 > p3/t16 > p3/t17 > p3/t18 > p3/gate > p3/t18b-edit-delete, none merged)
-**Next task:** the owner's phone test of T14 to T18b (checklist 5d to 5l). T18b is built in all three parts. Still open for the P3 gate: the owner's phone test of T14 to T18 and an answer on D-054. T19 then needs the owner's Supabase project and SMTP
+**Next task:** the owner's phone test of T14 to T18b (checklist 5d to 5l). T18b is built in all three parts. Still open for the P3 gate: the owner's phone test of T14 to T18. On 2026-11-07 the owner answered every open decision: eight as built, and D-034, D-043 and D-049 changed by D-057, which T18c builds. T19 then needs the owner's Supabase project and SMTP
 
 ## Done
 
@@ -38,7 +38,7 @@ Test evidence is host only. Encryption on Android, UX-06 timing and BUILD-04 on 
 Details in `docs/owner/P2_CHECKLIST.md`.
 
 1. Encryption check result, and seconds for the 10-worker entry (D-035).
-2. An answer on D-033, D-034, D-043, D-044, D-047, D-049, D-050, D-051, D-052, D-053 (D-055 answered its owner's sheet question) and D-054 after trying Tankhwah, Mahina band, Kaghazat, Timesheet, Invoice, receipts, Reports and CSV import on the phone. A tax adviser should see D-050, D-051 and D-054, and an accountant D-052.
+2. A go-ahead for T18c (D-057). The open decisions were answered on 2026-11-07. A tax adviser should still see D-050, D-051 and D-054, and an accountant the payroll rows and D-052.
 3. Run `gh auth login`. The public repo made CI readable, but PRs and merges still need it.
 4. Plug the phone in by USB with USB debugging on, so the share of several files can be checked from here. This computer has virtualisation off, so it can't run an emulator.
 
