@@ -733,7 +733,7 @@ Future<RegisterData> _cash(TenantDatabase db, AppLocalizations l10n, _Masters m,
 }
 
 /// The Dubai day a delete happened, which the Delete tab goes by.
-String _deletedDay(DateTime utc) => ymd(utc.add(dubaiOffset));
+String _deletedDay(DateTime at) => dubaiToday(at);
 
 /// The last column of the Delete tab, blank on paper and in Excel, for whoever the owner sends it to, to say why. It
 /// would only be empty on a screen.

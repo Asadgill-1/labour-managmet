@@ -729,7 +729,7 @@
   "tsRevisionsHeading": "Revisions",
   "tsOldRevisionNote": "Yeh purani revision hai, bilkul waisi mehfooz.",
   "tsAdjustTitle": "Company se kya tay hua",
-  "tsAdjustHelp": "Is se sirf company ka kaghaz badlega. Hazri aur mazdoor ki tankhwah wahi rahegi.",
+  "tsAdjustHelp": "Is se company ka kaghaz badlega. Ghante kam hon to app phir poochhegi ke mazdoor ki hazri bhi badle ya nahin.",
   "tsAdjustHours": "Bill ke ghante",
   "tsAdjustMinutes": "Minute",
   "tsAdjustAmount": "Raqam (AED)",

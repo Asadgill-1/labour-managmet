@@ -1408,7 +1408,7 @@
   "tsRevisionsHeading": "Revisions",
   "tsOldRevisionNote": "This is an older revision, kept exactly as it was.",
   "tsAdjustTitle": "What the company agreed",
-  "tsAdjustHelp": "This changes the company's paper only. Attendance and the worker's pay stay as they are.",
+  "tsAdjustHelp": "This changes the company's paper. With fewer hours the app then asks whether the worker's attendance changes too.",
   "tsAdjustHours": "Billable hours",
   "tsAdjustMinutes": "Minutes",
   "tsAdjustAmount": "Amount (AED)",

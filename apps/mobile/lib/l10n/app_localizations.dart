@@ -4480,7 +4480,7 @@ abstract class AppLocalizations {
   /// No description provided for @tsAdjustHelp.
   ///
   /// In en, this message translates to:
-  /// **'This changes the company\'s paper only. Attendance and the worker\'s pay stay as they are.'**
+  /// **'This changes the company\'s paper. With fewer hours the app then asks whether the worker\'s attendance changes too.'**
   String get tsAdjustHelp;
 
   /// No description provided for @tsAdjustHours.

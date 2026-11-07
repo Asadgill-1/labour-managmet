@@ -12,6 +12,7 @@ import 'package:labour_app/data/closing.dart';
 import 'package:labour_app/data/payroll.dart';
 import 'package:labour_app/data/tenant_database.dart';
 import 'package:labour_app/features/cash/cash_row.dart';
+import 'package:labour_app/features/changes/change_notes.dart' show deletedWhen;
 import 'package:labour_app/features/registers/register_defs.dart';
 import 'package:labour_app/l10n/app_localizations.dart';
 
@@ -186,5 +187,10 @@ void main() {
     await goTo(tester, words.regDeletedAttendance);
     expect(find.text('Asif (W1)'), findsOneWidget);
     await shutDown(tester, app);
+  });
+
+  test("a change's time is Dubai's even when the database hands it back in the phone's own zone", () {
+    final at = DateTime.utc(2026, 11, 7, 20, 49);
+    expect((deletedWhen(at), deletedWhen(at.toLocal())), ('08-11-2026 00:49', '08-11-2026 00:49'));
   });
 }

@@ -2509,7 +2509,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tsAdjustHelp =>
-      'This changes the company\'s paper only. Attendance and the worker\'s pay stay as they are.';
+      'This changes the company\'s paper. With fewer hours the app then asks whether the worker\'s attendance changes too.';
 
   @override
   String get tsAdjustHours => 'Billable hours';
@@ -6285,7 +6285,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get tsAdjustHelp =>
-      'Is se sirf company ka kaghaz badlega. Hazri aur mazdoor ki tankhwah wahi rahegi.';
+      'Is se company ka kaghaz badlega. Ghante kam hon to app phir poochhegi ke mazdoor ki hazri bhi badle ya nahin.';
 
   @override
   String get tsAdjustHours => 'Bill ke ghante';

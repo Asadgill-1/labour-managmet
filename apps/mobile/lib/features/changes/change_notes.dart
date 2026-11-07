@@ -162,10 +162,8 @@ String factsInWords(AppLocalizations l10n, Facts facts, {Set<Fact> leaving = con
     if (facts[f] != null && !leaving.contains(f)) '${factLabel(l10n, f)}: ${factValue(l10n, f, facts[f])}',
 ].join('; ');
 
-String _when(DateTime utc) {
-  final local = utc.add(dubaiOffset);
-  return '${showDate(ymd(local))} ${showMinuteOfDay(local.hour * 60 + local.minute)}';
-}
+// The database hands back a local DateTime, so the Dubai helpers convert to UTC first, whatever the phone's zone.
+String _when(DateTime at) => '${showDate(dubaiToday(at))} ${showMinuteOfDay(dubaiMinuteOfDay(at))}';
 
 /// The app's own note of one change: when, then each field from and to on a line of its own, in words rather than an
 /// arrow the font may lack, so it reads easily.
