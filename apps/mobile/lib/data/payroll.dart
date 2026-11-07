@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:domain/calc.dart';
 import 'package:domain/cash.dart';
 import 'package:domain/dates.dart';
 import 'package:domain/payroll.dart';
@@ -16,7 +17,7 @@ class LaterMonthPosted implements Exception {
 }
 
 /// The few columns payroll needs from an unpaid row. A thousand workers' rows as whole objects cost seconds on every look.
-typedef _UnpaidRow = ({String workerId, String workDate, int? amountFils, String state, String? revisesEntryId});
+typedef _UnpaidRow = ({String workerId, String workDate, int? amountFils, String state, String? revisesEntryId, String status});
 
 /// One worker's month. A posted month shows its stored line, otherwise a live preview (PAY-01).
 class WorkerPayroll {
@@ -31,6 +32,8 @@ class WorkerPayroll {
     this.line,
     this.paidFils = 0,
     this.unpricedRows = 0,
+    this.autoRecoveryFils = 0,
+    this.askRecoveryFils = 0,
   });
 
   final Worker worker;
@@ -52,11 +55,16 @@ class WorkerPayroll {
   /// Rows whose pay cannot be worked out yet, because a rate is missing.
   final int unpricedRows;
 
+  /// The advance instalments this month cuts by itself, already in [figures], and stored when it posts (D-057).
+  final int autoRecoveryFils;
+
+  /// What is left on advances with no instalment, while the owner has not said how much of it to cut.
+  final int askRecoveryFils;
+
   bool get posted => line != null;
   bool get canPost => !posted && figures.issues.isEmpty && !figures.isEmpty;
   bool get canAddRoomCharge => !posted && !items.any((i) => i.kind == PayItemKind.roomCharge.name);
   bool get needsVisaInstalment => !posted && (worker.visaInstalmentFils ?? 0) > 0 && visaLeftFils > 0 && !items.any((i) => i.kind == PayItemKind.visaRecovery.name);
-  bool get needsAdvanceCut => !posted && advanceLeftFils > 0 && figures.netFils > 0 && !items.any((i) => i.kind == PayItemKind.advanceRecovery.name);
   int get payableFils => openingFils + figures.dueFils;
   int get closingFils => payableFils - paidFils;
 }
@@ -69,6 +77,8 @@ PayrollFigures _postedFigures(PayrollLine l) => PayrollFigures(
   deductionsFils: l.deductionsFils,
   recoveryFils: l.recoveryFils,
   visaFils: l.visaRecoveryFils,
+  absenceFils: l.absenceFils,
+  absentDays: l.absentDays?.split(',') ?? const [],
 );
 
 extension PayrollOps on TenantDatabase {
@@ -101,14 +111,31 @@ extension PayrollOps on TenantDatabase {
         .get();
     final e = attendanceEntries;
     final unpaidQuery = selectOnly(e)
-      ..addColumns([e.workerId, e.workDate, e.workerAmountFils, e.state, e.revisesEntryId])
+      ..addColumns([e.workerId, e.workDate, e.workerAmountFils, e.state, e.revisesEntryId, e.attendanceStatus])
       ..where(e.superseded.equals(false) & e.payrollLineId.isNull() & e.workDate.isSmallerOrEqualValue(to));
     final unpaidRows = <_UnpaidRow>[
       for (final r in await unpaidQuery.get())
-        (workerId: r.read(e.workerId)!, workDate: r.read(e.workDate)!, amountFils: r.read(e.workerAmountFils), state: r.read(e.state)!, revisesEntryId: r.read(e.revisesEntryId)),
+        (
+          workerId: r.read(e.workerId)!,
+          workDate: r.read(e.workDate)!,
+          amountFils: r.read(e.workerAmountFils),
+          state: r.read(e.state)!,
+          revisesEntryId: r.read(e.revisesEntryId),
+          status: r.read(e.attendanceStatus)!,
+        ),
     ];
+    final excusedOf = groupedBy(await (select(dayOffs)..where((d) => d.workDate.isBetweenValues(from, to))).get(), (d) => d.workerId);
+    // A day counts as absent once it is over, so today's attendance can still come in (D-057).
+    final yesterday = addDays(dubaiToday(DateTime.now()), -1);
+    final through = to.compareTo(yesterday) < 0 ? to : yesterday;
     final openings = await select(openingBalances).get();
     final cash = await (select(cashEntries)..where((c) => c.workerId.isNotNull())).get();
+    final reversed = {for (final c in cash) ?c.reversesEntryId};
+    // A recovery waiting on another unposted month has taken its share of the advance already.
+    final waiting = groupedBy(
+      await (select(payrollItems)..where((i) => i.kind.equals(PayItemKind.advanceRecovery.name) & i.lineId.isNull() & i.periodFrom.equals(from).not())).get(),
+      (i) => i.workerId,
+    );
 
     final contractsOf = groupedBy(contracts, (c) => c.workerId);
     final itemsOf = groupedBy(items, (i) => i.workerId);
@@ -154,20 +181,52 @@ extension PayrollOps on TenantDatabase {
           WorkLine(r.workDate, r.amountFils ?? 0, alreadyPaidFils: r.revisesEntryId == null ? 0 : await _alreadyPaid(r.revisesEntryId)),
       ];
       final unpriced = rows.where((r) => r.state == 'draft').length;
-      final figures = workerPayroll(
+      PayrollFigures figuresWith({int recovery = 0, bool ask = false}) => workerPayroll(
         month: month,
         currentMonth: dubaiToday(DateTime.now()).substring(0, 7),
         work: work,
         // ponytail: an archived worker stops earning a monthly salary, so post their last month before archiving. Add an end date check if owners forget.
         contracts: worker.active ? (contractsOf[worker.id] ?? const <PayContract>[]).map(payTerms) : const [],
-        items: [for (final i in workerItems) PayItemLine(PayItemKind.values.byName(i.kind), i.amountFils)],
+        items: [
+          for (final i in workerItems) PayItemLine(PayItemKind.values.byName(i.kind), i.amountFils),
+          if (recovery > 0) PayItemLine(PayItemKind.advanceRecovery, recovery),
+        ],
         advanceLeftFils: advanceLeft,
         visaLeftFils: visaLeft,
         unpricedRows: unpriced,
         lastPostedMonth: workerLines.lastOrNull?.periodFrom.substring(0, 7),
         closedMonth: closedThrough?.substring(0, 7),
         limitBps: limitBps,
+        present: {
+          for (final r in rows)
+            if (r.status != AttendanceStatus.absent.name && r.workDate.compareTo(from) >= 0) r.workDate,
+        },
+        excused: {for (final d in excusedOf[worker.id] ?? const <DayOff>[]) d.workDate},
+        through: through,
+        askRecovery: ask,
       );
+      var figures = figuresWith();
+
+      // Advance comes off by itself at each advance's instalment, oldest first, up to what the month can carry. With no
+      // instalment the owner says how much, and a recovery the owner set, even at nothing, replaces all of it (D-057).
+      var auto = 0;
+      var ask = 0;
+      if (advanceLeft > 0 && figures.netFils > 0 && !workerItems.any((i) => i.kind == PayItemKind.advanceRecovery.name)) {
+        // Only advances given by the month's end come off it.
+        final given = [
+          for (final b in (openingsOf[worker.id] ?? const <OpeningBalance>[]).where((b) => b.kind == 'worker_advance' && b.asOfDate.compareTo(to) <= 0))
+            (amountFils: b.amountFils, instalmentFils: null),
+          for (final c in cashOf[worker.id] ?? const <CashEntry>[])
+            if (c.kind == CashKind.advanceGiven.name && c.reversesEntryId == null && !reversed.contains(c.id) && c.entryDate.compareTo(to) <= 0)
+              (amountFils: c.amountFils, instalmentFils: c.instalmentFils),
+        ];
+        final returned = cashLines.where((l) => l.kind == CashKind.advanceReturned).fold(0, (total, l) => total + l.signedFils);
+        final taken = (waiting[worker.id] ?? const <PayrollItem>[]).fold(0, (total, i) => total + i.amountFils);
+        final due = advanceInstalments(given, paidBackFils: returned + recovered + taken);
+        auto = min(due.instalmentFils, figures.netFils);
+        if (due.askFils > 0 && figures.netFils > auto) ask = due.askFils;
+        if (auto > 0 || ask > 0) figures = figuresWith(recovery: auto, ask: ask > 0);
+      }
       if (figures.isEmpty && unpriced == 0) continue;
       final posted = workerLines.fold(0, (total, l) => total + l.netFils + l.adjustmentFils);
       result.add(
@@ -180,6 +239,8 @@ extension PayrollOps on TenantDatabase {
           advanceLeftFils: advanceLeft,
           visaLeftFils: visaLeft,
           unpricedRows: unpriced,
+          autoRecoveryFils: auto,
+          askRecoveryFils: ask,
         ),
       );
     }
@@ -190,7 +251,7 @@ extension PayrollOps on TenantDatabase {
   Stream<List<WorkerPayroll>> watchPayroll(String month) async* {
     yield await payrollFor(month);
     final changes = tableUpdates(
-      TableUpdateQuery.onAllTables([attendanceEntries, payContracts, payrollItems, payrollLines, cashEntries, openingBalances, workers, tenantProfiles]),
+      TableUpdateQuery.onAllTables([attendanceEntries, payContracts, payrollItems, payrollLines, cashEntries, openingBalances, workers, tenantProfiles, dayOffs]),
     );
     await for (final _ in changes) {
       yield await payrollFor(month);
@@ -207,7 +268,8 @@ extension PayrollOps on TenantDatabase {
   /// Posts everyone who is ready, and returns how many. Figures are worked out again here, so a stale screen cannot
   /// post old numbers. Posting is the owner's approval: a posted worker's rows freeze here (D-041).
   /// The run, its lines and the links to work and items commit together or not at all (MODEL-07).
-  Future<int> postPayroll(String month, {required String operationId}) async {
+  /// [instalmentReason] is the reason an advance instalment cut by itself is stored with (D-057).
+  Future<int> postPayroll(String month, {required String operationId, String instalmentReason = 'Advance instalment'}) async {
     final runId = newUuid();
     final from = monthFirstDay(month);
     final to = monthLastDay(month);
@@ -261,11 +323,30 @@ extension PayrollOps on TenantDatabase {
               deductionsFils: f.deductionsFils,
               recoveryFils: f.recoveryFils,
               visaRecoveryFils: Value(f.visaFils),
+              absenceFils: Value(f.absenceFils),
+              absentDays: Value(f.absentDays.isEmpty ? null : f.absentDays.join(',')),
               netFils: f.netFils,
               payableFils: p.payableFils,
               paidBeforeFils: p.paidTotalFils,
             ),
           );
+          if (p.autoRecoveryFils > 0) {
+            await into(payrollItems).insert(
+              PayrollItemsCompanion.insert(
+                id: newUuid(),
+                tenantId: tenantId,
+                createdAtUtc: now,
+                updatedAtUtc: now,
+                actorId: actorId,
+                sourceOperationId: operationId,
+                workerId: p.worker.id,
+                periodFrom: from,
+                kind: PayItemKind.advanceRecovery.name,
+                amountFils: p.autoRecoveryFils,
+                reason: instalmentReason,
+              ),
+            );
+          }
           await (update(attendanceEntries)
                 ..where(
                   (e) =>
@@ -390,50 +471,6 @@ extension PayrollOps on TenantDatabase {
               periodFrom: monthFirstDay(month),
               kind: PayItemKind.visaRecovery.name,
               amountFils: min(p.worker.visaInstalmentFils!, p.visaLeftFils),
-              reason: reason,
-            ),
-          );
-          saved.add(row.toJson());
-          added++;
-        }
-        return {'items': saved};
-      },
-    );
-    return added;
-  }
-
-  /// Cuts what each worker's month can carry of their advance, so "To pay" here matches the slip, which counts an advance
-  /// when given. The owner presses this, and can still change or remove each one before posting (PAY-05, D-043).
-  /// A recovery waiting on another unposted month stays counted. Returns how many were added.
-  Future<int> applyAdvanceCuts(String month, {required String reason, required String operationId}) async {
-    var added = 0;
-    await applyOperation(
-      operationId: operationId,
-      entity: 'payroll_items',
-      recordId: operationId,
-      version: 1,
-      action: 'create',
-      change: () async {
-        final now = DateTime.now().toUtc();
-        final saved = <Map<String, dynamic>>[];
-        final waiting = groupedBy(await (select(payrollItems)..where((i) => i.kind.equals(PayItemKind.advanceRecovery.name) & i.lineId.isNull())).get(), (i) => i.workerId);
-        for (final p in await payrollFor(month)) {
-          if (!p.needsAdvanceCut) continue;
-          final left = p.advanceLeftFils - (waiting[p.worker.id] ?? const <PayrollItem>[]).fold<int>(0, (total, i) => total + i.amountFils);
-          final cut = min(left, p.figures.netFils);
-          if (cut <= 0) continue;
-          final row = await into(payrollItems).insertReturning(
-            PayrollItemsCompanion.insert(
-              id: newUuid(),
-              tenantId: tenantId,
-              createdAtUtc: now,
-              updatedAtUtc: now,
-              actorId: actorId,
-              sourceOperationId: operationId,
-              workerId: p.worker.id,
-              periodFrom: monthFirstDay(month),
-              kind: PayItemKind.advanceRecovery.name,
-              amountFils: cut,
               reason: reason,
             ),
           );

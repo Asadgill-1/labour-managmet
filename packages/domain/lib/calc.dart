@@ -30,6 +30,8 @@ class RateTerms {
     this.workerId,
     this.partialMethod,
     this.partialDivisor,
+    this.cutAbsence = false,
+    this.offWeekdays = const {},
   });
 
   final RateBasis basis;
@@ -44,6 +46,10 @@ class RateTerms {
   final String? workerId;
   final PartialMethod? partialMethod;
   final int? partialDivisor;
+
+  /// A monthly salary loses a day with no attendance, except on [offWeekdays], `DateTime.weekday` numbers (D-057).
+  final bool cutAbsence;
+  final Set<int> offWeekdays;
 
   bool coversDate(String date) => effectiveFrom.compareTo(date) <= 0 && (effectiveTo == null || effectiveTo!.compareTo(date) >= 0);
 }

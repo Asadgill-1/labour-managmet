@@ -96,6 +96,11 @@ class PayrollWorkerScreen extends ConsumerWidget {
             ListTile(
               leading: const Icon(Icons.warning_amber, color: due),
               title: Text(issueText(l10n, issue, p), style: const TextStyle(fontFamily: headingFont, fontSize: 15, fontWeight: FontWeight.w600, color: due)),
+              // The owner answers how much of the advance comes off this month (D-057).
+              trailing: issue == PayrollIssue.recoveryNotAnswered ? const Icon(Icons.chevron_right) : null,
+              onTap: issue == PayrollIssue.recoveryNotAnswered
+                  ? () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => PayItemFormScreen(workerId: workerId, month: month, kind: PayItemKind.advanceRecovery)))
+                  : null,
             ),
           SectionHeader(l10n.payrollEarnedHeading),
           const Divider(),
@@ -103,8 +108,12 @@ class PayrollWorkerScreen extends ConsumerWidget {
             InfoRow(l10n.payrollEarned, formatAed(f.earnedFils)),
             const Divider(),
           ],
-          if (f.salaryFils != 0) ...[
-            InfoRow(l10n.payrollSalary, formatAed(f.salaryFils)),
+          if (f.salaryFils != 0 || f.absenceFils != 0) ...[
+            InfoRow(l10n.payrollSalary, formatAed(f.salaryFils + f.absenceFils)),
+            const Divider(),
+          ],
+          if (f.absenceFils != 0) ...[
+            InfoRow(l10n.payrollAbsent(f.absentDays.length, absentDayList(f.absentDays)), '-${formatAed(f.absenceFils)}'),
             const Divider(),
           ],
           SectionHeader(l10n.payrollItemsHeading),
@@ -113,7 +122,16 @@ class PayrollWorkerScreen extends ConsumerWidget {
             _ItemRow(item, month: month, posted: p.posted),
             const Divider(),
           ],
-          if (p.items.isEmpty) ...[
+          if (p.autoRecoveryFils > 0) ...[
+            ListTile(
+              title: Text(l10n.payrollInstalmentAuto),
+              subtitle: Text(l10n.payrollInstalmentAutoHelp),
+              trailing: Text('-${formatAed(p.autoRecoveryFils)}', style: const TextStyle(fontFamily: headingFont, fontWeight: FontWeight.w600)),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => PayItemFormScreen(workerId: workerId, month: month, kind: PayItemKind.advanceRecovery))),
+            ),
+            const Divider(),
+          ],
+          if (p.items.isEmpty && p.autoRecoveryFils == 0) ...[
             ListTile(subtitle: Text(l10n.payrollNoItems)),
             const Divider(),
           ],

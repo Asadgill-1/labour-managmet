@@ -46,7 +46,7 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
 
   String _startAmount() => switch (widget.kind) {
     PayItemKind.roomCharge when _worker?.roomChargeFils != null => plainAmount(_worker!.roomChargeFils!),
-    PayItemKind.advanceRecovery when (_row?.advanceLeftFils ?? 0) > 0 => plainAmount(_row!.advanceLeftFils),
+    PayItemKind.advanceRecovery when (_row?.autoRecoveryFils ?? 0) > 0 => plainAmount(_row!.autoRecoveryFils),
     PayItemKind.visaRecovery when (_row?.visaLeftFils ?? 0) > 0 => plainAmount(min(_worker?.visaInstalmentFils ?? _row!.visaLeftFils, _row!.visaLeftFils)),
     _ => '',
   };
@@ -130,7 +130,12 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
               l10n.amountAed,
               _amount,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              validator: (v) => (parseAed(v ?? '') ?? 0) <= 0 ? l10n.amountInvalid : null,
+              // A recovery can be nothing: the owner's answer that none of the advance is cut this month (D-057).
+              helper: widget.kind == PayItemKind.advanceRecovery ? l10n.recoveryZeroHelp : null,
+              validator: (v) => switch (parseAed(v ?? '')) {
+                final fils? when fils > 0 || (fils == 0 && widget.kind == PayItemKind.advanceRecovery) => null,
+                _ => l10n.amountInvalid,
+              },
             ),
             fieldGap,
             Field(l10n.payItemReason, _reason, validator: required),

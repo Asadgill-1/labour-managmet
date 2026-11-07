@@ -78,7 +78,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 16;
+  int get schemaVersion => 17;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -222,6 +222,18 @@ class TenantDatabase extends _$TenantDatabase {
       from15To16: (m, schema) async {
         await m.addColumn(schema.auditEvents, schema.auditEvents.detail);
         await m.addColumn(schema.attendanceEntries, schema.attendanceEntries.deleted);
+      },
+      // Absence cut from monthly salaries, weekly days off, advance instalments, and a recovery set at nothing (D-057).
+      from16To17: (m, schema) async {
+        await m.addColumn(schema.payContracts, schema.payContracts.cutAbsence);
+        await m.addColumn(schema.payContracts, schema.payContracts.offWeekdays);
+        await m.addColumn(schema.payrollLines, schema.payrollLines.absenceFils);
+        await m.addColumn(schema.payrollLines, schema.payrollLines.absentDays);
+        await m.drop(schema.payrollLineNoEdit);
+        await m.createTrigger(schema.payrollLineNoEdit);
+        await m.addColumn(schema.cashEntries, schema.cashEntries.instalmentFils);
+        // The new check on amounts needs the table rebuilt. Its indexes and triggers come back with it.
+        await m.alterTable(TableMigration(schema.payrollItems));
       },
     ),
     beforeOpen: (details) async {

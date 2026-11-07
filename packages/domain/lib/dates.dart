@@ -36,6 +36,12 @@ String addDays(String storedDate, int days) {
   return ymd(DateTime.utc(parts[0], parts[1], parts[2] + days));
 }
 
+/// A stored date's day of the week, Monday 1 to Sunday 7.
+int weekdayOf(String storedDate) {
+  final parts = storedDate.split('-').map(int.parse).toList();
+  return DateTime.utc(parts[0], parts[1], parts[2]).weekday;
+}
+
 /// Whole days from one stored date to another. Below zero when [to] comes first.
 int daysBetween(String from, String to) {
   DateTime day(String stored) {

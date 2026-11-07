@@ -637,22 +637,6 @@
   "wageDueDays": "Days to pay salary after month end",
   "wageDueDaysHelp": "Your own figure, ask your accountant. Empty means late from the day after month end.",
   "wageDueDaysError": "A whole number from 0 to 90.",
-  "applyAdvanceCuts": "Cut advance ({count})",
-  "@applyAdvanceCuts": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "advanceCutsApplied": "Advance cut for {count} workers",
-  "@advanceCutsApplied": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "tabClosing": "Close month",
   "closingWorkersLeft": "Left on workers' accounts",
   "closingState": "This month",
@@ -2306,5 +2290,57 @@
       }
     }
   },
-  "invPEditReason": "Replaced by a corrected invoice"
+  "invPEditReason": "Replaced by a corrected invoice",
+  "contractCutAbsence": "Cut a day with no attendance",
+  "contractCutAbsenceHelp": "One day is the salary divided by the rule above. Weekly days off and days marked as no work are not cut.",
+  "contractOffDays": "Weekly days off",
+  "weekdaysShort": "Mon Tue Wed Thu Fri Sat Sun",
+  "payrollAbsent": "{count, plural, =1{1 day absent} other{{count} days absent}}: {days}",
+  "@payrollAbsent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "payrollSalaryLessAbsent": "Monthly salary, less {count, plural, =1{1 day absent} other{{count} days absent}} ({days})",
+  "@payrollSalaryLessAbsent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "payrollInstalment": "Advance instalment",
+  "issueRecoveryAsk": "{amount} of advance has no instalment. Say how much to cut this month.",
+  "@issueRecoveryAsk": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cashInstalment": "Cut each month (instalment)",
+  "cashInstalmentHelp": "Payroll cuts this much each month by itself. Leave it empty to be asked each month.",
+  "recoveryZeroHelp": "0 cuts nothing this month.",
+  "payrollInstalmentAuto": "Advance instalment",
+  "payrollInstalmentAutoHelp": "Cut by itself. Tap to change it for this month.",
+  "tsCarryTitle": "Cut the worker's hours too?",
+  "tsCarryBody": "Yes: the attendance takes the same hours, with a note, and the worker is paid for them. No: only the company's bill changes.",
+  "tsCarryYes": "Yes, the worker's too",
+  "tsCarryNo": "Only the company",
+  "tsCarryNote": "The company agreed fewer hours: {reason}",
+  "@tsCarryNote": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  }
 }

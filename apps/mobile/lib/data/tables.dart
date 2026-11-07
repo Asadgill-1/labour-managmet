@@ -127,6 +127,9 @@ class CashEntries extends Table with Common {
   /// Who took the money, when it was not the worker (PAY-06).
   TextColumn get receiver => text().nullable()();
 
+  /// On an advance: how much payroll cuts of it each month by itself. Null means the owner is asked each month (D-057).
+  IntColumn get instalmentFils => integer().nullable().check(instalmentFils.isBiggerThanValue(0))();
+
   @override
   List<String> get customConstraints => [
     "CHECK (kind NOT IN ('advanceGiven', 'salaryPaid', 'advanceReturned') OR worker_id IS NOT NULL)",
@@ -436,6 +439,13 @@ class PayContracts extends Table with Common, RateTerms {
   /// Monthly basis only: a `PartialMethod` by name. No default on purpose (D-102).
   TextColumn get partialMethod => text().nullable()();
   IntColumn get partialDivisor => integer().nullable()();
+
+  /// Monthly basis only: a day with no attendance is cut from the salary at the part-month rule (D-057). The form turns it
+  /// on for a new contract. A contract saved before stays off, so a month already being worked out does not change by itself.
+  BoolColumn get cutAbsence => boolean().withDefault(const Constant(false))();
+
+  /// Monthly basis only: weekly days off, never cut. `DateTime.weekday` numbers joined by commas, Monday 1. Null means none.
+  TextColumn get offWeekdays => text().nullable()();
 }
 
 /// What a client is charged. A set `siteId` or `workerId` beats the general rate (CALC-06).
@@ -594,6 +604,10 @@ class PayrollLines extends Table with Common {
   IntColumn get deductionsFils => integer()();
   IntColumn get recoveryFils => integer()();
   IntColumn get visaRecoveryFils => integer().withDefault(const Constant(0))();
+
+  /// What days with no attendance took off a monthly salary, already out of [salaryFils], and those days (D-057).
+  IntColumn get absenceFils => integer().withDefault(const Constant(0))();
+  TextColumn get absentDays => text().nullable()();
   IntColumn get netFils => integer()();
   IntColumn get payableFils => integer()();
 
@@ -610,7 +624,7 @@ class PayrollItems extends Table with Common {
 
   /// A `PayItemKind` by name.
   TextColumn get kind => text()();
-  IntColumn get amountFils => integer().check(amountFils.isBiggerThanValue(0))();
+  IntColumn get amountFils => integer().check(amountFils.isBiggerOrEqualValue(0))();
   TextColumn get reason => text()();
 
   /// Who agreed to this deduction, or the paper it rests on (PAY-07).
@@ -622,7 +636,11 @@ class PayrollItems extends Table with Common {
   TextColumn get lineId => text().nullable().references(PayrollLines, #id)();
 
   @override
-  List<String> get customConstraints => ["CHECK (kind NOT IN ('deduction', 'roomCharge') OR authorized_by IS NOT NULL)"];
+  /// Only a recovery can be nothing: the owner's answer that nothing of the advance is cut this month (D-057).
+  List<String> get customConstraints => [
+    "CHECK (kind NOT IN ('deduction', 'roomCharge') OR authorized_by IS NOT NULL)",
+    "CHECK (amount_fils > 0 OR kind = 'advanceRecovery')",
+  ];
 }
 
 @DataClassName('AuditEvent')

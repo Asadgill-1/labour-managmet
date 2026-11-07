@@ -239,45 +239,54 @@ void main() {
     });
   });
 
-  group('cutting the advance in one tap (D-043)', () {
-    Future<void> advance(int fils) => db.addCashEntry(operationId: newUuid(), date: '2020-10-08', kind: CashKind.advanceGiven, amountFils: fils, workerId: asif);
+  group('advance cut by itself (D-057)', () {
+    Future<void> advance(int fils, {int? instalment}) =>
+        db.addCashEntry(operationId: newUuid(), date: '2020-10-08', kind: CashKind.advanceGiven, amountFils: fils, workerId: asif, instalmentFils: instalment);
+    Future<void> recover(String month, int fils) =>
+        db.savePayItem(id: null, workerId: asif, month: month, kind: PayItemKind.advanceRecovery, amountFils: fils, reason: 'Typed', authorizedBy: null, note: null, roomId: null, operationId: newUuid());
 
-    test("Tankhwah's figure then matches the slip", () async {
-      await advance(2000);
-      expect((await db.payrollFor(oct)).single.needsAdvanceCut, isTrue);
-      expect(await db.applyAdvanceCuts(oct, reason: 'Advance', operationId: newUuid()), 1);
+    test('an instalment comes off by itself, and posting keeps it as a recovery', () async {
+      await advance(2000, instalment: 500);
       final tankhwah = (await db.payrollFor(oct)).single;
-      expect(tankhwah.figures.recoveryFils, 2000);
-      expect(tankhwah.needsAdvanceCut, isFalse);
-      expect(tankhwah.closingFils, (await statementOf(oct)).closingFils);
+      expect((tankhwah.figures.recoveryFils, tankhwah.autoRecoveryFils, tankhwah.figures.issues.length), (500, 500, 0));
+      await db.postPayroll(oct, operationId: newUuid(), instalmentReason: 'Qist');
+      final item = await db.select(db.payrollItems).getSingle();
+      expect((item.amountFils, item.reason, item.lineId != null, await db.advanceLeft(asif)), (500, 'Qist', true, 1500));
     });
 
     test('never more than the month can carry, so posting is not stopped', () async {
-      await advance(50000);
-      await db.applyAdvanceCuts(oct, reason: 'Advance', operationId: newUuid());
+      await advance(50000, instalment: 50000);
       final tankhwah = (await db.payrollFor(oct)).single;
       expect(tankhwah.figures.recoveryFils, tankhwah.figures.grossFils);
       expect(tankhwah.figures.issues, isEmpty);
     });
 
-    test('it does nothing twice, and leaves a recovery the owner typed alone', () async {
+    test('an advance with no instalment asks how much, and an answer of nothing lets the month post', () async {
       await advance(2000);
-      await db.savePayItem(id: null, workerId: asif, month: oct, kind: PayItemKind.advanceRecovery, amountFils: 500, reason: 'Typed', authorizedBy: null, note: null, roomId: null, operationId: newUuid());
-      expect(await db.applyAdvanceCuts(oct, reason: 'Advance', operationId: newUuid()), 0);
-      expect((await db.payrollFor(oct)).single.figures.recoveryFils, 500);
+      final asked = (await db.payrollFor(oct)).single;
+      expect((asked.figures.issues.single, asked.askRecoveryFils, asked.canPost), (PayrollIssue.recoveryNotAnswered, 2000, false));
+      await recover(oct, 0);
+      final answered = (await db.payrollFor(oct)).single;
+      expect((answered.figures.recoveryFils, answered.figures.issues.length, answered.canPost), (0, 0, true));
     });
 
-    test('a recovery waiting on another unposted month stays counted', () async {
-      await advance(2000);
-      await db.savePayItem(id: null, workerId: asif, month: sep, kind: PayItemKind.advanceRecovery, amountFils: 1500, reason: 'Typed', authorizedBy: null, note: null, roomId: null, operationId: newUuid());
-      await db.applyAdvanceCuts(oct, reason: 'Advance', operationId: newUuid());
+    test('a recovery the owner typed replaces the instalment', () async {
+      await advance(2000, instalment: 500);
+      await recover(oct, 800);
+      final tankhwah = (await db.payrollFor(oct)).single;
+      expect((tankhwah.figures.recoveryFils, tankhwah.autoRecoveryFils), (800, 0));
+    });
+
+    test('a recovery waiting on another unposted month counts as paid back', () async {
+      await advance(2000, instalment: 1500);
+      await recover(sep, 1500);
       expect((await db.payrollFor(oct)).single.figures.recoveryFils, 500);
     });
 
     test('a month already posted is left alone', () async {
       await db.postPayroll(oct, operationId: newUuid());
-      await advance(2000);
-      expect(await db.applyAdvanceCuts(oct, reason: 'Advance', operationId: newUuid()), 0);
+      await advance(2000, instalment: 500);
+      expect((await db.payrollFor(oct)).single.figures.recoveryFils, 0);
     });
   });
 

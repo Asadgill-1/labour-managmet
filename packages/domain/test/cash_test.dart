@@ -60,4 +60,11 @@ void main() {
     expect(addMonths('2026-10', 0), '2026-10');
     expect(showMonth('2026-10'), '10-2026');
   });
+
+  test('an instalment comes off the oldest advance still owed, and one with none is asked about (D-057)', () {
+    const advances = [(amountFils: 10000, instalmentFils: 3000), (amountFils: 5000, instalmentFils: null), (amountFils: 2000, instalmentFils: 1000)];
+    expect(advanceInstalments(advances, paidBackFils: 11000), (instalmentFils: 1000, askFils: 4000));
+    expect(advanceInstalments(const [(amountFils: 5000, instalmentFils: 3000)], paidBackFils: 3000), (instalmentFils: 2000, askFils: 0));
+    expect(advanceInstalments(advances, paidBackFils: 17000), (instalmentFils: 0, askFils: 0));
+  });
 }

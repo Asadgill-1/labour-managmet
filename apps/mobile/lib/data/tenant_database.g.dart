@@ -4572,6 +4572,18 @@ class $CashEntriesTable extends CashEntries
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _instalmentFilsMeta = const VerificationMeta(
+    'instalmentFils',
+  );
+  @override
+  late final GeneratedColumn<int> instalmentFils = GeneratedColumn<int>(
+    'instalment_fils',
+    aliasedName,
+    true,
+    check: () => ComparableExpr(instalmentFils).isBiggerThanValue(0),
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -4595,6 +4607,7 @@ class $CashEntriesTable extends CashEntries
     reversesEntryId,
     reference,
     receiver,
+    instalmentFils,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4761,6 +4774,15 @@ class $CashEntriesTable extends CashEntries
         receiver.isAcceptableOrUnknown(data['receiver']!, _receiverMeta),
       );
     }
+    if (data.containsKey('instalment_fils')) {
+      context.handle(
+        _instalmentFilsMeta,
+        instalmentFils.isAcceptableOrUnknown(
+          data['instalment_fils']!,
+          _instalmentFilsMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -4854,6 +4876,10 @@ class $CashEntriesTable extends CashEntries
         DriftSqlType.string,
         data['${effectivePrefix}receiver'],
       ),
+      instalmentFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}instalment_fils'],
+      ),
     );
   }
 
@@ -4895,6 +4921,9 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
 
   /// Who took the money, when it was not the worker (PAY-06).
   final String? receiver;
+
+  /// On an advance: how much payroll cuts of it each month by itself. Null means the owner is asked each month (D-057).
+  final int? instalmentFils;
   const CashEntry({
     required this.id,
     required this.tenantId,
@@ -4917,6 +4946,7 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
     this.reversesEntryId,
     this.reference,
     this.receiver,
+    this.instalmentFils,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4960,6 +4990,9 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
     if (!nullToAbsent || receiver != null) {
       map['receiver'] = Variable<String>(receiver);
     }
+    if (!nullToAbsent || instalmentFils != null) {
+      map['instalment_fils'] = Variable<int>(instalmentFils);
+    }
     return map;
   }
 
@@ -5002,6 +5035,9 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
       receiver: receiver == null && nullToAbsent
           ? const Value.absent()
           : Value(receiver),
+      instalmentFils: instalmentFils == null && nullToAbsent
+          ? const Value.absent()
+          : Value(instalmentFils),
     );
   }
 
@@ -5032,6 +5068,7 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
       reversesEntryId: serializer.fromJson<String?>(json['reversesEntryId']),
       reference: serializer.fromJson<String?>(json['reference']),
       receiver: serializer.fromJson<String?>(json['receiver']),
+      instalmentFils: serializer.fromJson<int?>(json['instalmentFils']),
     );
   }
   @override
@@ -5059,6 +5096,7 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
       'reversesEntryId': serializer.toJson<String?>(reversesEntryId),
       'reference': serializer.toJson<String?>(reference),
       'receiver': serializer.toJson<String?>(receiver),
+      'instalmentFils': serializer.toJson<int?>(instalmentFils),
     };
   }
 
@@ -5084,6 +5122,7 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
     Value<String?> reversesEntryId = const Value.absent(),
     Value<String?> reference = const Value.absent(),
     Value<String?> receiver = const Value.absent(),
+    Value<int?> instalmentFils = const Value.absent(),
   }) => CashEntry(
     id: id ?? this.id,
     tenantId: tenantId ?? this.tenantId,
@@ -5108,6 +5147,9 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
         : this.reversesEntryId,
     reference: reference.present ? reference.value : this.reference,
     receiver: receiver.present ? receiver.value : this.receiver,
+    instalmentFils: instalmentFils.present
+        ? instalmentFils.value
+        : this.instalmentFils,
   );
   CashEntry copyWithCompanion(CashEntriesCompanion data) {
     return CashEntry(
@@ -5142,6 +5184,9 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
           : this.reversesEntryId,
       reference: data.reference.present ? data.reference.value : this.reference,
       receiver: data.receiver.present ? data.receiver.value : this.receiver,
+      instalmentFils: data.instalmentFils.present
+          ? data.instalmentFils.value
+          : this.instalmentFils,
     );
   }
 
@@ -5168,7 +5213,8 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
           ..write('note: $note, ')
           ..write('reversesEntryId: $reversesEntryId, ')
           ..write('reference: $reference, ')
-          ..write('receiver: $receiver')
+          ..write('receiver: $receiver, ')
+          ..write('instalmentFils: $instalmentFils')
           ..write(')'))
         .toString();
   }
@@ -5196,6 +5242,7 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
     reversesEntryId,
     reference,
     receiver,
+    instalmentFils,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -5221,7 +5268,8 @@ class CashEntry extends DataClass implements Insertable<CashEntry> {
           other.note == this.note &&
           other.reversesEntryId == this.reversesEntryId &&
           other.reference == this.reference &&
-          other.receiver == this.receiver);
+          other.receiver == this.receiver &&
+          other.instalmentFils == this.instalmentFils);
 }
 
 class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
@@ -5246,6 +5294,7 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
   final Value<String?> reversesEntryId;
   final Value<String?> reference;
   final Value<String?> receiver;
+  final Value<int?> instalmentFils;
   final Value<int> rowid;
   const CashEntriesCompanion({
     this.id = const Value.absent(),
@@ -5269,6 +5318,7 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
     this.reversesEntryId = const Value.absent(),
     this.reference = const Value.absent(),
     this.receiver = const Value.absent(),
+    this.instalmentFils = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   CashEntriesCompanion.insert({
@@ -5293,6 +5343,7 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
     this.reversesEntryId = const Value.absent(),
     this.reference = const Value.absent(),
     this.receiver = const Value.absent(),
+    this.instalmentFils = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        tenantId = Value(tenantId),
@@ -5325,6 +5376,7 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
     Expression<String>? reversesEntryId,
     Expression<String>? reference,
     Expression<String>? receiver,
+    Expression<int>? instalmentFils,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -5349,6 +5401,7 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
       if (reversesEntryId != null) 'reverses_entry_id': reversesEntryId,
       if (reference != null) 'reference': reference,
       if (receiver != null) 'receiver': receiver,
+      if (instalmentFils != null) 'instalment_fils': instalmentFils,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -5375,6 +5428,7 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
     Value<String?>? reversesEntryId,
     Value<String?>? reference,
     Value<String?>? receiver,
+    Value<int?>? instalmentFils,
     Value<int>? rowid,
   }) {
     return CashEntriesCompanion(
@@ -5399,6 +5453,7 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
       reversesEntryId: reversesEntryId ?? this.reversesEntryId,
       reference: reference ?? this.reference,
       receiver: receiver ?? this.receiver,
+      instalmentFils: instalmentFils ?? this.instalmentFils,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5469,6 +5524,9 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
     if (receiver.present) {
       map['receiver'] = Variable<String>(receiver.value);
     }
+    if (instalmentFils.present) {
+      map['instalment_fils'] = Variable<int>(instalmentFils.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -5499,6 +5557,7 @@ class CashEntriesCompanion extends UpdateCompanion<CashEntry> {
           ..write('reversesEntryId: $reversesEntryId, ')
           ..write('reference: $reference, ')
           ..write('receiver: $receiver, ')
+          ..write('instalmentFils: $instalmentFils, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -7022,6 +7081,29 @@ class $PayrollLinesTable extends PayrollLines
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _absenceFilsMeta = const VerificationMeta(
+    'absenceFils',
+  );
+  @override
+  late final GeneratedColumn<int> absenceFils = GeneratedColumn<int>(
+    'absence_fils',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _absentDaysMeta = const VerificationMeta(
+    'absentDays',
+  );
+  @override
+  late final GeneratedColumn<String> absentDays = GeneratedColumn<String>(
+    'absent_days',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _netFilsMeta = const VerificationMeta(
     'netFils',
   );
@@ -7090,6 +7172,8 @@ class $PayrollLinesTable extends PayrollLines
     deductionsFils,
     recoveryFils,
     visaRecoveryFils,
+    absenceFils,
+    absentDays,
     netFils,
     payableFils,
     paidBeforeFils,
@@ -7271,6 +7355,21 @@ class $PayrollLinesTable extends PayrollLines
         ),
       );
     }
+    if (data.containsKey('absence_fils')) {
+      context.handle(
+        _absenceFilsMeta,
+        absenceFils.isAcceptableOrUnknown(
+          data['absence_fils']!,
+          _absenceFilsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('absent_days')) {
+      context.handle(
+        _absentDaysMeta,
+        absentDays.isAcceptableOrUnknown(data['absent_days']!, _absentDaysMeta),
+      );
+    }
     if (data.containsKey('net_fils')) {
       context.handle(
         _netFilsMeta,
@@ -7388,6 +7487,14 @@ class $PayrollLinesTable extends PayrollLines
         DriftSqlType.int,
         data['${effectivePrefix}visa_recovery_fils'],
       )!,
+      absenceFils: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}absence_fils'],
+      )!,
+      absentDays: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}absent_days'],
+      ),
       netFils: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}net_fils'],
@@ -7434,6 +7541,10 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
   final int deductionsFils;
   final int recoveryFils;
   final int visaRecoveryFils;
+
+  /// What days with no attendance took off a monthly salary, already out of [salaryFils], and those days (D-057).
+  final int absenceFils;
+  final String? absentDays;
   final int netFils;
   final int payableFils;
 
@@ -7459,6 +7570,8 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
     required this.deductionsFils,
     required this.recoveryFils,
     required this.visaRecoveryFils,
+    required this.absenceFils,
+    this.absentDays,
     required this.netFils,
     required this.payableFils,
     required this.paidBeforeFils,
@@ -7485,6 +7598,10 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
     map['deductions_fils'] = Variable<int>(deductionsFils);
     map['recovery_fils'] = Variable<int>(recoveryFils);
     map['visa_recovery_fils'] = Variable<int>(visaRecoveryFils);
+    map['absence_fils'] = Variable<int>(absenceFils);
+    if (!nullToAbsent || absentDays != null) {
+      map['absent_days'] = Variable<String>(absentDays);
+    }
     map['net_fils'] = Variable<int>(netFils);
     map['payable_fils'] = Variable<int>(payableFils);
     map['paid_before_fils'] = Variable<int>(paidBeforeFils);
@@ -7512,6 +7629,10 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
       deductionsFils: Value(deductionsFils),
       recoveryFils: Value(recoveryFils),
       visaRecoveryFils: Value(visaRecoveryFils),
+      absenceFils: Value(absenceFils),
+      absentDays: absentDays == null && nullToAbsent
+          ? const Value.absent()
+          : Value(absentDays),
       netFils: Value(netFils),
       payableFils: Value(payableFils),
       paidBeforeFils: Value(paidBeforeFils),
@@ -7543,6 +7664,8 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
       deductionsFils: serializer.fromJson<int>(json['deductionsFils']),
       recoveryFils: serializer.fromJson<int>(json['recoveryFils']),
       visaRecoveryFils: serializer.fromJson<int>(json['visaRecoveryFils']),
+      absenceFils: serializer.fromJson<int>(json['absenceFils']),
+      absentDays: serializer.fromJson<String?>(json['absentDays']),
       netFils: serializer.fromJson<int>(json['netFils']),
       payableFils: serializer.fromJson<int>(json['payableFils']),
       paidBeforeFils: serializer.fromJson<int>(json['paidBeforeFils']),
@@ -7571,6 +7694,8 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
       'deductionsFils': serializer.toJson<int>(deductionsFils),
       'recoveryFils': serializer.toJson<int>(recoveryFils),
       'visaRecoveryFils': serializer.toJson<int>(visaRecoveryFils),
+      'absenceFils': serializer.toJson<int>(absenceFils),
+      'absentDays': serializer.toJson<String?>(absentDays),
       'netFils': serializer.toJson<int>(netFils),
       'payableFils': serializer.toJson<int>(payableFils),
       'paidBeforeFils': serializer.toJson<int>(paidBeforeFils),
@@ -7597,6 +7722,8 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
     int? deductionsFils,
     int? recoveryFils,
     int? visaRecoveryFils,
+    int? absenceFils,
+    Value<String?> absentDays = const Value.absent(),
     int? netFils,
     int? payableFils,
     int? paidBeforeFils,
@@ -7620,6 +7747,8 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
     deductionsFils: deductionsFils ?? this.deductionsFils,
     recoveryFils: recoveryFils ?? this.recoveryFils,
     visaRecoveryFils: visaRecoveryFils ?? this.visaRecoveryFils,
+    absenceFils: absenceFils ?? this.absenceFils,
+    absentDays: absentDays.present ? absentDays.value : this.absentDays,
     netFils: netFils ?? this.netFils,
     payableFils: payableFils ?? this.payableFils,
     paidBeforeFils: paidBeforeFils ?? this.paidBeforeFils,
@@ -7669,6 +7798,12 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
       visaRecoveryFils: data.visaRecoveryFils.present
           ? data.visaRecoveryFils.value
           : this.visaRecoveryFils,
+      absenceFils: data.absenceFils.present
+          ? data.absenceFils.value
+          : this.absenceFils,
+      absentDays: data.absentDays.present
+          ? data.absentDays.value
+          : this.absentDays,
       netFils: data.netFils.present ? data.netFils.value : this.netFils,
       payableFils: data.payableFils.present
           ? data.payableFils.value
@@ -7701,6 +7836,8 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
           ..write('deductionsFils: $deductionsFils, ')
           ..write('recoveryFils: $recoveryFils, ')
           ..write('visaRecoveryFils: $visaRecoveryFils, ')
+          ..write('absenceFils: $absenceFils, ')
+          ..write('absentDays: $absentDays, ')
           ..write('netFils: $netFils, ')
           ..write('payableFils: $payableFils, ')
           ..write('paidBeforeFils: $paidBeforeFils, ')
@@ -7729,6 +7866,8 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
     deductionsFils,
     recoveryFils,
     visaRecoveryFils,
+    absenceFils,
+    absentDays,
     netFils,
     payableFils,
     paidBeforeFils,
@@ -7756,6 +7895,8 @@ class PayrollLine extends DataClass implements Insertable<PayrollLine> {
           other.deductionsFils == this.deductionsFils &&
           other.recoveryFils == this.recoveryFils &&
           other.visaRecoveryFils == this.visaRecoveryFils &&
+          other.absenceFils == this.absenceFils &&
+          other.absentDays == this.absentDays &&
           other.netFils == this.netFils &&
           other.payableFils == this.payableFils &&
           other.paidBeforeFils == this.paidBeforeFils &&
@@ -7781,6 +7922,8 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
   final Value<int> deductionsFils;
   final Value<int> recoveryFils;
   final Value<int> visaRecoveryFils;
+  final Value<int> absenceFils;
+  final Value<String?> absentDays;
   final Value<int> netFils;
   final Value<int> payableFils;
   final Value<int> paidBeforeFils;
@@ -7805,6 +7948,8 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
     this.deductionsFils = const Value.absent(),
     this.recoveryFils = const Value.absent(),
     this.visaRecoveryFils = const Value.absent(),
+    this.absenceFils = const Value.absent(),
+    this.absentDays = const Value.absent(),
     this.netFils = const Value.absent(),
     this.payableFils = const Value.absent(),
     this.paidBeforeFils = const Value.absent(),
@@ -7830,6 +7975,8 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
     required int deductionsFils,
     required int recoveryFils,
     this.visaRecoveryFils = const Value.absent(),
+    this.absenceFils = const Value.absent(),
+    this.absentDays = const Value.absent(),
     required int netFils,
     required int payableFils,
     required int paidBeforeFils,
@@ -7873,6 +8020,8 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
     Expression<int>? deductionsFils,
     Expression<int>? recoveryFils,
     Expression<int>? visaRecoveryFils,
+    Expression<int>? absenceFils,
+    Expression<String>? absentDays,
     Expression<int>? netFils,
     Expression<int>? payableFils,
     Expression<int>? paidBeforeFils,
@@ -7898,6 +8047,8 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
       if (deductionsFils != null) 'deductions_fils': deductionsFils,
       if (recoveryFils != null) 'recovery_fils': recoveryFils,
       if (visaRecoveryFils != null) 'visa_recovery_fils': visaRecoveryFils,
+      if (absenceFils != null) 'absence_fils': absenceFils,
+      if (absentDays != null) 'absent_days': absentDays,
       if (netFils != null) 'net_fils': netFils,
       if (payableFils != null) 'payable_fils': payableFils,
       if (paidBeforeFils != null) 'paid_before_fils': paidBeforeFils,
@@ -7925,6 +8076,8 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
     Value<int>? deductionsFils,
     Value<int>? recoveryFils,
     Value<int>? visaRecoveryFils,
+    Value<int>? absenceFils,
+    Value<String?>? absentDays,
     Value<int>? netFils,
     Value<int>? payableFils,
     Value<int>? paidBeforeFils,
@@ -7950,6 +8103,8 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
       deductionsFils: deductionsFils ?? this.deductionsFils,
       recoveryFils: recoveryFils ?? this.recoveryFils,
       visaRecoveryFils: visaRecoveryFils ?? this.visaRecoveryFils,
+      absenceFils: absenceFils ?? this.absenceFils,
+      absentDays: absentDays ?? this.absentDays,
       netFils: netFils ?? this.netFils,
       payableFils: payableFils ?? this.payableFils,
       paidBeforeFils: paidBeforeFils ?? this.paidBeforeFils,
@@ -8015,6 +8170,12 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
     if (visaRecoveryFils.present) {
       map['visa_recovery_fils'] = Variable<int>(visaRecoveryFils.value);
     }
+    if (absenceFils.present) {
+      map['absence_fils'] = Variable<int>(absenceFils.value);
+    }
+    if (absentDays.present) {
+      map['absent_days'] = Variable<String>(absentDays.value);
+    }
     if (netFils.present) {
       map['net_fils'] = Variable<int>(netFils.value);
     }
@@ -8054,6 +8215,8 @@ class PayrollLinesCompanion extends UpdateCompanion<PayrollLine> {
           ..write('deductionsFils: $deductionsFils, ')
           ..write('recoveryFils: $recoveryFils, ')
           ..write('visaRecoveryFils: $visaRecoveryFils, ')
+          ..write('absenceFils: $absenceFils, ')
+          ..write('absentDays: $absentDays, ')
           ..write('netFils: $netFils, ')
           ..write('payableFils: $payableFils, ')
           ..write('paidBeforeFils: $paidBeforeFils, ')
@@ -8189,7 +8352,7 @@ class $PayrollItemsTable extends PayrollItems
     'amount_fils',
     aliasedName,
     false,
-    check: () => ComparableExpr(amountFils).isBiggerThanValue(0),
+    check: () => ComparableExpr(amountFils).isBiggerOrEqualValue(0),
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
@@ -25535,6 +25698,32 @@ class $PayContractsTable extends PayContracts
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _cutAbsenceMeta = const VerificationMeta(
+    'cutAbsence',
+  );
+  @override
+  late final GeneratedColumn<bool> cutAbsence = GeneratedColumn<bool>(
+    'cut_absence',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("cut_absence" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _offWeekdaysMeta = const VerificationMeta(
+    'offWeekdays',
+  );
+  @override
+  late final GeneratedColumn<String> offWeekdays = GeneratedColumn<String>(
+    'off_weekdays',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -25556,6 +25745,8 @@ class $PayContractsTable extends PayContracts
     siteId,
     partialMethod,
     partialDivisor,
+    cutAbsence,
+    offWeekdays,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -25730,6 +25921,21 @@ class $PayContractsTable extends PayContracts
         ),
       );
     }
+    if (data.containsKey('cut_absence')) {
+      context.handle(
+        _cutAbsenceMeta,
+        cutAbsence.isAcceptableOrUnknown(data['cut_absence']!, _cutAbsenceMeta),
+      );
+    }
+    if (data.containsKey('off_weekdays')) {
+      context.handle(
+        _offWeekdaysMeta,
+        offWeekdays.isAcceptableOrUnknown(
+          data['off_weekdays']!,
+          _offWeekdaysMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -25815,6 +26021,14 @@ class $PayContractsTable extends PayContracts
         DriftSqlType.int,
         data['${effectivePrefix}partial_divisor'],
       ),
+      cutAbsence: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}cut_absence'],
+      )!,
+      offWeekdays: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}off_weekdays'],
+      ),
     );
   }
 
@@ -25846,6 +26060,13 @@ class PayContract extends DataClass implements Insertable<PayContract> {
   /// Monthly basis only: a `PartialMethod` by name. No default on purpose (D-102).
   final String? partialMethod;
   final int? partialDivisor;
+
+  /// Monthly basis only: a day with no attendance is cut from the salary at the part-month rule (D-057). The form turns it
+  /// on for a new contract. A contract saved before stays off, so a month already being worked out does not change by itself.
+  final bool cutAbsence;
+
+  /// Monthly basis only: weekly days off, never cut. `DateTime.weekday` numbers joined by commas, Monday 1. Null means none.
+  final String? offWeekdays;
   const PayContract({
     required this.id,
     required this.tenantId,
@@ -25866,6 +26087,8 @@ class PayContract extends DataClass implements Insertable<PayContract> {
     this.siteId,
     this.partialMethod,
     this.partialDivisor,
+    required this.cutAbsence,
+    this.offWeekdays,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -25902,6 +26125,10 @@ class PayContract extends DataClass implements Insertable<PayContract> {
     }
     if (!nullToAbsent || partialDivisor != null) {
       map['partial_divisor'] = Variable<int>(partialDivisor);
+    }
+    map['cut_absence'] = Variable<bool>(cutAbsence);
+    if (!nullToAbsent || offWeekdays != null) {
+      map['off_weekdays'] = Variable<String>(offWeekdays);
     }
     return map;
   }
@@ -25941,6 +26168,10 @@ class PayContract extends DataClass implements Insertable<PayContract> {
       partialDivisor: partialDivisor == null && nullToAbsent
           ? const Value.absent()
           : Value(partialDivisor),
+      cutAbsence: Value(cutAbsence),
+      offWeekdays: offWeekdays == null && nullToAbsent
+          ? const Value.absent()
+          : Value(offWeekdays),
     );
   }
 
@@ -25969,6 +26200,8 @@ class PayContract extends DataClass implements Insertable<PayContract> {
       siteId: serializer.fromJson<String?>(json['siteId']),
       partialMethod: serializer.fromJson<String?>(json['partialMethod']),
       partialDivisor: serializer.fromJson<int?>(json['partialDivisor']),
+      cutAbsence: serializer.fromJson<bool>(json['cutAbsence']),
+      offWeekdays: serializer.fromJson<String?>(json['offWeekdays']),
     );
   }
   @override
@@ -25994,6 +26227,8 @@ class PayContract extends DataClass implements Insertable<PayContract> {
       'siteId': serializer.toJson<String?>(siteId),
       'partialMethod': serializer.toJson<String?>(partialMethod),
       'partialDivisor': serializer.toJson<int?>(partialDivisor),
+      'cutAbsence': serializer.toJson<bool>(cutAbsence),
+      'offWeekdays': serializer.toJson<String?>(offWeekdays),
     };
   }
 
@@ -26017,6 +26252,8 @@ class PayContract extends DataClass implements Insertable<PayContract> {
     Value<String?> siteId = const Value.absent(),
     Value<String?> partialMethod = const Value.absent(),
     Value<int?> partialDivisor = const Value.absent(),
+    bool? cutAbsence,
+    Value<String?> offWeekdays = const Value.absent(),
   }) => PayContract(
     id: id ?? this.id,
     tenantId: tenantId ?? this.tenantId,
@@ -26047,6 +26284,8 @@ class PayContract extends DataClass implements Insertable<PayContract> {
     partialDivisor: partialDivisor.present
         ? partialDivisor.value
         : this.partialDivisor,
+    cutAbsence: cutAbsence ?? this.cutAbsence,
+    offWeekdays: offWeekdays.present ? offWeekdays.value : this.offWeekdays,
   );
   PayContract copyWithCompanion(PayContractsCompanion data) {
     return PayContract(
@@ -26089,6 +26328,12 @@ class PayContract extends DataClass implements Insertable<PayContract> {
       partialDivisor: data.partialDivisor.present
           ? data.partialDivisor.value
           : this.partialDivisor,
+      cutAbsence: data.cutAbsence.present
+          ? data.cutAbsence.value
+          : this.cutAbsence,
+      offWeekdays: data.offWeekdays.present
+          ? data.offWeekdays.value
+          : this.offWeekdays,
     );
   }
 
@@ -26113,13 +26358,15 @@ class PayContract extends DataClass implements Insertable<PayContract> {
           ..write('workerId: $workerId, ')
           ..write('siteId: $siteId, ')
           ..write('partialMethod: $partialMethod, ')
-          ..write('partialDivisor: $partialDivisor')
+          ..write('partialDivisor: $partialDivisor, ')
+          ..write('cutAbsence: $cutAbsence, ')
+          ..write('offWeekdays: $offWeekdays')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     tenantId,
     createdAtUtc,
@@ -26139,7 +26386,9 @@ class PayContract extends DataClass implements Insertable<PayContract> {
     siteId,
     partialMethod,
     partialDivisor,
-  );
+    cutAbsence,
+    offWeekdays,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -26162,7 +26411,9 @@ class PayContract extends DataClass implements Insertable<PayContract> {
           other.workerId == this.workerId &&
           other.siteId == this.siteId &&
           other.partialMethod == this.partialMethod &&
-          other.partialDivisor == this.partialDivisor);
+          other.partialDivisor == this.partialDivisor &&
+          other.cutAbsence == this.cutAbsence &&
+          other.offWeekdays == this.offWeekdays);
 }
 
 class PayContractsCompanion extends UpdateCompanion<PayContract> {
@@ -26185,6 +26436,8 @@ class PayContractsCompanion extends UpdateCompanion<PayContract> {
   final Value<String?> siteId;
   final Value<String?> partialMethod;
   final Value<int?> partialDivisor;
+  final Value<bool> cutAbsence;
+  final Value<String?> offWeekdays;
   final Value<int> rowid;
   const PayContractsCompanion({
     this.id = const Value.absent(),
@@ -26206,6 +26459,8 @@ class PayContractsCompanion extends UpdateCompanion<PayContract> {
     this.siteId = const Value.absent(),
     this.partialMethod = const Value.absent(),
     this.partialDivisor = const Value.absent(),
+    this.cutAbsence = const Value.absent(),
+    this.offWeekdays = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PayContractsCompanion.insert({
@@ -26228,6 +26483,8 @@ class PayContractsCompanion extends UpdateCompanion<PayContract> {
     this.siteId = const Value.absent(),
     this.partialMethod = const Value.absent(),
     this.partialDivisor = const Value.absent(),
+    this.cutAbsence = const Value.absent(),
+    this.offWeekdays = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        tenantId = Value(tenantId),
@@ -26259,6 +26516,8 @@ class PayContractsCompanion extends UpdateCompanion<PayContract> {
     Expression<String>? siteId,
     Expression<String>? partialMethod,
     Expression<int>? partialDivisor,
+    Expression<bool>? cutAbsence,
+    Expression<String>? offWeekdays,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -26281,6 +26540,8 @@ class PayContractsCompanion extends UpdateCompanion<PayContract> {
       if (siteId != null) 'site_id': siteId,
       if (partialMethod != null) 'partial_method': partialMethod,
       if (partialDivisor != null) 'partial_divisor': partialDivisor,
+      if (cutAbsence != null) 'cut_absence': cutAbsence,
+      if (offWeekdays != null) 'off_weekdays': offWeekdays,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -26305,6 +26566,8 @@ class PayContractsCompanion extends UpdateCompanion<PayContract> {
     Value<String?>? siteId,
     Value<String?>? partialMethod,
     Value<int?>? partialDivisor,
+    Value<bool>? cutAbsence,
+    Value<String?>? offWeekdays,
     Value<int>? rowid,
   }) {
     return PayContractsCompanion(
@@ -26327,6 +26590,8 @@ class PayContractsCompanion extends UpdateCompanion<PayContract> {
       siteId: siteId ?? this.siteId,
       partialMethod: partialMethod ?? this.partialMethod,
       partialDivisor: partialDivisor ?? this.partialDivisor,
+      cutAbsence: cutAbsence ?? this.cutAbsence,
+      offWeekdays: offWeekdays ?? this.offWeekdays,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -26391,6 +26656,12 @@ class PayContractsCompanion extends UpdateCompanion<PayContract> {
     if (partialDivisor.present) {
       map['partial_divisor'] = Variable<int>(partialDivisor.value);
     }
+    if (cutAbsence.present) {
+      map['cut_absence'] = Variable<bool>(cutAbsence.value);
+    }
+    if (offWeekdays.present) {
+      map['off_weekdays'] = Variable<String>(offWeekdays.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -26419,6 +26690,8 @@ class PayContractsCompanion extends UpdateCompanion<PayContract> {
           ..write('siteId: $siteId, ')
           ..write('partialMethod: $partialMethod, ')
           ..write('partialDivisor: $partialDivisor, ')
+          ..write('cutAbsence: $cutAbsence, ')
+          ..write('offWeekdays: $offWeekdays, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -29874,7 +30147,7 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
   );
   late final $PayrollLinesTable payrollLines = $PayrollLinesTable(this);
   late final Trigger payrollLineNoEdit = Trigger(
-    'CREATE TRIGGER payroll_line_no_edit BEFORE UPDATE OF run_id, worker_id, period_from, opening_fils, earned_fils, salary_fils, adjustment_fils, allowances_fils, deductions_fils, recovery_fils, visa_recovery_fils, net_fils, payable_fils, paid_before_fils ON payroll_lines BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
+    'CREATE TRIGGER payroll_line_no_edit BEFORE UPDATE OF run_id, worker_id, period_from, opening_fils, earned_fils, salary_fils, adjustment_fils, allowances_fils, deductions_fils, recovery_fils, visa_recovery_fils, absence_fils, absent_days, net_fils, payable_fils, paid_before_fils ON payroll_lines BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
     'payroll_line_no_edit',
   );
   late final Trigger payrollLineStaysReversed = Trigger(
@@ -35933,6 +36206,7 @@ typedef $$CashEntriesTableCreateCompanionBuilder =
       Value<String?> reversesEntryId,
       Value<String?> reference,
       Value<String?> receiver,
+      Value<int?> instalmentFils,
       Value<int> rowid,
     });
 typedef $$CashEntriesTableUpdateCompanionBuilder =
@@ -35958,6 +36232,7 @@ typedef $$CashEntriesTableUpdateCompanionBuilder =
       Value<String?> reversesEntryId,
       Value<String?> reference,
       Value<String?> receiver,
+      Value<int?> instalmentFils,
       Value<int> rowid,
     });
 
@@ -36180,6 +36455,11 @@ class $$CashEntriesTableFilterComposer
 
   ColumnFilters<String> get receiver => $composableBuilder(
     column: $table.receiver,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get instalmentFils => $composableBuilder(
+    column: $table.instalmentFils,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -36438,6 +36718,11 @@ class $$CashEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get instalmentFils => $composableBuilder(
+    column: $table.instalmentFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$WorkersTableOrderingComposer get workerId {
     final $$WorkersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -36618,6 +36903,11 @@ class $$CashEntriesTableAnnotationComposer
 
   GeneratedColumn<String> get receiver =>
       $composableBuilder(column: $table.receiver, builder: (column) => column);
+
+  GeneratedColumn<int> get instalmentFils => $composableBuilder(
+    column: $table.instalmentFils,
+    builder: (column) => column,
+  );
 
   $$WorkersTableAnnotationComposer get workerId {
     final $$WorkersTableAnnotationComposer composer = $composerBuilder(
@@ -36844,6 +37134,7 @@ class $$CashEntriesTableTableManager
                 Value<String?> reversesEntryId = const Value.absent(),
                 Value<String?> reference = const Value.absent(),
                 Value<String?> receiver = const Value.absent(),
+                Value<int?> instalmentFils = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CashEntriesCompanion(
                 id: id,
@@ -36867,6 +37158,7 @@ class $$CashEntriesTableTableManager
                 reversesEntryId: reversesEntryId,
                 reference: reference,
                 receiver: receiver,
+                instalmentFils: instalmentFils,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -36892,6 +37184,7 @@ class $$CashEntriesTableTableManager
                 Value<String?> reversesEntryId = const Value.absent(),
                 Value<String?> reference = const Value.absent(),
                 Value<String?> receiver = const Value.absent(),
+                Value<int?> instalmentFils = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CashEntriesCompanion.insert(
                 id: id,
@@ -36915,6 +37208,7 @@ class $$CashEntriesTableTableManager
                 reversesEntryId: reversesEntryId,
                 reference: reference,
                 receiver: receiver,
+                instalmentFils: instalmentFils,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -37966,6 +38260,8 @@ typedef $$PayrollLinesTableCreateCompanionBuilder =
       required int deductionsFils,
       required int recoveryFils,
       Value<int> visaRecoveryFils,
+      Value<int> absenceFils,
+      Value<String?> absentDays,
       required int netFils,
       required int payableFils,
       required int paidBeforeFils,
@@ -37992,6 +38288,8 @@ typedef $$PayrollLinesTableUpdateCompanionBuilder =
       Value<int> deductionsFils,
       Value<int> recoveryFils,
       Value<int> visaRecoveryFils,
+      Value<int> absenceFils,
+      Value<String?> absentDays,
       Value<int> netFils,
       Value<int> payableFils,
       Value<int> paidBeforeFils,
@@ -38163,6 +38461,16 @@ class $$PayrollLinesTableFilterComposer
 
   ColumnFilters<int> get visaRecoveryFils => $composableBuilder(
     column: $table.visaRecoveryFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get absenceFils => $composableBuilder(
+    column: $table.absenceFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get absentDays => $composableBuilder(
+    column: $table.absentDays,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -38372,6 +38680,16 @@ class $$PayrollLinesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get absenceFils => $composableBuilder(
+    column: $table.absenceFils,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get absentDays => $composableBuilder(
+    column: $table.absentDays,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get netFils => $composableBuilder(
     column: $table.netFils,
     builder: (column) => ColumnOrderings(column),
@@ -38517,6 +38835,16 @@ class $$PayrollLinesTableAnnotationComposer
 
   GeneratedColumn<int> get visaRecoveryFils => $composableBuilder(
     column: $table.visaRecoveryFils,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get absenceFils => $composableBuilder(
+    column: $table.absenceFils,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get absentDays => $composableBuilder(
+    column: $table.absentDays,
     builder: (column) => column,
   );
 
@@ -38685,6 +39013,8 @@ class $$PayrollLinesTableTableManager
                 Value<int> deductionsFils = const Value.absent(),
                 Value<int> recoveryFils = const Value.absent(),
                 Value<int> visaRecoveryFils = const Value.absent(),
+                Value<int> absenceFils = const Value.absent(),
+                Value<String?> absentDays = const Value.absent(),
                 Value<int> netFils = const Value.absent(),
                 Value<int> payableFils = const Value.absent(),
                 Value<int> paidBeforeFils = const Value.absent(),
@@ -38709,6 +39039,8 @@ class $$PayrollLinesTableTableManager
                 deductionsFils: deductionsFils,
                 recoveryFils: recoveryFils,
                 visaRecoveryFils: visaRecoveryFils,
+                absenceFils: absenceFils,
+                absentDays: absentDays,
                 netFils: netFils,
                 payableFils: payableFils,
                 paidBeforeFils: paidBeforeFils,
@@ -38735,6 +39067,8 @@ class $$PayrollLinesTableTableManager
                 required int deductionsFils,
                 required int recoveryFils,
                 Value<int> visaRecoveryFils = const Value.absent(),
+                Value<int> absenceFils = const Value.absent(),
+                Value<String?> absentDays = const Value.absent(),
                 required int netFils,
                 required int payableFils,
                 required int paidBeforeFils,
@@ -38759,6 +39093,8 @@ class $$PayrollLinesTableTableManager
                 deductionsFils: deductionsFils,
                 recoveryFils: recoveryFils,
                 visaRecoveryFils: visaRecoveryFils,
+                absenceFils: absenceFils,
+                absentDays: absentDays,
                 netFils: netFils,
                 payableFils: payableFils,
                 paidBeforeFils: paidBeforeFils,
@@ -51535,6 +51871,8 @@ typedef $$PayContractsTableCreateCompanionBuilder =
       Value<String?> siteId,
       Value<String?> partialMethod,
       Value<int?> partialDivisor,
+      Value<bool> cutAbsence,
+      Value<String?> offWeekdays,
       Value<int> rowid,
     });
 typedef $$PayContractsTableUpdateCompanionBuilder =
@@ -51558,6 +51896,8 @@ typedef $$PayContractsTableUpdateCompanionBuilder =
       Value<String?> siteId,
       Value<String?> partialMethod,
       Value<int?> partialDivisor,
+      Value<bool> cutAbsence,
+      Value<String?> offWeekdays,
       Value<int> rowid,
     });
 
@@ -51691,6 +52031,16 @@ class $$PayContractsTableFilterComposer
 
   ColumnFilters<int> get partialDivisor => $composableBuilder(
     column: $table.partialDivisor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get cutAbsence => $composableBuilder(
+    column: $table.cutAbsence,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get offWeekdays => $composableBuilder(
+    column: $table.offWeekdays,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -51835,6 +52185,16 @@ class $$PayContractsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get cutAbsence => $composableBuilder(
+    column: $table.cutAbsence,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get offWeekdays => $composableBuilder(
+    column: $table.offWeekdays,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$WorkersTableOrderingComposer get workerId {
     final $$WorkersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -51962,6 +52322,16 @@ class $$PayContractsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<bool> get cutAbsence => $composableBuilder(
+    column: $table.cutAbsence,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get offWeekdays => $composableBuilder(
+    column: $table.offWeekdays,
+    builder: (column) => column,
+  );
+
   $$WorkersTableAnnotationComposer get workerId {
     final $$WorkersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -52056,6 +52426,8 @@ class $$PayContractsTableTableManager
                 Value<String?> siteId = const Value.absent(),
                 Value<String?> partialMethod = const Value.absent(),
                 Value<int?> partialDivisor = const Value.absent(),
+                Value<bool> cutAbsence = const Value.absent(),
+                Value<String?> offWeekdays = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PayContractsCompanion(
                 id: id,
@@ -52077,6 +52449,8 @@ class $$PayContractsTableTableManager
                 siteId: siteId,
                 partialMethod: partialMethod,
                 partialDivisor: partialDivisor,
+                cutAbsence: cutAbsence,
+                offWeekdays: offWeekdays,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -52100,6 +52474,8 @@ class $$PayContractsTableTableManager
                 Value<String?> siteId = const Value.absent(),
                 Value<String?> partialMethod = const Value.absent(),
                 Value<int?> partialDivisor = const Value.absent(),
+                Value<bool> cutAbsence = const Value.absent(),
+                Value<String?> offWeekdays = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PayContractsCompanion.insert(
                 id: id,
@@ -52121,6 +52497,8 @@ class $$PayContractsTableTableManager
                 siteId: siteId,
                 partialMethod: partialMethod,
                 partialDivisor: partialDivisor,
+                cutAbsence: cutAbsence,
+                offWeekdays: offWeekdays,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

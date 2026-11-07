@@ -1,4 +1,5 @@
 import 'package:domain/cash.dart';
+import 'package:domain/payroll.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:drift_dev/api/migrations_native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,6 +8,7 @@ import 'package:labour_app/data/changes.dart';
 import 'package:labour_app/data/closing.dart';
 import 'package:labour_app/data/documents.dart';
 import 'package:labour_app/data/invoices.dart';
+import 'package:labour_app/data/payroll.dart';
 import 'package:labour_app/data/receipts.dart';
 import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/data/tenant_database.dart';
@@ -28,6 +30,32 @@ void main() {
     final db = TenantDatabase(await verifier.startAt(latest), tenantId: 'tenant', deviceId: 'device');
     addTearDown(db.close);
     await db.validateDatabaseSchema();
+  });
+
+  test('a phone on version 16 upgrades: its contract keeps paying the whole month, its items stay, and a recovery can then be nothing (D-057)', () async {
+    final old = await verifier.schemaAt(16);
+    old.rawDatabase.execute('''
+      INSERT INTO tenant_profiles (id, $commonColumns, legal_name) VALUES ('p1', $common, 'Labour');
+      INSERT INTO workers (id, $commonColumns, code, name) VALUES ('w1', $common, 'W001', 'Ahmad');
+      INSERT INTO pay_contracts (id, $commonColumns, worker_id, basis, rate_fils, effective_from, partial_method) VALUES ('k1', $common, 'w1', 'month', 310000, '2020-01-01', 'calendarDays');
+      INSERT INTO payroll_items (id, $commonColumns, worker_id, period_from, kind, amount_fils, reason) VALUES ('i1', $common, 'w1', '2020-10-01', 'allowance', 5000, 'Food');
+    ''');
+
+    final db = TenantDatabase(old.newConnection(), tenantId: 't', deviceId: 'device');
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, db.schemaVersion);
+
+    final contract = await db.select(db.payContracts).getSingle();
+    expect((contract.cutAbsence, contract.offWeekdays), (false, null));
+    expect((await db.select(db.payrollItems).getSingle()).amountFils, 5000);
+    final f = (await db.payrollFor('2020-10')).single.figures;
+    expect((f.salaryFils, f.absenceFils), (310000, 0), reason: 'no attendance, and still the whole month');
+    await db.savePayItem(id: null, workerId: 'w1', month: '2020-10', kind: PayItemKind.advanceRecovery, amountFils: 0, reason: 'Not this month', authorizedBy: null, note: null, roomId: null, operationId: newUuid());
+    expect(
+      db.savePayItem(id: null, workerId: 'w1', month: '2020-10', kind: PayItemKind.allowance, amountFils: 0, reason: 'x', authorizedBy: null, note: null, roomId: null, operationId: newUuid()),
+      throwsA(anything),
+      reason: 'only a recovery can be nothing',
+    );
   });
 
   test('a phone on version 15 upgrades: its rows and record stay, and a row can then be deleted and kept whole (D-056)', () async {

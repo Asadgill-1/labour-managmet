@@ -172,7 +172,10 @@ SlipContent slipContent(WorkerStatement s, AppLocalizations l10n, ExportText tex
       l10n.slipEarnings,
       [
         (worked.isEmpty ? l10n.slipWork : l10n.slipWorkBasis(worked.length, showDuration(minutes)), money(s.workFils)),
-        if (s.salaryFils != 0) (l10n.payrollSalary, money(s.salaryFils)),
+        if (s.absenceFils != 0)
+          (l10n.payrollSalaryLessAbsent(s.absentDays.length, absentDayList(s.absentDays)), money(s.salaryFils))
+        else if (s.salaryFils != 0)
+          (l10n.payrollSalary, money(s.salaryFils)),
         if (s.allowanceFils != 0) (l10n.payKindAllowance, money(s.allowanceFils)),
       ],
       totalLabel: l10n.slipEarned,
@@ -347,3 +350,6 @@ Future<void> shareSalarySlip(BuildContext context, WidgetRef ref, {required Stri
     onBusy: onBusy,
   );
 }
+
+/// Days of one month as their numbers, "5, 12, 19", since the month shows beside them (D-057).
+String absentDayList(List<String> days) => [for (final d in days) int.parse(d.substring(8)).toString()].join(', ');

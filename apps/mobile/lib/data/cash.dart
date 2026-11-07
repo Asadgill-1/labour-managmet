@@ -47,6 +47,7 @@ extension CashOps on TenantDatabase {
     String method = 'cash',
     String? note,
     String? reference,
+    int? instalmentFils,
   }) {
     final id = newUuid();
     return applyOperation(
@@ -78,6 +79,7 @@ extension CashOps on TenantDatabase {
             method: Value(method),
             note: Value(note),
             reference: Value(reference),
+            instalmentFils: Value(kind == CashKind.advanceGiven ? instalmentFils : null),
           ),
         );
         return row.toJson();

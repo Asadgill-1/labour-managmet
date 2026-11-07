@@ -63,6 +63,9 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
   late final _reference = TextEditingController(text: widget.editing?.reference);
   late final _receiver = TextEditingController(text: widget.editing?.receiver);
 
+  /// On an advance: what payroll cuts of it each month by itself. Empty means the owner is asked each month (D-057).
+  late final _instalment = TextEditingController(text: widget.editing?.instalmentFils == null ? null : plainAmount(widget.editing!.instalmentFils!));
+
   /// The user's own note on an edit, shown under the new line (D-056).
   final _changeNote = TextEditingController();
 
@@ -305,6 +308,7 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
                 method: _method,
                 note: note,
                 reference: isExpense && _reference.text.trim().isNotEmpty ? _reference.text.trim() : null,
+                instalmentFils: _kind == CashKind.advanceGiven ? parseAed(_instalment.text) : null,
               );
         }
       }
@@ -472,6 +476,16 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
               onChanged: (_) => _amountChanged(),
             ),
             fieldGap,
+            if (_kind == CashKind.advanceGiven) ...[
+              Field(
+                l10n.cashInstalment,
+                _instalment,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                helper: l10n.cashInstalmentHelp,
+                validator: (v) => (v ?? '').trim().isNotEmpty && (parseAed(v!) ?? 0) <= 0 ? l10n.amountInvalid : null,
+              ),
+              fieldGap,
+            ],
             if (_kind == CashKind.clientReceipt && _clientId != null) ...[
               Row(
                 children: [

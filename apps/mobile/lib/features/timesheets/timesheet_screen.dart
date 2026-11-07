@@ -107,7 +107,36 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
   Future<void> _adjust(TimesheetView v, TimesheetRow row) async {
     final answer = await showModalBottomSheet<({TsAdjustment? agreed})>(context: context, isScrollControlled: true, builder: (_) => _AdjustSheet(row: row));
     if (answer == null || !mounted) return;
-    await _step(() => _db.adjustTimesheetRow(v.revision.id, row.entryId, answer.agreed, operationId: newUuid()));
+    final agreed = answer.agreed;
+    // Fewer hours or a half day can go on the worker too, so nobody has to open the attendance again (D-057).
+    final fewer =
+        agreed != null &&
+        agreed.status != AttendanceStatus.absent &&
+        agreed.minutes > 0 &&
+        ((agreed.status == AttendanceStatus.half && row.line.status == AttendanceStatus.present) || agreed.minutes < row.line.billableMinutes);
+    if (fewer && await _askCarry() && mounted) {
+      final l10n = AppLocalizations.of(context);
+      await _step(() => _db.carryAgreedToAttendance(v.revision.id, row.entryId, agreed, note: l10n.tsCarryNote(agreed.reason), reopenReason: l10n.reopenByEdit));
+      return;
+    }
+    if (!mounted) return;
+    await _step(() => _db.adjustTimesheetRow(v.revision.id, row.entryId, agreed, operationId: newUuid()));
+  }
+
+  Future<bool> _askCarry() async {
+    final l10n = AppLocalizations.of(context);
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        title: Text(l10n.tsCarryTitle),
+        content: Text(l10n.tsCarryBody),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialog).pop(false), child: Text(l10n.tsCarryNo)),
+          TextButton(onPressed: () => Navigator.of(dialog).pop(true), child: Text(l10n.tsCarryYes)),
+        ],
+      ),
+    );
+    return yes ?? false;
   }
 
   void _open(int revision) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => TimesheetScreen(timesheetId: widget.timesheetId, revision: revision)));

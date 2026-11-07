@@ -6,6 +6,7 @@ import 'package:domain/timesheet.dart';
 import 'package:drift/drift.dart';
 
 import 'attendance.dart';
+import 'changes.dart';
 import 'documents.dart';
 import 'tenant_database.dart';
 
@@ -330,6 +331,46 @@ extension TimesheetOps on TenantDatabase {
     operationId: operationId,
     reason: agreed?.reason,
   );
+
+  /// Takes what a company agreed for a row into the attendance too, once the owner says yes: fewer hours or a half day,
+  /// with [note] as the user's note, so the worker is paid the same (D-057). A row already paid is corrected, and the
+  /// difference comes in the next payroll (ATT-08). A closed month opens first, as any edit does (D-056). The agreement
+  /// stays on the draft, now against the row as it stands. All or nothing.
+  Future<void> carryAgreedToAttendance(String revisionId, String entryId, TsAdjustment agreed, {required String note, required String reopenReason}) =>
+      transaction(() async {
+        final old = await (select(attendanceEntries)..where((e) => e.id.equals(entryId))).getSingle();
+        final input = entryToInput(old);
+        final s = input.shift;
+        final unpaidBreak = old.breakPaidClient ? 0 : old.breakMinutes;
+        // The same clock as the company's hours, so both sides count what was agreed.
+        final end = agreed.status == AttendanceStatus.present && s.startMinute != null ? (s.startMinute! + agreed.minutes + unpaidBreak) % (24 * 60) : s.endMinute;
+        await editAttendance(
+          old,
+          EntryInput(
+            workerId: input.workerId,
+            groupId: input.groupId,
+            overrideReason: input.overrideReason,
+            overlapReason: input.overlapReason,
+            notes: input.notes,
+            shift: ShiftInput(
+              status: agreed.status,
+              startMinute: s.startMinute,
+              endMinute: end,
+              breakMinutes: s.breakMinutes,
+              breakPaidClient: s.breakPaidClient,
+              breakPaidWorker: s.breakPaidWorker,
+              overtimeApproved: s.overtimeApproved,
+              clientOverrideFils: s.clientOverrideFils,
+              workerOverrideFils: s.workerOverrideFils,
+            ),
+          ),
+          note: note,
+          reopenReason: reopenReason,
+          operationId: newUuid(),
+        );
+        final current = await (select(attendanceEntries)..where((e) => (e.id.equals(entryId) | e.revisesEntryId.equals(entryId)) & e.superseded.equals(false))).getSingle();
+        await adjustTimesheetRow(revisionId, current.id, agreed, operationId: newUuid());
+      });
 
   /// Approves a draft: its attendance freezes, and its rows are stored as they stand. The first approval gives the number.
   /// The revision it replaces keeps its lines, no longer current (TS-04, TS-06).

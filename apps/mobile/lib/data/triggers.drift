@@ -43,7 +43,7 @@ CREATE TRIGGER payroll_run_no_delete BEFORE DELETE ON payroll_runs BEGIN
 END;
 
 CREATE TRIGGER payroll_line_no_edit BEFORE UPDATE OF run_id, worker_id, period_from, opening_fils, earned_fils, salary_fils,
-  adjustment_fils, allowances_fils, deductions_fils, recovery_fils, visa_recovery_fils, net_fils, payable_fils, paid_before_fils ON payroll_lines
+  adjustment_fils, allowances_fils, deductions_fils, recovery_fils, visa_recovery_fils, absence_fils, absent_days, net_fils, payable_fils, paid_before_fils ON payroll_lines
 BEGIN
   SELECT RAISE(ABORT, 'posted payroll is immutable');
 END;

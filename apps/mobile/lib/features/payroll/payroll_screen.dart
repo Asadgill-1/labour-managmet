@@ -27,6 +27,7 @@ String issueText(AppLocalizations l10n, PayrollIssue issue, WorkerPayroll p) => 
   PayrollIssue.laterMonthPosted => l10n.issueLater,
   PayrollIssue.monthNotStarted => l10n.issueNotStarted,
   PayrollIssue.monthClosed => l10n.issueClosed,
+  PayrollIssue.recoveryNotAnswered => l10n.issueRecoveryAsk(formatAed(p.askRecoveryFils)),
 };
 
 /// One month's pay for everyone: review, then post with one confirmation (PAY-01).
@@ -62,7 +63,7 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
     if (yes != true || !mounted) return;
     var count = 0;
     final saved = await saveOrExplain(context, () async {
-      count = await ref.read(dbProvider).postPayroll(_month, operationId: newUuid());
+      count = await ref.read(dbProvider).postPayroll(_month, operationId: newUuid(), instalmentReason: l10n.payrollInstalment);
     });
     if (saved && mounted) showSavedOnPhone(context, l10n.payrollPosted(count));
   }
@@ -74,15 +75,6 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
       added = await ref.read(dbProvider).applyVisaInstalments(_month, reason: l10n.payKindVisa, operationId: newUuid());
     });
     if (saved && mounted) showSavedOnPhone(context, l10n.visaInstalmentsApplied(added));
-  }
-
-  Future<void> _applyAdvanceCuts() async {
-    final l10n = AppLocalizations.of(context);
-    var added = 0;
-    final saved = await saveOrExplain(context, () async {
-      added = await ref.read(dbProvider).applyAdvanceCuts(_month, reason: l10n.payKindRecovery, operationId: newUuid());
-    });
-    if (saved && mounted) showSavedOnPhone(context, l10n.advanceCutsApplied(added));
   }
 
   Future<void> _ownerSheet() => exportOwnerSheet(context, ref, _month, onBusy: (busy) {
@@ -97,7 +89,6 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
     final shown = needle.isEmpty ? rows : rows.where((p) => p.worker.name.toLowerCase().contains(needle) || p.worker.code.toLowerCase().contains(needle)).toList();
     final ready = rows.where((p) => p.canPost).toList();
     final visaInstalments = rows.where((p) => p.needsVisaInstalment).length;
-    final advanceCuts = rows.where((p) => p.needsAdvanceCut).length;
     final closed = isClosed(monthLastDay(_month), ref.watch(lockedThroughProvider).value);
     final earned = rows.fold(0, (sum, p) => sum + p.figures.grossFils);
     final cut = rows.fold(0, (sum, p) => sum + p.figures.deductionsFils + p.figures.recoveryFils + p.figures.visaFils);
@@ -139,7 +130,6 @@ class _PayrollScreenState extends ConsumerState<PayrollScreen> {
                     child: Text(l10n.applyRoomCharges),
                   ),
                 if (visaInstalments > 0 && !closed) OutlinedButton(onPressed: _applyVisaInstalments, child: Text(l10n.applyVisaInstalments(visaInstalments))),
-                if (advanceCuts > 0 && !closed) OutlinedButton(onPressed: _applyAdvanceCuts, child: Text(l10n.applyAdvanceCuts(advanceCuts))),
                 OutlinedButton.icon(
                   icon: const Icon(Icons.table_chart),
                   label: Text(_makingSheet ? l10n.exportMaking : l10n.ownerSheet),

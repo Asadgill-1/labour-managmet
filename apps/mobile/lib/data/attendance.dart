@@ -54,7 +54,12 @@ RateTerms payTerms(PayContract c) => RateTerms(
   siteId: c.siteId,
   partialMethod: c.partialMethod == null ? null : PartialMethod.values.byName(c.partialMethod!),
   partialDivisor: c.partialDivisor,
+  cutAbsence: c.cutAbsence,
+  offWeekdays: offWeekdays(c.offWeekdays),
 );
+
+/// Stored weekly days off, "5,6", as `DateTime.weekday` numbers (D-057).
+Set<int> offWeekdays(String? stored) => stored == null || stored.isEmpty ? const {} : {for (final d in stored.split(',')) int.parse(d)};
 
 RateTerms _billingTerms(BillingContract c) => RateTerms(
   basis: RateBasis.values.byName(c.basis),

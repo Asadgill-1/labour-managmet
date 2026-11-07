@@ -1,5 +1,6 @@
 import 'package:domain/calc.dart';
 import 'package:domain/cash.dart';
+import 'package:domain/dates.dart';
 import 'package:domain/payroll.dart';
 import 'package:test/test.dart';
 
@@ -36,6 +37,43 @@ RateTerms monthly(int fils, {String from = '2026-01-01', String? to, PartialMeth
 }
 
 void main() {
+  group('a day with no attendance on a monthly salary (D-057)', () {
+    RateTerms cutting(int fils, {PartialMethod method = PartialMethod.calendarDays, int? divisor, Set<int> off = const {}}) =>
+        RateTerms(basis: RateBasis.month, rateFils: fils, effectiveFrom: '2026-01-01', partialMethod: method, partialDivisor: divisor, cutAbsence: true, offWeekdays: off);
+    Set<String> days(String month, bool Function(String day) keep) => {
+      for (var d = monthFirstDay(month); d.compareTo(monthLastDay(month)) <= 0; d = addDays(d, 1))
+        if (keep(d)) d,
+    };
+
+    test("is cut at the contract's own rule, but never a weekly day off or a day the owner excused", () {
+      final present = days(month, (d) => !{'2026-10-05', '2026-10-12', '2026-10-20'}.contains(d) && weekdayOf(d) != DateTime.friday);
+      final f = workerPayroll(
+        month: month,
+        currentMonth: month,
+        work: const [],
+        contracts: [cutting(310000, off: {DateTime.friday})],
+        items: const [],
+        advanceLeftFils: 0,
+        present: present,
+        excused: const {'2026-10-20'},
+        through: '2026-10-31',
+      );
+      expect((f.salaryFils, f.absenceFils, f.absentDays.join(' '), f.issues.length), (290000, 20000, '2026-10-05 2026-10-12', 0));
+    });
+
+    test('counts only up to the day given, by a fixed divisor too, and never takes more than the month pays', () {
+      expect(periodSalary([cutting(300000, method: PartialMethod.fixedDivisor, divisor: 30)], month, through: '2026-10-10')?.cutFils, 100000);
+      expect(periodSalary([cutting(300000, method: PartialMethod.fixedDivisor, divisor: 20)], '2026-02', through: '2026-02-28')?.fils, 0);
+    });
+
+    test('a contract with the cut off pays the whole month, and a cut with no rule stops for review (D-102)', () {
+      expect(periodSalary([monthly(300000, method: PartialMethod.calendarDays)], month, through: '2026-10-31')?.fils, 300000);
+      final noRule = RateTerms(basis: RateBasis.month, rateFils: 300000, effectiveFrom: '2026-01-01', cutAbsence: true);
+      expect(periodSalary([noRule], month, through: '2026-10-31'), isNull);
+      expect(periodSalary([noRule], month, present: days(month, (_) => true), through: '2026-10-31')?.fils, 300000);
+    });
+  });
+
   group('a closed month (REP-04)', () {
     test('cannot post, and pays no salary', () {
       final closed = figures(contracts: [monthly(200000)], closed: month);
@@ -142,7 +180,7 @@ void main() {
 
     test('a daily worker has no period pay', () {
       const day = RateTerms(basis: RateBasis.day, rateFils: 7000, effectiveFrom: '2026-01-01');
-      expect(periodSalary(const [day], month), 0);
+      expect(periodSalary(const [day], month)?.fils, 0);
     });
 
     test('approved overtime on a monthly contract is earned per line, at its own rate (CALC-07)', () {

@@ -2455,18 +2455,6 @@ abstract class AppLocalizations {
   /// **'A whole number from 0 to 90.'**
   String get wageDueDaysError;
 
-  /// No description provided for @applyAdvanceCuts.
-  ///
-  /// In en, this message translates to:
-  /// **'Cut advance ({count})'**
-  String applyAdvanceCuts(int count);
-
-  /// No description provided for @advanceCutsApplied.
-  ///
-  /// In en, this message translates to:
-  /// **'Advance cut for {count} workers'**
-  String advanceCutsApplied(int count);
-
   /// No description provided for @tabClosing.
   ///
   /// In en, this message translates to:
@@ -6492,6 +6480,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Replaced by a corrected invoice'**
   String get invPEditReason;
+
+  /// No description provided for @contractCutAbsence.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut a day with no attendance'**
+  String get contractCutAbsence;
+
+  /// No description provided for @contractCutAbsenceHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'One day is the salary divided by the rule above. Weekly days off and days marked as no work are not cut.'**
+  String get contractCutAbsenceHelp;
+
+  /// No description provided for @contractOffDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly days off'**
+  String get contractOffDays;
+
+  /// No description provided for @weekdaysShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon Tue Wed Thu Fri Sat Sun'**
+  String get weekdaysShort;
+
+  /// No description provided for @payrollAbsent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day absent} other{{count} days absent}}: {days}'**
+  String payrollAbsent(int count, String days);
+
+  /// No description provided for @payrollSalaryLessAbsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly salary, less {count, plural, =1{1 day absent} other{{count} days absent}} ({days})'**
+  String payrollSalaryLessAbsent(int count, String days);
+
+  /// No description provided for @payrollInstalment.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance instalment'**
+  String get payrollInstalment;
+
+  /// No description provided for @issueRecoveryAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} of advance has no instalment. Say how much to cut this month.'**
+  String issueRecoveryAsk(String amount);
+
+  /// No description provided for @cashInstalment.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut each month (instalment)'**
+  String get cashInstalment;
+
+  /// No description provided for @cashInstalmentHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Payroll cuts this much each month by itself. Leave it empty to be asked each month.'**
+  String get cashInstalmentHelp;
+
+  /// No description provided for @recoveryZeroHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'0 cuts nothing this month.'**
+  String get recoveryZeroHelp;
+
+  /// No description provided for @payrollInstalmentAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance instalment'**
+  String get payrollInstalmentAuto;
+
+  /// No description provided for @payrollInstalmentAutoHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut by itself. Tap to change it for this month.'**
+  String get payrollInstalmentAutoHelp;
+
+  /// No description provided for @tsCarryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut the worker\'s hours too?'**
+  String get tsCarryTitle;
+
+  /// No description provided for @tsCarryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes: the attendance takes the same hours, with a note, and the worker is paid for them. No: only the company\'s bill changes.'**
+  String get tsCarryBody;
+
+  /// No description provided for @tsCarryYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, the worker\'s too'**
+  String get tsCarryYes;
+
+  /// No description provided for @tsCarryNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the company'**
+  String get tsCarryNo;
+
+  /// No description provided for @tsCarryNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The company agreed fewer hours: {reason}'**
+  String tsCarryNote(String reason);
 }
 
 class _AppLocalizationsDelegate

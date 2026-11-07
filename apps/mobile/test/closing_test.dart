@@ -307,6 +307,8 @@ void main() {
 
     test('the closed month keeps it, today carries the reversal, and the balance comes out right', () async {
       await db.addCashEntry(operationId: newUuid(), date: '2020-10-08', kind: CashKind.advanceGiven, amountFils: 2000, workerId: asif);
+      // The owner's answer that nothing of it is cut this month (D-057).
+      await db.savePayItem(id: null, workerId: asif, month: oct, kind: PayItemKind.advanceRecovery, amountFils: 0, reason: 'Not this month', authorizedBy: null, note: null, roomId: null, operationId: newUuid());
       await postAndClose(oct);
       final closedBefore = await statementOf(oct);
       final line = (await db.select(db.cashEntries).get()).single;
@@ -393,13 +395,12 @@ void main() {
     await rate(db, imran, 500);
     await work(db, '2020-10-05', worker: imran);
     await db.saveRow(db.openingBalances, id: null, operationId: newUuid(), fields: OpeningBalancesCompanion(kind: const Value('worker_salary_owed'), workerId: Value(imran), amountFils: const Value(4000), asOfDate: const Value('2020-08-31'), sourceNote: const Value('Old book')));
-    await db.addCashEntry(operationId: newUuid(), date: '2020-10-08', kind: CashKind.advanceGiven, amountFils: 2000, workerId: asif);
+    await db.addCashEntry(operationId: newUuid(), date: '2020-10-08', kind: CashKind.advanceGiven, amountFils: 2000, workerId: asif, instalmentFils: 2000);
     await db.addCashEntry(operationId: newUuid(), date: '2020-10-11', kind: CashKind.expense, amountFils: 700);
     await db.addCashEntry(operationId: newUuid(), date: '2020-10-12', kind: CashKind.expense, amountFils: 300);
     await db.savePayItem(id: null, workerId: asif, month: oct, kind: PayItemKind.deduction, amountFils: 500, reason: 'Helmet', authorizedBy: 'Asif', note: null, roomId: null, operationId: newUuid());
     await db.addSalaryPayment(operationId: newUuid(), date: '2020-10-20', workerId: asif, amountFils: 9000, parts: {sep: 9000}, extraNote: 'x');
     await db.addSalaryPayment(operationId: newUuid(), date: '2020-10-21', workerId: asif, amountFils: 3000, parts: {oct: 3000}, extraNote: 'x');
-    await db.applyAdvanceCuts(oct, reason: 'Advance', operationId: newUuid());
     await db.postPayroll(oct, operationId: newUuid());
     await restOff(db, oct);
 

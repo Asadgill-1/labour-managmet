@@ -1303,16 +1303,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wageDueDaysError => 'A whole number from 0 to 90.';
 
   @override
-  String applyAdvanceCuts(int count) {
-    return 'Cut advance ($count)';
-  }
-
-  @override
-  String advanceCutsApplied(int count) {
-    return 'Advance cut for $count workers';
-  }
-
-  @override
   String get tabClosing => 'Close month';
 
   @override
@@ -3747,6 +3737,84 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invPEditReason => 'Replaced by a corrected invoice';
+
+  @override
+  String get contractCutAbsence => 'Cut a day with no attendance';
+
+  @override
+  String get contractCutAbsenceHelp =>
+      'One day is the salary divided by the rule above. Weekly days off and days marked as no work are not cut.';
+
+  @override
+  String get contractOffDays => 'Weekly days off';
+
+  @override
+  String get weekdaysShort => 'Mon Tue Wed Thu Fri Sat Sun';
+
+  @override
+  String payrollAbsent(int count, String days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days absent',
+      one: '1 day absent',
+    );
+    return '$_temp0: $days';
+  }
+
+  @override
+  String payrollSalaryLessAbsent(int count, String days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days absent',
+      one: '1 day absent',
+    );
+    return 'Monthly salary, less $_temp0 ($days)';
+  }
+
+  @override
+  String get payrollInstalment => 'Advance instalment';
+
+  @override
+  String issueRecoveryAsk(String amount) {
+    return '$amount of advance has no instalment. Say how much to cut this month.';
+  }
+
+  @override
+  String get cashInstalment => 'Cut each month (instalment)';
+
+  @override
+  String get cashInstalmentHelp =>
+      'Payroll cuts this much each month by itself. Leave it empty to be asked each month.';
+
+  @override
+  String get recoveryZeroHelp => '0 cuts nothing this month.';
+
+  @override
+  String get payrollInstalmentAuto => 'Advance instalment';
+
+  @override
+  String get payrollInstalmentAutoHelp =>
+      'Cut by itself. Tap to change it for this month.';
+
+  @override
+  String get tsCarryTitle => 'Cut the worker\'s hours too?';
+
+  @override
+  String get tsCarryBody =>
+      'Yes: the attendance takes the same hours, with a note, and the worker is paid for them. No: only the company\'s bill changes.';
+
+  @override
+  String get tsCarryYes => 'Yes, the worker\'s too';
+
+  @override
+  String get tsCarryNo => 'Only the company';
+
+  @override
+  String tsCarryNote(String reason) {
+    return 'The company agreed fewer hours: $reason';
+  }
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -5033,16 +5101,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get wageDueDaysError => '0 se 90 tak poora number likhein.';
-
-  @override
-  String applyAdvanceCuts(int count) {
-    return 'Advance katein ($count)';
-  }
-
-  @override
-  String advanceCutsApplied(int count) {
-    return '$count mazdoor ka advance kat gaya';
-  }
 
   @override
   String get tabClosing => 'Mahina band';
@@ -7302,4 +7360,70 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get invOpenNew => 'Naya invoice dekhein';
+
+  @override
+  String get contractCutAbsence => 'Hazri na ho to us din ka paisa katein';
+
+  @override
+  String get contractCutAbsenceHelp =>
+      'Ek din = tankhwah ÷ upar wala hisaab. Hafte ki chhutti aur jis din kaam nahin tha, woh din nahin katte.';
+
+  @override
+  String get contractOffDays => 'Hafte ki chhutti';
+
+  @override
+  String get weekdaysShort => 'Pir Mangal Budh Jumeraat Jumma Hafta Itwaar';
+
+  @override
+  String payrollAbsent(int count, String days) {
+    return '$count din chhutti: $days';
+  }
+
+  @override
+  String payrollSalaryLessAbsent(int count, String days) {
+    return 'Mahana tankhwah, $count din chhutti kaat kar ($days)';
+  }
+
+  @override
+  String get payrollInstalment => 'Advance ki qist';
+
+  @override
+  String issueRecoveryAsk(String amount) {
+    return '$amount advance ki qist nahin likhi. Batayein is mahine kitna katna hai.';
+  }
+
+  @override
+  String get cashInstalment => 'Har mahine kitna katay (qist)';
+
+  @override
+  String get cashInstalmentHelp =>
+      'Tankhwah se har mahine itna apne aap katega. Khali chhorein to har mahine poocha jayega.';
+
+  @override
+  String get recoveryZeroHelp => '0 likhein to is mahine kuch nahin katega.';
+
+  @override
+  String get payrollInstalmentAuto => 'Advance ki qist';
+
+  @override
+  String get payrollInstalmentAutoHelp =>
+      'Apne aap kat rahi hai. Is mahine ke liye badalne ko dabayein.';
+
+  @override
+  String get tsCarryTitle => 'Mazdoor ke ghante bhi kam karein?';
+
+  @override
+  String get tsCarryBody =>
+      'Haan: hazri mein bhi yahi ghante lagenge, note ke saath, aur mazdoor ki tankhwah usi hisaab se banegi. Nahin: sirf company ka bill badlega.';
+
+  @override
+  String get tsCarryYes => 'Haan, mazdoor ke bhi';
+
+  @override
+  String get tsCarryNo => 'Sirf company';
+
+  @override
+  String tsCarryNote(String reason) {
+    return 'Company ne ghante kam maane: $reason';
+  }
 }

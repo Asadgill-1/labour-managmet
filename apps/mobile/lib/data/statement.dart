@@ -58,6 +58,8 @@ class WorkerStatement {
     required this.unpaid,
     required this.owing,
     this.placed = const {},
+    this.absenceFils = 0,
+    this.absentDays = const [],
   });
 
   final Worker worker;
@@ -66,7 +68,11 @@ class WorkerStatement {
   /// Left from earlier months.
   final int openingFils;
   final int workFils;
+
+  /// Less [absenceFils], which days with no attendance took off it on [absentDays] (D-057).
   final int salaryFils;
+  final int absenceFils;
+  final List<String> absentDays;
   final int allowanceFils;
 
   /// Given less handed back.
@@ -166,6 +172,28 @@ extension StatementOps on TenantDatabase {
     final contracts = await (select(payContracts)..where((c) => c.basis.equals(RateBasis.month.name))).get();
     final contractsOf = groupedBy(contracts, (c) => c.workerId);
 
+    // The days worked and excused of a salary that cuts absence, read only for those workers (D-057).
+    final cutting = {
+      for (final c in contracts)
+        if (c.cutAbsence && (workerId == null || c.workerId == workerId)) c.workerId,
+    };
+    final presentOf = <String, Set<String>>{};
+    final excusedOf = <String, Set<String>>{};
+    if (cutting.isNotEmpty) {
+      final e = attendanceEntries;
+      final worked = selectOnly(e, distinct: true)
+        ..addColumns([e.workerId, e.workDate])
+        ..where(e.superseded.equals(false) & e.attendanceStatus.isNotValue(AttendanceStatus.absent.name) & e.workerId.isIn(cutting) & e.workDate.isSmallerOrEqualValue(to));
+      for (final r in await worked.get()) {
+        final String id = r.read(e.workerId)!;
+        (presentOf[id] ??= <String>{}).add(r.read(e.workDate)!);
+      }
+      for (final d in await (select(dayOffs)..where((d) => d.workerId.isIn(cutting) & d.workDate.isSmallerOrEqualValue(to))).get()) {
+        (excusedOf[d.workerId] ??= <String>{}).add(d.workDate);
+      }
+    }
+    final yesterday = addDays(dubaiToday(DateTime.now()), -1);
+
     final result = <WorkerStatement>[];
     for (final worker in people) {
       final own = <String, int>{};
@@ -259,6 +287,7 @@ extension StatementOps on TenantDatabase {
       // from the hiring date must not run up years of pay nobody recorded, so it counts from the account's first activity.
       final workerLines = linesOf[worker.id] ?? const <PayrollLine>[];
       final salaries = {for (final l in workerLines) l.periodFrom.substring(0, 7): l.salaryFils};
+      final absence = {for (final l in workerLines) l.periodFrom.substring(0, 7): (fils: l.absenceFils, days: l.absentDays?.split(',') ?? const <String>[])};
       final monthly = worker.active ? (contractsOf[worker.id] ?? const <PayContract>[]).map(payTerms).toList() : const <RateTerms>[];
       if (monthly.isNotEmpty) {
         final lastPosted = workerLines.lastOrNull?.periodFrom.substring(0, 7);
@@ -266,7 +295,18 @@ extension StatementOps on TenantDatabase {
         final activity = [...own.keys, ...brought.keys, ...payments.map((p) => p.date.substring(0, 7)), month]..sort();
         final first = firstContract.compareTo(activity.first) > 0 ? firstContract : activity.first;
         for (var m = first; m.compareTo(month) <= 0 && m.compareTo(thisMonth) <= 0; m = addMonths(m, 1)) {
-          if (!salaries.containsKey(m) && (lastPosted == null || m.compareTo(lastPosted) > 0) && !isClosed(monthLastDay(m), closedThrough)) salaries[m] = periodSalary(monthly, m) ?? 0;
+          if (!salaries.containsKey(m) && (lastPosted == null || m.compareTo(lastPosted) > 0) && !isClosed(monthLastDay(m), closedThrough)) {
+            final end = monthLastDay(m);
+            final pay = periodSalary(
+              monthly,
+              m,
+              present: presentOf[worker.id] ?? const {},
+              excused: excusedOf[worker.id] ?? const {},
+              through: end.compareTo(yesterday) < 0 ? end : yesterday,
+            );
+            salaries[m] = pay?.fils ?? 0;
+            absence[m] = (fils: pay?.cutFils ?? 0, days: pay?.absent ?? const []);
+          }
         }
       }
       salaries.forEach(add);
@@ -287,6 +327,8 @@ extension StatementOps on TenantDatabase {
         openingFils: statement?.openingFils ?? 0,
         workFils: workFils,
         salaryFils: salaries[month] ?? 0,
+        absenceFils: absence[month]?.fils ?? 0,
+        absentDays: absence[month]?.days ?? const [],
         allowanceFils: allowance,
         advanceFils: advance,
         roomFils: room,

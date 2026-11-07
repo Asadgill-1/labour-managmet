@@ -82,6 +82,8 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
   late PartialMethod? _partial = widget.pay?.partialMethod == null
       ? null
       : PartialMethod.values.byName(widget.pay!.partialMethod!);
+  late bool _cutAbsence = widget.pay?.cutAbsence ?? true;
+  late final Set<int> _offDays = {...offWeekdays(widget.pay?.offWeekdays)};
 
   static String _plain(int? fils) => fils == null ? '' : plainAmount(fils);
 
@@ -144,6 +146,12 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
             partialDivisor: Value(
               monthly && _partial == PartialMethod.fixedDivisor
                   ? int.parse(_divisor.text.trim())
+                  : null,
+            ),
+            cutAbsence: Value(monthly && _cutAbsence),
+            offWeekdays: Value(
+              monthly && _offDays.isNotEmpty
+                  ? (_offDays.toList()..sort()).join(',')
                   : null,
             ),
           ),
@@ -350,6 +358,32 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
                 ),
                 fieldGap,
               ],
+              SwitchListTile(
+                tileColor: Colors.transparent,
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.contractCutAbsence),
+                subtitle: Text(l10n.contractCutAbsenceHelp),
+                value: _cutAbsence,
+                onChanged: (v) => setState(() => _cutAbsence = v),
+              ),
+              if (_cutAbsence) ...[
+                Text(l10n.contractOffDays),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    for (final (i, day) in l10n.weekdaysShort.split(' ').indexed)
+                      FilterChip(
+                        label: Text(day),
+                        selected: _offDays.contains(i + 1),
+                        onSelected: (on) => setState(
+                          () => on ? _offDays.add(i + 1) : _offDays.remove(i + 1),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+              fieldGap,
             ],
             Field(
               l10n.includedMinutes,

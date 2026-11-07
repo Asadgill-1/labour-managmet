@@ -1,3 +1,5 @@
+import 'dart:math';
+
 /// What a line of the daily cash book is. Stored by name. Each kind says where the money belongs (D-030).
 enum CashKind { advanceGiven, salaryPaid, roomRentPaid, expense, advanceReturned, roomRentReceived, clientReceipt, visaPaid, visaReturned }
 
@@ -28,6 +30,27 @@ int _sum(Iterable<CashLine> lines, Set<CashKind> kinds) {
 /// outstanding = opening + issued - returned - recovered through posted payroll (PAY-05).
 int advanceOutstanding(int openingFils, Iterable<CashLine> lines, {int recoveredFils = 0}) {
   return openingFils + _sum(lines, const {CashKind.advanceGiven}) - _sum(lines, const {CashKind.advanceReturned}) - recoveredFils;
+}
+
+/// What payroll cuts by itself this month from a worker's advances, oldest first (D-057). What was handed back or
+/// recovered pays off the oldest advance first. An advance with an instalment gives that much, or what is left of it if
+/// less. [askFils] is what is left on advances with none, for the owner to say how much of it to cut.
+({int instalmentFils, int askFils}) advanceInstalments(Iterable<({int amountFils, int? instalmentFils})> advances, {required int paidBackFils}) {
+  var back = paidBackFils;
+  var instalment = 0;
+  var ask = 0;
+  for (final a in advances) {
+    final used = min(back, a.amountFils);
+    back -= used;
+    final left = a.amountFils - used;
+    if (left <= 0) continue;
+    if (a.instalmentFils case final each?) {
+      instalment += min(each, left);
+    } else {
+      ask += left;
+    }
+  }
+  return (instalmentFils: instalment, askFils: ask);
 }
 
 int visaPaidTotal(Iterable<CashLine> lines) => _sum(lines, const {CashKind.visaPaid});

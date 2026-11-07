@@ -331,6 +331,10 @@ void main() {
     await tester.enterText(find.widgetWithText(TextFormField, words.tsAdjustReason), 'Site says eight hours');
     await tester.tap(find.text(words.tsAdjustSave));
     await settle(tester);
+    // Fewer hours ask about the worker too. Only the company's side changes here (D-057).
+    expect(find.text(words.tsCarryTitle), findsOneWidget);
+    await tester.tap(find.text(words.tsCarryNo));
+    await settle(tester);
     expect(find.textContaining(words.tsAgreedRow('Site says eight hours')), findsOneWidget);
     expect(find.text('AED 120.00'), findsOneWidget);
 
