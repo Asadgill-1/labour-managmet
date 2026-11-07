@@ -198,6 +198,7 @@ InvoicePaper invoicePaper(InvoiceView v, AppLocalizations words) {
     notes: [
       if (vat && v.category != VatCategory.standard) _categoryText(words, v.category),
       if (inv.reason != null) words.invPReason(inv.reason!),
+      if (v.replaces case final r?) words.invPReplaces(r.invoice.number!),
       if (timesheets.isNotEmpty) words.invPTimesheets(timesheets.join(', ')),
       if (inv.pricesIncludeVat && vat) words.invPInclusive,
       words.regAmountsNote,

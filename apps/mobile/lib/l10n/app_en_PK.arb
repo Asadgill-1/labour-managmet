@@ -827,7 +827,7 @@
   "invItemPrice": "Aik ki qeemat (AED)",
   "invItemRemove": "Yeh line hatayein",
   "invReissue": "In tareekhon ka naya invoice",
-  "invChanged": "Is invoice ke baad {count, plural, =1{1 row badli} other{{count} rows badlin}}, kul farq {amount}. Poore invoice ka credit note banayein, phir naya invoice. Agar timesheet par badli hazri dikhe to pehle us ka naya revision approve karein.",
+  "invChanged": "Is invoice ke baad {count, plural, =1{1 row badli} other{{count} rows badlin}}, kul farq {amount}. Invoice badlein ka button credit note aur naya draft ek saath banata hai. Agar timesheet par badli hazri dikhe to pehle us ka naya revision approve karein.",
   "invCreditedSoFar": "{count, plural, =1{Credit note} other{{count} credit notes}}",
   "invLeft": "Credit notes ke baad baqi",
   "invCreditWhole": "Poora invoice",
@@ -1011,5 +1011,12 @@
   "archivedDone": "Archive ho gaya. Entries waisi hi hain.",
   "regDeletedPayItems": "Delete hui allowance aur katoti",
   "regDeletedRecords": "Delete hui baqi cheezein",
-  "colDetails": "Tafseel"
+  "colDetails": "Tafseel",
+  "invEdit": "Invoice badlein",
+  "invEditHelp": "Issue hua invoice badla nahin jata. Aaj ki tareekh ka credit note {number} ko poora wapas leta hai, aur inhi tareekhon ka naya draft khulta hai jis mein wohi sab hai. Draft mein badlein, phir issue karein.",
+  "invEditReceived": "Is par mila {amount} company ke credit mein rahega. Naya invoice issue hone par woh us mein lag sakta hai.",
+  "invEditReasonHelp": "Credit note par chhapegi",
+  "invEditConfirm": "Credit note aur naya draft banayein",
+  "invEditedNote": "Invoice {number} ki jagah. Credit note {credit} ne use poora wapas liya.",
+  "invOpenNew": "Naya invoice dekhein"
 }

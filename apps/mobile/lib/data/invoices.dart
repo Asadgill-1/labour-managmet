@@ -39,9 +39,9 @@ class InvoiceItem {
 }
 
 /// What a draft remembers besides its dates: timesheets the owner left out, each line's discount or monthly fee by line
-/// key, and lines the owner wrote. Everything else is read from the timesheets as they stand.
+/// key, lines the owner wrote, and the invoice it replaces. Everything else is read from the timesheets as they stand.
 class InvoiceDraft {
-  const InvoiceDraft({this.skipped = const {}, this.discounts = const {}, this.fees = const {}, this.items = const []});
+  const InvoiceDraft({this.skipped = const {}, this.discounts = const {}, this.fees = const {}, this.items = const [], this.replaces});
 
   factory InvoiceDraft.fromJson(String json) {
     final j = jsonDecode(json) as Map<String, Object?>;
@@ -50,6 +50,7 @@ class InvoiceDraft {
       discounts: (j['discounts'] as Map? ?? const {}).cast<String, int>(),
       fees: (j['fees'] as Map? ?? const {}).cast<String, int>(),
       items: [for (final i in j['items'] as List? ?? const []) InvoiceItem.fromJson((i as Map).cast<String, Object?>())],
+      replaces: j['replaces'] as String?,
     );
   }
 
@@ -58,10 +59,18 @@ class InvoiceDraft {
   final Map<String, int> fees;
   final List<InvoiceItem> items;
 
-  InvoiceDraft copyWith({Set<String>? skipped, Map<String, int>? discounts, Map<String, int>? fees, List<InvoiceItem>? items}) =>
-      InvoiceDraft(skipped: skipped ?? this.skipped, discounts: discounts ?? this.discounts, fees: fees ?? this.fees, items: items ?? this.items);
+  /// The invoice a credit note took back so this one could put it right (D-056).
+  final String? replaces;
 
-  String toJson() => jsonEncode({'skipped': [...skipped], 'discounts': discounts, 'fees': fees, 'items': [for (final i in items) i.toJson()]});
+  InvoiceDraft copyWith({Set<String>? skipped, Map<String, int>? discounts, Map<String, int>? fees, List<InvoiceItem>? items, String? replaces}) => InvoiceDraft(
+    skipped: skipped ?? this.skipped,
+    discounts: discounts ?? this.discounts,
+    fees: fees ?? this.fees,
+    items: items ?? this.items,
+    replaces: replaces ?? this.replaces,
+  );
+
+  String toJson() => jsonEncode({'skipped': [...skipped], 'discounts': discounts, 'fees': fees, 'items': [for (final i in items) i.toJson()], 'replaces': ?replaces});
 }
 
 /// How an item line, or a credit for an amount, is stored in place of a `RateBasis`.
@@ -147,6 +156,8 @@ class InvoiceView {
     this.creditNotes = const [],
     this.credited = const LineTax(netFils: 0, vatFils: 0),
     this.original,
+    this.replaces,
+    this.replacedBy,
     this.changes = const [],
     this.money,
     this.receipts = const [],
@@ -175,6 +186,12 @@ class InvoiceView {
 
   /// The invoice this credit note took back.
   final Invoice? original;
+
+  /// The invoice this one puts right, and the credit note that took it back (D-056).
+  final ({Invoice invoice, Invoice? creditNote})? replaces;
+
+  /// The draft or invoice that puts this one right.
+  final Invoice? replacedBy;
 
   /// Work this invoice charged whose timesheet now says another figure. A credit note and a new invoice put it right.
   final List<BillingChange> changes;
@@ -247,6 +264,9 @@ class InvoiceListRow {
 
   /// What is received and still owed, on an issued invoice.
   final InvoiceMoney? money;
+
+  /// It puts another invoice right (D-056).
+  bool get replaces => InvoiceDraft.fromJson(invoice.draft).replaces != null;
 }
 
 /// INV-2026-0012, or CN-2026-0003 for a credit note. Counted by year on this phone (INV-08).
@@ -400,11 +420,12 @@ extension InvoiceOps on TenantDatabase {
     final client = await (select(clients)..where((c) => c.id.equals(inv.clientId))).getSingle();
     final site = inv.siteId == null ? null : await (select(sites)..where((s) => s.id.equals(inv.siteId!))).getSingle();
     final original = inv.creditsInvoiceId == null ? null : await _invoice(inv.creditsInvoiceId!);
+    final replaces = await _replaces(inv);
 
     if (inv.status == InvoiceStatus.draft.name) {
       final (registered, parties) = await _partiesToday(client);
       final (lines, sources) = await _draftLines(inv, bps: registered ? vatBpsOf(VatCategory.values.byName(inv.vatCategory)) : 0);
-      return InvoiceView(invoice: inv, client: client, siteName: site?.name, lines: lines, sources: sources, vatRegistered: registered, parties: parties);
+      return InvoiceView(invoice: inv, client: client, siteName: site?.name, lines: lines, sources: sources, vatRegistered: registered, parties: parties, replaces: replaces);
     }
     final stored = await (select(invoiceLines)
           ..where((l) => l.invoiceId.equals(id))
@@ -449,6 +470,8 @@ extension InvoiceOps on TenantDatabase {
       creditNotes: notes,
       credited: await _creditedBy(notes),
       original: original,
+      replaces: replaces,
+      replacedBy: inv.status == InvoiceStatus.credited.name ? await replacementOf(id) : null,
       changes: inv.kind == 'invoice' ? await billingChanges(invoiceId: id) : const [],
       money: money?.invoices[id],
       receipts: [
@@ -458,6 +481,23 @@ extension InvoiceOps on TenantDatabase {
       clientCreditFils: money?.creditOf(inv.clientId) ?? 0,
     );
   }
+
+  Future<({Invoice invoice, Invoice? creditNote})?> _replaces(Invoice inv) async {
+    final old = InvoiceDraft.fromJson(inv.draft).replaces;
+    if (old == null) return null;
+    final notes = await (select(invoices)
+          ..where((i) => i.creditsInvoiceId.equals(old))
+          ..orderBy([(i) => OrderingTerm.desc(i.year), (i) => OrderingTerm.desc(i.seq)]))
+        .get();
+    return (invoice: await _invoice(old), creditNote: notes.firstOrNull);
+  }
+
+  /// The newest draft or invoice that puts this one right, if it was not thrown away.
+  Future<Invoice?> replacementOf(String id) async => (await (select(invoices)
+            ..where((i) => i.draft.like('%"replaces":"$id"%'))
+            ..orderBy([(i) => OrderingTerm.desc(i.createdAtUtc)]))
+          .get())
+      .firstOrNull;
 
   /// What these credit notes took back between them.
   Future<LineTax> _creditedBy(List<Invoice> notes) async {
@@ -735,6 +775,47 @@ extension InvoiceOps on TenantDatabase {
       },
     );
     return creditId;
+  }
+
+  /// Edit on an issued invoice (D-056). UAE VAT never changes one once issued, so in one step a whole credit note dated
+  /// today takes it back, worded as [reason], and a new draft of the same dates opens with the same choices: timesheets
+  /// left out, discounts, monthly fees, lines written, PO, VAT treatment and prices with VAT in. Its due date counts
+  /// again from the day it issues. The owner changes the draft and issues it. Returns the draft.
+  Future<String> editInvoice(String id, {required String reason, required String operationId}) async {
+    final draftId = newUuid();
+    await applyOperation(
+      operationId: operationId,
+      entity: 'invoices',
+      recordId: draftId,
+      version: 1,
+      action: 'create',
+      reason: reason,
+      change: () async {
+        final inv = await _invoice(id);
+        await creditInvoice(id, reason: reason, operationId: newUuid());
+        final now = DateTime.now().toUtc();
+        await into(invoices).insert(
+          InvoicesCompanion.insert(
+            id: draftId,
+            tenantId: tenantId,
+            createdAtUtc: now,
+            updatedAtUtc: now,
+            actorId: actorId,
+            sourceOperationId: operationId,
+            clientId: inv.clientId,
+            siteId: Value(inv.siteId),
+            fromDate: inv.fromDate,
+            toDate: inv.toDate,
+            draft: Value(InvoiceDraft.fromJson(inv.draft).copyWith(replaces: id).toJson()),
+            poReference: Value(inv.poReference),
+            vatCategory: Value(inv.vatCategory),
+            pricesIncludeVat: Value(inv.pricesIncludeVat),
+          ),
+        );
+        return (await _invoice(draftId)).toJson();
+      },
+    );
+    return draftId;
   }
 
   /// The timesheet revisions an invoice charged, to send with it (TS-07).

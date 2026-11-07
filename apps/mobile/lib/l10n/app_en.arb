@@ -1724,7 +1724,7 @@
   "invItemPrice": "Price of one (AED)",
   "invItemRemove": "Remove this line",
   "invReissue": "New invoice for these dates",
-  "invChanged": "{count, plural, =1{1 row changed} other{{count} rows changed}} after this invoice was issued, by {amount} in all. Make a credit note for the whole invoice, then a new invoice. If the timesheet shows changed attendance, approve its new revision first.",
+  "invChanged": "{count, plural, =1{1 row changed} other{{count} rows changed}} after this invoice was issued, by {amount} in all. Edit invoice makes the credit note and a new draft in one step. If the timesheet shows changed attendance, approve its new revision first.",
   "@invChanged": {
     "placeholders": {
       "count": {
@@ -2266,5 +2266,45 @@
   "archivedDone": "Archived. Its entries stay as they are.",
   "regDeletedPayItems": "Deleted allowances and deductions",
   "regDeletedRecords": "Other deleted records",
-  "colDetails": "Details"
+  "colDetails": "Details",
+  "invEdit": "Edit invoice",
+  "invEditHelp": "An issued invoice never changes. A credit note dated today takes back {number} whole, and a new draft of the same dates opens with everything it had. Change the draft, then issue it.",
+  "@invEditHelp": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "invEditReceived": "The {amount} received on it stays with the company as credit, which the new invoice can use once issued.",
+  "@invEditReceived": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invEditReasonHelp": "Prints on the credit note",
+  "invEditConfirm": "Make credit note and new draft",
+  "invEditedNote": "Replaces invoice {number}, which credit note {credit} took back whole.",
+  "@invEditedNote": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "credit": {
+        "type": "String"
+      }
+    }
+  },
+  "invOpenNew": "See the new invoice",
+  "invPReplaces": "Replaces invoice {number}.",
+  "@invPReplaces": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "invPEditReason": "Replaced by a corrected invoice"
 }

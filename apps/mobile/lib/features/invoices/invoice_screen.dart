@@ -124,6 +124,16 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
     if (answer != null && mounted) await _step(() => _db.creditInvoice(v.invoice.id, reason: answer.reason, amountFils: answer.amount, operationId: newUuid()));
   }
 
+  /// A whole credit note and a new draft with the same choices, in one step (D-056). The draft opens in its place.
+  Future<void> _edit(InvoiceView v) async {
+    final navigator = Navigator.of(context);
+    final reason = await showModalBottomSheet<String>(context: context, isScrollControlled: true, builder: (_) => _EditSheet(view: v));
+    if (reason == null || !mounted) return;
+    String? id;
+    final saved = await _step(() async => id = await _db.editInvoice(v.invoice.id, reason: reason.isEmpty ? paperWords.invPEditReason : reason, operationId: newUuid()));
+    if (saved && id != null && mounted) await navigator.pushReplacement(MaterialPageRoute<void>(builder: (_) => InvoiceScreen(invoiceId: id!)));
+  }
+
   /// What is left is lost, such as a company that shut down. It no longer stops a month, and can be opened again (D-048).
   Future<void> _closeLost(InvoiceView v, {required bool undo}) async {
     final l10n = AppLocalizations.of(context);
@@ -225,10 +235,11 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
       if (owed > 0) (l10n.invRecordReceipt, () => _openScreen(CashEntryFormScreen(kind: CashKind.clientReceipt, clientId: inv.clientId, invoiceId: inv.id, amountFils: owed))),
       if (owed > 0 && v.clientCreditFils > 0) (l10n.invUseCredit(formatAed(v.clientCreditFils < owed ? v.clientCreditFils : owed)), () => _step(() => _db.useClientCredit(inv.id, operationId: newUuid()))),
       if (v.status == InvoiceStatus.issued && !v.isCreditNote && v.lines.any((l) => l.timesheetId != null)) (l10n.invShareBoth, () => _sendWithTimesheets(v)),
-      if (v.status == InvoiceStatus.issued && !v.isCreditNote && v.leftFils > 0) (l10n.invCredit, () => _credit(v)),
-      if (v.status == InvoiceStatus.credited) (l10n.invReissue, () => _reissue(v)),
+      if (v.status == InvoiceStatus.issued && !v.isCreditNote && v.leftFils > 0) ...[(l10n.invEdit, () => _edit(v)), (l10n.invCredit, () => _credit(v))],
+      if (v.replacedBy case final next?) (l10n.invOpenNew, () => _open(next.id)) else if (v.status == InvoiceStatus.credited) (l10n.invReissue, () => _reissue(v)),
       for (final note in v.creditNotes) (l10n.invOpenCreditNote(note.number!), () => _open(note.id)),
       if (v.original case final original?) (l10n.invOpenInvoice(original.number!), () => _open(original.id)),
+      if (v.replaces case final r?) (l10n.invOpenInvoice(r.invoice.number!), () => _open(r.invoice.id)),
       if (owed > 0 && v.status == InvoiceStatus.issued) (l10n.invCloseLost, () => _closeLost(v, undo: false)),
       if ((v.money?.lostFils ?? 0) > 0) (l10n.invUndoLost, () => _closeLost(v, undo: true)),
     ];
@@ -273,6 +284,7 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
           InvoiceStatus.credited => l10n.invNoteCredited(lastNote),
         },
       ),
+      if (v.replaces case final r?) _ReplacesNote(r),
       if (money != null && v.status == InvoiceStatus.issued)
         switch (money.state(today)) {
           PayState.overdue => NoteRow(icon: Icons.error_outline, text: l10n.invNoteOverdue(showDate(inv.dueDate!), formatAed(owed)), color: due),
@@ -408,6 +420,82 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
       appBar: AppBar(title: Text(inv.number ?? l10n.invDraftTitle)),
       bottomNavigationBar: MainActionBar(label: label, onPressed: _busy ? null : press),
       body: ListView(children: [...head, ...body, ...foot]),
+    );
+  }
+}
+
+/// In the edited colour: which invoice this one puts right, and the user's reason, which the credit note prints (D-056).
+class _ReplacesNote extends StatelessWidget {
+  const _ReplacesNote(this.r);
+
+  final ({Invoice invoice, Invoice? creditNote}) r;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final reason = r.creditNote?.reason;
+    // Apart from the buttons under it.
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: RowCard(
+        edited: true,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.invEditedNote(r.invoice.number!, r.creditNote?.number ?? ''), style: const TextStyle(fontSize: 13.5, height: 1.35, color: editInk, fontWeight: FontWeight.w600)),
+              if (reason != null && reason != paperWords.invPEditReason)
+                Text(l10n.changeUserNote(reason), style: const TextStyle(fontSize: 13.5, height: 1.35, color: ink, fontStyle: FontStyle.italic)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// What Edit on an issued invoice will do, and the reason the credit note prints, which may be left empty (D-056).
+class _EditSheet extends StatefulWidget {
+  const _EditSheet({required this.view});
+
+  final InvoiceView view;
+
+  @override
+  State<_EditSheet> createState() => _EditSheetState();
+}
+
+class _EditSheetState extends State<_EditSheet> {
+  final _reason = TextEditingController();
+
+  @override
+  void dispose() {
+    _reason.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final received = widget.view.money?.receivedFils ?? 0;
+    const help = TextStyle(fontSize: 13.5, height: 1.35, color: muted);
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(16, 18, 16, 12 + MediaQuery.viewInsetsOf(context).bottom),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.invEdit, style: sectionTitleStyle),
+            Padding(padding: const EdgeInsets.only(top: 4), child: Text(l10n.invEditHelp(widget.view.invoice.number!), style: help)),
+            if (received > 0) Padding(padding: const EdgeInsets.only(top: 8), child: Text(l10n.invEditReceived(formatAed(received)), style: help)),
+            const SizedBox(height: 12),
+            Field(l10n.changeNoteItem, _reason, helper: l10n.invEditReasonHelp),
+            const SizedBox(height: 12),
+            FilledButton(onPressed: () => Navigator.of(context).pop(_reason.text.trim()), child: Text(l10n.invEditConfirm)),
+          ],
+        ),
+      ),
     );
   }
 }

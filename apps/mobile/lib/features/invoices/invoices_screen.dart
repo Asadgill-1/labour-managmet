@@ -57,11 +57,13 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
           if (rows.isEmpty) EmptyState(icon: Icons.receipt, text: l10n.invEmpty),
           for (final row in shown)
             RowCard(
+              // One that puts an invoice right, in the edited colour (D-056).
+              edited: row.replaces,
               child: ListTile(
                 title: Text(row.clientName),
                 subtitle: Text(
                   [
-                    [?row.invoice.number, invoiceStatusLabel(l10n, row.invoice, row.money)].join(', '),
+                    [?row.invoice.number, invoiceStatusLabel(l10n, row.invoice, row.money), if (row.replaces) l10n.editedTag].join(', '),
                     [
                       if (row.invoice.issueDate != null) showDate(row.invoice.issueDate!) else l10n.dateFromTo(showDate(row.invoice.fromDate), showDate(row.invoice.toDate)),
                       if (row.invoice.status == InvoiceStatus.issued.name && row.invoice.kind == 'invoice') l10n.invDue(showDate(row.invoice.dueDate!)),

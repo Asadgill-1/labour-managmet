@@ -5332,7 +5332,7 @@ abstract class AppLocalizations {
   /// No description provided for @invChanged.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{1 row changed} other{{count} rows changed}} after this invoice was issued, by {amount} in all. Make a credit note for the whole invoice, then a new invoice. If the timesheet shows changed attendance, approve its new revision first.'**
+  /// **'{count, plural, =1{1 row changed} other{{count} rows changed}} after this invoice was issued, by {amount} in all. Edit invoice makes the credit note and a new draft in one step. If the timesheet shows changed attendance, approve its new revision first.'**
   String invChanged(int count, String amount);
 
   /// No description provided for @invCreditedSoFar.
@@ -6438,6 +6438,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Details'**
   String get colDetails;
+
+  /// No description provided for @invEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit invoice'**
+  String get invEdit;
+
+  /// No description provided for @invEditHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'An issued invoice never changes. A credit note dated today takes back {number} whole, and a new draft of the same dates opens with everything it had. Change the draft, then issue it.'**
+  String invEditHelp(String number);
+
+  /// No description provided for @invEditReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'The {amount} received on it stays with the company as credit, which the new invoice can use once issued.'**
+  String invEditReceived(String amount);
+
+  /// No description provided for @invEditReasonHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Prints on the credit note'**
+  String get invEditReasonHelp;
+
+  /// No description provided for @invEditConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Make credit note and new draft'**
+  String get invEditConfirm;
+
+  /// No description provided for @invEditedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Replaces invoice {number}, which credit note {credit} took back whole.'**
+  String invEditedNote(String number, String credit);
+
+  /// No description provided for @invOpenNew.
+  ///
+  /// In en, this message translates to:
+  /// **'See the new invoice'**
+  String get invOpenNew;
+
+  /// No description provided for @invPReplaces.
+  ///
+  /// In en, this message translates to:
+  /// **'Replaces invoice {number}.'**
+  String invPReplaces(String number);
+
+  /// No description provided for @invPEditReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Replaced by a corrected invoice'**
+  String get invPEditReason;
 }
 
 class _AppLocalizationsDelegate

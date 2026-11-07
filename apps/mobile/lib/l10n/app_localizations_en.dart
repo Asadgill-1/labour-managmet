@@ -3025,7 +3025,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$count rows changed',
       one: '1 row changed',
     );
-    return '$_temp0 after this invoice was issued, by $amount in all. Make a credit note for the whole invoice, then a new invoice. If the timesheet shows changed attendance, approve its new revision first.';
+    return '$_temp0 after this invoice was issued, by $amount in all. Edit invoice makes the credit note and a new draft in one step. If the timesheet shows changed attendance, approve its new revision first.';
   }
 
   @override
@@ -3712,6 +3712,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get colDetails => 'Details';
+
+  @override
+  String get invEdit => 'Edit invoice';
+
+  @override
+  String invEditHelp(String number) {
+    return 'An issued invoice never changes. A credit note dated today takes back $number whole, and a new draft of the same dates opens with everything it had. Change the draft, then issue it.';
+  }
+
+  @override
+  String invEditReceived(String amount) {
+    return 'The $amount received on it stays with the company as credit, which the new invoice can use once issued.';
+  }
+
+  @override
+  String get invEditReasonHelp => 'Prints on the credit note';
+
+  @override
+  String get invEditConfirm => 'Make credit note and new draft';
+
+  @override
+  String invEditedNote(String number, String credit) {
+    return 'Replaces invoice $number, which credit note $credit took back whole.';
+  }
+
+  @override
+  String get invOpenNew => 'See the new invoice';
+
+  @override
+  String invPReplaces(String number) {
+    return 'Replaces invoice $number.';
+  }
+
+  @override
+  String get invPEditReason => 'Replaced by a corrected invoice';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -6552,7 +6587,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
       other: '$count rows badlin',
       one: '1 row badli',
     );
-    return 'Is invoice ke baad $_temp0, kul farq $amount. Poore invoice ka credit note banayein, phir naya invoice. Agar timesheet par badli hazri dikhe to pehle us ka naya revision approve karein.';
+    return 'Is invoice ke baad $_temp0, kul farq $amount. Invoice badlein ka button credit note aur naya draft ek saath banata hai. Agar timesheet par badli hazri dikhe to pehle us ka naya revision approve karein.';
   }
 
   @override
@@ -7240,4 +7275,31 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get colDetails => 'Tafseel';
+
+  @override
+  String get invEdit => 'Invoice badlein';
+
+  @override
+  String invEditHelp(String number) {
+    return 'Issue hua invoice badla nahin jata. Aaj ki tareekh ka credit note $number ko poora wapas leta hai, aur inhi tareekhon ka naya draft khulta hai jis mein wohi sab hai. Draft mein badlein, phir issue karein.';
+  }
+
+  @override
+  String invEditReceived(String amount) {
+    return 'Is par mila $amount company ke credit mein rahega. Naya invoice issue hone par woh us mein lag sakta hai.';
+  }
+
+  @override
+  String get invEditReasonHelp => 'Credit note par chhapegi';
+
+  @override
+  String get invEditConfirm => 'Credit note aur naya draft banayein';
+
+  @override
+  String invEditedNote(String number, String credit) {
+    return 'Invoice $number ki jagah. Credit note $credit ne use poora wapas liya.';
+  }
+
+  @override
+  String get invOpenNew => 'Naya invoice dekhein';
 }
