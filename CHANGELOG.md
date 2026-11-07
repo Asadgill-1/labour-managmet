@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Any attendance row or cash book line can be edited or deleted, in a closed month too, which opens again. An edited one turns violet, with what the app saw change and the user's own note under it.
+- A new Delete tab keeps every deleted entry whole, by kind and date, for PDF, Excel or WhatsApp, with a blank Clarification column for whoever it is sent to.
 - The owner's sheet counts a monthly contract's amount for the month on a line of its own, invoiced or not, so such a company no longer looks like a loss.
 - A monthly contract amount is charged once a month, however that month's work is split across invoices or timesheets. Its invoice line names the month, and the app no longer calls it a fee.
 - A letterhead prints the same size on a landscape register as on an upright paper.

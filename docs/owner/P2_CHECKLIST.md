@@ -109,6 +109,15 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 - [ ] Advance wale mazdoor par **Tankhwah** mein **Advance katein** dabayein. **Mazdoor ko dena hai** ab slip ke baqi ke barabar ho. Mazdoor ki screen par us raqam ko badal bhi sakte hain.
 - [ ] **Apni company** mein **Mahine ke baad tankhwah kitne din mein** likhein. Us din tak **abhi late nahin** likha aaye, us ke baad din ginay jayen.
 
+## 5j. Edit aur delete (T18b, D-056)
+
+- [ ] **Hazri > Aaj** mein kisi mazdoor ki row par dabayein. **Aadha din** chunein, **Wajah** mein kuch likhein, **Theek hai**. Row ka rang badle, "Badla gaya" likha ho, neeche app likhe kya badla (jaise "Hazri: Hazir se Aadha din") aur aap ki wajah.
+- [ ] Wohi row phir kholein, **Yeh entry delete karein**, phir **Delete karein**. Row Aaj se hat jaye.
+- [ ] Jis mazdoor ki tankhwah post ho chuki ho, us ki purani row delete karein. Agle mahine ki **Tankhwah** mein us din ki mazdoori minus mein "Pichli hazri ka hisaab" bane.
+- [ ] **Hisaab > Rozana hisaab** mein kisi line par dabayein: **Edit karein** aur **Delete karein** dono hon. Raqam badal kar save karein: line ka rang badle aur neeche "Raqam: ... se ..." likha ho. Kisi aur line ko delete karein: list se hat jaye aur din ka total theek rahe.
+- [ ] Band mahine ki koi entry badlein. Paigham aaye ke band mahina dobara khula. **Mahina band** mein ja kar dobara band karein.
+- [ ] Menu mein **Delete hui** kholein. Delete hui hazri aur cash entries alag tabs mein hon, tareekh ka filter chale. **PDF, Excel ya WhatsApp** se Excel nikalein: aakhri column **Wajah (clarification)** khaali ho.
+
 ## 5i. Reports aur CSV import (T18)
 
 - [ ] **Menu > Reports > Sab reports**: har report ke neeche likha ho woh kya dikhati hai aur kis tareekh se. Har aik par dabayein, sahi register khule. **Companies se mila paisa** aur **Kharche** par sirf wohi lines hon.

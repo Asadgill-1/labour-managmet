@@ -36,7 +36,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | ATT-05 | 05 | Duplication | T10 | IMPLEMENTED_UNVERIFIED | TC-008, TC-025 | - |
 | ATT-06 | 05 | Midnight shift | T10 | IMPLEMENTED_UNVERIFIED | TC-018 | - |
 | ATT-07 | 05 | Attendance states | T10, T11e | IMPLEMENTED_UNVERIFIED | TC-060 | `apps/mobile/test/payroll_test.dart` |
-| ATT-08 | 05 | Correction | T10 | IMPLEMENTED_UNVERIFIED | TC-027 | - |
+| ATT-08 | 05 | Correction | T10, T18b | IMPLEMENTED_UNVERIFIED | TC-027, TC-113, TC-114 | - |
 | ATT-09 | 05 | Maaloomati summary | T10 | IMPLEMENTED_UNVERIFIED | TC-028 | - |
 | CALC-01 | 06 | Duration integer minutes mein; amounts integer fils ya exact | T04, T09 | IN_PROGRESS | TC-015 | - |
 | CALC-02 | 06 | Hourly | T09 | IMPLEMENTED_UNVERIFIED | TC-003, TC-016 | - |
@@ -82,11 +82,11 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | REP-01 | 11 | Reports | T18, T18a, T11e, T11f | IMPLEMENTED_UNVERIFIED | TC-057, TC-058, TC-062, TC-063, TC-067, TC-106, TC-107, TC-108 | `apps/mobile/test/reports_test.dart` |
 | REP-02 | 11 | Hisaab ki separation | T18 | IMPLEMENTED_UNVERIFIED | TC-044 | `apps/mobile/test/reports_test.dart` |
 | REP-03 | 11 | Margin | T11f, T18 | IMPLEMENTED_UNVERIFIED | TC-044, TC-065, TC-112 | `apps/mobile/test/statement_test.dart`, `apps/mobile/test/reports_test.dart` |
-| REP-04 | 11 | Closing | T13, T13b, T16 | IMPLEMENTED_UNVERIFIED | TC-037, TC-072, TC-073, TC-074, TC-076, TC-095, TC-098 | - |
+| REP-04 | 11 | Closing | T13, T13b, T16, T18b | IMPLEMENTED_UNVERIFIED | TC-037, TC-072, TC-073, TC-074, TC-076, TC-095, TC-098, TC-116 | - |
 | REP-05 | 11 | Historical integrity | T13 | IMPLEMENTED_UNVERIFIED | TC-075 | - |
 | REP-06 | 11 | Backup/export | T18, T18a, T20 | IN_PROGRESS | TC-058, TC-103 | - |
 | REP-07 | 11 | Expenses | T13, T12a | IMPLEMENTED_UNVERIFIED | TC-052 | - |
-| REP-08 | 11 | Ledger design | T11, T12a | IMPLEMENTED_UNVERIFIED | TC-036, TC-051, TC-055 | `apps/mobile/test/payroll_test.dart`, `apps/mobile/test/cash_test.dart` |
+| REP-08 | 11 | Ledger design | T11, T12a, T18b | IMPLEMENTED_UNVERIFIED | TC-036, TC-051, TC-055, TC-114, TC-115 | `apps/mobile/test/payroll_test.dart`, `apps/mobile/test/cash_test.dart` |
 | PLAN-01 | 12 | Trial 14 din; Team feature trial owner ki clear | T24 | NOT_STARTED | - | - |
 | PLAN-02 | 12 | Manager trial end par paid Team entitlement na ho | T24 | NOT_STARTED | - | - |
 | PLAN-03 | 12 | Expiry par data delete, hidden balance ya mandatory ransom | T21 | NOT_STARTED | TC-012 | - |
