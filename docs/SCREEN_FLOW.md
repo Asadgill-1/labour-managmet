@@ -55,6 +55,8 @@ Language > email and password > verify email > company name > optional logo and 
 
 **Payroll (PAY-01, D-033):** Month > everyone with pay or a problem, with what stops them in words > tick who pays a room charge and how much > a worker's screen for allowances, deductions and advance recovery > post everyone who is ready, after one confirmation > record the payment, which goes through the cash book. Undo with a reason reopens that worker's month.
 
+**Absence and advance instalments (D-057):** Rates > a monthly contract > "Hazri na ho to us din ka paisa katein" and the weekly days off. Hisaab likhein > Advance > "Har mahine kitna katay (qist)". Tankhwah > worker > the days cut, the instalment, or the question about an advance with none, which opens the recovery with 0 allowed. Timesheet draft > a row > fewer hours > "Mazdoor ke ghante bhi kam karein?".
+
 **Closing a month (REP-04, D-045):** Hisaab > Mahina band > month > what is left, date by date, each row opening what clears it > how the workers' accounts add up > band karein, which works only when nothing is left, with a confirmation > the month shows as closed, and Aaj, Rozana hisaab and Tankhwah say so on its dates. The latest closed month can be opened again with a reason.
 
 **Salary payment (PAY-06, D-043):** Tankhwah or Rozana hisaab > Tankhwah > worker and amount > each unpaid month with its share, oldest first > change a share, or Purana pehle to start again > more than is owed asks before it goes on the advance > save. The line shows its months in the cash book and registers.

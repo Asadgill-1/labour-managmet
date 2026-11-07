@@ -127,6 +127,15 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 - [ ] **Tankhwah** mein kisi mazdoor ki allowance kholein, raqam badlein aur **Badalne ki wajah** likhein. Phir use **Delete karein**.
 - [ ] Menu mein **Delete hui** kholein. **Delete hui allowance aur katoti** aur **Delete hui baqi cheezein** mein woh cheezein poori hon, aap ki wajah ke saath. PDF ya Excel nikalein: aakhri column khaali ho.
 
+## 5m. Chhutti, advance ki qist aur company ke ghante (T18c, D-057)
+
+- [ ] **Rates** mein kisi mahine wale mazdoor ka contract kholein. **Hazri na ho to us din ka paisa katein** on karein aur **Hafte ki chhutti** mein Jumma chunein. Save karein.
+- [ ] Us mazdoor ki is mahine kuch din ki hazri na lagayein, ek din **Ghair hazir** lagayein. **Tankhwah** mein us ka naam kholein: "N din chhutti: ..." aur kati hui raqam dikhe. Jumma na kata ho.
+- [ ] **Hisaab likhein > Advance** mein raqam aur **Har mahine kitna katay (qist)** likhein. Tankhwah mein **Advance ki qist** apne aap kati dikhe.
+- [ ] Ek aur advance bina qist ke dein. Tankhwah mein laal sawal aaye ke kitna katna hai. Daba kar 0 ya koi raqam likhein. Sawal hat jaye.
+- [ ] Mahina post karein, phir **Salary slip** banayein: "Mahana tankhwah, N din chhutti kaat kar" likha ho.
+- [ ] **Timesheet** ka draft kholein, **Har mazdoor** mein ek row dabayein, ghante kam karein aur wajah likhein. Sawal aaye **Mazdoor ke ghante bhi kam karein?** **Haan, mazdoor ke bhi** dabayein. Hazri mein woh row jamni ho, aap ki wajah ke saath, aur mazdoor ki tankhwah kam ho.
+
 ## 5l. Invoice badlein (T18b, D-056)
 
 - [ ] Ek issue hua invoice kholein jis mein discount ya hath se likhi line ho. **Invoice badlein** dabayein. Sheet par likha ho ke credit note use poora wapas lega aur naya draft khulega.

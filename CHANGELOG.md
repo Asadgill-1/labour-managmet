@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- A monthly contract can cut a day with no attendance, at its own part-month rule, with weekly days off that are never cut. Tankhwah and the slip show the days cut.
+- An advance can have a monthly instalment, which payroll cuts by itself. With none, Tankhwah asks how much to cut that month, and 0 is an answer. The "Advance katein" button is gone.
+- When a company agrees fewer hours or a half day on a timesheet, the app asks whether the worker's attendance takes them too, with a note.
 - An issued invoice has Edit invoice. In one step a credit note dated today takes it back whole and a new draft of the same dates opens with the same discounts, lines, PO and VAT choices, in the violet edited colour. Issued, the new invoice prints which one it replaces.
 - Workers, companies, sites, rooms, groups, rates, allowances, deductions and opening balances show what changed and the user's note when edited, in the same violet. One that no entry names can be deleted, and stays whole on the Delete tab. One that entries name can only be archived, so they keep its name.
 - The Delete tab has two more tabs: allowances and deductions, and other records.

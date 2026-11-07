@@ -36,20 +36,20 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | ATT-05 | 05 | Duplication | T10 | IMPLEMENTED_UNVERIFIED | TC-008, TC-025 | - |
 | ATT-06 | 05 | Midnight shift | T10 | IMPLEMENTED_UNVERIFIED | TC-018 | - |
 | ATT-07 | 05 | Attendance states | T10, T11e | IMPLEMENTED_UNVERIFIED | TC-060 | `apps/mobile/test/payroll_test.dart` |
-| ATT-08 | 05 | Correction | T10, T18b | IMPLEMENTED_UNVERIFIED | TC-027, TC-113, TC-114 | - |
+| ATT-08 | 05 | Correction | T10, T18b, T18c | IMPLEMENTED_UNVERIFIED | TC-027, TC-113, TC-114, TC-130 | `apps/mobile/test/auto_cuts_test.dart` |
 | ATT-09 | 05 | Maaloomati summary | T10 | IMPLEMENTED_UNVERIFIED | TC-028 | - |
 | CALC-01 | 06 | Duration integer minutes mein; amounts integer fils ya exact | T04, T09 | IN_PROGRESS | TC-015 | - |
 | CALC-02 | 06 | Hourly | T09 | IMPLEMENTED_UNVERIFIED | TC-003, TC-016 | - |
 | CALC-03 | 06 | Shift/day | T09 | IMPLEMENTED_UNVERIFIED | TC-017 | - |
-| CALC-04 | 06 | Monthly | T09 | IMPLEMENTED_UNVERIFIED | TC-019 | - |
+| CALC-04 | 06 | Monthly | T09, T18c | IMPLEMENTED_UNVERIFIED | TC-019, TC-128 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/auto_cuts_test.dart` |
 | CALC-05 | 06 | Monthly client billing | T09 | IMPLEMENTED_UNVERIFIED | TC-020 | - |
 | CALC-06 | 06 | Rate priority | T09 | IMPLEMENTED_UNVERIFIED | TC-021 | - |
 | CALC-07 | 06 | Overtime | T09 | IMPLEMENTED_UNVERIFIED | TC-022 | - |
 | PAY-01 | 07 | Payroll cycle | T11 | IMPLEMENTED_UNVERIFIED | TC-036, TC-055 | `apps/mobile/test/payroll_test.dart` |
 | PAY-02 | 07 | Do alag concepts | T11 | IMPLEMENTED_UNVERIFIED | TC-001, TC-054 | `packages/domain/test/payroll_test.dart` |
 | PAY-03 | 07 | User ki misal | T11 | IMPLEMENTED_UNVERIFIED | TC-001 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
-| PAY-04 | 07 | Katoti ki misal | T11, T18b | IMPLEMENTED_UNVERIFIED | TC-032, TC-121 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
-| PAY-05 | 07 | Advance sub-ledger | T11, T12, T12a | IMPLEMENTED_UNVERIFIED | TC-002, TC-035, TC-051, TC-070 | - |
+| PAY-04 | 07 | Katoti ki misal | T11, T18b, T18c | IMPLEMENTED_UNVERIFIED | TC-032, TC-121, TC-128 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
+| PAY-05 | 07 | Advance sub-ledger | T11, T12, T12a, T18c | IMPLEMENTED_UNVERIFIED | TC-002, TC-035, TC-051, TC-070, TC-129 | `apps/mobile/test/salary_payment_test.dart` |
 | PAY-06 | 07 | Salary payments | T12, T12a | IMPLEMENTED_UNVERIFIED | TC-034, TC-051, TC-068, TC-069 | - |
 | PAY-07 | 07 | Deductions | T11, T11e | IMPLEMENTED_UNVERIFIED | TC-033, TC-061 | `apps/mobile/test/payroll_test.dart` |
 | PAY-08 | 07 | Compliance | T12 | IMPLEMENTED_UNVERIFIED | TC-071 | - |
@@ -59,7 +59,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | TS-03 | 08 | Daily summary | T15 | IMPLEMENTED_UNVERIFIED | TC-039 | - |
 | TS-04 | 08 | Lifecycle | T15 | IMPLEMENTED_UNVERIFIED | TC-085 | - |
 | TS-05 | 08 | Invoice source | T15 | IMPLEMENTED_UNVERIFIED | TC-004, TC-086, TC-109 | - |
-| TS-06 | 08 | Revision | T15 | IMPLEMENTED_UNVERIFIED | TC-087 | - |
+| TS-06 | 08 | Revision | T15, T18c | IMPLEMENTED_UNVERIFIED | TC-087, TC-130 | `apps/mobile/test/auto_cuts_test.dart` |
 | TS-07 | 08 | Output | T15, T16 | IMPLEMENTED_UNVERIFIED | TC-088, TC-093 | - |
 | TS-08 | 08 | Monthly contracts | T15, T16 | IMPLEMENTED_UNVERIFIED | TC-020, TC-089, TC-094, TC-109 | - |
 | INV-01 | 09 | Creation | T16 | IMPLEMENTED_UNVERIFIED | TC-041, TC-096 | - |
