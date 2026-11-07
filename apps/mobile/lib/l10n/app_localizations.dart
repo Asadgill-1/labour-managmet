@@ -2494,13 +2494,13 @@ abstract class AppLocalizations {
   /// No description provided for @closingIsClosed.
   ///
   /// In en, this message translates to:
-  /// **'This month is closed. A change now goes into an open month as an allowance, deduction or reversal.'**
+  /// **'This month is closed. Editing or deleting one of its entries opens it again, with your note as the reason.'**
   String get closingIsClosed;
 
   /// No description provided for @closingLeft.
   ///
   /// In en, this message translates to:
-  /// **'{count} things left. The month closes only when all are cleared.'**
+  /// **'{count, plural, =1{1 thing left. The month closes only when it is cleared.} other{{count} things left. The month closes only when all are cleared.}}'**
   String closingLeft(int count);
 
   /// No description provided for @closingUnpaidNote.
@@ -2512,7 +2512,7 @@ abstract class AppLocalizations {
   /// No description provided for @closeBlocked.
   ///
   /// In en, this message translates to:
-  /// **'Clear {count} things first'**
+  /// **'{count, plural, =1{Clear 1 thing first} other{Clear {count} things first}}'**
   String closeBlocked(int count);
 
   /// No description provided for @closingEnterHazri.
@@ -2608,7 +2608,7 @@ abstract class AppLocalizations {
   /// No description provided for @findingNoCompanyRate.
   ///
   /// In en, this message translates to:
-  /// **'{count} companies have no rate, so their bill is incomplete: {names}.'**
+  /// **'{count, plural, =1{1 company has no rate, so its bill is incomplete: {names}.} other{{count} companies have no rate, so their bill is incomplete: {names}.}}'**
   String findingNoCompanyRate(int count, String names);
 
   /// No description provided for @findingNoHazri.
@@ -2716,7 +2716,7 @@ abstract class AppLocalizations {
   /// No description provided for @closedNote.
   ///
   /// In en, this message translates to:
-  /// **'This month is closed. Nothing here can change.'**
+  /// **'This month is closed. Nothing new goes in, and editing an entry opens the month again.'**
   String get closedNote;
 
   /// No description provided for @reverseHelpClosed.
@@ -4912,7 +4912,7 @@ abstract class AppLocalizations {
   /// No description provided for @findingNotInvoiced.
   ///
   /// In en, this message translates to:
-  /// **'{count} companies have work no invoice charges yet: {names}. Make their invoices in Billing.'**
+  /// **'{count, plural, =1{1 company has work no invoice charges yet: {names}. Make its invoice in Billing.} other{{count} companies have work no invoice charges yet: {names}. Make their invoices in Billing.}}'**
   String findingNotInvoiced(int count, String names);
 
   /// No description provided for @regInvoices.
@@ -5392,13 +5392,13 @@ abstract class AppLocalizations {
   /// No description provided for @findingChangedAfterInvoice.
   ///
   /// In en, this message translates to:
-  /// **'{count} timesheets have attendance that changed after it was invoiced: {names}. Approve their new revisions, then put the invoices right.'**
+  /// **'{count, plural, =1{1 timesheet has attendance that changed after it was invoiced: {names}. Approve its new revision, then put the invoice right.} other{{count} timesheets have attendance that changed after it was invoiced: {names}. Approve their new revisions, then put the invoices right.}}'**
   String findingChangedAfterInvoice(int count, String names);
 
   /// No description provided for @findingInvoiceOutOfDate.
   ///
   /// In en, this message translates to:
-  /// **'{count} invoices charge other figures than their timesheets now say: {names}. Make a credit note for each, then a new invoice.'**
+  /// **'{count, plural, =1{1 invoice charges other figures than its timesheet now says: {names}. Make a credit note for it, then a new invoice.} other{{count} invoices charge other figures than their timesheets now say: {names}. Make a credit note for each, then a new invoice.}}'**
   String findingInvoiceOutOfDate(int count, String names);
 
   /// No description provided for @invNotePartCredited.

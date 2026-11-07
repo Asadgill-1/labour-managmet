@@ -2,7 +2,7 @@ import 'package:domain/calc.dart';
 import 'package:domain/money.dart';
 import 'package:domain/payroll.dart';
 import 'package:drift/drift.dart' show Value;
-import 'package:flutter/material.dart' show AlertDialog, Locale, TextField;
+import 'package:flutter/material.dart' show AlertDialog, Locale, MaterialPageRoute, NavigatorState, Navigator, TextField, TextFormField;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/app/side_panel.dart';
 import 'package:labour_app/data/attendance.dart';
@@ -10,6 +10,7 @@ import 'package:labour_app/data/changes.dart';
 import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/payroll.dart';
 import 'package:labour_app/data/tenant_database.dart';
+import 'package:labour_app/features/payroll/pay_item_form_screen.dart';
 import 'package:labour_app/features/registers/register_defs.dart';
 import 'package:labour_app/l10n/app_localizations.dart';
 
@@ -176,6 +177,33 @@ void main() {
     await goTo(tester, words.regDeletedRecords);
     expect(find.text('Kamran'), findsOneWidget);
     expect(find.textContaining('Do baar daala'), findsOneWidget);
+    await shutDown(tester, app);
+  });
+
+  testWidgets("the note typed in a form before Delete goes with the delete, so it isn't lost (D-056)", (tester) async {
+    final app = memoryDb();
+    late PayrollItem item;
+    await real(tester, () async {
+      await ts.seed(app);
+      await ts.work(app, '2020-10-05');
+      await app.savePayItem(id: null, workerId: ts.asif, month: '2020-10', kind: PayItemKind.allowance, amountFils: 5000, reason: 'Food', authorizedBy: null, note: null, roomId: null, operationId: newUuid());
+      item = (await app.select(app.payrollItems).get()).single;
+    });
+    final words = await real(tester, () => AppLocalizations.delegate.load(const Locale('en', 'PK')));
+    await pumpApp(tester, app);
+    tester.state<NavigatorState>(find.byType(Navigator).first).push(
+      MaterialPageRoute<void>(builder: (_) => PayItemFormScreen(workerId: ts.asif, month: '2020-10', kind: PayItemKind.allowance, item: item)),
+    );
+    await settle(tester);
+
+    await tester.enterText(find.widgetWithText(TextFormField, words.changeNoteItem), 'Not owed');
+    await tester.ensureVisible(find.text(words.deleteAction));
+    await tester.tap(find.text(words.deleteAction));
+    await settle(tester);
+    await tester.tap(find.descendant(of: find.byType(AlertDialog), matching: find.text(words.deleteAction)));
+    await settle(tester);
+    final deleted = await real(tester, () => app.select(app.auditEvents).get());
+    expect(deleted.where((a) => a.entity == 'payroll_items' && a.action == 'delete').single.reason, 'Not owed');
     await shutDown(tester, app);
   });
 }

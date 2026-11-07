@@ -1323,11 +1323,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get closingIsClosed =>
-      'This month is closed. A change now goes into an open month as an allowance, deduction or reversal.';
+      'This month is closed. Editing or deleting one of its entries opens it again, with your note as the reason.';
 
   @override
   String closingLeft(int count) {
-    return '$count things left. The month closes only when all are cleared.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count things left. The month closes only when all are cleared.',
+      one: '1 thing left. The month closes only when it is cleared.',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -1336,7 +1342,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String closeBlocked(int count) {
-    return 'Clear $count things first';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Clear $count things first',
+      one: 'Clear 1 thing first',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -1393,7 +1405,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String findingNoCompanyRate(int count, String names) {
-    return '$count companies have no rate, so their bill is incomplete: $names.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count companies have no rate, so their bill is incomplete: $names.',
+      one: '1 company has no rate, so its bill is incomplete: $names.',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -1467,7 +1486,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'This month is closed. Enter the difference in an open month as an allowance or deduction, or open it again from Close month.';
 
   @override
-  String get closedNote => 'This month is closed. Nothing here can change.';
+  String get closedNote =>
+      'This month is closed. Nothing new goes in, and editing an entry opens the month again.';
 
   @override
   String get reverseHelpClosed =>
@@ -2785,7 +2805,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String findingNotInvoiced(int count, String names) {
-    return '$count companies have work no invoice charges yet: $names. Make their invoices in Billing.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count companies have work no invoice charges yet: $names. Make their invoices in Billing.',
+      one:
+          '1 company has work no invoice charges yet: $names. Make its invoice in Billing.',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -3068,12 +3096,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String findingChangedAfterInvoice(int count, String names) {
-    return '$count timesheets have attendance that changed after it was invoiced: $names. Approve their new revisions, then put the invoices right.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count timesheets have attendance that changed after it was invoiced: $names. Approve their new revisions, then put the invoices right.',
+      one:
+          '1 timesheet has attendance that changed after it was invoiced: $names. Approve its new revision, then put the invoice right.',
+    );
+    return '$_temp0';
   }
 
   @override
   String findingInvoiceOutOfDate(int count, String names) {
-    return '$count invoices charge other figures than their timesheets now say: $names. Make a credit note for each, then a new invoice.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count invoices charge other figures than their timesheets now say: $names. Make a credit note for each, then a new invoice.',
+      one:
+          '1 invoice charges other figures than its timesheet now says: $names. Make a credit note for it, then a new invoice.',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -5123,11 +5167,18 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get closingIsClosed =>
-      'Yeh mahina band hai. Ab farq khule mahine mein allowance, katoti ya wapsi se likha jata hai.';
+      'Yeh mahina band hai. Is ki koi entry badlein ya delete karein to yeh dobara khul jayega, aap ki wajah ke saath.';
 
   @override
   String closingLeft(int count) {
-    return '$count cheezain baqi hain. Sab saaf hone par hi mahina band hoga.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count cheezain baqi hain. Sab saaf hone par hi mahina band hoga.',
+      one: '1 cheez baqi hai. Woh saaf hone par hi mahina band hoga.',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -5136,7 +5187,13 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String closeBlocked(int count) {
-    return 'Pehle $count cheezain saaf karein';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Pehle $count cheezain saaf karein',
+      one: 'Pehle 1 cheez saaf karein',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -5194,7 +5251,13 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String findingNoCompanyRate(int count, String names) {
-    return '$count company ka rate nahin: $names. Rate likhein.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count companies ka rate nahin: $names. Rate likhein.',
+      one: '1 company ka rate nahin: $names. Rate likhein.',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -5268,7 +5331,8 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
       'Yeh mahina band hai. Farq khule mahine mein allowance ya katoti se likhein, ya Mahina band se mahina dobara kholein.';
 
   @override
-  String get closedNote => 'Yeh mahina band hai. Yahan kuch nahin badlega.';
+  String get closedNote =>
+      'Yeh mahina band hai. Naya kuch nahin likh sakte. Kisi entry ko badlein to mahina dobara khul jayega.';
 
   @override
   String get reverseHelpClosed =>
@@ -6555,7 +6619,15 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String findingNotInvoiced(int count, String names) {
-    return '$count companies ka kaam abhi kisi invoice par nahin: $names. Billing mein invoice banayein.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count companies ka kaam abhi kisi invoice par nahin: $names. Billing mein invoice banayein.',
+      one:
+          '1 company ka kaam abhi kisi invoice par nahin: $names. Billing mein invoice banayein.',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -6698,12 +6770,28 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String findingChangedAfterInvoice(int count, String names) {
-    return '$count timesheets ki hazri invoice ke baad badli: $names. Un ke naye revision approve karein, phir invoice theek karein.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count timesheets ki hazri invoice ke baad badli: $names. Un ke naye revision approve karein, phir invoice theek karein.',
+      one:
+          '1 timesheet ki hazri invoice ke baad badli: $names. Us ki nayi revision approve karein, phir invoice theek karein.',
+    );
+    return '$_temp0';
   }
 
   @override
   String findingInvoiceOutOfDate(int count, String names) {
-    return '$count invoices par timesheet se alag raqam hai: $names. Har ek ka credit note banayein, phir naya invoice.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count invoices par timesheet se alag raqam hai: $names. Har ek ka credit note banayein, phir naya invoice.',
+      one:
+          '1 invoice par timesheet se alag raqam hai: $names. Us ka credit note banayein, phir naya invoice.',
+    );
+    return '$_temp0';
   }
 
   @override

@@ -1542,7 +1542,14 @@ Future<RegisterData> _aging(TenantDatabase db, AppLocalizations l10n, _Masters m
   final feet = <String, String>{};
   for (final c in m.clients.values) {
     final open = money.openOf(c.id);
-    if (open.isEmpty) continue;
+    if (open.isEmpty) {
+      // A company that only has credit left still shows, or its credit would be out of sight.
+      final credit = money.creditOf(c.id);
+      if (credit > 0) {
+        rows.add(RegisterEntry([c.name, l10n.regUnusedCredit(formatAed(credit)), null, null, null, null, null, null], group: c.name, tags: {'client': {c.id}, 'age': <String>{}}));
+      }
+      continue;
+    }
     for (final o in open) {
       final invoice = o.invoiceId == null ? null : money.invoices[o.invoiceId]!.invoice;
       final due = o.dueDate ?? openingDates[c.id] ?? today;

@@ -187,6 +187,7 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
     final db = ref.read(dbProvider);
     final gone = await deleteOrArchive(
       context,
+      reason: _change.text,
       (note) => db.savingRate(
         () => _isPay
             ? db.deleteRecord(db.payContracts, widget.pay!.id, note: note, operationId: newUuid())

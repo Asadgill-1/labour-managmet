@@ -108,6 +108,7 @@ class _GroupFormScreenState extends ConsumerState<GroupFormScreen> {
     final db = ref.read(dbProvider);
     final gone = await deleteOrArchive(
       context,
+      reason: _change.text,
       (note) => db.deleteRecord(db.workerGroups, widget.group!.id, note: note, operationId: newUuid()),
       archive: (note) =>
           db.saveRow(db.workerGroups, id: widget.group!.id, operationId: newUuid(), reason: note, fields: const WorkerGroupsCompanion(active: Value(false))),

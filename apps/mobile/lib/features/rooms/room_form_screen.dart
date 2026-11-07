@@ -48,6 +48,7 @@ class _RoomFormScreenState extends ConsumerState<RoomFormScreen> {
     final db = ref.read(dbProvider);
     final gone = await deleteOrArchive(
       context,
+      reason: _change.text,
       (note) => db.deleteRecord(db.rooms, widget.room!.id, note: note, operationId: newUuid()),
       archive: (note) => db.saveRow(db.rooms, id: widget.room!.id, operationId: newUuid(), reason: note, fields: const RoomsCompanion(active: Value(false))),
     );

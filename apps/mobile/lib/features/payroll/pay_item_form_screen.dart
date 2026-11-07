@@ -100,7 +100,7 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
 
   Future<void> _delete() async {
     final db = ref.read(dbProvider);
-    final gone = await deleteOrArchive(context, (note) => db.deleteRecord(db.payrollItems, widget.item!.id, note: note, operationId: newUuid()));
+    final gone = await deleteOrArchive(context, (note) => db.deleteRecord(db.payrollItems, widget.item!.id, note: note, operationId: newUuid()), reason: _change.text);
     if (gone && mounted) Navigator.of(context).pop();
   }
 

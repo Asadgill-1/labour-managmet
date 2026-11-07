@@ -178,6 +178,14 @@ void main() {
     expect(late.single.cells[7], 50000);
   });
 
+  test('a company that owes nothing but has credit left still shows, with its credit (REP-01)', () async {
+    await db.addClientReceipt(operationId: newUuid(), date: dubaiToday(DateTime.now()), clientId: ts.emaar, amountFils: 11000, parts: const {});
+
+    final data = await buildRegister(db, l10n, Section.agingRegister);
+    expect([for (final e in data.entries) (e.group, e.cells[1], e.cells[7])], [('Emaar', l10n.regUnusedCredit('AED 110.00'), null)]);
+    expect(data.rollupsOf!(data.entries).single.rows.single.cells, ['Emaar', 0, 0, 0, 0, 0, 0]);
+  });
+
   test('work by company, site and month: invoiced, still to bill, and work with no company rate (REP-01)', () async {
     final ate = await db.saveRow(db.clients, id: null, operationId: newUuid(), fields: const ClientsCompanion(name: Value('ATE')));
     final melboard = await db.saveRow(db.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(ate), name: const Value('Melboard')));

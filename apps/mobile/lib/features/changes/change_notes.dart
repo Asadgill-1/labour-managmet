@@ -39,9 +39,10 @@ Future<bool> confirmDelete(BuildContext context) async {
 }
 
 /// Asks before a delete and takes the user's note, which may be left empty. Null means they kept the entry.
-Future<String?> askDeleteNote(BuildContext context) async {
+/// [initial] is a note the user already typed in the form, so it isn't lost.
+Future<String?> askDeleteNote(BuildContext context, {String initial = ''}) async {
   final l10n = AppLocalizations.of(context);
-  final note = TextEditingController();
+  final note = TextEditingController(text: initial.trim());
   final yes = await showDialog<bool>(
     context: context,
     builder: (dialog) => AlertDialog(
@@ -252,10 +253,16 @@ class EditFooter extends ConsumerWidget {
 String? noteOf(TextEditingController note) => note.text.trim().isEmpty ? null : note.text.trim();
 
 /// Deletes a saved record after asking once. When entries name it, offers [archive] instead, so they keep its name
-/// (D-056). True when it is gone or archived, so the screen can close.
-Future<bool> deleteOrArchive(BuildContext context, Future<void> Function(String? note) delete, {Future<void> Function(String? note)? archive}) async {
+/// (D-056). True when it is gone or archived, so the screen can close. [reason] is the form's own note, which the
+/// question starts with.
+Future<bool> deleteOrArchive(
+  BuildContext context,
+  Future<void> Function(String? note) delete, {
+  Future<void> Function(String? note)? archive,
+  String reason = '',
+}) async {
   final l10n = AppLocalizations.of(context);
-  final note = await askDeleteNote(context);
+  final note = await askDeleteNote(context, initial: reason);
   if (note == null || !context.mounted) return false;
   final why = note.isEmpty ? null : note;
   try {

@@ -66,6 +66,7 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
     final db = ref.read(dbProvider);
     final gone = await deleteOrArchive(
       context,
+      reason: _change.text,
       (note) => db.deleteRecord(db.sites, widget.site!.id, note: note, operationId: newUuid()),
       archive: (note) => db.saveRow(db.sites, id: widget.site!.id, operationId: newUuid(), reason: note, fields: const SitesCompanion(active: Value(false))),
     );
