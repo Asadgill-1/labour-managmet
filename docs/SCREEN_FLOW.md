@@ -30,7 +30,7 @@ The panel lists main tabs that open to show sub-tabs. The current tab's sub-tabs
 | Billing | Timesheet, Invoice, Invoice register, Company ka hisaab |
 | Hisaab | Rozana hisaab, Pichla baqaya, Hisaab register, Mahina band |
 | Reports | Sab reports, Purana baqaya, Kaam: bill hua ya nahin |
-| Delete hui | Delete hui hazri, Delete hui cash entries |
+| Delete hui | Delete hui hazri, Delete hui cash entries, Delete hui allowance aur katoti, Delete hui baqi cheezein |
 | Kaghazat | Bane hue kaghaz, Letterhead |
 | Rooms | Rooms, Room register |
 | Jald aa raha hai | Team, Backup, Plan, Help |

@@ -22,12 +22,12 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | NOT_STARTED | - | - |
 | AUTH-08 | 03 | Production email login ke liye real SMTP/domain configuration aur | T19 | NOT_STARTED | - | - |
 | MASTER-01 | 04 | Apni company | T07 | IMPLEMENTED_UNVERIFIED | - | - |
-| MASTER-02 | 04 | Client | T07 | IMPLEMENTED_UNVERIFIED | - | - |
+| MASTER-02 | 04 | Client | T07, T18b | IMPLEMENTED_UNVERIFIED | TC-119 | `apps/mobile/test/records_test.dart` |
 | MASTER-03 | 04 | Sites | T07 | IMPLEMENTED_UNVERIFIED | - | - |
-| MASTER-04 | 04 | Worker | T07 | IMPLEMENTED_UNVERIFIED | - | - |
-| MASTER-05 | 04 | Opening balances | T08 | IMPLEMENTED_UNVERIFIED | TC-030 | - |
-| MASTER-06 | 04 | Rate cards | T08 | IMPLEMENTED_UNVERIFIED | - | - |
-| MASTER-07 | 04 | Archive | T07 | IMPLEMENTED_UNVERIFIED | TC-029 | - |
+| MASTER-04 | 04 | Worker | T07, T18b | IMPLEMENTED_UNVERIFIED | TC-118, TC-119 | `apps/mobile/test/records_test.dart` |
+| MASTER-05 | 04 | Opening balances | T08, T18b | IMPLEMENTED_UNVERIFIED | TC-030, TC-122 | `apps/mobile/test/records_test.dart` |
+| MASTER-06 | 04 | Rate cards | T08, T18b | IMPLEMENTED_UNVERIFIED | TC-120 | `apps/mobile/test/records_test.dart` |
+| MASTER-07 | 04 | Archive | T07, T18b | IMPLEMENTED_UNVERIFIED | TC-029, TC-118, TC-119, TC-123 | `apps/mobile/test/records_test.dart` |
 | MASTER-08 | 04 | Import | T18, T20 | IMPLEMENTED_UNVERIFIED | TC-103, TC-104, TC-105, TC-108 | `apps/mobile/test/reports_test.dart` |
 | ATT-01 | 05 | Flow | T10 | IMPLEMENTED_UNVERIFIED | - | - |
 | ATT-02 | 05 | Entry fields | T10 | IMPLEMENTED_UNVERIFIED | - | - |
@@ -48,7 +48,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | PAY-01 | 07 | Payroll cycle | T11 | IMPLEMENTED_UNVERIFIED | TC-036, TC-055 | `apps/mobile/test/payroll_test.dart` |
 | PAY-02 | 07 | Do alag concepts | T11 | IMPLEMENTED_UNVERIFIED | TC-001, TC-054 | `packages/domain/test/payroll_test.dart` |
 | PAY-03 | 07 | User ki misal | T11 | IMPLEMENTED_UNVERIFIED | TC-001 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
-| PAY-04 | 07 | Katoti ki misal | T11 | IMPLEMENTED_UNVERIFIED | TC-032 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
+| PAY-04 | 07 | Katoti ki misal | T11, T18b | IMPLEMENTED_UNVERIFIED | TC-032, TC-121 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
 | PAY-05 | 07 | Advance sub-ledger | T11, T12, T12a | IMPLEMENTED_UNVERIFIED | TC-002, TC-035, TC-051, TC-070 | - |
 | PAY-06 | 07 | Salary payments | T12, T12a | IMPLEMENTED_UNVERIFIED | TC-034, TC-051, TC-068, TC-069 | - |
 | PAY-07 | 07 | Deductions | T11, T11e | IMPLEMENTED_UNVERIFIED | TC-033, TC-061 | `apps/mobile/test/payroll_test.dart` |

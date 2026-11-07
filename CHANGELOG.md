@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Workers, companies, sites, rooms, groups, rates, allowances, deductions and opening balances show what changed and the user's note when edited, in the same violet. One that no entry names can be deleted, and stays whole on the Delete tab. One that entries name can only be archived, so they keep its name.
+- The Delete tab has two more tabs: allowances and deductions, and other records.
 - Any attendance row or cash book line can be edited or deleted, in a closed month too, which opens again. An edited one turns violet, with what the app saw change and the user's own note under it.
 - A new Delete tab keeps every deleted entry whole, by kind and date, for PDF, Excel or WhatsApp, with a blank Clarification column for whoever it is sent to.
 - The owner's sheet counts a monthly contract's amount for the month on a line of its own, invoiced or not, so such a company no longer looks like a loss.

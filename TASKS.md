@@ -57,7 +57,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 | T16 | Invoices, VAT, numbering, credit notes, e-invoice labelling and structured export, "send with timesheet" (TS-07), a month stopped by work with no invoice (D-048, D-050), lines typed by hand, credit notes for an amount, and a month stopped by work changed after it was invoiced (D-051) | INV-01..04, INV-06, INV-08, INV-09 | IMPLEMENTED_UNVERIFIED | `p3/t16-invoices` |
 | T17 | Receipts, status, client statement. An overdue invoice stops a month until paid or closed with a reason (D-048, D-052) | INV-05, INV-07 | IMPLEMENTED_UNVERIFIED | `p3/t17-receipts` |
 | T18 | Tenant reports, export, CSV import (D-053). Backup before an import waits for T20 | REP-01..03, REP-06, MASTER-08 | IMPLEMENTED_UNVERIFIED | `p3/t18-reports` |
-| T18b | Edit and delete everywhere: a Delete tab, an edited colour, the app's note and the user's note, closed months reopened by an edit, and a one-step invoice edit (owner's request, D-056). Part 1, attendance, the cash book and the Delete tab, is built and tested. Parts 2 and 3 are not started | ATT-08, REP-08, MODEL-08 | IN_PROGRESS | `p3/t18b-edit-delete` |
+| T18b | Edit and delete everywhere: a Delete tab, an edited colour, the app's note and the user's note, closed months reopened by an edit, and a one-step invoice edit (owner's request, D-056). Parts 1 and 2 are built and tested: attendance, the cash book, workers, companies, sites, rooms, groups, rates, pay items, opening balances and the Delete tab. Part 3, the invoice step, is not started | ATT-08, REP-08, MODEL-08, MASTER-02, MASTER-04, MASTER-05, MASTER-06, MASTER-07 | IN_PROGRESS | `p3/t18b-edit-delete` |
 
 **Gate:** PDF review, duplicate-billing and numbering tests pass.
 

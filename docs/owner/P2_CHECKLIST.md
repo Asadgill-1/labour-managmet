@@ -118,6 +118,15 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 - [ ] Band mahine ki koi entry badlein. Paigham aaye ke band mahina dobara khula. **Mahina band** mein ja kar dobara band karein.
 - [ ] Menu mein **Delete hui** kholein. Delete hui hazri aur cash entries alag tabs mein hon, tareekh ka filter chale. **PDF, Excel ya WhatsApp** se Excel nikalein: aakhri column **Wajah (clarification)** khaali ho.
 
+## 5k. Mazdoor, company aur baqi cheezon ka edit aur delete (T18b, D-056)
+
+- [ ] **Labour** mein kisi mazdoor ko kholein, edit (pencil) dabayein, phone badlein aur neeche **Wajah** likhein, **Save**. List mein us ka rang badle aur "Badla gaya" likha ho. Mazdoor kholein: upar likha ho kya badla aur aap ki wajah.
+- [ ] Us mazdoor ke **Tankhwah ke rate** ko kholein, rate badlein, save karein. Rate ke neeche "Rate: ... se ..." likha ho.
+- [ ] Naya mazdoor banayein jis ki koi hazri na ho. Use kholein, **Delete karein**, phir dobara **Delete karein**. List se hat jaye.
+- [ ] Jis mazdoor ki hazri lagi ho, use **Delete karein**. Paigham aaye ke delete nahin ho sakta, **Archive karein** ka button ho. Dabane par woh Archived mein chala jaye.
+- [ ] **Tankhwah** mein kisi mazdoor ki allowance kholein, raqam badlein aur **Badalne ki wajah** likhein. Phir use **Delete karein**.
+- [ ] Menu mein **Delete hui** kholein. **Delete hui allowance aur katoti** aur **Delete hui baqi cheezein** mein woh cheezein poori hon, aap ki wajah ke saath. PDF ya Excel nikalein: aakhri column khaali ho.
+
 ## 5i. Reports aur CSV import (T18)
 
 - [ ] **Menu > Reports > Sab reports**: har report ke neeche likha ho woh kya dikhati hai aur kis tareekh se. Har aik par dabayein, sahi register khule. **Companies se mila paisa** aur **Kharche** par sirf wohi lines hon.
