@@ -36,7 +36,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | ATT-05 | 05 | Duplication | T10 | IMPLEMENTED_UNVERIFIED | TC-008, TC-025 | - |
 | ATT-06 | 05 | Midnight shift | T10 | IMPLEMENTED_UNVERIFIED | TC-018 | - |
 | ATT-07 | 05 | Attendance states | T10, T11e | IMPLEMENTED_UNVERIFIED | TC-060 | `apps/mobile/test/payroll_test.dart` |
-| ATT-08 | 05 | Correction | T10, T18b, T18c | IMPLEMENTED_UNVERIFIED | TC-027, TC-113, TC-114, TC-130 | `apps/mobile/test/auto_cuts_test.dart` |
+| ATT-08 | 05 | Correction | T10, T18b, T18c | IMPLEMENTED_UNVERIFIED | TC-027, TC-113, TC-114, TC-130, TC-133 | `apps/mobile/test/auto_cuts_test.dart`, `apps/mobile/test/changes_test.dart` |
 | ATT-09 | 05 | Maaloomati summary | T10 | IMPLEMENTED_UNVERIFIED | TC-028 | - |
 | CALC-01 | 06 | Duration integer minutes mein; amounts integer fils ya exact | T04, T09 | IN_PROGRESS | TC-015 | - |
 | CALC-02 | 06 | Hourly | T09 | IMPLEMENTED_UNVERIFIED | TC-003, TC-016 | - |

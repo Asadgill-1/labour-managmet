@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- The time under an edited or deleted entry is now UAE time. On a device set to UAE time it showed 4 hours ahead.
+- The timesheet's agreed-hours sheet no longer says attendance never changes; it says the app asks when the hours are fewer.
 - A monthly contract can cut a day with no attendance, at its own part-month rule, with weekly days off that are never cut. Tankhwah and the slip show the days cut.
 - An advance can have a monthly instalment, which payroll cuts by itself. With none, Tankhwah asks how much to cut that month, and 0 is an answer. The "Advance katein" button is gone.
 - When a company agrees fewer hours or a half day on a timesheet, the app asks whether the worker's attendance takes them too, with a note.
