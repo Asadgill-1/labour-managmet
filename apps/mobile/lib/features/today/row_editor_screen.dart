@@ -1,4 +1,5 @@
 import 'package:domain/calc.dart';
+import 'package:domain/dates.dart';
 import 'package:domain/money.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,36 +8,32 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/attendance.dart';
+import '../../data/changes.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 
-/// Opens a saved row. Rows change in place until their payroll is posted. After that they get a correction that keeps the original (ATT-08).
+/// Opens a saved row to edit or delete it, wherever it stands (D-056). Before approval it changes in place; after, a
+/// correction keeps the original (ATT-08). A closed month opens again first, and the screen says so.
 Future<void> openAttendanceRow(BuildContext context, WidgetRef ref, AttendanceEntry entry, String title) async {
   final l10n = AppLocalizations.of(context);
-  if (isClosed(entry.workDate, ref.read(lockedThroughProvider).value)) {
-    showFormError(context, l10n.periodLockedError);
-    return;
-  }
   final db = ref.read(dbProvider);
-  final locked = entry.state == 'approved' || entry.state == 'linked';
   final input = entryToInput(entry);
   final preview = await db.previewRow(workDate: entry.workDate, clientId: entry.clientId, siteId: entry.siteId, input: input, exceptId: entry.id);
   if (!context.mounted) return;
   final edit = await Navigator.of(context).push<RowEdit>(
     MaterialPageRoute(
-      builder: (_) => RowEditorScreen(title: title, input: input, overlaps: preview.overlaps, correcting: locked, canDelete: !locked),
+      builder: (_) => RowEditorScreen(title: title, input: input, overlaps: preview.overlaps, saved: true),
     ),
   );
   if (edit == null) return;
   try {
-    if (edit.delete) {
-      await db.deleteUnapprovedEntry(entry, operationId: newUuid());
-    } else if (locked) {
-      await db.correctEntry(entry, edit.input!, reason: edit.correctionReason!, operationId: newUuid());
-    } else {
-      await db.updateUnapprovedEntry(entry, edit.input!, operationId: newUuid());
+    final opened = edit.delete
+        ? await db.deleteAttendance(entry, note: edit.note, reopenReason: l10n.reopenByEdit, operationId: newUuid())
+        : await db.editAttendance(entry, edit.input!, note: edit.note, reopenReason: l10n.reopenByEdit, operationId: newUuid());
+    if (context.mounted) {
+      showSavedOnPhone(context, opened.isNotEmpty ? l10n.monthsOpened(opened.map(showMonth).join(', ')) : (edit.delete ? l10n.deletedDone : l10n.savedOnPhone));
     }
-    if (context.mounted) showSavedOnPhone(context, l10n.savedOnPhone);
   } on AttendanceInvalid {
     if (context.mounted) showFormError(context, l10n.rowsNeedFix);
   } catch (e) {
@@ -44,26 +41,18 @@ Future<void> openAttendanceRow(BuildContext context, WidgetRef ref, AttendanceEn
   }
 }
 
-/// What the editor hands back. [delete] means remove the entry.
-typedef RowEdit = ({EntryInput? input, String? correctionReason, bool delete});
+/// What the editor hands back. [delete] means delete the entry. [note] is the user's own, under the entry (D-056).
+typedef RowEdit = ({EntryInput? input, String? note, bool delete});
 
 /// Changes one worker's row: late, half day, absent, overtime or a different rate (ATT-04).
-/// With [correcting], the row is already approved, so a reason is required and the original is kept (ATT-08).
+/// A [saved] row also takes the user's note and can be deleted (D-056).
 class RowEditorScreen extends StatefulWidget {
-  const RowEditorScreen({
-    required this.title,
-    required this.input,
-    this.overlaps = false,
-    this.correcting = false,
-    this.canDelete = false,
-    super.key,
-  });
+  const RowEditorScreen({required this.title, required this.input, this.overlaps = false, this.saved = false, super.key});
 
   final String title;
   final EntryInput input;
   final bool overlaps;
-  final bool correcting;
-  final bool canDelete;
+  final bool saved;
 
   @override
   State<RowEditorScreen> createState() => _RowEditorScreenState();
@@ -83,7 +72,7 @@ class _RowEditorScreenState extends State<RowEditorScreen> {
   late final _reason = TextEditingController(text: widget.input.overrideReason);
   late final _overlapReason = TextEditingController(text: widget.input.overlapReason);
   late final _notes = TextEditingController(text: widget.input.notes);
-  final _correction = TextEditingController();
+  final _change = TextEditingController();
 
   static String _plain(int? fils) => fils == null ? '' : plainAmount(fils);
   static String? _text(TextEditingController c) => c.text.trim().isEmpty ? null : c.text.trim();
@@ -97,7 +86,7 @@ class _RowEditorScreenState extends State<RowEditorScreen> {
     }
     Navigator.of(context).pop<RowEdit>((
       delete: false,
-      correctionReason: _text(_correction),
+      note: _text(_change),
       input: EntryInput(
         workerId: widget.input.workerId,
         groupId: widget.input.groupId,
@@ -147,9 +136,13 @@ class _RowEditorScreenState extends State<RowEditorScreen> {
             if (worked) ...[
               Row(
                 children: [
-                  Expanded(child: TimeField(l10n.shiftStart, value: _start, onChanged: (v) => setState(() => _start = v))),
+                  Expanded(
+                    child: TimeField(l10n.shiftStart, value: _start, onChanged: (v) => setState(() => _start = v)),
+                  ),
                   const SizedBox(width: 12),
-                  Expanded(child: TimeField(l10n.shiftEnd, value: _end, onChanged: (v) => setState(() => _end = v))),
+                  Expanded(
+                    child: TimeField(l10n.shiftEnd, value: _end, onChanged: (v) => setState(() => _end = v)),
+                  ),
                 ],
               ),
               fieldGap,
@@ -210,20 +203,18 @@ class _RowEditorScreenState extends State<RowEditorScreen> {
               fieldGap,
             ],
             Field(l10n.note, _notes),
-            if (widget.correcting) ...[
+            if (widget.saved) ...[
               fieldGap,
-              Field(
-                l10n.correctionReason,
-                _correction,
-                helper: l10n.correctionHelp,
-                validator: (v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null,
-              ),
-            ],
-            if (widget.canDelete) ...[
+              Field(l10n.changeNote, _change, helper: l10n.changeNoteHelp),
               fieldGap,
-              OutlinedButton(
-                onPressed: () => Navigator.of(context).pop<RowEdit>((delete: true, correctionReason: null, input: null)),
-                child: Text(l10n.deleteRow),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.delete_outline),
+                style: OutlinedButton.styleFrom(foregroundColor: due),
+                onPressed: () async {
+                  if (!await confirmDelete(context) || !context.mounted) return;
+                  Navigator.of(context).pop<RowEdit>((delete: true, note: _text(_change), input: null));
+                },
+                label: Text(l10n.deleteRow),
               ),
             ],
           ],

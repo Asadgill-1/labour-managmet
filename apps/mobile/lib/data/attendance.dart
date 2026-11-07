@@ -271,14 +271,16 @@ extension AttendanceOps on TenantDatabase {
     return batchId;
   }
 
-  /// Edits a row that is not yet approved, and prices it again.
-  Future<void> updateUnapprovedEntry(AttendanceEntry old, EntryInput input, {required String operationId}) {
+  /// Edits a row that is not yet approved, and prices it again. [note] and [detail] are what the owner reads (D-056).
+  Future<void> updateUnapprovedEntry(AttendanceEntry old, EntryInput input, {required String operationId, String? note, Future<Map<String, Object?>?> Function()? detail}) {
     return applyOperation(
       operationId: operationId,
       entity: 'attendance_entries',
       recordId: old.id,
       version: old.version + 1,
       action: 'update',
+      reason: note,
+      detail: detail,
       change: () async {
         final preview = await previewRow(workDate: old.workDate, clientId: old.clientId, siteId: old.siteId, input: input, exceptId: old.id);
         if (preview.blocksSave) throw AttendanceInvalid([input.workerId]);
@@ -296,15 +298,24 @@ extension AttendanceOps on TenantDatabase {
   }
 
   /// Corrects an approved or linked row: the old row stays as it was, flagged, and a new row revises it (ATT-08).
-  Future<String> correctEntry(AttendanceEntry old, EntryInput input, {required String reason, required String operationId}) async {
+  /// [deleted] makes the new row the delete of the old one: absent, worth nothing, shown only on the Delete tab (D-056).
+  Future<String> correctEntry(
+    AttendanceEntry old,
+    EntryInput input, {
+    String? reason,
+    required String operationId,
+    bool deleted = false,
+    Future<Map<String, Object?>?> Function()? detail,
+  }) async {
     final newId = newUuid();
     await applyOperation(
       operationId: operationId,
       entity: 'attendance_entries',
       recordId: newId,
       version: 1,
-      action: 'correct',
+      action: deleted ? 'delete' : 'correct',
       reason: reason,
+      detail: detail,
       change: () async {
         final preview = await previewRow(workDate: old.workDate, clientId: old.clientId, siteId: old.siteId, input: input, exceptId: old.id);
         if (preview.blocksSave) throw AttendanceInvalid([input.workerId]);
@@ -316,6 +327,7 @@ extension AttendanceOps on TenantDatabase {
             siteId: Value(old.siteId),
             workDate: Value(old.workDate),
             revisesEntryId: Value(old.id),
+            deleted: Value(deleted),
           ),
         );
         return row.toJson();
@@ -447,14 +459,16 @@ extension AttendanceOps on TenantDatabase {
     await repriceRows(operationId: newUuid(), workerId: workerId, clientId: clientId, groupId: groupId);
   });
 
-  /// Removes a row that nobody has approved.
-  Future<void> deleteUnapprovedEntry(AttendanceEntry old, {required String operationId}) {
+  /// Removes a row that nobody has approved. [detail] keeps it as it was for the Delete tab (D-056).
+  Future<void> deleteUnapprovedEntry(AttendanceEntry old, {required String operationId, String? note, Future<Map<String, Object?>?> Function()? detail}) {
     return applyOperation(
       operationId: operationId,
       entity: 'attendance_entries',
       recordId: old.id,
       version: old.version + 1,
       action: 'delete',
+      reason: note,
+      detail: detail,
       change: () async {
         await (delete(attendanceEntries)..where((e) => e.id.equals(old.id))).go();
         return {'id': old.id, 'deleted': true};
@@ -473,13 +487,13 @@ extension AttendanceOps on TenantDatabase {
   /// Who worked this site on its latest day before [date] (UX-05).
   Future<List<String>> lastTeam(String siteId, String date) async {
     final latest = await (select(attendanceEntries)
-          ..where((e) => e.siteId.equals(siteId) & e.workDate.isSmallerThanValue(date) & e.superseded.equals(false))
+          ..where((e) => e.siteId.equals(siteId) & e.workDate.isSmallerThanValue(date) & e.superseded.equals(false) & e.deleted.equals(false))
           ..orderBy([(e) => OrderingTerm.desc(e.workDate)])
           ..limit(1))
         .getSingleOrNull();
     if (latest == null) return const [];
     final rows = await (select(attendanceEntries)
-          ..where((e) => e.siteId.equals(siteId) & e.workDate.equals(latest.workDate) & e.superseded.equals(false)))
+          ..where((e) => e.siteId.equals(siteId) & e.workDate.equals(latest.workDate) & e.superseded.equals(false) & e.deleted.equals(false)))
         .get();
     return rows.where((e) => e.attendanceStatus != 'absent').map((e) => e.workerId).toSet().toList();
   }

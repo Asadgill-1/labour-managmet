@@ -172,17 +172,18 @@ void main() {
     expect(find.text('Nafa AED 100.00'), findsOneWidget, reason: 'rent received 300 minus rent paid 200');
     expect(find.text('Mila AED 300.00, diya AED 200.00'), findsOneWidget);
 
-    // Undo needs a reason, keeps the record, and the sums follow.
+    // A delete asks once, with a note if wanted, keeps the record by a reversal, leaves the cash book, and the sums
+    // follow (D-056).
     await goTo(tester, 'Rozana hisaab');
     await tester.tap(find.text('-AED 200.00').last);
     await settle(tester);
-    await tester.tap(find.text('Wapas karein'));
+    await tester.tap(find.text('Delete karein'));
     await settle(tester);
-    expect(find.text('Yeh zaroori hai'), findsOneWidget);
-    await tester.enterText(find.widgetWithText(TextFormField, 'Wapas karne ki wajah'), 'Wrong amount');
-    await tester.tap(find.text('Wapas karein'));
+    await tester.enterText(find.byType(TextField).last, 'Wrong amount');
+    await tester.tap(find.text('Delete karein').last);
     await settle(tester);
     expect(await real(tester, () => db.select(db.cashEntries).get()), hasLength(4));
+    expect(find.text('Room ka kiraya diya'), findsNothing, reason: 'the line and its reversal leave the cash book');
 
     await goTo(tester, 'Rooms');
     expect(find.text('Nafa AED 300.00'), findsOneWidget);

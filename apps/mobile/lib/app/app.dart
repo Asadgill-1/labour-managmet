@@ -54,7 +54,12 @@ Widget _screen(Section section) => switch (section) {
   Section.advanceRegister ||
   Section.cashRegister ||
   Section.roomRegister ||
-  Section.invoiceRegister || Section.statementRegister || Section.agingRegister || Section.workRegister => LedgerScreen(section),
+  Section.invoiceRegister ||
+  Section.statementRegister ||
+  Section.agingRegister ||
+  Section.workRegister ||
+  Section.deletedAttendance ||
+  Section.deletedCash => LedgerScreen(section),
   Section.reports => const ReportsScreen(),
 };
 

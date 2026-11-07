@@ -51,7 +51,7 @@ class WorkerMoneySection extends ConsumerWidget {
         const Divider(),
         InfoRow(l10n.workerRentTotal, formatAed(roomResult(lines, deductedFils: deductedRent).receivedFils)),
         const Divider(),
-        for (final entry in rows) ...[
+        for (final entry in liveCash(rows)) ...[
           CashEntryRow(entry, undone: undone.contains(entry.id), showDate: true, onWorkerScreen: true),
           const Divider(),
         ],

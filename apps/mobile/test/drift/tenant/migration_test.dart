@@ -3,6 +3,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:drift_dev/api/migrations_native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/data/cash.dart';
+import 'package:labour_app/data/changes.dart';
 import 'package:labour_app/data/closing.dart';
 import 'package:labour_app/data/documents.dart';
 import 'package:labour_app/data/invoices.dart';
@@ -27,6 +28,32 @@ void main() {
     final db = TenantDatabase(await verifier.startAt(latest), tenantId: 'tenant', deviceId: 'device');
     addTearDown(db.close);
     await db.validateDatabaseSchema();
+  });
+
+  test('a phone on version 15 upgrades: its rows and record stay, and a row can then be deleted and kept whole (D-056)', () async {
+    final old = await verifier.schemaAt(15);
+    old.rawDatabase.execute('''
+      INSERT INTO tenant_profiles (id, $commonColumns, legal_name) VALUES ('p1', $common, 'Labour');
+      INSERT INTO clients (id, $commonColumns, name) VALUES ('c1', $common, 'ATE');
+      INSERT INTO sites (id, $commonColumns, client_id, name) VALUES ('s1', $common, 'c1', 'Melboard');
+      INSERT INTO workers (id, $commonColumns, code, name) VALUES ('w1', $common, 'W001', 'Ahmad');
+      INSERT INTO attendance_batches (id, $commonColumns, work_date, client_id, site_id) VALUES ('b1', $common, '2026-10-20', 'c1', 's1');
+      INSERT INTO attendance_entries (id, $commonColumns, batch_id, worker_id, client_id, site_id, work_date, clock_minutes, break_minutes, break_paid_client, break_paid_worker,
+        client_billable_minutes, worker_payable_minutes, attendance_status, client_basis, client_rate_fils, client_amount_fils, worker_basis, worker_rate_fils, worker_amount_fils, state)
+      VALUES ('e1', $common, 'b1', 'w1', 'c1', 's1', '2026-10-20', 0, 0, 0, 0, 0, 0, 'present', 'day', 1500, 1500, 'day', 1000, 1000, 'submitted');
+      INSERT INTO audit_events (id, tenant_id, at_utc, actor_id, action, entity, record_id, record_version, operation_id) VALUES ('a1', 't', 0, 'a', 'create', 'attendance_entries', 'e1', 1, 'op');
+    ''');
+
+    final db = TenantDatabase(old.newConnection(), tenantId: 't', deviceId: 'device');
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, db.schemaVersion);
+
+    final entry = await db.select(db.attendanceEntries).getSingle();
+    expect((entry.deleted, (await db.select(db.auditEvents).getSingle()).detail), (false, null));
+    await db.deleteAttendance(entry, note: 'Old row', reopenReason: 'x', operationId: newUuid());
+    expect(await db.select(db.attendanceEntries).get(), isEmpty);
+    final deleted = ChangeNote.of(await (db.select(db.auditEvents)..where((a) => a.action.equals('delete'))).getSingle());
+    expect((deleted.note, deleted.facts[Fact.worker], deleted.facts[Fact.pay]), ('Old row', 'Ahmad (W001)', 1000));
   });
 
   test('a phone on version 1 upgrades and keeps its workers and attendance (MODEL-08)', () async {

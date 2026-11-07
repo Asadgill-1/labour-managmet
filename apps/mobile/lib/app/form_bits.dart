@@ -254,15 +254,19 @@ class SearchBox extends StatelessWidget {
 
 /// One ruled line of a list, as in an account book.
 class RowCard extends StatelessWidget {
-  const RowCard({required this.child, super.key});
+  const RowCard({required this.child, this.edited = false, super.key});
 
   final Widget child;
+
+  /// Tinted, with a bar at the start, when someone changed the entry (D-056).
+  final bool edited;
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: rule)),
+      decoration: BoxDecoration(
+        color: edited ? editSoft : null,
+        border: Border(bottom: const BorderSide(color: rule), left: edited ? const BorderSide(color: editInk, width: 4) : BorderSide.none),
       ),
       child: Material(type: MaterialType.transparency, child: child),
     );

@@ -79,7 +79,7 @@ class RoomDetailScreen extends ConsumerWidget {
             const Divider(),
           ],
           if (rows.isEmpty) ListTile(subtitle: Text(l10n.cashEmpty)),
-          for (final entry in rows) CashEntryRow(entry, undone: undone.contains(entry.id), showDate: true),
+          for (final entry in liveCash(rows)) CashEntryRow(entry, undone: undone.contains(entry.id), showDate: true),
         ],
       ),
     );

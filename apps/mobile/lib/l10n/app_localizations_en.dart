@@ -865,7 +865,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The original entry is kept. This creates a corrected entry.';
 
   @override
-  String get deleteRow => 'Remove this entry';
+  String get deleteRow => 'Delete this entry';
 
   @override
   String get applyChanges => 'Apply';
@@ -3598,6 +3598,88 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importShort => 'From file';
+
+  @override
+  String get editedTag => 'Edited';
+
+  @override
+  String get factTime => 'Time';
+
+  @override
+  String get factReference => 'Reference';
+
+  @override
+  String changeSystemNote(String when) {
+    return 'Changed $when:';
+  }
+
+  @override
+  String changeNoDetail(String when) {
+    return 'Changed $when';
+  }
+
+  @override
+  String changeUserNote(String note) {
+    return 'Note: $note';
+  }
+
+  @override
+  String changeLine(String what, String from, String to) {
+    return '$what: $from to $to';
+  }
+
+  @override
+  String get changeNote => 'Why (if you like)';
+
+  @override
+  String get changeNoteHelp =>
+      'Why it is changed or deleted. It stays with the entry.';
+
+  @override
+  String get deleteTitle => 'Delete this entry?';
+
+  @override
+  String get deleteBody =>
+      'It leaves every total, and stays whole on the Delete tab.';
+
+  @override
+  String get deleteAction => 'Delete';
+
+  @override
+  String get deletedDone => 'Deleted. It is on the Delete tab.';
+
+  @override
+  String monthsOpened(String months) {
+    return 'Saved. A closed month opened again: $months';
+  }
+
+  @override
+  String get reopenByEdit => 'Opened to change an entry';
+
+  @override
+  String get cashEdit => 'Edit';
+
+  @override
+  String get mainDeleted => 'Deleted';
+
+  @override
+  String get regDeletedAttendance => 'Deleted attendance';
+
+  @override
+  String get regDeletedCash => 'Deleted cash book lines';
+
+  @override
+  String get colDeletedOn => 'Deleted on';
+
+  @override
+  String get colClarification => 'Clarification';
+
+  @override
+  String get regDeletedNote =>
+      'Every entry deleted, as it was, by the day it was deleted. The last column is blank, for whoever you send it to to say why.';
+
+  @override
+  String get colDeleteNote => 'Delete note';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -4460,7 +4542,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
       'Asal entry mehfooz rahegi. Yeh nayi corrected entry banayega.';
 
   @override
-  String get deleteRow => 'Yeh entry hatayein';
+  String get deleteRow => 'Yeh entry delete karein';
 
   @override
   String get applyChanges => 'Theek hai';
@@ -7012,4 +7094,86 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get importShort => 'File se';
+
+  @override
+  String get editedTag => 'Badla gaya';
+
+  @override
+  String get factTime => 'Waqt';
+
+  @override
+  String get factReference => 'Reference';
+
+  @override
+  String changeSystemNote(String when) {
+    return '$when ko badla:';
+  }
+
+  @override
+  String changeNoDetail(String when) {
+    return '$when ko badla';
+  }
+
+  @override
+  String changeUserNote(String note) {
+    return 'Note: $note';
+  }
+
+  @override
+  String changeLine(String what, String from, String to) {
+    return '$what: $from se $to';
+  }
+
+  @override
+  String get changeNote => 'Wajah (chahein to)';
+
+  @override
+  String get changeNoteHelp =>
+      'Badalne ya delete karne ki wajah. Entry ke saath likhi rahegi.';
+
+  @override
+  String get deleteTitle => 'Yeh entry delete karein?';
+
+  @override
+  String get deleteBody =>
+      'Yeh har hisaab se nikal jayegi, aur poori Delete tab mein mehfooz rahegi.';
+
+  @override
+  String get deleteAction => 'Delete karein';
+
+  @override
+  String get deletedDone => 'Delete ho gayi. Delete tab mein dekhein.';
+
+  @override
+  String monthsOpened(String months) {
+    return 'Save ho gaya. Band mahina dobara khula: $months';
+  }
+
+  @override
+  String get reopenByEdit => 'Entry badalne ke liye khola';
+
+  @override
+  String get cashEdit => 'Edit karein';
+
+  @override
+  String get mainDeleted => 'Delete hui';
+
+  @override
+  String get regDeletedAttendance => 'Delete hui hazri';
+
+  @override
+  String get regDeletedCash => 'Delete hui cash entries';
+
+  @override
+  String get colDeletedOn => 'Delete ki';
+
+  @override
+  String get colClarification => 'Wajah (clarification)';
+
+  @override
+  String get regDeletedNote =>
+      'Har delete hui entry jaisi thi, delete ke din ke hisaab se. Aakhri column khaali hai: jise bhejein, woh wajah likhe.';
+
+  @override
+  String get colDeleteNote => 'Delete ka note';
 }

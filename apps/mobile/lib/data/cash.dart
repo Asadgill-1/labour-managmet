@@ -87,7 +87,8 @@ extension CashOps on TenantDatabase {
 
   /// Undoes a line with a matching reversal on the same date. The original stays on record (REP-08). A line in a closed
   /// month is reversed today instead, as a dated adjustment, so the closed month stays as it was (REP-04).
-  Future<void> reverseCashEntry(CashEntry entry, {required String reason, required String operationId}) {
+  /// [detail] says what the owner reads: the line as it was, or that an edit replaced it (D-056).
+  Future<void> reverseCashEntry(CashEntry entry, {String? reason, required String operationId, Future<Map<String, Object?>?> Function()? detail}) {
     final id = newUuid();
     return applyOperation(
       operationId: operationId,
@@ -96,6 +97,7 @@ extension CashOps on TenantDatabase {
       version: 1,
       action: 'reverse',
       reason: reason,
+      detail: detail,
       change: () async {
         if (entry.reversesEntryId != null) throw StateError('a reversal cannot be reversed');
         if (entry.kind == CashKind.advanceGiven.name && entry.amountFils > await advanceLeft(entry.workerId!)) throw const AdvanceTooHigh();

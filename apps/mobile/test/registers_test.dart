@@ -167,7 +167,9 @@ void main() {
     await db.reverseCashEntry(expense, reason: 'Mistake', operationId: newUuid());
     final after = await build(Section.cashRegister);
     expect(fils(after, l10n.moneyOut), 300000 + 20000 + 150000 + 1000);
-    expect(filterEntries(after.entries, {'kind': {CashKind.expense.name}}), hasLength(2), reason: 'both lines stay on record');
+    expect(filterEntries(after.entries, {'kind': {CashKind.expense.name}}), isEmpty, reason: 'both lines go to the Delete tab (D-056)');
+    expect(await (db.select(db.cashEntries)..where((c) => c.kind.equals(CashKind.expense.name))).get(), hasLength(2), reason: 'both stay on record');
+    expect((await build(Section.deletedCash)).entries.single.cells[7], 'Mistake');
   });
 
   test('advance and visa registers carry what was left, whatever the date range', () async {

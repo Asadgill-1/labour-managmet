@@ -100,7 +100,7 @@ class VisaWorkerScreen extends ConsumerWidget {
                 trailing: RowValue('+${formatAed(line.visaRecoveryFils)}', style: amountStyle.copyWith(color: settled)),
               ),
             ),
-          for (final entry in rows) CashEntryRow(entry, undone: undone.contains(entry.id), showDate: true, onWorkerScreen: true),
+          for (final entry in liveCash(rows)) CashEntryRow(entry, undone: undone.contains(entry.id), showDate: true, onWorkerScreen: true),
         ],
       ),
     );

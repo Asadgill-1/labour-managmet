@@ -109,6 +109,15 @@ class $AuditEventsTable extends AuditEvents
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _detailMeta = const VerificationMeta('detail');
+  @override
+  late final GeneratedColumn<String> detail = GeneratedColumn<String>(
+    'detail',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -121,6 +130,7 @@ class $AuditEventsTable extends AuditEvents
     recordVersion,
     operationId,
     reason,
+    detail,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -215,6 +225,12 @@ class $AuditEventsTable extends AuditEvents
         reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta),
       );
     }
+    if (data.containsKey('detail')) {
+      context.handle(
+        _detailMeta,
+        detail.isAcceptableOrUnknown(data['detail']!, _detailMeta),
+      );
+    }
     return context;
   }
 
@@ -264,6 +280,10 @@ class $AuditEventsTable extends AuditEvents
         DriftSqlType.string,
         data['${effectivePrefix}reason'],
       ),
+      detail: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}detail'],
+      ),
     );
   }
 
@@ -283,7 +303,12 @@ class AuditEvent extends DataClass implements Insertable<AuditEvent> {
   final String recordId;
   final int recordVersion;
   final String operationId;
+
+  /// The user's own note, or the reason a step asked for.
   final String? reason;
+
+  /// JSON the owner reads (D-056): on an edit, each field from and to; on a delete, the entry as it was.
+  final String? detail;
   const AuditEvent({
     required this.id,
     required this.tenantId,
@@ -295,6 +320,7 @@ class AuditEvent extends DataClass implements Insertable<AuditEvent> {
     required this.recordVersion,
     required this.operationId,
     this.reason,
+    this.detail,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -310,6 +336,9 @@ class AuditEvent extends DataClass implements Insertable<AuditEvent> {
     map['operation_id'] = Variable<String>(operationId);
     if (!nullToAbsent || reason != null) {
       map['reason'] = Variable<String>(reason);
+    }
+    if (!nullToAbsent || detail != null) {
+      map['detail'] = Variable<String>(detail);
     }
     return map;
   }
@@ -328,6 +357,9 @@ class AuditEvent extends DataClass implements Insertable<AuditEvent> {
       reason: reason == null && nullToAbsent
           ? const Value.absent()
           : Value(reason),
+      detail: detail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(detail),
     );
   }
 
@@ -347,6 +379,7 @@ class AuditEvent extends DataClass implements Insertable<AuditEvent> {
       recordVersion: serializer.fromJson<int>(json['recordVersion']),
       operationId: serializer.fromJson<String>(json['operationId']),
       reason: serializer.fromJson<String?>(json['reason']),
+      detail: serializer.fromJson<String?>(json['detail']),
     );
   }
   @override
@@ -363,6 +396,7 @@ class AuditEvent extends DataClass implements Insertable<AuditEvent> {
       'recordVersion': serializer.toJson<int>(recordVersion),
       'operationId': serializer.toJson<String>(operationId),
       'reason': serializer.toJson<String?>(reason),
+      'detail': serializer.toJson<String?>(detail),
     };
   }
 
@@ -377,6 +411,7 @@ class AuditEvent extends DataClass implements Insertable<AuditEvent> {
     int? recordVersion,
     String? operationId,
     Value<String?> reason = const Value.absent(),
+    Value<String?> detail = const Value.absent(),
   }) => AuditEvent(
     id: id ?? this.id,
     tenantId: tenantId ?? this.tenantId,
@@ -388,6 +423,7 @@ class AuditEvent extends DataClass implements Insertable<AuditEvent> {
     recordVersion: recordVersion ?? this.recordVersion,
     operationId: operationId ?? this.operationId,
     reason: reason.present ? reason.value : this.reason,
+    detail: detail.present ? detail.value : this.detail,
   );
   AuditEvent copyWithCompanion(AuditEventsCompanion data) {
     return AuditEvent(
@@ -405,6 +441,7 @@ class AuditEvent extends DataClass implements Insertable<AuditEvent> {
           ? data.operationId.value
           : this.operationId,
       reason: data.reason.present ? data.reason.value : this.reason,
+      detail: data.detail.present ? data.detail.value : this.detail,
     );
   }
 
@@ -420,7 +457,8 @@ class AuditEvent extends DataClass implements Insertable<AuditEvent> {
           ..write('recordId: $recordId, ')
           ..write('recordVersion: $recordVersion, ')
           ..write('operationId: $operationId, ')
-          ..write('reason: $reason')
+          ..write('reason: $reason, ')
+          ..write('detail: $detail')
           ..write(')'))
         .toString();
   }
@@ -437,6 +475,7 @@ class AuditEvent extends DataClass implements Insertable<AuditEvent> {
     recordVersion,
     operationId,
     reason,
+    detail,
   );
   @override
   bool operator ==(Object other) =>
@@ -451,7 +490,8 @@ class AuditEvent extends DataClass implements Insertable<AuditEvent> {
           other.recordId == this.recordId &&
           other.recordVersion == this.recordVersion &&
           other.operationId == this.operationId &&
-          other.reason == this.reason);
+          other.reason == this.reason &&
+          other.detail == this.detail);
 }
 
 class AuditEventsCompanion extends UpdateCompanion<AuditEvent> {
@@ -465,6 +505,7 @@ class AuditEventsCompanion extends UpdateCompanion<AuditEvent> {
   final Value<int> recordVersion;
   final Value<String> operationId;
   final Value<String?> reason;
+  final Value<String?> detail;
   final Value<int> rowid;
   const AuditEventsCompanion({
     this.id = const Value.absent(),
@@ -477,6 +518,7 @@ class AuditEventsCompanion extends UpdateCompanion<AuditEvent> {
     this.recordVersion = const Value.absent(),
     this.operationId = const Value.absent(),
     this.reason = const Value.absent(),
+    this.detail = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AuditEventsCompanion.insert({
@@ -490,6 +532,7 @@ class AuditEventsCompanion extends UpdateCompanion<AuditEvent> {
     required int recordVersion,
     required String operationId,
     this.reason = const Value.absent(),
+    this.detail = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        tenantId = Value(tenantId),
@@ -511,6 +554,7 @@ class AuditEventsCompanion extends UpdateCompanion<AuditEvent> {
     Expression<int>? recordVersion,
     Expression<String>? operationId,
     Expression<String>? reason,
+    Expression<String>? detail,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -524,6 +568,7 @@ class AuditEventsCompanion extends UpdateCompanion<AuditEvent> {
       if (recordVersion != null) 'record_version': recordVersion,
       if (operationId != null) 'operation_id': operationId,
       if (reason != null) 'reason': reason,
+      if (detail != null) 'detail': detail,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -539,6 +584,7 @@ class AuditEventsCompanion extends UpdateCompanion<AuditEvent> {
     Value<int>? recordVersion,
     Value<String>? operationId,
     Value<String?>? reason,
+    Value<String?>? detail,
     Value<int>? rowid,
   }) {
     return AuditEventsCompanion(
@@ -552,6 +598,7 @@ class AuditEventsCompanion extends UpdateCompanion<AuditEvent> {
       recordVersion: recordVersion ?? this.recordVersion,
       operationId: operationId ?? this.operationId,
       reason: reason ?? this.reason,
+      detail: detail ?? this.detail,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -589,6 +636,9 @@ class AuditEventsCompanion extends UpdateCompanion<AuditEvent> {
     if (reason.present) {
       map['reason'] = Variable<String>(reason.value);
     }
+    if (detail.present) {
+      map['detail'] = Variable<String>(detail.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -608,6 +658,7 @@ class AuditEventsCompanion extends UpdateCompanion<AuditEvent> {
           ..write('recordVersion: $recordVersion, ')
           ..write('operationId: $operationId, ')
           ..write('reason: $reason, ')
+          ..write('detail: $detail, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -14084,6 +14135,21 @@ class $AttendanceEntriesTable extends AttendanceEntries
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _deletedMeta = const VerificationMeta(
+    'deleted',
+  );
+  @override
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+    'deleted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("deleted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _payrollLineIdMeta = const VerificationMeta(
     'payrollLineId',
   );
@@ -14139,6 +14205,7 @@ class $AttendanceEntriesTable extends AttendanceEntries
     notes,
     revisesEntryId,
     superseded,
+    deleted,
     payrollLineId,
   ];
   @override
@@ -14489,6 +14556,12 @@ class $AttendanceEntriesTable extends AttendanceEntries
         superseded.isAcceptableOrUnknown(data['superseded']!, _supersededMeta),
       );
     }
+    if (data.containsKey('deleted')) {
+      context.handle(
+        _deletedMeta,
+        deleted.isAcceptableOrUnknown(data['deleted']!, _deletedMeta),
+      );
+    }
     if (data.containsKey('payroll_line_id')) {
       context.handle(
         _payrollLineIdMeta,
@@ -14663,6 +14736,10 @@ class $AttendanceEntriesTable extends AttendanceEntries
         DriftSqlType.bool,
         data['${effectivePrefix}superseded'],
       )!,
+      deleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}deleted'],
+      )!,
       payrollLineId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}payroll_line_id'],
@@ -14731,6 +14808,10 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
   final String? revisesEntryId;
   final bool superseded;
 
+  /// A correction that deletes the row it revises: absent, worth nothing, and shown only on the Delete tab. Pay already
+  /// given for the original comes back as a difference in the next payroll, as any correction's does (D-056, ATT-08).
+  final bool deleted;
+
   /// The posted payroll that paid this row (ATT-07, MODEL-07). Null means not paid yet.
   final String? payrollLineId;
   const AttendanceEntry({
@@ -14773,6 +14854,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     this.notes,
     this.revisesEntryId,
     required this.superseded,
+    required this.deleted,
     this.payrollLineId,
   });
   @override
@@ -14847,6 +14929,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
       map['revises_entry_id'] = Variable<String>(revisesEntryId);
     }
     map['superseded'] = Variable<bool>(superseded);
+    map['deleted'] = Variable<bool>(deleted);
     if (!nullToAbsent || payrollLineId != null) {
       map['payroll_line_id'] = Variable<String>(payrollLineId);
     }
@@ -14924,6 +15007,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
           ? const Value.absent()
           : Value(revisesEntryId),
       superseded: Value(superseded),
+      deleted: Value(deleted),
       payrollLineId: payrollLineId == null && nullToAbsent
           ? const Value.absent()
           : Value(payrollLineId),
@@ -14983,6 +15067,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
       notes: serializer.fromJson<String?>(json['notes']),
       revisesEntryId: serializer.fromJson<String?>(json['revisesEntryId']),
       superseded: serializer.fromJson<bool>(json['superseded']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
       payrollLineId: serializer.fromJson<String?>(json['payrollLineId']),
     );
   }
@@ -15029,6 +15114,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
       'notes': serializer.toJson<String?>(notes),
       'revisesEntryId': serializer.toJson<String?>(revisesEntryId),
       'superseded': serializer.toJson<bool>(superseded),
+      'deleted': serializer.toJson<bool>(deleted),
       'payrollLineId': serializer.toJson<String?>(payrollLineId),
     };
   }
@@ -15073,6 +15159,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     Value<String?> notes = const Value.absent(),
     Value<String?> revisesEntryId = const Value.absent(),
     bool? superseded,
+    bool? deleted,
     Value<String?> payrollLineId = const Value.absent(),
   }) => AttendanceEntry(
     id: id ?? this.id,
@@ -15132,6 +15219,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
         ? revisesEntryId.value
         : this.revisesEntryId,
     superseded: superseded ?? this.superseded,
+    deleted: deleted ?? this.deleted,
     payrollLineId: payrollLineId.present
         ? payrollLineId.value
         : this.payrollLineId,
@@ -15225,6 +15313,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
       superseded: data.superseded.present
           ? data.superseded.value
           : this.superseded,
+      deleted: data.deleted.present ? data.deleted.value : this.deleted,
       payrollLineId: data.payrollLineId.present
           ? data.payrollLineId.value
           : this.payrollLineId,
@@ -15273,6 +15362,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
           ..write('notes: $notes, ')
           ..write('revisesEntryId: $revisesEntryId, ')
           ..write('superseded: $superseded, ')
+          ..write('deleted: $deleted, ')
           ..write('payrollLineId: $payrollLineId')
           ..write(')'))
         .toString();
@@ -15319,6 +15409,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
     notes,
     revisesEntryId,
     superseded,
+    deleted,
     payrollLineId,
   ]);
   @override
@@ -15364,6 +15455,7 @@ class AttendanceEntry extends DataClass implements Insertable<AttendanceEntry> {
           other.notes == this.notes &&
           other.revisesEntryId == this.revisesEntryId &&
           other.superseded == this.superseded &&
+          other.deleted == this.deleted &&
           other.payrollLineId == this.payrollLineId);
 }
 
@@ -15407,6 +15499,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
   final Value<String?> notes;
   final Value<String?> revisesEntryId;
   final Value<bool> superseded;
+  final Value<bool> deleted;
   final Value<String?> payrollLineId;
   final Value<int> rowid;
   const AttendanceEntriesCompanion({
@@ -15449,6 +15542,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     this.notes = const Value.absent(),
     this.revisesEntryId = const Value.absent(),
     this.superseded = const Value.absent(),
+    this.deleted = const Value.absent(),
     this.payrollLineId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -15492,6 +15586,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     this.notes = const Value.absent(),
     this.revisesEntryId = const Value.absent(),
     this.superseded = const Value.absent(),
+    this.deleted = const Value.absent(),
     this.payrollLineId = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -15552,6 +15647,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     Expression<String>? notes,
     Expression<String>? revisesEntryId,
     Expression<bool>? superseded,
+    Expression<bool>? deleted,
     Expression<String>? payrollLineId,
     Expression<int>? rowid,
   }) {
@@ -15599,6 +15695,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
       if (notes != null) 'notes': notes,
       if (revisesEntryId != null) 'revises_entry_id': revisesEntryId,
       if (superseded != null) 'superseded': superseded,
+      if (deleted != null) 'deleted': deleted,
       if (payrollLineId != null) 'payroll_line_id': payrollLineId,
       if (rowid != null) 'rowid': rowid,
     });
@@ -15644,6 +15741,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     Value<String?>? notes,
     Value<String?>? revisesEntryId,
     Value<bool>? superseded,
+    Value<bool>? deleted,
     Value<String?>? payrollLineId,
     Value<int>? rowid,
   }) {
@@ -15690,6 +15788,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
       notes: notes ?? this.notes,
       revisesEntryId: revisesEntryId ?? this.revisesEntryId,
       superseded: superseded ?? this.superseded,
+      deleted: deleted ?? this.deleted,
       payrollLineId: payrollLineId ?? this.payrollLineId,
       rowid: rowid ?? this.rowid,
     );
@@ -15821,6 +15920,9 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
     if (superseded.present) {
       map['superseded'] = Variable<bool>(superseded.value);
     }
+    if (deleted.present) {
+      map['deleted'] = Variable<bool>(deleted.value);
+    }
     if (payrollLineId.present) {
       map['payroll_line_id'] = Variable<String>(payrollLineId.value);
     }
@@ -15872,6 +15974,7 @@ class AttendanceEntriesCompanion extends UpdateCompanion<AttendanceEntry> {
           ..write('notes: $notes, ')
           ..write('revisesEntryId: $revisesEntryId, ')
           ..write('superseded: $superseded, ')
+          ..write('deleted: $deleted, ')
           ..write('payrollLineId: $payrollLineId, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -30563,6 +30666,7 @@ typedef $$AuditEventsTableCreateCompanionBuilder =
       required int recordVersion,
       required String operationId,
       Value<String?> reason,
+      Value<String?> detail,
       Value<int> rowid,
     });
 typedef $$AuditEventsTableUpdateCompanionBuilder =
@@ -30577,6 +30681,7 @@ typedef $$AuditEventsTableUpdateCompanionBuilder =
       Value<int> recordVersion,
       Value<String> operationId,
       Value<String?> reason,
+      Value<String?> detail,
       Value<int> rowid,
     });
 
@@ -30636,6 +30741,11 @@ class $$AuditEventsTableFilterComposer
 
   ColumnFilters<String> get reason => $composableBuilder(
     column: $table.reason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get detail => $composableBuilder(
+    column: $table.detail,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -30698,6 +30808,11 @@ class $$AuditEventsTableOrderingComposer
     column: $table.reason,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get detail => $composableBuilder(
+    column: $table.detail,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AuditEventsTableAnnotationComposer
@@ -30742,6 +30857,9 @@ class $$AuditEventsTableAnnotationComposer
 
   GeneratedColumn<String> get reason =>
       $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<String> get detail =>
+      $composableBuilder(column: $table.detail, builder: (column) => column);
 }
 
 class $$AuditEventsTableTableManager
@@ -30785,6 +30903,7 @@ class $$AuditEventsTableTableManager
                 Value<int> recordVersion = const Value.absent(),
                 Value<String> operationId = const Value.absent(),
                 Value<String?> reason = const Value.absent(),
+                Value<String?> detail = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AuditEventsCompanion(
                 id: id,
@@ -30797,6 +30916,7 @@ class $$AuditEventsTableTableManager
                 recordVersion: recordVersion,
                 operationId: operationId,
                 reason: reason,
+                detail: detail,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -30811,6 +30931,7 @@ class $$AuditEventsTableTableManager
                 required int recordVersion,
                 required String operationId,
                 Value<String?> reason = const Value.absent(),
+                Value<String?> detail = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AuditEventsCompanion.insert(
                 id: id,
@@ -30823,6 +30944,7 @@ class $$AuditEventsTableTableManager
                 recordVersion: recordVersion,
                 operationId: operationId,
                 reason: reason,
+                detail: detail,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -42861,6 +42983,7 @@ typedef $$AttendanceEntriesTableCreateCompanionBuilder =
       Value<String?> notes,
       Value<String?> revisesEntryId,
       Value<bool> superseded,
+      Value<bool> deleted,
       Value<String?> payrollLineId,
       Value<int> rowid,
     });
@@ -42905,6 +43028,7 @@ typedef $$AttendanceEntriesTableUpdateCompanionBuilder =
       Value<String?> notes,
       Value<String?> revisesEntryId,
       Value<bool> superseded,
+      Value<bool> deleted,
       Value<String?> payrollLineId,
       Value<int> rowid,
     });
@@ -43237,6 +43361,11 @@ class $$AttendanceEntriesTableFilterComposer
 
   ColumnFilters<bool> get superseded => $composableBuilder(
     column: $table.superseded,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get deleted => $composableBuilder(
+    column: $table.deleted,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -43601,6 +43730,11 @@ class $$AttendanceEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get deleted => $composableBuilder(
+    column: $table.deleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$AttendanceBatchesTableOrderingComposer get batchId {
     final $$AttendanceBatchesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -43917,6 +44051,9 @@ class $$AttendanceEntriesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<bool> get deleted =>
+      $composableBuilder(column: $table.deleted, builder: (column) => column);
+
   $$AttendanceBatchesTableAnnotationComposer get batchId {
     final $$AttendanceBatchesTableAnnotationComposer composer =
         $composerBuilder(
@@ -44187,6 +44324,7 @@ class $$AttendanceEntriesTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<String?> revisesEntryId = const Value.absent(),
                 Value<bool> superseded = const Value.absent(),
+                Value<bool> deleted = const Value.absent(),
                 Value<String?> payrollLineId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttendanceEntriesCompanion(
@@ -44229,6 +44367,7 @@ class $$AttendanceEntriesTableTableManager
                 notes: notes,
                 revisesEntryId: revisesEntryId,
                 superseded: superseded,
+                deleted: deleted,
                 payrollLineId: payrollLineId,
                 rowid: rowid,
               ),
@@ -44273,6 +44412,7 @@ class $$AttendanceEntriesTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<String?> revisesEntryId = const Value.absent(),
                 Value<bool> superseded = const Value.absent(),
+                Value<bool> deleted = const Value.absent(),
                 Value<String?> payrollLineId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AttendanceEntriesCompanion.insert(
@@ -44315,6 +44455,7 @@ class $$AttendanceEntriesTableTableManager
                 notes: notes,
                 revisesEntryId: revisesEntryId,
                 superseded: superseded,
+                deleted: deleted,
                 payrollLineId: payrollLineId,
                 rowid: rowid,
               ),

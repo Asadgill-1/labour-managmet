@@ -79,7 +79,7 @@ class _CashScreenState extends ConsumerState<CashScreen> {
           const SizedBox(height: 8),
           if (closed) const ClosedNote(),
           if (rows.isEmpty) EmptyState(icon: Icons.receipt_long, text: l10n.cashEmpty),
-          for (final entry in rows) CashEntryRow(entry, undone: undone.contains(entry.id)),
+          for (final entry in liveCash(rows)) CashEntryRow(entry, undone: undone.contains(entry.id)),
         ],
       ),
     );

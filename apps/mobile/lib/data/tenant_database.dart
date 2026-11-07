@@ -78,7 +78,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 16;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -218,6 +218,11 @@ class TenantDatabase extends _$TenantDatabase {
         await m.createTrigger(schema.invoiceAllocationNoUpdate);
         await m.createTrigger(schema.invoiceAllocationNoDelete);
       },
+      // What each edit changed and what each delete took away, and attendance deleted by a correction (D-056).
+      from15To16: (m, schema) async {
+        await m.addColumn(schema.auditEvents, schema.auditEvents.detail);
+        await m.addColumn(schema.attendanceEntries, schema.attendanceEntries.deleted);
+      },
     ),
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -252,9 +257,10 @@ class TenantDatabase extends _$TenantDatabase {
     required String action,
     required Future<Map<String, dynamic>> Function() change,
     String? reason,
+    Future<Map<String, Object?>?> Function()? detail,
   }) async {
     try {
-      await _applyOnce(operationId: operationId, entity: entity, recordId: recordId, version: version, action: action, change: change, reason: reason);
+      await _applyOnce(operationId: operationId, entity: entity, recordId: recordId, version: version, action: action, change: change, reason: reason, detail: detail);
     } catch (e) {
       // From a background database this arrives wrapped, so the words are what stays the same.
       if (e.toString().contains('period is closed')) throw const PeriodLocked();
@@ -270,11 +276,14 @@ class TenantDatabase extends _$TenantDatabase {
     required String action,
     required Future<Map<String, dynamic>> Function() change,
     String? reason,
+    Future<Map<String, Object?>?> Function()? detail,
   }) {
     return transaction(() async {
       final seen = await (select(outbox)..where((o) => o.operationId.equals(operationId))).getSingleOrNull();
       if (seen != null) return;
       final payload = await change();
+      // What the owner reads about this write (D-056). Callers hold the entry as it was, so this runs after the change.
+      final told = await detail?.call();
       final now = DateTime.now().toUtc();
       await into(auditEvents).insert(
         AuditEventsCompanion.insert(
@@ -288,6 +297,7 @@ class TenantDatabase extends _$TenantDatabase {
           recordVersion: version,
           operationId: operationId,
           reason: Value(reason),
+          detail: Value(told == null ? null : jsonEncode(told)),
         ),
       );
       await into(outbox).insert(

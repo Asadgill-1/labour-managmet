@@ -124,7 +124,7 @@ extension StatementOps on TenantDatabase {
     final rows = !withWork
         ? const <AttendanceEntry>[]
         : await (select(attendanceEntries)
-              ..where((e) => e.superseded.equals(false) & e.workDate.isBetweenValues(from, to) & (workerId == null ? const Constant(true) : e.workerId.equals(workerId)))
+              ..where((e) => e.superseded.equals(false) & e.deleted.equals(false) & e.workDate.isBetweenValues(from, to) & (workerId == null ? const Constant(true) : e.workerId.equals(workerId)))
               ..orderBy([(e) => OrderingTerm.asc(e.workDate), (e) => OrderingTerm.asc(e.createdAtUtc)]))
             .get();
     final rowsOf = groupedBy(rows, (e) => e.workerId);

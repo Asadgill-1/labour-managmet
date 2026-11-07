@@ -345,7 +345,7 @@
   "overlapReason": "Why two entries overlap",
   "correctionReason": "Why this is being corrected",
   "correctionHelp": "The original entry is kept. This creates a corrected entry.",
-  "deleteRow": "Remove this entry",
+  "deleteRow": "Delete this entry",
   "applyChanges": "Apply",
   "stateDraft": "No pay rate",
   "stateSubmitted": "Saved",
@@ -2192,5 +2192,69 @@
   "problemTwoCompanies": "Two companies have this name",
   "problemSameName": "A worker with this name is already there. This line makes a new worker",
   "problemTrnWithoutVat": "TRN is kept only when VAT registered is yes",
-  "importShort": "From file"
+  "importShort": "From file",
+  "editedTag": "Edited",
+  "factTime": "Time",
+  "factReference": "Reference",
+  "changeSystemNote": "Changed {when}:",
+  "@changeSystemNote": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "changeNoDetail": "Changed {when}",
+  "@changeNoDetail": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "changeUserNote": "Note: {note}",
+  "changeLine": "{what}: {from} to {to}",
+  "@changeLine": {
+    "placeholders": {
+      "what": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "@changeUserNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "changeNote": "Why (if you like)",
+  "changeNoteHelp": "Why it is changed or deleted. It stays with the entry.",
+  "deleteTitle": "Delete this entry?",
+  "deleteBody": "It leaves every total, and stays whole on the Delete tab.",
+  "deleteAction": "Delete",
+  "deletedDone": "Deleted. It is on the Delete tab.",
+  "monthsOpened": "Saved. A closed month opened again: {months}",
+  "@monthsOpened": {
+    "placeholders": {
+      "months": {
+        "type": "String"
+      }
+    }
+  },
+  "reopenByEdit": "Opened to change an entry",
+  "cashEdit": "Edit",
+  "mainDeleted": "Deleted",
+  "regDeletedAttendance": "Deleted attendance",
+  "regDeletedCash": "Deleted cash book lines",
+  "colDeletedOn": "Deleted on",
+  "colClarification": "Clarification",
+  "regDeletedNote": "Every entry deleted, as it was, by the day it was deleted. The last column is blank, for whoever you send it to to say why.",
+  "colDeleteNote": "Delete note"
 }

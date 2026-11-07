@@ -1714,7 +1714,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteRow.
   ///
   /// In en, this message translates to:
-  /// **'Remove this entry'**
+  /// **'Delete this entry'**
   String get deleteRow;
 
   /// No description provided for @applyChanges.
@@ -6240,6 +6240,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'From file'**
   String get importShort;
+
+  /// No description provided for @editedTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Edited'**
+  String get editedTag;
+
+  /// No description provided for @factTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get factTime;
+
+  /// No description provided for @factReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference'**
+  String get factReference;
+
+  /// No description provided for @changeSystemNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Changed {when}:'**
+  String changeSystemNote(String when);
+
+  /// No description provided for @changeNoDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Changed {when}'**
+  String changeNoDetail(String when);
+
+  /// No description provided for @changeUserNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: {note}'**
+  String changeUserNote(String note);
+
+  /// No description provided for @changeLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{what}: {from} to {to}'**
+  String changeLine(String what, String from, String to);
+
+  /// No description provided for @changeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Why (if you like)'**
+  String get changeNote;
+
+  /// No description provided for @changeNoteHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it is changed or deleted. It stays with the entry.'**
+  String get changeNoteHelp;
+
+  /// No description provided for @deleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this entry?'**
+  String get deleteTitle;
+
+  /// No description provided for @deleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It leaves every total, and stays whole on the Delete tab.'**
+  String get deleteBody;
+
+  /// No description provided for @deleteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteAction;
+
+  /// No description provided for @deletedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted. It is on the Delete tab.'**
+  String get deletedDone;
+
+  /// No description provided for @monthsOpened.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. A closed month opened again: {months}'**
+  String monthsOpened(String months);
+
+  /// No description provided for @reopenByEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Opened to change an entry'**
+  String get reopenByEdit;
+
+  /// No description provided for @cashEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get cashEdit;
+
+  /// No description provided for @mainDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted'**
+  String get mainDeleted;
+
+  /// No description provided for @regDeletedAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted attendance'**
+  String get regDeletedAttendance;
+
+  /// No description provided for @regDeletedCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted cash book lines'**
+  String get regDeletedCash;
+
+  /// No description provided for @colDeletedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted on'**
+  String get colDeletedOn;
+
+  /// No description provided for @colClarification.
+  ///
+  /// In en, this message translates to:
+  /// **'Clarification'**
+  String get colClarification;
+
+  /// No description provided for @regDeletedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Every entry deleted, as it was, by the day it was deleted. The last column is blank, for whoever you send it to to say why.'**
+  String get regDeletedNote;
+
+  /// No description provided for @colDeleteNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete note'**
+  String get colDeleteNote;
 }
 
 class _AppLocalizationsDelegate

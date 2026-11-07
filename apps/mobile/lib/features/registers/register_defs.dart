@@ -8,12 +8,14 @@ import 'package:drift/drift.dart';
 
 import '../../app/side_panel.dart';
 import '../../data/cash.dart';
+import '../../data/changes.dart';
 import '../../data/invoices.dart';
 import '../../data/masters.dart';
 import '../../data/receipts.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../cash/cash_row.dart';
+import '../changes/change_notes.dart';
 import '../invoices/invoice_paper.dart';
 import '../invoices/invoice_screen.dart' show vatCategoryLabel;
 import '../invoices/invoices_screen.dart' show invoiceStatusLabel;
@@ -79,6 +81,8 @@ Future<RegisterData> buildRegister(TenantDatabase db, AppLocalizations l10n, Sec
     Section.statementRegister => _statement(db, l10n, masters, from, to),
     Section.agingRegister => _aging(db, l10n, masters),
     Section.workRegister => _work(db, l10n, masters, from, to),
+    Section.deletedAttendance => _deletedAttendance(db, l10n, from, to),
+    Section.deletedCash => _deletedCash(db, l10n, masters, from, to),
     _ => throw ArgumentError.value(section, 'section', 'is not a register'),
   };
 }
@@ -92,6 +96,7 @@ Future<List<AttendanceEntry>> _liveEntries(TenantDatabase db, String? from, Stri
           ..where(
             (e) =>
                 e.superseded.equals(false) &
+                e.deleted.equals(false) &
                 (from == null ? const Constant(true) : e.workDate.isBiggerOrEqualValue(from)) &
                 (to == null ? const Constant(true) : e.workDate.isSmallerOrEqualValue(to)),
           )
@@ -690,8 +695,9 @@ Future<RegisterData> _cash(TenantDatabase db, AppLocalizations l10n, _Masters m,
       RegisterFilter('room', l10n.colRoom, m.roomOptions),
       RegisterFilter('method', l10n.filterMethod, [(value: 'cash', label: l10n.methodCash), (value: 'bank', label: l10n.methodBank)]),
     ],
+    // A deleted line and its reversal show on the Delete tab instead, and cancel in every total (D-056).
     entries: [
-      for (final c in rows)
+      for (final c in liveCash(rows))
         () {
           final kind = CashKind.values.byName(c.kind);
           final line = cashLine(c);
@@ -719,6 +725,115 @@ Future<RegisterData> _cash(TenantDatabase db, AppLocalizations l10n, _Masters m,
             },
           );
         }(),
+    ],
+  );
+}
+
+/// The Dubai day a delete happened, which the Delete tab goes by.
+String _deletedDay(DateTime utc) => ymd(utc.add(dubaiOffset));
+
+/// The last column of the Delete tab, blank on paper and in Excel, for whoever the owner sends it to, to say why. It
+/// would only be empty on a screen.
+RegisterColumn _clarification(AppLocalizations l10n) => RegisterColumn(l10n.colClarification, flex: 5, onScreen: false);
+
+/// Attendance deleted, as it was, by the day it was deleted (D-056). A draft row went, and an approved one was deleted
+/// by a correction; both keep what the row said. One deleted before the app kept that shows only when.
+Future<RegisterData> _deletedAttendance(TenantDatabase db, AppLocalizations l10n, String? from, String? to) async {
+  final events = await (db.select(db.auditEvents)
+        ..where((a) => a.entity.equals('attendance_entries') & a.action.equals('delete'))
+        ..orderBy([(a) => OrderingTerm.desc(a.atUtc)]))
+      .get();
+  return RegisterData(
+    title: l10n.regDeletedAttendance,
+    titleColumn: 2,
+    amountColumns: const [8],
+    note: l10n.regDeletedNote,
+    columns: [
+      RegisterColumn(l10n.colDeletedOn, flex: 4),
+      RegisterColumn(l10n.colDate, kind: CellKind.date),
+      RegisterColumn(l10n.colWorker, flex: 5),
+      RegisterColumn(l10n.colCompany, flex: 4),
+      RegisterColumn(l10n.colSite, flex: 4),
+      RegisterColumn(l10n.filterStatus, flex: 2),
+      RegisterColumn(l10n.factTime, flex: 3),
+      RegisterColumn(l10n.colBill, kind: CellKind.money, total: true),
+      RegisterColumn(l10n.colPay, kind: CellKind.money, total: true),
+      RegisterColumn(l10n.colDeleteNote, flex: 5),
+      _clarification(l10n),
+    ],
+    entries: [
+      for (final e in events)
+        if (_inRange(_deletedDay(e.atUtc), from, to))
+          () {
+            final n = ChangeNote.of(e);
+            String? fact(Fact f) => n.facts[f] == null ? null : factValue(l10n, f, n.facts[f]);
+            return RegisterEntry(
+              [
+                deletedWhen(e.atUtc),
+                n.facts[Fact.date] as String?,
+                fact(Fact.worker),
+                fact(Fact.company),
+                fact(Fact.site),
+                fact(Fact.status),
+                fact(Fact.time),
+                n.facts[Fact.bill] as int?,
+                n.facts[Fact.pay] as int?,
+                n.note,
+                null,
+              ],
+              group: _deletedDay(e.atUtc),
+            );
+          }(),
+    ],
+  );
+}
+
+/// Cash book lines deleted, as they were, by the day they were deleted (D-056). Each was cancelled by its reversal, and
+/// both left the cash book. A line an edit replaced shows edited where it is, not here.
+Future<RegisterData> _deletedCash(TenantDatabase db, AppLocalizations l10n, _Masters m, String? from, String? to) async {
+  final events = await (db.select(db.auditEvents)
+        ..where((a) => a.entity.equals('cash_entries') & a.action.equals('reverse'))
+        ..orderBy([(a) => OrderingTerm.desc(a.atUtc)]))
+      .get();
+  final byId = {for (final c in await db.select(db.cashEntries).get()) c.id: c};
+  return RegisterData(
+    title: l10n.regDeletedCash,
+    titleColumn: 3,
+    amountColumns: const [4],
+    note: l10n.regDeletedNote,
+    columns: [
+      RegisterColumn(l10n.colDeletedOn, flex: 4),
+      RegisterColumn(l10n.colDate, kind: CellKind.date),
+      RegisterColumn(l10n.colKind, flex: 4),
+      RegisterColumn(l10n.colWho, flex: 5),
+      RegisterColumn(l10n.tsAmount, kind: CellKind.money, total: true),
+      RegisterColumn(l10n.receiptMethod, flex: 2),
+      RegisterColumn(l10n.note, flex: 4),
+      RegisterColumn(l10n.colDeleteNote, flex: 5),
+      _clarification(l10n),
+    ],
+    filters: [RegisterFilter('kind', l10n.filterKind, [for (final k in CashKind.values) (value: k.name, label: kindLabel(l10n, k))])],
+    entries: [
+      for (final e in events)
+        if (e.detail == null || !e.detail!.contains('"replaced"'))
+          if (byId[byId[e.recordId]?.reversesEntryId] case final c? when _inRange(_deletedDay(e.atUtc), from, to))
+            RegisterEntry(
+              [
+                deletedWhen(e.atUtc),
+                c.entryDate,
+                kindLabel(l10n, CashKind.values.byName(c.kind)),
+                m.workers[c.workerId]?.name ?? m.rooms[c.roomId]?.name ?? m.clients[c.clientId]?.name ?? categoryLabel(l10n, c.category),
+                c.amountFils,
+                methodLabel(l10n, c.method),
+                [?c.reference, ?c.receiver, ?c.note].join(', '),
+                (e.reason ?? '').trim().isEmpty ? null : e.reason!.trim(),
+                null,
+              ],
+              group: _deletedDay(e.atUtc),
+              tags: {
+                'kind': {c.kind},
+              },
+            ),
     ],
   );
 }

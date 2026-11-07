@@ -54,6 +54,10 @@ const settledSoft = Color(0xFFDBF4E3);
 const warn = Color(0xFF7E4F04);
 const warnSoft = Color(0xFFFBEDD1);
 
+/// An entry someone changed, so the owner sees it at a glance, apart from what is owed, settled or waiting (D-056).
+const editInk = Color(0xFF5B3F86);
+const editSoft = Color(0xFFF1EBF8);
+
 /// Named outright and bundled: a style with no family falls back to the phone's own font, which on some phones is a handwriting theme.
 const headingFont = 'Roboto';
 

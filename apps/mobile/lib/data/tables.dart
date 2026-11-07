@@ -557,6 +557,10 @@ class AttendanceEntries extends Table with Common {
   TextColumn get revisesEntryId => text().nullable().references(AttendanceEntries, #id)();
   BoolColumn get superseded => boolean().withDefault(const Constant(false))();
 
+  /// A correction that deletes the row it revises: absent, worth nothing, and shown only on the Delete tab. Pay already
+  /// given for the original comes back as a difference in the next payroll, as any correction's does (D-056, ATT-08).
+  BoolColumn get deleted => boolean().withDefault(const Constant(false))();
+
   /// The posted payroll that paid this row (ATT-07, MODEL-07). Null means not paid yet.
   TextColumn get payrollLineId => text().nullable().references(PayrollLines, #id)();
 
@@ -632,7 +636,12 @@ class AuditEvents extends Table {
   TextColumn get recordId => text()();
   IntColumn get recordVersion => integer()();
   TextColumn get operationId => text()();
+
+  /// The user's own note, or the reason a step asked for.
   TextColumn get reason => text().nullable()();
+
+  /// JSON the owner reads (D-056): on an edit, each field from and to; on a delete, the entry as it was.
+  TextColumn get detail => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

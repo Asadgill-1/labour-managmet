@@ -87,7 +87,8 @@ extension ClosingOps on TenantDatabase {
 
     final e = attendanceEntries;
     Expression<bool> inRange(Expression<String> date) => date.isSmallerOrEqualValue(to) & (closedThrough == null ? const Constant(true) : date.isBiggerThanValue(closedThrough));
-    final live = e.superseded.equals(false) & inRange(e.workDate);
+    // A deleted row is a day not worked, so it raises nothing and leaves the day as missing (D-056).
+    final live = e.superseded.equals(false) & e.deleted.equals(false) & inRange(e.workDate);
     Future<List<(String, String)>> byDate(GeneratedColumn<String> column, Expression<bool> where) async {
       final query = selectOnly(e, distinct: true)
         ..addColumns([column, e.workDate])
@@ -181,14 +182,14 @@ extension ClosingOps on TenantDatabase {
     final firstOf = {
       for (final r in await (selectOnly(e)
             ..addColumns([e.workerId, firstDay])
-            ..where(e.superseded.equals(false))
+            ..where(e.superseded.equals(false) & e.deleted.equals(false))
             ..groupBy([e.workerId]))
           .get())
         r.read(e.workerId)!: r.read(firstDay)!,
     };
     final done = selectOnly(e, distinct: true)
       ..addColumns([e.workerId, e.workDate])
-      ..where(e.superseded.equals(false) & e.workDate.isSmallerOrEqualValue(to) & (closedThrough == null ? const Constant(true) : e.workDate.isBiggerThanValue(closedThrough)));
+      ..where(e.superseded.equals(false) & e.deleted.equals(false) & e.workDate.isSmallerOrEqualValue(to) & (closedThrough == null ? const Constant(true) : e.workDate.isBiggerThanValue(closedThrough)));
     final seen = {for (final r in await done.get()) (r.read(e.workerId), r.read(e.workDate))};
     for (final d in await select(dayOffs).get()) {
       seen.add((d.workerId, d.workDate));

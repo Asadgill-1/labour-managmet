@@ -33,7 +33,13 @@ void main() {
     }
 
     // Not built yet, so it says so and goes nowhere (AI-07).
+    // The Delete tab pushed it below the fold, so take the list to its end first, and again once it opens.
+    final panel = find.descendant(of: find.byType(Drawer), matching: find.byType(Scrollable)).first;
+    await tester.drag(panel, const Offset(0, -3000));
+    await settle(tester);
     await tester.tap(find.text('Jald aa raha hai'));
+    await settle(tester);
+    await tester.drag(panel, const Offset(0, -3000));
     await settle(tester);
     expect(find.text('Jald'), findsWidgets);
     // The list is longer than the screen now, so bring the row up first.

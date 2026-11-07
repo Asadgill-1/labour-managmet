@@ -9,6 +9,7 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/cash.dart';
+import '../../data/changes.dart';
 import '../../data/receipts.dart';
 import '../../data/statement.dart';
 import '../../data/tenant_database.dart';
@@ -20,7 +21,10 @@ const _inKinds = [CashKind.roomRentReceived, CashKind.advanceReturned, CashKind.
 
 /// One money entry. The owner says what the money was for and the line goes where it belongs (D-030).
 class CashEntryFormScreen extends ConsumerStatefulWidget {
-  const CashEntryFormScreen({this.date, this.kind, this.workerId, this.roomId, this.clientId, this.invoiceId, this.amountFils, super.key});
+  const CashEntryFormScreen({this.date, this.kind, this.workerId, this.roomId, this.clientId, this.invoiceId, this.amountFils, this.editing, super.key});
+
+  /// A line being edited: the form starts from it, and saving puts a new line in its place (D-056).
+  final CashEntry? editing;
 
   final String? date;
   final CashKind? kind;
@@ -41,18 +45,26 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
 
   /// Fixed for this screen, so a double tap or a retry can only save once (TEAM-04).
   final _operationId = newUuid();
-  late String? _date = widget.date ?? dubaiToday(DateTime.now());
-  late CashKind _kind = widget.kind ?? CashKind.advanceGiven;
-  late String? _workerId = widget.workerId;
-  late String? _roomId = widget.roomId;
-  late String? _clientId = widget.clientId;
-  String? _siteId;
-  String _category = 'other';
-  String _method = 'cash';
-  late final _amount = TextEditingController(text: widget.amountFils == null ? null : plainAmount(widget.amountFils!));
-  final _note = TextEditingController();
-  final _reference = TextEditingController();
-  final _receiver = TextEditingController();
+  late String? _date = widget.editing?.entryDate ?? widget.date ?? dubaiToday(DateTime.now());
+  late CashKind _kind = widget.editing == null ? widget.kind ?? CashKind.advanceGiven : CashKind.values.byName(widget.editing!.kind);
+  late String? _workerId = widget.editing?.workerId ?? widget.workerId;
+  late String? _roomId = widget.editing?.roomId ?? widget.roomId;
+  late String? _clientId = widget.editing?.clientId ?? widget.clientId;
+  late String? _siteId = widget.editing?.siteId;
+  late String _category = widget.editing?.category ?? 'other';
+  late String _method = widget.editing?.method ?? 'cash';
+  late final _amount = TextEditingController(
+    text: switch (widget.editing?.amountFils ?? widget.amountFils) {
+      final int fils => plainAmount(fils),
+      null => null,
+    },
+  );
+  late final _note = TextEditingController(text: widget.editing?.note);
+  late final _reference = TextEditingController(text: widget.editing?.reference);
+  late final _receiver = TextEditingController(text: widget.editing?.receiver);
+
+  /// The user's own note on an edit, shown under the new line (D-056).
+  final _changeNote = TextEditingController();
 
   /// What this worker's months still owe, and how much of this payment goes on each (PAY-06).
   Map<String, int> _unpaid = const {};
@@ -79,10 +91,20 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
     final workerId = _workerId;
     final month = _date?.substring(0, 7);
     if (_kind != CashKind.salaryPaid || workerId == null || month == null) return;
-    final statements = await ref.read(dbProvider).statementsFor(month, workerId: workerId, withWork: false);
+    final db = ref.read(dbProvider);
+    final statements = await db.statementsFor(month, workerId: workerId, withWork: false);
+    // An edited payment's months are owed again once it is replaced, so it can settle them as before.
+    final old = widget.editing;
+    final back = old != null && old.kind == CashKind.salaryPaid.name && old.workerId == workerId
+        ? await (db.select(db.salaryAllocations)..where((a) => a.paymentId.equals(old.id))).get()
+        : const <SalaryAllocation>[];
     if (!mounted || workerId != _workerId || month != _date?.substring(0, 7)) return;
+    final unpaid = {...statements.single.unpaid};
+    for (final a in back) {
+      unpaid[a.month] = (unpaid[a.month] ?? 0) + a.amountFils;
+    }
     setState(() {
-      _unpaid = statements.single.unpaid;
+      _unpaid = {for (final m in unpaid.keys.toList()..sort()) m: unpaid[m]!};
       for (final m in _unpaid.keys) {
         _parts[m] ??= TextEditingController();
       }
@@ -94,15 +116,39 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
   Future<void> _loadOwed() async {
     final clientId = _clientId;
     if (clientId == null) return;
-    final money = await ref.read(dbProvider).receivables(clientId: clientId);
+    final db = ref.read(dbProvider);
+    final money = await db.receivables(clientId: clientId);
+    // What an edited receipt settled is owed again once it is replaced, so it can settle it as before.
+    final old = widget.editing;
+    final mine = old != null && old.kind == CashKind.clientReceipt.name && old.clientId == clientId;
+    final back = <String?, int>{};
+    if (mine) {
+      for (final a in await (db.select(db.invoiceAllocations)..where((a) => a.paymentId.equals(old.id))).get()) {
+        back[a.invoiceId] = (back[a.invoiceId] ?? 0) + a.amountFils;
+      }
+    }
+    final stillOpen = money.openOf(clientId);
+    final settledBefore = <OpenItem>[
+      for (final i in await (db.select(db.invoices)..where((i) => i.id.isIn(back.keys.nonNulls))).get())
+        if (!stillOpen.any((o) => o.invoiceId == i.id)) (invoiceId: i.id, number: i.number, dueDate: i.dueDate, leftFils: 0),
+    ];
     if (!mounted || clientId != _clientId) return;
-    final open = money.openOf(clientId);
+    final open = <OpenItem>[
+      for (final o in [...settledBefore, ...stillOpen])
+        if (o.leftFils + (back[o.invoiceId] ?? 0) > 0)
+          (invoiceId: o.invoiceId, number: o.number, dueDate: o.dueDate, leftFils: o.leftFils + (back[o.invoiceId] ?? 0)),
+    ];
+    // The credit an edited receipt left goes with it.
+    final oldCredit = mine ? old.amountFils - back.values.fold<int>(0, (total, fils) => total + fils) : 0;
     setState(() {
-      _owed = [...open.where((o) => o.invoiceId != null && o.invoiceId == widget.invoiceId), ...open.where((o) => o.invoiceId == null || o.invoiceId != widget.invoiceId)];
+      _owed = [
+        ...open.where((o) => o.invoiceId != null && o.invoiceId == widget.invoiceId),
+        ...open.where((o) => o.invoiceId == null || o.invoiceId != widget.invoiceId),
+      ];
       for (final o in _owed) {
         _receiptParts[o.invoiceId] ??= TextEditingController();
       }
-      _companyCredit = money.creditOf(clientId);
+      _companyCredit = money.creditOf(clientId) - oldCredit;
       _partsEdited = false;
       _shareOut();
     });
@@ -161,7 +207,14 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
     return yes == true;
   }
 
-  bool get _needsWorker => const {CashKind.advanceGiven, CashKind.salaryPaid, CashKind.advanceReturned, CashKind.roomRentReceived, CashKind.visaPaid, CashKind.visaReturned}.contains(_kind);
+  bool get _needsWorker => const {
+    CashKind.advanceGiven,
+    CashKind.salaryPaid,
+    CashKind.advanceReturned,
+    CashKind.roomRentReceived,
+    CashKind.visaPaid,
+    CashKind.visaReturned,
+  }.contains(_kind);
   bool get _needsRoom => const {CashKind.roomRentPaid, CashKind.roomRentReceived}.contains(_kind);
 
   /// Rent from a worker starts on their room and their agreed room charge.
@@ -205,46 +258,65 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
     }
     final note = _note.text.trim().isEmpty ? null : _note.text.trim();
     final reference = _reference.text.trim().isEmpty ? null : _reference.text.trim();
+    var opened = const <String>[];
     try {
-      if (isReceipt) {
-        await ref.read(dbProvider).addClientReceipt(
-          operationId: _operationId,
-          date: _date!,
-          clientId: clientId!,
-          amountFils: parseAed(_amount.text)!,
-          parts: _receiptTyped,
-          method: _method,
-          reference: reference,
-          note: note,
-        );
-      } else if (isSalary) {
-        await ref.read(dbProvider).addSalaryPayment(
-          operationId: _operationId,
-          date: _date!,
-          workerId: workerId!,
-          amountFils: parseAed(_amount.text)!,
-          parts: _partsTyped,
-          extraNote: l10n.salaryExtraNote,
-          method: _method,
-          note: note,
-          reference: _reference.text.trim().isEmpty ? null : _reference.text.trim(),
-          receiver: _receiver.text.trim().isEmpty ? null : _receiver.text.trim(),
-        );
+      Future<void> add() async {
+        if (isReceipt) {
+          await ref
+              .read(dbProvider)
+              .addClientReceipt(
+                operationId: _operationId,
+                date: _date!,
+                clientId: clientId!,
+                amountFils: parseAed(_amount.text)!,
+                parts: _receiptTyped,
+                method: _method,
+                reference: reference,
+                note: note,
+              );
+        } else if (isSalary) {
+          await ref
+              .read(dbProvider)
+              .addSalaryPayment(
+                operationId: _operationId,
+                date: _date!,
+                workerId: workerId!,
+                amountFils: parseAed(_amount.text)!,
+                parts: _partsTyped,
+                extraNote: l10n.salaryExtraNote,
+                method: _method,
+                note: note,
+                reference: _reference.text.trim().isEmpty ? null : _reference.text.trim(),
+                receiver: _receiver.text.trim().isEmpty ? null : _receiver.text.trim(),
+              );
+        } else {
+          await ref
+              .read(dbProvider)
+              .addCashEntry(
+                operationId: _operationId,
+                date: _date!,
+                kind: _kind,
+                amountFils: parseAed(_amount.text)!,
+                workerId: workerId,
+                roomId: roomId,
+                clientId: clientId,
+                siteId: isExpense ? _siteId : null,
+                category: isExpense ? _category : null,
+                method: _method,
+                note: note,
+                reference: isExpense && _reference.text.trim().isNotEmpty ? _reference.text.trim() : null,
+              );
+        }
+      }
+
+      final old = widget.editing;
+      if (old == null) {
+        await add();
       } else {
-        await ref.read(dbProvider).addCashEntry(
-          operationId: _operationId,
-          date: _date!,
-          kind: _kind,
-          amountFils: parseAed(_amount.text)!,
-          workerId: workerId,
-          roomId: roomId,
-          clientId: clientId,
-          siteId: isExpense ? _siteId : null,
-          category: isExpense ? _category : null,
-          method: _method,
-          note: note,
-          reference: isExpense && _reference.text.trim().isNotEmpty ? _reference.text.trim() : null,
-        );
+        final changeNote = _changeNote.text.trim();
+        opened = await ref
+            .read(dbProvider)
+            .replaceCash(old, add, note: changeNote.isEmpty ? null : changeNote, newDate: _date!, reopenReason: l10n.reopenByEdit, operationId: _operationId);
       }
     } on ReceiptTooHigh {
       if (mounted) showFormError(context, l10n.receiptPartTooHigh);
@@ -269,7 +341,10 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
     final room = (ref.read(roomsProvider).value ?? const <Room>[]).where((r) => r.id == roomId).firstOrNull;
     final client = (ref.read(clientsProvider).value ?? const <Client>[]).where((c) => c.id == clientId).firstOrNull;
     final place = worker?.name ?? room?.name ?? client?.name;
-    showSavedOnPhone(context, place == null ? l10n.savedOnPhone : l10n.savedTo(place));
+    showSavedOnPhone(
+      context,
+      opened.isNotEmpty ? l10n.monthsOpened(opened.map(showMonth).join(', ')) : (place == null ? l10n.savedOnPhone : l10n.savedTo(place)),
+    );
     Navigator.of(context).pop();
   }
 
@@ -292,7 +367,7 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
         : 0;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.addCash)),
+      appBar: AppBar(title: Text(widget.editing == null ? l10n.addCash : l10n.cashEdit)),
       bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _save),
       body: Form(
         key: _form,
@@ -331,7 +406,10 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
               fieldGap,
             ],
             if (showAdvanceLeft) ...[
-              Text(l10n.advanceBalance(formatAed(advanceOutstanding(advanceOpening, workerLines.map(cashLine), recoveredFils: recovered))), style: const TextStyle(color: muted)),
+              Text(
+                l10n.advanceBalance(formatAed(advanceOutstanding(advanceOpening, workerLines.map(cashLine), recoveredFils: recovered))),
+                style: const TextStyle(color: muted),
+              ),
               fieldGap,
             ],
             if (_needsRoom) ...[
@@ -421,7 +499,9 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
                           children: [
                             Text(o.number ?? l10n.receiptOldBalance, style: const TextStyle(fontWeight: FontWeight.w600)),
                             Text(
-                              o.dueDate == null ? l10n.salaryMonthLeft(formatAed(o.leftFils)) : l10n.receiptInvoiceLeft(formatAed(o.leftFils), showDate(o.dueDate!)),
+                              o.dueDate == null
+                                  ? l10n.salaryMonthLeft(formatAed(o.leftFils))
+                                  : l10n.receiptInvoiceLeft(formatAed(o.leftFils), showDate(o.dueDate!)),
                               style: const TextStyle(color: muted, fontSize: 13),
                             ),
                           ],
@@ -501,7 +581,10 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
                 ),
               if (_extraFils > 0) ...[
                 const SizedBox(height: 4),
-                Text(l10n.salaryExtraLine(formatAed(_extraFils)), style: const TextStyle(color: warn, fontWeight: FontWeight.w600)),
+                Text(
+                  l10n.salaryExtraLine(formatAed(_extraFils)),
+                  style: const TextStyle(color: warn, fontWeight: FontWeight.w600),
+                ),
               ],
               fieldGap,
             ],
@@ -524,15 +607,10 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
               onSelectionChanged: (s) => setState(() => _method = s.single),
             ),
             fieldGap,
-            if (isSalary || _kind == CashKind.expense || _kind == CashKind.clientReceipt) ...[
-              Field(l10n.salaryReference, _reference),
-              fieldGap,
-            ],
-            if (isSalary) ...[
-              Field(l10n.salaryReceiver, _receiver, helper: l10n.salaryReceiverHelp),
-              fieldGap,
-            ],
+            if (isSalary || _kind == CashKind.expense || _kind == CashKind.clientReceipt) ...[Field(l10n.salaryReference, _reference), fieldGap],
+            if (isSalary) ...[Field(l10n.salaryReceiver, _receiver, helper: l10n.salaryReceiverHelp), fieldGap],
             Field(l10n.note, _note),
+            if (widget.editing != null) ...[fieldGap, Field(l10n.changeNote, _changeNote, helper: l10n.changeNoteHelp)],
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/changes.dart';
 import '../data/closing.dart';
 import '../data/documents.dart';
 import '../data/invoices.dart';
@@ -185,11 +186,14 @@ final sitesOfClientProvider = StreamProvider.family<List<Site>, String>((ref, cl
       .watch();
 });
 
+/// Every edit of one kind of entry, by the entry it now shows on (D-056).
+final editsProvider = StreamProvider.family<Map<String, List<ChangeNote>>, String>((ref, entity) => ref.watch(dbProvider).watchEdits(entity));
+
 /// Live entries for one date. Corrected originals stay stored but drop out of this list.
 final entriesOnDateProvider = StreamProvider.family<List<AttendanceEntry>, String>((ref, date) {
   final db = ref.watch(dbProvider);
   return (db.select(db.attendanceEntries)
-        ..where((e) => e.workDate.equals(date) & e.superseded.equals(false))
+        ..where((e) => e.workDate.equals(date) & e.superseded.equals(false) & e.deleted.equals(false))
         ..orderBy([(e) => OrderingTerm.asc(e.createdAtUtc)]))
       .watch();
 });

@@ -7,8 +7,10 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/side_panel.dart';
 import '../../app/theme.dart';
+import '../../data/changes.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 import '../payroll/wages_due_screen.dart';
 import 'attendance_entry_screen.dart';
 import 'attendance_review_screen.dart';
@@ -37,6 +39,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final entries = ref.watch(entriesOnDateProvider(_date)).value ?? const <AttendanceEntry>[];
+    final edits = ref.watch(editsProvider('attendance_entries')).value ?? const <String, List<ChangeNote>>{};
     final allWorkers = ref.watch(workersProvider).value ?? const <Worker>[];
     final workers = {for (final w in allWorkers) w.id: w};
     final sites = {for (final s in ref.watch(allSitesProvider).value ?? const <Site>[]) s.id: s};
@@ -101,6 +104,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               entry: entry,
               worker: workers[entry.workerId],
               site: sites[entry.siteId],
+              changes: edits[entry.id] ?? const [],
               onTap: () => openAttendanceRow(context, ref, entry, workers[entry.workerId]?.name ?? ''),
             ),
           Padding(
@@ -109,7 +113,9 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               children: [
                 const Icon(Icons.smartphone, size: 16, color: muted),
                 const SizedBox(width: 6),
-                Expanded(child: Text(l10n.localOnlyNote, style: const TextStyle(fontSize: 13, color: muted))),
+                Expanded(
+                  child: Text(l10n.localOnlyNote, style: const TextStyle(fontSize: 13, color: muted)),
+                ),
               ],
             ),
           ),
@@ -120,11 +126,14 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
 }
 
 class _EntryRow extends StatelessWidget {
-  const _EntryRow({required this.entry, required this.worker, required this.site, required this.onTap});
+  const _EntryRow({required this.entry, required this.worker, required this.site, required this.changes, required this.onTap});
 
   final AttendanceEntry entry;
   final Worker? worker;
   final Site? site;
+
+  /// Every edit of this row and the rows it corrected, so the owner sees what changed (D-056).
+  final List<ChangeNote> changes;
   final VoidCallback onTap;
 
   @override
@@ -136,6 +145,7 @@ class _EntryRow extends StatelessWidget {
       if (status != AttendanceStatus.absent && entry.workerRateFils == null) l10n.issueWorkerRate,
     ];
     return RowCard(
+      edited: changes.isNotEmpty,
       child: ListTile(
         leading: switch (status) {
           AttendanceStatus.present => const RowTag.icon(Icons.check, fill: settledSoft, color: settled),
@@ -154,10 +164,12 @@ class _EntryRow extends StatelessWidget {
                   statusLabel(l10n, status)
                 else
                   '${showMinuteOfDay(dubaiMinuteOfDay(entry.startUtc!))}-${showMinuteOfDay(dubaiMinuteOfDay(entry.endUtc!))}',
-                if (entry.revisesEntryId != null) l10n.correctedTag,
+                if (entry.revisesEntryId != null && changes.isEmpty) l10n.correctedTag,
+                if (changes.isNotEmpty) l10n.editedTag,
               ].join(', '),
             ),
             if (problems.isNotEmpty) Text(problems.join(', '), style: const TextStyle(color: due)),
+            if (changes.isNotEmpty) ChangeNotes(changes),
           ],
         ),
         trailing: _StateLabel(entry.payrollLineId != null ? 'linked' : entry.state),
@@ -185,7 +197,10 @@ class _StateLabel extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(999)),
-      child: Text(label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: color)),
+      child: Text(
+        label,
+        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: color),
+      ),
     );
   }
 }
