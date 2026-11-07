@@ -1,6 +1,7 @@
 import 'package:domain/calc.dart';
 import 'package:drift/drift.dart';
 
+import 'changes.dart';
 import 'tenant_database.dart';
 
 /// What a worker earns in one group, set by hand there, per day or per hour (D-042).
@@ -31,6 +32,7 @@ class _Stamped<D> implements Insertable<D> {
 extension Masters on TenantDatabase {
   /// Creates the row when [id] is null, otherwise updates it and bumps its version.
   /// The operation ID comes from the form, so a double tap or retry applies once.
+  /// An update of a record the owner reads keeps what changed, from and to, beside [reason], the user's note (D-056).
   Future<String> saveRow<T extends Table, D extends DataClass>(
     TableInfo<T, D> table, {
     required String? id,
@@ -43,9 +45,11 @@ extension Masters on TenantDatabase {
     SimpleSelectStatement<T, D> byId() => select(table)..where((_) => idColumn.equals(rowId));
 
     var version = 1;
+    Facts? before;
     if (id != null) {
-      final existing = await byId().getSingle();
-      version = (existing.toJson()['version'] as int) + 1;
+      final existing = (await byId().getSingle()).toJson();
+      version = (existing['version'] as int) + 1;
+      before = await recordFacts(table.actualTableName, existing);
     }
     await applyOperation(
       operationId: operationId,
@@ -54,6 +58,9 @@ extension Masters on TenantDatabase {
       version: version,
       action: id == null ? 'create' : 'update',
       reason: reason,
+      detail: before == null
+          ? null
+          : () async => {'from': factsJson(before!), 'to': factsJson((await recordFacts(table.actualTableName, (await byId().getSingle()).toJson()))!)},
       change: () async {
         final now = Variable<DateTime>(DateTime.now().toUtc());
         final shared = <String, Expression>{
@@ -81,11 +88,15 @@ extension Masters on TenantDatabase {
     required WorkerGroupsCompanion fields,
     required Map<String, MemberRate?> members,
     required String operationId,
+    String? reason,
   }) async {
     final rowId = id ?? newUuid();
+    Future<Facts> facts() async => (await recordFacts('worker_groups', (await (select(workerGroups)..where((g) => g.id.equals(rowId))).getSingle()).toJson()))!;
     var version = 1;
+    Facts? before;
     if (id != null) {
       version = (await (select(workerGroups)..where((g) => g.id.equals(id))).getSingle()).version + 1;
+      before = await facts();
     }
     await applyOperation(
       operationId: operationId,
@@ -93,6 +104,8 @@ extension Masters on TenantDatabase {
       recordId: rowId,
       version: version,
       action: id == null ? 'create' : 'update',
+      reason: reason,
+      detail: before == null ? null : () async => {'from': factsJson(before!), 'to': factsJson(await facts())},
       change: () async {
         final moment = DateTime.now().toUtc();
         final now = Variable<DateTime>(moment);

@@ -11,7 +11,9 @@ import '../../app/theme.dart';
 import '../../data/cash.dart';
 import '../../data/payroll.dart';
 import '../../data/tenant_database.dart';
+import '../../data/changes.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 
 /// One allowance or deduction for one worker's month. A deduction needs a reason and an authorization (PAY-07).
 /// A room charge carries the worker's note, or else the owner's own say-so (D-041).
@@ -34,6 +36,7 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
   late final _reason = TextEditingController(text: widget.item?.reason ?? _startReason());
   late final _authorizedBy = TextEditingController(text: widget.item?.authorizedBy);
   late final _note = TextEditingController(text: widget.item?.note);
+  final _change = TextEditingController();
 
   Worker? get _worker => (ref.read(workersProvider).value ?? const <Worker>[]).where((w) => w.id == widget.workerId).firstOrNull;
 
@@ -78,6 +81,7 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
         note: text.isEmpty ? null : text,
         roomId: widget.kind == PayItemKind.roomCharge ? _worker?.roomId : null,
         operationId: _operationId,
+        changeNote: noteOf(_change),
       );
     } on AdvanceTooHigh {
       if (mounted) showFormError(context, l10n.advanceTooHigh);
@@ -95,33 +99,20 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
   }
 
   Future<void> _delete() async {
-    final l10n = AppLocalizations.of(context);
-    final saved = await saveOrExplain(context, () => ref.read(dbProvider).deletePayItem(widget.item!, operationId: newUuid()));
-    if (!saved || !mounted) return;
-    showSavedOnPhone(context, l10n.savedOnPhone);
-    Navigator.of(context).pop();
+    final db = ref.read(dbProvider);
+    final gone = await deleteOrArchive(context, (note) => db.deleteRecord(db.payrollItems, widget.item!.id, note: note, operationId: newUuid()));
+    if (gone && mounted) Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final title = switch (widget.kind) {
-      PayItemKind.allowance => l10n.payKindAllowance,
-      PayItemKind.deduction => l10n.payKindDeduction,
-      PayItemKind.roomCharge => l10n.payKindRoom,
-      PayItemKind.advanceRecovery => l10n.payKindRecovery,
-      PayItemKind.visaRecovery => l10n.payKindVisa,
-    };
+    final title = payKindLabel(l10n, widget.kind);
     String? required(String? v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null;
     final row = (ref.watch(payrollProvider(widget.month)).value ?? const <WorkerPayroll>[]).where((p) => p.worker.id == widget.workerId).firstOrNull;
     final advanceLeft = row?.advanceLeftFils;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        actions: [
-          if (widget.item != null) IconButton(tooltip: l10n.payItemDelete, icon: const Icon(Icons.delete_outline), onPressed: _delete),
-        ],
-      ),
+      appBar: AppBar(title: Text(title)),
       bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _save),
       body: Form(
         key: _form,
@@ -149,9 +140,19 @@ class _PayItemFormScreenState extends ConsumerState<PayItemFormScreen> {
               fieldGap,
             ],
             Field(l10n.note, _note),
+            if (widget.item != null)
+              EditFooter(entity: 'payroll_items', id: widget.item!.id, note: _change, label: l10n.changeNoteItem, onDelete: _delete),
           ],
         ),
       ),
     );
   }
 }
+
+String payKindLabel(AppLocalizations l10n, PayItemKind kind) => switch (kind) {
+  PayItemKind.allowance => l10n.payKindAllowance,
+  PayItemKind.deduction => l10n.payKindDeduction,
+  PayItemKind.roomCharge => l10n.payKindRoom,
+  PayItemKind.advanceRecovery => l10n.payKindRecovery,
+  PayItemKind.visaRecovery => l10n.payKindVisa,
+};

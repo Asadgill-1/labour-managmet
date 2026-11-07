@@ -40,6 +40,8 @@ enum Section {
   workRegister,
   deletedAttendance,
   deletedCash,
+  deletedPayItems,
+  deletedRecords,
   settings,
 }
 
@@ -75,6 +77,8 @@ String sectionLabel(AppLocalizations l10n, Section section) => switch (section) 
   Section.workRegister => l10n.regWork,
   Section.deletedAttendance => l10n.regDeletedAttendance,
   Section.deletedCash => l10n.regDeletedCash,
+  Section.deletedPayItems => l10n.regDeletedPayItems,
+  Section.deletedRecords => l10n.regDeletedRecords,
   Section.settings => l10n.tabSettings,
 };
 
@@ -97,7 +101,7 @@ final mainTabs = [
   MainTab((l) => l.mainMoney, Icons.account_balance_wallet, const [Section.cash, Section.balances, Section.cashRegister, Section.closing]),
   MainTab((l) => l.menuReports, Icons.insights, const [Section.reports, Section.agingRegister, Section.workRegister]),
   // What was deleted stays here whole, by kind, so an owner who doesn't run the app sees it (D-056).
-  MainTab((l) => l.mainDeleted, Icons.delete_outline, const [Section.deletedAttendance, Section.deletedCash]),
+  MainTab((l) => l.mainDeleted, Icons.delete_outline, const [Section.deletedAttendance, Section.deletedCash, Section.deletedPayItems, Section.deletedRecords]),
   MainTab((l) => l.tabRooms, Icons.bed, const [Section.rooms, Section.roomRegister]),
   MainTab((l) => l.mainDocuments, Icons.description, const [Section.documents, Section.letterhead]),
 ];

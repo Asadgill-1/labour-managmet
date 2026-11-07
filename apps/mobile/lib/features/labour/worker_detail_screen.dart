@@ -9,10 +9,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
+import '../../data/changes.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../cash/worker_money_section.dart';
+import '../changes/change_notes.dart';
 import '../rates/rate_sections.dart';
 import 'worker_form_screen.dart';
 
@@ -26,6 +28,7 @@ class WorkerDetailScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final worker = ref.watch(workersProvider).value?.where((w) => w.id == workerId).firstOrNull;
     if (worker == null) return Scaffold(appBar: AppBar());
+    final notes = notesOf(ref, 'workers', workerId);
     return Scaffold(
       appBar: AppBar(
         title: Text(worker.name),
@@ -42,6 +45,7 @@ class WorkerDetailScreen extends ConsumerWidget {
       body: ListView(
         children: [
           if (!worker.active) ListTile(title: Text(l10n.archivedLabel)),
+          if (notes.isNotEmpty) RowCard(edited: true, child: Padding(padding: const EdgeInsets.fromLTRB(16, 6, 16, 10), child: ChangeNotes(notes))),
           InfoRow(l10n.workerCode, worker.code),
           const Divider(),
           if (worker.trade != null) ...[InfoRow(l10n.trade, worker.trade!), const Divider()],
@@ -67,6 +71,26 @@ class WorkerDetailScreen extends ConsumerWidget {
                 );
               },
               child: Text(worker.active ? l10n.archive : l10n.reactivate),
+            ),
+          ),
+          fieldGap,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: OutlinedButton.icon(
+              icon: const Icon(Icons.delete_outline),
+              style: OutlinedButton.styleFrom(foregroundColor: due),
+              label: Text(l10n.deleteAction),
+              onPressed: () async {
+                final db = ref.read(dbProvider);
+                final gone = await deleteOrArchive(
+                  context,
+                  (note) => db.deleteRecord(db.workers, workerId, note: note, operationId: newUuid()),
+                  archive: worker.active
+                      ? (note) => db.saveRow(db.workers, id: workerId, operationId: newUuid(), reason: note, fields: const WorkersCompanion(active: Value(false)))
+                      : null,
+                );
+                if (gone && context.mounted) Navigator.of(context).pop();
+              },
             ),
           ),
           fieldGap,

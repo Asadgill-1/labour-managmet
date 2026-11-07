@@ -10,10 +10,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
+import '../../data/changes.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../../app/side_panel.dart';
+import '../changes/change_notes.dart';
 import '../rates/rate_sections.dart';
 import '../registers/ledger_screen.dart';
 import 'client_form_screen.dart';
@@ -39,6 +41,7 @@ class ClientDetailScreen extends ConsumerWidget {
     final owed = money?.openOf(clientId).fold(0, (total, o) => total + o.leftFils) ?? 0;
     final overdue = money?.invoices.values.where((m) => m.invoice.status == 'issued' && m.state(today) == PayState.overdue).fold(0, (total, m) => total + m.leftFils) ?? 0;
     final credit = money?.creditOf(clientId) ?? 0;
+    final notes = notesOf(ref, 'clients', clientId);
     return Scaffold(
       appBar: AppBar(
         title: Text(client.name),
@@ -53,6 +56,7 @@ class ClientDetailScreen extends ConsumerWidget {
       body: ListView(
         children: [
           if (!client.active) ListTile(title: Text(l10n.archivedLabel)),
+          if (notes.isNotEmpty) RowCard(edited: true, child: Padding(padding: const EdgeInsets.fromLTRB(16, 6, 16, 10), child: ChangeNotes(notes))),
           SectionHeader(
             l10n.clientMoneyHeading,
             action: TextButton(
@@ -72,16 +76,21 @@ class ClientDetailScreen extends ConsumerWidget {
           ),
           const Divider(),
           if (sites.isEmpty) ListTile(subtitle: Text(l10n.sitesEmpty)),
-          for (final site in sites) ...[
-            ListTile(
-              leading: RowTag(initial(site.name)),
-              title: Text(site.name),
-              subtitle: site.active ? (site.location == null ? null : Text(site.location!)) : Text(l10n.archivedLabel),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => _open(context, SiteFormScreen(clientId: clientId, site: site)),
-            ),
-            const Divider(),
-          ],
+          for (final site in sites)
+            () {
+              final edited = notesOf(ref, 'sites', site.id).isNotEmpty;
+              final about = [if (!site.active) l10n.archivedLabel else ?site.location, if (edited) l10n.editedTag];
+              return RowCard(
+                edited: edited,
+                child: ListTile(
+                  leading: RowTag(initial(site.name)),
+                  title: Text(site.name),
+                  subtitle: about.isEmpty ? null : Text(about.join(', ')),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _open(context, SiteFormScreen(clientId: clientId, site: site)),
+                ),
+              );
+            }(),
           ClientRateSections(clientId: clientId),
           fieldGap,
           Padding(
@@ -100,6 +109,26 @@ class ClientDetailScreen extends ConsumerWidget {
                 );
               },
               child: Text(client.active ? l10n.archive : l10n.reactivate),
+            ),
+          ),
+          fieldGap,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: OutlinedButton.icon(
+              icon: const Icon(Icons.delete_outline),
+              style: OutlinedButton.styleFrom(foregroundColor: due),
+              label: Text(l10n.deleteAction),
+              onPressed: () async {
+                final db = ref.read(dbProvider);
+                final gone = await deleteOrArchive(
+                  context,
+                  (note) => db.deleteRecord(db.clients, clientId, note: note, operationId: newUuid()),
+                  archive: client.active
+                      ? (note) => db.saveRow(db.clients, id: clientId, operationId: newUuid(), reason: note, fields: const ClientsCompanion(active: Value(false)))
+                      : null,
+                );
+                if (gone && context.mounted) Navigator.of(context).pop();
+              },
             ),
           ),
           fieldGap,

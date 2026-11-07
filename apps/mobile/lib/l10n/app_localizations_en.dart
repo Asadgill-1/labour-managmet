@@ -1024,9 +1024,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Who agreed, and how. For example: signed paper, 01-10-2026';
 
   @override
-  String get payItemDelete => 'Remove';
-
-  @override
   String get issuePartial => 'Choose the part-month method on the contract.';
 
   @override
@@ -3620,7 +3617,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String changeUserNote(String note) {
-    return 'Note: $note';
+    return 'Why it changed: $note';
   }
 
   @override
@@ -3680,6 +3677,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get colDeleteNote => 'Delete note';
+
+  @override
+  String get factName => 'Name';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get changeNoteItem => 'Why it changed (if you like)';
+
+  @override
+  String get inUseTitle => 'This can\'t be deleted';
+
+  @override
+  String get inUseBody =>
+      'Entries carry its name, and would lose it. Archive it instead: it leaves the lists, and its entries stay as they are.';
+
+  @override
+  String get inUseArchived =>
+      'Entries carry its name, so it can\'t be deleted. It is archived already.';
+
+  @override
+  String get archivedDone => 'Archived. Its entries stay as they are.';
+
+  @override
+  String get regDeletedPayItems => 'Deleted allowances and deductions';
+
+  @override
+  String get regDeletedRecords => 'Other deleted records';
+
+  @override
+  String get colDetails => 'Details';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -4699,9 +4731,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String get payItemAuthorizedHelp =>
       'Kis ne maana aur kaise. Jaise: kaghaz par dastakhat, 01-10-2026';
-
-  @override
-  String get payItemDelete => 'Hatayein';
 
   @override
   String get issuePartial => 'Contract mein adhoore mahine ka tareeqa chunein.';
@@ -7116,7 +7145,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String changeUserNote(String note) {
-    return 'Note: $note';
+    return 'Badalne ki wajah: $note';
   }
 
   @override
@@ -7176,4 +7205,39 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get colDeleteNote => 'Delete ka note';
+
+  @override
+  String get factName => 'Naam';
+
+  @override
+  String get yes => 'Haan';
+
+  @override
+  String get no => 'Nahin';
+
+  @override
+  String get changeNoteItem => 'Badalne ki wajah (chahein to)';
+
+  @override
+  String get inUseTitle => 'Yeh delete nahin ho sakta';
+
+  @override
+  String get inUseBody =>
+      'Is ke naam se entries hain, delete karne se un ka naam kho jayega. Archive kar dein: yeh list se hat jayega aur entries waisi hi rahengi.';
+
+  @override
+  String get inUseArchived =>
+      'Is ke naam se entries hain, is liye delete nahin ho sakta. Yeh pehle se archived hai.';
+
+  @override
+  String get archivedDone => 'Archive ho gaya. Entries waisi hi hain.';
+
+  @override
+  String get regDeletedPayItems => 'Delete hui allowance aur katoti';
+
+  @override
+  String get regDeletedRecords => 'Delete hui baqi cheezein';
+
+  @override
+  String get colDetails => 'Tafseel';
 }

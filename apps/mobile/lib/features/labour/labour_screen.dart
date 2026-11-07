@@ -7,6 +7,7 @@ import '../../app/side_panel.dart';
 import '../../data/import.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 import '../more/import_screen.dart';
 import 'worker_detail_screen.dart';
 import 'worker_form_screen.dart';
@@ -31,8 +32,9 @@ class LabourScreen extends ConsumerWidget {
           RegisterRow(
             tag: w.code,
             title: w.name,
-            subtitle: w.trade,
+            subtitle: [?w.trade, if (notesOf(ref, 'workers', w.id).isNotEmpty) l10n.editedTag].join(', '),
             active: w.active,
+            edited: notesOf(ref, 'workers', w.id).isNotEmpty,
             onTap: () => open(WorkerDetailScreen(workerId: w.id)),
           ),
       ],

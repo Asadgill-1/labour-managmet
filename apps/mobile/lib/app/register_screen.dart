@@ -6,12 +6,15 @@ import 'side_panel.dart';
 import 'theme.dart';
 
 class RegisterRow {
-  const RegisterRow({required this.tag, required this.title, this.subtitle, required this.active, required this.onTap});
+  const RegisterRow({required this.tag, required this.title, this.subtitle, required this.active, this.edited = false, required this.onTap});
 
   final String tag;
   final String title;
   final String? subtitle;
   final bool active;
+
+  /// Someone changed it since it was added (D-056).
+  final bool edited;
   final VoidCallback onTap;
 
   bool matches(String needle) => '$title ${subtitle ?? ''} $tag'.toLowerCase().contains(needle);
@@ -106,10 +109,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     padding: const EdgeInsets.only(bottom: 8),
                     itemCount: shown.length,
                     itemBuilder: (context, i) => RowCard(
+                      edited: shown[i].edited,
                       child: ListTile(
                         leading: RowTag(shown[i].tag),
                         title: Text(shown[i].title),
-                        subtitle: shown[i].subtitle == null ? null : Text(shown[i].subtitle!),
+                        subtitle: (shown[i].subtitle ?? '').isEmpty ? null : Text(shown[i].subtitle!),
                         trailing: const Icon(Icons.chevron_right),
                         onTap: shown[i].onTap,
                       ),

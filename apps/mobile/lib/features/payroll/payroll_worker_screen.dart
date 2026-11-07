@@ -11,6 +11,7 @@ import '../../app/theme.dart';
 import '../../data/payroll.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 import '../cash/cash_entry_form_screen.dart';
 import 'pay_item_form_screen.dart';
 import 'payroll_screen.dart';
@@ -226,7 +227,7 @@ class _TwoColumns extends StatelessWidget {
   }
 }
 
-class _ItemRow extends StatelessWidget {
+class _ItemRow extends ConsumerWidget {
   const _ItemRow(this.item, {required this.month, required this.posted});
 
   final PayrollItem item;
@@ -234,13 +235,22 @@ class _ItemRow extends StatelessWidget {
   final bool posted;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final kind = PayItemKind.values.byName(item.kind);
     final plus = kind == PayItemKind.allowance;
+    final notes = notesOf(ref, 'payroll_items', item.id);
+    final about = [?item.authorizedBy, ?item.note, if (notes.isNotEmpty) l10n.editedTag];
     return RowCard(
+      edited: notes.isNotEmpty,
       child: ListTile(
         title: Text(item.reason),
-        subtitle: item.authorizedBy == null && item.note == null ? null : Text([?item.authorizedBy, ?item.note].join(', ')),
+        subtitle: about.isEmpty
+            ? null
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [Text(about.join(', ')), if (notes.isNotEmpty) ChangeNotes(notes)],
+              ),
         trailing: RowValue('${plus ? '+' : '-'}${formatAed(item.amountFils)}'),
         onTap: posted
             ? null

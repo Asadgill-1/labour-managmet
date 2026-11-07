@@ -9,6 +9,7 @@ import '../../app/theme.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 
 /// Worker details (MASTER-04). No Emirates ID or passport fields on purpose. Photo arrives in T14.
 class WorkerFormScreen extends ConsumerStatefulWidget {
@@ -31,6 +32,7 @@ class _WorkerFormScreenState extends ConsumerState<WorkerFormScreen> {
     text: widget.worker?.roomChargeFils == null ? '' : plainAmount(widget.worker!.roomChargeFils!),
   );
   late final _roomNote = TextEditingController(text: widget.worker?.roomChargeNote);
+  final _change = TextEditingController();
   late String? _joined = widget.worker?.joiningDate;
   late String? _roomId = widget.worker?.roomId;
   String? _codeError;
@@ -60,6 +62,7 @@ class _WorkerFormScreenState extends ConsumerState<WorkerFormScreen> {
       db.workers,
       id: widget.worker?.id,
       operationId: _operationId,
+      reason: noteOf(_change),
       fields: WorkersCompanion(
         code: Value(code),
         name: Value(_name.text.trim()),
@@ -121,6 +124,7 @@ class _WorkerFormScreenState extends ConsumerState<WorkerFormScreen> {
             ),
             fieldGap,
             Field(l10n.roomChargeNote, _roomNote),
+            if (widget.worker != null) EditFooter(entity: 'workers', id: widget.worker!.id, note: _change),
           ],
         ),
       ),

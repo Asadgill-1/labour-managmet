@@ -8,6 +8,7 @@ import '../../app/side_panel.dart';
 import '../../data/import.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 import '../more/import_screen.dart';
 import 'client_detail_screen.dart';
 import 'client_form_screen.dart';
@@ -32,8 +33,9 @@ class CompaniesScreen extends ConsumerWidget {
           RegisterRow(
             tag: initial(c.name),
             title: c.name,
-            subtitle: c.contactPerson,
+            subtitle: [?c.contactPerson, if (notesOf(ref, 'clients', c.id).isNotEmpty) l10n.editedTag].join(', '),
             active: c.active,
+            edited: notesOf(ref, 'clients', c.id).isNotEmpty,
             onTap: () => open(ClientDetailScreen(clientId: c.id)),
           ),
       ],

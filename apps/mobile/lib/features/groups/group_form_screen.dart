@@ -11,7 +11,9 @@ import '../../app/theme.dart';
 import '../../data/attendance.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
+import '../../data/changes.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 import '../rates/rate_labels.dart';
 
 /// A team that usually works together, with its usual site, daily wage and duty time (D-029).
@@ -36,6 +38,7 @@ class _GroupFormScreenState extends ConsumerState<GroupFormScreen> {
   late int? _end = widget.group?.endMinute;
   late bool _halfIsHalf = widget.group?.halfDayIsHalf ?? true;
   late bool _active = widget.group?.active ?? true;
+  final _change = TextEditingController();
 
   /// Worker ID to a rate set for them here. Null means their own contract, or the group's wage if they have none.
   Map<String, MemberRate?> _members = {};
@@ -79,6 +82,7 @@ class _GroupFormScreenState extends ConsumerState<GroupFormScreen> {
       final id = await db.saveWorkerGroup(
         id: widget.group?.id,
         operationId: _operationId,
+        reason: noteOf(_change),
         members: _members,
         fields: WorkerGroupsCompanion(
           name: Value(_name.text.trim()),
@@ -98,6 +102,17 @@ class _GroupFormScreenState extends ConsumerState<GroupFormScreen> {
     if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();
+  }
+
+  Future<void> _delete() async {
+    final db = ref.read(dbProvider);
+    final gone = await deleteOrArchive(
+      context,
+      (note) => db.deleteRecord(db.workerGroups, widget.group!.id, note: note, operationId: newUuid()),
+      archive: (note) =>
+          db.saveRow(db.workerGroups, id: widget.group!.id, operationId: newUuid(), reason: note, fields: const WorkerGroupsCompanion(active: Value(false))),
+    );
+    if (gone && mounted) Navigator.of(context).pop();
   }
 
   /// Sets what this worker earns in this group, starting from what they earn now. Left empty, it goes back to that.
@@ -294,6 +309,7 @@ class _GroupFormScreenState extends ConsumerState<GroupFormScreen> {
                         value: _active,
                         onChanged: (v) => setState(() => _active = v),
                       ),
+                    if (widget.group != null) EditFooter(entity: 'worker_groups', id: widget.group!.id, note: _change, onDelete: _delete),
                   ],
                 ),
               ),

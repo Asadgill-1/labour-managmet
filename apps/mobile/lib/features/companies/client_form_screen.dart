@@ -9,6 +9,7 @@ import '../../app/theme.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 
 class ClientFormScreen extends ConsumerStatefulWidget {
   const ClientFormScreen({this.client, super.key});
@@ -33,6 +34,7 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
   late final _po = TextEditingController(text: widget.client?.poReference);
   late final _note = TextEditingController(text: widget.client?.note);
   late bool _vat = widget.client?.vatRegistered ?? false;
+  final _change = TextEditingController();
 
   Future<void> _save() async {
     if (!validateAndReveal(_form)) return;
@@ -42,6 +44,7 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
       db.clients,
       id: widget.client?.id,
       operationId: _operationId,
+      reason: noteOf(_change),
       fields: ClientsCompanion(
         name: Value(_name.text.trim()),
         address: optionalText(_address),
@@ -105,6 +108,7 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
             Field(l10n.poReference, _po),
             fieldGap,
             Field(l10n.note, _note, lines: 2),
+            if (widget.client != null) EditFooter(entity: 'clients', id: widget.client!.id, note: _change),
           ],
         ),
       ),

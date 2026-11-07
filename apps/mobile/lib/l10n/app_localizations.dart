@@ -1999,12 +1999,6 @@ abstract class AppLocalizations {
   /// **'Who agreed, and how. For example: signed paper, 01-10-2026'**
   String get payItemAuthorizedHelp;
 
-  /// No description provided for @payItemDelete.
-  ///
-  /// In en, this message translates to:
-  /// **'Remove'**
-  String get payItemDelete;
-
   /// No description provided for @issuePartial.
   ///
   /// In en, this message translates to:
@@ -6274,7 +6268,7 @@ abstract class AppLocalizations {
   /// No description provided for @changeUserNote.
   ///
   /// In en, this message translates to:
-  /// **'Note: {note}'**
+  /// **'Why it changed: {note}'**
   String changeUserNote(String note);
 
   /// No description provided for @changeLine.
@@ -6378,6 +6372,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete note'**
   String get colDeleteNote;
+
+  /// No description provided for @factName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get factName;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @changeNoteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it changed (if you like)'**
+  String get changeNoteItem;
+
+  /// No description provided for @inUseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This can\'t be deleted'**
+  String get inUseTitle;
+
+  /// No description provided for @inUseBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Entries carry its name, and would lose it. Archive it instead: it leaves the lists, and its entries stay as they are.'**
+  String get inUseBody;
+
+  /// No description provided for @inUseArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Entries carry its name, so it can\'t be deleted. It is archived already.'**
+  String get inUseArchived;
+
+  /// No description provided for @archivedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived. Its entries stay as they are.'**
+  String get archivedDone;
+
+  /// No description provided for @regDeletedPayItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted allowances and deductions'**
+  String get regDeletedPayItems;
+
+  /// No description provided for @regDeletedRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Other deleted records'**
+  String get regDeletedRecords;
+
+  /// No description provided for @colDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get colDetails;
 }
 
 class _AppLocalizationsDelegate

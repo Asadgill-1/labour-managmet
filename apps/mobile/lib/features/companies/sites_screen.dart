@@ -8,6 +8,7 @@ import '../../app/side_panel.dart';
 import '../../data/import.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 import '../more/import_screen.dart';
 import 'site_form_screen.dart';
 
@@ -39,8 +40,9 @@ class SitesScreen extends ConsumerWidget {
           RegisterRow(
             tag: initial(s.name),
             title: s.name,
-            subtitle: [?names[s.clientId], ?s.location].join(', '),
+            subtitle: [?names[s.clientId], ?s.location, if (notesOf(ref, 'sites', s.id).isNotEmpty) l10n.editedTag].join(', '),
             active: s.active,
+            edited: notesOf(ref, 'sites', s.id).isNotEmpty,
             onTap: () => open(SiteFormScreen(clientId: s.clientId, site: s)),
           ),
       ],

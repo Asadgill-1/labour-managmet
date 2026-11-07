@@ -11,7 +11,9 @@ import '../../app/theme.dart';
 import '../../data/attendance.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
+import '../../data/changes.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 import 'rate_labels.dart';
 
 /// One form for both sides of a rate (MASTER-06). Set [workerId] for what a worker is paid,
@@ -43,6 +45,7 @@ class ContractFormScreen extends ConsumerStatefulWidget {
 class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
   final _form = GlobalKey<FormState>();
   final _operationId = newUuid();
+  final _change = TextEditingController();
 
   bool get _isPay => widget.workerId != null;
 
@@ -125,6 +128,7 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
           db.payContracts,
           id: widget.pay?.id,
           operationId: _operationId,
+          reason: noteOf(_change),
           fields: PayContractsCompanion(
             workerId: Value(widget.workerId!),
             siteId: Value(_siteId),
@@ -149,6 +153,7 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
           db.billingContracts,
           id: widget.billing?.id,
           operationId: _operationId,
+          reason: noteOf(_change),
           fields: BillingContractsCompanion(
             clientId: Value(widget.clientId!),
             siteId: Value(_siteId),
@@ -168,6 +173,21 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
     if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();
+  }
+
+  Future<void> _delete() async {
+    final db = ref.read(dbProvider);
+    final gone = await deleteOrArchive(
+      context,
+      (note) => db.savingRate(
+        () => _isPay
+            ? db.deleteRecord(db.payContracts, widget.pay!.id, note: note, operationId: newUuid())
+            : db.deleteRecord(db.billingContracts, widget.billing!.id, note: note, operationId: newUuid()),
+        workerId: widget.workerId,
+        clientId: widget.clientId,
+      ),
+    );
+    if (gone && mounted) Navigator.of(context).pop();
   }
 
   String? _optionalAmount(String? v, AppLocalizations l10n) {
@@ -352,6 +372,13 @@ class _ContractFormScreenState extends ConsumerState<ContractFormScreen> {
               helper: l10n.overtimeRateHelp,
               validator: (v) => _optionalAmount(v, l10n),
             ),
+            if (widget.pay != null || widget.billing != null)
+              EditFooter(
+                entity: _isPay ? 'pay_contracts' : 'billing_contracts',
+                id: widget.pay?.id ?? widget.billing!.id,
+                note: _change,
+                onDelete: _delete,
+              ),
           ],
         ),
       ),

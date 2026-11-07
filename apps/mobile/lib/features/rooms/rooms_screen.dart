@@ -11,6 +11,7 @@ import '../../app/theme.dart';
 import '../../data/cash.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 import 'room_detail_screen.dart';
 import 'room_form_screen.dart';
 
@@ -77,13 +78,16 @@ class _RoomsScreenState extends ConsumerState<RoomsScreen> {
             Builder(
               builder: (context) {
                 final result = roomResult(entries.where((e) => e.roomId == room.id).map(cashLine), deductedFils: deducted(charges.where((i) => i.roomId == room.id)));
+                final edited = notesOf(ref, 'rooms', room.id).isNotEmpty;
                 return RowCard(
+                  edited: edited,
                   child: ListTile(
                     leading: RowTag(initial(room.name)),
                     title: Text(room.name),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (edited) Text(l10n.editedTag),
                         Text(l10n.rentSplit(formatAed(result.receivedFils), formatAed(result.paidFils))),
                         Text(
                           roomResultText(l10n, result.netFils),

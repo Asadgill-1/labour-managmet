@@ -40,7 +40,10 @@ class RoomDetailScreen extends ConsumerWidget {
           IconButton(
             tooltip: l10n.editRoom,
             icon: const Icon(Icons.edit),
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => RoomFormScreen(room: room))),
+            onPressed: () async {
+              final gone = await Navigator.of(context).push(MaterialPageRoute<bool>(builder: (_) => RoomFormScreen(room: room)));
+              if (gone == true && context.mounted) Navigator.of(context).pop();
+            },
           ),
         ],
       ),

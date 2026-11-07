@@ -444,7 +444,6 @@
   "payItemReason": "Reason",
   "payItemAuthorizedBy": "Agreement or permission",
   "payItemAuthorizedHelp": "Who agreed, and how. For example: signed paper, 01-10-2026",
-  "payItemDelete": "Remove",
   "issuePartial": "Choose the part-month method on the contract.",
   "issueNegative": "Deductions are more than earnings.",
   "issueRecovery": "Recovery is more than the advance left.",
@@ -2212,7 +2211,7 @@
       }
     }
   },
-  "changeUserNote": "Note: {note}",
+  "changeUserNote": "Why it changed: {note}",
   "changeLine": "{what}: {from} to {to}",
   "@changeLine": {
     "placeholders": {
@@ -2256,5 +2255,16 @@
   "colDeletedOn": "Deleted on",
   "colClarification": "Clarification",
   "regDeletedNote": "Every entry deleted, as it was, by the day it was deleted. The last column is blank, for whoever you send it to to say why.",
-  "colDeleteNote": "Delete note"
+  "colDeleteNote": "Delete note",
+  "factName": "Name",
+  "yes": "Yes",
+  "no": "No",
+  "changeNoteItem": "Why it changed (if you like)",
+  "inUseTitle": "This can't be deleted",
+  "inUseBody": "Entries carry its name, and would lose it. Archive it instead: it leaves the lists, and its entries stay as they are.",
+  "inUseArchived": "Entries carry its name, so it can't be deleted. It is archived already.",
+  "archivedDone": "Archived. Its entries stay as they are.",
+  "regDeletedPayItems": "Deleted allowances and deductions",
+  "regDeletedRecords": "Other deleted records",
+  "colDetails": "Details"
 }

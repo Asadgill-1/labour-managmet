@@ -9,7 +9,9 @@ import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
+import '../../data/changes.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 
 const salaryOwed = 'worker_salary_owed';
 const workerAdvance = 'worker_advance';
@@ -36,6 +38,7 @@ class _OpeningBalanceFormScreenState extends ConsumerState<OpeningBalanceFormScr
   late final _note = TextEditingController(text: widget.existing?.sourceNote);
   late String? _asOf = widget.existing?.asOfDate ?? dubaiToday(DateTime.now());
   bool _confirmed = false;
+  final _change = TextEditingController();
   String? _confirmError;
 
   Future<void> _save() async {
@@ -47,6 +50,7 @@ class _OpeningBalanceFormScreenState extends ConsumerState<OpeningBalanceFormScr
       db.openingBalances,
       id: widget.existing?.id,
       operationId: _operationId,
+      reason: noteOf(_change),
       fields: OpeningBalancesCompanion(
         kind: Value(widget.kind),
         workerId: Value(widget.workerId),
@@ -59,6 +63,12 @@ class _OpeningBalanceFormScreenState extends ConsumerState<OpeningBalanceFormScr
     if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();
+  }
+
+  Future<void> _delete() async {
+    final db = ref.read(dbProvider);
+    final gone = await deleteOrArchive(context, (note) => db.deleteRecord(db.openingBalances, widget.existing!.id, note: note, operationId: newUuid()));
+    if (gone && mounted) Navigator.of(context).pop();
   }
 
   @override
@@ -97,6 +107,7 @@ class _OpeningBalanceFormScreenState extends ConsumerState<OpeningBalanceFormScr
               value: _confirmed,
               onChanged: (v) => setState(() => _confirmed = v!),
             ),
+            if (widget.existing != null) EditFooter(entity: 'opening_balances', id: widget.existing!.id, note: _change, onDelete: _delete),
           ],
         ),
       ),

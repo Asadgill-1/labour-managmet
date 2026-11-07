@@ -7,7 +7,9 @@ import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
+import '../../data/changes.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 
 class RoomFormScreen extends ConsumerStatefulWidget {
   const RoomFormScreen({this.room, super.key});
@@ -24,6 +26,7 @@ class _RoomFormScreenState extends ConsumerState<RoomFormScreen> {
   late final _name = TextEditingController(text: widget.room?.name);
   late final _note = TextEditingController(text: widget.room?.note);
   late bool _active = widget.room?.active ?? true;
+  final _change = TextEditingController();
 
   Future<void> _save() async {
     if (!validateAndReveal(_form)) return;
@@ -33,11 +36,22 @@ class _RoomFormScreenState extends ConsumerState<RoomFormScreen> {
       db.rooms,
       id: widget.room?.id,
       operationId: _operationId,
+      reason: noteOf(_change),
       fields: RoomsCompanion(name: Value(_name.text.trim()), note: optionalText(_note), active: Value(_active)),
     ));
     if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();
+  }
+
+  Future<void> _delete() async {
+    final db = ref.read(dbProvider);
+    final gone = await deleteOrArchive(
+      context,
+      (note) => db.deleteRecord(db.rooms, widget.room!.id, note: note, operationId: newUuid()),
+      archive: (note) => db.saveRow(db.rooms, id: widget.room!.id, operationId: newUuid(), reason: note, fields: const RoomsCompanion(active: Value(false))),
+    );
+    if (gone && mounted) Navigator.of(context).pop(true);
   }
 
   @override
@@ -61,6 +75,7 @@ class _RoomFormScreenState extends ConsumerState<RoomFormScreen> {
                 value: _active,
                 onChanged: (v) => setState(() => _active = v),
               ),
+            if (widget.room != null) EditFooter(entity: 'rooms', id: widget.room!.id, note: _change, onDelete: _delete),
           ],
         ),
       ),

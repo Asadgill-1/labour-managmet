@@ -7,7 +7,9 @@ import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
+import '../../data/changes.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 
 class SiteFormScreen extends ConsumerStatefulWidget {
   const SiteFormScreen({required this.clientId, this.site, super.key});
@@ -31,6 +33,7 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
   late int? _start = widget.site?.defaultStartMinute;
   late int? _end = widget.site?.defaultEndMinute;
   late bool _active = widget.site?.active ?? true;
+  final _change = TextEditingController();
 
   Future<void> _save() async {
     if (!validateAndReveal(_form)) return;
@@ -40,6 +43,7 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
       db.sites,
       id: widget.site?.id,
       operationId: _operationId,
+      reason: noteOf(_change),
       fields: SitesCompanion(
         clientId: Value(widget.clientId),
         name: Value(_name.text.trim()),
@@ -56,6 +60,16 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
     if (!saved || !mounted) return;
     showSavedOnPhone(context, l10n.savedOnPhone);
     Navigator.of(context).pop();
+  }
+
+  Future<void> _delete() async {
+    final db = ref.read(dbProvider);
+    final gone = await deleteOrArchive(
+      context,
+      (note) => db.deleteRecord(db.sites, widget.site!.id, note: note, operationId: newUuid()),
+      archive: (note) => db.saveRow(db.sites, id: widget.site!.id, operationId: newUuid(), reason: note, fields: const SitesCompanion(active: Value(false))),
+    );
+    if (gone && mounted) Navigator.of(context).pop();
   }
 
   @override
@@ -100,6 +114,7 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
                 value: _active,
                 onChanged: (v) => setState(() => _active = v),
               ),
+            if (widget.site != null) EditFooter(entity: 'sites', id: widget.site!.id, note: _change, onDelete: _delete),
           ],
         ),
       ),

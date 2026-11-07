@@ -19,6 +19,7 @@ import '../changes/change_notes.dart';
 import '../invoices/invoice_paper.dart';
 import '../invoices/invoice_screen.dart' show vatCategoryLabel;
 import '../invoices/invoices_screen.dart' show invoiceStatusLabel;
+import '../payroll/pay_item_form_screen.dart' show payKindLabel;
 import '../rates/rate_labels.dart';
 import '../today/attendance_review_screen.dart' show statusLabel;
 import 'register_model.dart';
@@ -83,6 +84,8 @@ Future<RegisterData> buildRegister(TenantDatabase db, AppLocalizations l10n, Sec
     Section.workRegister => _work(db, l10n, masters, from, to),
     Section.deletedAttendance => _deletedAttendance(db, l10n, from, to),
     Section.deletedCash => _deletedCash(db, l10n, masters, from, to),
+    Section.deletedPayItems => _deletedPayItems(db, l10n, from, to),
+    Section.deletedRecords => _deletedRecords(db, l10n, from, to),
     _ => throw ArgumentError.value(section, 'section', 'is not a register'),
   };
 }
@@ -834,6 +837,115 @@ Future<RegisterData> _deletedCash(TenantDatabase db, AppLocalizations l10n, _Mas
                 'kind': {c.kind},
               },
             ),
+    ],
+  );
+}
+
+/// Allowances and deductions deleted, as they were, by the day they were deleted (D-056). One deleted before the app
+/// kept that shows only when.
+Future<RegisterData> _deletedPayItems(TenantDatabase db, AppLocalizations l10n, String? from, String? to) async {
+  final events = await (db.select(db.auditEvents)
+        ..where((a) => a.entity.equals('payroll_items') & a.action.equals('delete'))
+        ..orderBy([(a) => OrderingTerm.desc(a.atUtc)]))
+      .get();
+  return RegisterData(
+    title: l10n.regDeletedPayItems,
+    titleColumn: 2,
+    amountColumns: const [4],
+    note: l10n.regDeletedNote,
+    columns: [
+      RegisterColumn(l10n.colDeletedOn, flex: 4),
+      RegisterColumn(l10n.colMonth, flex: 2),
+      RegisterColumn(l10n.colWorker, flex: 5),
+      RegisterColumn(l10n.colKind, flex: 3),
+      RegisterColumn(l10n.tsAmount, kind: CellKind.money, total: true),
+      RegisterColumn(l10n.payItemReason, flex: 4),
+      RegisterColumn(l10n.colDeleteNote, flex: 5),
+      _clarification(l10n),
+    ],
+    filters: [RegisterFilter('kind', l10n.filterKind, [for (final k in PayItemKind.values) (value: k.name, label: payKindLabel(l10n, k))])],
+    entries: [
+      for (final e in events)
+        if (_inRange(_deletedDay(e.atUtc), from, to))
+          () {
+            final n = ChangeNote.of(e);
+            String? fact(Fact f) => n.facts[f] == null ? null : factValue(l10n, f, n.facts[f]);
+            return RegisterEntry(
+              [
+                deletedWhen(e.atUtc),
+                fact(Fact.month),
+                fact(Fact.worker),
+                fact(Fact.payKind),
+                n.facts[Fact.amount] as int?,
+                [?fact(Fact.reason), ?fact(Fact.authorizedBy), ?fact(Fact.note)].join(', '),
+                n.note,
+                null,
+              ],
+              group: _deletedDay(e.atUtc),
+              tags: {
+                'kind': {?n.facts[Fact.payKind] as String?},
+              },
+            );
+          }(),
+    ],
+  );
+}
+
+/// What each kind of record is called on the Delete tab.
+String _recordKind(AppLocalizations l10n, String table) => switch (table) {
+  'workers' => l10n.colWorker,
+  'clients' => l10n.colCompany,
+  'sites' => l10n.colSite,
+  'rooms' => l10n.colRoom,
+  'worker_groups' => l10n.tabGroups,
+  'pay_contracts' => l10n.payContractsHeading,
+  'billing_contracts' => l10n.billingContractsHeading,
+  _ => l10n.openingHeading,
+};
+
+/// Workers, companies, sites, rooms, groups, rates and opening balances deleted, each whole, by the day they were
+/// deleted (D-056). Only a record no entry named could be deleted.
+Future<RegisterData> _deletedRecords(TenantDatabase db, AppLocalizations l10n, String? from, String? to) async {
+  final events = await (db.select(db.auditEvents)
+        ..where((a) => a.entity.isIn(recordTables) & a.action.equals('delete'))
+        ..orderBy([(a) => OrderingTerm.desc(a.atUtc)]))
+      .get();
+  return RegisterData(
+    title: l10n.regDeletedRecords,
+    titleColumn: 2,
+    note: l10n.regDeletedNote,
+    columns: [
+      RegisterColumn(l10n.colDeletedOn, flex: 4),
+      RegisterColumn(l10n.colKind, flex: 3),
+      RegisterColumn(l10n.factName, flex: 5),
+      RegisterColumn(l10n.colDetails, flex: 9),
+      RegisterColumn(l10n.colDeleteNote, flex: 5),
+      _clarification(l10n),
+    ],
+    filters: [RegisterFilter('kind', l10n.filterKind, [for (final t in recordTables) (value: t, label: _recordKind(l10n, t))])],
+    entries: [
+      for (final e in events)
+        if (_inRange(_deletedDay(e.atUtc), from, to))
+          () {
+            final n = ChangeNote.of(e);
+            // A record is known by its name, a rate or balance by whose it is.
+            final named = [Fact.name, Fact.worker, Fact.company].where((f) => n.facts[f] != null).firstOrNull;
+            return RegisterEntry(
+              [
+                deletedWhen(e.atUtc),
+                _recordKind(l10n, e.entity),
+                named == null ? null : n.facts[named] as String,
+                // Whether it was archived is all a status adds once it is gone.
+                factsInWords(l10n, n.facts, leaving: {?named, if (n.facts[Fact.active] == true) Fact.active}),
+                n.note,
+                null,
+              ],
+              group: _deletedDay(e.atUtc),
+              tags: {
+                'kind': {e.entity},
+              },
+            );
+          }(),
     ],
   );
 }

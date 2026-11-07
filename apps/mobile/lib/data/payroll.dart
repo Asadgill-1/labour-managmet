@@ -330,6 +330,7 @@ extension PayrollOps on TenantDatabase {
     required String? note,
     required String? roomId,
     required String operationId,
+    String? changeNote,
   }) async {
     if (kind == PayItemKind.advanceRecovery) {
       final others = await (select(payrollItems)
@@ -349,6 +350,7 @@ extension PayrollOps on TenantDatabase {
       payrollItems,
       id: id,
       operationId: operationId,
+      reason: changeNote,
       fields: PayrollItemsCompanion(
         workerId: Value(workerId),
         periodFrom: Value(monthFirstDay(month)),
@@ -359,20 +361,6 @@ extension PayrollOps on TenantDatabase {
         note: Value(note),
         roomId: Value(roomId),
       ),
-    );
-  }
-
-  Future<void> deletePayItem(PayrollItem item, {required String operationId}) {
-    return applyOperation(
-      operationId: operationId,
-      entity: 'payroll_items',
-      recordId: item.id,
-      version: item.version + 1,
-      action: 'delete',
-      change: () async {
-        await (delete(payrollItems)..where((i) => i.id.equals(item.id))).go();
-        return {'id': item.id, 'deleted': true};
-      },
     );
   }
 

@@ -8,6 +8,7 @@ import '../../app/register_screen.dart';
 import '../../app/side_panel.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 import 'group_form_screen.dart';
 
 class GroupsScreen extends ConsumerWidget {
@@ -37,8 +38,10 @@ class GroupsScreen extends ConsumerWidget {
               ?sites[g.siteId],
               l10n.membersCount(members.where((m) => m.groupId == g.id).length),
               if (g.dailyRateFils != null) formatAed(g.dailyRateFils!),
+              if (notesOf(ref, 'worker_groups', g.id).isNotEmpty) l10n.editedTag,
             ].join(', '),
             active: g.active,
+            edited: notesOf(ref, 'worker_groups', g.id).isNotEmpty,
             onTap: () => open(GroupFormScreen(group: g)),
           ),
       ],

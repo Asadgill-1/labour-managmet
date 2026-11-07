@@ -9,6 +9,7 @@ import '../../app/side_panel.dart';
 import '../../app/theme.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
 import 'opening_balance_form_screen.dart';
 
 /// Every figure carried over from before this app, in one place (D-027). Entered with the same
@@ -45,13 +46,25 @@ class BalancesScreen extends ConsumerWidget {
       open(OpeningBalanceFormScreen(kind: kind, workerId: workerId, clientId: clientId, existing: existing));
     }
 
-    Widget row(OpeningBalance b, String tag, String name) => ListTile(
-      leading: RowTag(tag),
-      title: Text(name),
-      subtitle: Text('${openingLabel(l10n, b.kind)}, ${showDate(b.asOfDate)}'),
-      trailing: RowValue(formatAed(b.amountFils)),
-      onTap: () => open(OpeningBalanceFormScreen(kind: b.kind, workerId: b.workerId, clientId: b.clientId, existing: b)),
-    );
+    Widget row(OpeningBalance b, String tag, String name) {
+      final notes = notesOf(ref, 'opening_balances', b.id);
+      return RowCard(
+        edited: notes.isNotEmpty,
+        child: ListTile(
+          leading: RowTag(tag),
+          title: Text(name),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text([openingLabel(l10n, b.kind), showDate(b.asOfDate), if (notes.isNotEmpty) l10n.editedTag].join(', ')),
+              if (notes.isNotEmpty) ChangeNotes(notes),
+            ],
+          ),
+          trailing: RowValue(formatAed(b.amountFils)),
+          onTap: () => open(OpeningBalanceFormScreen(kind: b.kind, workerId: b.workerId, clientId: b.clientId, existing: b)),
+        ),
+      );
+    }
 
     final rows = [
       for (final w in workers)
@@ -65,11 +78,7 @@ class BalancesScreen extends ConsumerWidget {
       bottomNavigationBar: MainActionBar(label: l10n.addBalance, onPressed: add),
       body: rows.isEmpty
           ? EmptyState(icon: Icons.history, text: l10n.balancesEmpty)
-          : ListView.separated(
-              itemCount: rows.length,
-              separatorBuilder: (_, _) => const Divider(),
-              itemBuilder: (_, i) => rows[i],
-            ),
+          : ListView.builder(itemCount: rows.length, itemBuilder: (_, i) => rows[i]),
     );
   }
 }
