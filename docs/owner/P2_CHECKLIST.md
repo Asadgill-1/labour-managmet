@@ -232,7 +232,7 @@ Yeh hissa P3 ka hai, magar isi APK mein hai.
 - [ ] **Is mahine mazdooron ka hisaab** khud jor kar dekhein: pichla baqi + kamai - advance - katoti - ada kiya = baqi.
 - [ ] **Band karein** dabayein. Paigham parhein aur **Wapas** dabayein. Kuch na badle. Phir dobara dabayein aur band karein.
 - [ ] Us mahine ki kisi tareekh par **Aaj** aur **Rozana hisaab** kholein. Upar **Yeh mahina band hai** ho, aur naya likhne ka button na chale.
-- [ ] Us mahine ki hazri par dabayein. Paigham aaye, aur kuch na badle.
+- [ ] Us mahine ki hazri par dabayein. Row khulti hai. Kuch badal kar save karein: paigham aaye ke mahina dobara khula (D-056). Phir **Mahina band** mein dobara band karein.
 - [ ] Rozana hisaab mein us mahine ki koi line undo karein. Wapsi aaj ki tareekh par likhi jaye, aur us mahine ki slip wahi rahe.
 - [ ] Mazdoor ka rate badlein. Band mahine ki hazri aur slip wahi rahen.
 - [ ] Band mahine ki tankhwah agle mahine ki tareekh par dein. Adaigi ho jaye, aur us mahine ki slip par **Ada kiya** mein aaye.

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- A note typed in a form before Delete now goes into the delete question, so it stays with the deleted entry. It was dropped before.
+- Purana baqaya lists a company that owes nothing but has credit left, with its credit. It left it out before.
+- A closed month's note says an edit opens it again, as D-056 made it, instead of saying nothing there can change.
+- Month close says "1 cheez" and "1 company" for one, not "1 cheezain" or "1 companies".
 - The time under an edited or deleted entry is now UAE time. On a device set to UAE time it showed 4 hours ahead.
 - The timesheet's agreed-hours sheet no longer says attendance never changes; it says the app asks when the hours are fewer.
 - A monthly contract can cut a day with no attendance, at its own part-month rule, with weekly days off that are never cut. Tankhwah and the slip show the days cut.

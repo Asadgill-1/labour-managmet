@@ -48,7 +48,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | PAY-01 | 07 | Payroll cycle | T11 | IMPLEMENTED_UNVERIFIED | TC-036, TC-055 | `apps/mobile/test/payroll_test.dart` |
 | PAY-02 | 07 | Do alag concepts | T11 | IMPLEMENTED_UNVERIFIED | TC-001, TC-054 | `packages/domain/test/payroll_test.dart` |
 | PAY-03 | 07 | User ki misal | T11 | IMPLEMENTED_UNVERIFIED | TC-001 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
-| PAY-04 | 07 | Katoti ki misal | T11, T18b, T18c | IMPLEMENTED_UNVERIFIED | TC-032, TC-121, TC-128 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
+| PAY-04 | 07 | Katoti ki misal | T11, T18b, T18c | IMPLEMENTED_UNVERIFIED | TC-032, TC-121, TC-128, TC-134 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart`, `apps/mobile/test/records_test.dart` |
 | PAY-05 | 07 | Advance sub-ledger | T11, T12, T12a, T18c | IMPLEMENTED_UNVERIFIED | TC-002, TC-035, TC-051, TC-070, TC-129 | `apps/mobile/test/salary_payment_test.dart` |
 | PAY-06 | 07 | Salary payments | T12, T12a | IMPLEMENTED_UNVERIFIED | TC-034, TC-051, TC-068, TC-069 | - |
 | PAY-07 | 07 | Deductions | T11, T11e | IMPLEMENTED_UNVERIFIED | TC-033, TC-061 | `apps/mobile/test/payroll_test.dart` |
@@ -79,7 +79,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | DOC-06 | 10 | Actions | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-059, TC-081 | - |
 | DOC-07 | 10 | Data safety | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-059, TC-081 | - |
 | DOC-08 | 10 | Tests | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-058, TC-082 | - |
-| REP-01 | 11 | Reports | T18, T18a, T11e, T11f | IMPLEMENTED_UNVERIFIED | TC-057, TC-058, TC-062, TC-063, TC-067, TC-106, TC-107, TC-108 | `apps/mobile/test/reports_test.dart` |
+| REP-01 | 11 | Reports | T18, T18a, T11e, T11f | IMPLEMENTED_UNVERIFIED | TC-057, TC-058, TC-062, TC-063, TC-067, TC-106, TC-107, TC-108, TC-135 | `apps/mobile/test/reports_test.dart` |
 | REP-02 | 11 | Hisaab ki separation | T18 | IMPLEMENTED_UNVERIFIED | TC-044 | `apps/mobile/test/reports_test.dart` |
 | REP-03 | 11 | Margin | T11f, T18 | IMPLEMENTED_UNVERIFIED | TC-044, TC-065, TC-112 | `apps/mobile/test/statement_test.dart`, `apps/mobile/test/reports_test.dart` |
 | REP-04 | 11 | Closing | T13, T13b, T16, T18b | IMPLEMENTED_UNVERIFIED | TC-037, TC-072, TC-073, TC-074, TC-076, TC-095, TC-098, TC-116 | - |
