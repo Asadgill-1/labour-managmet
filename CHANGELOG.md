@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- An issued invoice has Edit invoice. In one step a credit note dated today takes it back whole and a new draft of the same dates opens with the same discounts, lines, PO and VAT choices, in the violet edited colour. Issued, the new invoice prints which one it replaces.
 - Workers, companies, sites, rooms, groups, rates, allowances, deductions and opening balances show what changed and the user's note when edited, in the same violet. One that no entry names can be deleted, and stays whole on the Delete tab. One that entries name can only be archived, so they keep its name.
 - The Delete tab has two more tabs: allowances and deductions, and other records.
 - Any attendance row or cash book line can be edited or deleted, in a closed month too, which opens again. An edited one turns violet, with what the app saw change and the user's own note under it.

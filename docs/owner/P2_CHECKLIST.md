@@ -127,6 +127,15 @@ Aik naya mazdoor banayein, mahana tankhwah AED 1,000, aur contract ki shuruat pi
 - [ ] **Tankhwah** mein kisi mazdoor ki allowance kholein, raqam badlein aur **Badalne ki wajah** likhein. Phir use **Delete karein**.
 - [ ] Menu mein **Delete hui** kholein. **Delete hui allowance aur katoti** aur **Delete hui baqi cheezein** mein woh cheezein poori hon, aap ki wajah ke saath. PDF ya Excel nikalein: aakhri column khaali ho.
 
+## 5l. Invoice badlein (T18b, D-056)
+
+- [ ] Ek issue hua invoice kholein jis mein discount ya hath se likhi line ho. **Invoice badlein** dabayein. Sheet par likha ho ke credit note use poora wapas lega aur naya draft khulega.
+- [ ] **Badalne ki wajah** mein kuch likhein, **Credit note aur naya draft banayein** dabayein. Naya draft khule: upar jamni rang mein likha ho "Invoice ... ki jagah" aur aap ki wajah. Discount, line aur PO wohi hon.
+- [ ] Draft mein kuch badlein aur **Issue** karein. Naya number mile. **Kaghaz** mein neeche likha ho "Replaces invoice ...".
+- [ ] Purana invoice kholein: Credited ki mohar ho, aur **Naya invoice dekhein** ka button. Credit note ke kaghaz par aap ki wajah chhapi ho.
+- [ ] Jis invoice par kuch paisa mila ho, us par **Invoice badlein** karein. Naya invoice issue kar ke **Company ka credit lagayein** dabayein. Woh paisa naye invoice par lag jaye.
+- [ ] **Invoice** ki list mein naya draft jamni ho aur "Badla gaya" likha ho.
+
 ## 5i. Reports aur CSV import (T18)
 
 - [ ] **Menu > Reports > Sab reports**: har report ke neeche likha ho woh kya dikhati hai aur kis tareekh se. Har aik par dabayein, sahi register khule. **Companies se mila paisa** aur **Kharche** par sirf wohi lines hon.
