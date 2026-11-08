@@ -61,7 +61,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | TS-05 | 08 | Invoice source | T15 | IMPLEMENTED_UNVERIFIED | TC-004, TC-086, TC-109 | - |
 | TS-06 | 08 | Revision | T15, T18c | IMPLEMENTED_UNVERIFIED | TC-087, TC-130 | `apps/mobile/test/auto_cuts_test.dart` |
 | TS-07 | 08 | Output | T15, T16 | IMPLEMENTED_UNVERIFIED | TC-088, TC-093 | - |
-| TS-08 | 08 | Monthly contracts | T15, T16, T18c | IMPLEMENTED_UNVERIFIED | TC-020, TC-089, TC-094, TC-109, TC-138, TC-139 | `apps/mobile/test/invoices_test.dart`, `apps/mobile/test/invoice_edit_test.dart` |
+| TS-08 | 08 | Monthly contracts | T15, T16, T18c | IMPLEMENTED_UNVERIFIED | TC-020, TC-089, TC-094, TC-109, TC-138, TC-139, TC-141 | `apps/mobile/test/invoices_test.dart`, `apps/mobile/test/invoice_edit_test.dart` |
 | INV-01 | 09 | Creation | T16 | IMPLEMENTED_UNVERIFIED | TC-041, TC-096 | - |
 | INV-02 | 09 | Minimum fields | T16 | IMPLEMENTED_UNVERIFIED | TC-090 | - |
 | INV-03 | 09 | VAT | T16 | IMPLEMENTED_UNVERIFIED | TC-040 | - |

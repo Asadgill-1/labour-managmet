@@ -3,6 +3,7 @@
 ## Unreleased
 
 - A fixed monthly contract's month can be invoiced in parts. Each new invoice's contract line starts at what is left of the month's amount and says which invoices charged the rest. Before, what the first invoice left off could never be charged (D-059).
+- A fixed contract line charged in part prints as one month at the amount charged, so its quantity times price adds up. Before, a changed amount printed beside the full monthly rate. The timesheet now says the contract amount goes on the invoice by the month, not once (D-059).
 - An invoice line keeps the month its contract amount charges (schema 18). Lines issued before count their month as charged whole, as they did.
 - A paid invoice taken back by a credit note says how much of its money went back as the company's credit. Before, the money it had received just vanished from its page.
 - In tareekhon ka naya invoice on a credited invoice opens the draft it made before, instead of making a second one, and that draft names the invoice it replaces (D-058).

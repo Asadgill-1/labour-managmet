@@ -357,7 +357,9 @@ extension InvoiceOps on TenantDatabase {
               RateBasis.monthFixed => 1,
               RateBasis.month || RateBasis.monthPerWorker => persons,
             },
-            unitPriceFils: first.rateFils,
+            // One month at what this invoice charges of it, so the paper's quantity times price is its amount (D-059).
+            // ponytail: a fee per worker the owner changed still prints its rate; split it per worker if that is billed in parts.
+            unitPriceFils: basis == RateBasis.monthFixed ? amount : first.rateFils,
             amountFils: amount,
             discountFils: discount,
             fromDate: dates.first,

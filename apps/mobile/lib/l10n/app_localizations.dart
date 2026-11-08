@@ -4288,7 +4288,7 @@ abstract class AppLocalizations {
   /// No description provided for @tsMonthlyLine.
   ///
   /// In en, this message translates to:
-  /// **'{basis}, {rate}: {from} to {to}, {count} people. The contract amount goes on the invoice once, not from these rows.'**
+  /// **'{basis}, {rate}: {from} to {to}, {count} people. The contract amount goes on the invoice by the month, not from these rows.'**
   String tsMonthlyLine(
     String basis,
     String rate,

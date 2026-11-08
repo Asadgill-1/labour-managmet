@@ -209,12 +209,12 @@ void main() {
       expect(jsonEncode(p.rows), isNot(contains('5,000')), reason: 'the fee shows once, under the rows');
     });
 
-    test('names the unit, the fee and the dates, and says the fee is charged once', () async {
+    test('names the unit, the fee and the dates, and says the fee goes on the invoice by the month (D-059)', () async {
       final p = timesheetPaper(await monthly(), workers: false, priced: true, l10n: l10n);
       expect(p.monthly.single, contains(l10n.basisMonthFixed));
       expect(p.monthly.single, contains('AED 5,000.00'));
       expect(p.monthly.single, contains('05-10-2020'));
-      expect(p.monthly.single, contains('aik dafa'));
+      expect(p.monthly.single, contains('mahine ke hisaab se'));
     });
 
     test('hours only hides the fee and keeps the unit and dates', () async {

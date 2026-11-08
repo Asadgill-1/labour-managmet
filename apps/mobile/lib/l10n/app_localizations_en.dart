@@ -2403,7 +2403,7 @@ class AppLocalizationsEn extends AppLocalizations {
     String to,
     int count,
   ) {
-    return '$basis, $rate: $from to $to, $count people. The contract amount goes on the invoice once, not from these rows.';
+    return '$basis, $rate: $from to $to, $count people. The contract amount goes on the invoice by the month, not from these rows.';
   }
 
   @override
@@ -6242,7 +6242,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
     String to,
     int count,
   ) {
-    return '$basis, $rate: $from se $to tak, $count log. Contract ki raqam invoice par aik dafa lagti hai, in lines se nahin.';
+    return '$basis, $rate: $from se $to tak, $count log. Contract ki raqam invoice par mahine ke hisaab se lagti hai, in lines se nahin.';
   }
 
   @override

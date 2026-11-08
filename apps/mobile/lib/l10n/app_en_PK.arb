@@ -698,7 +698,7 @@
   "tsShiftsValue": "{shifts} shift",
   "tsMonthlyRow": "Mahana",
   "tsNotCharged": "Bill nahin",
-  "tsMonthlyLine": "{basis}, {rate}: {from} se {to} tak, {count} log. Contract ki raqam invoice par aik dafa lagti hai, in lines se nahin.",
+  "tsMonthlyLine": "{basis}, {rate}: {from} se {to} tak, {count} log. Contract ki raqam invoice par mahine ke hisaab se lagti hai, in lines se nahin.",
   "tsMonthlyLinePlain": "{basis}: {from} se {to} tak, {count} log.",
   "tsAgreedHeading": "Company ke saath tay",
   "tsRevisedBecause": "Revision ki wajah: {reason}",

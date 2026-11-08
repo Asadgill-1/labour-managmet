@@ -335,9 +335,9 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
             title: Text(_lineTitle(l10n, line)),
             subtitle: Text(
               [
-                // A fixed monthly fee's rate already names its unit.
+                // A fixed monthly fee's rate already names its unit. A draft shows the contract's, not the part it charges.
                 if (line.basis == RateBasis.monthFixed)
-                  rateSummary(l10n, line.basis!.name, line.unitPriceFils)
+                  rateSummary(l10n, line.basis!.name, line.sources.firstOrNull?.rateFils ?? line.unitPriceFils)
                 else if (line.basis case final basis?)
                   '${quantityLabel(l10n, line)}, ${rateSummary(l10n, basis.name, line.unitPriceFils)}'
                 else

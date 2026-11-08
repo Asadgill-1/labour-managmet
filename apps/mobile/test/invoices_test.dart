@@ -436,7 +436,7 @@ void main() {
       final number = (await db.invoiceView(first)).invoice.number!;
       final second = await db.createInvoice(clientId: fixed, from: '2020-10-16', to: ts.to, operationId: newUuid());
       var line = await fee(second);
-      expect(line.amountFils, 250000, reason: 'the rest of the month');
+      expect((line.amountFils, line.quantity, line.unitPriceFils), (250000, 1, 250000), reason: 'the rest of the month, printed as one month at that price');
       expect(line.chargedBefore, [(number: number, fils: 250000)], reason: 'and where the first part went');
       await db.deleteInvoiceDraft(second, operationId: newUuid());
       await charge('2020-10-16', ts.to, 100000);
