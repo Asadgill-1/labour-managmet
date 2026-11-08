@@ -97,6 +97,7 @@ class InvoiceLineView {
     required this.tax,
     this.description,
     this.sources = const [],
+    this.chargedBefore = const [],
   });
 
   /// Says which line a discount or fee belongs to. Stable while the draft is open.
@@ -123,6 +124,9 @@ class InvoiceLineView {
 
   /// The timesheet rows a draft line would charge.
   final List<TimesheetLine> sources;
+
+  /// On a draft's fixed monthly fee: what live invoices already charged for its month, so it starts at the rest (D-058).
+  final List<({String number, int fils})> chargedBefore;
 
   bool get isFee => basis != null && isPeriodBasis(basis!);
   bool get isItem => basis == null;
@@ -297,7 +301,8 @@ extension InvoiceOps on TenantDatabase {
 
   /// What a draft would hold if issued now (TS-05, TS-08). One line per timesheet, site, trade, unit and rate, charging
   /// the sum of its rows, each rounded on its own (D-101). A monthly contract is one line a month at its fee, which the
-  /// owner can change; its rows go on record at 0 so the fee can't be charged twice.
+  /// owner can change; its rows go on record at 0 so the fee can't be charged twice. A fixed fee starts at what earlier
+  /// invoices left of its month (D-058).
   Future<(List<InvoiceLineView>, List<InvoiceSource>)> _draftLines(Invoice inv, {required int bps}) async {
     final draft = InvoiceDraft.fromJson(inv.draft);
     final sheets = await _timesheetsFor(inv);
@@ -320,6 +325,7 @@ extension InvoiceOps on TenantDatabase {
       }
     }
     final numbers = {for (final t in sheets) t.id: t.number};
+    final before = await fixedFeeCharges(clientId: inv.clientId);
     final lines = [
       for (final MapEntry(:key, value: rows) in byKey.entries)
         () {
@@ -329,7 +335,13 @@ extension InvoiceOps on TenantDatabase {
           final sites = rows.map((l) => l.siteName).toSet();
           final persons = rows.map((l) => l.workerId).toSet().length;
           final units = rows.fold(const TsUnits(), (total, l) => total + unitsOf(_tsLine(l)));
-          final amount = isPeriodBasis(basis) ? draft.fees[key] ?? clientMonthlyCharge(basis, rateFils: first.rateFils, workerCount: persons) : rows.fold(0, (total, l) => total + l.amountFils!);
+          final earlier = [
+            if (basis == RateBasis.monthFixed)
+              for (final c in before)
+                if (c.month == dates.first.substring(0, 7)) (number: c.number, fils: c.fils),
+          ];
+          final rest = clientMonthlyCharge(basis, rateFils: first.rateFils, workerCount: persons) - earlier.fold<int>(0, (total, c) => total + c.fils);
+          final amount = isPeriodBasis(basis) ? draft.fees[key] ?? rest : rows.fold(0, (total, l) => total + l.amountFils!);
           final discount = draft.discounts[key] ?? 0;
           return InvoiceLineView(
             key: key,
@@ -352,6 +364,7 @@ extension InvoiceOps on TenantDatabase {
             toDate: dates.last,
             tax: lineTax(amount, discountFils: discount.clamp(0, amount), bps: bps, inclusive: inv.pricesIncludeVat),
             sources: rows,
+            chargedBefore: earlier,
           );
         }(),
     ];
@@ -693,6 +706,7 @@ extension InvoiceOps on TenantDatabase {
             discountFils: Value(l.discountFils),
             netFils: l.tax.netFils,
             vatFils: l.tax.vatFils,
+            feeMonth: Value(l.basis == RateBasis.monthFixed && l.fromDate != null ? l.fromDate!.substring(0, 7) : null),
           ),
       ]);
     });
@@ -912,7 +926,7 @@ extension InvoiceOps on TenantDatabase {
           final basis = r.read(e.clientBasis);
           final monthly = basis != null && periodBases.contains(basis);
           final chargeable = rated && (amount > 0 || monthly);
-          final feeCharged = monthly && fees.contains(feeCover(r.read(e.clientId)!, basis, r.read(e.workDate)!, r.read(e.workerId)!));
+          final feeCharged = monthly && feeDone(fees, feeCover(r.read(e.clientId)!, basis, r.read(e.workDate)!, r.read(e.workerId)!), r.read(e.clientRateFils) ?? 0);
           return (
             clientId: r.read(e.clientId)!,
             siteId: r.read(e.siteId)!,

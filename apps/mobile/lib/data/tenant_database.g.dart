@@ -22605,6 +22605,17 @@ class $InvoiceLinesTable extends InvoiceLines
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _feeMonthMeta = const VerificationMeta(
+    'feeMonth',
+  );
+  @override
+  late final GeneratedColumn<String> feeMonth = GeneratedColumn<String>(
+    'fee_month',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -22625,6 +22636,7 @@ class $InvoiceLinesTable extends InvoiceLines
     discountFils,
     netFils,
     vatFils,
+    feeMonth,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -22794,6 +22806,12 @@ class $InvoiceLinesTable extends InvoiceLines
     } else if (isInserting) {
       context.missing(_vatFilsMeta);
     }
+    if (data.containsKey('fee_month')) {
+      context.handle(
+        _feeMonthMeta,
+        feeMonth.isAcceptableOrUnknown(data['fee_month']!, _feeMonthMeta),
+      );
+    }
     return context;
   }
 
@@ -22875,6 +22893,10 @@ class $InvoiceLinesTable extends InvoiceLines
         DriftSqlType.int,
         data['${effectivePrefix}vat_fils'],
       )!,
+      feeMonth: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}fee_month'],
+      ),
     );
   }
 
@@ -22909,6 +22931,10 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
   final int discountFils;
   final int netFils;
   final int vatFils;
+
+  /// On a fixed monthly contract's line, the month it charges, so the next invoice can charge what is left (D-058). Null
+  /// on a line issued before, whose month counts as charged whole.
+  final String? feeMonth;
   const InvoiceLine({
     required this.id,
     required this.tenantId,
@@ -22928,6 +22954,7 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
     required this.discountFils,
     required this.netFils,
     required this.vatFils,
+    this.feeMonth,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -22952,6 +22979,9 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
     map['discount_fils'] = Variable<int>(discountFils);
     map['net_fils'] = Variable<int>(netFils);
     map['vat_fils'] = Variable<int>(vatFils);
+    if (!nullToAbsent || feeMonth != null) {
+      map['fee_month'] = Variable<String>(feeMonth);
+    }
     return map;
   }
 
@@ -22977,6 +23007,9 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
       discountFils: Value(discountFils),
       netFils: Value(netFils),
       vatFils: Value(vatFils),
+      feeMonth: feeMonth == null && nullToAbsent
+          ? const Value.absent()
+          : Value(feeMonth),
     );
   }
 
@@ -23004,6 +23037,7 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
       discountFils: serializer.fromJson<int>(json['discountFils']),
       netFils: serializer.fromJson<int>(json['netFils']),
       vatFils: serializer.fromJson<int>(json['vatFils']),
+      feeMonth: serializer.fromJson<String?>(json['feeMonth']),
     );
   }
   @override
@@ -23028,6 +23062,7 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
       'discountFils': serializer.toJson<int>(discountFils),
       'netFils': serializer.toJson<int>(netFils),
       'vatFils': serializer.toJson<int>(vatFils),
+      'feeMonth': serializer.toJson<String?>(feeMonth),
     };
   }
 
@@ -23050,6 +23085,7 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
     int? discountFils,
     int? netFils,
     int? vatFils,
+    Value<String?> feeMonth = const Value.absent(),
   }) => InvoiceLine(
     id: id ?? this.id,
     tenantId: tenantId ?? this.tenantId,
@@ -23069,6 +23105,7 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
     discountFils: discountFils ?? this.discountFils,
     netFils: netFils ?? this.netFils,
     vatFils: vatFils ?? this.vatFils,
+    feeMonth: feeMonth.present ? feeMonth.value : this.feeMonth,
   );
   InvoiceLine copyWithCompanion(InvoiceLinesCompanion data) {
     return InvoiceLine(
@@ -23106,6 +23143,7 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
           : this.discountFils,
       netFils: data.netFils.present ? data.netFils.value : this.netFils,
       vatFils: data.vatFils.present ? data.vatFils.value : this.vatFils,
+      feeMonth: data.feeMonth.present ? data.feeMonth.value : this.feeMonth,
     );
   }
 
@@ -23129,7 +23167,8 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
           ..write('amountFils: $amountFils, ')
           ..write('discountFils: $discountFils, ')
           ..write('netFils: $netFils, ')
-          ..write('vatFils: $vatFils')
+          ..write('vatFils: $vatFils, ')
+          ..write('feeMonth: $feeMonth')
           ..write(')'))
         .toString();
   }
@@ -23154,6 +23193,7 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
     discountFils,
     netFils,
     vatFils,
+    feeMonth,
   );
   @override
   bool operator ==(Object other) =>
@@ -23176,7 +23216,8 @@ class InvoiceLine extends DataClass implements Insertable<InvoiceLine> {
           other.amountFils == this.amountFils &&
           other.discountFils == this.discountFils &&
           other.netFils == this.netFils &&
-          other.vatFils == this.vatFils);
+          other.vatFils == this.vatFils &&
+          other.feeMonth == this.feeMonth);
 }
 
 class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLine> {
@@ -23198,6 +23239,7 @@ class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLine> {
   final Value<int> discountFils;
   final Value<int> netFils;
   final Value<int> vatFils;
+  final Value<String?> feeMonth;
   final Value<int> rowid;
   const InvoiceLinesCompanion({
     this.id = const Value.absent(),
@@ -23218,6 +23260,7 @@ class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLine> {
     this.discountFils = const Value.absent(),
     this.netFils = const Value.absent(),
     this.vatFils = const Value.absent(),
+    this.feeMonth = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   InvoiceLinesCompanion.insert({
@@ -23239,6 +23282,7 @@ class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLine> {
     this.discountFils = const Value.absent(),
     required int netFils,
     required int vatFils,
+    this.feeMonth = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        tenantId = Value(tenantId),
@@ -23274,6 +23318,7 @@ class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLine> {
     Expression<int>? discountFils,
     Expression<int>? netFils,
     Expression<int>? vatFils,
+    Expression<String>? feeMonth,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -23295,6 +23340,7 @@ class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLine> {
       if (discountFils != null) 'discount_fils': discountFils,
       if (netFils != null) 'net_fils': netFils,
       if (vatFils != null) 'vat_fils': vatFils,
+      if (feeMonth != null) 'fee_month': feeMonth,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -23318,6 +23364,7 @@ class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLine> {
     Value<int>? discountFils,
     Value<int>? netFils,
     Value<int>? vatFils,
+    Value<String?>? feeMonth,
     Value<int>? rowid,
   }) {
     return InvoiceLinesCompanion(
@@ -23339,6 +23386,7 @@ class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLine> {
       discountFils: discountFils ?? this.discountFils,
       netFils: netFils ?? this.netFils,
       vatFils: vatFils ?? this.vatFils,
+      feeMonth: feeMonth ?? this.feeMonth,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -23400,6 +23448,9 @@ class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLine> {
     if (vatFils.present) {
       map['vat_fils'] = Variable<int>(vatFils.value);
     }
+    if (feeMonth.present) {
+      map['fee_month'] = Variable<String>(feeMonth.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -23427,6 +23478,7 @@ class InvoiceLinesCompanion extends UpdateCompanion<InvoiceLine> {
           ..write('discountFils: $discountFils, ')
           ..write('netFils: $netFils, ')
           ..write('vatFils: $vatFils, ')
+          ..write('feeMonth: $feeMonth, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -49980,6 +50032,7 @@ typedef $$InvoiceLinesTableCreateCompanionBuilder =
       Value<int> discountFils,
       required int netFils,
       required int vatFils,
+      Value<String?> feeMonth,
       Value<int> rowid,
     });
 typedef $$InvoiceLinesTableUpdateCompanionBuilder =
@@ -50002,6 +50055,7 @@ typedef $$InvoiceLinesTableUpdateCompanionBuilder =
       Value<int> discountFils,
       Value<int> netFils,
       Value<int> vatFils,
+      Value<String?> feeMonth,
       Value<int> rowid,
     });
 
@@ -50130,6 +50184,11 @@ class $$InvoiceLinesTableFilterComposer
 
   ColumnFilters<int> get vatFils => $composableBuilder(
     column: $table.vatFils,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get feeMonth => $composableBuilder(
+    column: $table.feeMonth,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -50269,6 +50328,11 @@ class $$InvoiceLinesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get feeMonth => $composableBuilder(
+    column: $table.feeMonth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$InvoicesTableOrderingComposer get invoiceId {
     final $$InvoicesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -50387,6 +50451,9 @@ class $$InvoiceLinesTableAnnotationComposer
   GeneratedColumn<int> get vatFils =>
       $composableBuilder(column: $table.vatFils, builder: (column) => column);
 
+  GeneratedColumn<String> get feeMonth =>
+      $composableBuilder(column: $table.feeMonth, builder: (column) => column);
+
   $$InvoicesTableAnnotationComposer get invoiceId {
     final $$InvoicesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -50480,6 +50547,7 @@ class $$InvoiceLinesTableTableManager
                 Value<int> discountFils = const Value.absent(),
                 Value<int> netFils = const Value.absent(),
                 Value<int> vatFils = const Value.absent(),
+                Value<String?> feeMonth = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => InvoiceLinesCompanion(
                 id: id,
@@ -50500,6 +50568,7 @@ class $$InvoiceLinesTableTableManager
                 discountFils: discountFils,
                 netFils: netFils,
                 vatFils: vatFils,
+                feeMonth: feeMonth,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -50522,6 +50591,7 @@ class $$InvoiceLinesTableTableManager
                 Value<int> discountFils = const Value.absent(),
                 required int netFils,
                 required int vatFils,
+                Value<String?> feeMonth = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => InvoiceLinesCompanion.insert(
                 id: id,
@@ -50542,6 +50612,7 @@ class $$InvoiceLinesTableTableManager
                 discountFils: discountFils,
                 netFils: netFils,
                 vatFils: vatFils,
+                feeMonth: feeMonth,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

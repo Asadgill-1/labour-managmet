@@ -66,6 +66,10 @@ enum BillHold { billed, notCharged, disputed, changed }
 String feeCover(String clientId, String basis, String workDate, String workerId) =>
     '$clientId|$basis|${workDate.substring(0, 7)}${basis == RateBasis.monthFixed.name ? '' : '|$workerId'}';
 
+/// Whether live invoices charged all of a monthly fee, from [feesCharged]: a fixed fee once its month's amount,
+/// [monthFils], is reached (D-058).
+bool feeDone(Map<String, int?> fees, String cover, int monthFils) => fees.containsKey(cover) && (fees[cover] ?? monthFils) >= monthFils;
+
 typedef BillableLine = ({TimesheetLine line, BillHold? hold});
 
 /// One row of a timesheet: read from live attendance in a draft, from its stored line after that.
@@ -658,7 +662,7 @@ extension TimesheetOps on TenantDatabase {
       ..orderBy([OrderingTerm.asc(l.workDate), OrderingTerm.asc(l.workerName)]);
     final billed = await _liveBillingKeys();
     final fees = await feesCharged();
-    bool feeCharged(TimesheetLine line, AttendanceEntry entry) => line.amountFils == null && fees.contains(feeCover(entry.clientId, line.basis, line.workDate, line.workerId));
+    bool feeCharged(TimesheetLine line, AttendanceEntry entry) => line.amountFils == null && feeDone(fees, feeCover(entry.clientId, line.basis, line.workDate, line.workerId), line.rateFils);
     return [
       for (final row in await query.get())
         (
@@ -682,15 +686,40 @@ extension TimesheetOps on TenantDatabase {
       if (b.hold == null && (b.line.amountFils == null) == monthly) b.line,
   ];
 
-  /// Every [feeCover] a live invoice charged, so a month's fee is charged once however its work is split (TS-05, TS-08).
-  Future<Set<String>> feesCharged() async {
+  /// Every [feeCover] a live invoice charged, so a month's fee is never charged twice however its work is split (TS-05,
+  /// TS-08). A fixed fee maps to what its invoices charged so far, which can be part of the month (D-058); null means
+  /// charged whole, as a fee per worker is, or a fixed fee issued before its line kept its month.
+  Future<Map<String, int?>> feesCharged() async {
     final b = billedAllocations;
     final l = timesheetLines;
     final t = timesheets;
     final query = selectOnly(b).join([innerJoin(l, l.id.equalsExp(b.lineId)), innerJoin(t, t.id.equalsExp(l.timesheetId))])
       ..addColumns([t.clientId, l.basis, l.workDate, l.workerId])
       ..where(b.released.equals(false) & l.amountFils.isNull());
-    return {for (final r in await query.get()) feeCover(r.read(t.clientId)!, r.read(l.basis)!, r.read(l.workDate)!, r.read(l.workerId)!)};
+    final fees = <String, int?>{for (final r in await query.get()) feeCover(r.read(t.clientId)!, r.read(l.basis)!, r.read(l.workDate)!, r.read(l.workerId)!): null};
+    for (final c in await fixedFeeCharges()) {
+      final cover = feeCover(c.clientId, RateBasis.monthFixed.name, '${c.month}-01', '');
+      fees[cover] = (fees[cover] ?? 0) + c.fils;
+    }
+    return fees;
+  }
+
+  /// Each fixed monthly contract amount a live invoice charged, with its month, for one company or all (D-058).
+  Future<List<({String clientId, String month, String number, int fils})>> fixedFeeCharges({String? clientId}) async {
+    final l = invoiceLines;
+    final i = invoices;
+    final query = select(l).join([innerJoin(i, i.id.equalsExp(l.invoiceId))])
+      ..where(
+        l.feeMonth.isNotNull() &
+            i.kind.equals('invoice') &
+            // A whole credit note gives the month back; one for an amount corrects the price and gives nothing back.
+            i.status.equals('issued') &
+            (clientId == null ? const Constant(true) : i.clientId.equals(clientId)),
+      )
+      ..orderBy([OrderingTerm.asc(i.year), OrderingTerm.asc(i.seq)]);
+    return [
+      for (final r in await query.get()) (clientId: r.readTable(i).clientId, month: r.readTable(l).feeMonth!, number: r.readTable(i).number!, fils: r.readTable(l).amountFils),
+    ];
   }
 
   Future<Set<String>> _liveBillingKeys() async {

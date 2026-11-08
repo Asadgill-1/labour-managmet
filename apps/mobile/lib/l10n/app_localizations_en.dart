@@ -786,7 +786,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get monthlyNotInTotal =>
-      'Monthly rates are not in these totals. A monthly wage counts by the month, and a company\'s monthly contract goes on its invoice once a month.';
+      'Monthly rates are not in these totals. A monthly wage counts by the month, and a company\'s monthly contract is charged by the month on its invoices.';
 
   @override
   String get groupRate => 'Change today\'s company rate';
@@ -2798,7 +2798,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invFeeHelp =>
-      'Starts at the monthly contract amount. Change it if the contract ran for only part of the month. A month\'s amount is charged once, so what you leave off can\'t go on a later invoice.';
+      'Starts at what is left of the month\'s contract amount. Change it if the contract ran for only part of the month. What you leave off can go on a later invoice for the same month.';
+
+  @override
+  String invFeeChargedBefore(String amount, String invoices) {
+    return '$amount of this month is already on $invoices, so this line starts at the rest.';
+  }
 
   @override
   String get invDiscountTooBig => 'A discount can\'t be more than its line.';
@@ -4647,7 +4652,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get monthlyNotInTotal =>
-      'Mahana rate is total mein nahin. Mahana tankhwah mahine par lagti hai, aur company ka mahana contract invoice par mahine mein aik baar.';
+      'Mahana rate is total mein nahin. Mahana tankhwah mahine par lagti hai, aur company ka mahana contract invoice par mahine ke hisaab se lagta hai.';
 
   @override
   String get groupRate => 'Aaj ka company rate badlein';
@@ -6617,7 +6622,12 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get invFeeHelp =>
-      'Contract ki mahana raqam se shuru. Contract mahine ka kuch hissa chala ho to badlein. Mahine ki raqam aik hi baar lagti hai, is liye jo kam karein woh baad ke invoice par nahin aayegi.';
+      'Mahine ki contract raqam mein se jo baqi hai, us se shuru. Contract mahine ka kuch hissa chala ho to badlein. Jo kam karein, woh isi mahine ke agle invoice par lag sakti hai.';
+
+  @override
+  String invFeeChargedBefore(String amount, String invoices) {
+    return 'Is mahine ke $amount pehle $invoices par lag chuke, is liye yeh line baqi raqam se shuru hai.';
+  }
 
   @override
   String get invDiscountTooBig => 'Discount line se zyada nahin ho sakta.';

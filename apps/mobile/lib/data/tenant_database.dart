@@ -78,7 +78,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 17;
+  int get schemaVersion => 18;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -235,6 +235,8 @@ class TenantDatabase extends _$TenantDatabase {
         // The new check on amounts needs the table rebuilt. Its indexes and triggers come back with it.
         await m.alterTable(TableMigration(schema.payrollItems));
       },
+      // A fixed monthly contract's line keeps its month, so a month billed in parts charges what is left (D-058).
+      from17To18: (m, schema) => m.addColumn(schema.invoiceLines, schema.invoiceLines.feeMonth),
     ),
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');

@@ -1564,7 +1564,7 @@ abstract class AppLocalizations {
   /// No description provided for @monthlyNotInTotal.
   ///
   /// In en, this message translates to:
-  /// **'Monthly rates are not in these totals. A monthly wage counts by the month, and a company\'s monthly contract goes on its invoice once a month.'**
+  /// **'Monthly rates are not in these totals. A monthly wage counts by the month, and a company\'s monthly contract is charged by the month on its invoices.'**
   String get monthlyNotInTotal;
 
   /// No description provided for @groupRate.
@@ -4900,8 +4900,14 @@ abstract class AppLocalizations {
   /// No description provided for @invFeeHelp.
   ///
   /// In en, this message translates to:
-  /// **'Starts at the monthly contract amount. Change it if the contract ran for only part of the month. A month\'s amount is charged once, so what you leave off can\'t go on a later invoice.'**
+  /// **'Starts at what is left of the month\'s contract amount. Change it if the contract ran for only part of the month. What you leave off can go on a later invoice for the same month.'**
   String get invFeeHelp;
+
+  /// No description provided for @invFeeChargedBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} of this month is already on {invoices}, so this line starts at the rest.'**
+  String invFeeChargedBefore(String amount, String invoices);
 
   /// No description provided for @invDiscountTooBig.
   ///

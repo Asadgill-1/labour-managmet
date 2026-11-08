@@ -423,6 +423,43 @@ void main() {
       expect(invoiceLineText(paperWords, line), startsWith('Monthly contract amount for 10-2020 ('), reason: 'the paper names the month the amount covers, and says contract once');
     });
 
+    test('a month billed in parts charges what is left of its amount, however many parts (D-058)', () async {
+      Future<InvoiceLineView> fee(String id) async => (await db.invoiceView(id)).lines.single;
+      Future<String> charge(String from, String to, int fils) async {
+        final id = await db.createInvoice(clientId: fixed, from: from, to: to, operationId: newUuid());
+        await db.saveInvoiceDraft(id, InvoicesCompanion(draft: Value(InvoiceDraft(fees: {(await fee(id)).key: fils}).toJson())), operationId: newUuid());
+        await issue(id);
+        return id;
+      }
+
+      final first = await charge(ts.from, '2020-10-15', 250000);
+      final number = (await db.invoiceView(first)).invoice.number!;
+      final second = await db.createInvoice(clientId: fixed, from: '2020-10-16', to: ts.to, operationId: newUuid());
+      var line = await fee(second);
+      expect(line.amountFils, 250000, reason: 'the rest of the month');
+      expect(line.chargedBefore, [(number: number, fils: 250000)], reason: 'and where the first part went');
+      await db.deleteInvoiceDraft(second, operationId: newUuid());
+      await charge('2020-10-16', ts.to, 100000);
+
+      // A third part: work entered later takes what is still left.
+      await db.saveAttendanceBatch(workDate: '2020-10-25', clientId: fixed, siteId: tower, inputs: [EntryInput(workerId: ts.bilal, shift: ts.shift)], operationId: newUuid());
+      final late = await db.createTimesheet(clientId: fixed, from: ts.from, to: ts.to, operationId: newUuid());
+      await db.approveTimesheet((await db.timesheetView(late)).revision.id, operationId: newUuid());
+      expect(await db.uninvoicedWork(to: ts.to), {(fixed, '2020-10')}, reason: 'part of the month is still to charge');
+      final third = await db.createInvoice(clientId: fixed, from: ts.from, to: ts.to, operationId: newUuid());
+      expect((await fee(third)).amountFils, 150000);
+      await issue(third);
+      await expectLater(db.createInvoice(clientId: fixed, from: ts.from, to: ts.to, operationId: newUuid()), refused(InvoiceProblem.nothingToBill));
+      expect([for (final f in (await db.closingFor('2020-10')).findings) if (f.issue == ClosingIssue.notInvoiced) f], isEmpty);
+
+      // A credit note for an amount corrects the price and gives nothing back; a whole one gives its part back.
+      await db.creditInvoice(first, reason: 'Agreed less', amountFils: 50000, operationId: newUuid());
+      await expectLater(db.createInvoice(clientId: fixed, from: ts.from, to: ts.to, operationId: newUuid()), refused(InvoiceProblem.nothingToBill));
+      await db.creditInvoice(third, reason: 'Wrong amount', operationId: newUuid());
+      line = await fee(await db.createInvoice(clientId: fixed, from: ts.from, to: ts.to, operationId: newUuid()));
+      expect((line.amountFils, line.sources.length), (150000, 1));
+    });
+
     test('a fee per worker charges each worker once a month', () async {
       final crew = await db.saveRow(db.clients, id: null, operationId: newUuid(), fields: const ClientsCompanion(name: Value('Crew')));
       final yard = await db.saveRow(db.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(crew), name: const Value('Yard')));

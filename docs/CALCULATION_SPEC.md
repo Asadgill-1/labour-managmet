@@ -29,7 +29,7 @@ The client and worker sides are calculated independently and can differ.
 | Shift or day | Agreed fee by eligibility: full, half, or explicit partial amount, plus extra time if contracted. Never `hours * rate` | CALC-03 |
 | Worker monthly | Once per payroll period, never per attendance row. Full period = the monthly amount exactly. Partial period uses the method on the contract | CALC-04 |
 | Client monthly per worker | Monthly fee times the number of contracted workers | CALC-05 |
-| Client fixed monthly | One fee for the contract, never multiplied by worker rows. Attendance is evidence only | CALC-05, TS-08 |
+| Client fixed monthly | One fee for the contract, never multiplied by worker rows. Attendance is evidence only. A month invoiced in parts charges what is left of the fee on each next invoice, until the fee is reached (D-059) | CALC-05, TS-08 |
 
 **Partial period:** no default (D-102). The contract must choose calendar days or a fixed divisor, effective-dated. `divRoundHalfUp(monthly * covered_units, total_units)`. A contract without a choice stops for review.
 

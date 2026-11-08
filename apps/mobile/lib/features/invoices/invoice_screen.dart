@@ -344,6 +344,8 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
                   quantityLabel(l10n, line),
                 if (line.description == null) [if (line.fromDate != null) l10n.dateFromTo(showDate(line.fromDate!), showDate(line.toDate!)), ?line.timesheetNumber].join(', '),
                 if (line.isFee && line.description == null) l10n.invFeeHelp,
+                if (line.chargedBefore.isNotEmpty)
+                  l10n.invFeeChargedBefore(formatAed(line.chargedBefore.fold(0, (total, c) => total + c.fils)), line.chargedBefore.map((c) => c.number).toSet().join(', ')),
                 if (line.discountFils > 0) l10n.invLessDiscount(formatAed(line.discountFils)),
               ].join('\n'),
             ),

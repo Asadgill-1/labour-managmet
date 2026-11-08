@@ -2,9 +2,11 @@
 
 ## Unreleased
 
+- A fixed monthly contract's month can be invoiced in parts. Each new invoice's contract line starts at what is left of the month's amount and says which invoices charged the rest. Before, what the first invoice left off could never be charged (D-059).
+- An invoice line keeps the month its contract amount charges (schema 18). Lines issued before count their month as charged whole, as they did.
 - A paid invoice taken back by a credit note says how much of its money went back as the company's credit. Before, the money it had received just vanished from its page.
 - In tareekhon ka naya invoice on a credited invoice opens the draft it made before, instead of making a second one, and that draft names the invoice it replaces (D-058).
-- An invoice for the rest of a month whose fixed contract amount is already charged says so, instead of asking for a timesheet that is already approved. The contract line says what is left off can't go on a later invoice (D-058).
+- An invoice for the rest of a month whose fixed contract amount is already charged says so, instead of asking for a timesheet that is already approved. (D-058).
 - The attendance review says a company's monthly contract is not in its total, not only a monthly wage.
 - Closing a month says an edit opens it again (D-056), and a closing finding says an invoice falls due by the month's end, which is true before the due date too.
 - A note typed in a form before Delete now goes into the delete question, so it stays with the deleted entry. It was dropped before.

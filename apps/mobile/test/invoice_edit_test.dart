@@ -1,13 +1,17 @@
+import 'package:domain/calc.dart';
 import 'package:domain/dates.dart';
+import 'package:domain/money.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/invoices.dart';
 import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/receipts.dart';
 import 'package:labour_app/data/tenant_database.dart';
 import 'package:labour_app/data/timesheets.dart';
 import 'package:labour_app/features/invoices/invoice_paper.dart';
+import 'package:labour_app/features/invoices/invoice_screen.dart';
 import 'package:labour_app/l10n/app_localizations.dart';
 
 import 'support.dart';
@@ -172,6 +176,39 @@ void main() {
     await tester.tap(find.byType(BackButton));
     await settle(tester);
     expect(find.textContaining(words.editedTag), findsOneWidget, reason: 'the new draft, in the list');
+    await shutDown(tester, app);
+  });
+
+  testWidgets("from the screens: a fixed contract's second part says what the month already charged (D-058)", (tester) async {
+    final app = memoryDb();
+    final draft = await real(tester, () async {
+      await ts.seed(app);
+      final fixed = await app.saveRow(app.clients, id: null, operationId: newUuid(), fields: const ClientsCompanion(name: Value('Fajr')));
+      final tower = await app.saveRow(app.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(fixed), name: const Value('Tower')));
+      await app.saveRow(
+        app.billingContracts,
+        id: null,
+        operationId: newUuid(),
+        fields: BillingContractsCompanion(clientId: Value(fixed), basis: Value(RateBasis.monthFixed.name), rateFils: const Value(500000), effectiveFrom: const Value('2020-01-01')),
+      );
+      for (final date in ['2020-10-05', '2020-10-20']) {
+        await app.saveAttendanceBatch(workDate: date, clientId: fixed, siteId: tower, inputs: [EntryInput(workerId: ts.asif, shift: ts.shift)], operationId: newUuid());
+      }
+      final sheet = await app.createTimesheet(clientId: fixed, from: ts.from, to: ts.to, operationId: newUuid());
+      await app.approveTimesheet((await app.timesheetView(sheet)).revision.id, operationId: newUuid());
+      final first = await app.createInvoice(clientId: fixed, from: ts.from, to: '2020-10-15', operationId: newUuid());
+      final key = (await app.invoiceView(first)).lines.single.key;
+      await app.saveInvoiceDraft(first, InvoicesCompanion(draft: Value(InvoiceDraft(fees: {key: 250000}).toJson())), operationId: newUuid());
+      await app.issueInvoice(first, describe: _describe, operationId: newUuid());
+      return app.createInvoice(clientId: fixed, from: '2020-10-16', to: ts.to, operationId: newUuid());
+    });
+    final words = await real(tester, () => AppLocalizations.delegate.load(const Locale('en', 'PK')));
+    await pumpApp(tester, app);
+    tester.state<NavigatorState>(find.byType(Navigator).first).push(MaterialPageRoute<void>(builder: (_) => InvoiceScreen(invoiceId: draft)));
+    await settle(tester);
+
+    expect(find.textContaining(words.invFeeChargedBefore(formatAed(250000), 'INV-$_year-0001')), findsOneWidget);
+    expect(find.text(formatAed(250000)), findsWidgets, reason: 'the line starts at the rest');
     await shutDown(tester, app);
   });
 }

@@ -320,7 +320,7 @@
   "reviewTitle": "Review attendance",
   "totalClient": "To collect from company",
   "totalWorker": "To pay workers",
-  "monthlyNotInTotal": "Monthly rates are not in these totals. A monthly wage counts by the month, and a company's monthly contract goes on its invoice once a month.",
+  "monthlyNotInTotal": "Monthly rates are not in these totals. A monthly wage counts by the month, and a company's monthly contract is charged by the month on its invoices.",
   "groupRate": "Change today's company rate",
   "groupRateAmount": "Company rate for this group (AED)",
   "issueClientRate": "No company rate found",
@@ -1568,7 +1568,18 @@
   "invLineSheetTitle": "Change this line",
   "invDiscount": "Discount (AED)",
   "invFee": "Contract amount for these dates (AED)",
-  "invFeeHelp": "Starts at the monthly contract amount. Change it if the contract ran for only part of the month. A month's amount is charged once, so what you leave off can't go on a later invoice.",
+  "invFeeHelp": "Starts at what is left of the month's contract amount. Change it if the contract ran for only part of the month. What you leave off can go on a later invoice for the same month.",
+  "invFeeChargedBefore": "{amount} of this month is already on {invoices}, so this line starts at the rest.",
+  "@invFeeChargedBefore": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "invoices": {
+        "type": "String"
+      }
+    }
+  },
   "invDiscountTooBig": "A discount can't be more than its line.",
   "findingNotInvoiced": "{count, plural, =1{1 company has work no invoice charges yet: {names}. Make its invoice in Billing.} other{{count} companies have work no invoice charges yet: {names}. Make their invoices in Billing.}}",
   "@findingNotInvoiced": {

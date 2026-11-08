@@ -392,6 +392,10 @@ class InvoiceLines extends Table with Common {
   IntColumn get discountFils => integer().withDefault(const Constant(0)).check(discountFils.isBiggerOrEqualValue(0))();
   IntColumn get netFils => integer()();
   IntColumn get vatFils => integer()();
+
+  /// On a fixed monthly contract's line, the month it charges, so the next invoice can charge what is left (D-058). Null
+  /// on a line issued before, whose month counts as charged whole.
+  TextColumn get feeMonth => text().nullable()();
 }
 
 /// What settles a company's invoice, or its balance from before the app (INV-05): part of a receipt in the cash book, or

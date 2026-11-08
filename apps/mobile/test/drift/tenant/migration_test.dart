@@ -32,6 +32,44 @@ void main() {
     await db.validateDatabaseSchema();
   });
 
+  test("a phone on version 17 upgrades: a fixed contract's month charged in part before stays charged whole, and new lines keep their month (D-058)", () async {
+    final old = await verifier.schemaAt(17);
+    old.rawDatabase.execute('''
+      INSERT INTO tenant_profiles (id, $commonColumns, legal_name) VALUES ('p1', $common, 'Labour');
+      INSERT INTO clients (id, $commonColumns, name) VALUES ('c1', $common, 'Fajr');
+      INSERT INTO sites (id, $commonColumns, client_id, name) VALUES ('s1', $common, 'c1', 'Tower');
+      INSERT INTO workers (id, $commonColumns, code, name) VALUES ('w1', $common, 'W001', 'Ahmad');
+      INSERT INTO pay_contracts (id, $commonColumns, worker_id, basis, rate_fils, effective_from) VALUES ('k1', $common, 'w1', 'day', 1000, '2026-01-01');
+      INSERT INTO billing_contracts (id, $commonColumns, client_id, basis, rate_fils, effective_from) VALUES ('k2', $common, 'c1', 'monthFixed', 500000, '2026-01-01');
+      INSERT INTO attendance_batches (id, $commonColumns, work_date, client_id, site_id) VALUES ('b1', $common, '2026-10-20', 'c1', 's1');
+      INSERT INTO attendance_entries (id, $commonColumns, batch_id, worker_id, client_id, site_id, work_date, clock_minutes, break_minutes, break_paid_client, break_paid_worker,
+        client_billable_minutes, worker_payable_minutes, attendance_status, client_basis, client_rate_fils, client_amount_fils, worker_basis, worker_rate_fils, worker_amount_fils, state)
+      VALUES ('e1', $common, 'b1', 'w1', 'c1', 's1', '2026-10-20', 0, 0, 0, 0, 0, 0, 'present', 'monthFixed', 500000, NULL, 'day', 1000, 1000, 'submitted');
+      INSERT INTO invoices (id, $commonColumns, client_id, status, from_date, to_date, issue_date, due_date, year, seq, number, parties)
+      VALUES ('i1', $common, 'c1', 'issued', '2026-10-01', '2026-10-31', '2026-11-01', '2026-11-01', 2026, 1, 'INV-2026-0001', '{"supplierName":"Labour","customerName":"Fajr"}');
+      INSERT INTO invoice_lines (id, $commonColumns, invoice_id, position, description, basis, quantity, unit_price_fils, amount_fils, net_fils, vat_fils)
+      VALUES ('l1', $common, 'i1', 1, 'Monthly contract amount for 10-2026', 'monthFixed', 1, 500000, 250000, 250000, 0);
+    ''');
+
+    final db = TenantDatabase(old.newConnection(), tenantId: 't', deviceId: 'device');
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, db.schemaVersion);
+
+    expect((await db.select(db.invoiceLines).getSingle()).feeMonth, isNull);
+    final sheet = await db.createTimesheet(clientId: 'c1', from: '2026-10-01', to: '2026-10-31', operationId: newUuid());
+    await db.approveTimesheet((await db.timesheetView(sheet)).revision.id, operationId: newUuid());
+    // The old invoice charged this row, as issuing did then.
+    await db.allocateBilling('i1', await db.unbilledLines(sheet, monthly: true), operationId: newUuid());
+    await expectLater(db.createInvoice(clientId: 'c1', from: '2026-10-01', to: '2026-10-31', operationId: newUuid()), throwsA(isA<InvoiceRefused>()), reason: 'its rule then: the month was charged');
+    expect(await db.uninvoicedWork(to: '2026-10-31'), isEmpty);
+
+    await db.creditInvoice('i1', reason: 'Wrong amount', operationId: newUuid());
+    final id = await db.createInvoice(clientId: 'c1', from: '2026-10-01', to: '2026-10-31', operationId: newUuid());
+    await db.issueInvoice(id, describe: (_) => 'Monthly contract amount for 10-2026', operationId: newUuid());
+    final lines = await (db.select(db.invoiceLines)..where((l) => l.invoiceId.equals(id))).get();
+    expect((lines.single.amountFils, lines.single.feeMonth), (500000, '2026-10'));
+  });
+
   test('a phone on version 16 upgrades: its contract keeps paying the whole month, its items stay, and a recovery can then be nothing (D-057)', () async {
     final old = await verifier.schemaAt(16);
     old.rawDatabase.execute('''
