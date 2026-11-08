@@ -13,11 +13,11 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | UX-05 | 02 | Kam typing | T10 | IMPLEMENTED_UNVERIFIED | TC-026 | - |
 | UX-06 | 02 | Measurable usability test | T10 | NOT_STARTED | TC-031 | - |
 | UX-07 | 02 | Save ki imaandari | T05 | IN_PROGRESS | TC-008 | - |
-| AUTH-01 | 03 | Email/password primary login ho. Email verification, forgot-password, safe password | T19 | NOT_STARTED | - | - |
-| AUTH-02 | 03 | Signup par immutable tenant ID bane. Naam, phone number | T19 | NOT_STARTED | TC-006 | - |
+| AUTH-01 | 03 | Email/password primary login ho. Email verification, forgot-password, safe password | T19 | IN_PROGRESS | TC-142 | `supabase/tests/database/tenants.test.sql` |
+| AUTH-02 | 03 | Signup par immutable tenant ID bane. Naam, phone number | T19 | IN_PROGRESS | TC-006, TC-142 | `supabase/tests/database/tenants.test.sql` |
 | AUTH-03 | 03 | Pehla signup, naya device login, password reset aur invite | T19 | NOT_STARTED | - | - |
 | AUTH-04 | 03 | Har local database tenant/account boundary mein encrypted ho. Logout/account | T19 | NOT_STARTED | TC-014, TC-045 | - |
-| AUTH-05 | 03 | Cloud tenant tables par Row Level Security aur membership | T19 | NOT_STARTED | TC-006 | - |
+| AUTH-05 | 03 | Cloud tenant tables par Row Level Security aur membership | T19 | IN_PROGRESS | TC-006, TC-142 | `supabase/tests/database/tenants.test.sql` |
 | AUTH-06 | 03 | App malik ke admin account par MFA lazmi ho | T19 | NOT_STARTED | - | - |
 | AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | NOT_STARTED | - | - |
 | AUTH-08 | 03 | Production email login ke liye real SMTP/domain configuration aur | T19 | NOT_STARTED | - | - |
@@ -150,10 +150,10 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | OPS-07 | 19 | Releases | T26 | NOT_STARTED | - | - |
 | OPS-08 | 19 | Availability target | T23 | NOT_STARTED | - | - |
 | MODEL-01 | 20 | Local operational groups | T04, T06 | IMPLEMENTED_UNVERIFIED | - | - |
-| MODEL-02 | 20 | Cloud control groups | T19 | NOT_STARTED | - | - |
+| MODEL-02 | 20 | Cloud control groups | T19 | IN_PROGRESS | TC-142 | `supabase/migrations/20261108120000_cloud_tenants.sql` |
 | MODEL-03 | 20 | Common keys | T04, T06 | IMPLEMENTED_UNVERIFIED | - | - |
 | MODEL-04 | 20 | Constraints | T04, T06 | IMPLEMENTED_UNVERIFIED | TC-004 | - |
-| MODEL-05 | 20 | Server-only actions | T19 | NOT_STARTED | TC-047 | - |
+| MODEL-05 | 20 | Server-only actions | T19 | IN_PROGRESS | TC-047, TC-142 | `supabase/tests/database/tenants.test.sql` |
 | MODEL-06 | 20 | Conceptual API contracts | T19 | NOT_STARTED | - | - |
 | MODEL-07 | 20 | Financial boundary | T11 | IMPLEMENTED_UNVERIFIED | TC-036 | `apps/mobile/test/payroll_test.dart` |
 | MODEL-08 | 20 | Migration | T06 | IMPLEMENTED_UNVERIFIED | TC-140 | `apps/mobile/test/drift/tenant/migration_test.dart` |

@@ -69,6 +69,6 @@ One encrypted file per tenant, `tenant_<uuid>.db` in app-private storage, with a
 
 ## Cloud control data (MODEL-02)
 
-Designed in T19: auth users, tenants, memberships, devices, plans and versions, subscriptions, entitlement leases, verified payments, activation redemptions, support tickets, diagnostic events, monthly metric snapshots, admin audit, Play import batches. Tenant operational tables are added for Team only (T25). Payroll and worker photos from Free and Solo are never uploaded automatically (ARCH-02).
+Built in T19a (`supabase/migrations/`, D-060): `tenants` (its `tenant_id` is the id every local row carries), `memberships` (owner or manager, revoked rows kept) and `devices`. Members read only their company's rows under row level security; only `create_tenant` and `register_device` write, taking the user from the session. Still to come: auth users' other groups, plans and versions, subscriptions, entitlement leases, verified payments, activation redemptions, support tickets, diagnostic events, monthly metric snapshots, admin audit, Play import batches. Tenant operational tables are added for Team only (T25). Payroll and worker photos from Free and Solo are never uploaded automatically (ARCH-02).
 
 Server-only actions (MODEL-05): tenant creation and membership, trial eligibility, licence issue and revoke, payment posting, Team final invoice numbers, metrics. A client can never grant itself a plan by setting a flag.

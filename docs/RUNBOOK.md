@@ -32,6 +32,8 @@ Everything stays under the owner's accounts and control. Nothing here holds a cr
 
 Environment sample (`.env.example`) arrives with the first secret in P4.
 
+Cloud database: migrations and pgTAP tests live in `supabase/`. This computer has virtualisation off, so Docker and `supabase start` can't run here; the `supabase` CI job starts it in Docker and runs `supabase test db` on every push (D-060). The CLI here also fails to read `~/.supabase/profile`, so new migration files are named by hand, `YYYYMMDDHHMMSS_name.sql`.
+
 ## Direct dependency licences
 
 | Package | Licence |
