@@ -54,6 +54,12 @@ jobs:
         with:
           flutter-version: 3.47.7
           channel: stable
+      # The sqlite3 hook downloads its library from GitHub releases, which fail at times, so keep it between runs.
+      # The hook checks the file's hash before using it.
+      - uses: actions/cache@v6
+        with:
+          path: apps/mobile/.dart_tool/hooks_runner/shared/*/build/download-*
+          key: hook-downloads-${{ runner.os }}-${{ hashFiles('apps/mobile/pubspec.lock') }}
       - run: flutter pub get --enforce-lockfile
       - run: flutter analyze
       - run: flutter test
@@ -75,5 +81,14 @@ jobs:
         with:
           flutter-version: 3.47.7
           channel: stable
+      # Gradle and the sqlite3 hook download from GitHub releases, which fail at times, so keep both between runs.
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.gradle/wrapper/dists
+            ~/.gradle/caches
+            apps/mobile/.dart_tool/hooks_runner/shared/*/build/download-*
+          key: android-${{ runner.os }}-${{ hashFiles('apps/mobile/android/**/*.gradle.kts', 'apps/mobile/android/gradle/wrapper/gradle-wrapper.properties', 'apps/mobile/pubspec.lock') }}
+          restore-keys: android-${{ runner.os }}-
       - run: flutter pub get --enforce-lockfile
       - run: flutter build apk --debug
