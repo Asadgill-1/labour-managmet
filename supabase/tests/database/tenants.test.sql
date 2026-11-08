@@ -2,7 +2,7 @@
 -- (T19a: AUTH-02, AUTH-05, MODEL-05).
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(20);
+select plan(22);
 
 insert into auth.users (id, aud, role, email, email_confirmed_at) values
   ('11111111-1111-1111-1111-111111111111', 'authenticated', 'authenticated', 'alpha@example.test', now()),
@@ -32,7 +32,16 @@ select throws_ok(
   '23505', 'operation id already used', 'another user cannot reuse an operation id to reach a company'
 );
 select results_eq('select name from public.tenants', array['Beta Labour'], 'Beta sees only its own company');
-select results_eq('select count(*)::int from public.memberships', array[1], 'Beta sees only its own membership');
+select is(
+  public.create_tenant('Beta Branch', 'bbbbbbbb-0000-0000-0000-000000000002', 'cccccccc-0000-0000-0000-000000000001'),
+  'cccccccc-0000-0000-0000-000000000001'::uuid,
+  'a company can keep the id the phone''s data already carries'
+);
+select throws_ok(
+  $$ select public.create_tenant('Copy', gen_random_uuid(), 'cccccccc-0000-0000-0000-000000000001') $$,
+  '23505', null, 'an id already in use is refused'
+);
+select results_eq('select count(*)::int from public.memberships', array[2], 'Beta sees only its own memberships');
 select is_empty('select * from public.devices', 'Beta does not see Alpha''s device');
 
 -- Ids known only to the database, kept where any role can read them.

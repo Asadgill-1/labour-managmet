@@ -89,8 +89,9 @@ create policy devices_own_or_owner on public.devices for select to authenticated
   using (user_id = (select auth.uid()) or private.member_role(tenant_id) = 'owner');
 
 -- Makes a company for the signed-in user, who becomes its owner (UX-02). Only after the email is verified (AUTH-01).
--- A retry with the same operation id returns the company it made (MODEL-06).
-create function public.create_tenant(p_name text, p_operation_id uuid) returns uuid
+-- [p_tenant_id] is the id the phone's data already carries, so it keeps working; an id in use is refused, and with
+-- none the server makes one. A retry with the same operation id returns the company it made (MODEL-06).
+create function public.create_tenant(p_name text, p_operation_id uuid, p_tenant_id uuid default null) returns uuid
 language plpgsql security definer set search_path = '' as $$
 declare
   v_user uuid := auth.uid();
@@ -109,14 +110,15 @@ begin
     end if;
     return v_tenant;
   end if;
-  insert into public.tenants (name, created_by, source_operation_id) values (btrim(p_name), v_user, p_operation_id)
+  insert into public.tenants (tenant_id, name, created_by, source_operation_id)
+    values (coalesce(p_tenant_id, gen_random_uuid()), btrim(p_name), v_user, p_operation_id)
     returning tenant_id into v_tenant;
   insert into public.memberships (tenant_id, user_id, role, actor_id, source_operation_id)
     values (v_tenant, v_user, 'owner', v_user, p_operation_id);
   return v_tenant;
 end $$;
-revoke all on function public.create_tenant(text, uuid) from public, anon;
-grant execute on function public.create_tenant(text, uuid) to authenticated;
+revoke all on function public.create_tenant(text, uuid, uuid) from public, anon;
+grant execute on function public.create_tenant(text, uuid, uuid) to authenticated;
 
 -- Records the device a member signed in on, or marks it seen again; returns its row id (AUTH-03). A member of another
 -- company, or a revoked member or device, is refused.
