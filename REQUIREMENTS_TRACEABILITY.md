@@ -66,9 +66,9 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | INV-02 | 09 | Minimum fields | T16 | IMPLEMENTED_UNVERIFIED | TC-090 | - |
 | INV-03 | 09 | VAT | T16 | IMPLEMENTED_UNVERIFIED | TC-040 | - |
 | INV-04 | 09 | Arithmetic | T16 | IMPLEMENTED_UNVERIFIED | TC-005, TC-040 | - |
-| INV-05 | 09 | Receipt | T17 | IMPLEMENTED_UNVERIFIED | TC-005, TC-099, TC-100 | - |
-| INV-06 | 09 | Corrections | T16, T18b | IMPLEMENTED_UNVERIFIED | TC-004, TC-041, TC-097, TC-124, TC-125, TC-126, TC-127 | `apps/mobile/test/invoice_edit_test.dart` |
-| INV-07 | 09 | Status | T17 | IMPLEMENTED_UNVERIFIED | TC-101, TC-102 | - |
+| INV-05 | 09 | Receipt | T17 | IMPLEMENTED_UNVERIFIED | TC-005, TC-099, TC-100, TC-136 | `apps/mobile/test/invoices_test.dart` |
+| INV-06 | 09 | Corrections | T16, T18b | IMPLEMENTED_UNVERIFIED | TC-004, TC-041, TC-097, TC-124, TC-125, TC-126, TC-127, TC-137 | `apps/mobile/test/invoice_edit_test.dart`, `apps/mobile/test/invoices_test.dart` |
+| INV-07 | 09 | Status | T17 | IMPLEMENTED_UNVERIFIED | TC-101, TC-102, TC-136 | `apps/mobile/test/invoices_test.dart` |
 | INV-08 | 09 | Online/offline numbering | T16 | IMPLEMENTED_UNVERIFIED | TC-091, TC-110 | - |
 | INV-09 | 09 | e-Invoicing gate | T16 | IMPLEMENTED_UNVERIFIED | TC-090, TC-092 | - |
 | DOC-01 | 10 | Aik shared engine | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-009, TC-058, TC-077 | - |

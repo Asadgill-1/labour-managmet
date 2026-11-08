@@ -320,7 +320,7 @@
   "reviewTitle": "Review attendance",
   "totalClient": "To collect from company",
   "totalWorker": "To pay workers",
-  "monthlyNotInTotal": "Workers on a monthly rate are not in this total. They are calculated per month.",
+  "monthlyNotInTotal": "Monthly rates are not in these totals. A monthly wage counts by the month, and a company's monthly contract goes on its invoice once a month.",
   "groupRate": "Change today's company rate",
   "groupRateAmount": "Company rate for this group (AED)",
   "issueClientRate": "No company rate found",
@@ -756,7 +756,7 @@
       }
     }
   },
-  "closeBody": "Attendance, expenses and payroll up to this month will stop changing. A later change goes into an open month as an allowance, deduction or reversal.",
+  "closeBody": "Attendance, expenses and payroll up to this month are closed. Editing or deleting one of their entries opens the month again, with your note as the reason.",
   "closeConfirm": "Close",
   "closeDone": "{month} is closed",
   "@closeDone": {
@@ -1446,7 +1446,7 @@
   "invEmpty": "No invoices yet. Approve a timesheet, then make an invoice from it.",
   "invCreate": "Make draft",
   "invNewHelp": "The draft takes every approved timesheet of this company in these dates that still has work to bill. You can leave one out next.",
-  "invNothing": "Nothing in these dates can be invoiced. Approve a timesheet for them first.",
+  "invNothing": "Nothing in these dates is left to invoice. Either no approved timesheet has work here still to bill, or it is already on an invoice, such as a monthly contract amount already charged for that month.",
   "invNoCompany": "Fill in your company's legal name in Apni company first.",
   "invWrongStep": "This invoice has moved on. Look at it again.",
   "invDraftLabel": "Draft",
@@ -1568,7 +1568,7 @@
   "invLineSheetTitle": "Change this line",
   "invDiscount": "Discount (AED)",
   "invFee": "Contract amount for these dates (AED)",
-  "invFeeHelp": "Starts at the monthly contract amount. Change it for part of a month.",
+  "invFeeHelp": "Starts at the monthly contract amount. Change it if the contract ran for only part of the month. A month's amount is charged once, so what you leave off can't go on a later invoice.",
   "invDiscountTooBig": "A discount can't be more than its line.",
   "findingNotInvoiced": "{count, plural, =1{1 company has work no invoice charges yet: {names}. Make its invoice in Billing.} other{{count} companies have work no invoice charges yet: {names}. Make their invoices in Billing.}}",
   "@findingNotInvoiced": {
@@ -1844,6 +1844,14 @@
       }
     }
   },
+  "invNoteReturned": "{amount} received on this invoice went back as the company's credit after its credit note. A new invoice can use it.",
+  "@invNoteReturned": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
   "invReceived": "Received",
   "invLost": "Closed as lost",
   "invToPay": "Still to pay",
@@ -1905,7 +1913,7 @@
   "receiptReceivedBy": "Received by",
   "receiptPaidBy": "Paid by",
   "receiptClientTitle": "Receipt",
-  "findingOverdue": "{count, plural, =1{An invoice is} other{{count} invoices are}} past the due date with money left: {names}. Record what was paid, or close the rest as lost with a reason.",
+  "findingOverdue": "{count, plural, =1{An invoice falls} other{{count} invoices fall}} due by the month's end with money left: {names}. Record what was paid, or close the rest as lost with a reason.",
   "@findingOverdue": {
     "placeholders": {
       "count": {

@@ -786,7 +786,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get monthlyNotInTotal =>
-      'Workers on a monthly rate are not in this total. They are calculated per month.';
+      'Monthly rates are not in these totals. A monthly wage counts by the month, and a company\'s monthly contract goes on its invoice once a month.';
 
   @override
   String get groupRate => 'Change today\'s company rate';
@@ -1442,7 +1442,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get closeBody =>
-      'Attendance, expenses and payroll up to this month will stop changing. A later change goes into an open month as an allowance, deduction or reversal.';
+      'Attendance, expenses and payroll up to this month are closed. Editing or deleting one of their entries opens the month again, with your note as the reason.';
 
   @override
   String get closeConfirm => 'Close';
@@ -2593,7 +2593,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invNothing =>
-      'Nothing in these dates can be invoiced. Approve a timesheet for them first.';
+      'Nothing in these dates is left to invoice. Either no approved timesheet has work here still to bill, or it is already on an invoice, such as a monthly contract amount already charged for that month.';
 
   @override
   String get invNoCompany =>
@@ -2798,7 +2798,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invFeeHelp =>
-      'Starts at the monthly contract amount. Change it for part of a month.';
+      'Starts at the monthly contract amount. Change it if the contract ran for only part of the month. A month\'s amount is charged once, so what you leave off can\'t go on a later invoice.';
 
   @override
   String get invDiscountTooBig => 'A discount can\'t be more than its line.';
@@ -3174,6 +3174,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String invNoteReturned(String amount) {
+    return '$amount received on this invoice went back as the company\'s credit after its credit note. A new invoice can use it.';
+  }
+
+  @override
   String get invReceived => 'Received';
 
   @override
@@ -3259,10 +3264,10 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count invoices are',
-      one: 'An invoice is',
+      other: '$count invoices fall',
+      one: 'An invoice falls',
     );
-    return '$_temp0 past the due date with money left: $names. Record what was paid, or close the rest as lost with a reason.';
+    return '$_temp0 due by the month\'s end with money left: $names. Record what was paid, or close the rest as lost with a reason.';
   }
 
   @override
@@ -4642,7 +4647,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get monthlyNotInTotal =>
-      'Mahana rate wale mazdoor is total mein nahin. Un ka hisaab mahine par hoga.';
+      'Mahana rate is total mein nahin. Mahana tankhwah mahine par lagti hai, aur company ka mahana contract invoice par mahine mein aik baar.';
 
   @override
   String get groupRate => 'Aaj ka company rate badlein';
@@ -5287,7 +5292,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get closeBody =>
-      'Is mahine tak ki hazri, kharche aur tankhwah ab nahin badlenge. Baad ka farq khule mahine mein allowance, katoti ya wapsi se likha jayega.';
+      'Is mahine tak ki hazri, kharche aur tankhwah band ho jayenge. Kisi entry ko badlein ya delete karein to mahina dobara khul jayega, aap ki wajah ke saath.';
 
   @override
   String get closeConfirm => 'Band karein';
@@ -6407,7 +6412,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get invNothing =>
-      'In tareekhon mein invoice ke liye kuch nahin. Pehle in ka timesheet approve karein.';
+      'In tareekhon mein invoice ke liye kuch baqi nahin. Ya to in ka koi approved timesheet nahin, ya kaam pehle hi invoice par hai, jaise mahine ki contract raqam jo lag chuki.';
 
   @override
   String get invNoCompany =>
@@ -6612,7 +6617,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get invFeeHelp =>
-      'Contract ki mahana raqam se shuru. Adhay mahine ke liye badlein.';
+      'Contract ki mahana raqam se shuru. Contract mahine ka kuch hissa chala ho to badlein. Mahine ki raqam aik hi baar lagti hai, is liye jo kam karein woh baad ke invoice par nahin aayegi.';
 
   @override
   String get invDiscountTooBig => 'Discount line se zyada nahin ho sakta.';
@@ -6848,6 +6853,11 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   }
 
   @override
+  String invNoteReturned(String amount) {
+    return 'Is invoice par mila $amount credit note ke baad company ka credit ban gaya. Naye invoice par lag sakta hai.';
+  }
+
+  @override
   String get invReceived => 'Mila';
 
   @override
@@ -6936,7 +6946,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
       other: '$count invoices ki',
       one: 'Aik invoice ki',
     );
-    return '$_temp0 due date guzar gayi aur paisa baqi hai: $names. Jo mila woh darj karein, ya wajah likh kar baqi nuqsan maan kar band karein.';
+    return '$_temp0 due date mahine ke andar hai aur paisa baqi hai: $names. Jo mila woh darj karein, ya wajah likh kar baqi nuqsan maan kar band karein.';
   }
 
   @override

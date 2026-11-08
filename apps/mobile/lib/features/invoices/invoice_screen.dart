@@ -149,7 +149,7 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
     final navigator = Navigator.of(context);
     final inv = v.invoice;
     String? id;
-    final saved = await saveOrExplain(context, () async => id = await _db.createInvoice(clientId: inv.clientId, siteId: inv.siteId, from: inv.fromDate, to: inv.toDate, operationId: newUuid()));
+    final saved = await saveOrExplain(context, () async => id = await _db.createInvoice(clientId: inv.clientId, siteId: inv.siteId, from: inv.fromDate, to: inv.toDate, replaces: inv.id, operationId: newUuid()));
     if (saved && id != null && mounted) await navigator.push(MaterialPageRoute<void>(builder: (_) => InvoiceScreen(invoiceId: id!)));
   }
 
@@ -285,6 +285,7 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
         },
       ),
       if (v.replaces case final r?) _ReplacesNote(r),
+      if (v.returnedFils > 0) NoteRow(icon: Icons.info_outline, text: l10n.invNoteReturned(formatAed(v.returnedFils)), color: muted),
       if (money != null && v.status == InvoiceStatus.issued)
         switch (money.state(today)) {
           PayState.overdue => NoteRow(icon: Icons.error_outline, text: l10n.invNoteOverdue(showDate(inv.dueDate!), formatAed(owed)), color: due),

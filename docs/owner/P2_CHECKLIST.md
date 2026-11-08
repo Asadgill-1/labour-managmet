@@ -233,7 +233,7 @@ Yeh hissa P3 ka hai, magar isi APK mein hai.
 - [ ] **Band karein** dabayein. Paigham parhein aur **Wapas** dabayein. Kuch na badle. Phir dobara dabayein aur band karein.
 - [ ] Us mahine ki kisi tareekh par **Aaj** aur **Rozana hisaab** kholein. Upar **Yeh mahina band hai** ho, aur naya likhne ka button na chale.
 - [ ] Us mahine ki hazri par dabayein. Row khulti hai. Kuch badal kar save karein: paigham aaye ke mahina dobara khula (D-056). Phir **Mahina band** mein dobara band karein.
-- [ ] Rozana hisaab mein us mahine ki koi line undo karein. Wapsi aaj ki tareekh par likhi jaye, aur us mahine ki slip wahi rahe.
+- [ ] Rozana hisaab mein us mahine ki koi line dabayein, **Delete karein**, wajah likhein. Line hisaab se nikal jaye, mahina dobara khule (D-056), aur line **Delete hui** mein ho. Phir mahina dobara band karein.
 - [ ] Mazdoor ka rate badlein. Band mahine ki hazri aur slip wahi rahen.
 - [ ] Band mahine ki tankhwah agle mahine ki tareekh par dein. Adaigi ho jaye, aur us mahine ki slip par **Ada kiya** mein aaye.
 - [ ] **Yeh mahina dobara kholein** dabayein aur wajah likhein. Mahina khul jaye.

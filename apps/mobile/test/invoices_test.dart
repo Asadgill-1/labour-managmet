@@ -514,10 +514,13 @@ void main() {
       await receive(14175, {id: 14175});
       await db.creditInvoice(id, reason: 'Rate agreed lower', amountFils: 3000, operationId: newUuid());
       expect(((await money(id)).leftFils, await credit()), (0, 3150));
+      expect((await db.invoiceView(id)).returnedFils, 3150, reason: 'the invoice says its money went to credit');
 
       await db.creditInvoice(id, reason: 'Wrong hours', operationId: newUuid());
       expect(((await money(id)).leftFils, await credit()), (0, 14175));
-      final again = await draft();
+      expect((await db.invoiceView(id)).returnedFils, 14175);
+      final again = await db.createInvoice(clientId: ts.emaar, from: ts.from, to: ts.to, replaces: id, operationId: newUuid());
+      expect((await db.invoiceView(id)).replacedBy?.id, again, reason: 'asking for a new invoice again opens this draft, not a second one');
       await issue(again);
       await db.useClientCredit(again, operationId: newUuid());
       expect(((await money(again)).state(today), await credit()), (PayState.paid, 0));

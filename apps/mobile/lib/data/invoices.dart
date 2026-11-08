@@ -161,6 +161,7 @@ class InvoiceView {
     this.changes = const [],
     this.money,
     this.receipts = const [],
+    this.returnedFils = 0,
     this.clientCreditFils = 0,
   });
 
@@ -201,6 +202,9 @@ class InvoiceView {
 
   /// The receipts that settled it, each with what of it went here, oldest first.
   final List<({CashEntry receipt, int fils})> receipts;
+
+  /// Money received on it that a credit note gave back as the company's credit (D-052 (6)).
+  final int returnedFils;
 
   /// The company's money received and set against nothing yet, which this invoice could use (INV-05).
   final int clientCreditFils;
@@ -438,8 +442,12 @@ extension InvoiceOps on TenantDatabase {
         .get();
     final money = inv.kind == 'invoice' ? await receivables(clientId: inv.clientId) : null;
     final paid = <String, int>{};
+    var returned = 0;
     for (final a in money?.parts ?? const <InvoiceAllocation>[]) {
-      if (a.invoiceId == id && a.paymentId != null) paid[a.paymentId!] = (paid[a.paymentId!] ?? 0) + a.amountFils;
+      if (a.invoiceId != id || a.paymentId == null) continue;
+      paid[a.paymentId!] = (paid[a.paymentId!] ?? 0) + a.amountFils;
+      // Only a credit note writes a receipt's share back, so a share below nothing is money returned as credit.
+      if (a.amountFils < 0) returned -= a.amountFils;
     }
     return InvoiceView(
       invoice: inv,
@@ -478,6 +486,7 @@ extension InvoiceOps on TenantDatabase {
         for (final MapEntry(:key, :value) in paid.entries)
           if (value > 0) (receipt: money!.receipts[key]!.receipt, fils: value),
       ]..sort((a, b) => a.receipt.entryDate.compareTo(b.receipt.entryDate)),
+      returnedFils: returned,
       clientCreditFils: money?.creditOf(inv.clientId) ?? 0,
     );
   }
@@ -545,7 +554,8 @@ extension InvoiceOps on TenantDatabase {
   }
 
   /// Starts a draft, if anything in these dates can still be billed. The company's own PO reference fills in.
-  Future<String> createInvoice({required String clientId, String? siteId, required String from, required String to, required String operationId}) async {
+  /// [replaces] is the invoice a whole credit note took back, so the new draft is the one that invoice opens next time.
+  Future<String> createInvoice({required String clientId, String? siteId, required String from, required String to, String? replaces, required String operationId}) async {
     final client = await (select(clients)..where((c) => c.id.equals(clientId))).getSingle();
     final id = newUuid();
     await applyOperation(
@@ -568,6 +578,7 @@ extension InvoiceOps on TenantDatabase {
             siteId: Value(siteId),
             fromDate: from,
             toDate: to,
+            draft: replaces == null ? const Value.absent() : Value(InvoiceDraft(replaces: replaces).toJson()),
             poReference: Value(client.poReference),
           ),
         );

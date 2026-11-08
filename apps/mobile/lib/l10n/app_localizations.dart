@@ -1564,7 +1564,7 @@ abstract class AppLocalizations {
   /// No description provided for @monthlyNotInTotal.
   ///
   /// In en, this message translates to:
-  /// **'Workers on a monthly rate are not in this total. They are calculated per month.'**
+  /// **'Monthly rates are not in these totals. A monthly wage counts by the month, and a company\'s monthly contract goes on its invoice once a month.'**
   String get monthlyNotInTotal;
 
   /// No description provided for @groupRate.
@@ -2644,7 +2644,7 @@ abstract class AppLocalizations {
   /// No description provided for @closeBody.
   ///
   /// In en, this message translates to:
-  /// **'Attendance, expenses and payroll up to this month will stop changing. A later change goes into an open month as an allowance, deduction or reversal.'**
+  /// **'Attendance, expenses and payroll up to this month are closed. Editing or deleting one of their entries opens the month again, with your note as the reason.'**
   String get closeBody;
 
   /// No description provided for @closeConfirm.
@@ -4582,7 +4582,7 @@ abstract class AppLocalizations {
   /// No description provided for @invNothing.
   ///
   /// In en, this message translates to:
-  /// **'Nothing in these dates can be invoiced. Approve a timesheet for them first.'**
+  /// **'Nothing in these dates is left to invoice. Either no approved timesheet has work here still to bill, or it is already on an invoice, such as a monthly contract amount already charged for that month.'**
   String get invNothing;
 
   /// No description provided for @invNoCompany.
@@ -4900,7 +4900,7 @@ abstract class AppLocalizations {
   /// No description provided for @invFeeHelp.
   ///
   /// In en, this message translates to:
-  /// **'Starts at the monthly contract amount. Change it for part of a month.'**
+  /// **'Starts at the monthly contract amount. Change it if the contract ran for only part of the month. A month\'s amount is charged once, so what you leave off can\'t go on a later invoice.'**
   String get invFeeHelp;
 
   /// No description provided for @invDiscountTooBig.
@@ -5479,6 +5479,12 @@ abstract class AppLocalizations {
   /// **'{amount} closed as lost. Nothing is left to pay.'**
   String invNoteClosed(String amount);
 
+  /// No description provided for @invNoteReturned.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} received on this invoice went back as the company\'s credit after its credit note. A new invoice can use it.'**
+  String invNoteReturned(String amount);
+
   /// No description provided for @invReceived.
   ///
   /// In en, this message translates to:
@@ -5620,7 +5626,7 @@ abstract class AppLocalizations {
   /// No description provided for @findingOverdue.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{An invoice is} other{{count} invoices are}} past the due date with money left: {names}. Record what was paid, or close the rest as lost with a reason.'**
+  /// **'{count, plural, =1{An invoice falls} other{{count} invoices fall}} due by the month\'s end with money left: {names}. Record what was paid, or close the rest as lost with a reason.'**
   String findingOverdue(int count, String names);
 
   /// No description provided for @regLostUndone.
