@@ -64,6 +64,18 @@ jobs:
       - run: flutter analyze
       - run: flutter test
 
+  # The cloud schema and its two-company security tests (T19, AUTH-05), in Docker on the runner.
+  supabase:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 2.108.0
+      - run: supabase start -x analytics,edge-runtime,functions,imgproxy,inbucket,kong,meta,realtime,rest,storage,studio,vector
+      - run: supabase test db
+
   # Android builds are slow, so only PRs to main run this.
   android:
     if: github.event_name == 'pull_request'
