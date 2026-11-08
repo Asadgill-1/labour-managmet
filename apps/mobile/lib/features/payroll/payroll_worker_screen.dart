@@ -1,0 +1,281 @@
+import 'package:domain/cash.dart';
+import 'package:domain/dates.dart';
+import 'package:domain/money.dart';
+import 'package:domain/payroll.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../app/form_bits.dart';
+import '../../app/providers.dart';
+import '../../app/theme.dart';
+import '../../data/payroll.dart';
+import '../../data/tenant_database.dart';
+import '../../l10n/app_localizations.dart';
+import '../changes/change_notes.dart';
+import '../cash/cash_entry_form_screen.dart';
+import 'pay_item_form_screen.dart';
+import 'payroll_screen.dart';
+import 'salary_slip.dart';
+
+/// One worker's month, with current earnings and old balance kept apart (PAY-02, PAY-09).
+class PayrollWorkerScreen extends ConsumerWidget {
+  const PayrollWorkerScreen({required this.workerId, required this.month, super.key});
+
+  final String workerId;
+
+  /// YYYY-MM.
+  final String month;
+
+  Future<void> _undo(BuildContext context, WidgetRef ref, PayrollLine line) async {
+    final l10n = AppLocalizations.of(context);
+    final reason = await askReason(context, title: l10n.payrollUndoTitle, label: l10n.reverseReason, helper: l10n.payrollUndoHelp, confirm: l10n.reverseConfirm);
+    if (reason == null || !context.mounted) return;
+    try {
+      await ref.read(dbProvider).reversePayrollLine(line, reason: reason, operationId: newUuid());
+      if (context.mounted) showSavedOnPhone(context, l10n.savedOnPhone);
+    } on LaterMonthPosted {
+      if (context.mounted) showFormError(context, l10n.payrollUndoLater);
+    } catch (e) {
+      if (context.mounted) showFormError(context, saveErrorText(l10n, e));
+    }
+  }
+
+  Widget _addButton(BuildContext context, PayItemKind kind, String label) {
+    return OutlinedButton(
+      onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => PayItemFormScreen(workerId: workerId, month: month, kind: kind))),
+      child: FittedBox(fit: BoxFit.scaleDown, child: Text(label)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final p = (ref.watch(payrollProvider(month)).value ?? const <WorkerPayroll>[]).where((r) => r.worker.id == workerId).firstOrNull;
+    if (p == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text(showMonth(month))),
+        body: EmptyState(icon: Icons.payments, text: l10n.payrollEmpty),
+      );
+    }
+    final f = p.figures;
+    final closing = p.closingFils;
+    // What the slip counts as taken already. A recovery on this unposted month has not come off the advance yet.
+    final advanceLeft = p.advanceLeftFils - (p.posted ? 0 : f.recoveryFils);
+    return Scaffold(
+      appBar: AppBar(title: Text(p.worker.name)),
+      bottomNavigationBar: p.posted && closing > 0
+          ? MainActionBar(
+              label: l10n.payrollPayNow,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => CashEntryFormScreen(kind: CashKind.salaryPaid, workerId: workerId, amountFils: closing)),
+              ),
+            )
+          : null,
+      body: ListView(
+        children: [
+          TopBand(
+            padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: closing < 0
+                        ? BandFigure(formatAed(-closing), l10n.payrollOverpaid, size: 24)
+                        : BandFigure(formatAed(closing), p.posted ? l10n.payrollClosing : l10n.payrollToPay, size: 24),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(child: BandFigure(showMonth(month), p.posted ? l10n.payrollStatePosted : l10n.payrollStateDraft, size: 16)),
+                ],
+              ),
+            ),
+          ),
+          _SlipButton(workerId: workerId, month: month),
+          for (final issue in f.issues)
+            ListTile(
+              leading: const Icon(Icons.warning_amber, color: due),
+              title: Text(issueText(l10n, issue, p), style: const TextStyle(fontFamily: headingFont, fontSize: 15, fontWeight: FontWeight.w600, color: due)),
+              // The owner answers how much of the advance comes off this month (D-057).
+              trailing: issue == PayrollIssue.recoveryNotAnswered ? const Icon(Icons.chevron_right) : null,
+              onTap: issue == PayrollIssue.recoveryNotAnswered
+                  ? () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => PayItemFormScreen(workerId: workerId, month: month, kind: PayItemKind.advanceRecovery)))
+                  : null,
+            ),
+          SectionHeader(l10n.payrollEarnedHeading),
+          const Divider(),
+          if (f.earnedFils != 0 || f.salaryFils == 0) ...[
+            InfoRow(l10n.payrollEarned, formatAed(f.earnedFils)),
+            const Divider(),
+          ],
+          if (f.salaryFils != 0 || f.absenceFils != 0) ...[
+            InfoRow(l10n.payrollSalary, formatAed(f.salaryFils + f.absenceFils)),
+            const Divider(),
+          ],
+          if (f.absenceFils != 0) ...[
+            InfoRow(l10n.payrollAbsent(f.absentDays.length, absentDayList(f.absentDays)), '-${formatAed(f.absenceFils)}'),
+            const Divider(),
+          ],
+          SectionHeader(l10n.payrollItemsHeading),
+          const Divider(),
+          for (final item in p.items) ...[
+            _ItemRow(item, month: month, posted: p.posted),
+            const Divider(),
+          ],
+          if (p.autoRecoveryFils > 0) ...[
+            ListTile(
+              title: Text(l10n.payrollInstalmentAuto),
+              subtitle: Text(l10n.payrollInstalmentAutoHelp),
+              trailing: Text('-${formatAed(p.autoRecoveryFils)}', style: const TextStyle(fontFamily: headingFont, fontWeight: FontWeight.w600)),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => PayItemFormScreen(workerId: workerId, month: month, kind: PayItemKind.advanceRecovery))),
+            ),
+            const Divider(),
+          ],
+          if (p.items.isEmpty && p.autoRecoveryFils == 0) ...[
+            ListTile(subtitle: Text(l10n.payrollNoItems)),
+            const Divider(),
+          ],
+          if (!p.posted)
+            _TwoColumns(
+              children: [
+                _addButton(context, PayItemKind.allowance, l10n.payKindAllowance),
+                _addButton(context, PayItemKind.deduction, l10n.payKindDeduction),
+                if (p.canAddRoomCharge) _addButton(context, PayItemKind.roomCharge, l10n.payKindRoom),
+                if (p.advanceLeftFils > 0) _addButton(context, PayItemKind.advanceRecovery, l10n.payKindRecovery),
+                if (p.visaLeftFils > 0) _addButton(context, PayItemKind.visaRecovery, l10n.payKindVisa),
+              ],
+            ),
+          SectionHeader(l10n.payrollSumHeading),
+          const Divider(),
+          InfoRow(l10n.payrollNet, formatAed(f.netFils)),
+          const Divider(),
+          if (f.adjustmentFils != 0) ...[
+            InfoRow(l10n.payrollAdjustment, formatAed(f.adjustmentFils)),
+            const Divider(),
+          ],
+          if (p.openingFils < 0)
+            InfoRow(l10n.payrollPaidAhead, formatAed(-p.openingFils))
+          else
+            InfoRow(l10n.payrollOpening, formatAed(p.openingFils)),
+          const Divider(),
+          InfoRow(l10n.payrollPayable, formatAed(p.payableFils)),
+          const Divider(),
+          if (p.posted) ...[
+            InfoRow(l10n.payrollPaid, formatAed(p.paidFils)),
+            const Divider(),
+            if (closing < 0) InfoRow(l10n.payrollOverpaid, formatAed(-closing)) else InfoRow(l10n.payrollClosing, formatAed(closing)),
+            const Divider(),
+          ],
+          if (advanceLeft > 0) ...[
+            InfoRow(l10n.payrollAdvanceLeft, formatAed(advanceLeft)),
+            const Divider(),
+            InfoRow(l10n.payrollAfterAdvance, formatAed(closing - advanceLeft)),
+            const Divider(),
+          ],
+          if (p.posted) TextButton(onPressed: () => _undo(context, ref, p.line!), child: Text(l10n.payrollUndo)),
+        ],
+      ),
+    );
+  }
+}
+
+/// Makes this worker's slip, to send them on WhatsApp.
+class _SlipButton extends ConsumerStatefulWidget {
+  const _SlipButton({required this.workerId, required this.month});
+
+  final String workerId;
+  final String month;
+
+  @override
+  ConsumerState<_SlipButton> createState() => _SlipButtonState();
+}
+
+class _SlipButtonState extends ConsumerState<_SlipButton> {
+  bool _busy = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: FilledButton.icon(
+        icon: const Icon(Icons.receipt_long),
+        label: Text(_busy ? l10n.exportMaking : l10n.slipTitle),
+        onPressed: _busy
+            ? null
+            : () => shareSalarySlip(
+                context,
+                ref,
+                workerId: widget.workerId,
+                month: widget.month,
+                onBusy: (busy) {
+                  if (mounted) setState(() => _busy = busy);
+                },
+              ),
+      ),
+    );
+  }
+}
+
+class _TwoColumns extends StatelessWidget {
+  const _TwoColumns({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: Column(
+        children: [
+          for (var i = 0; i < children.length; i += 2)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  Expanded(child: children[i]),
+                  const SizedBox(width: 8),
+                  Expanded(child: i + 1 < children.length ? children[i + 1] : const SizedBox()),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ItemRow extends ConsumerWidget {
+  const _ItemRow(this.item, {required this.month, required this.posted});
+
+  final PayrollItem item;
+  final String month;
+  final bool posted;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final kind = PayItemKind.values.byName(item.kind);
+    final plus = kind == PayItemKind.allowance;
+    final notes = notesOf(ref, 'payroll_items', item.id);
+    final about = [?item.authorizedBy, ?item.note, if (notes.isNotEmpty) l10n.editedTag];
+    return RowCard(
+      edited: notes.isNotEmpty,
+      child: ListTile(
+        title: Text(item.reason),
+        subtitle: about.isEmpty
+            ? null
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [Text(about.join(', ')), if (notes.isNotEmpty) ChangeNotes(notes)],
+              ),
+        trailing: RowValue('${plus ? '+' : '-'}${formatAed(item.amountFils)}'),
+        onTap: posted
+            ? null
+            : () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => PayItemFormScreen(workerId: item.workerId, month: month, kind: kind, item: item)),
+              ),
+      ),
+    );
+  }
+}

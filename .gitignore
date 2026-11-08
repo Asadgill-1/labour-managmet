@@ -1,3 +1,6 @@
+# Hallmark's working files
+.hallmark/
+
 # Secrets and signing assets (AI-05): never commit
 .env
 .env.*
@@ -37,6 +40,9 @@ out/
 supabase/.branches/
 supabase/.temp/
 
+# Graphify output, rebuilt with /graphify
+graphify-out/
+
 # Editors and OS
 .idea/
 .vscode/
@@ -44,3 +50,8 @@ supabase/.temp/
 .DS_Store
 Thumbs.db
 ~$*
+
+# Screens drawn to read by eye
+apps/mobile/test/zz/
+apps/mobile/test/zz_*
+apps/mobile/test/failures/

@@ -1,0 +1,199 @@
+import 'package:drift/drift.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../data/changes.dart';
+import '../data/closing.dart';
+import '../data/documents.dart';
+import '../data/invoices.dart';
+import '../data/payroll.dart';
+import '../data/receipts.dart';
+import '../data/statement.dart';
+import '../data/tenant_database.dart';
+import '../data/timesheets.dart';
+import '../data/visa.dart';
+
+/// Opened in main. Disposing this scope at logout closes the tenant's data (AUTH-04).
+final dbProvider = Provider<TenantDatabase>((ref) => throw UnimplementedError('opened in main'));
+
+final profileProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return db.select(db.tenantProfiles).watchSingleOrNull();
+});
+
+final clientsProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.clients)..orderBy([(c) => OrderingTerm.asc(c.name)])).watch();
+});
+
+final workersProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.workers)..orderBy([(w) => OrderingTerm.asc(w.name)])).watch();
+});
+
+final allSitesProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.sites)..orderBy([(s) => OrderingTerm.asc(s.name)])).watch();
+});
+
+final payContractsProvider = StreamProvider.family<List<PayContract>, String>((ref, workerId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.payContracts)
+        ..where((c) => c.workerId.equals(workerId))
+        ..orderBy([(c) => OrderingTerm.desc(c.effectiveFrom)]))
+      .watch();
+});
+
+final billingContractsProvider = StreamProvider.family<List<BillingContract>, String>((ref, clientId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.billingContracts)
+        ..where((c) => c.clientId.equals(clientId))
+        ..orderBy([(c) => OrderingTerm.desc(c.effectiveFrom)]))
+      .watch();
+});
+
+final roomsProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.rooms)..orderBy([(r) => OrderingTerm.asc(r.name)])).watch();
+});
+
+final cashOnDateProvider = StreamProvider.family<List<CashEntry>, String>((ref, date) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.cashEntries)
+        ..where((c) => c.entryDate.equals(date))
+        ..orderBy([(c) => OrderingTerm.desc(c.createdAtUtc)]))
+      .watch();
+});
+
+/// [month] is YYYY-MM.
+final cashInMonthProvider = StreamProvider.family<List<CashEntry>, String>((ref, month) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.cashEntries)
+        ..where((c) => c.entryDate.like('$month-%'))
+        ..orderBy([(c) => OrderingTerm.desc(c.entryDate), (c) => OrderingTerm.desc(c.createdAtUtc)]))
+      .watch();
+});
+
+final cashOfWorkerProvider = StreamProvider.family<List<CashEntry>, String>((ref, workerId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.cashEntries)
+        ..where((c) => c.workerId.equals(workerId))
+        ..orderBy([(c) => OrderingTerm.desc(c.entryDate), (c) => OrderingTerm.desc(c.createdAtUtc)]))
+      .watch();
+});
+
+/// [month] is YYYY-MM.
+final payrollProvider = StreamProvider.family<List<WorkerPayroll>, String>((ref, month) => ref.watch(dbProvider).watchPayroll(month));
+
+/// The last day of the latest closed month (REP-04).
+final lockedThroughProvider = StreamProvider<String?>((ref) {
+  final db = ref.watch(dbProvider);
+  final lastDay = db.periodLocks.lastDay.max();
+  final query = db.selectOnly(db.periodLocks)
+    ..addColumns([lastDay])
+    ..where(db.periodLocks.reopened.equals(false));
+  return query.watchSingle().map((row) => row.read(lastDay));
+});
+
+final closingProvider = StreamProvider.autoDispose.family<MonthClosing, String>((ref, month) => ref.watch(dbProvider).watchClosing(month));
+
+final wagesDueProvider = StreamProvider<List<WorkerWagesDue>>((ref) => ref.watch(dbProvider).watchWagesDue());
+
+/// The months one salary payment settled (PAY-06).
+/// What one company owes and holds (INV-07).
+final clientMoneyProvider = StreamProvider.family<Receivables, String>((ref, clientId) => ref.watch(dbProvider).watchReceivables(clientId: clientId));
+
+/// What a company's receipt settles (INV-05).
+final receiptPartsProvider = StreamProvider.family<List<ReceiptPart>, String>((ref, paymentId) => ref.watch(dbProvider).watchReceiptParts(paymentId));
+
+final allocationsOfPaymentProvider = StreamProvider.family<List<SalaryAllocation>, String>((ref, paymentId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.salaryAllocations)
+        ..where((a) => a.paymentId.equals(paymentId))
+        ..orderBy([(a) => OrderingTerm.asc(a.month)]))
+      .watch();
+});
+
+/// Posted months that still stand.
+final linesOfWorkerProvider = StreamProvider.family<List<PayrollLine>, String>((ref, workerId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.payrollLines)..where((l) => l.workerId.equals(workerId) & l.reversed.equals(false))).watch();
+});
+
+/// Room charge taken through posted payroll in [month], which counts as rent received (D-031).
+final roomChargesInMonthProvider = StreamProvider.family<List<PayrollItem>, String>((ref, month) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.payrollItems)..where((i) => i.periodFrom.equals('$month-01') & i.kind.equals('roomCharge') & i.lineId.isNotNull())).watch();
+});
+
+final roomChargesOfWorkerProvider = StreamProvider.family<List<PayrollItem>, String>((ref, workerId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.payrollItems)..where((i) => i.workerId.equals(workerId) & i.kind.equals('roomCharge') & i.lineId.isNotNull())).watch();
+});
+
+final documentTemplateProvider = StreamProvider<DocumentTemplate?>((ref) {
+  final db = ref.watch(dbProvider);
+  return db.select(db.documentTemplates).watchSingleOrNull();
+});
+
+final documentAssetProvider = FutureProvider.family<DocumentAsset?, String>((ref, id) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.documentAssets)..where((a) => a.id.equals(id))).getSingleOrNull();
+});
+
+final issuedDocumentsProvider = StreamProvider<List<IssuedRow>>((ref) => ref.watch(dbProvider).watchIssued());
+
+final timesheetsProvider = StreamProvider<List<TimesheetListRow>>((ref) => ref.watch(dbProvider).watchTimesheets());
+
+/// One revision of a timesheet. A null revision means the newest.
+final timesheetProvider = StreamProvider.autoDispose.family<TimesheetView, ({String id, int? revision})>((ref, key) => ref.watch(dbProvider).watchTimesheet(key.id, revision: key.revision));
+
+final invoicesProvider = StreamProvider<List<InvoiceListRow>>((ref) => ref.watch(dbProvider).watchInvoices());
+
+final invoiceProvider = StreamProvider.autoDispose.family<InvoiceView, String>((ref, id) => ref.watch(dbProvider).watchInvoice(id));
+
+final visaAccountsProvider = StreamProvider<List<VisaAccount>>((ref) => ref.watch(dbProvider).watchVisaAccounts());
+
+final workerGroupsProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.workerGroups)..orderBy([(g) => OrderingTerm.asc(g.name)])).watch();
+});
+
+final allGroupMembersProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return db.select(db.workerGroupMembers).watch();
+});
+
+final allPayContractsProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.payContracts)..orderBy([(c) => OrderingTerm.desc(c.effectiveFrom)])).watch();
+});
+
+final allBillingContractsProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.billingContracts)..orderBy([(c) => OrderingTerm.desc(c.effectiveFrom)])).watch();
+});
+
+final openingBalancesProvider = StreamProvider((ref) {
+  final db = ref.watch(dbProvider);
+  return db.select(db.openingBalances).watch();
+});
+
+final sitesOfClientProvider = StreamProvider.family<List<Site>, String>((ref, clientId) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.sites)
+        ..where((s) => s.clientId.equals(clientId))
+        ..orderBy([(s) => OrderingTerm.asc(s.name)]))
+      .watch();
+});
+
+/// Every edit of one kind of entry, by the entry it now shows on (D-056).
+final editsProvider = StreamProvider.family<Map<String, List<ChangeNote>>, String>((ref, entity) => ref.watch(dbProvider).watchEdits(entity));
+
+/// Live entries for one date. Corrected originals stay stored but drop out of this list.
+final entriesOnDateProvider = StreamProvider.family<List<AttendanceEntry>, String>((ref, date) {
+  final db = ref.watch(dbProvider);
+  return (db.select(db.attendanceEntries)
+        ..where((e) => e.workDate.equals(date) & e.superseded.equals(false) & e.deleted.equals(false))
+        ..orderBy([(e) => OrderingTerm.asc(e.createdAtUtc)]))
+      .watch();
+});

@@ -1,0 +1,2365 @@
+{
+  "@@locale": "en",
+  "tabToday": "Today",
+  "tabCompanies": "Companies",
+  "tabLabour": "Labour",
+  "tabGroups": "Worker groups",
+  "addGroup": "Make a group",
+  "editGroup": "Edit group",
+  "groupName": "Group name",
+  "groupNameHelp": "For example: Emaar West",
+  "groupsEmpty": "No groups yet. Make one for workers who usually go together.",
+  "noneChoice": "None",
+  "dailyWage": "Daily wage (AED)",
+  "dailyWageHelp": "Optional. Only for a worker with no pay of their own.",
+  "halfDayIsHalf": "Half day pays half the daily wage",
+  "ownWageHelp": "Leave empty to use the group's daily wage.",
+  "todayWageHelp": "For this attendance only. The group does not change.",
+  "todayWageReason": "Daily wage typed while marking attendance",
+  "setWage": "Set wage",
+  "monthlyPay": "Monthly",
+  "workersHeading": "Workers",
+  "searchGroup": "Search groups",
+  "searchWorker": "Search workers",
+  "membersCount": "{count} workers",
+  "@membersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "saveWithCount": "Save ({count} workers)",
+  "@saveWithCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wageOf": "Pay: {name}",
+  "@wageOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tabRates": "Rates",
+  "tabSettings": "Settings",
+  "menuLabel": "Menu",
+  "menuClose": "Hide menu",
+  "soon": "Soon",
+  "groupDaily": "Daily",
+  "groupRegisters": "Registers",
+  "groupBilling": "Payroll and billing",
+  "groupMore": "More",
+  "menuPayroll": "Payroll",
+  "tabCash": "Daily money",
+  "tabRooms": "Rooms",
+  "addCash": "Add entry",
+  "cashEmpty": "Nothing written for this. Tap Add entry when money comes in or goes out.",
+  "moneyOut": "Money given",
+  "moneyIn": "Money received",
+  "cashDifference": "Difference",
+  "kindAdvanceGiven": "Advance",
+  "kindSalaryPaid": "Salary",
+  "kindRoomRentPaid": "Room rent paid",
+  "kindExpense": "Expense",
+  "kindAdvanceReturned": "Advance returned",
+  "kindRoomRentReceived": "Room rent received",
+  "kindClientReceipt": "From a company",
+  "catTransport": "Transport",
+  "catFood": "Food",
+  "catVisa": "Visa and PRO",
+  "catTools": "Tools",
+  "catOffice": "Office",
+  "catOther": "Other",
+  "expenseCategory": "Expense type",
+  "optionalSite": "Site (optional)",
+  "methodCash": "Cash",
+  "methodBank": "Bank",
+  "chooseRoom": "Room",
+  "advanceTooHigh": "This is more than the advance still to recover.",
+  "advanceUndoBlocked": "Some of this advance has already come back. Undo that entry first.",
+  "reverseTitle": "Undo this entry?",
+  "reverseHelp": "The original stays on record. A reversing entry cancels it.",
+  "reverseReason": "Why it is being undone",
+  "reverseConfirm": "Undo entry",
+  "reversedTag": "Undone",
+  "reversalTag": "Undo of an entry",
+  "moneyHeading": "Money",
+  "advanceOutstanding": "Advance still to recover",
+  "salaryPaidTotal": "Salary paid",
+  "workerRentTotal": "Room rent paid by this worker",
+  "roomsEmpty": "No rooms yet. Add the rooms you rent for workers.",
+  "addRoom": "Add room",
+  "editRoom": "Edit room",
+  "roomName": "Room name",
+  "roomNameHelp": "For example: Sonapur Room 12",
+  "rentIn": "Rent received",
+  "rentOut": "Rent paid",
+  "roomProfitLabel": "Profit",
+  "roomLossLabel": "Loss",
+  "roomEven": "Even",
+  "residentsHeading": "Living here",
+  "noResidents": "Nobody yet. Choose this room on a worker's screen.",
+  "entriesHeading": "Entries",
+  "previousMonth": "Previous month",
+  "nextMonth": "Next month",
+  "advanceBalance": "Advance still to recover: {amount}",
+  "@advanceBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savedTo": "Saved on phone, in {name}'s account",
+  "@savedTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "roomProfit": "Profit {amount}",
+  "@roomProfit": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "roomLoss": "Loss {amount}",
+  "@roomLoss": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "rentSplit": "Received {received}, paid {paid}",
+  "@rentSplit": {
+    "placeholders": {
+      "received": {
+        "type": "String"
+      },
+      "paid": {
+        "type": "String"
+      }
+    }
+  },
+  "menuReports": "Reports",
+  "menuDocuments": "Documents",
+  "menuTeam": "Team",
+  "menuBackup": "Backup",
+  "menuPlan": "Plan",
+  "menuHelp": "Help",
+  "countWorkers": "Workers",
+  "countShifts": "Shifts",
+  "countWorkerDays": "Worker-days",
+  "dayNames": "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
+  "pickDate": "Choose date",
+  "chooseWorker": "Worker",
+  "noBillingRates": "No company rates yet. Add one so attendance can be priced.",
+  "noPayRates": "No pay rates yet. Add one so attendance can be priced.",
+  "balancesEmpty": "Nothing carried over yet. Add what was already due when you started using this app.",
+  "addBalance": "Add carried-over amount",
+  "balanceKind": "What kind of amount?",
+  "todayEmpty": "No attendance on this date. Tap Mark attendance to start.",
+  "companiesEmpty": "No client companies yet. Add your first one.",
+  "labourEmpty": "No workers yet. Add your first one.",
+  "settingsLanguage": "Language",
+  "languageEnglish": "English",
+  "languageRomanUrdu": "Roman Urdu",
+  "settingsLargeText": "Large text",
+  "dbCheckTitle": "Data encryption check",
+  "dbCheckAllPassed": "All passed",
+  "dbCheckSomeFailed": "Some failed",
+  "savedOnPhone": "Saved on phone",
+  "databaseError": "Your data could not be opened. Nothing was deleted. Close the app and open it again. If this repeats, contact support.",
+  "save": "Save",
+  "search": "Search",
+  "clearValue": "Clear",
+  "fieldRequired": "This is required",
+  "wholeNumberRequired": "Enter a whole number",
+  "amountInvalid": "Enter an amount like 1100.50",
+  "showArchived": "Show archived",
+  "showActive": "Show active",
+  "archive": "Archive",
+  "reactivate": "Make active again",
+  "archivedLabel": "Archived",
+  "activeLabel": "Active",
+  "welcomeTitle": "Your company",
+  "welcomeBody": "Start with your company's name. You can add the rest later.",
+  "myCompany": "My company",
+  "legalName": "Legal company name",
+  "tradingName": "Trading name",
+  "address": "Address",
+  "phone": "Phone or WhatsApp",
+  "email": "Email",
+  "vatRegistered": "My company is VAT registered",
+  "vatEffectiveFrom": "VAT registered from",
+  "trn": "TRN",
+  "trnFormatOnly": "This only checks the format. It is not verified with the FTA.",
+  "trnFormatError": "A TRN has 15 digits",
+  "invoicePrefix": "Invoice number prefix",
+  "paymentTermsDays": "Payment terms in days",
+  "bankDetails": "Bank details",
+  "documentFooter": "Document footer",
+  "addClient": "Add company",
+  "editClient": "Edit company",
+  "clientName": "Company name",
+  "contactPerson": "Contact person",
+  "clientVatRegistered": "This company is VAT registered",
+  "invoiceAddress": "Invoice address",
+  "dueDays": "Payment due after how many days",
+  "poReference": "PO or reference",
+  "note": "Note",
+  "sitesHeading": "Sites",
+  "sitesEmpty": "No sites yet.",
+  "addSite": "Add site",
+  "editSite": "Edit site",
+  "siteName": "Site or project name",
+  "siteLocation": "Location",
+  "defaultStart": "Usual start",
+  "defaultEnd": "Usual end",
+  "defaultBreakMinutes": "Usual break in minutes",
+  "activeFrom": "Active from",
+  "activeTo": "Active until",
+  "addWorker": "Add worker",
+  "editWorker": "Edit worker",
+  "workerCode": "Worker code",
+  "workerCodeTaken": "This code is already used by another worker",
+  "workerName": "Worker name",
+  "trade": "Trade",
+  "joiningDate": "Joining date",
+  "roomCharge": "Room charge per month (AED)",
+  "roomChargeNote": "Room charge agreement note",
+  "addPayContract": "Add pay rate",
+  "editPayContract": "Edit pay rate",
+  "addBillingContract": "Add client rate",
+  "editBillingContract": "Edit client rate",
+  "payContractsHeading": "Pay rates",
+  "billingContractsHeading": "Client rates",
+  "noPayContract": "No pay rate yet. Attendance for this worker will stop for review.",
+  "noBillingContract": "No client rate yet. Attendance for this client will stop for review.",
+  "rateBasis": "Paid by",
+  "rateAmount": "Rate (AED)",
+  "effectiveFrom": "Starts on",
+  "effectiveTo": "Ends on",
+  "appliesToSite": "Applies to site",
+  "allSites": "All sites",
+  "appliesToWorker": "Applies to worker",
+  "allWorkers": "All workers",
+  "breakIsPaid": "Break is paid",
+  "halfAmount": "Half-day amount (AED)",
+  "halfAmountHelp": "Leave empty if there is no agreed half amount. A half day then stops for review.",
+  "partialMethod": "Part-month calculation",
+  "partialMethodHelp": "Used when a worker joins or leaves mid-month. Choose what your contract says.",
+  "partialCalendarDays": "Actual days in the month",
+  "partialFixedDivisor": "Fixed number of days",
+  "partialDivisor": "Number of days",
+  "includedMinutes": "Minutes included before overtime",
+  "includedMinutesHelp": "Leave empty if there is no overtime on this rate.",
+  "overtimeRate": "Overtime rate per hour (AED)",
+  "overtimeRateHelp": "Only what your contract states. The app never applies a multiplier by itself.",
+  "basisHour": "Per hour",
+  "basisDay": "Per day",
+  "basisShift": "Per shift",
+  "basisMonth": "Per month",
+  "basisMonthPerWorker": "Per month, each worker",
+  "basisMonthFixed": "Per month, fixed contract",
+  "endBeforeStart": "The end date is before the start date",
+  "contractOverlap": "Another rate already covers these dates for the same site and worker. End that rate first.",
+  "openingHeading": "Carried over from before",
+  "openingSalaryOwed": "Old salary still owed to this worker",
+  "openingAdvance": "Old advance to recover from this worker",
+  "openingReceivable": "Old amount this company still owes",
+  "openingHelp": "Enter what was already due on the date you start using this app. It carries forward as a balance and is not counted as this month's expense or income.",
+  "amountAed": "Amount (AED)",
+  "asOfDate": "As of date",
+  "sourceNote": "Where this figure comes from",
+  "sourceNoteHelp": "For example: old register, page 12",
+  "openingConfirm": "I have checked this figure",
+  "confirmRequired": "Please confirm you have checked this figure",
+  "notEntered": "Not entered",
+  "dateFrom": "From {date}",
+  "@dateFrom": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "dateFromTo": "{from} to {to}",
+  "@dateFromTo": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "markAttendance": "Mark attendance",
+  "workDate": "Date",
+  "chooseClient": "Company",
+  "chooseSite": "Site",
+  "shiftStart": "Start",
+  "shiftEnd": "End",
+  "breakMinutes": "Break in minutes",
+  "selectAll": "Select all",
+  "clearSelection": "Clear selection",
+  "copyLastTeam": "Last team",
+  "noLastTeam": "No earlier team found for this site.",
+  "needSetupFirst": "Add a company, a site and a worker first.",
+  "timesRequired": "Choose the start and end time.",
+  "reviewTitle": "Review attendance",
+  "totalClient": "To collect from company",
+  "totalWorker": "To pay workers",
+  "monthlyNotInTotal": "Monthly rates are not in these totals. A monthly wage counts by the month, and a company's monthly contract is charged by the month on its invoices.",
+  "groupRate": "Change today's company rate",
+  "groupRateAmount": "Company rate for this group (AED)",
+  "issueClientRate": "No company rate found",
+  "issueWorkerRate": "No worker rate found",
+  "issueHalf": "No half-day amount agreed",
+  "issueOvertime": "No overtime rate agreed",
+  "issueOverlap": "This worker already has attendance at this time. Write a reason.",
+  "issueBreak": "Break is longer than the shift",
+  "issueOverrideReason": "Write why the rate changed",
+  "rowsNeedFix": "Fix the rows marked in red, then save.",
+  "savesAsDraft": "Rows with no worker rate stay out of payroll until a rate is added.",
+  "statusPresent": "Present",
+  "statusHalf": "Half day",
+  "statusAbsent": "Absent",
+  "clientBreakPaid": "Break paid on company side",
+  "workerBreakPaid": "Break paid on worker side",
+  "overtimeApproved": "Overtime approved",
+  "clientOverride": "Company rate for this row (AED)",
+  "workerOverride": "Worker rate for this row (AED)",
+  "overrideHelp": "Leave empty to use the contract. Changing a rate needs the owner's approval and a reason.",
+  "overrideReason": "Why the rate changed",
+  "overlapReason": "Why two entries overlap",
+  "correctionReason": "Why this is being corrected",
+  "correctionHelp": "The original entry is kept. This creates a corrected entry.",
+  "deleteRow": "Delete this entry",
+  "applyChanges": "Apply",
+  "stateDraft": "No pay rate",
+  "stateSubmitted": "Saved",
+  "stateApproved": "Final",
+  "stateLinked": "In payroll",
+  "correctedTag": "Corrected",
+  "cancel": "Cancel",
+  "localOnlyNote": "This data is only on this phone.",
+  "nextWithCount": "Next ({count} workers)",
+  "countsLine": "{workers} workers, {shifts} shifts, {days} worker-days",
+  "missingWorkers": "{count} workers have no attendance: {names}",
+  "hoursPaid": "{duration} hours",
+  "@nextWithCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@countsLine": {
+    "placeholders": {
+      "workers": {
+        "type": "int"
+      },
+      "shifts": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "@missingWorkers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "@hoursPaid": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "saveFailed": "Could not save. Nothing was changed. Try again.",
+  "rowCollect": "Collect {amount}",
+  "rowPay": "pay {amount}",
+  "@rowCollect": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@rowPay": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payrollEarned": "This month's earnings",
+  "payrollCut": "Deductions",
+  "payrollToPay": "To pay the worker",
+  "payrollSalary": "Monthly salary",
+  "payrollAdjustment": "Earlier work",
+  "payrollNet": "This month's net",
+  "payrollOpening": "Previous unpaid",
+  "payrollPaidAhead": "Paid ahead",
+  "payrollPayable": "Total payable",
+  "payrollPaid": "Paid since",
+  "payrollClosing": "Still unpaid",
+  "payrollOverpaid": "Paid too much",
+  "payrollEmpty": "Nothing to pay this month. Mark attendance first.",
+  "payrollEarnedHeading": "Earnings",
+  "payrollItemsHeading": "Allowances and deductions",
+  "payrollSumHeading": "Account",
+  "payrollNoItems": "None this month.",
+  "payrollStatePosted": "Posted",
+  "payrollStateReady": "Ready to post",
+  "payrollStateDraft": "Not posted",
+  "payrollPostConfirm": "Post",
+  "payrollPayNow": "Record payment",
+  "payrollUndo": "Undo this posting",
+  "payrollUndoTitle": "Undo this posting?",
+  "payrollUndoHelp": "The month goes back to unposted so you can fix it. The record stays, and money already paid stays on the worker's account.",
+  "payrollUndoLater": "Undo the later month first.",
+  "payKindAllowance": "Allowance",
+  "payKindDeduction": "Deduction",
+  "payKindRecovery": "Advance recovery",
+  "payItemReason": "Reason",
+  "payItemAuthorizedBy": "Agreement or permission",
+  "payItemAuthorizedHelp": "Who agreed, and how. For example: signed paper, 01-10-2026",
+  "issuePartial": "Choose the part-month method on the contract.",
+  "issueNegative": "Deductions are more than earnings.",
+  "issueRecovery": "Recovery is more than the advance left.",
+  "issueLimit": "Deductions are above your company's limit.",
+  "issueEarlier": "Post the earlier month first.",
+  "issueLater": "A later month is posted. This goes into the next payroll.",
+  "issueNotStarted": "This month has not started.",
+  "salaryOwed": "Salary still owed",
+  "rentFromPay": "Taken from salaries",
+  "deductionLimit": "Deduction limit (%, optional)",
+  "deductionLimitHelp": "Share of earnings. Ask your accountant. Empty means no limit.",
+  "deductionLimitError": "Write a whole number from 1 to 100.",
+  "payrollPost": "Post payroll ({count})",
+  "@payrollPost": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "payrollPostTitle": "Post payroll for {month}?",
+  "@payrollPostTitle": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "payrollPostBody": "{count} workers, {amount} goes onto their accounts. The figures will not change after this. If something is wrong, undo it on that worker.",
+  "@payrollPostBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payrollPosted": "Payroll posted for {count} workers",
+  "@payrollPosted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "payrollSplit": "Earned {earned}, deducted {cut}",
+  "@payrollSplit": {
+    "placeholders": {
+      "earned": {
+        "type": "String"
+      },
+      "cut": {
+        "type": "String"
+      }
+    }
+  },
+  "applyRoomCharges": "Add room charge",
+  "roomChargesApplied": "Room charge added for {count} workers",
+  "@roomChargesApplied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "payKindRoom": "Room charge",
+  "mainAttendance": "Attendance",
+  "mainVisa": "Visa",
+  "mainMoney": "Money",
+  "tabVisa": "Visa money",
+  "groupSoon": "Coming soon",
+  "regAttendance": "Attendance register",
+  "regWorkers": "Worker register",
+  "regVisa": "Visa register",
+  "regCompanies": "Company register",
+  "regPayroll": "Pay register",
+  "regAdvance": "Advance register",
+  "regCash": "Money register",
+  "regRooms": "Room register",
+  "kindVisaPaid": "Visa money spent",
+  "kindVisaReturned": "Visa money returned",
+  "visaTooHigh": "This is more than the visa money left.",
+  "visaUndoBlocked": "Can't undo this: some of this visa money has already come back.",
+  "visaBalance": "Visa money left: {amount}",
+  "@visaBalance": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "visaSpent": "Spent",
+  "visaBack": "Back",
+  "visaLeft": "Visa left",
+  "visaAdd": "Add visa money",
+  "visaEmpty": "No visa money yet. Add what the company spent on a worker.",
+  "visaSplit": "Spent {spent}, back {back}",
+  "@visaSplit": {
+    "placeholders": {
+      "spent": {
+        "type": "String"
+      },
+      "back": {
+        "type": "String"
+      }
+    }
+  },
+  "visaInstalment": "Monthly instalment",
+  "visaInstalmentOff": "Off",
+  "visaInstalmentHelp": "Taken from pay when you press the button in Payroll. Leave empty to turn it off.",
+  "visaInstalmentShort": "Instalment {amount} a month",
+  "@visaInstalmentShort": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "visaReturnAdd": "Add money returned",
+  "payKindVisa": "Visa instalment",
+  "salaryMonthsHeading": "Which month's salary",
+  "salaryMonthLeft": "{amount} unpaid",
+  "@salaryMonthLeft": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "salaryOldestFirst": "Oldest first",
+  "salaryNothingOwed": "No salary is unpaid for this worker. This amount goes on their advance.",
+  "salaryExtraLine": "{amount} more than is owed. It goes on the advance.",
+  "@salaryExtraLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "salaryExtraTitle": "{amount} more than is owed",
+  "@salaryExtraTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "salaryExtraBody": "This extra is written as an advance to this worker, and comes back through a later salary.",
+  "salaryExtraConfirm": "Write as advance",
+  "salaryExtraNote": "Paid above salary owed",
+  "salaryPartsTooMuch": "The months add up to more than the amount.",
+  "salaryPartTooHigh": "Above what is unpaid",
+  "salaryReference": "Reference (bank or cheque)",
+  "salaryReceiver": "Received by",
+  "salaryReceiverHelp": "Leave empty if the worker took it.",
+  "wagesDueBanner": "{count, plural, =1{1 worker} other{{count} workers}} unpaid: {amount}",
+  "@wagesDueBanner": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "wagesDueOldest": "Waiting longest: {month}",
+  "@wagesDueOldest": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "wagesDueTitle": "Unpaid salary",
+  "wagesDueWorkers": "Workers",
+  "wagesDueTotal": "Unpaid",
+  "wagesDueLate": "{days, plural, =1{1 day late} other{{days} days late}}",
+  "@wagesDueLate": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "wagesDueInTime": "due, not late yet",
+  "wagesDueNone": "Every finished month is paid.",
+  "wagesDueNote": "A reminder only. Recording a late salary does not make it lawful, and this app is not a wage payment or WPS service.",
+  "wageDueDays": "Days to pay salary after month end",
+  "wageDueDaysHelp": "Your own figure, ask your accountant. Empty means late from the day after month end.",
+  "wageDueDaysError": "A whole number from 0 to 90.",
+  "tabClosing": "Close month",
+  "closingWorkersLeft": "Left on workers' accounts",
+  "closingState": "This month",
+  "closingOpen": "Open",
+  "closingClosed": "Closed",
+  "closingNotOver": "This month has not ended yet, so it cannot be closed.",
+  "closingIsClosed": "This month is closed. Editing or deleting one of its entries opens it again, with your note as the reason.",
+  "closingLeft": "{count, plural, =1{1 thing left. The month closes only when it is cleared.} other{{count} things left. The month closes only when all are cleared.}}",
+  "@closingLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closingUnpaidNote": "Unpaid wages do not hold a month up. They carry into the next month.",
+  "closeBlocked": "{count, plural, =1{Clear 1 thing first} other{Clear {count} things first}}",
+  "@closeBlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "closingEnterHazri": "Mark attendance for this date",
+  "closingDayOff": "No work for the rest",
+  "closingDayOffHelp": "Mark attendance for those who worked. Then say the rest had no work, and this date clears.",
+  "closingDayOffDone": "Saved. This date is clear.",
+  "closingPostReady": "Post pay that is ready",
+  "closingPostHelp": "Pay that cannot post stays here. Open a name to see why.",
+  "closingSettle": "Settle against the oldest months",
+  "closingSettleHelp": "These figures stay the same. The months are only written down.",
+  "closingSettled": "Months written down",
+  "closingAllClear": "Nothing to fix. This month can be closed.",
+  "closingSummary": "Workers' accounts this month",
+  "closingCuts": "Room, visa and deductions",
+  "closingExpenses": "Expenses",
+  "findingNoWorkerRate": "{count} workers have attendance with no pay rate: {names}. Add a rate or remove the attendance.",
+  "@findingNoWorkerRate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "findingNotPosted": "{count} workers are not posted: {names}. Post them in Payroll.",
+  "@findingNotPosted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "findingNoCompanyRate": "{count, plural, =1{1 company has no rate, so its bill is incomplete: {names}.} other{{count} companies have no rate, so their bill is incomplete: {names}.}}",
+  "@findingNoCompanyRate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "findingNoHazri": "{count} workers with no attendance: {names}.",
+  "@findingNoHazri": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "findingOverlap": "{count} workers have shifts that overlap: {names}.",
+  "@findingOverlap": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "findingNoMonth": "{count} workers have a payment with no month chosen, which settles the oldest month: {names}.",
+  "@findingNoMonth": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "closeButton": "Close {month}",
+  "@closeButton": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "closeTitle": "Close {month}?",
+  "@closeTitle": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "closeBody": "Attendance, expenses and payroll up to this month are closed. Editing or deleting one of their entries opens the month again, with your note as the reason.",
+  "closeConfirm": "Close",
+  "closeDone": "{month} is closed",
+  "@closeDone": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "closeNotReady": "This month cannot close yet. Fix what is listed first.",
+  "reopenButton": "Open this month again",
+  "reopenTitle": "Open {month} again",
+  "@reopenTitle": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "reopenHelp": "Why it must change. The reason stays on record.",
+  "reopenReason": "Why the month is being reopened",
+  "reopenConfirm": "Open",
+  "reopenDone": "{month} is open again",
+  "@reopenDone": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "reopenLater": "Open the later month first.",
+  "periodLockedError": "This month is closed. Enter the difference in an open month as an allowance or deduction, or open it again from Close month.",
+  "closedNote": "This month is closed. Nothing new goes in, and editing an entry opens the month again.",
+  "reverseHelpClosed": "This month is closed, so the reversal is written with today's date and the closed month stays as it was.",
+  "issueClosed": "This month is closed.",
+  "applyVisaInstalments": "Add visa instalments ({count})",
+  "@applyVisaInstalments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "visaInstalmentsApplied": "Visa instalment added for {count} workers",
+  "@visaInstalmentsApplied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "issueVisa": "This is more than the visa money left.",
+  "regRows": "{count, plural, =1{1 entry} other{{count} entries}}",
+  "@regRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "regAllDates": "All dates",
+  "regThisMonth": "This month",
+  "regLastMonth": "Last month",
+  "regAll": "All",
+  "regClear": "Clear",
+  "regExport": "PDF, Excel or WhatsApp",
+  "regEmpty": "Nothing for these dates and filters.",
+  "regTotal": "Total",
+  "regPage": "Page {page} of {pages}",
+  "@regPage": {
+    "placeholders": {
+      "page": {
+        "type": "String"
+      },
+      "pages": {
+        "type": "String"
+      }
+    }
+  },
+  "regMade": "Made on {when}",
+  "@regMade": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "regFilterDates": "Dates: {range}",
+  "@regFilterDates": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "regAmountsNote": "Amounts in AED",
+  "regCompanyNote": "Wages here are pay marked on attendance. Monthly salaries are not in them.",
+  "regPayrollNote": "Posted months only.",
+  "exportMaking": "Making the file...",
+  "exportView": "View or print",
+  "exportOpen": "Open",
+  "exportSave": "Save on phone",
+  "exportWhatsApp": "WhatsApp",
+  "exportOther": "Other apps",
+  "exportNoWhatsApp": "WhatsApp not found. Choose another app.",
+  "exportNoApp": "No app on this phone opens this file. Use Other apps to send it.",
+  "exportSaved": "Saved on the phone.",
+  "exportFailed": "Could not make the file. Try again.",
+  "filterStatus": "Attendance",
+  "filterState": "State",
+  "filterKind": "Type",
+  "filterMethod": "Cash or bank",
+  "filterTrade": "Trade",
+  "filterActive": "Status",
+  "filterOwed": "Balance",
+  "stateActive": "Active",
+  "stateArchived": "Archived",
+  "owedYes": "Still owed",
+  "owedNo": "Cleared",
+  "colDate": "Date",
+  "colMonth": "Month",
+  "colWorker": "Worker",
+  "colCode": "Code",
+  "colCompany": "Company",
+  "colSite": "Site",
+  "colGroup": "Group",
+  "colIn": "In",
+  "colOut": "Out",
+  "colBreak": "Break",
+  "colCompanyHours": "Company hours",
+  "colWorkerHours": "Worker hours",
+  "colOvertime": "Overtime",
+  "colCompanyRate": "Company rate",
+  "colBill": "Company bill",
+  "colWorkerRate": "Worker rate",
+  "colPay": "Worker pay",
+  "colWhat": "What",
+  "colWho": "Who",
+  "colGiven": "Given",
+  "colBack": "Back",
+  "colLeft": "Left",
+  "colPhone": "Phone",
+  "colJoined": "Joined",
+  "colRoom": "Room",
+  "colRate": "Pay rate",
+  "colWorkers": "Workers",
+  "colHours": "Hours",
+  "colWages": "Wages",
+  "colDifference": "Difference",
+  "colPostedOn": "Posted on",
+  "settingsColour": "App colours",
+  "paletteBlue": "Blue",
+  "paletteGreen": "Green",
+  "paletteMaroon": "Maroon",
+  "issueMissingRate": "{count} attendance rows have no worker rate. Add it under Rates.",
+  "@issueMissingRate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noClientRateNote": "No company rate yet. The worker's pay still counts, and the bill appears once the rate is added.",
+  "roomChargeTitle": "Room charge, {month}",
+  "@roomChargeTitle": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "roomChargeAll": "Same amount for all (AED)",
+  "roomChargeAllHelp": "Used for anyone ticked with no amount of their own.",
+  "roomChargeSave": "Add for {count} workers",
+  "@roomChargeSave": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roomChargeNeedAmount": "Write the amount for {name}",
+  "@roomChargeNeedAmount": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "roomChargeNone": "Everyone has this month's room charge already, or their month is posted.",
+  "roomChargeByOwner": "Added by the owner",
+  "issueNoRate": "No rate",
+  "colEarned": "Earned",
+  "colPaid": "Paid",
+  "colNoRate": "No company rate",
+  "colDays": "Days",
+  "regBrought": "Brought forward",
+  "regWorkerNote": "Balance = earned - advance - deductions, room and visa cut - paid. A monthly salary shows once its month is posted.",
+  "regAttendanceNote": "Difference = company bill - worker pay, for rows that have both. Monthly salaries are not in worker pay.",
+  "regOwedToWorker": "Balance {amount}: to pay the worker",
+  "@regOwedToWorker": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regOwedByWorker": "Balance {amount}: the worker owes this",
+  "@regOwedByWorker": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regSettled": "Balance AED 0.00: settled",
+  "regOwedSplit": "Pay {pay}, less advance left {advance}",
+  "@regOwedSplit": {
+    "placeholders": {
+      "pay": {
+        "type": "String"
+      },
+      "advance": {
+        "type": "String"
+      }
+    }
+  },
+  "regRecoveryRow": "{amount} taken from pay. The balance counted it when it was given.",
+  "@regRecoveryRow": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regByWorker": "By worker",
+  "regBySite": "By company and site",
+  "regAllWorkers": "All workers",
+  "regSummarySheet": "Summary",
+  "colBalance": "Balance",
+  "rateIn": "Pay: {name}",
+  "@rateIn": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ownRateHelp": "Their own pay is {rate}. Leave empty to keep it.",
+  "@ownRateHelp": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "rateSetHere": "In this group: {rate}",
+  "@rateSetHere": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "rateOwn": "Own pay: {rate}",
+  "@rateOwn": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "rateFromGroup": "Group wage: {rate}",
+  "@rateFromGroup": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "rateMissing": "No pay set. Set it here, or add a group wage.",
+  "rateChange": "Change",
+  "regVisaRow": "Visa money {amount}. It comes off the balance as it is cut from pay.",
+  "@regVisaRow": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regVisaLeft": "Visa left {amount}",
+  "@regVisaLeft": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "exportSlowPdf": "This PDF is long and can take some minutes. Excel is much quicker.",
+  "exportTooLong": "Too many rows for one file. Pick fewer dates or add a filter.",
+  "payrollAdvanceLeft": "Advance not yet cut",
+  "payrollAfterAdvance": "Balance on the slip, after advance",
+  "slipTitle": "Salary slip",
+  "slipSummary": "Account",
+  "slipOpening": "Balance from before",
+  "slipWork": "This month's work",
+  "slipAdvance": "Advance taken",
+  "slipRoom": "Room",
+  "slipVisa": "Visa",
+  "slipOther": "Other deductions",
+  "slipPaid": "Paid",
+  "slipOwedToYou": "Balance: to be paid to you",
+  "slipYouOwe": "Balance: you owe",
+  "slipSettled": "Balance",
+  "slipDays": "Day by day",
+  "slipMoney": "Money taken",
+  "slipNoWork": "No work this month.",
+  "slipNoMoney": "No money taken this month.",
+  "slipDayCount": "{days} days",
+  "@slipDayCount": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "slipVisaLeft": "Visa left {amount}: comes out of later pay.",
+  "@slipVisaLeft": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "slipNote": "This slip is an account, not proof of payment.",
+  "ownerSheet": "Owner's sheet",
+  "sheetTitle": "Owner's salary sheet",
+  "sheetSummary": "The month in short",
+  "sheetBill": "Company bills",
+  "sheetWages": "Wages for that work",
+  "sheetSalaries": "Monthly salaries, not split by company",
+  "sheetAllowances": "Allowances",
+  "sheetCuts": "Other deductions from pay",
+  "sheetRoomIn": "Room money in, from pay and cash",
+  "sheetRoomOut": "Room rent paid",
+  "sheetExpenses": "Other expenses",
+  "sheetEstimate": "Operating estimate, not audited",
+  "sheetByCompany": "By company",
+  "sheetDetail": "Company wise",
+  "sheetWorkers": "Workers' accounts",
+  "sheetCompanyHead": "{workers} workers, {sites} sites",
+  "@sheetCompanyHead": {
+    "placeholders": {
+      "workers": {
+        "type": "int"
+      },
+      "sites": {
+        "type": "int"
+      }
+    }
+  },
+  "sheetNote": "An estimate from attendance, not audited accounts. A company on a monthly contract has its contract amount for the month on a line of its own, invoiced or not. A company with no rate shows no bill here, so its profit looks low. Advance and visa money are not expenses, because workers pay them back.",
+  "sheetContract": "Monthly contract amount",
+  "colProfit": "Profit",
+  "colVisaLeft": "Visa left",
+  "mainDocuments": "Documents",
+  "docsTab": "Issued papers",
+  "docsEmpty": "No papers yet. A salary slip or receipt shows here once made.",
+  "docCopyOption": "Mark as COPY",
+  "docCopyHelp": "The number stays the same. Without COPY you get the same file that was issued.",
+  "docCopyLabel": "COPY",
+  "docPrint": "Print",
+  "slipEarnings": "Earnings",
+  "slipEarned": "Total earned",
+  "slipDeductions": "Deductions",
+  "slipDeducted": "Total deducted",
+  "slipAccount": "Account",
+  "slipNet": "This month's net",
+  "slipWorkBasis": "Work: {days} days, {hours} hours",
+  "@slipWorkBasis": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptMake": "Make a receipt",
+  "receiptPaymentTitle": "Salary receipt",
+  "receiptAdvanceTitle": "Advance receipt",
+  "receiptPayment": "Salary paid",
+  "receiptAdvance": "Advance given",
+  "receiptMethod": "Method",
+  "receiptReference": "Reference",
+  "receiptReceiver": "Taken by",
+  "receiptMonth": "Salary for {month}",
+  "@receiptMonth": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptNote": "This receipt is the company's own record. It is not proof of a bank payment.",
+  "receiptTakenBy": "Signature of the person receiving",
+  "receiptFromCompany": "For the company",
+  "lhTab": "Letterhead",
+  "lhOld": "Papers already issued stay as they are. This applies to new papers only.",
+  "lhIdentity": "Company details",
+  "lhIdentityNote": "Name, address, phone and TRN come from here.",
+  "lhPrinted": "Print the company heading",
+  "lhPrintedHelp": "Turn off if your paper is already printed. Then name, logo and footer do not print.",
+  "lhBlankTop": "Blank at top (mm)",
+  "lhBlankBottom": "Blank at foot (mm)",
+  "lhBlankBad": "Enter 0 to 120 mm.",
+  "lhLogo": "Logo",
+  "lhHeader": "Header image",
+  "lhFooter": "Footer image",
+  "lhSignature": "Signature",
+  "lhStamp": "Stamp",
+  "lhUpload": "Choose image",
+  "lhChange": "Change",
+  "lhRemove": "Remove",
+  "lhSize": "Width",
+  "lhLeft": "Left",
+  "lhCenter": "Centre",
+  "lhRight": "Right",
+  "lhCrop": "Trim edges",
+  "lhCropTop": "Top",
+  "lhCropBottom": "Bottom",
+  "lhCropLeft": "Left",
+  "lhCropRight": "Right",
+  "lhShow": "Show on papers",
+  "lhResolution": "{width} x {height} pixels",
+  "@lhResolution": {
+    "placeholders": {
+      "width": {
+        "type": "int"
+      },
+      "height": {
+        "type": "int"
+      }
+    }
+  },
+  "lhLowRes": "Will look soft in print ({dpi} DPI). Use a bigger image or a smaller width.",
+  "@lhLowRes": {
+    "placeholders": {
+      "dpi": {
+        "type": "int"
+      }
+    }
+  },
+  "lhBadType": "Only PNG or JPEG images work.",
+  "imagePickFailed": "The picture could not be opened. Try again.",
+  "lhTooLarge": "The image is over 5 MB.",
+  "lhSample": "See a sample",
+  "mainBilling": "Billing",
+  "tsTab": "Timesheets",
+  "tsTitle": "Timesheet",
+  "tsNew": "New timesheet",
+  "tsEmpty": "No timesheets yet. Pick a company and dates to make one.",
+  "tsAllSites": "All sites",
+  "tsFrom": "From",
+  "tsTo": "To",
+  "tsBadDates": "The end date is before the start date.",
+  "tsWillHold": "{count, plural, =1{1 row goes on it} other{{count} rows go on it}}",
+  "@tsWillHold": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsNothing": "Nothing in these dates can go on a timesheet.",
+  "tsLeftNoRate": "{count, plural, =1{1 row left out: no company rate. Add it in Rates.} other{{count} rows left out: no company rate. Add it in Rates.}}",
+  "@tsLeftNoRate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsLeftNoWage": "{count, plural, =1{1 row left out: no worker rate yet.} other{{count} rows left out: no worker rate yet.}}",
+  "@tsLeftNoWage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsLeftOther": "{count, plural, =1{1 row left out: already on another timesheet.} other{{count} rows left out: already on another timesheet.}}",
+  "@tsLeftOther": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsCreate": "Make draft",
+  "tsDraftNote": "A draft follows the attendance until you approve it.",
+  "tsStatusDraft": "Draft",
+  "tsStatusApproved": "Approved",
+  "tsStatusShared": "Sent to the company",
+  "tsStatusAccepted": "Accepted, locked",
+  "tsStatusDisputed": "Disputed by the company",
+  "tsNoteApproved": "Make the paper and send it. Then say you sent it.",
+  "tsNoteShared": "Waiting for the company. This never holds up a wage.",
+  "tsNoteDisputed": "Check the hours with the company. Worker pay stays as it is until you correct the attendance.",
+  "tsRevisionLabel": "Revision {number}",
+  "@tsRevisionLabel": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "tsViewDaily": "Daily summary",
+  "tsViewWorkers": "Worker detail",
+  "tsPricedLabel": "with rates",
+  "tsHoursOnlyLabel": "hours only",
+  "tsUniqueWorkers": "Unique workers",
+  "tsWorkerDays": "Worker-days",
+  "tsShiftsWorked": "Shifts worked",
+  "tsHoursBilled": "Billable hours",
+  "tsDaysBilled": "Billable days",
+  "tsShiftsBilled": "Billable shifts",
+  "tsAmount": "Amount",
+  "tsTotalAmount": "Timesheet total",
+  "colPersons": "People",
+  "colShifts": "Shifts",
+  "colClock": "Clock hours",
+  "colTrade": "Trade",
+  "colBillable": "Billable",
+  "tsHoursValue": "{hours} h",
+  "@tsHoursValue": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "tsDaysValue": "{days} days",
+  "@tsDaysValue": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "tsShiftsValue": "{shifts} shifts",
+  "@tsShiftsValue": {
+    "placeholders": {
+      "shifts": {
+        "type": "String"
+      }
+    }
+  },
+  "tsMonthlyRow": "Monthly",
+  "tsNotCharged": "Not charged",
+  "tsMonthlyLine": "{basis}, {rate}: {from} to {to}, {count} people. The contract amount goes on the invoice by the month, not from these rows.",
+  "@tsMonthlyLine": {
+    "placeholders": {
+      "basis": {
+        "type": "String"
+      },
+      "rate": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsMonthlyLinePlain": "{basis}: {from} to {to}, {count} people.",
+  "@tsMonthlyLinePlain": {
+    "placeholders": {
+      "basis": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsAgreedHeading": "Agreed with the company",
+  "tsRevisedBecause": "Revised: {reason}",
+  "@tsRevisedBecause": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "tsNotInvoice": "This is a timesheet, not an invoice.",
+  "tsClientSign": "Acknowledged for {client}",
+  "tsApprove": "Approve",
+  "tsApproveBody": "Its attendance freezes and it gets a number. A later change needs a new revision.",
+  "tsDeleteDraft": "Throw away draft",
+  "tsDeleteDraftBody": "The draft goes, with any hours agreed in it. Attendance does not change.",
+  "tsPaper": "Make the paper",
+  "tsPaperPriced": "Show rate and amount",
+  "tsPaperPricedHelp": "Off, the company sees hours only. A worker's wage never prints.",
+  "tsContinue": "Continue",
+  "tsShared": "Sent to the company",
+  "tsAccepted": "Company accepted",
+  "tsDisputed": "Company disputes it",
+  "tsRespondDate": "On what date",
+  "tsRespondNote": "What they said (optional)",
+  "tsEvidence": "Add a photo (optional)",
+  "tsEvidenceAdded": "Photo added",
+  "tsEvidenceNote": "A photo of what came back. It is not a verified digital signature.",
+  "tsNewRevision": "New revision",
+  "tsRevisionHelp": "The old one stays exactly as it was. What changed?",
+  "tsRevisionReason": "Why a new revision",
+  "tsRevisionConfirm": "Start",
+  "tsChanged": "{count, plural, =1{1 row of attendance was corrected after this. A new revision takes it in.} other{{count} rows of attendance were corrected after this. A new revision takes them in.}}",
+  "@tsChanged": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tsBillingChanged": "{count, plural, =1{1 row differs from what an invoice charged, by {amount}. The invoice has not changed.} other{{count} rows differ from what an invoice charged, by {amount}. The invoice has not changed.}}",
+  "@tsBillingChanged": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tsRevisionsHeading": "Revisions",
+  "tsOldRevisionNote": "This is an older revision, kept exactly as it was.",
+  "tsAdjustTitle": "What the company agreed",
+  "tsAdjustHelp": "This changes the company's paper. With fewer hours the app then asks whether the worker's attendance changes too.",
+  "tsAdjustHours": "Billable hours",
+  "tsAdjustMinutes": "Minutes",
+  "tsAdjustAmount": "Amount (AED)",
+  "tsAdjustReason": "Why",
+  "tsAdjustClear": "Back to the attendance figure",
+  "tsAdjustSave": "Save",
+  "tsNotTaken": "Not charged",
+  "tsAgreedRow": "Agreed: {reason}",
+  "@tsAgreedRow": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "tsWrongStep": "This has already moved on. Look again.",
+  "tsBasisOnly": "A monthly row has no amount of its own.",
+  "tsPeople": "{count, plural, =1{1 person} other{{count} people}}",
+  "@tsPeople": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@tsClientSign": {
+    "placeholders": {
+      "client": {
+        "type": "String"
+      }
+    }
+  },
+  "invTab": "Invoices",
+  "invNew": "New invoice",
+  "invEmpty": "No invoices yet. Approve a timesheet, then make an invoice from it.",
+  "invCreate": "Make draft",
+  "invNewHelp": "The draft takes every approved timesheet of this company in these dates that still has work to bill. You can leave one out next.",
+  "invNothing": "Nothing in these dates is left to invoice. Either no approved timesheet has work here still to bill, or it is already on an invoice, such as a monthly contract amount already charged for that month.",
+  "invNoCompany": "Fill in your company's legal name in Apni company first.",
+  "invWrongStep": "This invoice has moved on. Look at it again.",
+  "invDraftLabel": "Draft",
+  "invDraftTitle": "Invoice draft",
+  "invStatusIssued": "Issued",
+  "invStatusCredited": "Taken back",
+  "invCreditNoteLabel": "Credit note",
+  "invDue": "due {date}",
+  "@invDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "invTotal": "Total",
+  "invVat": "VAT",
+  "invNet": "Before VAT",
+  "invVatAt": "VAT {rate}",
+  "@invVatAt": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "invNoteDraft": "Draft. It has no number until you issue it, and reads its timesheets as they stand.",
+  "invNoteIssued": "Issued on {date}. Due on {due}.",
+  "@invNoteIssued": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "due": {
+        "type": "String"
+      }
+    }
+  },
+  "invNoteCredited": "Taken back whole by credit note {number}. Its work can go on a new invoice.",
+  "@invNoteCredited": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "invNoteCreditNote": "Takes back invoice {number}: {reason}",
+  "@invNoteCreditNote": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "invNotRegistered": "Your company is not VAT registered on today's date, so no VAT is charged and the paper says Invoice, not Tax Invoice. Change it in Apni company.",
+  "invNeedsTrn": "Add your TRN in Apni company before issuing a tax invoice.",
+  "invIssue": "Issue",
+  "invIssueBody": "It gets the next number and today's date. After this it can't be changed, only taken back whole with a credit note.",
+  "invPreview": "See draft",
+  "invDeleteDraft": "Delete draft",
+  "invDeleteDraftBody": "The draft goes, with its discounts and changed contract amounts. The timesheets don't change.",
+  "invPaper": "Paper",
+  "invShareBoth": "Send with timesheet",
+  "invShareBothBody": "Invoice {number} and each timesheet it charges go together in one message. You pick who gets it.",
+  "@invShareBothBody": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "invCredit": "Credit note",
+  "invCreditTitle": "Credit note",
+  "invCreditReason": "Why it is taken back",
+  "invCreditHelp": "A credit note dated today takes back every line and its VAT. The invoice stays on record, and its work can go on a new invoice.",
+  "invCreditConfirm": "Make credit note",
+  "invSettingsHeading": "Details",
+  "invPo": "PO / reference",
+  "invDueDate": "Due date",
+  "invDueAuto": "Set on issue, from the company's days",
+  "invVatTreatment": "VAT treatment",
+  "invCatStandard": "Standard rate, 5%",
+  "invCatZero": "Zero-rated",
+  "invCatExempt": "Exempt",
+  "invCatOut": "Outside the scope of VAT",
+  "invCatHelp": "A tax adviser should confirm any treatment other than standard.",
+  "invInclusive": "Rates include VAT",
+  "invInclusiveHelp": "Off: VAT is added on top.",
+  "invTimesheetsHeading": "Timesheets",
+  "invSourceRows": "{count, plural, =1{1 row to bill} other{{count} rows to bill}}",
+  "@invSourceRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invSourceDisputed": "{count, plural, =1{1 row waits: the company disputed it} other{{count} rows wait: the company disputed them}}",
+  "@invSourceDisputed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invSourceChanged": "{count, plural, =1{1 row waits: its attendance changed, so make a new revision} other{{count} rows wait: their attendance changed, so make a new revision}}",
+  "@invSourceChanged": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invLinesHeading": "Lines",
+  "invNoLines": "Nothing ticked can be invoiced.",
+  "invLineSheetTitle": "Change this line",
+  "invDiscount": "Discount (AED)",
+  "invFee": "Contract amount for these dates (AED)",
+  "invFeeHelp": "Starts at what is left of the month's contract amount. Change it if the contract ran for only part of the month. What you leave off can go on a later invoice for the same month.",
+  "invFeeChargedBefore": "{amount} of this month is already on {invoices}, so this line starts at the rest.",
+  "@invFeeChargedBefore": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "invoices": {
+        "type": "String"
+      }
+    }
+  },
+  "invDiscountTooBig": "A discount can't be more than its line.",
+  "findingNotInvoiced": "{count, plural, =1{1 company has work no invoice charges yet: {names}. Make its invoice in Billing.} other{{count} companies have work no invoice charges yet: {names}. Make their invoices in Billing.}}",
+  "@findingNotInvoiced": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "regInvoices": "Invoice register",
+  "regInvoiceNote": "One row for each line of each invoice and credit note, as issued. Credit notes count against. This is a record, not a UAE structured e-invoice.",
+  "colNumber": "Number",
+  "colKind": "Kind",
+  "colStatus": "Status",
+  "colDescription": "Description",
+  "colQty": "Qty",
+  "colUnit": "Unit",
+  "colUnitPrice": "Unit price",
+  "colVatRate": "VAT %",
+  "invPTaxInvoice": "Tax Invoice",
+  "invPInvoice": "Invoice",
+  "invPTaxCreditNote": "Tax Credit Note",
+  "invPCreditNote": "Credit Note",
+  "invPBillTo": "Bill to",
+  "invPCreditTo": "Credit to",
+  "invPSupplierTrn": "Supplier TRN",
+  "invPIssueDate": "Date of issue",
+  "invPSupplyPeriod": "Period of supply",
+  "invPAgainst": "Against invoice",
+  "invPDueDate": "Due date",
+  "invPReference": "PO / reference",
+  "invPColNo": "No.",
+  "invPColDescription": "Description",
+  "invPColQty": "Qty",
+  "invPColUnit": "Unit",
+  "invPColRate": "Unit price",
+  "invPColDiscount": "Discount",
+  "invPColNet": "Taxable amount",
+  "invPColAmount": "Amount",
+  "invPColVatRate": "VAT %",
+  "invPColVat": "VAT",
+  "invPColTotal": "Total",
+  "invPUnitHour": "Hour",
+  "invPUnitDay": "Day",
+  "invPUnitShift": "Shift",
+  "invPUnitMonth": "Month",
+  "invPUnitWorkerMonth": "Worker-month",
+  "invPLineLabour": "Manpower supply",
+  "invPLineFee": "Monthly contract amount for {month}",
+  "@invPLineFee": {
+    "description": "A monthly contract line on an invoice names the month its contract amount covers (TS-08).",
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "invPTotalNet": "Total before VAT",
+  "invPTotalVat": "VAT at {rate}",
+  "@invPTotalVat": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "invPTotal": "Total due",
+  "invPCredited": "Total credited",
+  "invPZeroRated": "Zero-rated supply.",
+  "invPExempt": "Exempt supply.",
+  "invPOutOfScope": "Outside the scope of UAE VAT.",
+  "invPReason": "Reason: {reason}",
+  "@invPReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "invPTimesheets": "Supported by timesheet {numbers}, which is a separate paper.",
+  "@invPTimesheets": {
+    "placeholders": {
+      "numbers": {
+        "type": "String"
+      }
+    }
+  },
+  "invPInclusive": "The rates included VAT, shown here apart.",
+  "invPNotEInvoice": "This PDF is not a UAE structured e-invoice.",
+  "invPBank": "Bank details",
+  "invPDraft": "DRAFT",
+  "invPDraftNote": "Not issued and has no number",
+  "invLessDiscount": "Discount {amount}",
+  "@invLessDiscount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invOpenCreditNote": "See credit note {number}",
+  "@invOpenCreditNote": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "invOpenInvoice": "See invoice {number}",
+  "@invOpenInvoice": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "invItemQuantity": "{count} × {price}",
+  "@invItemQuantity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "invAddLine": "Add a line",
+  "invItemTitle": "Line",
+  "invItemHelp": "For something no timesheet holds, such as transport. VAT goes on it at this invoice's rate.",
+  "invItemDescription": "What it is for",
+  "invItemCount": "How many",
+  "invItemCountInvalid": "Write a whole number, 1 or more",
+  "invItemPrice": "Price of one (AED)",
+  "invItemRemove": "Remove this line",
+  "invReissue": "New invoice for these dates",
+  "invChanged": "{count, plural, =1{1 row changed} other{{count} rows changed}} after this invoice was issued, by {amount} in all. Edit invoice makes the credit note and a new draft in one step. If the timesheet shows changed attendance, approve its new revision first.",
+  "@invChanged": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invCreditedSoFar": "{count, plural, =1{Credit note} other{{count} credit notes}}",
+  "@invCreditedSoFar": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "invLeft": "Left after credit notes",
+  "invCreditWhole": "Whole invoice",
+  "invCreditPart": "An amount",
+  "invCreditRestHelp": "Takes back the {amount} that earlier credit notes left. Its work can then go on a new invoice.",
+  "@invCreditRestHelp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invCreditPartHelp": "Takes back part of the invoice, up to {amount}, such as a rate agreed lower later. The work stays charged on this invoice.",
+  "@invCreditPartHelp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invCreditAmount": "Amount (AED)",
+  "invCreditAmountBeforeVat": "Amount before VAT (AED)",
+  "invCreditAmountWithVat": "Amount with VAT (AED)",
+  "invCreditTooBig": "More than is left of this invoice: {amount} with VAT.",
+  "@invCreditTooBig": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invCreditNothingLeft": "There is not that much left of this invoice to take back.",
+  "findingChangedAfterInvoice": "{count, plural, =1{1 timesheet has attendance that changed after it was invoiced: {names}. Approve its new revision, then put the invoice right.} other{{count} timesheets have attendance that changed after it was invoiced: {names}. Approve their new revisions, then put the invoices right.}}",
+  "@findingChangedAfterInvoice": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "findingInvoiceOutOfDate": "{count, plural, =1{1 invoice charges other figures than its timesheet now says: {names}. Make a credit note for it, then a new invoice.} other{{count} invoices charge other figures than their timesheets now say: {names}. Make a credit note for each, then a new invoice.}}",
+  "@findingInvoiceOutOfDate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "invNotePartCredited": "Credit notes took back {amount}. {left} is left.",
+  "@invNotePartCredited": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "left": {
+        "type": "String"
+      }
+    }
+  },
+  "invRecordReceipt": "Record a receipt",
+  "invUseCredit": "Use company credit, {amount}",
+  "@invUseCredit": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invCloseLost": "Close the rest as lost",
+  "invCloseLostTitle": "Close {amount} as lost?",
+  "@invCloseLostTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invCloseLostHelp": "For money that will not come. The month is no longer held up, and you can open it again. Ask your accountant about the VAT.",
+  "invUndoLost": "Open the closed amount again",
+  "invUndoLostTitle": "Open the closed amount again?",
+  "invUndoLostHelp": "It is owed again. Past its due date, it stops closing the month until paid.",
+  "invNoteOverdue": "Overdue since {due}: {amount} still to pay. The month cannot close until it is paid, or closed as lost with a reason.",
+  "@invNoteOverdue": {
+    "placeholders": {
+      "due": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invNotePartPaid": "{received} received, {left} still to pay.",
+  "@invNotePartPaid": {
+    "placeholders": {
+      "received": {
+        "type": "String"
+      },
+      "left": {
+        "type": "String"
+      }
+    }
+  },
+  "invNotePaid": "Paid in full.",
+  "invNoteClosed": "{amount} closed as lost. Nothing is left to pay.",
+  "@invNoteClosed": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invNoteReturned": "{amount} received on this invoice went back as the company's credit after its credit note. A new invoice can use it.",
+  "@invNoteReturned": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invReceived": "Received",
+  "invLost": "Closed as lost",
+  "invToPay": "Still to pay",
+  "invReceiptsHeading": "Receipts",
+  "invStatusPartlyPaid": "Partly paid",
+  "invStatusOverdue": "Overdue",
+  "invStatusPaid": "Paid",
+  "invStatusClosed": "Closed, part lost",
+  "invToPayShort": "{amount} to pay",
+  "@invToPayShort": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptPaysHeading": "What it pays",
+  "receiptNothingOwed": "Nothing is owed. The whole amount waits as the company's credit for its next invoice.",
+  "receiptOldBalance": "Balance from before the app",
+  "receiptInvoiceLeft": "{amount} left, due {due}",
+  "@receiptInvoiceLeft": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "due": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptPartTooHigh": "More than is left on it",
+  "receiptKeptLine": "{amount} stays as the company's credit for later invoices.",
+  "@receiptKeptLine": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptCreditAlready": "This company already has {amount} of credit not used. Use it from the invoice's screen.",
+  "@receiptCreditAlready": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptForInvoice": "Invoice {number}",
+  "@receiptForInvoice": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptKeptAsCredit": "Kept as credit",
+  "receiptReceived": "Received",
+  "receiptClientNote": "This receipt is the supplier's own record of money received. It is not a tax invoice.",
+  "receiptReceivedBy": "Received by",
+  "receiptPaidBy": "Paid by",
+  "receiptClientTitle": "Receipt",
+  "findingOverdue": "{count, plural, =1{An invoice falls} other{{count} invoices fall}} due by the month's end with money left: {names}. Record what was paid, or close the rest as lost with a reason.",
+  "@findingOverdue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "regLostUndone": "Closed amount opened again",
+  "regCompanyOwes": "Balance {amount}: the company owes",
+  "@regCompanyOwes": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regCompanyCredit": "Balance {amount}: credit to the company",
+  "@regCompanyCredit": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regOverdue": "Overdue {amount}",
+  "@regOverdue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regUnusedCredit": "Credit not used {amount}",
+  "@regUnusedCredit": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "regAllCompanies": "All companies",
+  "regInvoiced": "Invoiced",
+  "regStatement": "Company statement",
+  "regStatementNote": "Invoices, credit notes, receipts and amounts closed as lost, with the balance after each. Not a tax invoice.",
+  "clientMoneyHeading": "Money",
+  "clientCreditUnused": "Credit not used",
+  "invLostReason": "Why the money will not come",
+  "invUndoLostReason": "Why it is owed again",
+  "invCloseLostConfirm": "Close as lost",
+  "invUndoLostConfirm": "Open again",
+  "reportsTab": "All reports",
+  "regAging": "Owed by age",
+  "regWork": "Work billed or not",
+  "regAgingNote": "As of {date}. Each invoice counts from its due date, and the balance from before the app from its own date. Credit not yet set against an invoice is shown under each company.",
+  "@regAgingNote": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "regByAge": "Each company by age",
+  "ageNotDue": "Not due yet",
+  "ageDays": "{days} days late",
+  "@ageDays": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "ageOver90": "Over 90 days late",
+  "colIssued": "Issued",
+  "colDaysLate": "Days late",
+  "colAge": "How late",
+  "regWorkNote": "By work date. Invoiced means an issued invoice charges it. Work on a monthly rate shows no amount, because the month's contract amount is the charge. With no company rate, work can't be billed until a rate is set.",
+  "colWorth": "Worth",
+  "colNotInvoiced": "Not invoiced",
+  "colDaysNotInvoiced": "Days not invoiced",
+  "filterBilled": "Billing",
+  "billedOpen": "Still to bill",
+  "billedDone": "All billed",
+  "sheetContribution": "Labour contribution: bills less wages",
+  "sheetOperating": "After other costs",
+  "reportsIntro": "Each report opens on its own screen with dates and filters. The file it makes says which dates and filters it shows.",
+  "reportsHeadWork": "Attendance and work",
+  "reportsHeadCompanies": "Company money",
+  "reportsHeadWorkers": "Workers' money",
+  "reportsHeadBusiness": "Expenses and margin",
+  "repAttendance": "Each day's attendance, with totals by worker, company and site. By work date.",
+  "repWork": "What each company's work is worth, what is invoiced and what is still to bill. By work date.",
+  "repAging": "What each company owes, by how late. As of today, from due dates.",
+  "repInvoices": "Every invoice and credit note line, with VAT. By issue date.",
+  "repReceiptsTitle": "Company receipts",
+  "repReceipts": "Money received from companies, as the cash book has it. By receipt date.",
+  "repStatement": "Each company's invoices, receipts and balance. By date, with the balance brought forward.",
+  "repWorkers": "What each worker earned, was paid and is owed. By date, with a running balance.",
+  "repPayroll": "Each month's pay: earned, deductions, recoveries and net. By pay month.",
+  "repAdvance": "Advances given, recovered and left. By date.",
+  "repExpensesTitle": "Expenses",
+  "repExpenses": "Expenses from the cash book, with their category. By entry date.",
+  "repMargin": "A month's bills less wages, then other costs. An estimate, not audited accounts. By work month.",
+  "repChooseMonth": "Which month?",
+  "importCsv": "Import CSV",
+  "importWorkersTitle": "Import workers",
+  "importCompaniesTitle": "Import companies",
+  "importSitesTitle": "Import sites",
+  "importSteps": "1. Get the blank file, or use your own with these headings.\n2. Fill it in Excel and save it as CSV.\n3. Choose the file. Nothing is saved until you have checked the lines and pressed save.",
+  "importBlankFile": "Get the blank file",
+  "importColumns": "Columns",
+  "importRequired": "needed",
+  "importBackupNote": "Backup before an import is not in the app yet. A file is saved whole or not at all, and a wrong line can be archived afterwards.",
+  "importChoose": "Choose CSV file",
+  "importChooseAgain": "Choose another file",
+  "importSave": "Save {count} lines",
+  "@importSave": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importSaved": "{count} saved on this phone",
+  "@importSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importSummary": "{total} lines: {bad} with mistakes, {warned} to check",
+  "@importSummary": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "bad": {
+        "type": "int"
+      },
+      "warned": {
+        "type": "int"
+      }
+    }
+  },
+  "importFix": "Fix these lines in the file and choose it again. Nothing has been saved.",
+  "importReady": "Every line can be saved. Check the names, then save.",
+  "importMissingColumns": "The file has no column for: {names}",
+  "@importMissingColumns": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "importIgnored": "Not read: {names}",
+  "@importIgnored": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "importEmpty": "The file has no lines under its headings.",
+  "importRow": "Row {row}",
+  "@importRow": {
+    "placeholders": {
+      "row": {
+        "type": "int"
+      }
+    }
+  },
+  "importHintDate": "date, day first: 05/11/2026",
+  "importHintBasis": "hour, day or shift",
+  "importHintAmount": "AED amount: 120.50",
+  "importHintYesNo": "yes or no",
+  "importHintTime": "24-hour time: 08:00",
+  "importHintNumber": "whole number",
+  "importHintCompany": "company name as in the app",
+  "importHintTrn": "15 digits, when VAT registered",
+  "problemMissing": "{column} is empty",
+  "@problemMissing": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemRepeated": "{column} is in the file twice",
+  "@problemRepeated": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemExists": "{column} is already in the app",
+  "@problemExists": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadDate": "{column} is not a date, day first: 05/11/2026",
+  "@problemBadDate": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadAmount": "{column} is not an amount",
+  "@problemBadAmount": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadNumber": "{column} is not a whole number",
+  "@problemBadNumber": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadTime": "{column} is not a time like 08:00",
+  "@problemBadTime": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadYesNo": "{column} should be yes or no",
+  "@problemBadYesNo": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadTrn": "{column} needs 15 digits",
+  "@problemBadTrn": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemBadBasis": "{column} should be hour, day or shift",
+  "@problemBadBasis": {
+    "placeholders": {
+      "column": {
+        "type": "String"
+      }
+    }
+  },
+  "problemMonthly": "Monthly pay needs a rule for part months: set it in the app",
+  "problemRateAndBasis": "Pay basis and pay rate go together",
+  "problemRateDate": "The rate needs a rate from date or a joining date",
+  "problemNoCompany": "No company with this name in the app",
+  "problemTwoCompanies": "Two companies have this name",
+  "problemSameName": "A worker with this name is already there. This line makes a new worker",
+  "problemTrnWithoutVat": "TRN is kept only when VAT registered is yes",
+  "importShort": "From file",
+  "editedTag": "Edited",
+  "factTime": "Time",
+  "factReference": "Reference",
+  "changeSystemNote": "Changed {when}:",
+  "@changeSystemNote": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "changeNoDetail": "Changed {when}",
+  "@changeNoDetail": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "changeUserNote": "Why it changed: {note}",
+  "changeLine": "{what}: {from} to {to}",
+  "@changeLine": {
+    "placeholders": {
+      "what": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "@changeUserNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "changeNote": "Why (if you like)",
+  "changeNoteHelp": "Why it is changed or deleted. It stays with the entry.",
+  "deleteTitle": "Delete this entry?",
+  "deleteBody": "It leaves every total, and stays whole on the Delete tab.",
+  "deleteAction": "Delete",
+  "deletedDone": "Deleted. It is on the Delete tab.",
+  "monthsOpened": "Saved. A closed month opened again: {months}",
+  "@monthsOpened": {
+    "placeholders": {
+      "months": {
+        "type": "String"
+      }
+    }
+  },
+  "reopenByEdit": "Opened to change an entry",
+  "cashEdit": "Edit",
+  "mainDeleted": "Deleted",
+  "regDeletedAttendance": "Deleted attendance",
+  "regDeletedCash": "Deleted cash book lines",
+  "colDeletedOn": "Deleted on",
+  "colClarification": "Clarification",
+  "regDeletedNote": "Every entry deleted, as it was, by the day it was deleted. The last column is blank, for whoever you send it to to say why.",
+  "colDeleteNote": "Delete note",
+  "factName": "Name",
+  "yes": "Yes",
+  "no": "No",
+  "changeNoteItem": "Why it changed (if you like)",
+  "inUseTitle": "This can't be deleted",
+  "inUseBody": "Entries carry its name, and would lose it. Archive it instead: it leaves the lists, and its entries stay as they are.",
+  "inUseArchived": "Entries carry its name, so it can't be deleted. It is archived already.",
+  "archivedDone": "Archived. Its entries stay as they are.",
+  "regDeletedPayItems": "Deleted allowances and deductions",
+  "regDeletedRecords": "Other deleted records",
+  "colDetails": "Details",
+  "invEdit": "Edit invoice",
+  "invEditHelp": "An issued invoice never changes. A credit note dated today takes back {number} whole, and a new draft of the same dates opens with everything it had. Change the draft, then issue it.",
+  "@invEditHelp": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "invEditReceived": "The {amount} received on it stays with the company as credit, which the new invoice can use once issued.",
+  "@invEditReceived": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "invEditReasonHelp": "Prints on the credit note",
+  "invEditConfirm": "Make credit note and new draft",
+  "invEditedNote": "Replaces invoice {number}, which credit note {credit} took back whole.",
+  "@invEditedNote": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "credit": {
+        "type": "String"
+      }
+    }
+  },
+  "invOpenNew": "See the new invoice",
+  "invPReplaces": "Replaces invoice {number}.",
+  "@invPReplaces": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "invPEditReason": "Replaced by a corrected invoice",
+  "contractCutAbsence": "Cut a day with no attendance",
+  "contractCutAbsenceHelp": "One day is the salary divided by the rule above. Weekly days off and days marked as no work are not cut.",
+  "contractOffDays": "Weekly days off",
+  "weekdaysShort": "Mon Tue Wed Thu Fri Sat Sun",
+  "payrollAbsent": "{count, plural, =1{1 day absent} other{{count} days absent}}: {days}",
+  "@payrollAbsent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "payrollSalaryLessAbsent": "Monthly salary, less {count, plural, =1{1 day absent} other{{count} days absent}} ({days})",
+  "@payrollSalaryLessAbsent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "payrollInstalment": "Advance instalment",
+  "issueRecoveryAsk": "{amount} of advance has no instalment. Say how much to cut this month.",
+  "@issueRecoveryAsk": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cashInstalment": "Cut each month (instalment)",
+  "cashInstalmentHelp": "Payroll cuts this much each month by itself. Leave it empty to be asked each month.",
+  "recoveryZeroHelp": "0 cuts nothing this month.",
+  "payrollInstalmentAuto": "Advance instalment",
+  "payrollInstalmentAutoHelp": "Cut by itself. Tap to change it for this month.",
+  "tsCarryTitle": "Cut the worker's hours too?",
+  "tsCarryBody": "Yes: the attendance takes the same hours, with a note, and the worker is paid for them. No: only the company's bill changes.",
+  "tsCarryYes": "Yes, the worker's too",
+  "tsCarryNo": "Only the company",
+  "tsCarryNote": "The company agreed fewer hours: {reason}",
+  "@tsCarryNote": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  }
+}

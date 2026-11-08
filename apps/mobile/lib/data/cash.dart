@@ -1,0 +1,133 @@
+import 'package:domain/cash.dart';
+import 'package:domain/dates.dart';
+import 'package:drift/drift.dart';
+
+import 'tenant_database.dart';
+
+/// More than the worker still owes back, so it would turn an advance negative (PAY-05).
+class AdvanceTooHigh implements Exception {
+  const AdvanceTooHigh();
+}
+
+/// More than the worker still has left to return, so visa money would go negative (D-039).
+class VisaTooHigh implements Exception {
+  const VisaTooHigh();
+}
+
+CashLine cashLine(CashEntry e) => CashLine(CashKind.values.byName(e.kind), e.amountFils, reversal: e.reversesEntryId != null);
+
+extension CashOps on TenantDatabase {
+  /// What this worker still owes back, including any advance carried over from before this app.
+  Future<int> advanceLeft(String workerId) async {
+    final opening = await (select(openingBalances)..where((b) => b.kind.equals('worker_advance') & b.workerId.equals(workerId))).getSingleOrNull();
+    final rows = await (select(cashEntries)..where((c) => c.workerId.equals(workerId))).get();
+    final lines = await (select(payrollLines)..where((l) => l.workerId.equals(workerId) & l.reversed.equals(false))).get();
+    final recovered = lines.fold(0, (total, l) => total + l.recoveryFils);
+    return advanceOutstanding(opening?.amountFils ?? 0, rows.map(cashLine), recoveredFils: recovered);
+  }
+
+  /// What is left of the visa money spent on this worker (D-039).
+  Future<int> visaLeft(String workerId) async {
+    final rows = await (select(cashEntries)..where((c) => c.workerId.equals(workerId))).get();
+    final lines = await (select(payrollLines)..where((l) => l.workerId.equals(workerId) & l.reversed.equals(false))).get();
+    return visaOutstanding(rows.map(cashLine), recoveredFils: lines.fold(0, (total, l) => total + l.visaRecoveryFils));
+  }
+
+  /// Writes one line. A retry with the same operation ID changes nothing (TEAM-04).
+  Future<void> addCashEntry({
+    required String operationId,
+    required String date,
+    required CashKind kind,
+    required int amountFils,
+    String? workerId,
+    String? roomId,
+    String? clientId,
+    String? siteId,
+    String? category,
+    String method = 'cash',
+    String? note,
+    String? reference,
+    int? instalmentFils,
+  }) {
+    final id = newUuid();
+    return applyOperation(
+      operationId: operationId,
+      entity: 'cash_entries',
+      recordId: id,
+      version: 1,
+      action: 'create',
+      change: () async {
+        if (kind == CashKind.advanceReturned && amountFils > await advanceLeft(workerId!)) throw const AdvanceTooHigh();
+        if (kind == CashKind.visaReturned && amountFils > await visaLeft(workerId!)) throw const VisaTooHigh();
+        final now = DateTime.now().toUtc();
+        final row = await into(cashEntries).insertReturning(
+          CashEntriesCompanion.insert(
+            id: id,
+            tenantId: tenantId,
+            createdAtUtc: now,
+            updatedAtUtc: now,
+            actorId: actorId,
+            sourceOperationId: operationId,
+            entryDate: date,
+            kind: kind.name,
+            amountFils: amountFils,
+            workerId: Value(workerId),
+            roomId: Value(roomId),
+            clientId: Value(clientId),
+            siteId: Value(siteId),
+            category: Value(category),
+            method: Value(method),
+            note: Value(note),
+            reference: Value(reference),
+            instalmentFils: Value(kind == CashKind.advanceGiven ? instalmentFils : null),
+          ),
+        );
+        return row.toJson();
+      },
+    );
+  }
+
+  /// Undoes a line with a matching reversal on the same date. The original stays on record (REP-08). A line in a closed
+  /// month is reversed today instead, as a dated adjustment, so the closed month stays as it was (REP-04).
+  /// [detail] says what the owner reads: the line as it was, or that an edit replaced it (D-056).
+  Future<void> reverseCashEntry(CashEntry entry, {String? reason, required String operationId, Future<Map<String, Object?>?> Function()? detail}) {
+    final id = newUuid();
+    return applyOperation(
+      operationId: operationId,
+      entity: 'cash_entries',
+      recordId: id,
+      version: 1,
+      action: 'reverse',
+      reason: reason,
+      detail: detail,
+      change: () async {
+        if (entry.reversesEntryId != null) throw StateError('a reversal cannot be reversed');
+        if (entry.kind == CashKind.advanceGiven.name && entry.amountFils > await advanceLeft(entry.workerId!)) throw const AdvanceTooHigh();
+        if (entry.kind == CashKind.visaPaid.name && entry.amountFils > await visaLeft(entry.workerId!)) throw const VisaTooHigh();
+        final now = DateTime.now().toUtc();
+        final row = await into(cashEntries).insertReturning(
+          CashEntriesCompanion.insert(
+            id: id,
+            tenantId: tenantId,
+            createdAtUtc: now,
+            updatedAtUtc: now,
+            actorId: actorId,
+            sourceOperationId: operationId,
+            entryDate: isClosed(entry.entryDate, await lockedThrough()) ? dubaiToday(now) : entry.entryDate,
+            kind: entry.kind,
+            amountFils: entry.amountFils,
+            workerId: Value(entry.workerId),
+            roomId: Value(entry.roomId),
+            clientId: Value(entry.clientId),
+            siteId: Value(entry.siteId),
+            category: Value(entry.category),
+            method: Value(entry.method),
+            note: Value(reason),
+            reversesEntryId: Value(entry.id),
+          ),
+        );
+        return row.toJson();
+      },
+    );
+  }
+}

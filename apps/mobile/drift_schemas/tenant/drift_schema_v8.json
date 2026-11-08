@@ -1,0 +1,5165 @@
+{
+  "_meta": {
+    "description": "This file contains a serialized version of schema entities for drift.",
+    "version": "1.3.0"
+  },
+  "options": {
+    "store_date_time_values_as_text": false
+  },
+  "entities": [
+    {
+      "id": 0,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "audit_events",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "at_utc",
+            "getter_name": "atUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "action",
+            "getter_name": "action",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "entity",
+            "getter_name": "entity",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "record_id",
+            "getter_name": "recordId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "record_version",
+            "getter_name": "recordVersion",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "operation_id",
+            "getter_name": "operationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "reason",
+            "getter_name": "reason",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "references": [
+        0
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 0,
+        "references_in_body": [
+          0
+        ],
+        "name": "audit_no_update",
+        "sql": "CREATE TRIGGER audit_no_update BEFORE UPDATE ON audit_events BEGIN\n  SELECT RAISE(ABORT, 'audit events are append-only');\nEND;"
+      }
+    },
+    {
+      "id": 2,
+      "references": [
+        0
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 0,
+        "references_in_body": [
+          0
+        ],
+        "name": "audit_no_delete",
+        "sql": "CREATE TRIGGER audit_no_delete BEFORE DELETE ON audit_events BEGIN\n  SELECT RAISE(ABORT, 'audit events are append-only');\nEND;"
+      }
+    },
+    {
+      "id": 3,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "rooms",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "note",
+            "getter_name": "note",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "active",
+            "getter_name": "active",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"active\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"active\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "references": [
+        3
+      ],
+      "type": "table",
+      "data": {
+        "name": "workers",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "code",
+            "getter_name": "code",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "phone",
+            "getter_name": "phone",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "trade",
+            "getter_name": "trade",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "joining_date",
+            "getter_name": "joiningDate",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "room_charge_fils",
+            "getter_name": "roomChargeFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "room_charge_note",
+            "getter_name": "roomChargeNote",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "room_id",
+            "getter_name": "roomId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES rooms (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES rooms (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "rooms",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "visa_instalment_fils",
+            "getter_name": "visaInstalmentFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "check": {
+                  "dart_expression": {
+                    "elements": [
+                      {
+                        "lexeme": "ComparableExpr",
+                        "import_uri": "package:drift/src/runtime/query_builder/query_builder.dart"
+                      },
+                      "(",
+                      {
+                        "lexeme": "visaInstalmentFils",
+                        "tag": "visaInstalmentFils"
+                      },
+                      ").isBiggerThanValue(0)"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "active",
+            "getter_name": "active",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"active\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"active\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ],
+        "unique_keys": [
+          [
+            "tenant_id",
+            "code"
+          ]
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "clients",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "address",
+            "getter_name": "address",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "contact_person",
+            "getter_name": "contactPerson",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "phone",
+            "getter_name": "phone",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "email",
+            "getter_name": "email",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "vat_registered",
+            "getter_name": "vatRegistered",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"vat_registered\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"vat_registered\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "trn",
+            "getter_name": "trn",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "invoice_address",
+            "getter_name": "invoiceAddress",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "due_days",
+            "getter_name": "dueDays",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "po_reference",
+            "getter_name": "poReference",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "note",
+            "getter_name": "note",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "active",
+            "getter_name": "active",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"active\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"active\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "references": [
+        5
+      ],
+      "type": "table",
+      "data": {
+        "name": "sites",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "client_id",
+            "getter_name": "clientId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES clients (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES clients (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "clients",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "location",
+            "getter_name": "location",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "contact",
+            "getter_name": "contact",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "active_from",
+            "getter_name": "activeFrom",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "active_to",
+            "getter_name": "activeTo",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "default_start_minute",
+            "getter_name": "defaultStartMinute",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "default_end_minute",
+            "getter_name": "defaultEndMinute",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "default_break_minutes",
+            "getter_name": "defaultBreakMinutes",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "active",
+            "getter_name": "active",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"active\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"active\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "references": [
+        4,
+        3,
+        5,
+        6
+      ],
+      "type": "table",
+      "data": {
+        "name": "cash_entries",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "entry_date",
+            "getter_name": "entryDate",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "kind",
+            "getter_name": "kind",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "amount_fils",
+            "getter_name": "amountFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "check": {
+                  "dart_expression": {
+                    "elements": [
+                      {
+                        "lexeme": "ComparableExpr",
+                        "import_uri": "package:drift/src/runtime/query_builder/query_builder.dart"
+                      },
+                      "(",
+                      {
+                        "lexeme": "amountFils",
+                        "tag": "amountFils"
+                      },
+                      ").isBiggerThanValue(0)"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "currency",
+            "getter_name": "currency",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'AED\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "worker_id",
+            "getter_name": "workerId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES workers (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES workers (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "workers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "room_id",
+            "getter_name": "roomId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES rooms (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES rooms (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "rooms",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "client_id",
+            "getter_name": "clientId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES clients (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES clients (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "clients",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "site_id",
+            "getter_name": "siteId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES sites (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES sites (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "sites",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "category",
+            "getter_name": "category",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "method",
+            "getter_name": "method",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'cash\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "note",
+            "getter_name": "note",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "reverses_entry_id",
+            "getter_name": "reversesEntryId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "UNIQUE REFERENCES cash_entries (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "UNIQUE REFERENCES cash_entries (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "unique",
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "cash_entries",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "reference",
+            "getter_name": "reference",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "receiver",
+            "getter_name": "receiver",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK (kind NOT IN ('advanceGiven', 'salaryPaid', 'advanceReturned') OR worker_id IS NOT NULL)",
+          "CHECK (kind NOT IN ('roomRentPaid', 'roomRentReceived') OR room_id IS NOT NULL)",
+          "CHECK (kind <> 'clientReceipt' OR client_id IS NOT NULL)"
+        ],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "references": [
+        7
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 7,
+        "references_in_body": [
+          7
+        ],
+        "name": "cash_no_update",
+        "sql": "CREATE TRIGGER cash_no_update BEFORE UPDATE ON cash_entries BEGIN\n  SELECT RAISE(ABORT, 'cash entries are append-only');\nEND;"
+      }
+    },
+    {
+      "id": 9,
+      "references": [
+        7
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 7,
+        "references_in_body": [
+          7
+        ],
+        "name": "cash_no_delete",
+        "sql": "CREATE TRIGGER cash_no_delete BEFORE DELETE ON cash_entries BEGIN\n  SELECT RAISE(ABORT, 'cash entries are append-only');\nEND;"
+      }
+    },
+    {
+      "id": 10,
+      "references": [
+        7
+      ],
+      "type": "table",
+      "data": {
+        "name": "salary_allocations",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "payment_id",
+            "getter_name": "paymentId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES cash_entries (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES cash_entries (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "cash_entries",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "month",
+            "getter_name": "month",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "amount_fils",
+            "getter_name": "amountFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "check": {
+                  "dart_expression": {
+                    "elements": [
+                      {
+                        "lexeme": "ComparableExpr",
+                        "import_uri": "package:drift/src/runtime/query_builder/query_builder.dart"
+                      },
+                      "(",
+                      {
+                        "lexeme": "amountFils",
+                        "tag": "amountFils"
+                      },
+                      ").isBiggerThanValue(0)"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ],
+        "unique_keys": [
+          [
+            "payment_id",
+            "month"
+          ]
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "references": [
+        10
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 10,
+        "references_in_body": [
+          10
+        ],
+        "name": "allocation_no_update",
+        "sql": "CREATE TRIGGER allocation_no_update BEFORE UPDATE ON salary_allocations BEGIN\n  SELECT RAISE(ABORT, 'salary allocations are append-only');\nEND;"
+      }
+    },
+    {
+      "id": 12,
+      "references": [
+        10
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 10,
+        "references_in_body": [
+          10
+        ],
+        "name": "allocation_no_delete",
+        "sql": "CREATE TRIGGER allocation_no_delete BEFORE DELETE ON salary_allocations BEGIN\n  SELECT RAISE(ABORT, 'salary allocations are append-only');\nEND;"
+      }
+    },
+    {
+      "id": 13,
+      "references": [
+        7
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 7,
+        "references_in_body": [
+          7
+        ],
+        "name": "cash_visa_needs_worker",
+        "sql": "CREATE TRIGGER cash_visa_needs_worker BEFORE INSERT ON cash_entries\nWHEN NEW.kind IN ('visaPaid', 'visaReturned') AND NEW.worker_id IS NULL\nBEGIN\n  SELECT RAISE(ABORT, 'a visa line needs a worker');\nEND;"
+      }
+    },
+    {
+      "id": 14,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "payroll_runs",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "period_from",
+            "getter_name": "periodFrom",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "period_to",
+            "getter_name": "periodTo",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "posting_date",
+            "getter_name": "postingDate",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "currency",
+            "getter_name": "currency",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'AED\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "references": [
+        14
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 14,
+        "references_in_body": [
+          14
+        ],
+        "name": "payroll_run_no_update",
+        "sql": "CREATE TRIGGER payroll_run_no_update BEFORE UPDATE ON payroll_runs BEGIN\n  SELECT RAISE(ABORT, 'posted payroll is immutable');\nEND;"
+      }
+    },
+    {
+      "id": 16,
+      "references": [
+        14
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 14,
+        "references_in_body": [
+          14
+        ],
+        "name": "payroll_run_no_delete",
+        "sql": "CREATE TRIGGER payroll_run_no_delete BEFORE DELETE ON payroll_runs BEGIN\n  SELECT RAISE(ABORT, 'posted payroll is immutable');\nEND;"
+      }
+    },
+    {
+      "id": 17,
+      "references": [
+        14,
+        4
+      ],
+      "type": "table",
+      "data": {
+        "name": "payroll_lines",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "run_id",
+            "getter_name": "runId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES payroll_runs (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES payroll_runs (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "payroll_runs",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "worker_id",
+            "getter_name": "workerId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES workers (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES workers (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "workers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "period_from",
+            "getter_name": "periodFrom",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "opening_fils",
+            "getter_name": "openingFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "earned_fils",
+            "getter_name": "earnedFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "salary_fils",
+            "getter_name": "salaryFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "adjustment_fils",
+            "getter_name": "adjustmentFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "allowances_fils",
+            "getter_name": "allowancesFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "deductions_fils",
+            "getter_name": "deductionsFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "recovery_fils",
+            "getter_name": "recoveryFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "visa_recovery_fils",
+            "getter_name": "visaRecoveryFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "net_fils",
+            "getter_name": "netFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "payable_fils",
+            "getter_name": "payableFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "paid_before_fils",
+            "getter_name": "paidBeforeFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "reversed",
+            "getter_name": "reversed",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"reversed\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"reversed\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 18,
+      "references": [
+        17
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 17,
+        "references_in_body": [
+          17
+        ],
+        "name": "payroll_line_no_edit",
+        "sql": "CREATE TRIGGER payroll_line_no_edit BEFORE UPDATE OF run_id, worker_id, period_from, opening_fils, earned_fils, salary_fils,\n  adjustment_fils, allowances_fils, deductions_fils, recovery_fils, visa_recovery_fils, net_fils, payable_fils, paid_before_fils ON payroll_lines\nBEGIN\n  SELECT RAISE(ABORT, 'posted payroll is immutable');\nEND;"
+      }
+    },
+    {
+      "id": 19,
+      "references": [
+        17
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 17,
+        "references_in_body": [
+          17
+        ],
+        "name": "payroll_line_stays_reversed",
+        "sql": "CREATE TRIGGER payroll_line_stays_reversed BEFORE UPDATE OF reversed ON payroll_lines\nWHEN OLD.reversed\nBEGIN\n  SELECT RAISE(ABORT, 'a reversed payroll line stays reversed');\nEND;"
+      }
+    },
+    {
+      "id": 20,
+      "references": [
+        17
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 17,
+        "references_in_body": [
+          17
+        ],
+        "name": "payroll_line_no_delete",
+        "sql": "CREATE TRIGGER payroll_line_no_delete BEFORE DELETE ON payroll_lines BEGIN\n  SELECT RAISE(ABORT, 'posted payroll is immutable');\nEND;"
+      }
+    },
+    {
+      "id": 21,
+      "references": [
+        4,
+        3,
+        17
+      ],
+      "type": "table",
+      "data": {
+        "name": "payroll_items",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "worker_id",
+            "getter_name": "workerId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES workers (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES workers (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "workers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "period_from",
+            "getter_name": "periodFrom",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "kind",
+            "getter_name": "kind",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "amount_fils",
+            "getter_name": "amountFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "check": {
+                  "dart_expression": {
+                    "elements": [
+                      {
+                        "lexeme": "ComparableExpr",
+                        "import_uri": "package:drift/src/runtime/query_builder/query_builder.dart"
+                      },
+                      "(",
+                      {
+                        "lexeme": "amountFils",
+                        "tag": "amountFils"
+                      },
+                      ").isBiggerThanValue(0)"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "reason",
+            "getter_name": "reason",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "authorized_by",
+            "getter_name": "authorizedBy",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "note",
+            "getter_name": "note",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "room_id",
+            "getter_name": "roomId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES rooms (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES rooms (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "rooms",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "line_id",
+            "getter_name": "lineId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES payroll_lines (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES payroll_lines (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "payroll_lines",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK (kind NOT IN ('deduction', 'roomCharge') OR authorized_by IS NOT NULL)"
+        ],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 22,
+      "references": [
+        21
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 21,
+        "references_in_body": [
+          21
+        ],
+        "name": "posted_item_no_edit",
+        "sql": "CREATE TRIGGER posted_item_no_edit BEFORE UPDATE OF worker_id, period_from, kind, amount_fils, reason, authorized_by, room_id ON payroll_items\nWHEN OLD.line_id IS NOT NULL\nBEGIN\n  SELECT RAISE(ABORT, 'a posted payroll item is immutable');\nEND;"
+      }
+    },
+    {
+      "id": 23,
+      "references": [
+        21
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 21,
+        "references_in_body": [
+          21
+        ],
+        "name": "posted_item_no_delete",
+        "sql": "CREATE TRIGGER posted_item_no_delete BEFORE DELETE ON payroll_items\nWHEN OLD.line_id IS NOT NULL\nBEGIN\n  SELECT RAISE(ABORT, 'a posted payroll item is immutable');\nEND;"
+      }
+    },
+    {
+      "id": 24,
+      "references": [
+        17
+      ],
+      "type": "index",
+      "data": {
+        "on": 17,
+        "name": "one_live_payroll_line",
+        "sql": "CREATE UNIQUE INDEX one_live_payroll_line ON payroll_lines (worker_id, period_from) WHERE NOT reversed;",
+        "unique": true,
+        "columns": []
+      }
+    },
+    {
+      "id": 25,
+      "references": [
+        5,
+        6
+      ],
+      "type": "table",
+      "data": {
+        "name": "worker_groups",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "client_id",
+            "getter_name": "clientId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES clients (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES clients (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "clients",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "site_id",
+            "getter_name": "siteId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES sites (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES sites (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "sites",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "daily_rate_fils",
+            "getter_name": "dailyRateFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "check": {
+                  "dart_expression": {
+                    "elements": [
+                      {
+                        "lexeme": "ComparableExpr",
+                        "import_uri": "package:drift/src/runtime/query_builder/query_builder.dart"
+                      },
+                      "(",
+                      {
+                        "lexeme": "dailyRateFils",
+                        "tag": "dailyRateFils"
+                      },
+                      ").isBiggerOrEqualValue(0)"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "half_day_is_half",
+            "getter_name": "halfDayIsHalf",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"half_day_is_half\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"half_day_is_half\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "start_minute",
+            "getter_name": "startMinute",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "end_minute",
+            "getter_name": "endMinute",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "break_minutes",
+            "getter_name": "breakMinutes",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "active",
+            "getter_name": "active",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"active\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"active\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 26,
+      "references": [
+        5,
+        6,
+        25
+      ],
+      "type": "table",
+      "data": {
+        "name": "attendance_batches",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "work_date",
+            "getter_name": "workDate",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "client_id",
+            "getter_name": "clientId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES clients (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES clients (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "clients",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "site_id",
+            "getter_name": "siteId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES sites (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES sites (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "sites",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "group_id",
+            "getter_name": "groupId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES worker_groups (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES worker_groups (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "worker_groups",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "note",
+            "getter_name": "note",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 27,
+      "references": [
+        26,
+        4,
+        5,
+        6,
+        25,
+        17
+      ],
+      "type": "table",
+      "data": {
+        "name": "attendance_entries",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "batch_id",
+            "getter_name": "batchId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES attendance_batches (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES attendance_batches (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "attendance_batches",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "worker_id",
+            "getter_name": "workerId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES workers (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES workers (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "workers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "client_id",
+            "getter_name": "clientId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES clients (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES clients (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "clients",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "site_id",
+            "getter_name": "siteId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES sites (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES sites (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "sites",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "group_id",
+            "getter_name": "groupId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES worker_groups (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES worker_groups (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "worker_groups",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "work_date",
+            "getter_name": "workDate",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "start_utc",
+            "getter_name": "startUtc",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "end_utc",
+            "getter_name": "endUtc",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "clock_minutes",
+            "getter_name": "clockMinutes",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "check": {
+                  "dart_expression": {
+                    "elements": [
+                      {
+                        "lexeme": "ComparableExpr",
+                        "import_uri": "package:drift/src/runtime/query_builder/query_builder.dart"
+                      },
+                      "(",
+                      {
+                        "lexeme": "clockMinutes",
+                        "tag": "clockMinutes"
+                      },
+                      ").isBiggerOrEqualValue(0)"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "break_minutes",
+            "getter_name": "breakMinutes",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "check": {
+                  "dart_expression": {
+                    "elements": [
+                      {
+                        "lexeme": "ComparableExpr",
+                        "import_uri": "package:drift/src/runtime/query_builder/query_builder.dart"
+                      },
+                      "(",
+                      {
+                        "lexeme": "breakMinutes",
+                        "tag": "breakMinutes"
+                      },
+                      ").isBiggerOrEqualValue(0)"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "break_paid_client",
+            "getter_name": "breakPaidClient",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"break_paid_client\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"break_paid_client\" IN (0, 1))"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "break_paid_worker",
+            "getter_name": "breakPaidWorker",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"break_paid_worker\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"break_paid_worker\" IN (0, 1))"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "client_billable_minutes",
+            "getter_name": "clientBillableMinutes",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "worker_payable_minutes",
+            "getter_name": "workerPayableMinutes",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "overtime_minutes",
+            "getter_name": "overtimeMinutes",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "overtime_approved",
+            "getter_name": "overtimeApproved",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"overtime_approved\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"overtime_approved\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "attendance_status",
+            "getter_name": "attendanceStatus",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "state",
+            "getter_name": "state",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'draft\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "client_ack",
+            "getter_name": "clientAck",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'none\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "client_basis",
+            "getter_name": "clientBasis",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "client_rate_fils",
+            "getter_name": "clientRateFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "client_amount_fils",
+            "getter_name": "clientAmountFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "worker_basis",
+            "getter_name": "workerBasis",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "worker_rate_fils",
+            "getter_name": "workerRateFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "worker_amount_fils",
+            "getter_name": "workerAmountFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "client_rate_override_fils",
+            "getter_name": "clientRateOverrideFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "worker_rate_override_fils",
+            "getter_name": "workerRateOverrideFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "override_reason",
+            "getter_name": "overrideReason",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "overlap_reason",
+            "getter_name": "overlapReason",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "notes",
+            "getter_name": "notes",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "revises_entry_id",
+            "getter_name": "revisesEntryId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES attendance_entries (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES attendance_entries (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "attendance_entries",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "superseded",
+            "getter_name": "superseded",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"superseded\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"superseded\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "payroll_line_id",
+            "getter_name": "payrollLineId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES payroll_lines (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES payroll_lines (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "payroll_lines",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK (break_minutes <= clock_minutes)"
+        ],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 28,
+      "references": [
+        27
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 27,
+        "references_in_body": [
+          27
+        ],
+        "name": "approved_entry_no_edit",
+        "sql": "CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries\nWHEN OLD.state IN ('approved', 'linked')\n  AND (NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes\n    OR (OLD.client_rate_fils IS NOT NULL AND (NEW.client_billable_minutes <> OLD.client_billable_minutes\n      OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils))\n    OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes\n    OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils\n    OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)\nBEGIN\n  SELECT RAISE(ABORT, 'approved attendance is immutable');\nEND;"
+      }
+    },
+    {
+      "id": 29,
+      "references": [
+        27
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 27,
+        "references_in_body": [
+          27
+        ],
+        "name": "linked_entry_keeps_state",
+        "sql": "CREATE TRIGGER linked_entry_keeps_state BEFORE UPDATE ON attendance_entries\nWHEN OLD.state = 'linked' AND NEW.state <> 'linked'\nBEGIN\n  SELECT RAISE(ABORT, 'linked attendance is immutable');\nEND;"
+      }
+    },
+    {
+      "id": 30,
+      "references": [
+        27
+      ],
+      "type": "trigger",
+      "data": {
+        "on": 27,
+        "references_in_body": [
+          27
+        ],
+        "name": "entry_no_delete",
+        "sql": "CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries\nWHEN OLD.state NOT IN ('draft', 'submitted')\nBEGIN\n  SELECT RAISE(ABORT, 'approved attendance cannot be deleted');\nEND;"
+      }
+    },
+    {
+      "id": 31,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "tenant_profiles",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "legal_name",
+            "getter_name": "legalName",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "trading_name",
+            "getter_name": "tradingName",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "address",
+            "getter_name": "address",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "phone",
+            "getter_name": "phone",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "email",
+            "getter_name": "email",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "vat_registered",
+            "getter_name": "vatRegistered",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"vat_registered\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"vat_registered\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "vat_effective_from",
+            "getter_name": "vatEffectiveFrom",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "trn",
+            "getter_name": "trn",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "invoice_prefix",
+            "getter_name": "invoicePrefix",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'INV\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "currency",
+            "getter_name": "currency",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'AED\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "payment_terms_days",
+            "getter_name": "paymentTermsDays",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "bank_details",
+            "getter_name": "bankDetails",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "document_footer",
+            "getter_name": "documentFooter",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "deduction_limit_bps",
+            "getter_name": "deductionLimitBps",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "wage_due_days",
+            "getter_name": "wageDueDays",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 32,
+      "references": [
+        4,
+        6
+      ],
+      "type": "table",
+      "data": {
+        "name": "pay_contracts",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "basis",
+            "getter_name": "basis",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "rate_fils",
+            "getter_name": "rateFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "check": {
+                  "dart_expression": {
+                    "elements": [
+                      {
+                        "lexeme": "ComparableExpr",
+                        "import_uri": "package:drift/src/runtime/query_builder/query_builder.dart"
+                      },
+                      "(",
+                      {
+                        "lexeme": "rateFils",
+                        "tag": "rateFils"
+                      },
+                      ").isBiggerOrEqualValue(0)"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "effective_from",
+            "getter_name": "effectiveFrom",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "effective_to",
+            "getter_name": "effectiveTo",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "break_paid",
+            "getter_name": "breakPaid",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"break_paid\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"break_paid\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "half_amount_fils",
+            "getter_name": "halfAmountFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "included_minutes",
+            "getter_name": "includedMinutes",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "overtime_rate_fils",
+            "getter_name": "overtimeRateFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "worker_id",
+            "getter_name": "workerId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES workers (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES workers (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "workers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "site_id",
+            "getter_name": "siteId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES sites (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES sites (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "sites",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "partial_method",
+            "getter_name": "partialMethod",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "partial_divisor",
+            "getter_name": "partialDivisor",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 33,
+      "references": [
+        5,
+        6,
+        4
+      ],
+      "type": "table",
+      "data": {
+        "name": "billing_contracts",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "basis",
+            "getter_name": "basis",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "rate_fils",
+            "getter_name": "rateFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "check": {
+                  "dart_expression": {
+                    "elements": [
+                      {
+                        "lexeme": "ComparableExpr",
+                        "import_uri": "package:drift/src/runtime/query_builder/query_builder.dart"
+                      },
+                      "(",
+                      {
+                        "lexeme": "rateFils",
+                        "tag": "rateFils"
+                      },
+                      ").isBiggerOrEqualValue(0)"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "effective_from",
+            "getter_name": "effectiveFrom",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "effective_to",
+            "getter_name": "effectiveTo",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "break_paid",
+            "getter_name": "breakPaid",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"break_paid\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"break_paid\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "half_amount_fils",
+            "getter_name": "halfAmountFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "included_minutes",
+            "getter_name": "includedMinutes",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "overtime_rate_fils",
+            "getter_name": "overtimeRateFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "client_id",
+            "getter_name": "clientId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES clients (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES clients (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "clients",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "site_id",
+            "getter_name": "siteId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES sites (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES sites (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "sites",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "worker_id",
+            "getter_name": "workerId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES workers (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES workers (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "workers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 34,
+      "references": [
+        4,
+        5
+      ],
+      "type": "table",
+      "data": {
+        "name": "opening_balances",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "kind",
+            "getter_name": "kind",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "worker_id",
+            "getter_name": "workerId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES workers (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES workers (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "workers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "client_id",
+            "getter_name": "clientId",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES clients (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES clients (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "clients",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "amount_fils",
+            "getter_name": "amountFils",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "check": {
+                  "dart_expression": {
+                    "elements": [
+                      {
+                        "lexeme": "ComparableExpr",
+                        "import_uri": "package:drift/src/runtime/query_builder/query_builder.dart"
+                      },
+                      "(",
+                      {
+                        "lexeme": "amountFils",
+                        "tag": "amountFils"
+                      },
+                      ").isBiggerOrEqualValue(0)"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "as_of_date",
+            "getter_name": "asOfDate",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_note",
+            "getter_name": "sourceNote",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK ((worker_id IS NULL) <> (client_id IS NULL))"
+        ],
+        "explicit_pk": [
+          "id"
+        ],
+        "unique_keys": [
+          [
+            "kind",
+            "worker_id"
+          ],
+          [
+            "kind",
+            "client_id"
+          ]
+        ]
+      }
+    },
+    {
+      "id": 35,
+      "references": [
+        25,
+        4
+      ],
+      "type": "table",
+      "data": {
+        "name": "worker_group_members",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "updated_at_utc",
+            "getter_name": "updatedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "actor_id",
+            "getter_name": "actorId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "version",
+            "getter_name": "version",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "source_operation_id",
+            "getter_name": "sourceOperationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "group_id",
+            "getter_name": "groupId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES worker_groups (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES worker_groups (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "worker_groups",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "worker_id",
+            "getter_name": "workerId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES workers (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES workers (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "workers",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "daily_rate_fils",
+            "getter_name": "rateFils",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "check": {
+                  "dart_expression": {
+                    "elements": [
+                      {
+                        "lexeme": "ComparableExpr",
+                        "import_uri": "package:drift/src/runtime/query_builder/query_builder.dart"
+                      },
+                      "(",
+                      {
+                        "lexeme": "rateFils",
+                        "tag": "rateFils"
+                      },
+                      ").isBiggerOrEqualValue(0)"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "rate_basis",
+            "getter_name": "rateBasis",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'day\\'')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ],
+        "unique_keys": [
+          [
+            "group_id",
+            "worker_id"
+          ]
+        ]
+      }
+    },
+    {
+      "id": 36,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "outbox",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "operation_id",
+            "getter_name": "operationId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "tenant_id",
+            "getter_name": "tenantId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "entity",
+            "getter_name": "entity",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "record_id",
+            "getter_name": "recordId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "record_version",
+            "getter_name": "recordVersion",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "device_id",
+            "getter_name": "deviceId",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "payload",
+            "getter_name": "payload",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at_utc",
+            "getter_name": "createdAtUtc",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "acked_at_utc",
+            "getter_name": "ackedAtUtc",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "operation_id"
+        ]
+      }
+    },
+    {
+      "id": 37,
+      "references": [
+        7
+      ],
+      "type": "index",
+      "data": {
+        "on": 7,
+        "name": "idx_cash_date",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "entry_date",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 38,
+      "references": [
+        7
+      ],
+      "type": "index",
+      "data": {
+        "on": 7,
+        "name": "idx_cash_worker",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "worker_id",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 39,
+      "references": [
+        7
+      ],
+      "type": "index",
+      "data": {
+        "on": 7,
+        "name": "idx_cash_room",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "room_id",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 40,
+      "references": [
+        27
+      ],
+      "type": "index",
+      "data": {
+        "on": 27,
+        "name": "idx_entries_worker_date",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "worker_id",
+            "order_by": null
+          },
+          {
+            "column": "work_date",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 41,
+      "references": [
+        27
+      ],
+      "type": "index",
+      "data": {
+        "on": 27,
+        "name": "idx_entries_date",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "work_date",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 42,
+      "references": [
+        17
+      ],
+      "type": "index",
+      "data": {
+        "on": 17,
+        "name": "idx_payroll_lines_worker",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "worker_id",
+            "order_by": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 43,
+      "references": [
+        21
+      ],
+      "type": "index",
+      "data": {
+        "on": 21,
+        "name": "idx_payroll_items_period",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "period_from",
+            "order_by": null
+          }
+        ]
+      }
+    }
+  ],
+  "fixed_sql": [
+    {
+      "name": "audit_events",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"audit_events\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"action\" TEXT NOT NULL, \"entity\" TEXT NOT NULL, \"record_id\" TEXT NOT NULL, \"record_version\" INTEGER NOT NULL, \"operation_id\" TEXT NOT NULL, \"reason\" TEXT NULL, PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "audit_no_update",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER audit_no_update BEFORE UPDATE ON audit_events BEGIN SELECT RAISE (ABORT, 'audit events are append-only');END"
+        }
+      ]
+    },
+    {
+      "name": "audit_no_delete",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER audit_no_delete BEFORE DELETE ON audit_events BEGIN SELECT RAISE (ABORT, 'audit events are append-only');END"
+        }
+      ]
+    },
+    {
+      "name": "rooms",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"rooms\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"name\" TEXT NOT NULL, \"note\" TEXT NULL, \"active\" INTEGER NOT NULL DEFAULT 1 CHECK (\"active\" IN (0, 1)), PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "workers",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"workers\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"code\" TEXT NOT NULL, \"name\" TEXT NOT NULL, \"phone\" TEXT NULL, \"trade\" TEXT NULL, \"joining_date\" TEXT NULL, \"room_charge_fils\" INTEGER NULL, \"room_charge_note\" TEXT NULL, \"room_id\" TEXT NULL REFERENCES rooms (id), \"visa_instalment_fils\" INTEGER NULL CHECK(\"visa_instalment_fils\" > 0), \"active\" INTEGER NOT NULL DEFAULT 1 CHECK (\"active\" IN (0, 1)), PRIMARY KEY (\"id\"), UNIQUE (\"tenant_id\", \"code\"));"
+        }
+      ]
+    },
+    {
+      "name": "clients",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"clients\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"name\" TEXT NOT NULL, \"address\" TEXT NULL, \"contact_person\" TEXT NULL, \"phone\" TEXT NULL, \"email\" TEXT NULL, \"vat_registered\" INTEGER NOT NULL DEFAULT 0 CHECK (\"vat_registered\" IN (0, 1)), \"trn\" TEXT NULL, \"invoice_address\" TEXT NULL, \"due_days\" INTEGER NULL, \"po_reference\" TEXT NULL, \"note\" TEXT NULL, \"active\" INTEGER NOT NULL DEFAULT 1 CHECK (\"active\" IN (0, 1)), PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "sites",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"sites\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"client_id\" TEXT NOT NULL REFERENCES clients (id), \"name\" TEXT NOT NULL, \"location\" TEXT NULL, \"contact\" TEXT NULL, \"active_from\" TEXT NULL, \"active_to\" TEXT NULL, \"default_start_minute\" INTEGER NULL, \"default_end_minute\" INTEGER NULL, \"default_break_minutes\" INTEGER NOT NULL DEFAULT 0, \"active\" INTEGER NOT NULL DEFAULT 1 CHECK (\"active\" IN (0, 1)), PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "cash_entries",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"cash_entries\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"entry_date\" TEXT NOT NULL, \"kind\" TEXT NOT NULL, \"amount_fils\" INTEGER NOT NULL CHECK(\"amount_fils\" > 0), \"currency\" TEXT NOT NULL DEFAULT 'AED', \"worker_id\" TEXT NULL REFERENCES workers (id), \"room_id\" TEXT NULL REFERENCES rooms (id), \"client_id\" TEXT NULL REFERENCES clients (id), \"site_id\" TEXT NULL REFERENCES sites (id), \"category\" TEXT NULL, \"method\" TEXT NOT NULL DEFAULT 'cash', \"note\" TEXT NULL, \"reverses_entry_id\" TEXT NULL UNIQUE REFERENCES cash_entries (id), \"reference\" TEXT NULL, \"receiver\" TEXT NULL, PRIMARY KEY (\"id\"), CHECK (kind NOT IN ('advanceGiven', 'salaryPaid', 'advanceReturned') OR worker_id IS NOT NULL), CHECK (kind NOT IN ('roomRentPaid', 'roomRentReceived') OR room_id IS NOT NULL), CHECK (kind <> 'clientReceipt' OR client_id IS NOT NULL));"
+        }
+      ]
+    },
+    {
+      "name": "cash_no_update",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER cash_no_update BEFORE UPDATE ON cash_entries BEGIN SELECT RAISE (ABORT, 'cash entries are append-only');END"
+        }
+      ]
+    },
+    {
+      "name": "cash_no_delete",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER cash_no_delete BEFORE DELETE ON cash_entries BEGIN SELECT RAISE (ABORT, 'cash entries are append-only');END"
+        }
+      ]
+    },
+    {
+      "name": "salary_allocations",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"salary_allocations\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"payment_id\" TEXT NOT NULL REFERENCES cash_entries (id), \"month\" TEXT NOT NULL, \"amount_fils\" INTEGER NOT NULL CHECK(\"amount_fils\" > 0), PRIMARY KEY (\"id\"), UNIQUE (\"payment_id\", \"month\"));"
+        }
+      ]
+    },
+    {
+      "name": "allocation_no_update",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER allocation_no_update BEFORE UPDATE ON salary_allocations BEGIN SELECT RAISE (ABORT, 'salary allocations are append-only');END"
+        }
+      ]
+    },
+    {
+      "name": "allocation_no_delete",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER allocation_no_delete BEFORE DELETE ON salary_allocations BEGIN SELECT RAISE (ABORT, 'salary allocations are append-only');END"
+        }
+      ]
+    },
+    {
+      "name": "cash_visa_needs_worker",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER cash_visa_needs_worker BEFORE INSERT ON cash_entries WHEN NEW.kind IN ('visaPaid', 'visaReturned') AND NEW.worker_id IS NULL BEGIN SELECT RAISE (ABORT, 'a visa line needs a worker');END"
+        }
+      ]
+    },
+    {
+      "name": "payroll_runs",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"payroll_runs\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"period_from\" TEXT NOT NULL, \"period_to\" TEXT NOT NULL, \"posting_date\" TEXT NOT NULL, \"currency\" TEXT NOT NULL DEFAULT 'AED', PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "payroll_run_no_update",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER payroll_run_no_update BEFORE UPDATE ON payroll_runs BEGIN SELECT RAISE (ABORT, 'posted payroll is immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "payroll_run_no_delete",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER payroll_run_no_delete BEFORE DELETE ON payroll_runs BEGIN SELECT RAISE (ABORT, 'posted payroll is immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "payroll_lines",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"payroll_lines\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"run_id\" TEXT NOT NULL REFERENCES payroll_runs (id), \"worker_id\" TEXT NOT NULL REFERENCES workers (id), \"period_from\" TEXT NOT NULL, \"opening_fils\" INTEGER NOT NULL, \"earned_fils\" INTEGER NOT NULL, \"salary_fils\" INTEGER NOT NULL, \"adjustment_fils\" INTEGER NOT NULL, \"allowances_fils\" INTEGER NOT NULL, \"deductions_fils\" INTEGER NOT NULL, \"recovery_fils\" INTEGER NOT NULL, \"visa_recovery_fils\" INTEGER NOT NULL DEFAULT 0, \"net_fils\" INTEGER NOT NULL, \"payable_fils\" INTEGER NOT NULL, \"paid_before_fils\" INTEGER NOT NULL, \"reversed\" INTEGER NOT NULL DEFAULT 0 CHECK (\"reversed\" IN (0, 1)), PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "payroll_line_no_edit",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER payroll_line_no_edit BEFORE UPDATE OF run_id, worker_id, period_from, opening_fils, earned_fils, salary_fils, adjustment_fils, allowances_fils, deductions_fils, recovery_fils, visa_recovery_fils, net_fils, payable_fils, paid_before_fils ON payroll_lines BEGIN SELECT RAISE (ABORT, 'posted payroll is immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "payroll_line_stays_reversed",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER payroll_line_stays_reversed BEFORE UPDATE OF reversed ON payroll_lines WHEN OLD.reversed BEGIN SELECT RAISE (ABORT, 'a reversed payroll line stays reversed');END"
+        }
+      ]
+    },
+    {
+      "name": "payroll_line_no_delete",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER payroll_line_no_delete BEFORE DELETE ON payroll_lines BEGIN SELECT RAISE (ABORT, 'posted payroll is immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "payroll_items",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"payroll_items\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"worker_id\" TEXT NOT NULL REFERENCES workers (id), \"period_from\" TEXT NOT NULL, \"kind\" TEXT NOT NULL, \"amount_fils\" INTEGER NOT NULL CHECK(\"amount_fils\" > 0), \"reason\" TEXT NOT NULL, \"authorized_by\" TEXT NULL, \"note\" TEXT NULL, \"room_id\" TEXT NULL REFERENCES rooms (id), \"line_id\" TEXT NULL REFERENCES payroll_lines (id), PRIMARY KEY (\"id\"), CHECK (kind NOT IN ('deduction', 'roomCharge') OR authorized_by IS NOT NULL));"
+        }
+      ]
+    },
+    {
+      "name": "posted_item_no_edit",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER posted_item_no_edit BEFORE UPDATE OF worker_id, period_from, kind, amount_fils, reason, authorized_by, room_id ON payroll_items WHEN OLD.line_id IS NOT NULL BEGIN SELECT RAISE (ABORT, 'a posted payroll item is immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "posted_item_no_delete",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER posted_item_no_delete BEFORE DELETE ON payroll_items WHEN OLD.line_id IS NOT NULL BEGIN SELECT RAISE (ABORT, 'a posted payroll item is immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "one_live_payroll_line",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE UNIQUE INDEX one_live_payroll_line ON payroll_lines (worker_id, period_from) WHERE NOT reversed"
+        }
+      ]
+    },
+    {
+      "name": "worker_groups",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"worker_groups\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"name\" TEXT NOT NULL, \"client_id\" TEXT NULL REFERENCES clients (id), \"site_id\" TEXT NULL REFERENCES sites (id), \"daily_rate_fils\" INTEGER NULL CHECK(\"daily_rate_fils\" >= 0), \"half_day_is_half\" INTEGER NOT NULL DEFAULT 1 CHECK (\"half_day_is_half\" IN (0, 1)), \"start_minute\" INTEGER NULL, \"end_minute\" INTEGER NULL, \"break_minutes\" INTEGER NOT NULL DEFAULT 0, \"active\" INTEGER NOT NULL DEFAULT 1 CHECK (\"active\" IN (0, 1)), PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "attendance_batches",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"attendance_batches\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"work_date\" TEXT NOT NULL, \"client_id\" TEXT NOT NULL REFERENCES clients (id), \"site_id\" TEXT NOT NULL REFERENCES sites (id), \"group_id\" TEXT NULL REFERENCES worker_groups (id), \"note\" TEXT NULL, PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "attendance_entries",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"attendance_entries\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"batch_id\" TEXT NOT NULL REFERENCES attendance_batches (id), \"worker_id\" TEXT NOT NULL REFERENCES workers (id), \"client_id\" TEXT NOT NULL REFERENCES clients (id), \"site_id\" TEXT NOT NULL REFERENCES sites (id), \"group_id\" TEXT NULL REFERENCES worker_groups (id), \"work_date\" TEXT NOT NULL, \"start_utc\" INTEGER NULL, \"end_utc\" INTEGER NULL, \"clock_minutes\" INTEGER NOT NULL CHECK(\"clock_minutes\" >= 0), \"break_minutes\" INTEGER NOT NULL CHECK(\"break_minutes\" >= 0), \"break_paid_client\" INTEGER NOT NULL CHECK (\"break_paid_client\" IN (0, 1)), \"break_paid_worker\" INTEGER NOT NULL CHECK (\"break_paid_worker\" IN (0, 1)), \"client_billable_minutes\" INTEGER NOT NULL, \"worker_payable_minutes\" INTEGER NOT NULL, \"overtime_minutes\" INTEGER NOT NULL DEFAULT 0, \"overtime_approved\" INTEGER NOT NULL DEFAULT 0 CHECK (\"overtime_approved\" IN (0, 1)), \"attendance_status\" TEXT NOT NULL, \"state\" TEXT NOT NULL DEFAULT 'draft', \"client_ack\" TEXT NOT NULL DEFAULT 'none', \"client_basis\" TEXT NULL, \"client_rate_fils\" INTEGER NULL, \"client_amount_fils\" INTEGER NULL, \"worker_basis\" TEXT NULL, \"worker_rate_fils\" INTEGER NULL, \"worker_amount_fils\" INTEGER NULL, \"client_rate_override_fils\" INTEGER NULL, \"worker_rate_override_fils\" INTEGER NULL, \"override_reason\" TEXT NULL, \"overlap_reason\" TEXT NULL, \"notes\" TEXT NULL, \"revises_entry_id\" TEXT NULL REFERENCES attendance_entries (id), \"superseded\" INTEGER NOT NULL DEFAULT 0 CHECK (\"superseded\" IN (0, 1)), \"payroll_line_id\" TEXT NULL REFERENCES payroll_lines (id), PRIMARY KEY (\"id\"), CHECK (break_minutes <= clock_minutes));"
+        }
+      ]
+    },
+    {
+      "name": "approved_entry_no_edit",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN OLD.state IN ('approved', 'linked') AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes OR(OLD.client_rate_fils IS NOT NULL AND(NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils))OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)BEGIN SELECT RAISE (ABORT, 'approved attendance is immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "linked_entry_keeps_state",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER linked_entry_keeps_state BEFORE UPDATE ON attendance_entries WHEN OLD.state = 'linked' AND NEW.state <> 'linked' BEGIN SELECT RAISE (ABORT, 'linked attendance is immutable');END"
+        }
+      ]
+    },
+    {
+      "name": "entry_no_delete",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.state NOT IN ('draft', 'submitted') BEGIN SELECT RAISE (ABORT, 'approved attendance cannot be deleted');END"
+        }
+      ]
+    },
+    {
+      "name": "tenant_profiles",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"tenant_profiles\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"legal_name\" TEXT NOT NULL, \"trading_name\" TEXT NULL, \"address\" TEXT NULL, \"phone\" TEXT NULL, \"email\" TEXT NULL, \"vat_registered\" INTEGER NOT NULL DEFAULT 0 CHECK (\"vat_registered\" IN (0, 1)), \"vat_effective_from\" TEXT NULL, \"trn\" TEXT NULL, \"invoice_prefix\" TEXT NOT NULL DEFAULT 'INV', \"currency\" TEXT NOT NULL DEFAULT 'AED', \"payment_terms_days\" INTEGER NULL, \"bank_details\" TEXT NULL, \"document_footer\" TEXT NULL, \"deduction_limit_bps\" INTEGER NULL, \"wage_due_days\" INTEGER NULL, PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "pay_contracts",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"pay_contracts\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"basis\" TEXT NOT NULL, \"rate_fils\" INTEGER NOT NULL CHECK(\"rate_fils\" >= 0), \"effective_from\" TEXT NOT NULL, \"effective_to\" TEXT NULL, \"break_paid\" INTEGER NOT NULL DEFAULT 0 CHECK (\"break_paid\" IN (0, 1)), \"half_amount_fils\" INTEGER NULL, \"included_minutes\" INTEGER NULL, \"overtime_rate_fils\" INTEGER NULL, \"worker_id\" TEXT NOT NULL REFERENCES workers (id), \"site_id\" TEXT NULL REFERENCES sites (id), \"partial_method\" TEXT NULL, \"partial_divisor\" INTEGER NULL, PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "billing_contracts",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"billing_contracts\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"basis\" TEXT NOT NULL, \"rate_fils\" INTEGER NOT NULL CHECK(\"rate_fils\" >= 0), \"effective_from\" TEXT NOT NULL, \"effective_to\" TEXT NULL, \"break_paid\" INTEGER NOT NULL DEFAULT 0 CHECK (\"break_paid\" IN (0, 1)), \"half_amount_fils\" INTEGER NULL, \"included_minutes\" INTEGER NULL, \"overtime_rate_fils\" INTEGER NULL, \"client_id\" TEXT NOT NULL REFERENCES clients (id), \"site_id\" TEXT NULL REFERENCES sites (id), \"worker_id\" TEXT NULL REFERENCES workers (id), PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "opening_balances",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"opening_balances\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"kind\" TEXT NOT NULL, \"worker_id\" TEXT NULL REFERENCES workers (id), \"client_id\" TEXT NULL REFERENCES clients (id), \"amount_fils\" INTEGER NOT NULL CHECK(\"amount_fils\" >= 0), \"as_of_date\" TEXT NOT NULL, \"source_note\" TEXT NOT NULL, PRIMARY KEY (\"id\"), UNIQUE (\"kind\", \"worker_id\"), UNIQUE (\"kind\", \"client_id\"), CHECK ((worker_id IS NULL) <> (client_id IS NULL)));"
+        }
+      ]
+    },
+    {
+      "name": "worker_group_members",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"worker_group_members\" (\"id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"updated_at_utc\" INTEGER NOT NULL, \"actor_id\" TEXT NOT NULL, \"version\" INTEGER NOT NULL DEFAULT 1, \"source_operation_id\" TEXT NOT NULL, \"group_id\" TEXT NOT NULL REFERENCES worker_groups (id), \"worker_id\" TEXT NOT NULL REFERENCES workers (id), \"daily_rate_fils\" INTEGER NULL CHECK(\"daily_rate_fils\" >= 0), \"rate_basis\" TEXT NOT NULL DEFAULT 'day', PRIMARY KEY (\"id\"), UNIQUE (\"group_id\", \"worker_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "outbox",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"outbox\" (\"operation_id\" TEXT NOT NULL, \"tenant_id\" TEXT NOT NULL, \"entity\" TEXT NOT NULL, \"record_id\" TEXT NOT NULL, \"record_version\" INTEGER NOT NULL, \"device_id\" TEXT NOT NULL, \"payload\" TEXT NOT NULL, \"created_at_utc\" INTEGER NOT NULL, \"acked_at_utc\" INTEGER NULL, PRIMARY KEY (\"operation_id\"));"
+        }
+      ]
+    },
+    {
+      "name": "idx_cash_date",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX idx_cash_date ON cash_entries (entry_date)"
+        }
+      ]
+    },
+    {
+      "name": "idx_cash_worker",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX idx_cash_worker ON cash_entries (worker_id)"
+        }
+      ]
+    },
+    {
+      "name": "idx_cash_room",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX idx_cash_room ON cash_entries (room_id)"
+        }
+      ]
+    },
+    {
+      "name": "idx_entries_worker_date",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX idx_entries_worker_date ON attendance_entries (worker_id, work_date)"
+        }
+      ]
+    },
+    {
+      "name": "idx_entries_date",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX idx_entries_date ON attendance_entries (work_date)"
+        }
+      ]
+    },
+    {
+      "name": "idx_payroll_lines_worker",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX idx_payroll_lines_worker ON payroll_lines (worker_id)"
+        }
+      ]
+    },
+    {
+      "name": "idx_payroll_items_period",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX idx_payroll_items_period ON payroll_items (period_from)"
+        }
+      ]
+    }
+  ]
+}

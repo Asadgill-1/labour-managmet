@@ -1,0 +1,6647 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_en.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'l10n/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
+abstract class AppLocalizations {
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  }
+
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('en', 'PK'),
+  ];
+
+  /// No description provided for @tabToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get tabToday;
+
+  /// No description provided for @tabCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'Companies'**
+  String get tabCompanies;
+
+  /// No description provided for @tabLabour.
+  ///
+  /// In en, this message translates to:
+  /// **'Labour'**
+  String get tabLabour;
+
+  /// No description provided for @tabGroups.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker groups'**
+  String get tabGroups;
+
+  /// No description provided for @addGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a group'**
+  String get addGroup;
+
+  /// No description provided for @editGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit group'**
+  String get editGroup;
+
+  /// No description provided for @groupName.
+  ///
+  /// In en, this message translates to:
+  /// **'Group name'**
+  String get groupName;
+
+  /// No description provided for @groupNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For example: Emaar West'**
+  String get groupNameHelp;
+
+  /// No description provided for @groupsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No groups yet. Make one for workers who usually go together.'**
+  String get groupsEmpty;
+
+  /// No description provided for @noneChoice.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get noneChoice;
+
+  /// No description provided for @dailyWage.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily wage (AED)'**
+  String get dailyWage;
+
+  /// No description provided for @dailyWageHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional. Only for a worker with no pay of their own.'**
+  String get dailyWageHelp;
+
+  /// No description provided for @halfDayIsHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Half day pays half the daily wage'**
+  String get halfDayIsHalf;
+
+  /// No description provided for @ownWageHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty to use the group\'s daily wage.'**
+  String get ownWageHelp;
+
+  /// No description provided for @todayWageHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For this attendance only. The group does not change.'**
+  String get todayWageHelp;
+
+  /// No description provided for @todayWageReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily wage typed while marking attendance'**
+  String get todayWageReason;
+
+  /// No description provided for @setWage.
+  ///
+  /// In en, this message translates to:
+  /// **'Set wage'**
+  String get setWage;
+
+  /// No description provided for @monthlyPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthlyPay;
+
+  /// No description provided for @workersHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers'**
+  String get workersHeading;
+
+  /// No description provided for @searchGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Search groups'**
+  String get searchGroup;
+
+  /// No description provided for @searchWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Search workers'**
+  String get searchWorker;
+
+  /// No description provided for @membersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers'**
+  String membersCount(int count);
+
+  /// No description provided for @saveWithCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Save ({count} workers)'**
+  String saveWithCount(int count);
+
+  /// No description provided for @wageOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay: {name}'**
+  String wageOf(String name);
+
+  /// No description provided for @tabRates.
+  ///
+  /// In en, this message translates to:
+  /// **'Rates'**
+  String get tabRates;
+
+  /// No description provided for @tabSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get tabSettings;
+
+  /// No description provided for @menuLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get menuLabel;
+
+  /// No description provided for @menuClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide menu'**
+  String get menuClose;
+
+  /// No description provided for @soon.
+  ///
+  /// In en, this message translates to:
+  /// **'Soon'**
+  String get soon;
+
+  /// No description provided for @groupDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get groupDaily;
+
+  /// No description provided for @groupRegisters.
+  ///
+  /// In en, this message translates to:
+  /// **'Registers'**
+  String get groupRegisters;
+
+  /// No description provided for @groupBilling.
+  ///
+  /// In en, this message translates to:
+  /// **'Payroll and billing'**
+  String get groupBilling;
+
+  /// No description provided for @groupMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get groupMore;
+
+  /// No description provided for @menuPayroll.
+  ///
+  /// In en, this message translates to:
+  /// **'Payroll'**
+  String get menuPayroll;
+
+  /// No description provided for @tabCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily money'**
+  String get tabCash;
+
+  /// No description provided for @tabRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooms'**
+  String get tabRooms;
+
+  /// No description provided for @addCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Add entry'**
+  String get addCash;
+
+  /// No description provided for @cashEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing written for this. Tap Add entry when money comes in or goes out.'**
+  String get cashEmpty;
+
+  /// No description provided for @moneyOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Money given'**
+  String get moneyOut;
+
+  /// No description provided for @moneyIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Money received'**
+  String get moneyIn;
+
+  /// No description provided for @cashDifference.
+  ///
+  /// In en, this message translates to:
+  /// **'Difference'**
+  String get cashDifference;
+
+  /// No description provided for @kindAdvanceGiven.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance'**
+  String get kindAdvanceGiven;
+
+  /// No description provided for @kindSalaryPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary'**
+  String get kindSalaryPaid;
+
+  /// No description provided for @kindRoomRentPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Room rent paid'**
+  String get kindRoomRentPaid;
+
+  /// No description provided for @kindExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense'**
+  String get kindExpense;
+
+  /// No description provided for @kindAdvanceReturned.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance returned'**
+  String get kindAdvanceReturned;
+
+  /// No description provided for @kindRoomRentReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Room rent received'**
+  String get kindRoomRentReceived;
+
+  /// No description provided for @kindClientReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'From a company'**
+  String get kindClientReceipt;
+
+  /// No description provided for @catTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get catTransport;
+
+  /// No description provided for @catFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get catFood;
+
+  /// No description provided for @catVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa and PRO'**
+  String get catVisa;
+
+  /// No description provided for @catTools.
+  ///
+  /// In en, this message translates to:
+  /// **'Tools'**
+  String get catTools;
+
+  /// No description provided for @catOffice.
+  ///
+  /// In en, this message translates to:
+  /// **'Office'**
+  String get catOffice;
+
+  /// No description provided for @catOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get catOther;
+
+  /// No description provided for @expenseCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense type'**
+  String get expenseCategory;
+
+  /// No description provided for @optionalSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Site (optional)'**
+  String get optionalSite;
+
+  /// No description provided for @methodCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get methodCash;
+
+  /// No description provided for @methodBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank'**
+  String get methodBank;
+
+  /// No description provided for @chooseRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get chooseRoom;
+
+  /// No description provided for @advanceTooHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'This is more than the advance still to recover.'**
+  String get advanceTooHigh;
+
+  /// No description provided for @advanceUndoBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Some of this advance has already come back. Undo that entry first.'**
+  String get advanceUndoBlocked;
+
+  /// No description provided for @reverseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo this entry?'**
+  String get reverseTitle;
+
+  /// No description provided for @reverseHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The original stays on record. A reversing entry cancels it.'**
+  String get reverseHelp;
+
+  /// No description provided for @reverseReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it is being undone'**
+  String get reverseReason;
+
+  /// No description provided for @reverseConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo entry'**
+  String get reverseConfirm;
+
+  /// No description provided for @reversedTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Undone'**
+  String get reversedTag;
+
+  /// No description provided for @reversalTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo of an entry'**
+  String get reversalTag;
+
+  /// No description provided for @moneyHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get moneyHeading;
+
+  /// No description provided for @advanceOutstanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance still to recover'**
+  String get advanceOutstanding;
+
+  /// No description provided for @salaryPaidTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary paid'**
+  String get salaryPaidTotal;
+
+  /// No description provided for @workerRentTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Room rent paid by this worker'**
+  String get workerRentTotal;
+
+  /// No description provided for @roomsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No rooms yet. Add the rooms you rent for workers.'**
+  String get roomsEmpty;
+
+  /// No description provided for @addRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Add room'**
+  String get addRoom;
+
+  /// No description provided for @editRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit room'**
+  String get editRoom;
+
+  /// No description provided for @roomName.
+  ///
+  /// In en, this message translates to:
+  /// **'Room name'**
+  String get roomName;
+
+  /// No description provided for @roomNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For example: Sonapur Room 12'**
+  String get roomNameHelp;
+
+  /// No description provided for @rentIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Rent received'**
+  String get rentIn;
+
+  /// No description provided for @rentOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Rent paid'**
+  String get rentOut;
+
+  /// No description provided for @roomProfitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Profit'**
+  String get roomProfitLabel;
+
+  /// No description provided for @roomLossLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Loss'**
+  String get roomLossLabel;
+
+  /// No description provided for @roomEven.
+  ///
+  /// In en, this message translates to:
+  /// **'Even'**
+  String get roomEven;
+
+  /// No description provided for @residentsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Living here'**
+  String get residentsHeading;
+
+  /// No description provided for @noResidents.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody yet. Choose this room on a worker\'s screen.'**
+  String get noResidents;
+
+  /// No description provided for @entriesHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Entries'**
+  String get entriesHeading;
+
+  /// No description provided for @previousMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous month'**
+  String get previousMonth;
+
+  /// No description provided for @nextMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Next month'**
+  String get nextMonth;
+
+  /// No description provided for @advanceBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance still to recover: {amount}'**
+  String advanceBalance(String amount);
+
+  /// No description provided for @savedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on phone, in {name}\'s account'**
+  String savedTo(String name);
+
+  /// No description provided for @roomProfit.
+  ///
+  /// In en, this message translates to:
+  /// **'Profit {amount}'**
+  String roomProfit(String amount);
+
+  /// No description provided for @roomLoss.
+  ///
+  /// In en, this message translates to:
+  /// **'Loss {amount}'**
+  String roomLoss(String amount);
+
+  /// No description provided for @rentSplit.
+  ///
+  /// In en, this message translates to:
+  /// **'Received {received}, paid {paid}'**
+  String rentSplit(String received, String paid);
+
+  /// No description provided for @menuReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get menuReports;
+
+  /// No description provided for @menuDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get menuDocuments;
+
+  /// No description provided for @menuTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get menuTeam;
+
+  /// No description provided for @menuBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup'**
+  String get menuBackup;
+
+  /// No description provided for @menuPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get menuPlan;
+
+  /// No description provided for @menuHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get menuHelp;
+
+  /// No description provided for @countWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers'**
+  String get countWorkers;
+
+  /// No description provided for @countShifts.
+  ///
+  /// In en, this message translates to:
+  /// **'Shifts'**
+  String get countShifts;
+
+  /// No description provided for @countWorkerDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker-days'**
+  String get countWorkerDays;
+
+  /// No description provided for @dayNames.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon,Tue,Wed,Thu,Fri,Sat,Sun'**
+  String get dayNames;
+
+  /// No description provided for @pickDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose date'**
+  String get pickDate;
+
+  /// No description provided for @chooseWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker'**
+  String get chooseWorker;
+
+  /// No description provided for @noBillingRates.
+  ///
+  /// In en, this message translates to:
+  /// **'No company rates yet. Add one so attendance can be priced.'**
+  String get noBillingRates;
+
+  /// No description provided for @noPayRates.
+  ///
+  /// In en, this message translates to:
+  /// **'No pay rates yet. Add one so attendance can be priced.'**
+  String get noPayRates;
+
+  /// No description provided for @balancesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing carried over yet. Add what was already due when you started using this app.'**
+  String get balancesEmpty;
+
+  /// No description provided for @addBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Add carried-over amount'**
+  String get addBalance;
+
+  /// No description provided for @balanceKind.
+  ///
+  /// In en, this message translates to:
+  /// **'What kind of amount?'**
+  String get balanceKind;
+
+  /// No description provided for @todayEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No attendance on this date. Tap Mark attendance to start.'**
+  String get todayEmpty;
+
+  /// No description provided for @companiesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No client companies yet. Add your first one.'**
+  String get companiesEmpty;
+
+  /// No description provided for @labourEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No workers yet. Add your first one.'**
+  String get labourEmpty;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @languageRomanUrdu.
+  ///
+  /// In en, this message translates to:
+  /// **'Roman Urdu'**
+  String get languageRomanUrdu;
+
+  /// No description provided for @settingsLargeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Large text'**
+  String get settingsLargeText;
+
+  /// No description provided for @dbCheckTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Data encryption check'**
+  String get dbCheckTitle;
+
+  /// No description provided for @dbCheckAllPassed.
+  ///
+  /// In en, this message translates to:
+  /// **'All passed'**
+  String get dbCheckAllPassed;
+
+  /// No description provided for @dbCheckSomeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Some failed'**
+  String get dbCheckSomeFailed;
+
+  /// No description provided for @savedOnPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on phone'**
+  String get savedOnPhone;
+
+  /// No description provided for @databaseError.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data could not be opened. Nothing was deleted. Close the app and open it again. If this repeats, contact support.'**
+  String get databaseError;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @clearValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clearValue;
+
+  /// No description provided for @fieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This is required'**
+  String get fieldRequired;
+
+  /// No description provided for @wholeNumberRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a whole number'**
+  String get wholeNumberRequired;
+
+  /// No description provided for @amountInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount like 1100.50'**
+  String get amountInvalid;
+
+  /// No description provided for @showArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Show archived'**
+  String get showArchived;
+
+  /// No description provided for @showActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Show active'**
+  String get showActive;
+
+  /// No description provided for @archive.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archive;
+
+  /// No description provided for @reactivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Make active again'**
+  String get reactivate;
+
+  /// No description provided for @archivedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get archivedLabel;
+
+  /// No description provided for @activeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get activeLabel;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your company'**
+  String get welcomeTitle;
+
+  /// No description provided for @welcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with your company\'s name. You can add the rest later.'**
+  String get welcomeBody;
+
+  /// No description provided for @myCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'My company'**
+  String get myCompany;
+
+  /// No description provided for @legalName.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal company name'**
+  String get legalName;
+
+  /// No description provided for @tradingName.
+  ///
+  /// In en, this message translates to:
+  /// **'Trading name'**
+  String get tradingName;
+
+  /// No description provided for @address.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone or WhatsApp'**
+  String get phone;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @vatRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'My company is VAT registered'**
+  String get vatRegistered;
+
+  /// No description provided for @vatEffectiveFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT registered from'**
+  String get vatEffectiveFrom;
+
+  /// No description provided for @trn.
+  ///
+  /// In en, this message translates to:
+  /// **'TRN'**
+  String get trn;
+
+  /// No description provided for @trnFormatOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'This only checks the format. It is not verified with the FTA.'**
+  String get trnFormatOnly;
+
+  /// No description provided for @trnFormatError.
+  ///
+  /// In en, this message translates to:
+  /// **'A TRN has 15 digits'**
+  String get trnFormatError;
+
+  /// No description provided for @invoicePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice number prefix'**
+  String get invoicePrefix;
+
+  /// No description provided for @paymentTermsDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment terms in days'**
+  String get paymentTermsDays;
+
+  /// No description provided for @bankDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank details'**
+  String get bankDetails;
+
+  /// No description provided for @documentFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Document footer'**
+  String get documentFooter;
+
+  /// No description provided for @addClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Add company'**
+  String get addClient;
+
+  /// No description provided for @editClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit company'**
+  String get editClient;
+
+  /// No description provided for @clientName.
+  ///
+  /// In en, this message translates to:
+  /// **'Company name'**
+  String get clientName;
+
+  /// No description provided for @contactPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact person'**
+  String get contactPerson;
+
+  /// No description provided for @clientVatRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'This company is VAT registered'**
+  String get clientVatRegistered;
+
+  /// No description provided for @invoiceAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice address'**
+  String get invoiceAddress;
+
+  /// No description provided for @dueDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment due after how many days'**
+  String get dueDays;
+
+  /// No description provided for @poReference.
+  ///
+  /// In en, this message translates to:
+  /// **'PO or reference'**
+  String get poReference;
+
+  /// No description provided for @note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get note;
+
+  /// No description provided for @sitesHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Sites'**
+  String get sitesHeading;
+
+  /// No description provided for @sitesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No sites yet.'**
+  String get sitesEmpty;
+
+  /// No description provided for @addSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Add site'**
+  String get addSite;
+
+  /// No description provided for @editSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit site'**
+  String get editSite;
+
+  /// No description provided for @siteName.
+  ///
+  /// In en, this message translates to:
+  /// **'Site or project name'**
+  String get siteName;
+
+  /// No description provided for @siteLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get siteLocation;
+
+  /// No description provided for @defaultStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Usual start'**
+  String get defaultStart;
+
+  /// No description provided for @defaultEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Usual end'**
+  String get defaultEnd;
+
+  /// No description provided for @defaultBreakMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Usual break in minutes'**
+  String get defaultBreakMinutes;
+
+  /// No description provided for @activeFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Active from'**
+  String get activeFrom;
+
+  /// No description provided for @activeTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Active until'**
+  String get activeTo;
+
+  /// No description provided for @addWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Add worker'**
+  String get addWorker;
+
+  /// No description provided for @editWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit worker'**
+  String get editWorker;
+
+  /// No description provided for @workerCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker code'**
+  String get workerCode;
+
+  /// No description provided for @workerCodeTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'This code is already used by another worker'**
+  String get workerCodeTaken;
+
+  /// No description provided for @workerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker name'**
+  String get workerName;
+
+  /// No description provided for @trade.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade'**
+  String get trade;
+
+  /// No description provided for @joiningDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Joining date'**
+  String get joiningDate;
+
+  /// No description provided for @roomCharge.
+  ///
+  /// In en, this message translates to:
+  /// **'Room charge per month (AED)'**
+  String get roomCharge;
+
+  /// No description provided for @roomChargeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Room charge agreement note'**
+  String get roomChargeNote;
+
+  /// No description provided for @addPayContract.
+  ///
+  /// In en, this message translates to:
+  /// **'Add pay rate'**
+  String get addPayContract;
+
+  /// No description provided for @editPayContract.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit pay rate'**
+  String get editPayContract;
+
+  /// No description provided for @addBillingContract.
+  ///
+  /// In en, this message translates to:
+  /// **'Add client rate'**
+  String get addBillingContract;
+
+  /// No description provided for @editBillingContract.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit client rate'**
+  String get editBillingContract;
+
+  /// No description provided for @payContractsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay rates'**
+  String get payContractsHeading;
+
+  /// No description provided for @billingContractsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Client rates'**
+  String get billingContractsHeading;
+
+  /// No description provided for @noPayContract.
+  ///
+  /// In en, this message translates to:
+  /// **'No pay rate yet. Attendance for this worker will stop for review.'**
+  String get noPayContract;
+
+  /// No description provided for @noBillingContract.
+  ///
+  /// In en, this message translates to:
+  /// **'No client rate yet. Attendance for this client will stop for review.'**
+  String get noBillingContract;
+
+  /// No description provided for @rateBasis.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid by'**
+  String get rateBasis;
+
+  /// No description provided for @rateAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate (AED)'**
+  String get rateAmount;
+
+  /// No description provided for @effectiveFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts on'**
+  String get effectiveFrom;
+
+  /// No description provided for @effectiveTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends on'**
+  String get effectiveTo;
+
+  /// No description provided for @appliesToSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies to site'**
+  String get appliesToSite;
+
+  /// No description provided for @allSites.
+  ///
+  /// In en, this message translates to:
+  /// **'All sites'**
+  String get allSites;
+
+  /// No description provided for @appliesToWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies to worker'**
+  String get appliesToWorker;
+
+  /// No description provided for @allWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'All workers'**
+  String get allWorkers;
+
+  /// No description provided for @breakIsPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Break is paid'**
+  String get breakIsPaid;
+
+  /// No description provided for @halfAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Half-day amount (AED)'**
+  String get halfAmount;
+
+  /// No description provided for @halfAmountHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty if there is no agreed half amount. A half day then stops for review.'**
+  String get halfAmountHelp;
+
+  /// No description provided for @partialMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Part-month calculation'**
+  String get partialMethod;
+
+  /// No description provided for @partialMethodHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Used when a worker joins or leaves mid-month. Choose what your contract says.'**
+  String get partialMethodHelp;
+
+  /// No description provided for @partialCalendarDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Actual days in the month'**
+  String get partialCalendarDays;
+
+  /// No description provided for @partialFixedDivisor.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed number of days'**
+  String get partialFixedDivisor;
+
+  /// No description provided for @partialDivisor.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of days'**
+  String get partialDivisor;
+
+  /// No description provided for @includedMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes included before overtime'**
+  String get includedMinutes;
+
+  /// No description provided for @includedMinutesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty if there is no overtime on this rate.'**
+  String get includedMinutesHelp;
+
+  /// No description provided for @overtimeRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime rate per hour (AED)'**
+  String get overtimeRate;
+
+  /// No description provided for @overtimeRateHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Only what your contract states. The app never applies a multiplier by itself.'**
+  String get overtimeRateHelp;
+
+  /// No description provided for @basisHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Per hour'**
+  String get basisHour;
+
+  /// No description provided for @basisDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Per day'**
+  String get basisDay;
+
+  /// No description provided for @basisShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Per shift'**
+  String get basisShift;
+
+  /// No description provided for @basisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Per month'**
+  String get basisMonth;
+
+  /// No description provided for @basisMonthPerWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Per month, each worker'**
+  String get basisMonthPerWorker;
+
+  /// No description provided for @basisMonthFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Per month, fixed contract'**
+  String get basisMonthFixed;
+
+  /// No description provided for @endBeforeStart.
+  ///
+  /// In en, this message translates to:
+  /// **'The end date is before the start date'**
+  String get endBeforeStart;
+
+  /// No description provided for @contractOverlap.
+  ///
+  /// In en, this message translates to:
+  /// **'Another rate already covers these dates for the same site and worker. End that rate first.'**
+  String get contractOverlap;
+
+  /// No description provided for @openingHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Carried over from before'**
+  String get openingHeading;
+
+  /// No description provided for @openingSalaryOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'Old salary still owed to this worker'**
+  String get openingSalaryOwed;
+
+  /// No description provided for @openingAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Old advance to recover from this worker'**
+  String get openingAdvance;
+
+  /// No description provided for @openingReceivable.
+  ///
+  /// In en, this message translates to:
+  /// **'Old amount this company still owes'**
+  String get openingReceivable;
+
+  /// No description provided for @openingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter what was already due on the date you start using this app. It carries forward as a balance and is not counted as this month\'s expense or income.'**
+  String get openingHelp;
+
+  /// No description provided for @amountAed.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount (AED)'**
+  String get amountAed;
+
+  /// No description provided for @asOfDate.
+  ///
+  /// In en, this message translates to:
+  /// **'As of date'**
+  String get asOfDate;
+
+  /// No description provided for @sourceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Where this figure comes from'**
+  String get sourceNote;
+
+  /// No description provided for @sourceNoteHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For example: old register, page 12'**
+  String get sourceNoteHelp;
+
+  /// No description provided for @openingConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'I have checked this figure'**
+  String get openingConfirm;
+
+  /// No description provided for @confirmRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm you have checked this figure'**
+  String get confirmRequired;
+
+  /// No description provided for @notEntered.
+  ///
+  /// In en, this message translates to:
+  /// **'Not entered'**
+  String get notEntered;
+
+  /// No description provided for @dateFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From {date}'**
+  String dateFrom(String date);
+
+  /// No description provided for @dateFromTo.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} to {to}'**
+  String dateFromTo(String from, String to);
+
+  /// No description provided for @markAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark attendance'**
+  String get markAttendance;
+
+  /// No description provided for @workDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get workDate;
+
+  /// No description provided for @chooseClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Company'**
+  String get chooseClient;
+
+  /// No description provided for @chooseSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Site'**
+  String get chooseSite;
+
+  /// No description provided for @shiftStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get shiftStart;
+
+  /// No description provided for @shiftEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get shiftEnd;
+
+  /// No description provided for @breakMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Break in minutes'**
+  String get breakMinutes;
+
+  /// No description provided for @selectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get selectAll;
+
+  /// No description provided for @clearSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear selection'**
+  String get clearSelection;
+
+  /// No description provided for @copyLastTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Last team'**
+  String get copyLastTeam;
+
+  /// No description provided for @noLastTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'No earlier team found for this site.'**
+  String get noLastTeam;
+
+  /// No description provided for @needSetupFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a company, a site and a worker first.'**
+  String get needSetupFirst;
+
+  /// No description provided for @timesRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the start and end time.'**
+  String get timesRequired;
+
+  /// No description provided for @reviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review attendance'**
+  String get reviewTitle;
+
+  /// No description provided for @totalClient.
+  ///
+  /// In en, this message translates to:
+  /// **'To collect from company'**
+  String get totalClient;
+
+  /// No description provided for @totalWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'To pay workers'**
+  String get totalWorker;
+
+  /// No description provided for @monthlyNotInTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly rates are not in these totals. A monthly wage counts by the month, and a company\'s monthly contract is charged by the month on its invoices.'**
+  String get monthlyNotInTotal;
+
+  /// No description provided for @groupRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Change today\'s company rate'**
+  String get groupRate;
+
+  /// No description provided for @groupRateAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Company rate for this group (AED)'**
+  String get groupRateAmount;
+
+  /// No description provided for @issueClientRate.
+  ///
+  /// In en, this message translates to:
+  /// **'No company rate found'**
+  String get issueClientRate;
+
+  /// No description provided for @issueWorkerRate.
+  ///
+  /// In en, this message translates to:
+  /// **'No worker rate found'**
+  String get issueWorkerRate;
+
+  /// No description provided for @issueHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'No half-day amount agreed'**
+  String get issueHalf;
+
+  /// No description provided for @issueOvertime.
+  ///
+  /// In en, this message translates to:
+  /// **'No overtime rate agreed'**
+  String get issueOvertime;
+
+  /// No description provided for @issueOverlap.
+  ///
+  /// In en, this message translates to:
+  /// **'This worker already has attendance at this time. Write a reason.'**
+  String get issueOverlap;
+
+  /// No description provided for @issueBreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Break is longer than the shift'**
+  String get issueBreak;
+
+  /// No description provided for @issueOverrideReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Write why the rate changed'**
+  String get issueOverrideReason;
+
+  /// No description provided for @rowsNeedFix.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix the rows marked in red, then save.'**
+  String get rowsNeedFix;
+
+  /// No description provided for @savesAsDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Rows with no worker rate stay out of payroll until a rate is added.'**
+  String get savesAsDraft;
+
+  /// No description provided for @statusPresent.
+  ///
+  /// In en, this message translates to:
+  /// **'Present'**
+  String get statusPresent;
+
+  /// No description provided for @statusHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Half day'**
+  String get statusHalf;
+
+  /// No description provided for @statusAbsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Absent'**
+  String get statusAbsent;
+
+  /// No description provided for @clientBreakPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Break paid on company side'**
+  String get clientBreakPaid;
+
+  /// No description provided for @workerBreakPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Break paid on worker side'**
+  String get workerBreakPaid;
+
+  /// No description provided for @overtimeApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime approved'**
+  String get overtimeApproved;
+
+  /// No description provided for @clientOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Company rate for this row (AED)'**
+  String get clientOverride;
+
+  /// No description provided for @workerOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker rate for this row (AED)'**
+  String get workerOverride;
+
+  /// No description provided for @overrideHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty to use the contract. Changing a rate needs the owner\'s approval and a reason.'**
+  String get overrideHelp;
+
+  /// No description provided for @overrideReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why the rate changed'**
+  String get overrideReason;
+
+  /// No description provided for @overlapReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why two entries overlap'**
+  String get overlapReason;
+
+  /// No description provided for @correctionReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why this is being corrected'**
+  String get correctionReason;
+
+  /// No description provided for @correctionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The original entry is kept. This creates a corrected entry.'**
+  String get correctionHelp;
+
+  /// No description provided for @deleteRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this entry'**
+  String get deleteRow;
+
+  /// No description provided for @applyChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyChanges;
+
+  /// No description provided for @stateDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'No pay rate'**
+  String get stateDraft;
+
+  /// No description provided for @stateSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get stateSubmitted;
+
+  /// No description provided for @stateApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Final'**
+  String get stateApproved;
+
+  /// No description provided for @stateLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'In payroll'**
+  String get stateLinked;
+
+  /// No description provided for @correctedTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Corrected'**
+  String get correctedTag;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @localOnlyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This data is only on this phone.'**
+  String get localOnlyNote;
+
+  /// No description provided for @nextWithCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Next ({count} workers)'**
+  String nextWithCount(int count);
+
+  /// No description provided for @countsLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{workers} workers, {shifts} shifts, {days} worker-days'**
+  String countsLine(int workers, int shifts, int days);
+
+  /// No description provided for @missingWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers have no attendance: {names}'**
+  String missingWorkers(int count, String names);
+
+  /// No description provided for @hoursPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} hours'**
+  String hoursPaid(String duration);
+
+  /// No description provided for @saveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save. Nothing was changed. Try again.'**
+  String get saveFailed;
+
+  /// No description provided for @rowCollect.
+  ///
+  /// In en, this message translates to:
+  /// **'Collect {amount}'**
+  String rowCollect(String amount);
+
+  /// No description provided for @rowPay.
+  ///
+  /// In en, this message translates to:
+  /// **'pay {amount}'**
+  String rowPay(String amount);
+
+  /// No description provided for @payrollEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'This month\'s earnings'**
+  String get payrollEarned;
+
+  /// No description provided for @payrollCut.
+  ///
+  /// In en, this message translates to:
+  /// **'Deductions'**
+  String get payrollCut;
+
+  /// No description provided for @payrollToPay.
+  ///
+  /// In en, this message translates to:
+  /// **'To pay the worker'**
+  String get payrollToPay;
+
+  /// No description provided for @payrollSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly salary'**
+  String get payrollSalary;
+
+  /// No description provided for @payrollAdjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier work'**
+  String get payrollAdjustment;
+
+  /// No description provided for @payrollNet.
+  ///
+  /// In en, this message translates to:
+  /// **'This month\'s net'**
+  String get payrollNet;
+
+  /// No description provided for @payrollOpening.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous unpaid'**
+  String get payrollOpening;
+
+  /// No description provided for @payrollPaidAhead.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid ahead'**
+  String get payrollPaidAhead;
+
+  /// No description provided for @payrollPayable.
+  ///
+  /// In en, this message translates to:
+  /// **'Total payable'**
+  String get payrollPayable;
+
+  /// No description provided for @payrollPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid since'**
+  String get payrollPaid;
+
+  /// No description provided for @payrollClosing.
+  ///
+  /// In en, this message translates to:
+  /// **'Still unpaid'**
+  String get payrollClosing;
+
+  /// No description provided for @payrollOverpaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid too much'**
+  String get payrollOverpaid;
+
+  /// No description provided for @payrollEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to pay this month. Mark attendance first.'**
+  String get payrollEmpty;
+
+  /// No description provided for @payrollEarnedHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Earnings'**
+  String get payrollEarnedHeading;
+
+  /// No description provided for @payrollItemsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowances and deductions'**
+  String get payrollItemsHeading;
+
+  /// No description provided for @payrollSumHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get payrollSumHeading;
+
+  /// No description provided for @payrollNoItems.
+  ///
+  /// In en, this message translates to:
+  /// **'None this month.'**
+  String get payrollNoItems;
+
+  /// No description provided for @payrollStatePosted.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted'**
+  String get payrollStatePosted;
+
+  /// No description provided for @payrollStateReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to post'**
+  String get payrollStateReady;
+
+  /// No description provided for @payrollStateDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Not posted'**
+  String get payrollStateDraft;
+
+  /// No description provided for @payrollPostConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Post'**
+  String get payrollPostConfirm;
+
+  /// No description provided for @payrollPayNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Record payment'**
+  String get payrollPayNow;
+
+  /// No description provided for @payrollUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo this posting'**
+  String get payrollUndo;
+
+  /// No description provided for @payrollUndoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo this posting?'**
+  String get payrollUndoTitle;
+
+  /// No description provided for @payrollUndoHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The month goes back to unposted so you can fix it. The record stays, and money already paid stays on the worker\'s account.'**
+  String get payrollUndoHelp;
+
+  /// No description provided for @payrollUndoLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo the later month first.'**
+  String get payrollUndoLater;
+
+  /// No description provided for @payKindAllowance.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowance'**
+  String get payKindAllowance;
+
+  /// No description provided for @payKindDeduction.
+  ///
+  /// In en, this message translates to:
+  /// **'Deduction'**
+  String get payKindDeduction;
+
+  /// No description provided for @payKindRecovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance recovery'**
+  String get payKindRecovery;
+
+  /// No description provided for @payItemReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get payItemReason;
+
+  /// No description provided for @payItemAuthorizedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Agreement or permission'**
+  String get payItemAuthorizedBy;
+
+  /// No description provided for @payItemAuthorizedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Who agreed, and how. For example: signed paper, 01-10-2026'**
+  String get payItemAuthorizedHelp;
+
+  /// No description provided for @issuePartial.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the part-month method on the contract.'**
+  String get issuePartial;
+
+  /// No description provided for @issueNegative.
+  ///
+  /// In en, this message translates to:
+  /// **'Deductions are more than earnings.'**
+  String get issueNegative;
+
+  /// No description provided for @issueRecovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery is more than the advance left.'**
+  String get issueRecovery;
+
+  /// No description provided for @issueLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deductions are above your company\'s limit.'**
+  String get issueLimit;
+
+  /// No description provided for @issueEarlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Post the earlier month first.'**
+  String get issueEarlier;
+
+  /// No description provided for @issueLater.
+  ///
+  /// In en, this message translates to:
+  /// **'A later month is posted. This goes into the next payroll.'**
+  String get issueLater;
+
+  /// No description provided for @issueNotStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'This month has not started.'**
+  String get issueNotStarted;
+
+  /// No description provided for @salaryOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary still owed'**
+  String get salaryOwed;
+
+  /// No description provided for @rentFromPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken from salaries'**
+  String get rentFromPay;
+
+  /// No description provided for @deductionLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deduction limit (%, optional)'**
+  String get deductionLimit;
+
+  /// No description provided for @deductionLimitHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Share of earnings. Ask your accountant. Empty means no limit.'**
+  String get deductionLimitHelp;
+
+  /// No description provided for @deductionLimitError.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a whole number from 1 to 100.'**
+  String get deductionLimitError;
+
+  /// No description provided for @payrollPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Post payroll ({count})'**
+  String payrollPost(int count);
+
+  /// No description provided for @payrollPostTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Post payroll for {month}?'**
+  String payrollPostTitle(String month);
+
+  /// No description provided for @payrollPostBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers, {amount} goes onto their accounts. The figures will not change after this. If something is wrong, undo it on that worker.'**
+  String payrollPostBody(int count, String amount);
+
+  /// No description provided for @payrollPosted.
+  ///
+  /// In en, this message translates to:
+  /// **'Payroll posted for {count} workers'**
+  String payrollPosted(int count);
+
+  /// No description provided for @payrollSplit.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned {earned}, deducted {cut}'**
+  String payrollSplit(String earned, String cut);
+
+  /// No description provided for @applyRoomCharges.
+  ///
+  /// In en, this message translates to:
+  /// **'Add room charge'**
+  String get applyRoomCharges;
+
+  /// No description provided for @roomChargesApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Room charge added for {count} workers'**
+  String roomChargesApplied(int count);
+
+  /// No description provided for @payKindRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Room charge'**
+  String get payKindRoom;
+
+  /// No description provided for @mainAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance'**
+  String get mainAttendance;
+
+  /// No description provided for @mainVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa'**
+  String get mainVisa;
+
+  /// No description provided for @mainMoney.
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get mainMoney;
+
+  /// No description provided for @tabVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa money'**
+  String get tabVisa;
+
+  /// No description provided for @groupSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get groupSoon;
+
+  /// No description provided for @regAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance register'**
+  String get regAttendance;
+
+  /// No description provided for @regWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker register'**
+  String get regWorkers;
+
+  /// No description provided for @regVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa register'**
+  String get regVisa;
+
+  /// No description provided for @regCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'Company register'**
+  String get regCompanies;
+
+  /// No description provided for @regPayroll.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay register'**
+  String get regPayroll;
+
+  /// No description provided for @regAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance register'**
+  String get regAdvance;
+
+  /// No description provided for @regCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Money register'**
+  String get regCash;
+
+  /// No description provided for @regRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Room register'**
+  String get regRooms;
+
+  /// No description provided for @kindVisaPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa money spent'**
+  String get kindVisaPaid;
+
+  /// No description provided for @kindVisaReturned.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa money returned'**
+  String get kindVisaReturned;
+
+  /// No description provided for @visaTooHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'This is more than the visa money left.'**
+  String get visaTooHigh;
+
+  /// No description provided for @visaUndoBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t undo this: some of this visa money has already come back.'**
+  String get visaUndoBlocked;
+
+  /// No description provided for @visaBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa money left: {amount}'**
+  String visaBalance(String amount);
+
+  /// No description provided for @visaSpent.
+  ///
+  /// In en, this message translates to:
+  /// **'Spent'**
+  String get visaSpent;
+
+  /// No description provided for @visaBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get visaBack;
+
+  /// No description provided for @visaLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa left'**
+  String get visaLeft;
+
+  /// No description provided for @visaAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add visa money'**
+  String get visaAdd;
+
+  /// No description provided for @visaEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No visa money yet. Add what the company spent on a worker.'**
+  String get visaEmpty;
+
+  /// No description provided for @visaSplit.
+  ///
+  /// In en, this message translates to:
+  /// **'Spent {spent}, back {back}'**
+  String visaSplit(String spent, String back);
+
+  /// No description provided for @visaInstalment.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly instalment'**
+  String get visaInstalment;
+
+  /// No description provided for @visaInstalmentOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get visaInstalmentOff;
+
+  /// No description provided for @visaInstalmentHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken from pay when you press the button in Payroll. Leave empty to turn it off.'**
+  String get visaInstalmentHelp;
+
+  /// No description provided for @visaInstalmentShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Instalment {amount} a month'**
+  String visaInstalmentShort(String amount);
+
+  /// No description provided for @visaReturnAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add money returned'**
+  String get visaReturnAdd;
+
+  /// No description provided for @payKindVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa instalment'**
+  String get payKindVisa;
+
+  /// No description provided for @salaryMonthsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Which month\'s salary'**
+  String get salaryMonthsHeading;
+
+  /// No description provided for @salaryMonthLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} unpaid'**
+  String salaryMonthLeft(String amount);
+
+  /// No description provided for @salaryOldestFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest first'**
+  String get salaryOldestFirst;
+
+  /// No description provided for @salaryNothingOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'No salary is unpaid for this worker. This amount goes on their advance.'**
+  String get salaryNothingOwed;
+
+  /// No description provided for @salaryExtraLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} more than is owed. It goes on the advance.'**
+  String salaryExtraLine(String amount);
+
+  /// No description provided for @salaryExtraTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} more than is owed'**
+  String salaryExtraTitle(String amount);
+
+  /// No description provided for @salaryExtraBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This extra is written as an advance to this worker, and comes back through a later salary.'**
+  String get salaryExtraBody;
+
+  /// No description provided for @salaryExtraConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Write as advance'**
+  String get salaryExtraConfirm;
+
+  /// No description provided for @salaryExtraNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid above salary owed'**
+  String get salaryExtraNote;
+
+  /// No description provided for @salaryPartsTooMuch.
+  ///
+  /// In en, this message translates to:
+  /// **'The months add up to more than the amount.'**
+  String get salaryPartsTooMuch;
+
+  /// No description provided for @salaryPartTooHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Above what is unpaid'**
+  String get salaryPartTooHigh;
+
+  /// No description provided for @salaryReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference (bank or cheque)'**
+  String get salaryReference;
+
+  /// No description provided for @salaryReceiver.
+  ///
+  /// In en, this message translates to:
+  /// **'Received by'**
+  String get salaryReceiver;
+
+  /// No description provided for @salaryReceiverHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty if the worker took it.'**
+  String get salaryReceiverHelp;
+
+  /// No description provided for @wagesDueBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 worker} other{{count} workers}} unpaid: {amount}'**
+  String wagesDueBanner(int count, String amount);
+
+  /// No description provided for @wagesDueOldest.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting longest: {month}'**
+  String wagesDueOldest(String month);
+
+  /// No description provided for @wagesDueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpaid salary'**
+  String get wagesDueTitle;
+
+  /// No description provided for @wagesDueWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers'**
+  String get wagesDueWorkers;
+
+  /// No description provided for @wagesDueTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpaid'**
+  String get wagesDueTotal;
+
+  /// No description provided for @wagesDueLate.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day late} other{{days} days late}}'**
+  String wagesDueLate(int days);
+
+  /// No description provided for @wagesDueInTime.
+  ///
+  /// In en, this message translates to:
+  /// **'due, not late yet'**
+  String get wagesDueInTime;
+
+  /// No description provided for @wagesDueNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Every finished month is paid.'**
+  String get wagesDueNone;
+
+  /// No description provided for @wagesDueNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A reminder only. Recording a late salary does not make it lawful, and this app is not a wage payment or WPS service.'**
+  String get wagesDueNote;
+
+  /// No description provided for @wageDueDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Days to pay salary after month end'**
+  String get wageDueDays;
+
+  /// No description provided for @wageDueDaysHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own figure, ask your accountant. Empty means late from the day after month end.'**
+  String get wageDueDaysHelp;
+
+  /// No description provided for @wageDueDaysError.
+  ///
+  /// In en, this message translates to:
+  /// **'A whole number from 0 to 90.'**
+  String get wageDueDaysError;
+
+  /// No description provided for @tabClosing.
+  ///
+  /// In en, this message translates to:
+  /// **'Close month'**
+  String get tabClosing;
+
+  /// No description provided for @closingWorkersLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left on workers\' accounts'**
+  String get closingWorkersLeft;
+
+  /// No description provided for @closingState.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get closingState;
+
+  /// No description provided for @closingOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get closingOpen;
+
+  /// No description provided for @closingClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get closingClosed;
+
+  /// No description provided for @closingNotOver.
+  ///
+  /// In en, this message translates to:
+  /// **'This month has not ended yet, so it cannot be closed.'**
+  String get closingNotOver;
+
+  /// No description provided for @closingIsClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'This month is closed. Editing or deleting one of its entries opens it again, with your note as the reason.'**
+  String get closingIsClosed;
+
+  /// No description provided for @closingLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 thing left. The month closes only when it is cleared.} other{{count} things left. The month closes only when all are cleared.}}'**
+  String closingLeft(int count);
+
+  /// No description provided for @closingUnpaidNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpaid wages do not hold a month up. They carry into the next month.'**
+  String get closingUnpaidNote;
+
+  /// No description provided for @closeBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Clear 1 thing first} other{Clear {count} things first}}'**
+  String closeBlocked(int count);
+
+  /// No description provided for @closingEnterHazri.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark attendance for this date'**
+  String get closingEnterHazri;
+
+  /// No description provided for @closingDayOff.
+  ///
+  /// In en, this message translates to:
+  /// **'No work for the rest'**
+  String get closingDayOff;
+
+  /// No description provided for @closingDayOffHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark attendance for those who worked. Then say the rest had no work, and this date clears.'**
+  String get closingDayOffHelp;
+
+  /// No description provided for @closingDayOffDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. This date is clear.'**
+  String get closingDayOffDone;
+
+  /// No description provided for @closingPostReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Post pay that is ready'**
+  String get closingPostReady;
+
+  /// No description provided for @closingPostHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay that cannot post stays here. Open a name to see why.'**
+  String get closingPostHelp;
+
+  /// No description provided for @closingSettle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settle against the oldest months'**
+  String get closingSettle;
+
+  /// No description provided for @closingSettleHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'These figures stay the same. The months are only written down.'**
+  String get closingSettleHelp;
+
+  /// No description provided for @closingSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'Months written down'**
+  String get closingSettled;
+
+  /// No description provided for @closingAllClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to fix. This month can be closed.'**
+  String get closingAllClear;
+
+  /// No description provided for @closingSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers\' accounts this month'**
+  String get closingSummary;
+
+  /// No description provided for @closingCuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Room, visa and deductions'**
+  String get closingCuts;
+
+  /// No description provided for @closingExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses'**
+  String get closingExpenses;
+
+  /// No description provided for @findingNoWorkerRate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers have attendance with no pay rate: {names}. Add a rate or remove the attendance.'**
+  String findingNoWorkerRate(int count, String names);
+
+  /// No description provided for @findingNotPosted.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers are not posted: {names}. Post them in Payroll.'**
+  String findingNotPosted(int count, String names);
+
+  /// No description provided for @findingNoCompanyRate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 company has no rate, so its bill is incomplete: {names}.} other{{count} companies have no rate, so their bill is incomplete: {names}.}}'**
+  String findingNoCompanyRate(int count, String names);
+
+  /// No description provided for @findingNoHazri.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers with no attendance: {names}.'**
+  String findingNoHazri(int count, String names);
+
+  /// No description provided for @findingOverlap.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers have shifts that overlap: {names}.'**
+  String findingOverlap(int count, String names);
+
+  /// No description provided for @findingNoMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workers have a payment with no month chosen, which settles the oldest month: {names}.'**
+  String findingNoMonth(int count, String names);
+
+  /// No description provided for @closeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Close {month}'**
+  String closeButton(String month);
+
+  /// No description provided for @closeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Close {month}?'**
+  String closeTitle(String month);
+
+  /// No description provided for @closeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance, expenses and payroll up to this month are closed. Editing or deleting one of their entries opens the month again, with your note as the reason.'**
+  String get closeBody;
+
+  /// No description provided for @closeConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeConfirm;
+
+  /// No description provided for @closeDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{month} is closed'**
+  String closeDone(String month);
+
+  /// No description provided for @closeNotReady.
+  ///
+  /// In en, this message translates to:
+  /// **'This month cannot close yet. Fix what is listed first.'**
+  String get closeNotReady;
+
+  /// No description provided for @reopenButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Open this month again'**
+  String get reopenButton;
+
+  /// No description provided for @reopenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {month} again'**
+  String reopenTitle(String month);
+
+  /// No description provided for @reopenHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it must change. The reason stays on record.'**
+  String get reopenHelp;
+
+  /// No description provided for @reopenReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why the month is being reopened'**
+  String get reopenReason;
+
+  /// No description provided for @reopenConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get reopenConfirm;
+
+  /// No description provided for @reopenDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{month} is open again'**
+  String reopenDone(String month);
+
+  /// No description provided for @reopenLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the later month first.'**
+  String get reopenLater;
+
+  /// No description provided for @periodLockedError.
+  ///
+  /// In en, this message translates to:
+  /// **'This month is closed. Enter the difference in an open month as an allowance or deduction, or open it again from Close month.'**
+  String get periodLockedError;
+
+  /// No description provided for @closedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This month is closed. Nothing new goes in, and editing an entry opens the month again.'**
+  String get closedNote;
+
+  /// No description provided for @reverseHelpClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'This month is closed, so the reversal is written with today\'s date and the closed month stays as it was.'**
+  String get reverseHelpClosed;
+
+  /// No description provided for @issueClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'This month is closed.'**
+  String get issueClosed;
+
+  /// No description provided for @applyVisaInstalments.
+  ///
+  /// In en, this message translates to:
+  /// **'Add visa instalments ({count})'**
+  String applyVisaInstalments(int count);
+
+  /// No description provided for @visaInstalmentsApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa instalment added for {count} workers'**
+  String visaInstalmentsApplied(int count);
+
+  /// No description provided for @issueVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'This is more than the visa money left.'**
+  String get issueVisa;
+
+  /// No description provided for @regRows.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 entry} other{{count} entries}}'**
+  String regRows(int count);
+
+  /// No description provided for @regAllDates.
+  ///
+  /// In en, this message translates to:
+  /// **'All dates'**
+  String get regAllDates;
+
+  /// No description provided for @regThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get regThisMonth;
+
+  /// No description provided for @regLastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Last month'**
+  String get regLastMonth;
+
+  /// No description provided for @regAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get regAll;
+
+  /// No description provided for @regClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get regClear;
+
+  /// No description provided for @regExport.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF, Excel or WhatsApp'**
+  String get regExport;
+
+  /// No description provided for @regEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing for these dates and filters.'**
+  String get regEmpty;
+
+  /// No description provided for @regTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get regTotal;
+
+  /// No description provided for @regPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {page} of {pages}'**
+  String regPage(String page, String pages);
+
+  /// No description provided for @regMade.
+  ///
+  /// In en, this message translates to:
+  /// **'Made on {when}'**
+  String regMade(String when);
+
+  /// No description provided for @regFilterDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates: {range}'**
+  String regFilterDates(String range);
+
+  /// No description provided for @regAmountsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Amounts in AED'**
+  String get regAmountsNote;
+
+  /// No description provided for @regCompanyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Wages here are pay marked on attendance. Monthly salaries are not in them.'**
+  String get regCompanyNote;
+
+  /// No description provided for @regPayrollNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted months only.'**
+  String get regPayrollNote;
+
+  /// No description provided for @exportMaking.
+  ///
+  /// In en, this message translates to:
+  /// **'Making the file...'**
+  String get exportMaking;
+
+  /// No description provided for @exportView.
+  ///
+  /// In en, this message translates to:
+  /// **'View or print'**
+  String get exportView;
+
+  /// No description provided for @exportOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get exportOpen;
+
+  /// No description provided for @exportSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save on phone'**
+  String get exportSave;
+
+  /// No description provided for @exportWhatsApp.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp'**
+  String get exportWhatsApp;
+
+  /// No description provided for @exportOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other apps'**
+  String get exportOther;
+
+  /// No description provided for @exportNoWhatsApp.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp not found. Choose another app.'**
+  String get exportNoWhatsApp;
+
+  /// No description provided for @exportNoApp.
+  ///
+  /// In en, this message translates to:
+  /// **'No app on this phone opens this file. Use Other apps to send it.'**
+  String get exportNoApp;
+
+  /// No description provided for @exportSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on the phone.'**
+  String get exportSaved;
+
+  /// No description provided for @exportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not make the file. Try again.'**
+  String get exportFailed;
+
+  /// No description provided for @filterStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance'**
+  String get filterStatus;
+
+  /// No description provided for @filterState.
+  ///
+  /// In en, this message translates to:
+  /// **'State'**
+  String get filterState;
+
+  /// No description provided for @filterKind.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get filterKind;
+
+  /// No description provided for @filterMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash or bank'**
+  String get filterMethod;
+
+  /// No description provided for @filterTrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade'**
+  String get filterTrade;
+
+  /// No description provided for @filterActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get filterActive;
+
+  /// No description provided for @filterOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get filterOwed;
+
+  /// No description provided for @stateActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get stateActive;
+
+  /// No description provided for @stateArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get stateArchived;
+
+  /// No description provided for @owedYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Still owed'**
+  String get owedYes;
+
+  /// No description provided for @owedNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleared'**
+  String get owedNo;
+
+  /// No description provided for @colDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get colDate;
+
+  /// No description provided for @colMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get colMonth;
+
+  /// No description provided for @colWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker'**
+  String get colWorker;
+
+  /// No description provided for @colCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get colCode;
+
+  /// No description provided for @colCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'Company'**
+  String get colCompany;
+
+  /// No description provided for @colSite.
+  ///
+  /// In en, this message translates to:
+  /// **'Site'**
+  String get colSite;
+
+  /// No description provided for @colGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Group'**
+  String get colGroup;
+
+  /// No description provided for @colIn.
+  ///
+  /// In en, this message translates to:
+  /// **'In'**
+  String get colIn;
+
+  /// No description provided for @colOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Out'**
+  String get colOut;
+
+  /// No description provided for @colBreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Break'**
+  String get colBreak;
+
+  /// No description provided for @colCompanyHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Company hours'**
+  String get colCompanyHours;
+
+  /// No description provided for @colWorkerHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker hours'**
+  String get colWorkerHours;
+
+  /// No description provided for @colOvertime.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime'**
+  String get colOvertime;
+
+  /// No description provided for @colCompanyRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Company rate'**
+  String get colCompanyRate;
+
+  /// No description provided for @colBill.
+  ///
+  /// In en, this message translates to:
+  /// **'Company bill'**
+  String get colBill;
+
+  /// No description provided for @colWorkerRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker rate'**
+  String get colWorkerRate;
+
+  /// No description provided for @colPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker pay'**
+  String get colPay;
+
+  /// No description provided for @colWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'What'**
+  String get colWhat;
+
+  /// No description provided for @colWho.
+  ///
+  /// In en, this message translates to:
+  /// **'Who'**
+  String get colWho;
+
+  /// No description provided for @colGiven.
+  ///
+  /// In en, this message translates to:
+  /// **'Given'**
+  String get colGiven;
+
+  /// No description provided for @colBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get colBack;
+
+  /// No description provided for @colLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get colLeft;
+
+  /// No description provided for @colPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get colPhone;
+
+  /// No description provided for @colJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined'**
+  String get colJoined;
+
+  /// No description provided for @colRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get colRoom;
+
+  /// No description provided for @colRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay rate'**
+  String get colRate;
+
+  /// No description provided for @colWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers'**
+  String get colWorkers;
+
+  /// No description provided for @colHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get colHours;
+
+  /// No description provided for @colWages.
+  ///
+  /// In en, this message translates to:
+  /// **'Wages'**
+  String get colWages;
+
+  /// No description provided for @colDifference.
+  ///
+  /// In en, this message translates to:
+  /// **'Difference'**
+  String get colDifference;
+
+  /// No description provided for @colPostedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted on'**
+  String get colPostedOn;
+
+  /// No description provided for @settingsColour.
+  ///
+  /// In en, this message translates to:
+  /// **'App colours'**
+  String get settingsColour;
+
+  /// No description provided for @paletteBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get paletteBlue;
+
+  /// No description provided for @paletteGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get paletteGreen;
+
+  /// No description provided for @paletteMaroon.
+  ///
+  /// In en, this message translates to:
+  /// **'Maroon'**
+  String get paletteMaroon;
+
+  /// No description provided for @issueMissingRate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} attendance rows have no worker rate. Add it under Rates.'**
+  String issueMissingRate(int count);
+
+  /// No description provided for @noClientRateNote.
+  ///
+  /// In en, this message translates to:
+  /// **'No company rate yet. The worker\'s pay still counts, and the bill appears once the rate is added.'**
+  String get noClientRateNote;
+
+  /// No description provided for @roomChargeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Room charge, {month}'**
+  String roomChargeTitle(String month);
+
+  /// No description provided for @roomChargeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Same amount for all (AED)'**
+  String get roomChargeAll;
+
+  /// No description provided for @roomChargeAllHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Used for anyone ticked with no amount of their own.'**
+  String get roomChargeAllHelp;
+
+  /// No description provided for @roomChargeSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Add for {count} workers'**
+  String roomChargeSave(int count);
+
+  /// No description provided for @roomChargeNeedAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Write the amount for {name}'**
+  String roomChargeNeedAmount(String name);
+
+  /// No description provided for @roomChargeNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone has this month\'s room charge already, or their month is posted.'**
+  String get roomChargeNone;
+
+  /// No description provided for @roomChargeByOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'Added by the owner'**
+  String get roomChargeByOwner;
+
+  /// No description provided for @issueNoRate.
+  ///
+  /// In en, this message translates to:
+  /// **'No rate'**
+  String get issueNoRate;
+
+  /// No description provided for @colEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned'**
+  String get colEarned;
+
+  /// No description provided for @colPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get colPaid;
+
+  /// No description provided for @colNoRate.
+  ///
+  /// In en, this message translates to:
+  /// **'No company rate'**
+  String get colNoRate;
+
+  /// No description provided for @colDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get colDays;
+
+  /// No description provided for @regBrought.
+  ///
+  /// In en, this message translates to:
+  /// **'Brought forward'**
+  String get regBrought;
+
+  /// No description provided for @regWorkerNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance = earned - advance - deductions, room and visa cut - paid. A monthly salary shows once its month is posted.'**
+  String get regWorkerNote;
+
+  /// No description provided for @regAttendanceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Difference = company bill - worker pay, for rows that have both. Monthly salaries are not in worker pay.'**
+  String get regAttendanceNote;
+
+  /// No description provided for @regOwedToWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance {amount}: to pay the worker'**
+  String regOwedToWorker(String amount);
+
+  /// No description provided for @regOwedByWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance {amount}: the worker owes this'**
+  String regOwedByWorker(String amount);
+
+  /// No description provided for @regSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance AED 0.00: settled'**
+  String get regSettled;
+
+  /// No description provided for @regOwedSplit.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay {pay}, less advance left {advance}'**
+  String regOwedSplit(String pay, String advance);
+
+  /// No description provided for @regRecoveryRow.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} taken from pay. The balance counted it when it was given.'**
+  String regRecoveryRow(String amount);
+
+  /// No description provided for @regByWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'By worker'**
+  String get regByWorker;
+
+  /// No description provided for @regBySite.
+  ///
+  /// In en, this message translates to:
+  /// **'By company and site'**
+  String get regBySite;
+
+  /// No description provided for @regAllWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'All workers'**
+  String get regAllWorkers;
+
+  /// No description provided for @regSummarySheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get regSummarySheet;
+
+  /// No description provided for @colBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get colBalance;
+
+  /// No description provided for @rateIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay: {name}'**
+  String rateIn(String name);
+
+  /// No description provided for @ownRateHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Their own pay is {rate}. Leave empty to keep it.'**
+  String ownRateHelp(String rate);
+
+  /// No description provided for @rateSetHere.
+  ///
+  /// In en, this message translates to:
+  /// **'In this group: {rate}'**
+  String rateSetHere(String rate);
+
+  /// No description provided for @rateOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'Own pay: {rate}'**
+  String rateOwn(String rate);
+
+  /// No description provided for @rateFromGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Group wage: {rate}'**
+  String rateFromGroup(String rate);
+
+  /// No description provided for @rateMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'No pay set. Set it here, or add a group wage.'**
+  String get rateMissing;
+
+  /// No description provided for @rateChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get rateChange;
+
+  /// No description provided for @regVisaRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa money {amount}. It comes off the balance as it is cut from pay.'**
+  String regVisaRow(String amount);
+
+  /// No description provided for @regVisaLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa left {amount}'**
+  String regVisaLeft(String amount);
+
+  /// No description provided for @exportSlowPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'This PDF is long and can take some minutes. Excel is much quicker.'**
+  String get exportSlowPdf;
+
+  /// No description provided for @exportTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many rows for one file. Pick fewer dates or add a filter.'**
+  String get exportTooLong;
+
+  /// No description provided for @payrollAdvanceLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance not yet cut'**
+  String get payrollAdvanceLeft;
+
+  /// No description provided for @payrollAfterAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance on the slip, after advance'**
+  String get payrollAfterAdvance;
+
+  /// No description provided for @slipTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary slip'**
+  String get slipTitle;
+
+  /// No description provided for @slipSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get slipSummary;
+
+  /// No description provided for @slipOpening.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance from before'**
+  String get slipOpening;
+
+  /// No description provided for @slipWork.
+  ///
+  /// In en, this message translates to:
+  /// **'This month\'s work'**
+  String get slipWork;
+
+  /// No description provided for @slipAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance taken'**
+  String get slipAdvance;
+
+  /// No description provided for @slipRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get slipRoom;
+
+  /// No description provided for @slipVisa.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa'**
+  String get slipVisa;
+
+  /// No description provided for @slipOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other deductions'**
+  String get slipOther;
+
+  /// No description provided for @slipPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get slipPaid;
+
+  /// No description provided for @slipOwedToYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance: to be paid to you'**
+  String get slipOwedToYou;
+
+  /// No description provided for @slipYouOwe.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance: you owe'**
+  String get slipYouOwe;
+
+  /// No description provided for @slipSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get slipSettled;
+
+  /// No description provided for @slipDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Day by day'**
+  String get slipDays;
+
+  /// No description provided for @slipMoney.
+  ///
+  /// In en, this message translates to:
+  /// **'Money taken'**
+  String get slipMoney;
+
+  /// No description provided for @slipNoWork.
+  ///
+  /// In en, this message translates to:
+  /// **'No work this month.'**
+  String get slipNoWork;
+
+  /// No description provided for @slipNoMoney.
+  ///
+  /// In en, this message translates to:
+  /// **'No money taken this month.'**
+  String get slipNoMoney;
+
+  /// No description provided for @slipDayCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days'**
+  String slipDayCount(int days);
+
+  /// No description provided for @slipVisaLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa left {amount}: comes out of later pay.'**
+  String slipVisaLeft(String amount);
+
+  /// No description provided for @slipNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This slip is an account, not proof of payment.'**
+  String get slipNote;
+
+  /// No description provided for @ownerSheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner\'s sheet'**
+  String get ownerSheet;
+
+  /// No description provided for @sheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner\'s salary sheet'**
+  String get sheetTitle;
+
+  /// No description provided for @sheetSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'The month in short'**
+  String get sheetSummary;
+
+  /// No description provided for @sheetBill.
+  ///
+  /// In en, this message translates to:
+  /// **'Company bills'**
+  String get sheetBill;
+
+  /// No description provided for @sheetWages.
+  ///
+  /// In en, this message translates to:
+  /// **'Wages for that work'**
+  String get sheetWages;
+
+  /// No description provided for @sheetSalaries.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly salaries, not split by company'**
+  String get sheetSalaries;
+
+  /// No description provided for @sheetAllowances.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowances'**
+  String get sheetAllowances;
+
+  /// No description provided for @sheetCuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Other deductions from pay'**
+  String get sheetCuts;
+
+  /// No description provided for @sheetRoomIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Room money in, from pay and cash'**
+  String get sheetRoomIn;
+
+  /// No description provided for @sheetRoomOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Room rent paid'**
+  String get sheetRoomOut;
+
+  /// No description provided for @sheetExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Other expenses'**
+  String get sheetExpenses;
+
+  /// No description provided for @sheetEstimate.
+  ///
+  /// In en, this message translates to:
+  /// **'Operating estimate, not audited'**
+  String get sheetEstimate;
+
+  /// No description provided for @sheetByCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'By company'**
+  String get sheetByCompany;
+
+  /// No description provided for @sheetDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Company wise'**
+  String get sheetDetail;
+
+  /// No description provided for @sheetWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers\' accounts'**
+  String get sheetWorkers;
+
+  /// No description provided for @sheetCompanyHead.
+  ///
+  /// In en, this message translates to:
+  /// **'{workers} workers, {sites} sites'**
+  String sheetCompanyHead(int workers, int sites);
+
+  /// No description provided for @sheetNote.
+  ///
+  /// In en, this message translates to:
+  /// **'An estimate from attendance, not audited accounts. A company on a monthly contract has its contract amount for the month on a line of its own, invoiced or not. A company with no rate shows no bill here, so its profit looks low. Advance and visa money are not expenses, because workers pay them back.'**
+  String get sheetNote;
+
+  /// No description provided for @sheetContract.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly contract amount'**
+  String get sheetContract;
+
+  /// No description provided for @colProfit.
+  ///
+  /// In en, this message translates to:
+  /// **'Profit'**
+  String get colProfit;
+
+  /// No description provided for @colVisaLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa left'**
+  String get colVisaLeft;
+
+  /// No description provided for @mainDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get mainDocuments;
+
+  /// No description provided for @docsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued papers'**
+  String get docsTab;
+
+  /// No description provided for @docsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No papers yet. A salary slip or receipt shows here once made.'**
+  String get docsEmpty;
+
+  /// No description provided for @docCopyOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as COPY'**
+  String get docCopyOption;
+
+  /// No description provided for @docCopyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The number stays the same. Without COPY you get the same file that was issued.'**
+  String get docCopyHelp;
+
+  /// No description provided for @docCopyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'COPY'**
+  String get docCopyLabel;
+
+  /// No description provided for @docPrint.
+  ///
+  /// In en, this message translates to:
+  /// **'Print'**
+  String get docPrint;
+
+  /// No description provided for @slipEarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Earnings'**
+  String get slipEarnings;
+
+  /// No description provided for @slipEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Total earned'**
+  String get slipEarned;
+
+  /// No description provided for @slipDeductions.
+  ///
+  /// In en, this message translates to:
+  /// **'Deductions'**
+  String get slipDeductions;
+
+  /// No description provided for @slipDeducted.
+  ///
+  /// In en, this message translates to:
+  /// **'Total deducted'**
+  String get slipDeducted;
+
+  /// No description provided for @slipAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get slipAccount;
+
+  /// No description provided for @slipNet.
+  ///
+  /// In en, this message translates to:
+  /// **'This month\'s net'**
+  String get slipNet;
+
+  /// No description provided for @slipWorkBasis.
+  ///
+  /// In en, this message translates to:
+  /// **'Work: {days} days, {hours} hours'**
+  String slipWorkBasis(int days, String hours);
+
+  /// No description provided for @receiptMake.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a receipt'**
+  String get receiptMake;
+
+  /// No description provided for @receiptPaymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary receipt'**
+  String get receiptPaymentTitle;
+
+  /// No description provided for @receiptAdvanceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance receipt'**
+  String get receiptAdvanceTitle;
+
+  /// No description provided for @receiptPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary paid'**
+  String get receiptPayment;
+
+  /// No description provided for @receiptAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance given'**
+  String get receiptAdvance;
+
+  /// No description provided for @receiptMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Method'**
+  String get receiptMethod;
+
+  /// No description provided for @receiptReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference'**
+  String get receiptReference;
+
+  /// No description provided for @receiptReceiver.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken by'**
+  String get receiptReceiver;
+
+  /// No description provided for @receiptMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary for {month}'**
+  String receiptMonth(String month);
+
+  /// No description provided for @receiptNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This receipt is the company\'s own record. It is not proof of a bank payment.'**
+  String get receiptNote;
+
+  /// No description provided for @receiptTakenBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature of the person receiving'**
+  String get receiptTakenBy;
+
+  /// No description provided for @receiptFromCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'For the company'**
+  String get receiptFromCompany;
+
+  /// No description provided for @lhTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Letterhead'**
+  String get lhTab;
+
+  /// No description provided for @lhOld.
+  ///
+  /// In en, this message translates to:
+  /// **'Papers already issued stay as they are. This applies to new papers only.'**
+  String get lhOld;
+
+  /// No description provided for @lhIdentity.
+  ///
+  /// In en, this message translates to:
+  /// **'Company details'**
+  String get lhIdentity;
+
+  /// No description provided for @lhIdentityNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Name, address, phone and TRN come from here.'**
+  String get lhIdentityNote;
+
+  /// No description provided for @lhPrinted.
+  ///
+  /// In en, this message translates to:
+  /// **'Print the company heading'**
+  String get lhPrinted;
+
+  /// No description provided for @lhPrintedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off if your paper is already printed. Then name, logo and footer do not print.'**
+  String get lhPrintedHelp;
+
+  /// No description provided for @lhBlankTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Blank at top (mm)'**
+  String get lhBlankTop;
+
+  /// No description provided for @lhBlankBottom.
+  ///
+  /// In en, this message translates to:
+  /// **'Blank at foot (mm)'**
+  String get lhBlankBottom;
+
+  /// No description provided for @lhBlankBad.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter 0 to 120 mm.'**
+  String get lhBlankBad;
+
+  /// No description provided for @lhLogo.
+  ///
+  /// In en, this message translates to:
+  /// **'Logo'**
+  String get lhLogo;
+
+  /// No description provided for @lhHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Header image'**
+  String get lhHeader;
+
+  /// No description provided for @lhFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Footer image'**
+  String get lhFooter;
+
+  /// No description provided for @lhSignature.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature'**
+  String get lhSignature;
+
+  /// No description provided for @lhStamp.
+  ///
+  /// In en, this message translates to:
+  /// **'Stamp'**
+  String get lhStamp;
+
+  /// No description provided for @lhUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose image'**
+  String get lhUpload;
+
+  /// No description provided for @lhChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get lhChange;
+
+  /// No description provided for @lhRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get lhRemove;
+
+  /// No description provided for @lhSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Width'**
+  String get lhSize;
+
+  /// No description provided for @lhLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get lhLeft;
+
+  /// No description provided for @lhCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Centre'**
+  String get lhCenter;
+
+  /// No description provided for @lhRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get lhRight;
+
+  /// No description provided for @lhCrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Trim edges'**
+  String get lhCrop;
+
+  /// No description provided for @lhCropTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Top'**
+  String get lhCropTop;
+
+  /// No description provided for @lhCropBottom.
+  ///
+  /// In en, this message translates to:
+  /// **'Bottom'**
+  String get lhCropBottom;
+
+  /// No description provided for @lhCropLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get lhCropLeft;
+
+  /// No description provided for @lhCropRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get lhCropRight;
+
+  /// No description provided for @lhShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show on papers'**
+  String get lhShow;
+
+  /// No description provided for @lhResolution.
+  ///
+  /// In en, this message translates to:
+  /// **'{width} x {height} pixels'**
+  String lhResolution(int width, int height);
+
+  /// No description provided for @lhLowRes.
+  ///
+  /// In en, this message translates to:
+  /// **'Will look soft in print ({dpi} DPI). Use a bigger image or a smaller width.'**
+  String lhLowRes(int dpi);
+
+  /// No description provided for @lhBadType.
+  ///
+  /// In en, this message translates to:
+  /// **'Only PNG or JPEG images work.'**
+  String get lhBadType;
+
+  /// No description provided for @imagePickFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The picture could not be opened. Try again.'**
+  String get imagePickFailed;
+
+  /// No description provided for @lhTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'The image is over 5 MB.'**
+  String get lhTooLarge;
+
+  /// No description provided for @lhSample.
+  ///
+  /// In en, this message translates to:
+  /// **'See a sample'**
+  String get lhSample;
+
+  /// No description provided for @mainBilling.
+  ///
+  /// In en, this message translates to:
+  /// **'Billing'**
+  String get mainBilling;
+
+  /// No description provided for @tsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Timesheets'**
+  String get tsTab;
+
+  /// No description provided for @tsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Timesheet'**
+  String get tsTitle;
+
+  /// No description provided for @tsNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New timesheet'**
+  String get tsNew;
+
+  /// No description provided for @tsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No timesheets yet. Pick a company and dates to make one.'**
+  String get tsEmpty;
+
+  /// No description provided for @tsAllSites.
+  ///
+  /// In en, this message translates to:
+  /// **'All sites'**
+  String get tsAllSites;
+
+  /// No description provided for @tsFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get tsFrom;
+
+  /// No description provided for @tsTo.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get tsTo;
+
+  /// No description provided for @tsBadDates.
+  ///
+  /// In en, this message translates to:
+  /// **'The end date is before the start date.'**
+  String get tsBadDates;
+
+  /// No description provided for @tsWillHold.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row goes on it} other{{count} rows go on it}}'**
+  String tsWillHold(int count);
+
+  /// No description provided for @tsNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in these dates can go on a timesheet.'**
+  String get tsNothing;
+
+  /// No description provided for @tsLeftNoRate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row left out: no company rate. Add it in Rates.} other{{count} rows left out: no company rate. Add it in Rates.}}'**
+  String tsLeftNoRate(int count);
+
+  /// No description provided for @tsLeftNoWage.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row left out: no worker rate yet.} other{{count} rows left out: no worker rate yet.}}'**
+  String tsLeftNoWage(int count);
+
+  /// No description provided for @tsLeftOther.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row left out: already on another timesheet.} other{{count} rows left out: already on another timesheet.}}'**
+  String tsLeftOther(int count);
+
+  /// No description provided for @tsCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Make draft'**
+  String get tsCreate;
+
+  /// No description provided for @tsDraftNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A draft follows the attendance until you approve it.'**
+  String get tsDraftNote;
+
+  /// No description provided for @tsStatusDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get tsStatusDraft;
+
+  /// No description provided for @tsStatusApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get tsStatusApproved;
+
+  /// No description provided for @tsStatusShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to the company'**
+  String get tsStatusShared;
+
+  /// No description provided for @tsStatusAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted, locked'**
+  String get tsStatusAccepted;
+
+  /// No description provided for @tsStatusDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'Disputed by the company'**
+  String get tsStatusDisputed;
+
+  /// No description provided for @tsNoteApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Make the paper and send it. Then say you sent it.'**
+  String get tsNoteApproved;
+
+  /// No description provided for @tsNoteShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the company. This never holds up a wage.'**
+  String get tsNoteShared;
+
+  /// No description provided for @tsNoteDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the hours with the company. Worker pay stays as it is until you correct the attendance.'**
+  String get tsNoteDisputed;
+
+  /// No description provided for @tsRevisionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Revision {number}'**
+  String tsRevisionLabel(int number);
+
+  /// No description provided for @tsViewDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily summary'**
+  String get tsViewDaily;
+
+  /// No description provided for @tsViewWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker detail'**
+  String get tsViewWorkers;
+
+  /// No description provided for @tsPricedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'with rates'**
+  String get tsPricedLabel;
+
+  /// No description provided for @tsHoursOnlyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'hours only'**
+  String get tsHoursOnlyLabel;
+
+  /// No description provided for @tsUniqueWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Unique workers'**
+  String get tsUniqueWorkers;
+
+  /// No description provided for @tsWorkerDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker-days'**
+  String get tsWorkerDays;
+
+  /// No description provided for @tsShiftsWorked.
+  ///
+  /// In en, this message translates to:
+  /// **'Shifts worked'**
+  String get tsShiftsWorked;
+
+  /// No description provided for @tsHoursBilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Billable hours'**
+  String get tsHoursBilled;
+
+  /// No description provided for @tsDaysBilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Billable days'**
+  String get tsDaysBilled;
+
+  /// No description provided for @tsShiftsBilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Billable shifts'**
+  String get tsShiftsBilled;
+
+  /// No description provided for @tsAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get tsAmount;
+
+  /// No description provided for @tsTotalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Timesheet total'**
+  String get tsTotalAmount;
+
+  /// No description provided for @colPersons.
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get colPersons;
+
+  /// No description provided for @colShifts.
+  ///
+  /// In en, this message translates to:
+  /// **'Shifts'**
+  String get colShifts;
+
+  /// No description provided for @colClock.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock hours'**
+  String get colClock;
+
+  /// No description provided for @colTrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade'**
+  String get colTrade;
+
+  /// No description provided for @colBillable.
+  ///
+  /// In en, this message translates to:
+  /// **'Billable'**
+  String get colBillable;
+
+  /// No description provided for @tsHoursValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h'**
+  String tsHoursValue(String hours);
+
+  /// No description provided for @tsDaysValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days'**
+  String tsDaysValue(String days);
+
+  /// No description provided for @tsShiftsValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{shifts} shifts'**
+  String tsShiftsValue(String shifts);
+
+  /// No description provided for @tsMonthlyRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get tsMonthlyRow;
+
+  /// No description provided for @tsNotCharged.
+  ///
+  /// In en, this message translates to:
+  /// **'Not charged'**
+  String get tsNotCharged;
+
+  /// No description provided for @tsMonthlyLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{basis}, {rate}: {from} to {to}, {count} people. The contract amount goes on the invoice by the month, not from these rows.'**
+  String tsMonthlyLine(
+    String basis,
+    String rate,
+    String from,
+    String to,
+    int count,
+  );
+
+  /// No description provided for @tsMonthlyLinePlain.
+  ///
+  /// In en, this message translates to:
+  /// **'{basis}: {from} to {to}, {count} people.'**
+  String tsMonthlyLinePlain(String basis, String from, String to, int count);
+
+  /// No description provided for @tsAgreedHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Agreed with the company'**
+  String get tsAgreedHeading;
+
+  /// No description provided for @tsRevisedBecause.
+  ///
+  /// In en, this message translates to:
+  /// **'Revised: {reason}'**
+  String tsRevisedBecause(String reason);
+
+  /// No description provided for @tsNotInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a timesheet, not an invoice.'**
+  String get tsNotInvoice;
+
+  /// No description provided for @tsClientSign.
+  ///
+  /// In en, this message translates to:
+  /// **'Acknowledged for {client}'**
+  String tsClientSign(String client);
+
+  /// No description provided for @tsApprove.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get tsApprove;
+
+  /// No description provided for @tsApproveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Its attendance freezes and it gets a number. A later change needs a new revision.'**
+  String get tsApproveBody;
+
+  /// No description provided for @tsDeleteDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Throw away draft'**
+  String get tsDeleteDraft;
+
+  /// No description provided for @tsDeleteDraftBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The draft goes, with any hours agreed in it. Attendance does not change.'**
+  String get tsDeleteDraftBody;
+
+  /// No description provided for @tsPaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Make the paper'**
+  String get tsPaper;
+
+  /// No description provided for @tsPaperPriced.
+  ///
+  /// In en, this message translates to:
+  /// **'Show rate and amount'**
+  String get tsPaperPriced;
+
+  /// No description provided for @tsPaperPricedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Off, the company sees hours only. A worker\'s wage never prints.'**
+  String get tsPaperPricedHelp;
+
+  /// No description provided for @tsContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get tsContinue;
+
+  /// No description provided for @tsShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to the company'**
+  String get tsShared;
+
+  /// No description provided for @tsAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Company accepted'**
+  String get tsAccepted;
+
+  /// No description provided for @tsDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'Company disputes it'**
+  String get tsDisputed;
+
+  /// No description provided for @tsRespondDate.
+  ///
+  /// In en, this message translates to:
+  /// **'On what date'**
+  String get tsRespondDate;
+
+  /// No description provided for @tsRespondNote.
+  ///
+  /// In en, this message translates to:
+  /// **'What they said (optional)'**
+  String get tsRespondNote;
+
+  /// No description provided for @tsEvidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo (optional)'**
+  String get tsEvidence;
+
+  /// No description provided for @tsEvidenceAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo added'**
+  String get tsEvidenceAdded;
+
+  /// No description provided for @tsEvidenceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A photo of what came back. It is not a verified digital signature.'**
+  String get tsEvidenceNote;
+
+  /// No description provided for @tsNewRevision.
+  ///
+  /// In en, this message translates to:
+  /// **'New revision'**
+  String get tsNewRevision;
+
+  /// No description provided for @tsRevisionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The old one stays exactly as it was. What changed?'**
+  String get tsRevisionHelp;
+
+  /// No description provided for @tsRevisionReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why a new revision'**
+  String get tsRevisionReason;
+
+  /// No description provided for @tsRevisionConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get tsRevisionConfirm;
+
+  /// No description provided for @tsChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row of attendance was corrected after this. A new revision takes it in.} other{{count} rows of attendance were corrected after this. A new revision takes them in.}}'**
+  String tsChanged(int count);
+
+  /// No description provided for @tsBillingChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row differs from what an invoice charged, by {amount}. The invoice has not changed.} other{{count} rows differ from what an invoice charged, by {amount}. The invoice has not changed.}}'**
+  String tsBillingChanged(int count, String amount);
+
+  /// No description provided for @tsRevisionsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Revisions'**
+  String get tsRevisionsHeading;
+
+  /// No description provided for @tsOldRevisionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This is an older revision, kept exactly as it was.'**
+  String get tsOldRevisionNote;
+
+  /// No description provided for @tsAdjustTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What the company agreed'**
+  String get tsAdjustTitle;
+
+  /// No description provided for @tsAdjustHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'This changes the company\'s paper. With fewer hours the app then asks whether the worker\'s attendance changes too.'**
+  String get tsAdjustHelp;
+
+  /// No description provided for @tsAdjustHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Billable hours'**
+  String get tsAdjustHours;
+
+  /// No description provided for @tsAdjustMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get tsAdjustMinutes;
+
+  /// No description provided for @tsAdjustAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount (AED)'**
+  String get tsAdjustAmount;
+
+  /// No description provided for @tsAdjustReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why'**
+  String get tsAdjustReason;
+
+  /// No description provided for @tsAdjustClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to the attendance figure'**
+  String get tsAdjustClear;
+
+  /// No description provided for @tsAdjustSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get tsAdjustSave;
+
+  /// No description provided for @tsNotTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Not charged'**
+  String get tsNotTaken;
+
+  /// No description provided for @tsAgreedRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Agreed: {reason}'**
+  String tsAgreedRow(String reason);
+
+  /// No description provided for @tsWrongStep.
+  ///
+  /// In en, this message translates to:
+  /// **'This has already moved on. Look again.'**
+  String get tsWrongStep;
+
+  /// No description provided for @tsBasisOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'A monthly row has no amount of its own.'**
+  String get tsBasisOnly;
+
+  /// No description provided for @tsPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 person} other{{count} people}}'**
+  String tsPeople(int count);
+
+  /// No description provided for @invTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoices'**
+  String get invTab;
+
+  /// No description provided for @invNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New invoice'**
+  String get invNew;
+
+  /// No description provided for @invEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No invoices yet. Approve a timesheet, then make an invoice from it.'**
+  String get invEmpty;
+
+  /// No description provided for @invCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Make draft'**
+  String get invCreate;
+
+  /// No description provided for @invNewHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The draft takes every approved timesheet of this company in these dates that still has work to bill. You can leave one out next.'**
+  String get invNewHelp;
+
+  /// No description provided for @invNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in these dates is left to invoice. Either no approved timesheet has work here still to bill, or it is already on an invoice, such as a monthly contract amount already charged for that month.'**
+  String get invNothing;
+
+  /// No description provided for @invNoCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in your company\'s legal name in Apni company first.'**
+  String get invNoCompany;
+
+  /// No description provided for @invWrongStep.
+  ///
+  /// In en, this message translates to:
+  /// **'This invoice has moved on. Look at it again.'**
+  String get invWrongStep;
+
+  /// No description provided for @invDraftLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get invDraftLabel;
+
+  /// No description provided for @invDraftTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice draft'**
+  String get invDraftTitle;
+
+  /// No description provided for @invStatusIssued.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued'**
+  String get invStatusIssued;
+
+  /// No description provided for @invStatusCredited.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken back'**
+  String get invStatusCredited;
+
+  /// No description provided for @invCreditNoteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit note'**
+  String get invCreditNoteLabel;
+
+  /// No description provided for @invDue.
+  ///
+  /// In en, this message translates to:
+  /// **'due {date}'**
+  String invDue(String date);
+
+  /// No description provided for @invTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get invTotal;
+
+  /// No description provided for @invVat.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT'**
+  String get invVat;
+
+  /// No description provided for @invNet.
+  ///
+  /// In en, this message translates to:
+  /// **'Before VAT'**
+  String get invNet;
+
+  /// No description provided for @invVatAt.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT {rate}'**
+  String invVatAt(String rate);
+
+  /// No description provided for @invNoteDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft. It has no number until you issue it, and reads its timesheets as they stand.'**
+  String get invNoteDraft;
+
+  /// No description provided for @invNoteIssued.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued on {date}. Due on {due}.'**
+  String invNoteIssued(String date, String due);
+
+  /// No description provided for @invNoteCredited.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken back whole by credit note {number}. Its work can go on a new invoice.'**
+  String invNoteCredited(String number);
+
+  /// No description provided for @invNoteCreditNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes back invoice {number}: {reason}'**
+  String invNoteCreditNote(String number, String reason);
+
+  /// No description provided for @invNotRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Your company is not VAT registered on today\'s date, so no VAT is charged and the paper says Invoice, not Tax Invoice. Change it in Apni company.'**
+  String get invNotRegistered;
+
+  /// No description provided for @invNeedsTrn.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your TRN in Apni company before issuing a tax invoice.'**
+  String get invNeedsTrn;
+
+  /// No description provided for @invIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue'**
+  String get invIssue;
+
+  /// No description provided for @invIssueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It gets the next number and today\'s date. After this it can\'t be changed, only taken back whole with a credit note.'**
+  String get invIssueBody;
+
+  /// No description provided for @invPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'See draft'**
+  String get invPreview;
+
+  /// No description provided for @invDeleteDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete draft'**
+  String get invDeleteDraft;
+
+  /// No description provided for @invDeleteDraftBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The draft goes, with its discounts and changed contract amounts. The timesheets don\'t change.'**
+  String get invDeleteDraftBody;
+
+  /// No description provided for @invPaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Paper'**
+  String get invPaper;
+
+  /// No description provided for @invShareBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Send with timesheet'**
+  String get invShareBoth;
+
+  /// No description provided for @invShareBothBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice {number} and each timesheet it charges go together in one message. You pick who gets it.'**
+  String invShareBothBody(String number);
+
+  /// No description provided for @invCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit note'**
+  String get invCredit;
+
+  /// No description provided for @invCreditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit note'**
+  String get invCreditTitle;
+
+  /// No description provided for @invCreditReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it is taken back'**
+  String get invCreditReason;
+
+  /// No description provided for @invCreditHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A credit note dated today takes back every line and its VAT. The invoice stays on record, and its work can go on a new invoice.'**
+  String get invCreditHelp;
+
+  /// No description provided for @invCreditConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Make credit note'**
+  String get invCreditConfirm;
+
+  /// No description provided for @invSettingsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get invSettingsHeading;
+
+  /// No description provided for @invPo.
+  ///
+  /// In en, this message translates to:
+  /// **'PO / reference'**
+  String get invPo;
+
+  /// No description provided for @invDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get invDueDate;
+
+  /// No description provided for @invDueAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Set on issue, from the company\'s days'**
+  String get invDueAuto;
+
+  /// No description provided for @invVatTreatment.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT treatment'**
+  String get invVatTreatment;
+
+  /// No description provided for @invCatStandard.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard rate, 5%'**
+  String get invCatStandard;
+
+  /// No description provided for @invCatZero.
+  ///
+  /// In en, this message translates to:
+  /// **'Zero-rated'**
+  String get invCatZero;
+
+  /// No description provided for @invCatExempt.
+  ///
+  /// In en, this message translates to:
+  /// **'Exempt'**
+  String get invCatExempt;
+
+  /// No description provided for @invCatOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Outside the scope of VAT'**
+  String get invCatOut;
+
+  /// No description provided for @invCatHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A tax adviser should confirm any treatment other than standard.'**
+  String get invCatHelp;
+
+  /// No description provided for @invInclusive.
+  ///
+  /// In en, this message translates to:
+  /// **'Rates include VAT'**
+  String get invInclusive;
+
+  /// No description provided for @invInclusiveHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Off: VAT is added on top.'**
+  String get invInclusiveHelp;
+
+  /// No description provided for @invTimesheetsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Timesheets'**
+  String get invTimesheetsHeading;
+
+  /// No description provided for @invSourceRows.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row to bill} other{{count} rows to bill}}'**
+  String invSourceRows(int count);
+
+  /// No description provided for @invSourceDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row waits: the company disputed it} other{{count} rows wait: the company disputed them}}'**
+  String invSourceDisputed(int count);
+
+  /// No description provided for @invSourceChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row waits: its attendance changed, so make a new revision} other{{count} rows wait: their attendance changed, so make a new revision}}'**
+  String invSourceChanged(int count);
+
+  /// No description provided for @invLinesHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Lines'**
+  String get invLinesHeading;
+
+  /// No description provided for @invNoLines.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing ticked can be invoiced.'**
+  String get invNoLines;
+
+  /// No description provided for @invLineSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change this line'**
+  String get invLineSheetTitle;
+
+  /// No description provided for @invDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount (AED)'**
+  String get invDiscount;
+
+  /// No description provided for @invFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Contract amount for these dates (AED)'**
+  String get invFee;
+
+  /// No description provided for @invFeeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts at what is left of the month\'s contract amount. Change it if the contract ran for only part of the month. What you leave off can go on a later invoice for the same month.'**
+  String get invFeeHelp;
+
+  /// No description provided for @invFeeChargedBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} of this month is already on {invoices}, so this line starts at the rest.'**
+  String invFeeChargedBefore(String amount, String invoices);
+
+  /// No description provided for @invDiscountTooBig.
+  ///
+  /// In en, this message translates to:
+  /// **'A discount can\'t be more than its line.'**
+  String get invDiscountTooBig;
+
+  /// No description provided for @findingNotInvoiced.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 company has work no invoice charges yet: {names}. Make its invoice in Billing.} other{{count} companies have work no invoice charges yet: {names}. Make their invoices in Billing.}}'**
+  String findingNotInvoiced(int count, String names);
+
+  /// No description provided for @regInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice register'**
+  String get regInvoices;
+
+  /// No description provided for @regInvoiceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'One row for each line of each invoice and credit note, as issued. Credit notes count against. This is a record, not a UAE structured e-invoice.'**
+  String get regInvoiceNote;
+
+  /// No description provided for @colNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Number'**
+  String get colNumber;
+
+  /// No description provided for @colKind.
+  ///
+  /// In en, this message translates to:
+  /// **'Kind'**
+  String get colKind;
+
+  /// No description provided for @colStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get colStatus;
+
+  /// No description provided for @colDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get colDescription;
+
+  /// No description provided for @colQty.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty'**
+  String get colQty;
+
+  /// No description provided for @colUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get colUnit;
+
+  /// No description provided for @colUnitPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit price'**
+  String get colUnitPrice;
+
+  /// No description provided for @colVatRate.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT %'**
+  String get colVatRate;
+
+  /// No description provided for @invPTaxInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax Invoice'**
+  String get invPTaxInvoice;
+
+  /// No description provided for @invPInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice'**
+  String get invPInvoice;
+
+  /// No description provided for @invPTaxCreditNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax Credit Note'**
+  String get invPTaxCreditNote;
+
+  /// No description provided for @invPCreditNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit Note'**
+  String get invPCreditNote;
+
+  /// No description provided for @invPBillTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Bill to'**
+  String get invPBillTo;
+
+  /// No description provided for @invPCreditTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit to'**
+  String get invPCreditTo;
+
+  /// No description provided for @invPSupplierTrn.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplier TRN'**
+  String get invPSupplierTrn;
+
+  /// No description provided for @invPIssueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of issue'**
+  String get invPIssueDate;
+
+  /// No description provided for @invPSupplyPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Period of supply'**
+  String get invPSupplyPeriod;
+
+  /// No description provided for @invPAgainst.
+  ///
+  /// In en, this message translates to:
+  /// **'Against invoice'**
+  String get invPAgainst;
+
+  /// No description provided for @invPDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get invPDueDate;
+
+  /// No description provided for @invPReference.
+  ///
+  /// In en, this message translates to:
+  /// **'PO / reference'**
+  String get invPReference;
+
+  /// No description provided for @invPColNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No.'**
+  String get invPColNo;
+
+  /// No description provided for @invPColDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get invPColDescription;
+
+  /// No description provided for @invPColQty.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty'**
+  String get invPColQty;
+
+  /// No description provided for @invPColUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get invPColUnit;
+
+  /// No description provided for @invPColRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit price'**
+  String get invPColRate;
+
+  /// No description provided for @invPColDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount'**
+  String get invPColDiscount;
+
+  /// No description provided for @invPColNet.
+  ///
+  /// In en, this message translates to:
+  /// **'Taxable amount'**
+  String get invPColNet;
+
+  /// No description provided for @invPColAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get invPColAmount;
+
+  /// No description provided for @invPColVatRate.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT %'**
+  String get invPColVatRate;
+
+  /// No description provided for @invPColVat.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT'**
+  String get invPColVat;
+
+  /// No description provided for @invPColTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get invPColTotal;
+
+  /// No description provided for @invPUnitHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Hour'**
+  String get invPUnitHour;
+
+  /// No description provided for @invPUnitDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get invPUnitDay;
+
+  /// No description provided for @invPUnitShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift'**
+  String get invPUnitShift;
+
+  /// No description provided for @invPUnitMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get invPUnitMonth;
+
+  /// No description provided for @invPUnitWorkerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker-month'**
+  String get invPUnitWorkerMonth;
+
+  /// No description provided for @invPLineLabour.
+  ///
+  /// In en, this message translates to:
+  /// **'Manpower supply'**
+  String get invPLineLabour;
+
+  /// A monthly contract line on an invoice names the month its contract amount covers (TS-08).
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly contract amount for {month}'**
+  String invPLineFee(String month);
+
+  /// No description provided for @invPTotalNet.
+  ///
+  /// In en, this message translates to:
+  /// **'Total before VAT'**
+  String get invPTotalNet;
+
+  /// No description provided for @invPTotalVat.
+  ///
+  /// In en, this message translates to:
+  /// **'VAT at {rate}'**
+  String invPTotalVat(String rate);
+
+  /// No description provided for @invPTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total due'**
+  String get invPTotal;
+
+  /// No description provided for @invPCredited.
+  ///
+  /// In en, this message translates to:
+  /// **'Total credited'**
+  String get invPCredited;
+
+  /// No description provided for @invPZeroRated.
+  ///
+  /// In en, this message translates to:
+  /// **'Zero-rated supply.'**
+  String get invPZeroRated;
+
+  /// No description provided for @invPExempt.
+  ///
+  /// In en, this message translates to:
+  /// **'Exempt supply.'**
+  String get invPExempt;
+
+  /// No description provided for @invPOutOfScope.
+  ///
+  /// In en, this message translates to:
+  /// **'Outside the scope of UAE VAT.'**
+  String get invPOutOfScope;
+
+  /// No description provided for @invPReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason: {reason}'**
+  String invPReason(String reason);
+
+  /// No description provided for @invPTimesheets.
+  ///
+  /// In en, this message translates to:
+  /// **'Supported by timesheet {numbers}, which is a separate paper.'**
+  String invPTimesheets(String numbers);
+
+  /// No description provided for @invPInclusive.
+  ///
+  /// In en, this message translates to:
+  /// **'The rates included VAT, shown here apart.'**
+  String get invPInclusive;
+
+  /// No description provided for @invPNotEInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'This PDF is not a UAE structured e-invoice.'**
+  String get invPNotEInvoice;
+
+  /// No description provided for @invPBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank details'**
+  String get invPBank;
+
+  /// No description provided for @invPDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'DRAFT'**
+  String get invPDraft;
+
+  /// No description provided for @invPDraftNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Not issued and has no number'**
+  String get invPDraftNote;
+
+  /// No description provided for @invLessDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount {amount}'**
+  String invLessDiscount(String amount);
+
+  /// No description provided for @invOpenCreditNote.
+  ///
+  /// In en, this message translates to:
+  /// **'See credit note {number}'**
+  String invOpenCreditNote(String number);
+
+  /// No description provided for @invOpenInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'See invoice {number}'**
+  String invOpenInvoice(String number);
+
+  /// No description provided for @invItemQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} × {price}'**
+  String invItemQuantity(int count, String price);
+
+  /// No description provided for @invAddLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a line'**
+  String get invAddLine;
+
+  /// No description provided for @invItemTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Line'**
+  String get invItemTitle;
+
+  /// No description provided for @invItemHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For something no timesheet holds, such as transport. VAT goes on it at this invoice\'s rate.'**
+  String get invItemHelp;
+
+  /// No description provided for @invItemDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'What it is for'**
+  String get invItemDescription;
+
+  /// No description provided for @invItemCount.
+  ///
+  /// In en, this message translates to:
+  /// **'How many'**
+  String get invItemCount;
+
+  /// No description provided for @invItemCountInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a whole number, 1 or more'**
+  String get invItemCountInvalid;
+
+  /// No description provided for @invItemPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price of one (AED)'**
+  String get invItemPrice;
+
+  /// No description provided for @invItemRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this line'**
+  String get invItemRemove;
+
+  /// No description provided for @invReissue.
+  ///
+  /// In en, this message translates to:
+  /// **'New invoice for these dates'**
+  String get invReissue;
+
+  /// No description provided for @invChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 row changed} other{{count} rows changed}} after this invoice was issued, by {amount} in all. Edit invoice makes the credit note and a new draft in one step. If the timesheet shows changed attendance, approve its new revision first.'**
+  String invChanged(int count, String amount);
+
+  /// No description provided for @invCreditedSoFar.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Credit note} other{{count} credit notes}}'**
+  String invCreditedSoFar(int count);
+
+  /// No description provided for @invLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left after credit notes'**
+  String get invLeft;
+
+  /// No description provided for @invCreditWhole.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole invoice'**
+  String get invCreditWhole;
+
+  /// No description provided for @invCreditPart.
+  ///
+  /// In en, this message translates to:
+  /// **'An amount'**
+  String get invCreditPart;
+
+  /// No description provided for @invCreditRestHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes back the {amount} that earlier credit notes left. Its work can then go on a new invoice.'**
+  String invCreditRestHelp(String amount);
+
+  /// No description provided for @invCreditPartHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes back part of the invoice, up to {amount}, such as a rate agreed lower later. The work stays charged on this invoice.'**
+  String invCreditPartHelp(String amount);
+
+  /// No description provided for @invCreditAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount (AED)'**
+  String get invCreditAmount;
+
+  /// No description provided for @invCreditAmountBeforeVat.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount before VAT (AED)'**
+  String get invCreditAmountBeforeVat;
+
+  /// No description provided for @invCreditAmountWithVat.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount with VAT (AED)'**
+  String get invCreditAmountWithVat;
+
+  /// No description provided for @invCreditTooBig.
+  ///
+  /// In en, this message translates to:
+  /// **'More than is left of this invoice: {amount} with VAT.'**
+  String invCreditTooBig(String amount);
+
+  /// No description provided for @invCreditNothingLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'There is not that much left of this invoice to take back.'**
+  String get invCreditNothingLeft;
+
+  /// No description provided for @findingChangedAfterInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 timesheet has attendance that changed after it was invoiced: {names}. Approve its new revision, then put the invoice right.} other{{count} timesheets have attendance that changed after it was invoiced: {names}. Approve their new revisions, then put the invoices right.}}'**
+  String findingChangedAfterInvoice(int count, String names);
+
+  /// No description provided for @findingInvoiceOutOfDate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 invoice charges other figures than its timesheet now says: {names}. Make a credit note for it, then a new invoice.} other{{count} invoices charge other figures than their timesheets now say: {names}. Make a credit note for each, then a new invoice.}}'**
+  String findingInvoiceOutOfDate(int count, String names);
+
+  /// No description provided for @invNotePartCredited.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit notes took back {amount}. {left} is left.'**
+  String invNotePartCredited(String amount, String left);
+
+  /// No description provided for @invRecordReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Record a receipt'**
+  String get invRecordReceipt;
+
+  /// No description provided for @invUseCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Use company credit, {amount}'**
+  String invUseCredit(String amount);
+
+  /// No description provided for @invCloseLost.
+  ///
+  /// In en, this message translates to:
+  /// **'Close the rest as lost'**
+  String get invCloseLost;
+
+  /// No description provided for @invCloseLostTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Close {amount} as lost?'**
+  String invCloseLostTitle(String amount);
+
+  /// No description provided for @invCloseLostHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For money that will not come. The month is no longer held up, and you can open it again. Ask your accountant about the VAT.'**
+  String get invCloseLostHelp;
+
+  /// No description provided for @invUndoLost.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the closed amount again'**
+  String get invUndoLost;
+
+  /// No description provided for @invUndoLostTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the closed amount again?'**
+  String get invUndoLostTitle;
+
+  /// No description provided for @invUndoLostHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'It is owed again. Past its due date, it stops closing the month until paid.'**
+  String get invUndoLostHelp;
+
+  /// No description provided for @invNoteOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue since {due}: {amount} still to pay. The month cannot close until it is paid, or closed as lost with a reason.'**
+  String invNoteOverdue(String due, String amount);
+
+  /// No description provided for @invNotePartPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'{received} received, {left} still to pay.'**
+  String invNotePartPaid(String received, String left);
+
+  /// No description provided for @invNotePaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid in full.'**
+  String get invNotePaid;
+
+  /// No description provided for @invNoteClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} closed as lost. Nothing is left to pay.'**
+  String invNoteClosed(String amount);
+
+  /// No description provided for @invNoteReturned.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} received on this invoice went back as the company\'s credit after its credit note. A new invoice can use it.'**
+  String invNoteReturned(String amount);
+
+  /// No description provided for @invReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get invReceived;
+
+  /// No description provided for @invLost.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed as lost'**
+  String get invLost;
+
+  /// No description provided for @invToPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Still to pay'**
+  String get invToPay;
+
+  /// No description provided for @invReceiptsHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipts'**
+  String get invReceiptsHeading;
+
+  /// No description provided for @invStatusPartlyPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Partly paid'**
+  String get invStatusPartlyPaid;
+
+  /// No description provided for @invStatusOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get invStatusOverdue;
+
+  /// No description provided for @invStatusPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get invStatusPaid;
+
+  /// No description provided for @invStatusClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed, part lost'**
+  String get invStatusClosed;
+
+  /// No description provided for @invToPayShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} to pay'**
+  String invToPayShort(String amount);
+
+  /// No description provided for @receiptPaysHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'What it pays'**
+  String get receiptPaysHeading;
+
+  /// No description provided for @receiptNothingOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is owed. The whole amount waits as the company\'s credit for its next invoice.'**
+  String get receiptNothingOwed;
+
+  /// No description provided for @receiptOldBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance from before the app'**
+  String get receiptOldBalance;
+
+  /// No description provided for @receiptInvoiceLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} left, due {due}'**
+  String receiptInvoiceLeft(String amount, String due);
+
+  /// No description provided for @receiptPartTooHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'More than is left on it'**
+  String get receiptPartTooHigh;
+
+  /// No description provided for @receiptKeptLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} stays as the company\'s credit for later invoices.'**
+  String receiptKeptLine(String amount);
+
+  /// No description provided for @receiptCreditAlready.
+  ///
+  /// In en, this message translates to:
+  /// **'This company already has {amount} of credit not used. Use it from the invoice\'s screen.'**
+  String receiptCreditAlready(String amount);
+
+  /// No description provided for @receiptForInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice {number}'**
+  String receiptForInvoice(String number);
+
+  /// No description provided for @receiptKeptAsCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept as credit'**
+  String get receiptKeptAsCredit;
+
+  /// No description provided for @receiptReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get receiptReceived;
+
+  /// No description provided for @receiptClientNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This receipt is the supplier\'s own record of money received. It is not a tax invoice.'**
+  String get receiptClientNote;
+
+  /// No description provided for @receiptReceivedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Received by'**
+  String get receiptReceivedBy;
+
+  /// No description provided for @receiptPaidBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid by'**
+  String get receiptPaidBy;
+
+  /// No description provided for @receiptClientTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt'**
+  String get receiptClientTitle;
+
+  /// No description provided for @findingOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{An invoice falls} other{{count} invoices fall}} due by the month\'s end with money left: {names}. Record what was paid, or close the rest as lost with a reason.'**
+  String findingOverdue(int count, String names);
+
+  /// No description provided for @regLostUndone.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed amount opened again'**
+  String get regLostUndone;
+
+  /// No description provided for @regCompanyOwes.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance {amount}: the company owes'**
+  String regCompanyOwes(String amount);
+
+  /// No description provided for @regCompanyCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance {amount}: credit to the company'**
+  String regCompanyCredit(String amount);
+
+  /// No description provided for @regOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue {amount}'**
+  String regOverdue(String amount);
+
+  /// No description provided for @regUnusedCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit not used {amount}'**
+  String regUnusedCredit(String amount);
+
+  /// No description provided for @regAllCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'All companies'**
+  String get regAllCompanies;
+
+  /// No description provided for @regInvoiced.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoiced'**
+  String get regInvoiced;
+
+  /// No description provided for @regStatement.
+  ///
+  /// In en, this message translates to:
+  /// **'Company statement'**
+  String get regStatement;
+
+  /// No description provided for @regStatementNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoices, credit notes, receipts and amounts closed as lost, with the balance after each. Not a tax invoice.'**
+  String get regStatementNote;
+
+  /// No description provided for @clientMoneyHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get clientMoneyHeading;
+
+  /// No description provided for @clientCreditUnused.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit not used'**
+  String get clientCreditUnused;
+
+  /// No description provided for @invLostReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why the money will not come'**
+  String get invLostReason;
+
+  /// No description provided for @invUndoLostReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it is owed again'**
+  String get invUndoLostReason;
+
+  /// No description provided for @invCloseLostConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Close as lost'**
+  String get invCloseLostConfirm;
+
+  /// No description provided for @invUndoLostConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Open again'**
+  String get invUndoLostConfirm;
+
+  /// No description provided for @reportsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'All reports'**
+  String get reportsTab;
+
+  /// No description provided for @regAging.
+  ///
+  /// In en, this message translates to:
+  /// **'Owed by age'**
+  String get regAging;
+
+  /// No description provided for @regWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Work billed or not'**
+  String get regWork;
+
+  /// No description provided for @regAgingNote.
+  ///
+  /// In en, this message translates to:
+  /// **'As of {date}. Each invoice counts from its due date, and the balance from before the app from its own date. Credit not yet set against an invoice is shown under each company.'**
+  String regAgingNote(String date);
+
+  /// No description provided for @regByAge.
+  ///
+  /// In en, this message translates to:
+  /// **'Each company by age'**
+  String get regByAge;
+
+  /// No description provided for @ageNotDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Not due yet'**
+  String get ageNotDue;
+
+  /// No description provided for @ageDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days late'**
+  String ageDays(String days);
+
+  /// No description provided for @ageOver90.
+  ///
+  /// In en, this message translates to:
+  /// **'Over 90 days late'**
+  String get ageOver90;
+
+  /// No description provided for @colIssued.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued'**
+  String get colIssued;
+
+  /// No description provided for @colDaysLate.
+  ///
+  /// In en, this message translates to:
+  /// **'Days late'**
+  String get colDaysLate;
+
+  /// No description provided for @colAge.
+  ///
+  /// In en, this message translates to:
+  /// **'How late'**
+  String get colAge;
+
+  /// No description provided for @regWorkNote.
+  ///
+  /// In en, this message translates to:
+  /// **'By work date. Invoiced means an issued invoice charges it. Work on a monthly rate shows no amount, because the month\'s contract amount is the charge. With no company rate, work can\'t be billed until a rate is set.'**
+  String get regWorkNote;
+
+  /// No description provided for @colWorth.
+  ///
+  /// In en, this message translates to:
+  /// **'Worth'**
+  String get colWorth;
+
+  /// No description provided for @colNotInvoiced.
+  ///
+  /// In en, this message translates to:
+  /// **'Not invoiced'**
+  String get colNotInvoiced;
+
+  /// No description provided for @colDaysNotInvoiced.
+  ///
+  /// In en, this message translates to:
+  /// **'Days not invoiced'**
+  String get colDaysNotInvoiced;
+
+  /// No description provided for @filterBilled.
+  ///
+  /// In en, this message translates to:
+  /// **'Billing'**
+  String get filterBilled;
+
+  /// No description provided for @billedOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Still to bill'**
+  String get billedOpen;
+
+  /// No description provided for @billedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'All billed'**
+  String get billedDone;
+
+  /// No description provided for @sheetContribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Labour contribution: bills less wages'**
+  String get sheetContribution;
+
+  /// No description provided for @sheetOperating.
+  ///
+  /// In en, this message translates to:
+  /// **'After other costs'**
+  String get sheetOperating;
+
+  /// No description provided for @reportsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Each report opens on its own screen with dates and filters. The file it makes says which dates and filters it shows.'**
+  String get reportsIntro;
+
+  /// No description provided for @reportsHeadWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance and work'**
+  String get reportsHeadWork;
+
+  /// No description provided for @reportsHeadCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'Company money'**
+  String get reportsHeadCompanies;
+
+  /// No description provided for @reportsHeadWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers\' money'**
+  String get reportsHeadWorkers;
+
+  /// No description provided for @reportsHeadBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses and margin'**
+  String get reportsHeadBusiness;
+
+  /// No description provided for @repAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Each day\'s attendance, with totals by worker, company and site. By work date.'**
+  String get repAttendance;
+
+  /// No description provided for @repWork.
+  ///
+  /// In en, this message translates to:
+  /// **'What each company\'s work is worth, what is invoiced and what is still to bill. By work date.'**
+  String get repWork;
+
+  /// No description provided for @repAging.
+  ///
+  /// In en, this message translates to:
+  /// **'What each company owes, by how late. As of today, from due dates.'**
+  String get repAging;
+
+  /// No description provided for @repInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Every invoice and credit note line, with VAT. By issue date.'**
+  String get repInvoices;
+
+  /// No description provided for @repReceiptsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Company receipts'**
+  String get repReceiptsTitle;
+
+  /// No description provided for @repReceipts.
+  ///
+  /// In en, this message translates to:
+  /// **'Money received from companies, as the cash book has it. By receipt date.'**
+  String get repReceipts;
+
+  /// No description provided for @repStatement.
+  ///
+  /// In en, this message translates to:
+  /// **'Each company\'s invoices, receipts and balance. By date, with the balance brought forward.'**
+  String get repStatement;
+
+  /// No description provided for @repWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'What each worker earned, was paid and is owed. By date, with a running balance.'**
+  String get repWorkers;
+
+  /// No description provided for @repPayroll.
+  ///
+  /// In en, this message translates to:
+  /// **'Each month\'s pay: earned, deductions, recoveries and net. By pay month.'**
+  String get repPayroll;
+
+  /// No description provided for @repAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'Advances given, recovered and left. By date.'**
+  String get repAdvance;
+
+  /// No description provided for @repExpensesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses'**
+  String get repExpensesTitle;
+
+  /// No description provided for @repExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses from the cash book, with their category. By entry date.'**
+  String get repExpenses;
+
+  /// No description provided for @repMargin.
+  ///
+  /// In en, this message translates to:
+  /// **'A month\'s bills less wages, then other costs. An estimate, not audited accounts. By work month.'**
+  String get repMargin;
+
+  /// No description provided for @repChooseMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Which month?'**
+  String get repChooseMonth;
+
+  /// No description provided for @importCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Import CSV'**
+  String get importCsv;
+
+  /// No description provided for @importWorkersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import workers'**
+  String get importWorkersTitle;
+
+  /// No description provided for @importCompaniesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import companies'**
+  String get importCompaniesTitle;
+
+  /// No description provided for @importSitesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import sites'**
+  String get importSitesTitle;
+
+  /// No description provided for @importSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Get the blank file, or use your own with these headings.\n2. Fill it in Excel and save it as CSV.\n3. Choose the file. Nothing is saved until you have checked the lines and pressed save.'**
+  String get importSteps;
+
+  /// No description provided for @importBlankFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Get the blank file'**
+  String get importBlankFile;
+
+  /// No description provided for @importColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'Columns'**
+  String get importColumns;
+
+  /// No description provided for @importRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'needed'**
+  String get importRequired;
+
+  /// No description provided for @importBackupNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup before an import is not in the app yet. A file is saved whole or not at all, and a wrong line can be archived afterwards.'**
+  String get importBackupNote;
+
+  /// No description provided for @importChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose CSV file'**
+  String get importChoose;
+
+  /// No description provided for @importChooseAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another file'**
+  String get importChooseAgain;
+
+  /// No description provided for @importSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save {count} lines'**
+  String importSave(int count);
+
+  /// No description provided for @importSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} saved on this phone'**
+  String importSaved(int count);
+
+  /// No description provided for @importSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{total} lines: {bad} with mistakes, {warned} to check'**
+  String importSummary(int total, int bad, int warned);
+
+  /// No description provided for @importFix.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix these lines in the file and choose it again. Nothing has been saved.'**
+  String get importFix;
+
+  /// No description provided for @importReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Every line can be saved. Check the names, then save.'**
+  String get importReady;
+
+  /// No description provided for @importMissingColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'The file has no column for: {names}'**
+  String importMissingColumns(String names);
+
+  /// No description provided for @importIgnored.
+  ///
+  /// In en, this message translates to:
+  /// **'Not read: {names}'**
+  String importIgnored(String names);
+
+  /// No description provided for @importEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'The file has no lines under its headings.'**
+  String get importEmpty;
+
+  /// No description provided for @importRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Row {row}'**
+  String importRow(int row);
+
+  /// No description provided for @importHintDate.
+  ///
+  /// In en, this message translates to:
+  /// **'date, day first: 05/11/2026'**
+  String get importHintDate;
+
+  /// No description provided for @importHintBasis.
+  ///
+  /// In en, this message translates to:
+  /// **'hour, day or shift'**
+  String get importHintBasis;
+
+  /// No description provided for @importHintAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'AED amount: 120.50'**
+  String get importHintAmount;
+
+  /// No description provided for @importHintYesNo.
+  ///
+  /// In en, this message translates to:
+  /// **'yes or no'**
+  String get importHintYesNo;
+
+  /// No description provided for @importHintTime.
+  ///
+  /// In en, this message translates to:
+  /// **'24-hour time: 08:00'**
+  String get importHintTime;
+
+  /// No description provided for @importHintNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'whole number'**
+  String get importHintNumber;
+
+  /// No description provided for @importHintCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'company name as in the app'**
+  String get importHintCompany;
+
+  /// No description provided for @importHintTrn.
+  ///
+  /// In en, this message translates to:
+  /// **'15 digits, when VAT registered'**
+  String get importHintTrn;
+
+  /// No description provided for @problemMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is empty'**
+  String problemMissing(String column);
+
+  /// No description provided for @problemRepeated.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is in the file twice'**
+  String problemRepeated(String column);
+
+  /// No description provided for @problemExists.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is already in the app'**
+  String problemExists(String column);
+
+  /// No description provided for @problemBadDate.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is not a date, day first: 05/11/2026'**
+  String problemBadDate(String column);
+
+  /// No description provided for @problemBadAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is not an amount'**
+  String problemBadAmount(String column);
+
+  /// No description provided for @problemBadNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is not a whole number'**
+  String problemBadNumber(String column);
+
+  /// No description provided for @problemBadTime.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} is not a time like 08:00'**
+  String problemBadTime(String column);
+
+  /// No description provided for @problemBadYesNo.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} should be yes or no'**
+  String problemBadYesNo(String column);
+
+  /// No description provided for @problemBadTrn.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} needs 15 digits'**
+  String problemBadTrn(String column);
+
+  /// No description provided for @problemBadBasis.
+  ///
+  /// In en, this message translates to:
+  /// **'{column} should be hour, day or shift'**
+  String problemBadBasis(String column);
+
+  /// No description provided for @problemMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly pay needs a rule for part months: set it in the app'**
+  String get problemMonthly;
+
+  /// No description provided for @problemRateAndBasis.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay basis and pay rate go together'**
+  String get problemRateAndBasis;
+
+  /// No description provided for @problemRateDate.
+  ///
+  /// In en, this message translates to:
+  /// **'The rate needs a rate from date or a joining date'**
+  String get problemRateDate;
+
+  /// No description provided for @problemNoCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'No company with this name in the app'**
+  String get problemNoCompany;
+
+  /// No description provided for @problemTwoCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'Two companies have this name'**
+  String get problemTwoCompanies;
+
+  /// No description provided for @problemSameName.
+  ///
+  /// In en, this message translates to:
+  /// **'A worker with this name is already there. This line makes a new worker'**
+  String get problemSameName;
+
+  /// No description provided for @problemTrnWithoutVat.
+  ///
+  /// In en, this message translates to:
+  /// **'TRN is kept only when VAT registered is yes'**
+  String get problemTrnWithoutVat;
+
+  /// No description provided for @importShort.
+  ///
+  /// In en, this message translates to:
+  /// **'From file'**
+  String get importShort;
+
+  /// No description provided for @editedTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Edited'**
+  String get editedTag;
+
+  /// No description provided for @factTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get factTime;
+
+  /// No description provided for @factReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference'**
+  String get factReference;
+
+  /// No description provided for @changeSystemNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Changed {when}:'**
+  String changeSystemNote(String when);
+
+  /// No description provided for @changeNoDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Changed {when}'**
+  String changeNoDetail(String when);
+
+  /// No description provided for @changeUserNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it changed: {note}'**
+  String changeUserNote(String note);
+
+  /// No description provided for @changeLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{what}: {from} to {to}'**
+  String changeLine(String what, String from, String to);
+
+  /// No description provided for @changeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Why (if you like)'**
+  String get changeNote;
+
+  /// No description provided for @changeNoteHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it is changed or deleted. It stays with the entry.'**
+  String get changeNoteHelp;
+
+  /// No description provided for @deleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this entry?'**
+  String get deleteTitle;
+
+  /// No description provided for @deleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It leaves every total, and stays whole on the Delete tab.'**
+  String get deleteBody;
+
+  /// No description provided for @deleteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteAction;
+
+  /// No description provided for @deletedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted. It is on the Delete tab.'**
+  String get deletedDone;
+
+  /// No description provided for @monthsOpened.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. A closed month opened again: {months}'**
+  String monthsOpened(String months);
+
+  /// No description provided for @reopenByEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Opened to change an entry'**
+  String get reopenByEdit;
+
+  /// No description provided for @cashEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get cashEdit;
+
+  /// No description provided for @mainDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted'**
+  String get mainDeleted;
+
+  /// No description provided for @regDeletedAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted attendance'**
+  String get regDeletedAttendance;
+
+  /// No description provided for @regDeletedCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted cash book lines'**
+  String get regDeletedCash;
+
+  /// No description provided for @colDeletedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted on'**
+  String get colDeletedOn;
+
+  /// No description provided for @colClarification.
+  ///
+  /// In en, this message translates to:
+  /// **'Clarification'**
+  String get colClarification;
+
+  /// No description provided for @regDeletedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Every entry deleted, as it was, by the day it was deleted. The last column is blank, for whoever you send it to to say why.'**
+  String get regDeletedNote;
+
+  /// No description provided for @colDeleteNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete note'**
+  String get colDeleteNote;
+
+  /// No description provided for @factName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get factName;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @changeNoteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it changed (if you like)'**
+  String get changeNoteItem;
+
+  /// No description provided for @inUseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This can\'t be deleted'**
+  String get inUseTitle;
+
+  /// No description provided for @inUseBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Entries carry its name, and would lose it. Archive it instead: it leaves the lists, and its entries stay as they are.'**
+  String get inUseBody;
+
+  /// No description provided for @inUseArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Entries carry its name, so it can\'t be deleted. It is archived already.'**
+  String get inUseArchived;
+
+  /// No description provided for @archivedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived. Its entries stay as they are.'**
+  String get archivedDone;
+
+  /// No description provided for @regDeletedPayItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted allowances and deductions'**
+  String get regDeletedPayItems;
+
+  /// No description provided for @regDeletedRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Other deleted records'**
+  String get regDeletedRecords;
+
+  /// No description provided for @colDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get colDetails;
+
+  /// No description provided for @invEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit invoice'**
+  String get invEdit;
+
+  /// No description provided for @invEditHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'An issued invoice never changes. A credit note dated today takes back {number} whole, and a new draft of the same dates opens with everything it had. Change the draft, then issue it.'**
+  String invEditHelp(String number);
+
+  /// No description provided for @invEditReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'The {amount} received on it stays with the company as credit, which the new invoice can use once issued.'**
+  String invEditReceived(String amount);
+
+  /// No description provided for @invEditReasonHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Prints on the credit note'**
+  String get invEditReasonHelp;
+
+  /// No description provided for @invEditConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Make credit note and new draft'**
+  String get invEditConfirm;
+
+  /// No description provided for @invEditedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Replaces invoice {number}, which credit note {credit} took back whole.'**
+  String invEditedNote(String number, String credit);
+
+  /// No description provided for @invOpenNew.
+  ///
+  /// In en, this message translates to:
+  /// **'See the new invoice'**
+  String get invOpenNew;
+
+  /// No description provided for @invPReplaces.
+  ///
+  /// In en, this message translates to:
+  /// **'Replaces invoice {number}.'**
+  String invPReplaces(String number);
+
+  /// No description provided for @invPEditReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Replaced by a corrected invoice'**
+  String get invPEditReason;
+
+  /// No description provided for @contractCutAbsence.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut a day with no attendance'**
+  String get contractCutAbsence;
+
+  /// No description provided for @contractCutAbsenceHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'One day is the salary divided by the rule above. Weekly days off and days marked as no work are not cut.'**
+  String get contractCutAbsenceHelp;
+
+  /// No description provided for @contractOffDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly days off'**
+  String get contractOffDays;
+
+  /// No description provided for @weekdaysShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon Tue Wed Thu Fri Sat Sun'**
+  String get weekdaysShort;
+
+  /// No description provided for @payrollAbsent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day absent} other{{count} days absent}}: {days}'**
+  String payrollAbsent(int count, String days);
+
+  /// No description provided for @payrollSalaryLessAbsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly salary, less {count, plural, =1{1 day absent} other{{count} days absent}} ({days})'**
+  String payrollSalaryLessAbsent(int count, String days);
+
+  /// No description provided for @payrollInstalment.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance instalment'**
+  String get payrollInstalment;
+
+  /// No description provided for @issueRecoveryAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} of advance has no instalment. Say how much to cut this month.'**
+  String issueRecoveryAsk(String amount);
+
+  /// No description provided for @cashInstalment.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut each month (instalment)'**
+  String get cashInstalment;
+
+  /// No description provided for @cashInstalmentHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Payroll cuts this much each month by itself. Leave it empty to be asked each month.'**
+  String get cashInstalmentHelp;
+
+  /// No description provided for @recoveryZeroHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'0 cuts nothing this month.'**
+  String get recoveryZeroHelp;
+
+  /// No description provided for @payrollInstalmentAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance instalment'**
+  String get payrollInstalmentAuto;
+
+  /// No description provided for @payrollInstalmentAutoHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut by itself. Tap to change it for this month.'**
+  String get payrollInstalmentAutoHelp;
+
+  /// No description provided for @tsCarryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut the worker\'s hours too?'**
+  String get tsCarryTitle;
+
+  /// No description provided for @tsCarryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes: the attendance takes the same hours, with a note, and the worker is paid for them. No: only the company\'s bill changes.'**
+  String get tsCarryBody;
+
+  /// No description provided for @tsCarryYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, the worker\'s too'**
+  String get tsCarryYes;
+
+  /// No description provided for @tsCarryNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the company'**
+  String get tsCarryNo;
+
+  /// No description provided for @tsCarryNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The company agreed fewer hours: {reason}'**
+  String tsCarryNote(String reason);
+}
+
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _AppLocalizationsDelegate();
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['en'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
+}
+
+AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when language+country codes are specified.
+  switch (locale.languageCode) {
+    case 'en':
+      {
+        switch (locale.countryCode) {
+          case 'PK':
+            return AppLocalizationsEnPk();
+        }
+        break;
+      }
+  }
+
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'en':
+      return AppLocalizationsEn();
+  }
+
+  throw FlutterError(
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
+}

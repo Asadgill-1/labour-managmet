@@ -1,0 +1,325 @@
+import 'tables.dart';
+
+CREATE TRIGGER audit_no_update BEFORE UPDATE ON audit_events BEGIN
+  SELECT RAISE(ABORT, 'audit events are append-only');
+END;
+
+CREATE TRIGGER audit_no_delete BEFORE DELETE ON audit_events BEGIN
+  SELECT RAISE(ABORT, 'audit events are append-only');
+END;
+
+-- The cash book only grows. A mistake gets a reversal row (REP-08, D-030).
+CREATE TRIGGER cash_no_update BEFORE UPDATE ON cash_entries BEGIN
+  SELECT RAISE(ABORT, 'cash entries are append-only');
+END;
+
+CREATE TRIGGER cash_no_delete BEFORE DELETE ON cash_entries BEGIN
+  SELECT RAISE(ABORT, 'cash entries are append-only');
+END;
+
+-- What a payment settled stays on record. Undoing the payment sets these aside (PAY-06, REP-08).
+CREATE TRIGGER allocation_no_update BEFORE UPDATE ON salary_allocations BEGIN
+  SELECT RAISE(ABORT, 'salary allocations are append-only');
+END;
+
+CREATE TRIGGER allocation_no_delete BEFORE DELETE ON salary_allocations BEGIN
+  SELECT RAISE(ABORT, 'salary allocations are append-only');
+END;
+
+-- A visa line belongs to a worker (D-039). The table's own check is older than these kinds.
+CREATE TRIGGER cash_visa_needs_worker BEFORE INSERT ON cash_entries
+WHEN NEW.kind IN ('visaPaid', 'visaReturned') AND NEW.worker_id IS NULL
+BEGIN
+  SELECT RAISE(ABORT, 'a visa line needs a worker');
+END;
+
+-- Posted payroll never changes. A wrong posting is only flagged, and the flag never clears (PAY-01, REP-08).
+CREATE TRIGGER payroll_run_no_update BEFORE UPDATE ON payroll_runs BEGIN
+  SELECT RAISE(ABORT, 'posted payroll is immutable');
+END;
+
+CREATE TRIGGER payroll_run_no_delete BEFORE DELETE ON payroll_runs BEGIN
+  SELECT RAISE(ABORT, 'posted payroll is immutable');
+END;
+
+CREATE TRIGGER payroll_line_no_edit BEFORE UPDATE OF run_id, worker_id, period_from, opening_fils, earned_fils, salary_fils,
+  adjustment_fils, allowances_fils, deductions_fils, recovery_fils, visa_recovery_fils, absence_fils, absent_days, net_fils, payable_fils, paid_before_fils ON payroll_lines
+BEGIN
+  SELECT RAISE(ABORT, 'posted payroll is immutable');
+END;
+
+CREATE TRIGGER payroll_line_stays_reversed BEFORE UPDATE OF reversed ON payroll_lines
+WHEN OLD.reversed
+BEGIN
+  SELECT RAISE(ABORT, 'a reversed payroll line stays reversed');
+END;
+
+CREATE TRIGGER payroll_line_no_delete BEFORE DELETE ON payroll_lines BEGIN
+  SELECT RAISE(ABORT, 'posted payroll is immutable');
+END;
+
+CREATE TRIGGER posted_item_no_edit BEFORE UPDATE OF worker_id, period_from, kind, amount_fils, reason, authorized_by, room_id ON payroll_items
+WHEN OLD.line_id IS NOT NULL
+BEGIN
+  SELECT RAISE(ABORT, 'a posted payroll item is immutable');
+END;
+
+CREATE TRIGGER posted_item_no_delete BEFORE DELETE ON payroll_items
+WHEN OLD.line_id IS NOT NULL
+BEGIN
+  SELECT RAISE(ABORT, 'a posted payroll item is immutable');
+END;
+
+-- A closed month stays as it was. A change after it is a dated adjustment in an open month, or the month is opened
+-- again with a reason (REP-04). `period is closed` is how the app tells this apart from any other refusal.
+CREATE TRIGGER lock_no_delete BEFORE DELETE ON period_locks BEGIN
+  SELECT RAISE(ABORT, 'a period lock stays on record');
+END;
+
+CREATE TRIGGER lock_no_edit BEFORE UPDATE OF month, last_day ON period_locks BEGIN
+  SELECT RAISE(ABORT, 'a period lock stays on record');
+END;
+
+CREATE TRIGGER lock_stays_reopened BEFORE UPDATE OF reopened ON period_locks
+WHEN OLD.reopened
+BEGIN
+  SELECT RAISE(ABORT, 'a reopened lock stays reopened');
+END;
+
+CREATE UNIQUE INDEX one_live_period_lock ON period_locks (month) WHERE NOT reopened;
+
+CREATE TRIGGER closed_cash_no_insert BEFORE INSERT ON cash_entries
+WHEN NEW.entry_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+-- A paper stays exactly as it was issued, and so does any image it used (DOC-05).
+CREATE TRIGGER issued_no_edit BEFORE UPDATE ON issued_documents BEGIN
+  SELECT RAISE(ABORT, 'an issued document never changes');
+END;
+
+CREATE TRIGGER issued_no_delete BEFORE DELETE ON issued_documents BEGIN
+  SELECT RAISE(ABORT, 'an issued document stays on record');
+END;
+
+CREATE TRIGGER asset_no_edit BEFORE UPDATE ON document_assets BEGIN
+  SELECT RAISE(ABORT, 'a stored image never changes');
+END;
+
+CREATE TRIGGER asset_no_delete BEFORE DELETE ON document_assets BEGIN
+  SELECT RAISE(ABORT, 'a stored image stays on record');
+END;
+
+CREATE TRIGGER closed_day_off_no_insert BEFORE INSERT ON day_offs
+WHEN NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_entry_no_insert BEFORE INSERT ON attendance_entries
+WHEN NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+-- Linking a closed row to a later posting or a timesheet changes no figure, so it may still happen.
+CREATE TRIGGER closed_entry_no_edit BEFORE UPDATE ON attendance_entries
+WHEN (OLD.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened))
+  AND (NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes
+    OR NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes
+    OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils
+    OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils
+    OR NEW.worker_id <> OLD.worker_id OR NEW.client_id <> OLD.client_id OR NEW.site_id <> OLD.site_id
+    OR NEW.work_date <> OLD.work_date OR NEW.superseded <> OLD.superseded OR NEW.attendance_status <> OLD.attendance_status)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_entry_no_delete BEFORE DELETE ON attendance_entries
+WHEN OLD.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_item_no_insert BEFORE INSERT ON payroll_items
+WHEN NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_item_no_edit BEFORE UPDATE ON payroll_items
+WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_item_no_delete BEFORE DELETE ON payroll_items
+WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_line_no_insert BEFORE INSERT ON payroll_lines
+WHEN NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_line_no_reverse BEFORE UPDATE OF reversed ON payroll_lines
+WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_opening_no_insert BEFORE INSERT ON opening_balances
+WHEN NEW.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+CREATE TRIGGER closed_opening_no_edit BEFORE UPDATE ON opening_balances
+WHEN OLD.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened)
+BEGIN
+  SELECT RAISE(ABORT, 'period is closed');
+END;
+
+-- One worker cannot be paid twice for one month.
+CREATE UNIQUE INDEX one_live_payroll_line ON payroll_lines (worker_id, period_from) WHERE NOT reversed;
+
+-- Approved and linked rows keep their figures. A correction is a new row, and the old one is only flagged (ATT-08).
+-- A row frozen with no company rate can still fill one in, so its bill appears later. Its pay never moves (D-041).
+CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries
+WHEN OLD.state IN ('approved', 'linked')
+  AND (NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes
+    OR (OLD.client_rate_fils IS NOT NULL AND (NEW.client_billable_minutes <> OLD.client_billable_minutes
+      OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils))
+    OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes
+    OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils
+    OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)
+BEGIN
+  SELECT RAISE(ABORT, 'approved attendance is immutable');
+END;
+
+CREATE TRIGGER linked_entry_keeps_state BEFORE UPDATE ON attendance_entries
+WHEN OLD.state = 'linked' AND NEW.state <> 'linked'
+BEGIN
+  SELECT RAISE(ABORT, 'linked attendance is immutable');
+END;
+
+CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries
+WHEN OLD.state NOT IN ('draft', 'submitted')
+BEGIN
+  SELECT RAISE(ABORT, 'approved attendance cannot be deleted');
+END;
+
+-- A timesheet as approved stays as it was. A change is a new revision, and the old one keeps its lines (TS-04, TS-06, ATT-08).
+CREATE TRIGGER timesheet_keeps_number BEFORE UPDATE OF client_id, site_id, from_date, to_date, year, seq, number ON timesheets
+WHEN OLD.number IS NOT NULL
+BEGIN
+  SELECT RAISE(ABORT, 'an approved timesheet keeps its number and dates');
+END;
+
+CREATE TRIGGER timesheet_no_delete BEFORE DELETE ON timesheets
+WHEN OLD.number IS NOT NULL
+BEGIN
+  SELECT RAISE(ABORT, 'an approved timesheet stays on record');
+END;
+
+CREATE TRIGGER revision_no_redraft BEFORE UPDATE OF status ON timesheet_revisions
+WHEN OLD.status <> 'draft' AND NEW.status = 'draft'
+BEGIN
+  SELECT RAISE(ABORT, 'an approved revision stays approved');
+END;
+
+CREATE TRIGGER revision_keeps_adjustments BEFORE UPDATE OF timesheet_id, revision, adjustments ON timesheet_revisions
+WHEN OLD.status <> 'draft'
+BEGIN
+  SELECT RAISE(ABORT, 'an approved revision never changes');
+END;
+
+CREATE TRIGGER revision_accepted_locked BEFORE UPDATE ON timesheet_revisions
+WHEN OLD.status = 'accepted'
+BEGIN
+  SELECT RAISE(ABORT, 'an accepted revision is locked');
+END;
+
+CREATE TRIGGER revision_no_delete BEFORE DELETE ON timesheet_revisions
+WHEN OLD.status <> 'draft'
+BEGIN
+  SELECT RAISE(ABORT, 'an approved revision stays on record');
+END;
+
+CREATE TRIGGER timesheet_line_no_edit BEFORE UPDATE OF timesheet_id, revision_id, entry_id, work_key, work_date, site_id, site_name, worker_id, worker_name,
+  worker_code, trade, attendance_status, clock_minutes, break_minutes, billable_minutes, basis, rate_fils, amount_fils, adjust_reason ON timesheet_lines
+BEGIN
+  SELECT RAISE(ABORT, 'an approved timesheet line never changes');
+END;
+
+CREATE TRIGGER timesheet_line_stays_off BEFORE UPDATE OF live ON timesheet_lines
+WHEN NOT OLD.live AND NEW.live
+BEGIN
+  SELECT RAISE(ABORT, 'a replaced timesheet line stays replaced');
+END;
+
+CREATE TRIGGER timesheet_line_no_delete BEFORE DELETE ON timesheet_lines BEGIN
+  SELECT RAISE(ABORT, 'an approved timesheet line stays on record');
+END;
+
+-- One piece of work sits on one current timesheet.
+CREATE UNIQUE INDEX one_live_timesheet_line ON timesheet_lines (work_key) WHERE live;
+
+-- What an invoice charged stays on record. A credit note or cancellation only flags it (TS-05, INV-06).
+CREATE TRIGGER billing_no_edit BEFORE UPDATE OF line_id, work_key, invoice_id, amount_fils ON billed_allocations BEGIN
+  SELECT RAISE(ABORT, 'a billed allocation never changes');
+END;
+
+CREATE TRIGGER billing_stays_released BEFORE UPDATE OF released ON billed_allocations
+WHEN OLD.released
+BEGIN
+  SELECT RAISE(ABORT, 'a released allocation stays released');
+END;
+
+CREATE TRIGGER billing_no_delete BEFORE DELETE ON billed_allocations BEGIN
+  SELECT RAISE(ABORT, 'a billed allocation stays on record');
+END;
+
+-- The same work can't be charged twice, whatever any screen or date filter asks for (TS-05).
+CREATE UNIQUE INDEX one_live_billing ON billed_allocations (work_key) WHERE NOT released;
+
+-- Only a draft can change or go. An issued invoice keeps every figure, and its one step left is to be credited (INV-06).
+CREATE TRIGGER invoice_keeps_issue BEFORE UPDATE OF client_id, kind, credits_invoice_id, site_id, from_date, to_date, draft,
+  po_reference, vat_category, vat_bps, prices_include_vat, vat_registered, due_date, issue_date, year, seq, number, parties, reason ON invoices
+WHEN OLD.status <> 'draft'
+BEGIN
+  SELECT RAISE(ABORT, 'an issued invoice never changes');
+END;
+
+CREATE TRIGGER invoice_status_forward BEFORE UPDATE OF status ON invoices
+WHEN NEW.status <> OLD.status AND NOT ((OLD.status = 'draft' AND NEW.status = 'issued') OR (OLD.status = 'issued' AND NEW.status = 'credited'))
+BEGIN
+  SELECT RAISE(ABORT, 'an invoice only moves from draft to issued to credited');
+END;
+
+CREATE TRIGGER invoice_no_delete BEFORE DELETE ON invoices
+WHEN OLD.status <> 'draft'
+BEGIN
+  SELECT RAISE(ABORT, 'an issued invoice stays on record');
+END;
+
+CREATE TRIGGER invoice_line_no_edit BEFORE UPDATE ON invoice_lines BEGIN
+  SELECT RAISE(ABORT, 'an invoice line never changes');
+END;
+
+CREATE TRIGGER invoice_line_no_delete BEFORE DELETE ON invoice_lines BEGIN
+  SELECT RAISE(ABORT, 'an invoice line stays on record');
+END;
+
+-- What settled an invoice stays on record. A negative row gives some back (INV-05, REP-08).
+CREATE TRIGGER invoice_allocation_no_update BEFORE UPDATE ON invoice_allocations BEGIN
+  SELECT RAISE(ABORT, 'invoice allocations are append-only');
+END;
+
+CREATE TRIGGER invoice_allocation_no_delete BEFORE DELETE ON invoice_allocations BEGIN
+  SELECT RAISE(ABORT, 'invoice allocations are append-only');
+END;

@@ -1,0 +1,688 @@
+// Drift's check() refers to the column through its own getter.
+// ignore_for_file: recursive_getters
+
+import 'package:drift/drift.dart';
+
+/// Columns on every operational table (MODEL-03).
+mixin Common on Table {
+  TextColumn get id => text()();
+  TextColumn get tenantId => text()();
+  DateTimeColumn get createdAtUtc => dateTime()();
+  DateTimeColumn get updatedAtUtc => dateTime()();
+  TextColumn get actorId => text()();
+  IntColumn get version => integer().withDefault(const Constant(1))();
+  TextColumn get sourceOperationId => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+class TenantProfiles extends Table with Common {
+  TextColumn get legalName => text()();
+  TextColumn get tradingName => text().nullable()();
+  TextColumn get address => text().nullable()();
+  TextColumn get phone => text().nullable()();
+  TextColumn get email => text().nullable()();
+  BoolColumn get vatRegistered => boolean().withDefault(const Constant(false))();
+  TextColumn get vatEffectiveFrom => text().nullable()();
+  TextColumn get trn => text().nullable()();
+  TextColumn get invoicePrefix => text().withDefault(const Constant('INV'))();
+  TextColumn get currency => text().withDefault(const Constant('AED'))();
+  IntColumn get paymentTermsDays => integer().nullable()();
+  TextColumn get bankDetails => text().nullable()();
+  TextColumn get documentFooter => text().nullable()();
+
+  /// The company's own limit on deductions, as a share of earnings. Null means none. Never a built-in legal figure (PAY-07).
+  IntColumn get deductionLimitBps => integer().nullable()();
+
+  /// Days after a month ends before its wages count as late. The company's own figure, never a legal one (PAY-08).
+  IntColumn get wageDueDays => integer().nullable()();
+}
+
+class Clients extends Table with Common {
+  TextColumn get name => text()();
+  TextColumn get address => text().nullable()();
+  TextColumn get contactPerson => text().nullable()();
+  TextColumn get phone => text().nullable()();
+  TextColumn get email => text().nullable()();
+  BoolColumn get vatRegistered => boolean().withDefault(const Constant(false))();
+  TextColumn get trn => text().nullable()();
+  TextColumn get invoiceAddress => text().nullable()();
+  IntColumn get dueDays => integer().nullable()();
+  TextColumn get poReference => text().nullable()();
+  TextColumn get note => text().nullable()();
+  BoolColumn get active => boolean().withDefault(const Constant(true))();
+}
+
+class Sites extends Table with Common {
+  TextColumn get clientId => text().references(Clients, #id)();
+  TextColumn get name => text()();
+  TextColumn get location => text().nullable()();
+  TextColumn get contact => text().nullable()();
+  TextColumn get activeFrom => text().nullable()();
+  TextColumn get activeTo => text().nullable()();
+
+  /// Default shift as minutes from local midnight. End below start means next day.
+  IntColumn get defaultStartMinute => integer().nullable()();
+  IntColumn get defaultEndMinute => integer().nullable()();
+  IntColumn get defaultBreakMinutes => integer().withDefault(const Constant(0))();
+  BoolColumn get active => boolean().withDefault(const Constant(true))();
+}
+
+class Workers extends Table with Common {
+  TextColumn get code => text()();
+  TextColumn get name => text()();
+  TextColumn get phone => text().nullable()();
+  TextColumn get trade => text().nullable()();
+  TextColumn get joiningDate => text().nullable()();
+  IntColumn get roomChargeFils => integer().nullable()();
+  TextColumn get roomChargeNote => text().nullable()();
+  TextColumn get roomId => text().nullable().references(Rooms, #id)();
+
+  /// Taken from pay each month while visa money is left. Null means off (D-039).
+  IntColumn get visaInstalmentFils => integer().nullable().check(visaInstalmentFils.isBiggerThanValue(0))();
+  BoolColumn get active => boolean().withDefault(const Constant(true))();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {tenantId, code},
+  ];
+}
+
+/// A room the company rents for its workers (D-031).
+class Rooms extends Table with Common {
+  TextColumn get name => text()();
+  TextColumn get note => text().nullable()();
+  BoolColumn get active => boolean().withDefault(const Constant(true))();
+}
+
+/// Every amount in or out, one row each (D-030). Rows never change: a mistake gets a reversal row, so
+/// balances always come from the rows themselves (REP-08). Triggers enforce this.
+@TableIndex(name: 'idx_cash_date', columns: {#entryDate})
+@TableIndex(name: 'idx_cash_worker', columns: {#workerId})
+@TableIndex(name: 'idx_cash_room', columns: {#roomId})
+class CashEntries extends Table with Common {
+  TextColumn get entryDate => text()();
+
+  /// A `CashKind` by name.
+  TextColumn get kind => text()();
+  IntColumn get amountFils => integer().check(amountFils.isBiggerThanValue(0))();
+  TextColumn get currency => text().withDefault(const Constant('AED'))();
+  TextColumn get workerId => text().nullable().references(Workers, #id)();
+  TextColumn get roomId => text().nullable().references(Rooms, #id)();
+  TextColumn get clientId => text().nullable().references(Clients, #id)();
+  TextColumn get siteId => text().nullable().references(Sites, #id)();
+  TextColumn get category => text().nullable()();
+
+  /// 'cash' or 'bank'.
+  TextColumn get method => text().withDefault(const Constant('cash'))();
+  TextColumn get note => text().nullable()();
+
+  /// Set on a reversal, which carries the original's figures. Unique, so nothing is reversed twice.
+  TextColumn get reversesEntryId => text().nullable().unique().references(CashEntries, #id)();
+
+  /// A bank or cheque reference on a salary payment (PAY-06).
+  TextColumn get reference => text().nullable()();
+
+  /// Who took the money, when it was not the worker (PAY-06).
+  TextColumn get receiver => text().nullable()();
+
+  /// On an advance: how much payroll cuts of it each month by itself. Null means the owner is asked each month (D-057).
+  IntColumn get instalmentFils => integer().nullable().check(instalmentFils.isBiggerThanValue(0))();
+
+  @override
+  List<String> get customConstraints => [
+    "CHECK (kind NOT IN ('advanceGiven', 'salaryPaid', 'advanceReturned') OR worker_id IS NOT NULL)",
+    "CHECK (kind NOT IN ('roomRentPaid', 'roomRentReceived') OR room_id IS NOT NULL)",
+    "CHECK (kind <> 'clientReceipt' OR client_id IS NOT NULL)",
+  ];
+}
+
+/// Which month a salary payment settles, as the owner confirmed it (PAY-06). These rows never change. Undoing the
+/// payment in the cash book sets them aside with it (REP-08). Triggers enforce this.
+class SalaryAllocations extends Table with Common {
+  TextColumn get paymentId => text().references(CashEntries, #id)();
+
+  /// YYYY-MM.
+  TextColumn get month => text()();
+  IntColumn get amountFils => integer().check(amountFils.isBiggerThanValue(0))();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {paymentId, month},
+  ];
+}
+
+/// A closed month (REP-04). Everything up to [lastDay] is locked while this row stands. Opening it again only flags it,
+/// with the owner's reason in the audit log. Triggers enforce this.
+class PeriodLocks extends Table with Common {
+  /// YYYY-MM.
+  TextColumn get month => text()();
+  TextColumn get lastDay => text()();
+  BoolColumn get reopened => boolean().withDefault(const Constant(false))();
+}
+
+/// The owner's word that a worker had no work on a date, so closing does not ask for their attendance (D-045). It moves
+/// no money and shows on no bill.
+class DayOffs extends Table with Common {
+  TextColumn get workerId => text().references(Workers, #id)();
+  TextColumn get workDate => text()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {tenantId, workerId, workDate},
+  ];
+}
+
+/// An uploaded image, kept for good so a paper can always find what it was issued with (DOC-04, DOC-05). Triggers enforce this.
+class DocumentAssets extends Table with Common {
+  TextColumn get kind => text()();
+  TextColumn get mime => text()();
+  IntColumn get widthPx => integer()();
+  IntColumn get heightPx => integer()();
+  BlobColumn get bytes => blob()();
+}
+
+/// How the company's papers look today: one row. Changing it never touches a paper already issued (DOC-02 to DOC-05).
+class DocumentTemplates extends Table with Common {
+  TextColumn get logoAssetId => text().nullable().references(DocumentAssets, #id)();
+  TextColumn get headerAssetId => text().nullable().references(DocumentAssets, #id)();
+  TextColumn get footerAssetId => text().nullable().references(DocumentAssets, #id)();
+  TextColumn get signatureAssetId => text().nullable().references(DocumentAssets, #id)();
+  TextColumn get stampAssetId => text().nullable().references(DocumentAssets, #id)();
+
+  /// JSON, by image kind: size, position and trim.
+  TextColumn get placements => text().withDefault(const Constant('{}'))();
+
+  /// False for pre-printed paper. Nothing of the company prints, and the blank space stays clear.
+  BoolColumn get printLetterhead => boolean().withDefault(const Constant(true))();
+  IntColumn get blankTopMm => integer().withDefault(const Constant(40))();
+  IntColumn get blankBottomMm => integer().withDefault(const Constant(25))();
+  BoolColumn get showSignature => boolean().withDefault(const Constant(false))();
+  BoolColumn get showStamp => boolean().withDefault(const Constant(false))();
+}
+
+/// A paper as it was issued: its file, what it said and how it looked (DOC-05). Never changes, and a change to the facts
+/// is a new revision under the same number. Triggers enforce this.
+@TableIndex(name: 'idx_issued_subject', columns: {#kind, #subjectId, #period})
+class IssuedDocuments extends Table with Common {
+  TextColumn get kind => text()();
+  IntColumn get year => integer()();
+  IntColumn get seq => integer()();
+  IntColumn get revision => integer()();
+  TextColumn get number => text()();
+
+  /// The worker of a slip, or the cash line of a receipt.
+  TextColumn get subjectId => text()();
+
+  /// YYYY-MM on a slip.
+  TextColumn get period => text().nullable()();
+  TextColumn get title => text()();
+  TextColumn get summary => text()();
+  TextColumn get dataJson => text()();
+  TextColumn get identityJson => text()();
+  TextColumn get metaJson => text()();
+  BlobColumn get pdfBytes => blob()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {tenantId, kind, year, seq, revision},
+  ];
+}
+
+/// One company's work over some dates (TS-01). It gets its number when first approved, so a draft thrown away leaves no gap.
+class Timesheets extends Table with Common {
+  TextColumn get clientId => text().references(Clients, #id)();
+
+  /// Null means every site of the company.
+  TextColumn get siteId => text().nullable().references(Sites, #id)();
+  TextColumn get fromDate => text()();
+  TextColumn get toDate => text()();
+  IntColumn get year => integer().nullable()();
+  IntColumn get seq => integer().nullable()();
+  TextColumn get number => text().nullable()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {tenantId, year, seq},
+  ];
+}
+
+/// One version of a timesheet and how far it has gone (TS-04). A change after approval is a new revision, and the old one
+/// stays (TS-06). Triggers enforce this.
+class TimesheetRevisions extends Table with Common {
+  TextColumn get timesheetId => text().references(Timesheets, #id)();
+  IntColumn get revision => integer()();
+
+  /// A `TsStatus` by name.
+  TextColumn get status => text().withDefault(const Constant('draft'))();
+
+  /// Why this revision exists. Null on the first.
+  TextColumn get reason => text().nullable()();
+
+  /// JSON while a draft, by attendance row: what the company agreed instead, and why. Attendance and pay never change for it (TS-06).
+  TextColumn get adjustments => text().withDefault(const Constant('{}'))();
+  TextColumn get sharedOn => text().nullable()();
+  TextColumn get respondedOn => text().nullable()();
+  TextColumn get responseNote => text().nullable()();
+
+  /// A photo of what the company sent back. Never a verified signature (TS-04).
+  TextColumn get evidenceAssetId => text().nullable().references(DocumentAssets, #id)();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {timesheetId, revision},
+  ];
+}
+
+/// A row of an approved revision as it stood, company side only: no wage has a column here (TS-02). Written once at approval
+/// and never changed. [live] says it belongs to the current revision. Triggers enforce this.
+@TableIndex(name: 'idx_timesheet_lines_revision', columns: {#revisionId})
+@TableIndex(name: 'idx_timesheet_lines_timesheet', columns: {#timesheetId, #live})
+class TimesheetLines extends Table with Common {
+  TextColumn get timesheetId => text().references(Timesheets, #id)();
+  TextColumn get revisionId => text().references(TimesheetRevisions, #id)();
+  TextColumn get entryId => text().references(AttendanceEntries, #id)();
+
+  /// The first row of the entry's correction chain, so a corrected row is still the same work (TS-05).
+  TextColumn get workKey => text()();
+  TextColumn get workDate => text()();
+  TextColumn get siteId => text().references(Sites, #id)();
+  TextColumn get siteName => text()();
+  TextColumn get workerId => text().references(Workers, #id)();
+  TextColumn get workerName => text()();
+  TextColumn get workerCode => text()();
+  TextColumn get trade => text().nullable()();
+
+  /// What the company is charged for: 'present', 'half' or 'absent'.
+  TextColumn get attendanceStatus => text()();
+  IntColumn get clockMinutes => integer()();
+  IntColumn get breakMinutes => integer()();
+  IntColumn get billableMinutes => integer()();
+  TextColumn get basis => text()();
+  IntColumn get rateFils => integer()();
+
+  /// Null on a monthly row, whose fee belongs to the contract (TS-08).
+  IntColumn get amountFils => integer().nullable().check(amountFils.isBiggerOrEqualValue(0))();
+
+  /// Set when this differs from the attendance.
+  TextColumn get adjustReason => text().nullable()();
+  BoolColumn get live => boolean().withDefault(const Constant(true))();
+}
+
+/// Which invoice charged which work (TS-05). One live row per piece of work, so nothing is charged twice. A credit note or
+/// cancelled invoice only flags its rows. Triggers enforce this.
+class BilledAllocations extends Table with Common {
+  TextColumn get lineId => text().references(TimesheetLines, #id)();
+  TextColumn get workKey => text()();
+
+  /// The invoice that charged it. A monthly row is charged at 0, since its contract's fee is the charge (TS-08).
+  /// ponytail: no foreign key, since adding one rebuilds the table and its triggers. Issuing is the only writer.
+  TextColumn get invoiceId => text()();
+  IntColumn get amountFils => integer().check(amountFils.isBiggerOrEqualValue(0))();
+  BoolColumn get released => boolean().withDefault(const Constant(false))();
+}
+
+/// A company invoice, or a credit note that takes back all or part of one (INV-01, INV-06). A draft has no number and no lines:
+/// it reads its timesheets as they stand, so it can't go stale. Issuing stores everything as it stood, and from then on
+/// nothing changes but the step to credited. Triggers enforce this.
+class Invoices extends Table with Common {
+  TextColumn get clientId => text().references(Clients, #id)();
+
+  /// 'invoice' or 'credit'.
+  TextColumn get kind => text().withDefault(const Constant('invoice'))();
+
+  /// The invoice a credit note takes back.
+  TextColumn get creditsInvoiceId => text().nullable().references(Invoices, #id)();
+
+  /// 'draft', 'issued' or 'credited'.
+  TextColumn get status => text().withDefault(const Constant('draft'))();
+
+  /// Null means every site of the company.
+  TextColumn get siteId => text().nullable().references(Sites, #id)();
+  TextColumn get fromDate => text()();
+  TextColumn get toDate => text()();
+
+  /// JSON while a draft: timesheets left out, each line's discount or monthly fee, and lines the owner wrote.
+  TextColumn get draft => text().withDefault(const Constant('{}'))();
+  TextColumn get poReference => text().nullable()();
+
+  /// A `VatCategory` by name, and the rate it charged.
+  TextColumn get vatCategory => text().withDefault(const Constant('standard'))();
+  IntColumn get vatBps => integer().withDefault(const Constant(0))();
+  BoolColumn get pricesIncludeVat => boolean().withDefault(const Constant(false))();
+
+  /// Whether the supplier charged VAT on the day it issued (INV-03).
+  BoolColumn get vatRegistered => boolean().withDefault(const Constant(false))();
+  TextColumn get dueDate => text().nullable()();
+  TextColumn get issueDate => text().nullable()();
+  IntColumn get year => integer().nullable()();
+  IntColumn get seq => integer().nullable()();
+  TextColumn get number => text().nullable()();
+
+  /// JSON: both parties as they stood on the day it issued (INV-02, DOC-05).
+  TextColumn get parties => text().nullable()();
+
+  /// Why a credit note was made.
+  TextColumn get reason => text().nullable()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {tenantId, kind, year, seq},
+  ];
+}
+
+/// One line of an issued invoice or credit note, as it stood (INV-02). Never changes. Triggers enforce this.
+@TableIndex(name: 'idx_invoice_lines_invoice', columns: {#invoiceId})
+class InvoiceLines extends Table with Common {
+  TextColumn get invoiceId => text().references(Invoices, #id)();
+  IntColumn get position => integer()();
+  TextColumn get timesheetId => text().nullable().references(Timesheets, #id)();
+  TextColumn get description => text()();
+
+  /// A `RateBasis` by name, which is the unit, or 'item' for a line the owner wrote or a credit for an amount.
+  TextColumn get basis => text()();
+
+  /// In the unit's own count: minutes of hours, half days, half shifts, workers on a monthly fee, or items.
+  IntColumn get quantity => integer()();
+  IntColumn get unitPriceFils => integer()();
+
+  /// Before the discount. The sum of its timesheet rows, each rounded on its own (D-101), or a monthly fee.
+  IntColumn get amountFils => integer().check(amountFils.isBiggerOrEqualValue(0))();
+  IntColumn get discountFils => integer().withDefault(const Constant(0)).check(discountFils.isBiggerOrEqualValue(0))();
+  IntColumn get netFils => integer()();
+  IntColumn get vatFils => integer()();
+
+  /// On a fixed monthly contract's line, the month it charges, so the next invoice can charge what is left (D-058). Null
+  /// on a line issued before, whose month counts as charged whole.
+  TextColumn get feeMonth => text().nullable()();
+}
+
+/// What settles a company's invoice, or its balance from before the app (INV-05): part of a receipt in the cash book, or
+/// what the owner closed as lost with a reason (D-048). Rows never change. A negative row gives some back, when a credit
+/// note leaves less to pay or a closing is undone. Only receipts still standing in the cash book count, so undoing one
+/// there sets its rows aside (REP-08). Triggers enforce this.
+@TableIndex(name: 'idx_invoice_allocations_client', columns: {#clientId})
+class InvoiceAllocations extends Table with Common {
+  TextColumn get clientId => text().references(Clients, #id)();
+
+  /// Null means the company's balance from before this app.
+  TextColumn get invoiceId => text().nullable().references(Invoices, #id)();
+
+  /// The company's receipt. Null on what the owner closed as lost.
+  TextColumn get paymentId => text().nullable().references(CashEntries, #id)();
+
+  /// The day it was written: the receipt's own date when entered with it.
+  TextColumn get entryDate => text()();
+  IntColumn get amountFils => integer().check(amountFils.equals(0).not())();
+
+  /// Why the owner closed it, or the credit note that gave it back.
+  TextColumn get reason => text().nullable()();
+
+  @override
+  List<String> get customConstraints => ['CHECK (payment_id IS NOT NULL OR (invoice_id IS NOT NULL AND reason IS NOT NULL))'];
+}
+
+/// Rate terms shared by both contract tables (MASTER-06). Dates are YYYY-MM-DD.
+mixin RateTerms on Table {
+  TextColumn get basis => text()();
+  IntColumn get rateFils => integer().check(rateFils.isBiggerOrEqualValue(0))();
+  TextColumn get effectiveFrom => text()();
+  TextColumn get effectiveTo => text().nullable()();
+  BoolColumn get breakPaid => boolean().withDefault(const Constant(false))();
+  IntColumn get halfAmountFils => integer().nullable()();
+  IntColumn get includedMinutes => integer().nullable()();
+  IntColumn get overtimeRateFils => integer().nullable()();
+}
+
+/// What a worker is paid. A set `siteId` is the assignment-level rate that beats the general one (CALC-06).
+class PayContracts extends Table with Common, RateTerms {
+  TextColumn get workerId => text().references(Workers, #id)();
+  TextColumn get siteId => text().nullable().references(Sites, #id)();
+
+  /// Monthly basis only: a `PartialMethod` by name. No default on purpose (D-102).
+  TextColumn get partialMethod => text().nullable()();
+  IntColumn get partialDivisor => integer().nullable()();
+
+  /// Monthly basis only: a day with no attendance is cut from the salary at the part-month rule (D-057). The form turns it
+  /// on for a new contract. A contract saved before stays off, so a month already being worked out does not change by itself.
+  BoolColumn get cutAbsence => boolean().withDefault(const Constant(false))();
+
+  /// Monthly basis only: weekly days off, never cut. `DateTime.weekday` numbers joined by commas, Monday 1. Null means none.
+  TextColumn get offWeekdays => text().nullable()();
+}
+
+/// What a client is charged. A set `siteId` or `workerId` beats the general rate (CALC-06).
+class BillingContracts extends Table with Common, RateTerms {
+  TextColumn get clientId => text().references(Clients, #id)();
+  TextColumn get siteId => text().nullable().references(Sites, #id)();
+  TextColumn get workerId => text().nullable().references(Workers, #id)();
+}
+
+/// Migration figures with source and owner confirmation (MASTER-05). Never a wage expense.
+class OpeningBalances extends Table with Common {
+  /// 'worker_salary_owed', 'worker_advance' or 'client_receivable'.
+  TextColumn get kind => text()();
+  TextColumn get workerId => text().nullable().references(Workers, #id)();
+  TextColumn get clientId => text().nullable().references(Clients, #id)();
+  IntColumn get amountFils => integer().check(amountFils.isBiggerOrEqualValue(0))();
+  TextColumn get asOfDate => text()();
+  TextColumn get sourceNote => text()();
+
+  @override
+  List<String> get customConstraints => ['CHECK ((worker_id IS NULL) <> (client_id IS NULL))'];
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {kind, workerId},
+    {kind, clientId},
+  ];
+}
+
+/// A team that usually works together (D-029). Everything but the name is optional.
+class WorkerGroups extends Table with Common {
+  TextColumn get name => text()();
+  TextColumn get clientId => text().nullable().references(Clients, #id)();
+  TextColumn get siteId => text().nullable().references(Sites, #id)();
+
+  /// Pay per day for everyone in the group, unless a member has their own.
+  IntColumn get dailyRateFils => integer().nullable().check(dailyRateFils.isBiggerOrEqualValue(0))();
+  BoolColumn get halfDayIsHalf => boolean().withDefault(const Constant(true))();
+
+  /// Usual duty as minutes from local midnight. End below start means next day.
+  IntColumn get startMinute => integer().nullable()();
+  IntColumn get endMinute => integer().nullable()();
+  IntColumn get breakMinutes => integer().withDefault(const Constant(0))();
+  BoolColumn get active => boolean().withDefault(const Constant(true))();
+}
+
+class WorkerGroupMembers extends Table with Common {
+  TextColumn get groupId => text().references(WorkerGroups, #id)();
+  TextColumn get workerId => text().references(Workers, #id)();
+
+  /// What this worker earns in this group. Null means their own contract, or the group's daily wage if they have none (D-042).
+  IntColumn get rateFils => integer().named('daily_rate_fils').nullable().check(rateFils.isBiggerOrEqualValue(0))();
+
+  /// 'day' or 'hour'.
+  TextColumn get rateBasis => text().withDefault(const Constant('day'))();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {groupId, workerId},
+  ];
+}
+
+@DataClassName('AttendanceBatch')
+class AttendanceBatches extends Table with Common {
+  TextColumn get workDate => text()();
+  TextColumn get clientId => text().references(Clients, #id)();
+  TextColumn get siteId => text().references(Sites, #id)();
+  TextColumn get groupId => text().nullable().references(WorkerGroups, #id)();
+  TextColumn get note => text().nullable()();
+}
+
+@TableIndex(name: 'idx_entries_worker_date', columns: {#workerId, #workDate})
+@TableIndex(name: 'idx_entries_date', columns: {#workDate})
+class AttendanceEntries extends Table with Common {
+  TextColumn get batchId => text().references(AttendanceBatches, #id)();
+  TextColumn get workerId => text().references(Workers, #id)();
+  TextColumn get clientId => text().references(Clients, #id)();
+  TextColumn get siteId => text().references(Sites, #id)();
+
+  /// Set when marked through a group, so the row can be priced again until it is approved (D-026, D-029).
+  TextColumn get groupId => text().nullable().references(WorkerGroups, #id)();
+  TextColumn get workDate => text()();
+
+  /// Null for an absent row.
+  DateTimeColumn get startUtc => dateTime().nullable()();
+  DateTimeColumn get endUtc => dateTime().nullable()();
+  IntColumn get clockMinutes => integer().check(clockMinutes.isBiggerOrEqualValue(0))();
+  IntColumn get breakMinutes => integer().check(breakMinutes.isBiggerOrEqualValue(0))();
+  BoolColumn get breakPaidClient => boolean()();
+  BoolColumn get breakPaidWorker => boolean()();
+  IntColumn get clientBillableMinutes => integer()();
+  IntColumn get workerPayableMinutes => integer()();
+  IntColumn get overtimeMinutes => integer().withDefault(const Constant(0))();
+  BoolColumn get overtimeApproved => boolean().withDefault(const Constant(false))();
+
+  /// 'present', 'half' or 'absent'.
+  TextColumn get attendanceStatus => text()();
+
+  /// 'draft', 'submitted', 'approved' or 'linked' (ATT-07). Client acknowledgement is separate.
+  TextColumn get state => text().withDefault(const Constant('draft'))();
+  TextColumn get clientAck => text().withDefault(const Constant('none'))();
+
+  /// Rate snapshot. Null means no rate was found: the row cannot be approved (CALC-06).
+  TextColumn get clientBasis => text().nullable()();
+  IntColumn get clientRateFils => integer().nullable()();
+  IntColumn get clientAmountFils => integer().nullable()();
+  TextColumn get workerBasis => text().nullable()();
+  IntColumn get workerRateFils => integer().nullable()();
+  IntColumn get workerAmountFils => integer().nullable()();
+
+  /// Kept apart from the snapshot, so approving a row can re-price it without losing the override.
+  IntColumn get clientRateOverrideFils => integer().nullable()();
+  IntColumn get workerRateOverrideFils => integer().nullable()();
+  TextColumn get overrideReason => text().nullable()();
+  TextColumn get overlapReason => text().nullable()();
+  TextColumn get notes => text().nullable()();
+
+  /// Set on a correction. The original row stays untouched (ATT-08).
+  TextColumn get revisesEntryId => text().nullable().references(AttendanceEntries, #id)();
+  BoolColumn get superseded => boolean().withDefault(const Constant(false))();
+
+  /// A correction that deletes the row it revises: absent, worth nothing, and shown only on the Delete tab. Pay already
+  /// given for the original comes back as a difference in the next payroll, as any correction's does (D-056, ATT-08).
+  BoolColumn get deleted => boolean().withDefault(const Constant(false))();
+
+  /// The posted payroll that paid this row (ATT-07, MODEL-07). Null means not paid yet.
+  TextColumn get payrollLineId => text().nullable().references(PayrollLines, #id)();
+
+  @override
+  List<String> get customConstraints => ['CHECK (break_minutes <= clock_minutes)'];
+}
+
+/// One posting: the owner approved these workers' figures for this period (PAY-01).
+class PayrollRuns extends Table with Common {
+  TextColumn get periodFrom => text()();
+  TextColumn get periodTo => text()();
+  TextColumn get postingDate => text()();
+  TextColumn get currency => text().withDefault(const Constant('AED'))();
+}
+
+/// One worker's posted month. Its figures never change. A wrong posting is flagged [reversed], which puts the
+/// work and items back to unpaid, and the month can post again (PAY-01, REP-08). Triggers enforce this.
+/// Paid and closing are not stored, because they grow with later payments and always derive (REP-08).
+@TableIndex(name: 'idx_payroll_lines_worker', columns: {#workerId})
+class PayrollLines extends Table with Common {
+  TextColumn get runId => text().references(PayrollRuns, #id)();
+  TextColumn get workerId => text().references(Workers, #id)();
+  TextColumn get periodFrom => text()();
+
+  /// Owed before this month. Below zero means paid in advance of it.
+  IntColumn get openingFils => integer()();
+  IntColumn get earnedFils => integer()();
+  IntColumn get salaryFils => integer()();
+  IntColumn get adjustmentFils => integer()();
+  IntColumn get allowancesFils => integer()();
+  IntColumn get deductionsFils => integer()();
+  IntColumn get recoveryFils => integer()();
+  IntColumn get visaRecoveryFils => integer().withDefault(const Constant(0))();
+
+  /// What days with no attendance took off a monthly salary, already out of [salaryFils], and those days (D-057).
+  IntColumn get absenceFils => integer().withDefault(const Constant(0))();
+  TextColumn get absentDays => text().nullable()();
+  IntColumn get netFils => integer()();
+  IntColumn get payableFils => integer()();
+
+  /// All salary paid to this worker before this posting. Payments after it are this line's "paid".
+  IntColumn get paidBeforeFils => integer()();
+  BoolColumn get reversed => boolean().withDefault(const Constant(false))();
+}
+
+/// An allowance or deduction for one worker's month. Free to change until posted (PAY-01).
+@TableIndex(name: 'idx_payroll_items_period', columns: {#periodFrom})
+class PayrollItems extends Table with Common {
+  TextColumn get workerId => text().references(Workers, #id)();
+  TextColumn get periodFrom => text()();
+
+  /// A `PayItemKind` by name.
+  TextColumn get kind => text()();
+  IntColumn get amountFils => integer().check(amountFils.isBiggerOrEqualValue(0))();
+  TextColumn get reason => text()();
+
+  /// Who agreed to this deduction, or the paper it rests on (PAY-07).
+  TextColumn get authorizedBy => text().nullable()();
+  TextColumn get note => text().nullable()();
+
+  /// A room charge counts as rent received for this room once posted (D-031).
+  TextColumn get roomId => text().nullable().references(Rooms, #id)();
+  TextColumn get lineId => text().nullable().references(PayrollLines, #id)();
+
+  @override
+  /// Only a recovery can be nothing: the owner's answer that nothing of the advance is cut this month (D-057).
+  List<String> get customConstraints => [
+    "CHECK (kind NOT IN ('deduction', 'roomCharge') OR authorized_by IS NOT NULL)",
+    "CHECK (amount_fils > 0 OR kind = 'advanceRecovery')",
+  ];
+}
+
+@DataClassName('AuditEvent')
+class AuditEvents extends Table {
+  TextColumn get id => text()();
+  TextColumn get tenantId => text()();
+  DateTimeColumn get atUtc => dateTime()();
+  TextColumn get actorId => text()();
+  TextColumn get action => text()();
+  TextColumn get entity => text()();
+  TextColumn get recordId => text()();
+  IntColumn get recordVersion => integer()();
+  TextColumn get operationId => text()();
+
+  /// The user's own note, or the reason a step asked for.
+  TextColumn get reason => text().nullable()();
+
+  /// JSON the owner reads (D-056): on an edit, each field from and to; on a delete, the entry as it was.
+  TextColumn get detail => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// One row per mutation, written with the change itself (TEAM-04). The primary key is the
+/// idempotency key, so a retried operation can never apply twice.
+@DataClassName('OutboxEntry')
+class Outbox extends Table {
+  TextColumn get operationId => text()();
+  TextColumn get tenantId => text()();
+  TextColumn get entity => text()();
+  TextColumn get recordId => text()();
+  IntColumn get recordVersion => integer()();
+  TextColumn get deviceId => text()();
+  TextColumn get payload => text()();
+  DateTimeColumn get createdAtUtc => dateTime()();
+  DateTimeColumn get ackedAtUtc => dateTime().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {operationId};
+}

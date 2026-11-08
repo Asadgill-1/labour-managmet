@@ -1,0 +1,103 @@
+/// shortcut: fixed Asia/Dubai offset (UAE has no DST), add a tenant timezone if a non-UAE tenant ever signs up.
+const dubaiOffset = Duration(hours: 4);
+
+String _two(int v) => v.toString().padLeft(2, '0');
+
+/// Calendar date as stored: YYYY-MM-DD, which also sorts correctly as text.
+String ymd(DateTime wallClock) => '${wallClock.year}-${_two(wallClock.month)}-${_two(wallClock.day)}';
+
+/// Today's calendar date in the UAE, whatever timezone the phone is set to.
+String dubaiToday(DateTime nowUtc) => ymd(nowUtc.toUtc().add(dubaiOffset));
+
+/// "2026-11-01" -> "01-11-2026" (DD-MM-YYYY display).
+String showDate(String storedDate) {
+  final parts = storedDate.split('-');
+  return '${parts[2]}-${parts[1]}-${parts[0]}';
+}
+
+/// Minutes from midnight -> "20:05".
+String showMinuteOfDay(int minute) => '${_two(minute ~/ 60)}:${_two(minute % 60)}';
+
+/// The UTC instant of a UAE wall-clock time on a stored date.
+DateTime dubaiToUtc(String storedDate, int minuteOfDay) {
+  final parts = storedDate.split('-').map(int.parse).toList();
+  return DateTime.utc(parts[0], parts[1], parts[2]).add(Duration(minutes: minuteOfDay)).subtract(dubaiOffset);
+}
+
+/// A UTC instant as UAE minutes from midnight.
+int dubaiMinuteOfDay(DateTime utc) {
+  final local = utc.toUtc().add(dubaiOffset);
+  return local.hour * 60 + local.minute;
+}
+
+/// A stored date shifted by whole days.
+String addDays(String storedDate, int days) {
+  final parts = storedDate.split('-').map(int.parse).toList();
+  return ymd(DateTime.utc(parts[0], parts[1], parts[2] + days));
+}
+
+/// A stored date's day of the week, Monday 1 to Sunday 7.
+int weekdayOf(String storedDate) {
+  final parts = storedDate.split('-').map(int.parse).toList();
+  return DateTime.utc(parts[0], parts[1], parts[2]).weekday;
+}
+
+/// Whole days from one stored date to another. Below zero when [to] comes first.
+int daysBetween(String from, String to) {
+  DateTime day(String stored) {
+    final parts = stored.split('-').map(int.parse).toList();
+    return DateTime.utc(parts[0], parts[1], parts[2]);
+  }
+
+  return day(to).difference(day(from)).inDays;
+}
+
+/// A stored month ("2026-10") shifted by whole months.
+String addMonths(String month, int months) {
+  final parts = month.split('-').map(int.parse).toList();
+  final moved = DateTime.utc(parts[0], parts[1] + months);
+  return '${moved.year}-${_two(moved.month)}';
+}
+
+/// "2026-10" -> "2026-10-01".
+String monthFirstDay(String month) => '$month-01';
+
+/// "2026-10" -> "2026-10-31".
+String monthLastDay(String month) => addDays(monthFirstDay(addMonths(month, 1)), -1);
+
+/// "2026-10" -> "10-2026".
+String showMonth(String month) {
+  final parts = month.split('-');
+  return '${parts[1]}-${parts[0]}';
+}
+
+/// 660 -> "11:00".
+String showDuration(int minutes) => '${minutes ~/ 60}:${_two(minutes % 60)}';
+
+final _dayFirst = RegExp(r'^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$');
+final _yearFirst = RegExp(r'^(\d{4})-(\d{1,2})-(\d{1,2})$');
+
+/// A typed date as stored, or null if it is no real date. Day first, as in the UAE: "5/1/2026" is 5 January.
+/// "2026-01-05" reads too.
+String? parseDate(String input) {
+  final text = input.trim();
+  final dayFirst = _dayFirst.firstMatch(text);
+  final yearFirst = _yearFirst.firstMatch(text);
+  final (year, month, day) = dayFirst != null
+      ? (int.parse(dayFirst[3]!), int.parse(dayFirst[2]!), int.parse(dayFirst[1]!))
+      : yearFirst != null
+      ? (int.parse(yearFirst[1]!), int.parse(yearFirst[2]!), int.parse(yearFirst[3]!))
+      : (0, 0, 0);
+  final date = DateTime.utc(year, month, day);
+  return year > 0 && date.month == month && date.day == day ? ymd(date) : null;
+}
+
+final _clock = RegExp(r'^(\d{1,2}):(\d{2})$');
+
+/// "8:30" or "20:05" -> minutes from midnight, or null.
+int? parseClock(String input) {
+  final match = _clock.firstMatch(input.trim());
+  if (match == null) return null;
+  final (hour, minute) = (int.parse(match[1]!), int.parse(match[2]!));
+  return hour < 24 && minute < 60 ? hour * 60 + minute : null;
+}

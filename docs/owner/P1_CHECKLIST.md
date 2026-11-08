@@ -1,0 +1,64 @@
+# P1 Owner Checklist
+
+Yeh checklist Asad ke liye hai (BUILD-03). P1 mein company, sites, mazdoor, rates aur rozana hazri ban gaye hain. Tankhwah aur invoice abhi nahin, woh P2 aur P3 mein hain.
+
+Test APK: `apps/mobile/build/app/outputs/flutter-apk/app-release.apk`. Yeh test build hai. Asal data na daalein.
+
+## 1. Encryption ka saboot (P0 se baqi)
+
+- [ ] **Menu > Settings > Data encryption ki jaanch** kholein. Upar **Sab theek** aana chahiye.
+- [ ] App poori tarah band kar ke dobara yeh screen kholein. "Data survives reopen" mein rows 10 barh jani chahiye.
+
+## 2. Setup (5 minute)
+
+- [ ] Pehli baar khulne par sirf company ka naam maanga jaye.
+- [ ] Oopar baen taraf **Menu** dabayein. Baen taraf panel khule. Teer ka nishan dabane par, ya bahar dabane par, panel chhup jaye.
+- [ ] Panel mein yeh sab hon: Aaj, Rozana hisaab, Companies, Sites, Labour, Mazdoor group, Rooms, Rates, Pichla baqaya, Apni company, Settings. Jo abhi bane nahin un par **Jald** likha ho aur woh na khulein.
+- [ ] **Companies** mein aik company add karein, phir us mein site. Site mein aam shuru aur khatam waqt, aur break likhein.
+- [ ] Usi company mein **Company ka rate** add karein: fi ghanta AED 10.
+- [ ] **Labour** mein 10 mazdoor add karein. Har aik mein **Tankhwah ka rate**: fi ghanta AED 8.
+- [ ] Aik mazdoor mein **Pichla baqaya** bhar kar dekhein. Tareekh, wajah aur tasdeeq ke baghair save nahin hona chahiye.
+- [ ] **Sites**, **Rates** aur **Pichla baqaya** kholein. Jo upar add kiya woh sab yahan bhi nazar aaye.
+
+## 3. Asal test: 10 mazdoor ki hazri
+
+Time note karein. Target 60 second hai.
+
+- [ ] **Aaj** par **Hazri lagayein** dabayein. Company aur site chunein, waqt khud aa jana chahiye.
+- [ ] **Sab ko select** dabayein, phir **Aage**.
+- [ ] 8:00 se 20:00, 60 minute break par yeh aana chahiye: **Company se lena hai AED 1,100.00**, **Mazdoor ko dena hai AED 880.00**.
+- [ ] Aik mazdoor par click kar ke **Ghair hazir** karein. Total AED 990.00 aur AED 792.00 ho jane chahiye.
+- [ ] **Save karein**. **Aaj** par 9 Mazdoor, 9 Shifts dikhein.
+- [ ] Wahi mazdoor usi waqt dobara daalein. Wajah ke baghair save nahin hona chahiye.
+- [ ] Us din ki tankhwah post karein. Phir woh row kholein. Ab wajah likhe baghair correction nahin honi chahiye, aur asal row mehfooz rehni chahiye.
+- [ ] Internet band kar ke sab dobara karein. Sab kuch chalna chahiye.
+
+Kitne second lage: ______
+
+## 3b. Mazdoor group
+
+- [ ] **Menu > Mazdoor group** mein **Group banayein**. Naam (jaise Emaar West), company, site, dehari aur duty ka waqt likhein, phir mazdoor chunein.
+- [ ] Har chune hue mazdoor ke saamne dehari aaye. Aik ki raqam par daba kar badlein. Save kar ke dobara kholein, wahi raqam honi chahiye.
+- [ ] **Hazri lagayein** mein group par dabayein. Us ke mazdoor khud tick hon, aur company, site aur waqt khud aa jayen.
+- [ ] Aik mazdoor ka tick hatayein, phir **Mazdoor talash karein** se group ke bahar ka mazdoor chunein. Us ki dehari poochi jaye, aur group ki dehari pehle se likhi ho.
+- [ ] Hazri save karein. Phir **Hazri lagayein** khol kar wahi group dobara chunein. Group poora hona chahiye: hataya hua mazdoor wapas ho, aur naya mazdoor na ho.
+
+## 3c. Rozana hisaab aur Rooms
+
+- [ ] **Menu > Rooms** mein aik room add karein. Phir mazdoor ki screen par **Room** aur room charge chunein.
+- [ ] **Rozana hisaab > Hisaab likhein**: **Paisay diye**, **Advance**, mazdoor chunein, raqam likh kar save karein. Paigham aaye ke yeh us mazdoor ke hisaab mein gaya.
+- [ ] Us mazdoor ki screen kholein. **Paisay ka hisaab** mein **Advance baqi** wahi raqam ho, aur dobara kuch likhna na pare.
+- [ ] **Room ka kiraya diya** likhein, phir **Paisay mile > Room ka kiraya mila** mein mazdoor chunein. Room aur raqam khud aa jayen.
+- [ ] **Rooms** kholein. Kiraya mila, kiraya diya, aur Nafa ya Nuksan sahi hon.
+- [ ] **Rozana hisaab** mein aik entry par dabayein aur wapas karein. Wajah ke baghair na ho. Asal entry nazar aati rahe aur total theek ho jayen.
+
+## 4. Aap ke faislay
+
+Asad ne 31-10-2026 ko yeh dono tay kiye.
+
+- [x] **Logo aur mazdoor ki photo (D-023):** Yeh T14 mein documents ke saath aayenge.
+- [x] **Hazri ka waqt aur tareekh (D-024):** Mazdoor din ya raat kisi bhi waqt add ho sakta hai, koi shift fixed nahin, aur tareekh hath se daali jayegi.
+
+## 5. Aap ke karne ke kaam (P0 se baqi)
+
+- [ ] Terminal mein `gh auth login` chalayein, taake PR ban sakein aur CI ka nateeja dekha ja sake.

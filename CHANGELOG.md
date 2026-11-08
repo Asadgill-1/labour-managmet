@@ -1,0 +1,82 @@
+# Changelog
+
+## Unreleased
+
+- A fixed monthly contract's month can be invoiced in parts. Each new invoice's contract line starts at what is left of the month's amount and says which invoices charged the rest. Before, what the first invoice left off could never be charged (D-059).
+- A fixed contract line charged in part prints as one month at the amount charged, so its quantity times price adds up. Before, a changed amount printed beside the full monthly rate. The timesheet now says the contract amount goes on the invoice by the month, not once (D-059).
+- An invoice line keeps the month its contract amount charges (schema 18). Lines issued before count their month as charged whole, as they did.
+- A paid invoice taken back by a credit note says how much of its money went back as the company's credit. Before, the money it had received just vanished from its page.
+- In tareekhon ka naya invoice on a credited invoice opens the draft it made before, instead of making a second one, and that draft names the invoice it replaces (D-058).
+- An invoice for the rest of a month whose fixed contract amount is already charged says so, instead of asking for a timesheet that is already approved. (D-058).
+- The attendance review says a company's monthly contract is not in its total, not only a monthly wage.
+- Closing a month says an edit opens it again (D-056), and a closing finding says an invoice falls due by the month's end, which is true before the due date too.
+- A note typed in a form before Delete now goes into the delete question, so it stays with the deleted entry. It was dropped before.
+- Purana baqaya lists a company that owes nothing but has credit left, with its credit. It left it out before.
+- A closed month's note says an edit opens it again, as D-056 made it, instead of saying nothing there can change.
+- Month close says "1 cheez" and "1 company" for one, not "1 cheezain" or "1 companies".
+- The time under an edited or deleted entry is now UAE time. On a device set to UAE time it showed 4 hours ahead.
+- The timesheet's agreed-hours sheet no longer says attendance never changes; it says the app asks when the hours are fewer.
+- A monthly contract can cut a day with no attendance, at its own part-month rule, with weekly days off that are never cut. Tankhwah and the slip show the days cut.
+- An advance can have a monthly instalment, which payroll cuts by itself. With none, Tankhwah asks how much to cut that month, and 0 is an answer. The "Advance katein" button is gone.
+- When a company agrees fewer hours or a half day on a timesheet, the app asks whether the worker's attendance takes them too, with a note.
+- An issued invoice has Edit invoice. In one step a credit note dated today takes it back whole and a new draft of the same dates opens with the same discounts, lines, PO and VAT choices, in the violet edited colour. Issued, the new invoice prints which one it replaces.
+- Workers, companies, sites, rooms, groups, rates, allowances, deductions and opening balances show what changed and the user's note when edited, in the same violet. One that no entry names can be deleted, and stays whole on the Delete tab. One that entries name can only be archived, so they keep its name.
+- The Delete tab has two more tabs: allowances and deductions, and other records.
+- Any attendance row or cash book line can be edited or deleted, in a closed month too, which opens again. An edited one turns violet, with what the app saw change and the user's own note under it.
+- A new Delete tab keeps every deleted entry whole, by kind and date, for PDF, Excel or WhatsApp, with a blank Clarification column for whoever it is sent to.
+- The owner's sheet counts a monthly contract's amount for the month on a line of its own, invoiced or not, so such a company no longer looks like a loss.
+- A monthly contract amount is charged once a month, however that month's work is split across invoices or timesheets. Its invoice line names the month, and the app no longer calls it a fee.
+- A letterhead prints the same size on a landscape register as on an upright paper.
+- The invoice register keeps each invoice's lines together.
+- A Reports tab lists every report with what it shows and which date it goes by.
+- Two new reports: what each company owes by how late, and each company's work by site and month with what is still to bill.
+- The owner's sheet shows the labour contribution before the other costs, and calls the result an estimate, not audited.
+- Workers, companies and sites can come in from a CSV file, checked line by line first and saved all together or not at all.
+
+- Repository bootstrap: PRD in Markdown, source-of-truth docs, requirements traceability check.
+- Encrypted per-tenant local database.
+- App in Roman Urdu and English, with large text.
+- Own company, clients, sites, workers and archive.
+- Client and worker rates, and opening balances.
+- Calculation engine for hourly, day, shift and monthly contracts.
+- Bulk attendance with exceptions, approval and corrections.
+- New look: a bound account book, with a dark cover, cream ruled pages and three colours to choose from. A side panel of main tabs with sub-tabs.
+- Timesheets for a company: daily summary or each worker, with or without rates, from approval through the company's answer, with revisions that keep the old one. The same work can't go on two timesheets or be charged twice.
+- Throwing a timesheet draft away asks first, since hours agreed in it go too. A new revision and reopening a month each ask for their own reason, not an undo's.
+- A picture picker that fails says so, instead of calling the file the wrong type.
+- Invoices from approved timesheets: VAT when your company is registered, a number given only when issued, a discount on a line, and a monthly fee charged once. A paper in English that says it is no e-invoice, sent alone or with its timesheet.
+- A credit note takes an invoice back whole, so its work can be invoiced again, or takes back an amount of it. The invoice register lists every line issued, for PDF or Excel.
+- An invoice draft takes lines typed by hand, such as transport.
+- A month can't close while an invoice charges other figures than its corrected timesheet. The invoice shows the difference, and a new invoice for the same dates is one tap after the credit note.
+- A month can't close while work with a company rate has no invoice.
+- A company's payment says which invoices it settles, oldest first, and what is left waits as credit for the next invoice. Invoices show partly paid, paid or overdue, and an overdue one holds up its month until paid or closed as lost with a reason. A receipt paper for the company, and a company statement as PDF or Excel.
+- The invoice register no longer fails on a line typed by hand or a credit note for an amount.
+- Your letterhead on every paper: logo, header and footer images, signature, stamp, or pre-printed paper, with a sample to check.
+- Salary slips and receipts keep a number and an exact stored copy, and a new revision when a figure changes.
+- See a paper on screen, then save, print or send it.
+- Close a month: everything left shows date by date, each row opens what clears it, and the month closes only when nothing is left. A closed month stops changing, and can be opened again with a reason.
+- Undoing money from a closed month is written with today's date, so the closed month stays as it was.
+- Expenses take a payment reference, and the money register filters by category.
+- Choose which month a salary payment settles, oldest first by default, with reference and who took it.
+- Paying more than is owed goes on the worker's advance, after you confirm.
+- A reminder of unpaid salary on Aaj and Tankhwah, with how late each month is, counted from your own days.
+- One button in Tankhwah to cut advance, so "To pay" matches the slip.
+- Salary slip for each worker, as a PDF to send on WhatsApp, with no company figures on it.
+- Owner's salary sheet by company, with rates, bill, pay and estimated profit, in PDF and Excel.
+- A worker's own pay shows under their name when you make a group, and you can change it there, per day or per hour. The group's wage is only for someone with no pay of their own.
+- Visa money counts on a worker's account as it is cut from pay.
+- Registers, Excel and payroll keep working at 1,000 workers.
+- Attendance counts in payroll as soon as it is saved, with no approve button. Posting is the approval.
+- A missing company rate no longer holds a worker's pay, and the bill fills in when the rate is added.
+- Room charge goes on the workers you tick, with an amount for each.
+- Worker register is now each worker's account, date by date, with the running balance.
+- Attendance register adds the difference, flags missing rates, and sums by worker and by site.
+- Three colour themes to choose from in Settings.
+- Visa money per worker, with a monthly instalment through payroll.
+- Eight registers with date range and filters, exporting to PDF, Excel and WhatsApp.
+- Left side panel in place of bottom tabs, new Sites, Rates and Pichla baqaya screens, and a new look.
+- Worker groups with a daily wage and duty time, and attendance by group or by worker.
+- Daily cash book that sends each amount to its worker, room or company, with undo by reversal.
+- Rooms, with rent received, rent paid and profit or loss per month.
+- Monthly payroll: review, allowances and deductions, post, carry-forward of unpaid salary, and undo with a reason.
+- Room charge taken through payroll counts as rent received, and advance recovery comes off the advance.
