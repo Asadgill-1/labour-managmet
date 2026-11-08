@@ -30,9 +30,9 @@ Everything stays under the owner's accounts and control. Nothing here holds a cr
 | Email provider and domain | Owner | Not created (P4) |
 | Admin hosting | Owner | Not created (P5) |
 
-Environment sample (`.env.example`) arrives with the first secret in P4.
+Environment: `apps/mobile/.env.example` names what `apps/mobile/.env` holds, the project URL and its publishable key, from Project Settings > API Keys. `.env` is git-ignored. The secret key never goes in it.
 
-Cloud database: migrations and pgTAP tests live in `supabase/`. This computer has virtualisation off, so Docker and `supabase start` can't run here; the `supabase` CI job starts it in Docker and runs `supabase test db` on every push (D-060). The CLI here also fails to read `~/.supabase/profile`, so new migration files are named by hand, `YYYYMMDDHHMMSS_name.sql`.
+Cloud database: migrations and pgTAP tests live in `supabase/`. This computer has virtualisation off, so Docker and `supabase start` can't run here; the `supabase` CI job starts it in Docker and runs `supabase test db` on every push (D-060). The CLI here also fails to read `~/.supabase/profile`, so new migration files are named by hand, `YYYYMMDDHHMMSS_name.sql`. The live project got its first migration through the dashboard's SQL editor, with a row in `supabase_migrations.schema_migrations` like the one `supabase db push` writes (D-061). Later migrations go the same way, or by `supabase db push` once the CLI is linked, which needs the owner's sign-in and database password.
 
 ## Direct dependency licences
 

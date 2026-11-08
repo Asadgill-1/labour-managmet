@@ -13,11 +13,11 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | UX-05 | 02 | Kam typing | T10 | IMPLEMENTED_UNVERIFIED | TC-026 | - |
 | UX-06 | 02 | Measurable usability test | T10 | NOT_STARTED | TC-031 | - |
 | UX-07 | 02 | Save ki imaandari | T05 | IN_PROGRESS | TC-008 | - |
-| AUTH-01 | 03 | Email/password primary login ho. Email verification, forgot-password, safe password | T19 | IN_PROGRESS | TC-142 | `supabase/tests/database/tenants.test.sql` |
+| AUTH-01 | 03 | Email/password primary login ho. Email verification, forgot-password, safe password | T19 | IN_PROGRESS | TC-142, TC-143 | `supabase/tests/database/tenants.test.sql` |
 | AUTH-02 | 03 | Signup par immutable tenant ID bane. Naam, phone number | T19 | IN_PROGRESS | TC-006, TC-142 | `supabase/tests/database/tenants.test.sql` |
 | AUTH-03 | 03 | Pehla signup, naya device login, password reset aur invite | T19 | NOT_STARTED | - | - |
 | AUTH-04 | 03 | Har local database tenant/account boundary mein encrypted ho. Logout/account | T19 | NOT_STARTED | TC-014, TC-045 | - |
-| AUTH-05 | 03 | Cloud tenant tables par Row Level Security aur membership | T19 | IN_PROGRESS | TC-006, TC-142 | `supabase/tests/database/tenants.test.sql` |
+| AUTH-05 | 03 | Cloud tenant tables par Row Level Security aur membership | T19 | IN_PROGRESS | TC-006, TC-142, TC-143 | `supabase/tests/database/tenants.test.sql` |
 | AUTH-06 | 03 | App malik ke admin account par MFA lazmi ho | T19 | NOT_STARTED | - | - |
 | AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | NOT_STARTED | - | - |
 | AUTH-08 | 03 | Production email login ke liye real SMTP/domain configuration aur | T19 | NOT_STARTED | - | - |

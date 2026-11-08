@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- The owner's Supabase project now holds the cloud tables, and signup there needs a confirmed email and a password of at least 8 characters with letters and digits (D-061).
 - The cloud database's first tables: companies, their members and devices, each company closed to the others by row level security, with server functions to make a company and record a device (T19a, D-060).
 - CI keeps Gradle's and the sqlite3 hook's downloads between runs, so a failing GitHub release download no longer fails the build, and runs the cloud database tests in Docker.
 - A fixed monthly contract's month can be invoiced in parts. Each new invoice's contract line starts at what is left of the month's amount and says which invoices charged the rest. Before, what the first invoice left off could never be charged (D-059).

@@ -68,7 +68,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 
 | Task | Title | Requirements | Status | Branch / PR |
 | --- | --- | --- | --- | --- |
-| T19 | Supabase schema, RLS, two-tenant tests, SMTP, signup, device unlock, deletion. In slices: T19a cloud tables, row level security and two-company tests, done on 2026-11-08 (D-060, TC-142); T19b signup, login, verify, reset, device registration and offline PIN or fingerprint unlock; T19c account deletion; T19d real SMTP, which needs the owner's Supabase project and email provider | AUTH-01..08, ARCH-02, ARCH-07, MODEL-02, MODEL-05, MODEL-06, UX-02 | IN_PROGRESS | `p4/t19a-cloud-tenants` |
+| T19 | Supabase schema, RLS, two-tenant tests, SMTP, signup, device unlock, deletion. In slices: T19a cloud tables, row level security and two-company tests, done on 2026-11-08 (D-060, TC-142), and on the owner's live project the same day (D-061, TC-143); T19b signup, login, verify, reset, device registration and offline PIN or fingerprint unlock; T19c account deletion; T19d real SMTP, which needs the owner's email provider | AUTH-01..08, ARCH-02, ARCH-07, MODEL-02, MODEL-05, MODEL-06, UX-02 | IN_PROGRESS | `p4/t19a-cloud-tenants` |
 | T20 | Encrypted backup, restore, device change, sequence reconciliation | DATA-02..08 | NOT_STARTED | - |
 | T21 | Signed entitlements, offline lease, versioned plan config, safe expiry | BILL-02, BILL-03, BILL-05, BILL-06, PLAN-03, PLAN-04, PLAN-06 | NOT_STARTED | - |
 
