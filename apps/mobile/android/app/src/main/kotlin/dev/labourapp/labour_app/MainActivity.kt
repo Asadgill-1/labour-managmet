@@ -1,13 +1,16 @@
 package dev.labourapp.labour_app
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.provider.Settings
 import androidx.core.content.FileProvider
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
+import java.util.UUID
 
 private const val SAVE_REQUEST = 4101
 private const val PICK_REQUEST = 4102
@@ -19,6 +22,9 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "labour_app/phone").setMethodCallHandler { call, result ->
+            if (call.method == "id") result.success(phoneId()) else result.notImplemented()
+        }
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "labour_app/files").setMethodCallHandler { call, result ->
             if (call.method == "pickImage") {
                 pick(result, "image/*", arrayOf("image/png", "image/jpeg"))
@@ -44,6 +50,14 @@ class MainActivity : FlutterActivity() {
             }
         }
     }
+
+    /**
+     * The phone's id for this app, as a UUID, so the cloud lets one account use the phone (D-063). A reinstall keeps it;
+     * a factory reset or another signing key changes it. Android scopes it to this app, so other apps cannot match it.
+     */
+    @SuppressLint("HardwareIds")
+    private fun phoneId(): String? = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        ?.let { UUID.nameUUIDFromBytes("labour_app:$it".toByteArray()).toString() }
 
     private fun uriOf(file: File) = FileProvider.getUriForFile(this, "$packageName.files", file)
 

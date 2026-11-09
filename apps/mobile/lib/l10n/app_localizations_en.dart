@@ -3978,7 +3978,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountPhoneData =>
-      'This phone already has data. A new account keeps it in the new company. Logging in to another company hides it on this phone. It is not deleted.';
+      'This phone already has data. Create a new account and it goes into the new company.';
 
   @override
   String get accountTitle => 'Account';
@@ -4012,6 +4012,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountOk => 'OK';
+
+  @override
+  String accountPhoneTaken(String email) {
+    return 'This phone already has an account: $email. Log in with it. A phone holds one account, so no company\'s data is left hidden on it.';
+  }
+
+  @override
+  String get accountPhoneElsewhere =>
+      'This phone belongs to another account. Log in with that one.';
+
+  @override
+  String get accountPhoneDataLogin =>
+      'This phone\'s earlier data has no company yet. Create a new account here and it goes into that company.';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -7787,7 +7800,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get accountPhoneData =>
-      'Is phone par pehle se data hai. Naya account banane par ye isi nayi company mein rahega. Kisi aur company mein login karne par ye data is phone par chhup jayega, delete nahin hoga.';
+      'Is phone par pehle se data hai. Naya account banayein, ye data usi nayi company mein chala jayega.';
 
   @override
   String get accountTitle => 'Account';
@@ -7821,4 +7834,17 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get accountOk => 'Theek hai';
+
+  @override
+  String accountPhoneTaken(String email) {
+    return 'Is phone par pehle se account hai: $email. Usi se login karein. Ek phone par ek hi account chalta hai, taake kisi company ka data is par chhup na jaye.';
+  }
+
+  @override
+  String get accountPhoneElsewhere =>
+      'Ye phone kisi aur account ka hai. Usi account se login karein.';
+
+  @override
+  String get accountPhoneDataLogin =>
+      'Is phone ke purane data ki abhi koi company nahin. Yahan naya account banayein, data usi ki company mein chala jayega.';
 }

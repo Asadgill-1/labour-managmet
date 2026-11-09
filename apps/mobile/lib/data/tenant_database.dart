@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'attendance.dart';
@@ -383,9 +384,19 @@ Future<String> stableId(FlutterSecureStorage storage, String name) async {
   return created;
 }
 
+const _phone = MethodChannel('labour_app/phone');
+
+/// This device's id. On Android it is the phone's own, which a reinstall keeps, so the cloud knows the phone again and
+/// lets one account use it (D-063); elsewhere it is one the app made and kept.
+Future<String> thisDeviceId(FlutterSecureStorage storage) async {
+  // ponytail: an iOS build would need an id kept in its keychain; vendor ids reset when the app is removed.
+  final phone = Platform.isAndroid ? await _phone.invokeMethod<String>('id') : null;
+  return phone ?? stableId(storage, 'device_id');
+}
+
 /// Opens one company's encrypted file on this device.
 Future<TenantDatabase> openTenant(FlutterSecureStorage storage, Directory dir, String tenantId, {String actorId = localOwner}) async {
-  final deviceId = await stableId(storage, 'device_id');
+  final deviceId = await thisDeviceId(storage);
   final key = await tenantKey(storage, tenantId);
   return openTenantDatabase(tenantFile(dir, tenantId), key, tenantId: tenantId, deviceId: deviceId, actorId: actorId);
 }

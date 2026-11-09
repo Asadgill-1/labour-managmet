@@ -11,7 +11,7 @@ import '../../l10n/app_localizations.dart';
 /// Opens a company on this device. [companyName] comes with a company just made, so its first screen need not ask again.
 typedef OpenCompany = Future<void> Function(String tenantId, {String? companyName});
 
-String accountProblemText(AppLocalizations l10n, AccountProblem problem) => switch (problem) {
+String accountProblemText(AppLocalizations l10n, AccountRefused refusal) => switch (refusal.problem) {
   AccountProblem.offline => l10n.accountOffline,
   AccountProblem.wrongLogin => l10n.accountWrongLogin,
   AccountProblem.notConfirmed => l10n.accountNotConfirmed,
@@ -20,6 +20,11 @@ String accountProblemText(AppLocalizations l10n, AccountProblem problem) => swit
   AccountProblem.badCode => l10n.accountBadCode,
   AccountProblem.tooMany => l10n.accountTooMany,
   AccountProblem.deviceRevoked => l10n.accountDeviceRevoked,
+  AccountProblem.phoneTaken => switch (refusal.holder) {
+    final holder? => l10n.accountPhoneTaken(holder),
+    null => l10n.accountPhoneElsewhere,
+  },
+  AccountProblem.phoneData => l10n.accountPhoneDataLogin,
   AccountProblem.failed => l10n.accountFailed,
 };
 
@@ -35,7 +40,7 @@ mixin _Step<T extends StatefulWidget> on State<T> {
     } catch (e) {
       if (!mounted) return;
       final l10n = AppLocalizations.of(context);
-      showFormError(context, e is AccountRefused ? accountProblemText(l10n, e.problem) : l10n.accountFailed);
+      showFormError(context, e is AccountRefused ? accountProblemText(l10n, e) : l10n.accountFailed);
     } finally {
       if (mounted) setState(() => busy = false);
     }

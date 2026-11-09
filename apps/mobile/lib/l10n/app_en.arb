@@ -2401,7 +2401,7 @@
   "accountOffline": "No internet. Creating an account or logging in needs the internet.",
   "accountDeviceRevoked": "Your company turned off this phone's access.",
   "accountFailed": "That did not work. Try again.",
-  "accountPhoneData": "This phone already has data. A new account keeps it in the new company. Logging in to another company hides it on this phone. It is not deleted.",
+  "accountPhoneData": "This phone already has data. Create a new account and it goes into the new company.",
   "accountTitle": "Account",
   "accountNotInBuild": "Not in this build. Data stays on this phone only.",
   "logOut": "Log out",
@@ -2417,5 +2417,15 @@
   },
   "accountNotConfirmed": "The email is not confirmed yet. Tap the link in the email first.",
   "accountResetUnavailable": "Resetting a password is not available yet. It comes with email codes, soon.",
-  "accountOk": "OK"
+  "accountOk": "OK",
+  "accountPhoneTaken": "This phone already has an account: {email}. Log in with it. A phone holds one account, so no company's data is left hidden on it.",
+  "@accountPhoneTaken": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountPhoneElsewhere": "This phone belongs to another account. Log in with that one.",
+  "accountPhoneDataLogin": "This phone's earlier data has no company yet. Create a new account here and it goes into that company."
 }

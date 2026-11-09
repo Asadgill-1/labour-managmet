@@ -68,6 +68,41 @@ void main() {
     expect((await account.binding())?.tenantId, '00000000-0000-4000-8000-0000000000c9');
   });
 
+  test('one phone serves one account: a second signup and a login to another account are refused (D-063)', () async {
+    cloud
+      ..addUser('owner@test.ae', 'pass1234', company: '00000000-0000-4000-8000-0000000000c9')
+      ..addUser('other@test.ae', 'pass1234', company: '00000000-0000-4000-8000-0000000000c8');
+    await account.signIn('owner@test.ae', 'pass1234');
+    await account.openCompany();
+    await account.logOut();
+
+    AccountRefused? signup;
+    try {
+      await account.signUp('new@test.ae', 'pass1234');
+    } on AccountRefused catch (e) {
+      signup = e;
+    }
+    expect(signup?.problem, AccountProblem.phoneTaken);
+    expect(signup?.holder, 'ow***@test.ae', reason: 'the user is told which account to log in with, not its whole email');
+    expect(cloud.calls.where((c) => c.path == '/auth/v1/signup'), isEmpty, reason: 'no email goes out');
+
+    await account.signIn('other@test.ae', 'pass1234');
+    expect(await problem(account.openCompany), AccountProblem.phoneTaken);
+    expect(await account.binding(), isNull);
+
+    await account.signIn('owner@test.ae', 'pass1234');
+    expect(await account.openCompany(), '00000000-0000-4000-8000-0000000000c9', reason: 'its own account still opens');
+  });
+
+  test('data made before the account is not hidden under a company made on another phone (D-063)', () async {
+    await storage.write(key: localTenantKey, value: phoneTenant);
+    cloud.addUser('owner@test.ae', 'pass1234', company: '00000000-0000-4000-8000-0000000000c9');
+    await account.signIn('owner@test.ae', 'pass1234');
+    expect(await problem(account.openCompany), AccountProblem.phoneData);
+    expect(await account.binding(), isNull);
+    expect(await account.hasPhoneData(), isTrue, reason: 'the data waits for a company made on this phone');
+  });
+
   test('a device the company turned off is refused and not remembered', () async {
     cloud
       ..addUser('owner@test.ae', 'pass1234', company: '00000000-0000-4000-8000-0000000000c9')

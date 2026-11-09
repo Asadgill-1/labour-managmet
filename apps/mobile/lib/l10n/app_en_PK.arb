@@ -1069,7 +1069,7 @@
   "accountOffline": "Internet nahin mila. Account banane ya login ke liye internet chahiye.",
   "accountDeviceRevoked": "Aap ki company ne is phone ka access band kar diya hai.",
   "accountFailed": "Ye nahin hua. Dobara koshish karein.",
-  "accountPhoneData": "Is phone par pehle se data hai. Naya account banane par ye isi nayi company mein rahega. Kisi aur company mein login karne par ye data is phone par chhup jayega, delete nahin hoga.",
+  "accountPhoneData": "Is phone par pehle se data hai. Naya account banayein, ye data usi nayi company mein chala jayega.",
   "accountTitle": "Account",
   "accountNotInBuild": "Is build mein nahin. Data sirf isi phone par hai.",
   "logOut": "Log out",
@@ -1078,5 +1078,8 @@
   "accountLinkSent": "{email} par email bheji hai. Us mein diya link dabayein, phir yahan wapas aa kar Aage dabayein. Link ke baad page na khule to fikr na karein, email confirm ho jati hai. Email na mile to spam folder dekhein.",
   "accountNotConfirmed": "Email abhi confirm nahin hui. Pehle email mein diya link dabayein.",
   "accountResetUnavailable": "Password badalna abhi chalu nahin. Ye email ke code se hoga, jo jald aa raha hai.",
-  "accountOk": "Theek hai"
+  "accountOk": "Theek hai",
+  "accountPhoneTaken": "Is phone par pehle se account hai: {email}. Usi se login karein. Ek phone par ek hi account chalta hai, taake kisi company ka data is par chhup na jaye.",
+  "accountPhoneElsewhere": "Ye phone kisi aur account ka hai. Usi account se login karein.",
+  "accountPhoneDataLogin": "Is phone ke purane data ki abhi koi company nahin. Yahan naya account banayein, data usi ki company mein chala jayega."
 }

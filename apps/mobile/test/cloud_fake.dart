@@ -18,6 +18,8 @@ class FakeCloud {
 
   /// Company id by owner's user id.
   final companies = <String, String>{};
+  /// The user each phone serves, by device id, as its live device rows say (D-063).
+  final phones = <String, String>{};
   final calls = <({String path, Map<String, dynamic> body})>[];
   bool offline = false;
   bool deviceRevoked = false;
@@ -94,8 +96,16 @@ class FakeCloud {
       case '/rest/v1/rpc/create_tenant':
         final id = companies[caller!] ??= (body['p_tenant_id'] as String?) ?? '00000000-0000-4000-8000-0000000000c1';
         return _json(id);
+      case '/rest/v1/rpc/phone_account':
+        final holder = phones[body['p_device_id']];
+        if (holder == null || holder == caller) return _json(null);
+        final email = users.entries.firstWhere((e) => e.value.id == holder).key;
+        return _json(email.replaceFirstMapped(RegExp(r'^(.{1,2})[^@]*(@.*)$'), (m) => '${m[1]}***${m[2]}'));
       case '/rest/v1/rpc/register_device':
-        if (deviceRevoked) return _json({'code': '42501', 'details': null, 'hint': null, 'message': 'this device was revoked'}, status: 403);
+        if (deviceRevoked) return _refused('this device was revoked');
+        final device = body['p_device_id'] as String;
+        if ((phones[device] ?? caller) != caller) return _refused('this phone belongs to another account');
+        phones[device] = caller!;
         return _json('00000000-0000-4000-8000-0000000000d1');
     }
     return _json({'message': 'no route $path'}, status: 404);
@@ -134,8 +144,10 @@ class FakeCloud {
     };
   }
 
+  http.Response _refused(String message) => _json({'code': '42501', 'details': null, 'hint': null, 'message': message}, status: 403);
+
   http.Response _authError(int status, String code, String message) => _json({'code': status, 'error_code': code, 'msg': message}, status: status);
 
-  http.Response _json(Object body, {int status = 200}) =>
+  http.Response _json(Object? body, {int status = 200}) =>
       http.Response(jsonEncode(body), status, headers: {'content-type': 'application/json; charset=utf-8'});
 }

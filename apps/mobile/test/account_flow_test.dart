@@ -147,11 +147,11 @@ void main() {
     await shutDown(tester, opened.single);
   });
 
-  testWidgets('an owner with a company logs in on a phone that has data, and is told what happens to it', (tester) async {
+  testWidgets('earlier phone data goes into the company of a new account, never hidden under another (D-063)', (tester) async {
     await const FlutterSecureStorage().write(key: localTenantKey, value: testTenant);
     cloud.addUser('owner@test.ae', 'pass1234', company: '00000000-0000-4000-8000-0000000000c9');
     await pumpRoot(tester);
-    expect(find.textContaining('Is phone par pehle se data hai.'), findsOneWidget);
+    expect(find.text('Is phone par pehle se data hai. Naya account banayein, ye data usi nayi company mein chala jayega.'), findsOneWidget);
 
     await fill(tester, 'Email', 'owner@test.ae');
     await fill(tester, 'Password', 'wrong999');
@@ -160,9 +160,36 @@ void main() {
 
     await fill(tester, 'Password', 'pass1234');
     await tapAndSettle(tester, find.text('Login karein'));
-    expect(opened.single.tenantId, '00000000-0000-4000-8000-0000000000c9');
+    expect(find.text('Is phone ke purane data ki abhi koi company nahin. Yahan naya account banayein, data usi ki company mein chala jayega.'), findsOneWidget);
+    expect(opened, isEmpty);
+
+    await tapAndSettle(tester, find.text('Naya account banayein'));
+    await fill(tester, 'Email', 'new@test.ae');
+    await fill(tester, 'Password', 'pass1234');
+    await tapAndSettle(tester, find.text('Account banayein'));
+    await fill(tester, 'Email wala code', FakeCloud.code);
+    await tapAndSettle(tester, find.text('Aage'));
+    await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+    await tapAndSettle(tester, find.text('Shuru karein'));
+    expect(opened.single.tenantId, testTenant, reason: 'the data on the phone opens in the new company');
     expect(find.byType(LabourApp), findsOneWidget);
     await shutDown(tester, opened.single);
+  });
+
+  testWidgets('a phone that holds an account names it when another signup is tried', (tester) async {
+    cloud.addUser('owner@test.ae', 'pass1234', company: '00000000-0000-4000-8000-0000000000c9');
+    await const FlutterSecureStorage().write(key: 'device_id', value: 'dddddddd-0000-4000-8000-00000000000a');
+    cloud.phones['dddddddd-0000-4000-8000-00000000000a'] = cloud.users['owner@test.ae']!.id;
+    await pumpRoot(tester);
+    await tapAndSettle(tester, find.text('Naya account banayein'));
+    await fill(tester, 'Email', 'new@test.ae');
+    await fill(tester, 'Password', 'pass1234');
+    await tapAndSettle(tester, find.text('Account banayein'));
+    expect(
+      find.text('Is phone par pehle se account hai: ow***@test.ae. Usi se login karein. Ek phone par ek hi account chalta hai, taake kisi company ka data is par chhup na jaye.'),
+      findsOneWidget,
+    );
+    expect(find.text('Apni company'), findsNothing);
   });
 
   testWidgets('a phone the company turned off stays on the login screen', (tester) async {

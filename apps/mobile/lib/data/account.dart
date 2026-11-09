@@ -9,12 +9,15 @@ import 'package:supabase/supabase.dart';
 import 'tenant_database.dart';
 
 /// Why an account step failed, in terms a screen can say plainly (UX-04).
-enum AccountProblem { offline, wrongLogin, notConfirmed, exists, weakPassword, badCode, tooMany, deviceRevoked, failed }
+enum AccountProblem { offline, wrongLogin, notConfirmed, exists, weakPassword, badCode, tooMany, deviceRevoked, phoneTaken, phoneData, failed }
 
 class AccountRefused implements Exception {
-  const AccountRefused(this.problem);
+  const AccountRefused(this.problem, [this.holder]);
 
   final AccountProblem problem;
+
+  /// With [AccountProblem.phoneTaken]: the masked email of the account that holds this phone, when the server said.
+  final String? holder;
 
   @override
   String toString() => 'AccountRefused($problem)';
@@ -63,6 +66,7 @@ class Account {
   Future<bool> hasPhoneData() async => await _storage.read(key: localTenantKey) != null;
 
   Future<void> signUp(String email, String password) => _run(() async {
+    await _phoneFree();
     final response = await _auth.signUp(email: email, password: password);
     // An email that already has an account gets no code and no error, only a user with no identities.
     if (response.user?.identities?.isEmpty ?? false) throw const AccountRefused(AccountProblem.exists);
@@ -83,8 +87,11 @@ class Account {
 
   /// After a sign-in, puts the user's company on this device. Null means they have none yet.
   Future<String?> openCompany() => _run(() async {
+    await _phoneFree();
     final rows = await _client.from('memberships').select('tenant_id').eq('user_id', _auth.currentUser!.id).isFilter('revoked_at_utc', null);
     if (rows.isEmpty) return null;
+    // Data made before the phone had an account goes only into a company made here; opening another would hide it.
+    if (await hasPhoneData()) throw const AccountRefused(AccountProblem.phoneData);
     // ponytail: the first live membership; a chooser comes with managers who work for more than one company (T24).
     final tenantId = rows.first['tenant_id'] as String;
     await _enrol(tenantId);
@@ -102,6 +109,12 @@ class Account {
     return tenantId;
   });
 
+  /// One phone serves one account, so no company's data is left hidden on it under another (D-063).
+  Future<void> _phoneFree() async {
+    final holder = await _client.rpc<String?>('phone_account', params: {'p_device_id': await thisDeviceId(_storage)});
+    if (holder != null) throw AccountRefused(AccountProblem.phoneTaken, holder);
+  }
+
   /// Records this device with the company, which refuses one it turned off, then remembers the company here.
   Future<void> _enrol(String tenantId) async {
     final os = Platform.operatingSystem;
@@ -110,7 +123,7 @@ class Account {
       'register_device',
       params: {
         'p_tenant_id': tenantId,
-        'p_device_id': await stableId(_storage, 'device_id'),
+        'p_device_id': await thisDeviceId(_storage),
         'p_label': host.isEmpty || host == 'localhost' ? os : host,
         'p_platform': const {'android', 'ios', 'windows'}.contains(os) ? os : 'web',
         'p_operation_id': newUuid(),
@@ -149,6 +162,7 @@ AccountProblem problemOf(Object error) => switch (error) {
   AuthException(code: 'weak_password') => AccountProblem.weakPassword,
   AuthException(code: 'otp_expired') => AccountProblem.badCode,
   PostgrestException(:final message) when message.contains('revoked') => AccountProblem.deviceRevoked,
+  PostgrestException(:final message) when message.contains('another account') => AccountProblem.phoneTaken,
   _ => AccountProblem.failed,
 };
 

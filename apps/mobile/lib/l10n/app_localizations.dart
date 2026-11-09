@@ -6796,7 +6796,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountPhoneData.
   ///
   /// In en, this message translates to:
-  /// **'This phone already has data. A new account keeps it in the new company. Logging in to another company hides it on this phone. It is not deleted.'**
+  /// **'This phone already has data. Create a new account and it goes into the new company.'**
   String get accountPhoneData;
 
   /// No description provided for @accountTitle.
@@ -6852,6 +6852,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get accountOk;
+
+  /// No description provided for @accountPhoneTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone already has an account: {email}. Log in with it. A phone holds one account, so no company\'s data is left hidden on it.'**
+  String accountPhoneTaken(String email);
+
+  /// No description provided for @accountPhoneElsewhere.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone belongs to another account. Log in with that one.'**
+  String get accountPhoneElsewhere;
+
+  /// No description provided for @accountPhoneDataLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone\'s earlier data has no company yet. Create a new account here and it goes into that company.'**
+  String get accountPhoneDataLogin;
 }
 
 class _AppLocalizationsDelegate
