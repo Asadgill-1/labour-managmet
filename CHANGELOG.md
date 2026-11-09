@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Settings can delete the account. The screen first shows the way to take the data out to Excel or PDF, then takes the password again and the word DELETE. The account, its company and its devices go from the cloud at once, and the company's file and key from the phone (D-066).
 - After logging in, the phone offers a PIN of 4 to 6 digits and the fingerprint, and Abhi nahin skips it. With a PIN the company opens with that lock each time the app starts, with no internet. Eight wrong PINs, or PIN bhool gaye, send the user to the email login, which opens the same data. Settings sets, changes or removes the PIN, and logout clears it (D-064, D-065).
 - A phone serves one account. A second signup on it, or a login to another account, is refused and names the phone's account, masked, so no company's data is left hidden on the phone. Data the phone made before it had an account goes only into a company made on it (D-063).
 - A build with the cloud settings opens on login. A new owner makes an account, confirms the email and names the company, and its books open; earlier data on the phone stays with the new company. Every login records the device, and a device the company turned off is refused. Logout in Settings closes the company's data and deletes share files. A forgotten password waits for the project's own emails (T19b, D-062).

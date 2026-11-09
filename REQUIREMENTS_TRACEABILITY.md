@@ -19,7 +19,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | AUTH-04 | 03 | Har local database tenant/account boundary mein encrypted ho. Logout/account | T19 | IN_PROGRESS | TC-014, TC-045, TC-145, TC-149, TC-150 | `apps/mobile/test/account_flow_test.dart` |
 | AUTH-05 | 03 | Cloud tenant tables par Row Level Security aur membership | T19 | IN_PROGRESS | TC-006, TC-142, TC-143 | `supabase/tests/database/tenants.test.sql` |
 | AUTH-06 | 03 | App malik ke admin account par MFA lazmi ho | T19 | NOT_STARTED | - | - |
-| AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | NOT_STARTED | - | - |
+| AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | IN_PROGRESS | TC-153, TC-154, TC-155, TC-156 | `supabase/tests/database/delete_account.test.sql`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart` |
 | AUTH-08 | 03 | Production email login ke liye real SMTP/domain configuration aur | T19 | NOT_STARTED | - | - |
 | MASTER-01 | 04 | Apni company | T07 | IMPLEMENTED_UNVERIFIED | - | - |
 | MASTER-02 | 04 | Client | T07, T18b | IMPLEMENTED_UNVERIFIED | TC-119 | `apps/mobile/test/records_test.dart` |
