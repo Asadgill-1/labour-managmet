@@ -119,4 +119,4 @@ Details in `docs/owner/P2_CHECKLIST.md`.
 - A test that walks the side panel can find the sub-tab it wants below the fold once more main tabs are open. `goTo` scrolls to it and pumps a frame before tapping, or the tap lands on the old spot.
 - A capture test froze for five minutes when it wrote to the database a screen was watching. Draw papers from a database of their own.
 - A rule that stops a month reaches every test that closes one. D-048 (3) needed `invoiceUpTo` in `test/support.dart`.
-- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Refresh the graph after every task, as the owner asked on 2026-10-31. Current graph: 3,982 nodes, 6,258 edges, 142 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.
+- Never run the bare `graphify update` CLI on this repo. See `CLAUDE.md`. Refresh the graph after every task, as the owner asked on 2026-10-31. Current graph: 4,149 nodes, 6,518 edges, 146 communities, including all 278 PRD nodes and 166 requirements. Repo docs other than the PRD have no semantic extraction yet.
