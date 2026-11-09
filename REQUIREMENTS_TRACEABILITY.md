@@ -14,9 +14,9 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | UX-06 | 02 | Measurable usability test | T10 | NOT_STARTED | TC-031 | - |
 | UX-07 | 02 | Save ki imaandari | T05 | IN_PROGRESS | TC-008 | - |
 | AUTH-01 | 03 | Email/password primary login ho. Email verification, forgot-password, safe password | T19 | IN_PROGRESS | TC-142, TC-143, TC-144, TC-145, TC-146 | `supabase/tests/database/tenants.test.sql`, `apps/mobile/test/account_test.dart` |
-| AUTH-02 | 03 | Signup par immutable tenant ID bane. Naam, phone number | T19 | IN_PROGRESS | TC-006, TC-142, TC-144 | `supabase/tests/database/tenants.test.sql`, `apps/mobile/test/account_test.dart` |
-| AUTH-03 | 03 | Pehla signup, naya device login, password reset aur invite | T19 | IN_PROGRESS | TC-144, TC-145, TC-146 | `apps/mobile/test/account_flow_test.dart` |
-| AUTH-04 | 03 | Har local database tenant/account boundary mein encrypted ho. Logout/account | T19 | IN_PROGRESS | TC-014, TC-045, TC-145 | `apps/mobile/test/account_flow_test.dart` |
+| AUTH-02 | 03 | Signup par immutable tenant ID bane. Naam, phone number | T19 | IN_PROGRESS | TC-006, TC-142, TC-144, TC-147, TC-148, TC-149 | `supabase/tests/database/tenants.test.sql`, `supabase/tests/database/phones.test.sql`, `apps/mobile/test/account_test.dart` |
+| AUTH-03 | 03 | Pehla signup, naya device login, password reset aur invite | T19 | IN_PROGRESS | TC-144, TC-145, TC-146, TC-147, TC-148, TC-149, TC-150, TC-151 | `apps/mobile/test/account_flow_test.dart`, `apps/mobile/test/app_lock_test.dart`, `supabase/tests/database/phones.test.sql` |
+| AUTH-04 | 03 | Har local database tenant/account boundary mein encrypted ho. Logout/account | T19 | IN_PROGRESS | TC-014, TC-045, TC-145, TC-149, TC-150 | `apps/mobile/test/account_flow_test.dart` |
 | AUTH-05 | 03 | Cloud tenant tables par Row Level Security aur membership | T19 | IN_PROGRESS | TC-006, TC-142, TC-143 | `supabase/tests/database/tenants.test.sql` |
 | AUTH-06 | 03 | App malik ke admin account par MFA lazmi ho | T19 | NOT_STARTED | - | - |
 | AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | NOT_STARTED | - | - |
