@@ -3,13 +3,14 @@
 Read this first each session (AI-04). Replace it, do not append; git holds the history.
 
 **Phase:** P3 started on the owner's word on 2026-11-02, with P2's sign-off and the P1 gate's phone checks (D-035) still open. T14 to T18 are built, and the P3 gate's tests and paper review passed on this computer on 2026-11-06
-**Branch:** `p4/t19a-cloud-tenants`, on top of `p3/t18c-owner-answers` (stacked: ... > p3/t18 > p3/gate > p3/t18b-edit-delete > p3/t18c-owner-answers > p4/t19a-cloud-tenants, none merged). PR https://github.com/Asadgill-1/labour-managmet/pull/1 takes all of it into `main`; its CI passed on 2026-11-08
-**Next task:** T19b, signup and login in the app. The owner's Supabase project is set up with the T19a tables and auth settings, and its URL and key are in `apps/mobile/.env` (D-061). T19 started on the owner's word on 2026-11-08 with the P3 gate's phone test still open; T19a, the cloud tables with their two-company tests, is done (D-060). The P3 gate still waits for the owner's phone test of T14 to T18c (checklist 5d to 5m). On 2026-11-08 checklists 5d to 5m were run on a Windows build on the owner's laptop, then once more with old October data for the steps that needed it. What is left needs the phone or a later date; see Needed from the owner, item 2. T18c, the owner's answers of 2026-11-07 (D-057) and 2026-11-08 (D-059), is built. Still open for the P3 gate: the owner's phone test of T14 to T18. On 2026-11-07 the owner answered every open decision: eight as built, and D-034, D-043 and D-049 changed by D-057, which T18c built. T19 then needs the owner's Supabase project and SMTP
+**Branch:** `p4/t19b-signup-login`, on top of `p4/t19a-cloud-tenants` (stacked: ... > p3/t18 > p3/gate > p3/t18b-edit-delete > p3/t18c-owner-answers > p4/t19a-cloud-tenants > p4/t19b-signup-login, none merged). PR https://github.com/Asadgill-1/labour-managmet/pull/1 takes everything up to `p3/t18c-owner-answers` into `main`; its CI passed on 2026-11-08. The T19 branches get one PR when T19's slices are done
+**Next task:** T19b part 2, the PIN or fingerprint lock on a signed-in device (AUTH-03). Part 1 is built: a build with `.env` opens on login, then a new account, the email step, the company's name and the books, and logs out from Settings (D-062). The owner's project still sends Supabase's own emails, which carry a link, so a forgotten password waits for T19d and the owner's email provider. The owner can try the live signup now (TC-146). T19 started on the owner's word on 2026-11-08 with the P3 gate's phone test still open; T19a, the cloud tables with their two-company tests, is done (D-060, D-061). The P3 gate still waits for the owner's phone test of T14 to T18c (checklist 5d to 5m); what is left needs the phone or a later date, see Needed from the owner, item 2
 
 ## Done
 
 | Task | State | Evidence |
 | --- | --- | --- |
+| T19b part 1 | IMPLEMENTED_UNVERIFIED | `flutter test`: 381 passing, including the app's account calls against a stand-in for Supabase's auth and REST APIs (TC-144) and, through the screens, a sign-up with a wrong then the right code, the company's name and a logout that closes the file and deletes share files, the same with link-only emails, a login on a phone with earlier data, a turned-off phone and a reset by code (TC-145). `flutter analyze` clean. The login, sign-up, email, company, Settings and logout screens were drawn in both modes and read by eye. On 2026-11-09 a Windows build with the live `.env` opened on the login screen, with the note about the laptop's earlier data; nothing was typed or sent. Not run against the live project: the owner signs up with their own email (TC-146). Not on a phone |
 | T01, T02, T03 | IMPLEMENTED_UNVERIFIED | CI read for the first time on 2026-10-31, once the repo was public: trace, gitleaks, domain and mobile are green on every branch. The Android job has never run, because it runs only on PRs. The database has never been checked on a phone |
 | T04 | OWNER_ACCEPTED | Policy defaults D-101 to D-105 approved 2026-10-31 |
 | T05 to T10b, T12a | IMPLEMENTED_UNVERIFIED | CI green. The owner said "Theek hain" on 2026-10-31 to worker groups and the cash book on the phone. The checklist results are not reported yet |
@@ -42,6 +43,8 @@ Details in `docs/owner/P2_CHECKLIST.md`.
 2. The checklist steps a laptop could not run: choosing images (5e, the timesheet photo in 5f, the CSV file in 5i), WhatsApp, sharing, printing and opening Excel; and from 9 November, INV-2026-0006 of Fajr Builders on the laptop showing red and Overdue in the list and on the invoice (5h), since an invoice is overdue only the day after its due date. Checklist 5g now also checks D-059: a fixed contract's month in two parts, the second starting at the rest. The open decisions were answered on 2026-11-07. A tax adviser should still see D-050, D-051 and D-054, and an accountant the payroll rows and D-052.
 3. Review PR 1, which takes all work since P0 into `main`, and say when to merge it. `gh` was signed in on 2026-11-08.
 4. Plug the phone in by USB with USB debugging on, so the share of several files can be checked from here. This computer has virtualisation off, so it can't run an emulator.
+5. Try the live signup (TC-146): on a build with `.env`, sign up with your own email, tap the link in Supabase's email, come back and tap Aage, then name the company. The link opens a page that may not load; the email is confirmed anyway. Confirm D-062.
+6. For T19d: the email provider and sending domain, so the project can send its own emails with a code, and a password can be reset in the app.
 
 ## Open
 
@@ -83,7 +86,8 @@ Details in `docs/owner/P2_CHECKLIST.md`.
 - A client company that pays for a visa and cuts it from an invoice is not covered. Visa money runs against the worker only (D-039). Add to invoices if the owner says that happens.
 - PDFs use Roboto, which has Latin letters only, so a name typed in Urdu or Arabic script prints as boxes. Margin reports and CSV import are still T18.
 - Rozana hisaab has no running cash-in-hand figure, because no opening cash exists yet. Group wages have no overtime. Payroll periods are calendar months only, though the tables store from and to. Add when asked.
-- UX-02 is local only until T19 adds accounts. UX-07's sync statuses arrive with T25.
+- UX-02's language, account, email and company steps are built (T19b, D-062); the rest are the app's own first screens. UX-07's sync statuses arrive with T25.
+- The session after login stays in memory only (D-062). T20's backup and T21's licence must store it in secure storage, and T25 must lock a device whose session or device was revoked.
 - Worker lists sort by plain text, so "Worker 10" comes before "Worker 2". Real names are fine; revisit if codes are shown as the sort key.
 
 ## Known risks

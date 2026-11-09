@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- A build with the cloud settings opens on login. A new owner makes an account, confirms the email and names the company, and its books open; earlier data on the phone stays with the new company. Every login records the device, and a device the company turned off is refused. Logout in Settings closes the company's data and deletes share files. A forgotten password waits for the project's own emails (T19b, D-062).
 - The owner's Supabase project now holds the cloud tables, and signup there needs a confirmed email and a password of at least 8 characters with letters and digits (D-061).
 - The cloud database's first tables: companies, their members and devices, each company closed to the others by row level security, with server functions to make a company and record a device (T19a, D-060).
 - CI keeps Gradle's and the sqlite3 hook's downloads between runs, so a failing GitHub release download no longer fails the build, and runs the cloud database tests in Docker.
