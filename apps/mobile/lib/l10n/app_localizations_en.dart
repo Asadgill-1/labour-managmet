@@ -4031,7 +4031,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lockSetIntro =>
-      'The app asks for this PIN each time it opens, with no internet needed. It locks this phone only; it is not your email password.';
+      'Keep a PIN if you want one. The app then asks for it each time it opens, with no internet needed. It locks this phone only; it is not your email password. Settings can add or remove it later.';
 
   @override
   String get lockPin => 'PIN';
@@ -4094,14 +4094,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lockForgotGo => 'Email login';
 
   @override
-  String get lockGone =>
-      'The PIN was wrong 5 times, so the phone\'s lock was removed. Log in with your email and password; the data is still on this phone.';
+  String lockGone(int count) {
+    return 'The PIN was wrong $count times, so the phone\'s lock was removed. Log in with your email and password; the data is still on this phone.';
+  }
 
   @override
   String get lockSettings => 'Phone lock (PIN)';
 
   @override
   String get lockChanged => 'New PIN kept';
+
+  @override
+  String get lockSkip => 'Not now';
+
+  @override
+  String get lockRemove => 'Remove the lock';
+
+  @override
+  String get lockRemoved => 'Lock removed';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -7930,7 +7940,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get lockSetIntro =>
-      'App har baar khulne par ye PIN poochegi, internet ke baghair bhi. Ye sirf is phone ka taala hai, email ka password nahin.';
+      'Chahein to PIN rakhein. Phir app har baar khulne par ye PIN poochegi, internet ke baghair bhi. Ye sirf is phone ka taala hai, email ka password nahin. Settings se baad mein laga ya hata sakte hain.';
 
   @override
   String get lockPin => 'PIN';
@@ -7993,12 +8003,22 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get lockForgotGo => 'Email se login';
 
   @override
-  String get lockGone =>
-      'PIN 5 baar ghalat likha gaya, is liye phone ka taala hata diya gaya. Email aur password se login karein; data isi phone par hai.';
+  String lockGone(int count) {
+    return 'PIN $count baar ghalat likha gaya, is liye phone ka taala hata diya gaya. Email aur password se login karein; data isi phone par hai.';
+  }
 
   @override
   String get lockSettings => 'Phone ka taala (PIN)';
 
   @override
   String get lockChanged => 'Naya PIN rakh liya';
+
+  @override
+  String get lockSkip => 'Abhi nahin';
+
+  @override
+  String get lockRemove => 'Taala hatayein';
+
+  @override
+  String get lockRemoved => 'Taala hata diya';
 }

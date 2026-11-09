@@ -79,6 +79,10 @@ class SettingsScreen extends ConsumerWidget {
                       Navigator.of(page).pop();
                       showSavedOnPhone(context, l10n.lockChanged);
                     },
+                    onRemoved: () {
+                      Navigator.of(page).pop();
+                      showSavedOnPhone(context, l10n.lockRemoved);
+                    },
                   ),
                 ),
               ),

@@ -6880,7 +6880,7 @@ abstract class AppLocalizations {
   /// No description provided for @lockSetIntro.
   ///
   /// In en, this message translates to:
-  /// **'The app asks for this PIN each time it opens, with no internet needed. It locks this phone only; it is not your email password.'**
+  /// **'Keep a PIN if you want one. The app then asks for it each time it opens, with no internet needed. It locks this phone only; it is not your email password. Settings can add or remove it later.'**
   String get lockSetIntro;
 
   /// No description provided for @lockPin.
@@ -6982,8 +6982,8 @@ abstract class AppLocalizations {
   /// No description provided for @lockGone.
   ///
   /// In en, this message translates to:
-  /// **'The PIN was wrong 5 times, so the phone\'s lock was removed. Log in with your email and password; the data is still on this phone.'**
-  String get lockGone;
+  /// **'The PIN was wrong {count} times, so the phone\'s lock was removed. Log in with your email and password; the data is still on this phone.'**
+  String lockGone(int count);
 
   /// No description provided for @lockSettings.
   ///
@@ -6996,6 +6996,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New PIN kept'**
   String get lockChanged;
+
+  /// No description provided for @lockSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get lockSkip;
+
+  /// No description provided for @lockRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the lock'**
+  String get lockRemove;
+
+  /// No description provided for @lockRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock removed'**
+  String get lockRemoved;
 }
 
 class _AppLocalizationsDelegate

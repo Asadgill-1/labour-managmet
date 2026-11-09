@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- After logging in, the phone asks for a PIN of 4 to 6 digits and offers the fingerprint. The company then opens with that lock each time the app starts, with no internet. Five wrong PINs, or PIN bhool gaye, send the user to the email login, which opens the same data. Settings changes the PIN, and logout clears it (D-064).
+- After logging in, the phone offers a PIN of 4 to 6 digits and the fingerprint, and Abhi nahin skips it. With a PIN the company opens with that lock each time the app starts, with no internet. Eight wrong PINs, or PIN bhool gaye, send the user to the email login, which opens the same data. Settings sets, changes or removes the PIN, and logout clears it (D-064, D-065).
 - A phone serves one account. A second signup on it, or a login to another account, is refused and names the phone's account, masked, so no company's data is left hidden on the phone. Data the phone made before it had an account goes only into a company made on it (D-063).
 - A build with the cloud settings opens on login. A new owner makes an account, confirms the email and names the company, and its books open; earlier data on the phone stays with the new company. Every login records the device, and a device the company turned off is refused. Logout in Settings closes the company's data and deletes share files. A forgotten password waits for the project's own emails (T19b, D-062).
 - The owner's Supabase project now holds the cloud tables, and signup there needs a confirmed email and a password of at least 8 characters with letters and digits (D-061).

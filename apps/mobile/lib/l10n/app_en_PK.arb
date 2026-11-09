@@ -1083,7 +1083,7 @@
   "accountPhoneElsewhere": "Ye phone kisi aur account ka hai. Usi account se login karein.",
   "accountPhoneDataLogin": "Is phone ke purane data ki abhi koi company nahin. Yahan naya account banayein, data usi ki company mein chala jayega.",
   "lockSetTitle": "Phone ka taala",
-  "lockSetIntro": "App har baar khulne par ye PIN poochegi, internet ke baghair bhi. Ye sirf is phone ka taala hai, email ka password nahin.",
+  "lockSetIntro": "Chahein to PIN rakhein. Phir app har baar khulne par ye PIN poochegi, internet ke baghair bhi. Ye sirf is phone ka taala hai, email ka password nahin. Settings se baad mein laga ya hata sakte hain.",
   "lockPin": "PIN",
   "lockPinAgain": "PIN dobara",
   "lockPinWeak": "4 se 6 number rakhein. Ek hi number baar baar ya 1234 jaisi seedhi line nahin.",
@@ -1100,7 +1100,10 @@
   "lockForgotAsk": "Email se login karein?",
   "lockForgotBody": "PIN ke baghair email aur password se dobara login karein. Is ke liye internet chahiye. Data isi phone par rahega aur dobara khul jayega.",
   "lockForgotGo": "Email se login",
-  "lockGone": "PIN 5 baar ghalat likha gaya, is liye phone ka taala hata diya gaya. Email aur password se login karein; data isi phone par hai.",
+  "lockGone": "PIN {count} baar ghalat likha gaya, is liye phone ka taala hata diya gaya. Email aur password se login karein; data isi phone par hai.",
   "lockSettings": "Phone ka taala (PIN)",
-  "lockChanged": "Naya PIN rakh liya"
+  "lockChanged": "Naya PIN rakh liya",
+  "lockSkip": "Abhi nahin",
+  "lockRemove": "Taala hatayein",
+  "lockRemoved": "Taala hata diya"
 }

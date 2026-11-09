@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> with _Step {
         child: AutofillGroup(
           child: FormBody(
             children: [
-              if (widget.lockedOut) ...[_Note(l10n.lockGone), fieldGap],
+              if (widget.lockedOut) ...[_Note(l10n.lockGone(AppLock.tries)), fieldGap],
               Text(l10n.accountIntro),
               fieldGap,
               Field(
@@ -368,12 +368,18 @@ class _CompanyNameScreenState extends State<CompanyNameScreen> with _Step {
   }
 }
 
-/// The phone's lock, set after logging in and changed from Settings (AUTH-03).
+/// The phone's lock, offered after logging in and set, changed or removed from Settings (AUTH-03, D-064).
 class SetPinScreen extends StatefulWidget {
-  const SetPinScreen({required this.lock, required this.onDone, super.key});
+  const SetPinScreen({required this.lock, required this.onDone, this.onSkip, this.onRemoved, super.key});
 
   final AppLock lock;
   final VoidCallback onDone;
+
+  /// After a login the lock is offered, not required.
+  final VoidCallback? onSkip;
+
+  /// From Settings, once a lock is set.
+  final VoidCallback? onRemoved;
 
   @override
   State<SetPinScreen> createState() => _SetPinScreenState();
@@ -385,6 +391,7 @@ class _SetPinScreenState extends State<SetPinScreen> {
   final _again = TextEditingController();
   var _canFingerprint = false;
   var _fingerprint = true;
+  var _hadPin = false;
 
   @override
   void initState() {
@@ -392,11 +399,13 @@ class _SetPinScreenState extends State<SetPinScreen> {
     () async {
       final can = await widget.lock.canUseFingerprint();
       // A new lock offers the fingerprint; a change keeps what was chosen.
-      final on = !await widget.lock.hasPin() || await widget.lock.fingerprintOn();
+      final had = await widget.lock.hasPin();
+      final on = !had || await widget.lock.fingerprintOn();
       if (!mounted) return;
       setState(() {
         _canFingerprint = can;
         _fingerprint = on;
+        _hadPin = had;
       });
     }();
   }
@@ -406,6 +415,11 @@ class _SetPinScreenState extends State<SetPinScreen> {
     await widget.lock.setPin(_pin.text);
     await widget.lock.setFingerprint(_canFingerprint && _fingerprint);
     widget.onDone();
+  }
+
+  Future<void> _remove() async {
+    await widget.lock.clear();
+    widget.onRemoved!();
   }
 
   @override
@@ -431,6 +445,10 @@ class _SetPinScreenState extends State<SetPinScreen> {
                 value: _fingerprint,
                 onChanged: (v) => setState(() => _fingerprint = v),
               ),
+            if (widget.onSkip case final skip?)
+              Align(alignment: AlignmentDirectional.centerEnd, child: TextButton(onPressed: skip, child: Text(l10n.lockSkip)))
+            else if (_hadPin && widget.onRemoved != null)
+              Align(alignment: AlignmentDirectional.centerEnd, child: TextButton(onPressed: _remove, child: Text(l10n.lockRemove))),
           ],
         ),
       ),

@@ -42,7 +42,7 @@ class AppRoot extends StatefulWidget {
   /// The company main opened, when this device already had one.
   final ({TenantDatabase db, Binding binding})? opened;
 
-  /// [opened] has its PIN already, so it waits behind the lock.
+  /// [opened] has its PIN already, so it waits behind the lock; without one it opens straight away (D-064).
   final bool pinSet;
 
   @override
@@ -52,7 +52,7 @@ class AppRoot extends StatefulWidget {
 class _AppRootState extends State<AppRoot> {
   late var _settings = widget.settings;
   late var _opened = widget.opened;
-  late var _lock = widget.pinSet ? _Lock.locked : _Lock.setPin;
+  late var _lock = widget.pinSet ? _Lock.locked : _Lock.open;
   var _lockedOut = false;
 
   Future<void> _open(String tenantId, {String? companyName}) async {
@@ -107,7 +107,7 @@ class _AppRootState extends State<AppRoot> {
         overrides: [initialSettingsProvider.overrideWithValue(_settings)],
         child: AccountApp(
           home: _lock == _Lock.setPin
-              ? SetPinScreen(lock: widget.lock, onDone: _unlock)
+              ? SetPinScreen(lock: widget.lock, onDone: _unlock, onSkip: _unlock)
               : LockScreen(lock: widget.lock, email: opened.binding.email, onUnlock: _unlock, onLogInAgain: _logOut),
         ),
       );

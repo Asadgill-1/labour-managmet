@@ -6,8 +6,8 @@ import 'package:local_auth/local_auth.dart';
 
 import 'tenant_database.dart';
 
-/// This phone's own lock on its company (AUTH-03): a PIN, and the fingerprint when the phone has one. It opens the
-/// company with no network. It is not the account's password: forgetting it, or getting it wrong [tries] times, means
+/// This phone's own lock on its company (AUTH-03), kept only when the user chooses one (D-064): a PIN, and the
+/// fingerprint when the phone has one. It opens the company with no network. It is not the account's password: forgetting it, or getting it wrong [tries] times, means
 /// logging in with the email again, which opens the same data.
 class AppLock {
   AppLock(this._storage);
@@ -15,7 +15,7 @@ class AppLock {
   final FlutterSecureStorage _storage;
   LocalAuthentication? _biometrics;
 
-  static const tries = 5;
+  static const tries = 8;
   static const _pinKey = 'lock_pin';
   static const _failsKey = 'lock_fails';
   static const _fingerprintKey = 'lock_fingerprint';

@@ -275,7 +275,7 @@ void main() {
 
     await fill(tester, 'PIN', '1111');
     await tapAndSettle(tester, find.text('Kholein'));
-    expect(find.text('PIN ghalat hai. 4 koshishein baqi, phir email se login karna hoga.'), findsOneWidget);
+    expect(find.text('PIN ghalat hai. 7 koshishein baqi, phir email se login karna hoga.'), findsOneWidget);
     await fill(tester, 'PIN', '2580');
     await tapAndSettle(tester, find.text('Kholein'));
     expect(find.byType(LabourApp), findsOneWidget);
@@ -293,11 +293,11 @@ void main() {
     await shutDown(tester, db);
   });
 
-  testWidgets('5 wrong PINs remove the lock; logging in with the email opens the same company again', (tester) async {
+  testWidgets('8 wrong PINs remove the lock; logging in with the email opens the same company again', (tester) async {
     await lock.setPin('2580');
     await boundPhone(tester, pinSet: true);
     shareFolder(tester);
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 7; i++) {
       await fill(tester, 'PIN', '1111');
       await tapAndSettle(tester, find.text('Kholein'));
     }
@@ -308,7 +308,7 @@ void main() {
     await fill(tester, 'PIN', '1111');
     await tapAndSettle(tester, find.text('Kholein'));
 
-    expect(find.text('PIN 5 baar ghalat likha gaya, is liye phone ka taala hata diya gaya. Email aur password se login karein; data isi phone par hai.'), findsOneWidget);
+    expect(find.text('PIN 8 baar ghalat likha gaya, is liye phone ka taala hata diya gaya. Email aur password se login karein; data isi phone par hai.'), findsOneWidget);
     expect(await real(tester, lock.hasPin), isFalse);
 
     cloud
@@ -320,5 +320,42 @@ void main() {
     await setPin(tester, '3690');
     expect(opened.single.tenantId, testTenant, reason: 'the data stayed on the phone');
     await shutDown(tester, opened.single);
+  });
+
+  testWidgets('the lock is optional: skipped after login the books open, and Settings sets and removes it (D-064)', (tester) async {
+    cloud.addUser('owner@test.ae', 'pass1234', company: testTenant);
+    await pumpRoot(tester);
+    await fill(tester, 'Email', 'owner@test.ae');
+    await fill(tester, 'Password', 'pass1234');
+    await tapAndSettle(tester, find.text('Login karein'));
+    expect(find.text('Phone ka taala'), findsOneWidget, reason: 'the lock is offered after a login');
+    expect(find.text('Taala hatayein'), findsNothing);
+    await tapAndSettle(tester, find.text('Abhi nahin'));
+    expect(find.byType(LabourApp), findsOneWidget);
+    expect(await real(tester, lock.hasPin), isFalse);
+    await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+    await tapAndSettle(tester, find.text('Save karein'));
+
+    await goTo(tester, 'Settings');
+    await tapAndSettle(tester, find.text('Phone ka taala (PIN)'));
+    expect(find.text('Abhi nahin'), findsNothing);
+    expect(find.text('Taala hatayein'), findsNothing, reason: 'there is no lock to remove yet');
+    await fill(tester, 'PIN', '2580');
+    await fill(tester, 'PIN dobara', '2580');
+    await tapAndSettle(tester, find.text('Ye PIN rakhein'));
+    expect(await real(tester, lock.hasPin), isTrue);
+
+    await tapAndSettle(tester, find.text('Phone ka taala (PIN)'));
+    await tapAndSettle(tester, find.text('Taala hatayein'));
+    expect(find.text('Taala hata diya'), findsOneWidget);
+    expect(await real(tester, lock.hasPin), isFalse);
+    await shutDown(tester, opened.single);
+  });
+
+  testWidgets('a phone without a PIN opens its books straight away', (tester) async {
+    final db = await boundPhone(tester, pinSet: false);
+    expect(find.text('Phone ka taala'), findsNothing);
+    expect(find.byType(LabourApp), findsOneWidget);
+    await shutDown(tester, db);
   });
 }
