@@ -2472,5 +2472,22 @@
   },
   "lockSkip": "Not now",
   "lockRemove": "Remove the lock",
-  "lockRemoved": "Lock removed"
+  "lockRemoved": "Lock removed",
+  "accountHasMembers": "Other people still work in this company. Remove them from it first, then delete the account.",
+  "accountDeleteTitle": "Delete account",
+  "accountDeleteWarning": "This deletes the account {email} and all of its company's books for good: workers, attendance, payroll, invoices and receipts, from the cloud and from this phone. It cannot be undone.",
+  "@accountDeleteWarning": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountDeleteExport": "Take your data out first. In Reports, every register goes to Excel or PDF.",
+  "accountDeleteOpenReports": "Open Reports",
+  "accountDeleteConfirm": "To confirm, type your password again and the word DELETE. This needs internet.",
+  "accountDeleteWord": "Type DELETE",
+  "accountDeleteWordWrong": "Type DELETE exactly, in capitals.",
+  "accountDeleteGo": "Delete for good",
+  "accountDeleted": "The account and all of its company's data were deleted. You can make a new account."
 }

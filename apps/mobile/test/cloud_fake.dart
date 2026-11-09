@@ -25,6 +25,9 @@ class FakeCloud {
   bool offline = false;
   bool deviceRevoked = false;
 
+  /// Someone besides the owner still works in the company (T24).
+  bool companyHasOthers = false;
+
   Account account(FlutterSecureStorage storage, {bool emailCodes = true}) => Account(
     SupabaseClient(
       cloudUrl,
@@ -108,6 +111,14 @@ class FakeCloud {
         if ((phones[device] ?? caller) != caller) return _refused('this phone belongs to another account');
         phones[device] = caller!;
         return _json('00000000-0000-4000-8000-0000000000d1');
+      case '/rest/v1/rpc/delete_account':
+        // The server takes only a session signed in with the password just now (D-066).
+        if (calls.length < 2 || calls[calls.length - 2].path != '/auth/v1/token') return _refused('type the password again');
+        if (companyHasOthers) return _refused('the company has other members');
+        users.removeWhere((_, user) => user.id == caller);
+        companies.remove(caller);
+        phones.removeWhere((_, user) => user == caller);
+        return http.Response('', 204);
     }
     return _json({'message': 'no route $path'}, status: 404);
   }

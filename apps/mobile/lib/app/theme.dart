@@ -49,6 +49,7 @@ const rule = Color(0xFFDDD8CB);
 const fieldEdge = Color(0xFFA9A79C);
 const due = Color(0xFF9E2320);
 const dueSoft = Color(0xFFFBE7E2);
+const dueRim = Color(0xFF5E1210);
 const settled = Color(0xFF036639);
 const settledSoft = Color(0xFFDBF4E3);
 const warn = Color(0xFF7E4F04);
@@ -234,10 +235,13 @@ class BarButton extends StatelessWidget {
 
 /// The screen's one main action, at thumb height (UX-03).
 class MainActionBar extends StatelessWidget {
-  const MainActionBar({required this.label, required this.onPressed, super.key});
+  const MainActionBar({required this.label, required this.onPressed, this.danger = false, super.key});
 
   final String label;
   final VoidCallback? onPressed;
+
+  /// The action cannot be undone, such as deleting the account.
+  final bool danger;
 
   @override
   Widget build(BuildContext context) {
@@ -254,9 +258,9 @@ class MainActionBar extends StatelessWidget {
           child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: _corner10,
-              boxShadow: [if (onPressed != null) BoxShadow(color: _palette.rim, offset: const Offset(0, 3))],
+              boxShadow: [if (onPressed != null) BoxShadow(color: danger ? dueRim : _palette.rim, offset: const Offset(0, 3))],
             ),
-            child: FilledButton(onPressed: onPressed, child: Text(label)),
+            child: FilledButton(style: danger ? FilledButton.styleFrom(backgroundColor: due) : null, onPressed: onPressed, child: Text(label)),
           ),
         ),
       ),

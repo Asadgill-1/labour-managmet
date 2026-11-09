@@ -7014,6 +7014,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lock removed'**
   String get lockRemoved;
+
+  /// No description provided for @accountHasMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Other people still work in this company. Remove them from it first, then delete the account.'**
+  String get accountHasMembers;
+
+  /// No description provided for @accountDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get accountDeleteTitle;
+
+  /// No description provided for @accountDeleteWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This deletes the account {email} and all of its company\'s books for good: workers, attendance, payroll, invoices and receipts, from the cloud and from this phone. It cannot be undone.'**
+  String accountDeleteWarning(String email);
+
+  /// No description provided for @accountDeleteExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Take your data out first. In Reports, every register goes to Excel or PDF.'**
+  String get accountDeleteExport;
+
+  /// No description provided for @accountDeleteOpenReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Reports'**
+  String get accountDeleteOpenReports;
+
+  /// No description provided for @accountDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'To confirm, type your password again and the word DELETE. This needs internet.'**
+  String get accountDeleteConfirm;
+
+  /// No description provided for @accountDeleteWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Type DELETE'**
+  String get accountDeleteWord;
+
+  /// No description provided for @accountDeleteWordWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Type DELETE exactly, in capitals.'**
+  String get accountDeleteWordWrong;
+
+  /// No description provided for @accountDeleteGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete for good'**
+  String get accountDeleteGo;
+
+  /// No description provided for @accountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'The account and all of its company\'s data were deleted. You can make a new account.'**
+  String get accountDeleted;
 }
 
 class _AppLocalizationsDelegate

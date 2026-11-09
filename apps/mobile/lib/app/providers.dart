@@ -17,7 +17,9 @@ import '../data/visa.dart';
 final dbProvider = Provider<TenantDatabase>((ref) => throw UnimplementedError('opened in main'));
 
 /// Who is signed in on this device, how to log out, and the phone's lock. Null in a build without accounts (D-062).
-final accountProvider = Provider<({String email, Future<void> Function() logOut, AppLock lock})?>((ref) => null);
+final accountProvider = Provider<({String email, Future<void> Function() logOut, Future<void> Function(String password) deleteAccount, AppLock lock})?>(
+  (ref) => null,
+);
 
 final profileProvider = StreamProvider((ref) {
   final db = ref.watch(dbProvider);

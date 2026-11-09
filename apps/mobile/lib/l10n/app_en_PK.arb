@@ -1105,5 +1105,15 @@
   "lockChanged": "Naya PIN rakh liya",
   "lockSkip": "Abhi nahin",
   "lockRemove": "Taala hatayein",
-  "lockRemoved": "Taala hata diya"
+  "lockRemoved": "Taala hata diya",
+  "accountHasMembers": "Is company mein aur log bhi kaam karte hain. Pehle unhein company se hatayein, phir account delete karein.",
+  "accountDeleteTitle": "Account delete karein",
+  "accountDeleteWarning": "Ye {email} ka account aur is ki company ka sara hisaab hamesha ke liye mita dega: workers, hazri, payroll, invoices aur raseedein, cloud se bhi aur is phone se bhi. Ye wapas nahin aata.",
+  "accountDeleteExport": "Pehle apna data nikal lein. Reports mein har register Excel ya PDF mein nikalta hai.",
+  "accountDeleteOpenReports": "Reports kholein",
+  "accountDeleteConfirm": "Tasdeeq ke liye password dobara likhein, aur lafz DELETE. Is ke liye internet chahiye.",
+  "accountDeleteWord": "DELETE likhein",
+  "accountDeleteWordWrong": "Bilkul DELETE likhein, bade huroof mein.",
+  "accountDeleteGo": "Hamesha ke liye delete karein",
+  "accountDeleted": "Account aur us ki company ka sara data mit gaya. Naya account bana sakte hain."
 }

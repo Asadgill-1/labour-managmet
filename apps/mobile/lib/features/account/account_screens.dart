@@ -27,6 +27,7 @@ String accountProblemText(AppLocalizations l10n, AccountRefused refusal) => swit
     null => l10n.accountPhoneElsewhere,
   },
   AccountProblem.phoneData => l10n.accountPhoneDataLogin,
+  AccountProblem.companyHasMembers => l10n.accountHasMembers,
   AccountProblem.failed => l10n.accountFailed,
 };
 
@@ -70,15 +71,16 @@ String? _emailError(AppLocalizations l10n, String? v) => isEmail(v ?? '') ? null
 
 String? _newPasswordError(AppLocalizations l10n, String? v) => isStrongPassword(v ?? '') ? null : l10n.accountPasswordWeak;
 
+/// Why the company on this device closed, said on the login screen.
+enum LoginNote { lockedOut, accountDeleted }
+
 /// The first screen on a device with no company open: log in, or start an account. The language comes first (UX-02).
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({required this.account, required this.onOpen, this.lockedOut = false, super.key});
+  const LoginScreen({required this.account, required this.onOpen, this.note, super.key});
 
   final Account account;
   final OpenCompany onOpen;
-
-  /// The PIN was wrong too many times, which removed the phone's lock.
-  final bool lockedOut;
+  final LoginNote? note;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -139,7 +141,13 @@ class _LoginScreenState extends State<LoginScreen> with _Step {
         child: AutofillGroup(
           child: FormBody(
             children: [
-              if (widget.lockedOut) ...[_Note(l10n.lockGone(AppLock.tries)), fieldGap],
+              if (widget.note case final note?) ...[
+                _Note(switch (note) {
+                  LoginNote.lockedOut => l10n.lockGone(AppLock.tries),
+                  LoginNote.accountDeleted => l10n.accountDeleted,
+                }),
+                fieldGap,
+              ],
               Text(l10n.accountIntro),
               fieldGap,
               Field(
@@ -571,6 +579,73 @@ class _PinField extends StatelessWidget {
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(6)],
       decoration: InputDecoration(labelText: label, errorMaxLines: 3),
+    );
+  }
+}
+
+/// Deletes the account, from the cloud and this phone, once the password is typed again with the word DELETE
+/// (AUTH-07, D-066). The way to take the data out comes first.
+class DeleteAccountScreen extends StatefulWidget {
+  const DeleteAccountScreen({required this.email, required this.onDelete, required this.onExport, super.key});
+
+  final String email;
+
+  /// Throws [AccountRefused] when the cloud refuses; once it returns, the company has left this phone.
+  final Future<void> Function(String password) onDelete;
+
+  /// Opens Reports, where every register goes to Excel or PDF.
+  final VoidCallback onExport;
+
+  @override
+  State<DeleteAccountScreen> createState() => _DeleteAccountScreenState();
+}
+
+class _DeleteAccountScreenState extends State<DeleteAccountScreen> with _Step {
+  final _form = GlobalKey<FormState>();
+  final _password = TextEditingController();
+  final _word = TextEditingController();
+
+  Future<void> _delete() async {
+    if (!validateAndReveal(_form)) return;
+    await attempt(() => widget.onDelete(_password.text));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return _StepScaffold(
+      title: l10n.accountDeleteTitle,
+      busy: busy,
+      action: MainActionBar(label: l10n.accountDeleteGo, danger: true, onPressed: busy ? null : _delete),
+      child: Form(
+        key: _form,
+        child: FormBody(
+          children: [
+            Text(l10n.accountDeleteWarning(widget.email)),
+            fieldGap,
+            _Note(l10n.accountDeleteExport),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton.icon(onPressed: widget.onExport, icon: const Icon(Icons.table_view_outlined), label: Text(l10n.accountDeleteOpenReports)),
+            ),
+            fieldGap,
+            Text(l10n.accountDeleteConfirm),
+            fieldGap,
+            _PasswordField(
+              l10n.accountPassword,
+              _password,
+              autofillHints: const [AutofillHints.password],
+              validator: (v) => (v ?? '').isEmpty ? l10n.fieldRequired : null,
+            ),
+            fieldGap,
+            Field(
+              l10n.accountDeleteWord,
+              _word,
+              validator: (v) => (v ?? '').trim() == 'DELETE' ? null : l10n.accountDeleteWordWrong,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

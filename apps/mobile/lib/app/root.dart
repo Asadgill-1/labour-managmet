@@ -26,6 +26,7 @@ class AppRoot extends StatefulWidget {
     required this.settings,
     required this.openTenant,
     required this.loadSettings,
+    required this.deleteTenant,
     this.opened,
     this.pinSet = false,
     super.key,
@@ -38,6 +39,9 @@ class AppRoot extends StatefulWidget {
 
   /// The language and colours chosen on the account screens carry into the books, and back.
   final Future<AppSettings> Function() loadSettings;
+
+  /// Removes a closed company's file and key from this device, once its account is deleted (AUTH-07).
+  final Future<void> Function(String tenantId) deleteTenant;
 
   /// The company main opened, when this device already had one.
   final ({TenantDatabase db, Binding binding})? opened;
@@ -53,7 +57,7 @@ class _AppRootState extends State<AppRoot> {
   late var _settings = widget.settings;
   late var _opened = widget.opened;
   late var _lock = widget.pinSet ? _Lock.locked : _Lock.open;
-  var _lockedOut = false;
+  LoginNote? _note;
 
   Future<void> _open(String tenantId, {String? companyName}) async {
     final binding = (await widget.account.binding())!;
@@ -72,19 +76,28 @@ class _AppRootState extends State<AppRoot> {
 
   void _unlock() => setState(() => _lock = _Lock.open);
 
-  Future<void> _logOut({bool lockedOut = false}) async {
-    final db = _opened!.db;
+  Future<void> _logOut({bool lockedOut = false}) => _leave(lockedOut ? LoginNote.lockedOut : null);
+
+  /// The cloud deletes the account first; only then does the company leave this phone (D-066).
+  Future<void> _deleteAccount(String password) async {
+    await widget.account.deleteAccount(password);
+    await _leave(LoginNote.accountDeleted);
+  }
+
+  Future<void> _leave(LoginNote? note) async {
+    final (:db, :binding) = _opened!;
     await widget.account.logOut();
     await widget.lock.clear();
     final settings = await widget.loadSettings();
     setState(() {
       _settings = settings;
       _opened = null;
-      _lockedOut = lockedOut;
+      _note = note;
     });
     // The company's scope goes with this frame, and its streams with it; only then can the file close.
     await WidgetsBinding.instance.endOfFrame;
     await db.close();
+    if (note == LoginNote.accountDeleted) await widget.deleteTenant(binding.tenantId);
     PaintingBinding.instance.imageCache
       ..clear()
       ..clearLiveImages();
@@ -98,7 +111,7 @@ class _AppRootState extends State<AppRoot> {
       return ProviderScope(
         key: const ValueKey('account'),
         overrides: [initialSettingsProvider.overrideWithValue(_settings)],
-        child: AccountApp(home: LoginScreen(account: widget.account, onOpen: _open, lockedOut: _lockedOut)),
+        child: AccountApp(home: LoginScreen(account: widget.account, onOpen: _open, note: _note)),
       );
     }
     if (_lock != _Lock.open) {
@@ -117,7 +130,7 @@ class _AppRootState extends State<AppRoot> {
       overrides: [
         initialSettingsProvider.overrideWithValue(_settings),
         dbProvider.overrideWithValue(opened.db),
-        accountProvider.overrideWithValue((email: opened.binding.email, logOut: _logOut, lock: widget.lock)),
+        accountProvider.overrideWithValue((email: opened.binding.email, logOut: _logOut, deleteAccount: _deleteAccount, lock: widget.lock)),
       ],
       child: const LabourApp(),
     );

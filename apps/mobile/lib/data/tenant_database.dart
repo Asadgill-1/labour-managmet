@@ -362,9 +362,11 @@ String newHexKey() {
   return List.generate(32, (_) => random.nextInt(256).toRadixString(16).padLeft(2, '0')).join();
 }
 
+String _keyName(String tenantId) => 'db_key_$tenantId';
+
 /// Reads this tenant's key from Android Keystore-backed storage, creating it on first use.
 Future<String> tenantKey(FlutterSecureStorage storage, String tenantId) async {
-  final name = 'db_key_$tenantId';
+  final name = _keyName(tenantId);
   final existing = await storage.read(key: name);
   if (existing != null) return existing;
   final created = newHexKey();
@@ -399,6 +401,16 @@ Future<TenantDatabase> openTenant(FlutterSecureStorage storage, Directory dir, S
   final deviceId = await thisDeviceId(storage);
   final key = await tenantKey(storage, tenantId);
   return openTenantDatabase(tenantFile(dir, tenantId), key, tenantId: tenantId, deviceId: deviceId, actorId: actorId);
+}
+
+/// Removes a company from this phone for good (AUTH-07). Its key goes first: without it the file cannot be read, even
+/// if deleting the file fails. The file must be closed.
+Future<void> deleteTenant(FlutterSecureStorage storage, Directory dir, String tenantId) async {
+  await storage.delete(key: _keyName(tenantId));
+  final file = tenantFile(dir, tenantId);
+  for (final part in [file, for (final end in ['-wal', '-shm', '-journal']) File('${file.path}$end')]) {
+    if (part.existsSync()) await part.delete();
+  }
 }
 
 /// Opens the phone's own tenant, in a build without accounts (D-062).

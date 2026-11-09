@@ -9,7 +9,7 @@ import 'package:supabase/supabase.dart';
 import 'tenant_database.dart';
 
 /// Why an account step failed, in terms a screen can say plainly (UX-04).
-enum AccountProblem { offline, wrongLogin, notConfirmed, exists, weakPassword, badCode, tooMany, deviceRevoked, phoneTaken, phoneData, failed }
+enum AccountProblem { offline, wrongLogin, notConfirmed, exists, weakPassword, badCode, tooMany, deviceRevoked, phoneTaken, phoneData, companyHasMembers, failed }
 
 class AccountRefused implements Exception {
   const AccountRefused(this.problem, [this.holder]);
@@ -133,6 +133,15 @@ class Account {
     await _storage.write(key: _bindingKey, value: jsonEncode({'tenant_id': tenantId, 'user_id': user.id, 'email': user.email}));
   }
 
+  /// Deletes this account from the cloud, with each company it owns (AUTH-07, D-066). The password is typed again: the
+  /// server takes only a session signed in with it in the last minutes, so a phone left open cannot. The caller then
+  /// removes the company from this phone.
+  Future<void> deleteAccount(String password) => _run(() async {
+    await _auth.signInWithPassword(email: (await binding())!.email, password: password);
+    // An empty body, not null, as PostgREST takes for a function with no arguments.
+    await _client.rpc<void>('delete_account', params: const <String, dynamic>{});
+  });
+
   /// Ends the account on this device (AUTH-04), without waiting on the network: signing out drops the session here at
   /// once, and the server is told when it answers. Offline it never is, and the session, held only in memory, dies
   /// with the app.
@@ -163,6 +172,7 @@ AccountProblem problemOf(Object error) => switch (error) {
   AuthException(code: 'otp_expired') => AccountProblem.badCode,
   PostgrestException(:final message) when message.contains('revoked') => AccountProblem.deviceRevoked,
   PostgrestException(:final message) when message.contains('another account') => AccountProblem.phoneTaken,
+  PostgrestException(:final message) when message.contains('other members') => AccountProblem.companyHasMembers,
   _ => AccountProblem.failed,
 };
 

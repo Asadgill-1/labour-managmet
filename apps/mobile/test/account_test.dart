@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/data/account.dart';
@@ -148,5 +150,38 @@ void main() {
     expect(isStrongPassword('12345678'), isFalse, reason: 'no letter');
     expect(isEmailCode('12345678'), isTrue);
     expect(isEmailCode('1234 5678'), isFalse);
+  });
+
+  test('deleting the account takes the password again, then removes it from the cloud and frees the phone (D-066)', () async {
+    cloud.addUser('owner@test.ae', 'pass1234', company: phoneTenant);
+    await account.signIn('owner@test.ae', 'pass1234');
+    await account.openCompany();
+
+    expect(await problem(() => account.deleteAccount('wrong999')), AccountProblem.wrongLogin);
+    cloud.companyHasOthers = true;
+    expect(await problem(() => account.deleteAccount('pass1234')), AccountProblem.companyHasMembers);
+    cloud
+      ..companyHasOthers = false
+      ..offline = true;
+    expect(await problem(() => account.deleteAccount('pass1234')), AccountProblem.offline);
+    expect(cloud.users, contains('owner@test.ae'), reason: 'nothing was deleted yet');
+
+    cloud.offline = false;
+    await account.deleteAccount('pass1234');
+    expect(cloud.users, isEmpty);
+    expect(cloud.phones, isEmpty, reason: 'the phone is free for a new account');
+  });
+
+  test('a deleted company leaves no key and no file on the phone', () async {
+    final dir = await Directory.systemTemp.createTemp('t19c');
+    addTearDown(() => dir.delete(recursive: true));
+    final db = await openTenant(storage, dir, phoneTenant);
+    await db.select(db.tenantProfiles).get();
+    await db.close();
+    expect(tenantFile(dir, phoneTenant).existsSync(), isTrue);
+
+    await deleteTenant(storage, dir, phoneTenant);
+    expect(await storage.read(key: 'db_key_$phoneTenant'), isNull);
+    expect(dir.listSync(), isEmpty);
   });
 }

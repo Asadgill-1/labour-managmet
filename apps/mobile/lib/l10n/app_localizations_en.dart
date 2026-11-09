@@ -4112,6 +4112,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lockRemoved => 'Lock removed';
+
+  @override
+  String get accountHasMembers =>
+      'Other people still work in this company. Remove them from it first, then delete the account.';
+
+  @override
+  String get accountDeleteTitle => 'Delete account';
+
+  @override
+  String accountDeleteWarning(String email) {
+    return 'This deletes the account $email and all of its company\'s books for good: workers, attendance, payroll, invoices and receipts, from the cloud and from this phone. It cannot be undone.';
+  }
+
+  @override
+  String get accountDeleteExport =>
+      'Take your data out first. In Reports, every register goes to Excel or PDF.';
+
+  @override
+  String get accountDeleteOpenReports => 'Open Reports';
+
+  @override
+  String get accountDeleteConfirm =>
+      'To confirm, type your password again and the word DELETE. This needs internet.';
+
+  @override
+  String get accountDeleteWord => 'Type DELETE';
+
+  @override
+  String get accountDeleteWordWrong => 'Type DELETE exactly, in capitals.';
+
+  @override
+  String get accountDeleteGo => 'Delete for good';
+
+  @override
+  String get accountDeleted =>
+      'The account and all of its company\'s data were deleted. You can make a new account.';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -8021,4 +8057,41 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get lockRemoved => 'Taala hata diya';
+
+  @override
+  String get accountHasMembers =>
+      'Is company mein aur log bhi kaam karte hain. Pehle unhein company se hatayein, phir account delete karein.';
+
+  @override
+  String get accountDeleteTitle => 'Account delete karein';
+
+  @override
+  String accountDeleteWarning(String email) {
+    return 'Ye $email ka account aur is ki company ka sara hisaab hamesha ke liye mita dega: workers, hazri, payroll, invoices aur raseedein, cloud se bhi aur is phone se bhi. Ye wapas nahin aata.';
+  }
+
+  @override
+  String get accountDeleteExport =>
+      'Pehle apna data nikal lein. Reports mein har register Excel ya PDF mein nikalta hai.';
+
+  @override
+  String get accountDeleteOpenReports => 'Reports kholein';
+
+  @override
+  String get accountDeleteConfirm =>
+      'Tasdeeq ke liye password dobara likhein, aur lafz DELETE. Is ke liye internet chahiye.';
+
+  @override
+  String get accountDeleteWord => 'DELETE likhein';
+
+  @override
+  String get accountDeleteWordWrong =>
+      'Bilkul DELETE likhein, bade huroof mein.';
+
+  @override
+  String get accountDeleteGo => 'Hamesha ke liye delete karein';
+
+  @override
+  String get accountDeleted =>
+      'Account aur us ki company ka sara data mit gaya. Naya account bana sakte hain.';
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../app/providers.dart';
 import '../../app/settings.dart';
@@ -89,6 +90,23 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const Divider(),
             ListTile(leading: const Icon(Icons.logout), title: Text(l10n.logOut), onTap: () => _logOut(context, account.logOut)),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.delete_forever_outlined, color: due),
+              title: Text(l10n.accountDeleteTitle, style: const TextStyle(color: due)),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (page) => DeleteAccountScreen(
+                    email: account.email,
+                    onDelete: account.deleteAccount,
+                    onExport: () {
+                      Navigator.of(page).pop();
+                      StatefulNavigationShell.of(context).goBranch(Section.reports.index);
+                    },
+                  ),
+                ),
+              ),
+            ),
           ],
           const Divider(),
         ],

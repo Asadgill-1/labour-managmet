@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:drift/drift.dart' show driftRuntimeOptions;
+import 'package:drift/drift.dart' show Value, driftRuntimeOptions;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +10,7 @@ import 'package:labour_app/app/app.dart';
 import 'package:labour_app/app/root.dart';
 import 'package:labour_app/app/settings.dart';
 import 'package:labour_app/data/account.dart';
+import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/tenant_database.dart';
 import 'package:labour_app/features/registers/register_export.dart';
 
@@ -21,6 +22,7 @@ void main() {
   late Account account;
   late FakeLock lock;
   final opened = <TenantDatabase>[];
+  final deleted = <String>[];
 
   setUp(() {
     FlutterSecureStorage.setMockInitialValues({});
@@ -28,6 +30,7 @@ void main() {
     account = cloud.account(const FlutterSecureStorage());
     lock = FakeLock(const FlutterSecureStorage());
     opened.clear();
+    deleted.clear();
   });
 
   Future<void> pumpRoot(WidgetTester tester, {({TenantDatabase db, Binding binding})? bound, bool pinSet = false}) async {
@@ -43,6 +46,7 @@ void main() {
         pinSet: pinSet,
         settings: const AppSettings(),
         loadSettings: () => AppSettings.load(const FlutterSecureStorage()),
+        deleteTenant: (tenantId) async => deleted.add(tenantId),
         openTenant: (tenantId, {required actorId}) async {
           final db = TenantDatabase(NativeDatabase.memory(), tenantId: tenantId, deviceId: 'device-1', actorId: actorId);
           opened.add(db);
@@ -356,6 +360,69 @@ void main() {
     final db = await boundPhone(tester, pinSet: false);
     expect(find.text('Phone ka taala'), findsNothing);
     expect(find.byType(LabourApp), findsOneWidget);
+    await shutDown(tester, db);
+  });
+
+  testWidgets('deleting the account takes the password and DELETE, then the company leaves the phone (D-066)', (tester) async {
+    cloud.addUser('owner@test.ae', 'pass1234', company: testTenant);
+    await pumpRoot(tester);
+    await fill(tester, 'Email', 'owner@test.ae');
+    await fill(tester, 'Password', 'pass1234');
+    await tapAndSettle(tester, find.text('Login karein'));
+    await setPin(tester);
+    await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+    await tapAndSettle(tester, find.text('Save karein'));
+    shareFolder(tester);
+    final db = opened.single;
+
+    await goTo(tester, 'Settings');
+    await tapAndSettle(tester, find.text('Account delete karein'));
+    expect(find.textContaining('Ye owner@test.ae ka account'), findsOneWidget);
+    await tapAndSettle(tester, find.text('Hamesha ke liye delete karein'));
+    expect(find.text('Bilkul DELETE likhein, bade huroof mein.'), findsOneWidget);
+    await fill(tester, 'Password', 'wrong999');
+    await fill(tester, 'DELETE likhein', 'delete');
+    await tapAndSettle(tester, find.text('Hamesha ke liye delete karein'));
+    expect(find.text('Bilkul DELETE likhein, bade huroof mein.'), findsOneWidget);
+    expect(cloud.calls.where((call) => call.path.contains('delete_account')), isEmpty, reason: 'nothing leaves the phone until the form is right');
+
+    await fill(tester, 'DELETE likhein', 'DELETE');
+    await tapAndSettle(tester, find.text('Hamesha ke liye delete karein'));
+    expect(find.text('Email ya password ghalat hai.'), findsOneWidget);
+    expect(cloud.users, contains('owner@test.ae'), reason: 'a wrong password deletes nothing');
+
+    await fill(tester, 'Password', 'pass1234');
+    await tapAndSettle(tester, find.text('Hamesha ke liye delete karein'));
+    for (var i = 0; i < 5 && deleted.isEmpty; i++) {
+      await settle(tester);
+    }
+    expect(find.text('Account aur us ki company ka sara data mit gaya. Naya account bana sakte hain.'), findsOneWidget);
+    expect(find.byType(LabourApp), findsNothing);
+    expect(cloud.users, isEmpty);
+    expect(deleted, [testTenant], reason: 'the company file and its key leave the phone');
+    expect(await real(tester, account.binding), isNull);
+    expect(await real(tester, lock.hasPin), isFalse);
+    final closed = await real(tester, () async {
+      try {
+        await db.select(db.tenantProfiles).get();
+        return false;
+      } on StateError {
+        return true;
+      }
+    });
+    expect(closed, isTrue, reason: 'the file was closed before it was removed');
+  });
+
+  testWidgets('before deleting, the account screen opens Reports, where the data goes to Excel or PDF (AUTH-07)', (tester) async {
+    final db = await boundPhone(tester, pinSet: false);
+    await real(tester, () => db.saveRow(db.tenantProfiles, id: null, operationId: newUuid(), fields: const TenantProfilesCompanion(legalName: Value('Al Noor Labour Supply'))));
+    await settle(tester);
+    await goTo(tester, 'Settings');
+    await tapAndSettle(tester, find.text('Account delete karein'));
+    expect(find.text('Pehle apna data nikal lein. Reports mein har register Excel ya PDF mein nikalta hai.'), findsOneWidget);
+    await tapAndSettle(tester, find.text('Reports kholein'));
+    expect(find.text('Account delete karein'), findsNothing);
+    expect(find.text('Sab reports'), findsWidgets);
     await shutDown(tester, db);
   });
 }
