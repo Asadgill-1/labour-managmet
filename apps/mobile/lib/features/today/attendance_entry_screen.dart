@@ -293,7 +293,7 @@ class _AttendanceEntryScreenState extends ConsumerState<AttendanceEntryScreen> {
                   children: [
                     Expanded(child: TimeField(l10n.shiftStart, value: _start, onChanged: (v) => setState(() => _start = v))),
                     const SizedBox(width: 12),
-                    Expanded(child: TimeField(l10n.shiftEnd, value: _end, onChanged: (v) => setState(() => _end = v))),
+                    Expanded(child: TimeField(l10n.shiftEnd, value: _end, startAt: 17 * 60, onChanged: (v) => setState(() => _end = v))),
                   ],
                 ),
                 fieldGap,

@@ -30,7 +30,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | MASTER-07 | 04 | Archive | T07, T18b | IMPLEMENTED_UNVERIFIED | TC-029, TC-118, TC-119, TC-123 | `apps/mobile/test/records_test.dart` |
 | MASTER-08 | 04 | Import | T18, T20 | IMPLEMENTED_UNVERIFIED | TC-103, TC-104, TC-105, TC-108 | `apps/mobile/test/reports_test.dart` |
 | ATT-01 | 05 | Flow | T10 | IMPLEMENTED_UNVERIFIED | - | - |
-| ATT-02 | 05 | Entry fields | T10 | IMPLEMENTED_UNVERIFIED | - | - |
+| ATT-02 | 05 | Entry fields | T10 | IMPLEMENTED_UNVERIFIED | TC-158 | `apps/mobile/test/groups_test.dart` |
 | ATT-03 | 05 | Bulk apply | T10 | IMPLEMENTED_UNVERIFIED | TC-023 | - |
 | ATT-04 | 05 | Exceptions | T10 | IMPLEMENTED_UNVERIFIED | TC-024 | - |
 | ATT-05 | 05 | Duplication | T10 | IMPLEMENTED_UNVERIFIED | TC-008, TC-025 | - |

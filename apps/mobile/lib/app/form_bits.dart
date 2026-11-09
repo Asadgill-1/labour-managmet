@@ -114,17 +114,21 @@ class DateField extends StatelessWidget {
 
 /// Time picked on a clock, held as minutes from midnight.
 class TimeField extends StatelessWidget {
-  const TimeField(this.label, {required this.value, required this.onChanged, super.key});
+  const TimeField(this.label, {required this.value, required this.onChanged, this.startAt = 8 * 60, super.key});
 
   final String label;
   final int? value;
   final ValueChanged<int> onChanged;
 
+  /// Where the clock opens while the field is empty. An end time opens later, so tapping OK at once never makes a
+  /// 24-hour shift.
+  final int startAt;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        final current = value ?? 8 * 60;
+        final current = value ?? startAt;
         final picked = await showTimePicker(
           context: context,
           initialTime: TimeOfDay(hour: current ~/ 60, minute: current % 60),

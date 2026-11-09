@@ -314,6 +314,7 @@ void main() {
 
     final rows = await real(tester, () => db.select(db.attendanceEntries).get());
     expect(rows, hasLength(3));
+    expect(rows.map((r) => r.clockMinutes).toSet(), {9 * 60}, reason: 'the end clock opens at 17:00, so OK on both makes 08:00 to 17:00');
     int amount(int i) => rows.singleWhere((r) => r.workerId == team.workers[i]).workerAmountFils!;
     expect(amount(0), 10000);
     expect(amount(1), 12000);

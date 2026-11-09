@@ -141,7 +141,7 @@ class _RowEditorScreenState extends State<RowEditorScreen> {
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: TimeField(l10n.shiftEnd, value: _end, onChanged: (v) => setState(() => _end = v)),
+                    child: TimeField(l10n.shiftEnd, value: _end, startAt: 17 * 60, onChanged: (v) => setState(() => _end = v)),
                   ),
                 ],
               ),

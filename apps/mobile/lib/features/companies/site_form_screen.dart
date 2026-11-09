@@ -93,7 +93,7 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
               children: [
                 Expanded(child: TimeField(l10n.defaultStart, value: _start, onChanged: (v) => setState(() => _start = v))),
                 const SizedBox(width: 12),
-                Expanded(child: TimeField(l10n.defaultEnd, value: _end, onChanged: (v) => setState(() => _end = v))),
+                Expanded(child: TimeField(l10n.defaultEnd, value: _end, startAt: 17 * 60, onChanged: (v) => setState(() => _end = v))),
               ],
             ),
             fieldGap,
