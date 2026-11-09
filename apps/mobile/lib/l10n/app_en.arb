@@ -2427,5 +2427,40 @@
     }
   },
   "accountPhoneElsewhere": "This phone belongs to another account. Log in with that one.",
-  "accountPhoneDataLogin": "This phone's earlier data has no company yet. Create a new account here and it goes into that company."
+  "accountPhoneDataLogin": "This phone's earlier data has no company yet. Create a new account here and it goes into that company.",
+  "lockSetTitle": "Lock this phone",
+  "lockSetIntro": "The app asks for this PIN each time it opens, with no internet needed. It locks this phone only; it is not your email password.",
+  "lockPin": "PIN",
+  "lockPinAgain": "PIN again",
+  "lockPinWeak": "Use 4 to 6 digits, not one digit repeated or a run like 1234.",
+  "lockPinMismatch": "The two PINs are not the same.",
+  "lockFingerprint": "Open with fingerprint too",
+  "lockSet": "Keep this PIN",
+  "lockTitle": "Open the app",
+  "lockIntro": "Type the PIN for {email} on this phone.",
+  "@lockIntro": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "lockOpen": "Open",
+  "lockUseFingerprint": "Use fingerprint",
+  "lockFingerprintReason": "Open the company's books",
+  "lockWrong": "Wrong PIN. {count, plural, =1{1 try left} other{{count} tries left}}, then you log in with your email.",
+  "@lockWrong": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lockForgot": "Forgot PIN?",
+  "lockForgotAsk": "Log in with email?",
+  "lockForgotBody": "Without the PIN, log in again with your email and password. That needs internet. The data stays on this phone and opens again.",
+  "lockForgotGo": "Email login",
+  "lockGone": "The PIN was wrong 5 times, so the phone's lock was removed. Log in with your email and password; the data is still on this phone.",
+  "lockSettings": "Phone lock (PIN)",
+  "lockChanged": "New PIN kept"
 }

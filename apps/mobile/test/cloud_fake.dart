@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:labour_app/data/account.dart';
+import 'package:labour_app/data/app_lock.dart';
 import 'package:supabase/supabase.dart';
 import 'package:yet_another_json_isolate/yet_another_json_isolate.dart';
 
@@ -150,4 +151,22 @@ class FakeCloud {
 
   http.Response _json(Object? body, {int status = 200}) =>
       http.Response(jsonEncode(body), status, headers: {'content-type': 'application/json; charset=utf-8'});
+}
+
+/// The phone's lock with a stand-in for the phone's fingerprint reader.
+class FakeLock extends AppLock {
+  FakeLock(super.storage, {this.hasFingerprint = false});
+
+  final bool hasFingerprint;
+  var fingerprintWorks = true;
+  var prompts = 0;
+
+  @override
+  Future<bool> canUseFingerprint() async => hasFingerprint;
+
+  @override
+  Future<bool> unlockWithFingerprint(String reason) async {
+    prompts++;
+    return fingerprintWorks;
+  }
 }

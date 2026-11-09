@@ -6870,6 +6870,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This phone\'s earlier data has no company yet. Create a new account here and it goes into that company.'**
   String get accountPhoneDataLogin;
+
+  /// No description provided for @lockSetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock this phone'**
+  String get lockSetTitle;
+
+  /// No description provided for @lockSetIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'The app asks for this PIN each time it opens, with no internet needed. It locks this phone only; it is not your email password.'**
+  String get lockSetIntro;
+
+  /// No description provided for @lockPin.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN'**
+  String get lockPin;
+
+  /// No description provided for @lockPinAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN again'**
+  String get lockPinAgain;
+
+  /// No description provided for @lockPinWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Use 4 to 6 digits, not one digit repeated or a run like 1234.'**
+  String get lockPinWeak;
+
+  /// No description provided for @lockPinMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The two PINs are not the same.'**
+  String get lockPinMismatch;
+
+  /// No description provided for @lockFingerprint.
+  ///
+  /// In en, this message translates to:
+  /// **'Open with fingerprint too'**
+  String get lockFingerprint;
+
+  /// No description provided for @lockSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep this PIN'**
+  String get lockSet;
+
+  /// No description provided for @lockTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the app'**
+  String get lockTitle;
+
+  /// No description provided for @lockIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Type the PIN for {email} on this phone.'**
+  String lockIntro(String email);
+
+  /// No description provided for @lockOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get lockOpen;
+
+  /// No description provided for @lockUseFingerprint.
+  ///
+  /// In en, this message translates to:
+  /// **'Use fingerprint'**
+  String get lockUseFingerprint;
+
+  /// No description provided for @lockFingerprintReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the company\'s books'**
+  String get lockFingerprintReason;
+
+  /// No description provided for @lockWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong PIN. {count, plural, =1{1 try left} other{{count} tries left}}, then you log in with your email.'**
+  String lockWrong(int count);
+
+  /// No description provided for @lockForgot.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot PIN?'**
+  String get lockForgot;
+
+  /// No description provided for @lockForgotAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in with email?'**
+  String get lockForgotAsk;
+
+  /// No description provided for @lockForgotBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Without the PIN, log in again with your email and password. That needs internet. The data stays on this phone and opens again.'**
+  String get lockForgotBody;
+
+  /// No description provided for @lockForgotGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Email login'**
+  String get lockForgotGo;
+
+  /// No description provided for @lockGone.
+  ///
+  /// In en, this message translates to:
+  /// **'The PIN was wrong 5 times, so the phone\'s lock was removed. Log in with your email and password; the data is still on this phone.'**
+  String get lockGone;
+
+  /// No description provided for @lockSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone lock (PIN)'**
+  String get lockSettings;
+
+  /// No description provided for @lockChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'New PIN kept'**
+  String get lockChanged;
 }
 
 class _AppLocalizationsDelegate

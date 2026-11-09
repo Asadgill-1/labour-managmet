@@ -6,6 +6,7 @@ import '../../app/settings.dart';
 import '../../app/side_panel.dart';
 import '../../app/theme.dart';
 import '../../l10n/app_localizations.dart';
+import '../account/account_screens.dart';
 import 'db_check_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -65,6 +66,23 @@ class SettingsScreen extends ConsumerWidget {
           const Divider(),
           ListTile(title: Text(l10n.accountTitle), subtitle: Text(account?.email ?? l10n.accountNotInBuild)),
           if (account != null) ...[
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.lock_outline),
+              title: Text(l10n.lockSettings),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (page) => SetPinScreen(
+                    lock: account.lock,
+                    onDone: () {
+                      Navigator.of(page).pop();
+                      showSavedOnPhone(context, l10n.lockChanged);
+                    },
+                  ),
+                ),
+              ),
+            ),
             const Divider(),
             ListTile(leading: const Icon(Icons.logout), title: Text(l10n.logOut), onTap: () => _logOut(context, account.logOut)),
           ],

@@ -19,16 +19,18 @@ import 'support.dart';
 void main() {
   late FakeCloud cloud;
   late Account account;
+  late FakeLock lock;
   final opened = <TenantDatabase>[];
 
   setUp(() {
     FlutterSecureStorage.setMockInitialValues({});
     cloud = FakeCloud();
     account = cloud.account(const FlutterSecureStorage());
+    lock = FakeLock(const FlutterSecureStorage());
     opened.clear();
   });
 
-  Future<void> pumpRoot(WidgetTester tester) async {
+  Future<void> pumpRoot(WidgetTester tester, {({TenantDatabase db, Binding binding})? bound, bool pinSet = false}) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
@@ -36,6 +38,9 @@ void main() {
     await tester.pumpWidget(
       AppRoot(
         account: account,
+        lock: lock,
+        opened: bound,
+        pinSet: pinSet,
         settings: const AppSettings(),
         loadSettings: () => AppSettings.load(const FlutterSecureStorage()),
         openTenant: (tenantId, {required actorId}) async {
@@ -55,6 +60,35 @@ void main() {
   }
 
   Future<void> fill(WidgetTester tester, String label, String text) => tester.enterText(find.widgetWithText(TextFormField, label), text);
+
+  /// Share files live in the phone's cache folder, which logging out empties; here a folder of the test's own.
+  void shareFolder(WidgetTester tester) {
+    final cache = Directory.systemTemp.createTempSync('t19b');
+    const paths = MethodChannel('plugins.flutter.io/path_provider');
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(paths, (_) async => cache.path);
+    addTearDown(() {
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(paths, null);
+      if (cache.existsSync()) cache.deleteSync(recursive: true);
+    });
+  }
+
+  /// The phone's lock, asked for once the company opens after a login (AUTH-03).
+  Future<void> setPin(WidgetTester tester, [String pin = '2580']) async {
+    expect(find.text('Phone ka taala'), findsOneWidget);
+    expect(find.byType(LabourApp), findsNothing, reason: 'the books wait for the lock');
+    await fill(tester, 'PIN', pin);
+    await fill(tester, 'PIN dobara', pin);
+    await tapAndSettle(tester, find.text('Ye PIN rakhein'));
+  }
+
+  /// A phone someone signed in on before, opening with no network.
+  Future<TenantDatabase> boundPhone(WidgetTester tester, {required bool pinSet}) async {
+    cloud.offline = true;
+    final db = TenantDatabase(NativeDatabase.memory(), tenantId: testTenant, deviceId: 'device-1', actorId: 'user-1');
+    driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
+    await pumpRoot(tester, bound: (db: db, binding: (tenantId: testTenant, userId: 'user-1', email: 'owner@test.ae')), pinSet: pinSet);
+    return db;
+  }
 
   testWidgets('a new owner signs up, types the email code, names the company and lands in its books; logging out closes them', (tester) async {
     await pumpRoot(tester);
@@ -83,6 +117,11 @@ void main() {
     expect(find.text('Apni company'), findsOneWidget);
     await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
     await tapAndSettle(tester, find.text('Shuru karein'));
+    await fill(tester, 'PIN', '1234');
+    await tapAndSettle(tester, find.text('Ye PIN rakhein'));
+    expect(find.text('4 se 6 number rakhein. Ek hi number baar baar ya 1234 jaisi seedhi line nahin.'), findsOneWidget);
+    expect(find.text('Dono PIN ek jaise nahin.'), findsOneWidget);
+    await setPin(tester);
 
     expect(find.byType(LabourApp), findsOneWidget);
     expect(find.text('Menu'), findsOneWidget, reason: 'the books open straight away, without asking the name again');
@@ -90,18 +129,17 @@ void main() {
     final user = cloud.users['owner@test.ae']!.id;
     expect(db.actorId, user, reason: 'rows are written as the signed-in user');
     expect((await real(tester, () => db.select(db.tenantProfiles).getSingle())).legalName, 'Al Noor Labour Supply');
-    // Share files live in the phone's cache folder; here a folder of the test's own.
-    final cache = Directory.systemTemp.createTempSync('t19b');
-    const paths = MethodChannel('plugins.flutter.io/path_provider');
-    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(paths, (_) async => cache.path);
-    addTearDown(() {
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(paths, null);
-      cache.deleteSync(recursive: true);
-    });
+    shareFolder(tester);
     final share = await real(tester, () => writeExportFile('left-behind.pdf', Uint8List(4)));
 
     await goTo(tester, 'Settings');
     expect(find.text('owner@test.ae'), findsOneWidget);
+    await tapAndSettle(tester, find.text('Phone ka taala (PIN)'));
+    await fill(tester, 'PIN', '3690');
+    await fill(tester, 'PIN dobara', '3690');
+    await tapAndSettle(tester, find.text('Ye PIN rakhein'));
+    expect(find.text('Naya PIN rakh liya'), findsOneWidget);
+    expect(await real(tester, () => lock.check('3690')), isNull, reason: 'the PIN can be changed from Settings');
     await tapAndSettle(tester, find.text('Log out'));
     expect(find.text('Is phone par is company ka data band ho jayega. Dobara login karne par khul jayega.'), findsOneWidget);
     await tapAndSettle(tester, find.widgetWithText(TextButton, 'Log out'));
@@ -109,6 +147,11 @@ void main() {
     expect(find.byType(LabourApp), findsNothing);
     expect(find.text('Login karein'), findsOneWidget);
     expect(await real(tester, account.binding), isNull);
+    expect(await real(tester, lock.hasPin), isFalse, reason: 'the next account on the phone sets its own lock');
+    // Logging out ends with the disk: each step waits on it once.
+    for (var i = 0; i < 5 && await real(tester, share.exists); i++) {
+      await settle(tester);
+    }
     expect(await real(tester, share.exists), isFalse, reason: 'no share file is left for the next account (AUTH-04)');
     final closed = await real(tester, () async {
       try {
@@ -143,6 +186,7 @@ void main() {
     expect(find.text('Apni company'), findsOneWidget);
     await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
     await tapAndSettle(tester, find.text('Shuru karein'));
+    await setPin(tester);
     expect(find.byType(LabourApp), findsOneWidget);
     await shutDown(tester, opened.single);
   });
@@ -171,6 +215,7 @@ void main() {
     await tapAndSettle(tester, find.text('Aage'));
     await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
     await tapAndSettle(tester, find.text('Shuru karein'));
+    await setPin(tester);
     expect(opened.single.tenantId, testTenant, reason: 'the data on the phone opens in the new company');
     expect(find.byType(LabourApp), findsOneWidget);
     await shutDown(tester, opened.single);
@@ -216,7 +261,64 @@ void main() {
     await fill(tester, 'Naya password', 'newpass99');
     await tapAndSettle(tester, find.text('Naya password rakhein'));
     expect(cloud.users['owner@test.ae']?.password, 'newpass99');
+    await setPin(tester);
     expect(find.byType(LabourApp), findsOneWidget);
+    await shutDown(tester, opened.single);
+  });
+
+  testWidgets('a phone with a PIN opens behind its lock with no network; a wrong PIN says how many tries are left', (tester) async {
+    await lock.setPin('2580');
+    final db = await boundPhone(tester, pinSet: true);
+    expect(find.text('Is phone par owner@test.ae ka PIN likhein.'), findsOneWidget);
+    expect(find.byType(LabourApp), findsNothing);
+    expect(find.text('Fingerprint lagayein'), findsNothing, reason: 'a phone without a fingerprint is not offered one');
+
+    await fill(tester, 'PIN', '1111');
+    await tapAndSettle(tester, find.text('Kholein'));
+    expect(find.text('PIN ghalat hai. 4 koshishein baqi, phir email se login karna hoga.'), findsOneWidget);
+    await fill(tester, 'PIN', '2580');
+    await tapAndSettle(tester, find.text('Kholein'));
+    expect(find.byType(LabourApp), findsOneWidget);
+    expect(cloud.calls, isEmpty, reason: 'the lock opens with no network (AUTH-03)');
+    await shutDown(tester, db);
+  });
+
+  testWidgets('the fingerprint opens the lock by itself when it is on', (tester) async {
+    lock = FakeLock(const FlutterSecureStorage(), hasFingerprint: true);
+    await lock.setPin('2580');
+    await lock.setFingerprint(true);
+    final db = await boundPhone(tester, pinSet: true);
+    expect(lock.prompts, 1);
+    expect(find.byType(LabourApp), findsOneWidget);
+    await shutDown(tester, db);
+  });
+
+  testWidgets('5 wrong PINs remove the lock; logging in with the email opens the same company again', (tester) async {
+    await lock.setPin('2580');
+    await boundPhone(tester, pinSet: true);
+    shareFolder(tester);
+    for (var i = 0; i < 4; i++) {
+      await fill(tester, 'PIN', '1111');
+      await tapAndSettle(tester, find.text('Kholein'));
+    }
+    expect(find.text('PIN ghalat hai. 1 koshish baqi, phir email se login karna hoga.'), findsOneWidget);
+    await tapAndSettle(tester, find.text('PIN bhool gaye?'));
+    expect(find.text('PIN ke baghair email aur password se dobara login karein. Is ke liye internet chahiye. Data isi phone par rahega aur dobara khul jayega.'), findsOneWidget);
+    await tapAndSettle(tester, find.text('Wapas'));
+    await fill(tester, 'PIN', '1111');
+    await tapAndSettle(tester, find.text('Kholein'));
+
+    expect(find.text('PIN 5 baar ghalat likha gaya, is liye phone ka taala hata diya gaya. Email aur password se login karein; data isi phone par hai.'), findsOneWidget);
+    expect(await real(tester, lock.hasPin), isFalse);
+
+    cloud
+      ..offline = false
+      ..addUser('owner@test.ae', 'pass1234', company: testTenant);
+    await fill(tester, 'Email', 'owner@test.ae');
+    await fill(tester, 'Password', 'pass1234');
+    await tapAndSettle(tester, find.text('Login karein'));
+    await setPin(tester, '3690');
+    expect(opened.single.tenantId, testTenant, reason: 'the data stayed on the phone');
     await shutDown(tester, opened.single);
   });
 }

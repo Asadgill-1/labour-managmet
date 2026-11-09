@@ -6,7 +6,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.provider.Settings
 import androidx.core.content.FileProvider
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
@@ -15,8 +15,11 @@ import java.util.UUID
 private const val SAVE_REQUEST = 4101
 private const val PICK_REQUEST = 4102
 
-/** Sends, opens or saves an exported register. The user picks the recipient and sends it themselves (DOC-06). */
-class MainActivity : FlutterActivity() {
+/**
+ * Sends, opens or saves an exported register; the user picks the recipient and sends it themselves (DOC-06). A fragment
+ * activity, so the phone's fingerprint prompt can show (AUTH-03).
+ */
+class MainActivity : FlutterFragmentActivity() {
     private var pendingSave: Pair<File, MethodChannel.Result>? = null
     private var pendingPick: MethodChannel.Result? = null
 

@@ -4025,6 +4025,83 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get accountPhoneDataLogin =>
       'This phone\'s earlier data has no company yet. Create a new account here and it goes into that company.';
+
+  @override
+  String get lockSetTitle => 'Lock this phone';
+
+  @override
+  String get lockSetIntro =>
+      'The app asks for this PIN each time it opens, with no internet needed. It locks this phone only; it is not your email password.';
+
+  @override
+  String get lockPin => 'PIN';
+
+  @override
+  String get lockPinAgain => 'PIN again';
+
+  @override
+  String get lockPinWeak =>
+      'Use 4 to 6 digits, not one digit repeated or a run like 1234.';
+
+  @override
+  String get lockPinMismatch => 'The two PINs are not the same.';
+
+  @override
+  String get lockFingerprint => 'Open with fingerprint too';
+
+  @override
+  String get lockSet => 'Keep this PIN';
+
+  @override
+  String get lockTitle => 'Open the app';
+
+  @override
+  String lockIntro(String email) {
+    return 'Type the PIN for $email on this phone.';
+  }
+
+  @override
+  String get lockOpen => 'Open';
+
+  @override
+  String get lockUseFingerprint => 'Use fingerprint';
+
+  @override
+  String get lockFingerprintReason => 'Open the company\'s books';
+
+  @override
+  String lockWrong(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tries left',
+      one: '1 try left',
+    );
+    return 'Wrong PIN. $_temp0, then you log in with your email.';
+  }
+
+  @override
+  String get lockForgot => 'Forgot PIN?';
+
+  @override
+  String get lockForgotAsk => 'Log in with email?';
+
+  @override
+  String get lockForgotBody =>
+      'Without the PIN, log in again with your email and password. That needs internet. The data stays on this phone and opens again.';
+
+  @override
+  String get lockForgotGo => 'Email login';
+
+  @override
+  String get lockGone =>
+      'The PIN was wrong 5 times, so the phone\'s lock was removed. Log in with your email and password; the data is still on this phone.';
+
+  @override
+  String get lockSettings => 'Phone lock (PIN)';
+
+  @override
+  String get lockChanged => 'New PIN kept';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -7847,4 +7924,81 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String get accountPhoneDataLogin =>
       'Is phone ke purane data ki abhi koi company nahin. Yahan naya account banayein, data usi ki company mein chala jayega.';
+
+  @override
+  String get lockSetTitle => 'Phone ka taala';
+
+  @override
+  String get lockSetIntro =>
+      'App har baar khulne par ye PIN poochegi, internet ke baghair bhi. Ye sirf is phone ka taala hai, email ka password nahin.';
+
+  @override
+  String get lockPin => 'PIN';
+
+  @override
+  String get lockPinAgain => 'PIN dobara';
+
+  @override
+  String get lockPinWeak =>
+      '4 se 6 number rakhein. Ek hi number baar baar ya 1234 jaisi seedhi line nahin.';
+
+  @override
+  String get lockPinMismatch => 'Dono PIN ek jaise nahin.';
+
+  @override
+  String get lockFingerprint => 'Fingerprint se bhi kholein';
+
+  @override
+  String get lockSet => 'Ye PIN rakhein';
+
+  @override
+  String get lockTitle => 'App kholein';
+
+  @override
+  String lockIntro(String email) {
+    return 'Is phone par $email ka PIN likhein.';
+  }
+
+  @override
+  String get lockOpen => 'Kholein';
+
+  @override
+  String get lockUseFingerprint => 'Fingerprint lagayein';
+
+  @override
+  String get lockFingerprintReason => 'Company ka hisaab kholein';
+
+  @override
+  String lockWrong(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count koshishein baqi',
+      one: '1 koshish baqi',
+    );
+    return 'PIN ghalat hai. $_temp0, phir email se login karna hoga.';
+  }
+
+  @override
+  String get lockForgot => 'PIN bhool gaye?';
+
+  @override
+  String get lockForgotAsk => 'Email se login karein?';
+
+  @override
+  String get lockForgotBody =>
+      'PIN ke baghair email aur password se dobara login karein. Is ke liye internet chahiye. Data isi phone par rahega aur dobara khul jayega.';
+
+  @override
+  String get lockForgotGo => 'Email se login';
+
+  @override
+  String get lockGone =>
+      'PIN 5 baar ghalat likha gaya, is liye phone ka taala hata diya gaya. Email aur password se login karein; data isi phone par hai.';
+
+  @override
+  String get lockSettings => 'Phone ka taala (PIN)';
+
+  @override
+  String get lockChanged => 'Naya PIN rakh liya';
 }

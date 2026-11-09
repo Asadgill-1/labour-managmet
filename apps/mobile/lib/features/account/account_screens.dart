@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/form_bits.dart';
 import '../../app/settings.dart';
 import '../../app/theme.dart';
 import '../../data/account.dart';
+import '../../data/app_lock.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -70,10 +72,13 @@ String? _newPasswordError(AppLocalizations l10n, String? v) => isStrongPassword(
 
 /// The first screen on a device with no company open: log in, or start an account. The language comes first (UX-02).
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({required this.account, required this.onOpen, super.key});
+  const LoginScreen({required this.account, required this.onOpen, this.lockedOut = false, super.key});
 
   final Account account;
   final OpenCompany onOpen;
+
+  /// The PIN was wrong too many times, which removed the phone's lock.
+  final bool lockedOut;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -134,6 +139,7 @@ class _LoginScreenState extends State<LoginScreen> with _Step {
         child: AutofillGroup(
           child: FormBody(
             children: [
+              if (widget.lockedOut) ...[_Note(l10n.lockGone), fieldGap],
               Text(l10n.accountIntro),
               fieldGap,
               Field(
@@ -358,6 +364,195 @@ class _CompanyNameScreenState extends State<CompanyNameScreen> with _Step {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// The phone's lock, set after logging in and changed from Settings (AUTH-03).
+class SetPinScreen extends StatefulWidget {
+  const SetPinScreen({required this.lock, required this.onDone, super.key});
+
+  final AppLock lock;
+  final VoidCallback onDone;
+
+  @override
+  State<SetPinScreen> createState() => _SetPinScreenState();
+}
+
+class _SetPinScreenState extends State<SetPinScreen> {
+  final _form = GlobalKey<FormState>();
+  final _pin = TextEditingController();
+  final _again = TextEditingController();
+  var _canFingerprint = false;
+  var _fingerprint = true;
+
+  @override
+  void initState() {
+    super.initState();
+    () async {
+      final can = await widget.lock.canUseFingerprint();
+      // A new lock offers the fingerprint; a change keeps what was chosen.
+      final on = !await widget.lock.hasPin() || await widget.lock.fingerprintOn();
+      if (!mounted) return;
+      setState(() {
+        _canFingerprint = can;
+        _fingerprint = on;
+      });
+    }();
+  }
+
+  Future<void> _save() async {
+    if (!validateAndReveal(_form)) return;
+    await widget.lock.setPin(_pin.text);
+    await widget.lock.setFingerprint(_canFingerprint && _fingerprint);
+    widget.onDone();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return _StepScaffold(
+      title: l10n.lockSetTitle,
+      busy: false,
+      action: MainActionBar(label: l10n.lockSet, onPressed: _save),
+      child: Form(
+        key: _form,
+        child: FormBody(
+          children: [
+            Text(l10n.lockSetIntro),
+            fieldGap,
+            _PinField(l10n.lockPin, _pin, validator: (v) => isGoodPin(v ?? '') ? null : l10n.lockPinWeak),
+            fieldGap,
+            _PinField(l10n.lockPinAgain, _again, validator: (v) => v == _pin.text ? null : l10n.lockPinMismatch),
+            if (_canFingerprint)
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.lockFingerprint),
+                value: _fingerprint,
+                onChanged: (v) => setState(() => _fingerprint = v),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Opens this phone's company with its PIN or fingerprint, with no network (AUTH-03).
+class LockScreen extends StatefulWidget {
+  const LockScreen({required this.lock, required this.email, required this.onUnlock, required this.onLogInAgain, super.key});
+
+  final AppLock lock;
+  final String email;
+  final VoidCallback onUnlock;
+
+  /// Forgets the company on this phone until the email login, which opens the same data again.
+  final Future<void> Function({bool lockedOut}) onLogInAgain;
+
+  @override
+  State<LockScreen> createState() => _LockScreenState();
+}
+
+class _LockScreenState extends State<LockScreen> {
+  final _form = GlobalKey<FormState>();
+  final _pin = TextEditingController();
+  var _fingerprint = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.lock.fingerprintOn().then((on) {
+      if (!mounted || !on) return;
+      setState(() => _fingerprint = true);
+      _useFingerprint();
+    });
+  }
+
+  Future<void> _open() async {
+    if (!validateAndReveal(_form)) return;
+    final left = await widget.lock.check(_pin.text);
+    if (!mounted) return;
+    if (left == null) return widget.onUnlock();
+    if (left == 0) return widget.onLogInAgain(lockedOut: true);
+    _pin.clear();
+    showFormError(context, AppLocalizations.of(context).lockWrong(left));
+  }
+
+  Future<void> _useFingerprint() async {
+    if (await widget.lock.unlockWithFingerprint(AppLocalizations.of(context).lockFingerprintReason)) widget.onUnlock();
+  }
+
+  Future<void> _forgot() async {
+    final l10n = AppLocalizations.of(context);
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        title: Text(l10n.lockForgotAsk),
+        content: Text(l10n.lockForgotBody),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialog).pop(false), child: Text(l10n.cancel)),
+          TextButton(onPressed: () => Navigator.of(dialog).pop(true), child: Text(l10n.lockForgotGo)),
+        ],
+      ),
+    );
+    if (yes == true) await widget.onLogInAgain();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return _StepScaffold(
+      title: l10n.lockTitle,
+      busy: false,
+      action: MainActionBar(label: l10n.lockOpen, onPressed: _open),
+      child: Form(
+        key: _form,
+        child: FormBody(
+          children: [
+            Text(l10n.lockIntro(widget.email)),
+            fieldGap,
+            _PinField(
+              l10n.lockPin,
+              _pin,
+              autofocus: !_fingerprint,
+              onSubmitted: (_) => _open(),
+              validator: (v) => (v ?? '').isEmpty ? l10n.fieldRequired : null,
+            ),
+            if (_fingerprint) ...[
+              fieldGap,
+              OutlinedButton.icon(onPressed: _useFingerprint, icon: const Icon(Icons.fingerprint), label: Text(l10n.lockUseFingerprint)),
+            ],
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: TextButton(onPressed: _forgot, child: Text(l10n.lockForgot)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PinField extends StatelessWidget {
+  const _PinField(this.label, this.controller, {required this.validator, this.autofocus = false, this.onSubmitted});
+
+  final String label;
+  final TextEditingController controller;
+  final FormFieldValidator<String> validator;
+  final bool autofocus;
+  final ValueChanged<String>? onSubmitted;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      autofocus: autofocus,
+      onFieldSubmitted: onSubmitted,
+      obscureText: true,
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(6)],
+      decoration: InputDecoration(labelText: label, errorMaxLines: 3),
     );
   }
 }
