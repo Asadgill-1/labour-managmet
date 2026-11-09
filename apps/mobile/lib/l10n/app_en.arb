@@ -2361,5 +2361,61 @@
         "type": "String"
       }
     }
-  }
+  },
+  "accountLoginTitle": "Log in",
+  "accountIntro": "Log in to open your company's books on this phone.",
+  "accountEmail": "Email",
+  "accountPassword": "Password",
+  "accountPasswordHelp": "At least 8 characters, with letters and numbers.",
+  "accountShowPassword": "Show password",
+  "accountHidePassword": "Hide password",
+  "accountLogin": "Log in",
+  "accountForgot": "Forgot password?",
+  "accountCreate": "Create a new account",
+  "accountSignupTitle": "New account",
+  "accountSignupIntro": "We send you an email to check the address.",
+  "accountSignup": "Create account",
+  "accountCodeTitle": "Email code",
+  "accountCodeSent": "We sent a code to {email}. If it is not there, look in spam.",
+  "@accountCodeSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountCode": "Code from the email",
+  "accountCodeInvalid": "Enter the numbers from the email.",
+  "accountResend": "Send the code again",
+  "accountResent": "Code sent again.",
+  "accountNewPassword": "New password",
+  "accountContinue": "Continue",
+  "accountSetPassword": "Save new password",
+  "accountStart": "Start",
+  "accountEmailInvalid": "Enter a full email, like name@example.com.",
+  "accountPasswordWeak": "Use at least 8 characters, with letters and numbers.",
+  "accountWrongLogin": "Email or password is wrong.",
+  "accountExists": "This email already has an account. Log in instead.",
+  "accountBadCode": "That code is wrong or too old. Send a new one.",
+  "accountTooMany": "Too many tries. Wait a few minutes and try again.",
+  "accountOffline": "No internet. Creating an account or logging in needs the internet.",
+  "accountDeviceRevoked": "Your company turned off this phone's access.",
+  "accountFailed": "That did not work. Try again.",
+  "accountPhoneData": "This phone already has data. A new account keeps it in the new company. Logging in to another company hides it on this phone. It is not deleted.",
+  "accountTitle": "Account",
+  "accountNotInBuild": "Not in this build. Data stays on this phone only.",
+  "logOut": "Log out",
+  "logOutAsk": "Log out?",
+  "logOutBody": "This company's data closes on this phone. Log in again to open it.",
+  "accountLinkSent": "We emailed {email}. Tap the link in it, then come back here and tap Continue. The page the link opens may not load; the email is confirmed anyway. If the email is not there, look in spam.",
+  "@accountLinkSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountNotConfirmed": "The email is not confirmed yet. Tap the link in the email first.",
+  "accountResetUnavailable": "Resetting a password is not available yet. It comes with email codes, soon.",
+  "accountOk": "OK"
 }

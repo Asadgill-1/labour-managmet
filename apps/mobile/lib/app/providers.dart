@@ -12,8 +12,11 @@ import '../data/tenant_database.dart';
 import '../data/timesheets.dart';
 import '../data/visa.dart';
 
-/// Opened in main. Disposing this scope at logout closes the tenant's data (AUTH-04).
+/// Opened in main, or by AppRoot once someone signs in. Disposing this scope at logout closes the tenant's data (AUTH-04).
 final dbProvider = Provider<TenantDatabase>((ref) => throw UnimplementedError('opened in main'));
+
+/// Who is signed in on this device, and how to log out. Null in a build without accounts (D-062).
+final accountProvider = Provider<({String email, Future<void> Function() logOut})?>((ref) => null);
 
 final profileProvider = StreamProvider((ref) {
   final db = ref.watch(dbProvider);

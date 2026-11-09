@@ -128,9 +128,17 @@ Future<Uint8List> makeExportBytes(
   );
 }
 
+Future<Directory> _exportDir() async => Directory('${(await getTemporaryDirectory()).path}/exports');
+
+/// Removes every share file, so whoever logs in next on this phone sees none of them (AUTH-04).
+Future<void> clearExportFiles() async {
+  final dir = await _exportDir();
+  if (await dir.exists()) await dir.delete(recursive: true);
+}
+
 /// Share files stay in the cache and are gone after a day (DOC-07).
 Future<File> writeExportFile(String name, Uint8List bytes) async {
-  final dir = Directory('${(await getTemporaryDirectory()).path}/exports');
+  final dir = await _exportDir();
   await dir.create(recursive: true);
   final dayAgo = DateTime.now().subtract(const Duration(days: 1));
   await for (final old in dir.list()) {

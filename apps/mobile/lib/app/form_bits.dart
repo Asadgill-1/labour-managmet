@@ -40,7 +40,7 @@ bool validateAndReveal(GlobalKey<FormState> form) {
 }
 
 class Field extends StatelessWidget {
-  const Field(this.label, this.controller, {this.validator, this.keyboardType, this.helper, this.lines = 1, this.onChanged, super.key});
+  const Field(this.label, this.controller, {this.validator, this.keyboardType, this.helper, this.lines = 1, this.onChanged, this.autofillHints, super.key});
 
   final String label;
   final TextEditingController controller;
@@ -49,6 +49,7 @@ class Field extends StatelessWidget {
   final String? helper;
   final int lines;
   final ValueChanged<String>? onChanged;
+  final Iterable<String>? autofillHints;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +58,7 @@ class Field extends StatelessWidget {
       validator: validator,
       onChanged: onChanged,
       keyboardType: keyboardType,
+      autofillHints: autofillHints,
       maxLines: lines,
       decoration: InputDecoration(labelText: label, helperText: helper, helperMaxLines: 4),
     );

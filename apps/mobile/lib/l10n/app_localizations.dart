@@ -6600,6 +6600,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The company agreed fewer hours: {reason}'**
   String tsCarryNote(String reason);
+
+  /// No description provided for @accountLoginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in'**
+  String get accountLoginTitle;
+
+  /// No description provided for @accountIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in to open your company\'s books on this phone.'**
+  String get accountIntro;
+
+  /// No description provided for @accountEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get accountEmail;
+
+  /// No description provided for @accountPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get accountPassword;
+
+  /// No description provided for @accountPasswordHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 8 characters, with letters and numbers.'**
+  String get accountPasswordHelp;
+
+  /// No description provided for @accountShowPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get accountShowPassword;
+
+  /// No description provided for @accountHidePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get accountHidePassword;
+
+  /// No description provided for @accountLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in'**
+  String get accountLogin;
+
+  /// No description provided for @accountForgot.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get accountForgot;
+
+  /// No description provided for @accountCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new account'**
+  String get accountCreate;
+
+  /// No description provided for @accountSignupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New account'**
+  String get accountSignupTitle;
+
+  /// No description provided for @accountSignupIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'We send you an email to check the address.'**
+  String get accountSignupIntro;
+
+  /// No description provided for @accountSignup.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get accountSignup;
+
+  /// No description provided for @accountCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Email code'**
+  String get accountCodeTitle;
+
+  /// No description provided for @accountCodeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a code to {email}. If it is not there, look in spam.'**
+  String accountCodeSent(String email);
+
+  /// No description provided for @accountCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Code from the email'**
+  String get accountCode;
+
+  /// No description provided for @accountCodeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the numbers from the email.'**
+  String get accountCodeInvalid;
+
+  /// No description provided for @accountResend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send the code again'**
+  String get accountResend;
+
+  /// No description provided for @accountResent.
+  ///
+  /// In en, this message translates to:
+  /// **'Code sent again.'**
+  String get accountResent;
+
+  /// No description provided for @accountNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get accountNewPassword;
+
+  /// No description provided for @accountContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get accountContinue;
+
+  /// No description provided for @accountSetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Save new password'**
+  String get accountSetPassword;
+
+  /// No description provided for @accountStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get accountStart;
+
+  /// No description provided for @accountEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a full email, like name@example.com.'**
+  String get accountEmailInvalid;
+
+  /// No description provided for @accountPasswordWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least 8 characters, with letters and numbers.'**
+  String get accountPasswordWeak;
+
+  /// No description provided for @accountWrongLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Email or password is wrong.'**
+  String get accountWrongLogin;
+
+  /// No description provided for @accountExists.
+  ///
+  /// In en, this message translates to:
+  /// **'This email already has an account. Log in instead.'**
+  String get accountExists;
+
+  /// No description provided for @accountBadCode.
+  ///
+  /// In en, this message translates to:
+  /// **'That code is wrong or too old. Send a new one.'**
+  String get accountBadCode;
+
+  /// No description provided for @accountTooMany.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many tries. Wait a few minutes and try again.'**
+  String get accountTooMany;
+
+  /// No description provided for @accountOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet. Creating an account or logging in needs the internet.'**
+  String get accountOffline;
+
+  /// No description provided for @accountDeviceRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Your company turned off this phone\'s access.'**
+  String get accountDeviceRevoked;
+
+  /// No description provided for @accountFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'That did not work. Try again.'**
+  String get accountFailed;
+
+  /// No description provided for @accountPhoneData.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone already has data. A new account keeps it in the new company. Logging in to another company hides it on this phone. It is not deleted.'**
+  String get accountPhoneData;
+
+  /// No description provided for @accountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountTitle;
+
+  /// No description provided for @accountNotInBuild.
+  ///
+  /// In en, this message translates to:
+  /// **'Not in this build. Data stays on this phone only.'**
+  String get accountNotInBuild;
+
+  /// No description provided for @logOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get logOut;
+
+  /// No description provided for @logOutAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out?'**
+  String get logOutAsk;
+
+  /// No description provided for @logOutBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This company\'s data closes on this phone. Log in again to open it.'**
+  String get logOutBody;
+
+  /// No description provided for @accountLinkSent.
+  ///
+  /// In en, this message translates to:
+  /// **'We emailed {email}. Tap the link in it, then come back here and tap Continue. The page the link opens may not load; the email is confirmed anyway. If the email is not there, look in spam.'**
+  String accountLinkSent(String email);
+
+  /// No description provided for @accountNotConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'The email is not confirmed yet. Tap the link in the email first.'**
+  String get accountNotConfirmed;
+
+  /// No description provided for @accountResetUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Resetting a password is not available yet. It comes with email codes, soon.'**
+  String get accountResetUnavailable;
+
+  /// No description provided for @accountOk.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get accountOk;
 }
 
 class _AppLocalizationsDelegate

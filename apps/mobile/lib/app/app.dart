@@ -94,16 +94,39 @@ class LabourApp extends ConsumerWidget {
       locale: settings.locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      builder: (context, child) {
-        if (!settings.largeText) return child!;
-        final scale = MediaQuery.textScalerOf(context).scale(1) * 1.3;
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
-          child: child!,
-        );
-      },
+      builder: (context, child) => _textSize(context, settings, child!),
     );
   }
+}
+
+/// The account screens, before any company is open, in the same colours, language and text size (T19b).
+class AccountApp extends ConsumerWidget {
+  const AccountApp({required this.home, super.key});
+
+  final Widget home;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(settingsProvider);
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: usePalette(settings.palette),
+      home: home,
+      locale: settings.locale,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      builder: (context, child) => _textSize(context, settings, child!),
+    );
+  }
+}
+
+Widget _textSize(BuildContext context, AppSettings settings, Widget child) {
+  if (!settings.largeText) return child;
+  final scale = MediaQuery.textScalerOf(context).scale(1) * 1.3;
+  return MediaQuery(
+    data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
+    child: child,
+  );
 }
 
 class _Shell extends ConsumerWidget {

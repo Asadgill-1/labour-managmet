@@ -3869,6 +3869,149 @@ class AppLocalizationsEn extends AppLocalizations {
   String tsCarryNote(String reason) {
     return 'The company agreed fewer hours: $reason';
   }
+
+  @override
+  String get accountLoginTitle => 'Log in';
+
+  @override
+  String get accountIntro =>
+      'Log in to open your company\'s books on this phone.';
+
+  @override
+  String get accountEmail => 'Email';
+
+  @override
+  String get accountPassword => 'Password';
+
+  @override
+  String get accountPasswordHelp =>
+      'At least 8 characters, with letters and numbers.';
+
+  @override
+  String get accountShowPassword => 'Show password';
+
+  @override
+  String get accountHidePassword => 'Hide password';
+
+  @override
+  String get accountLogin => 'Log in';
+
+  @override
+  String get accountForgot => 'Forgot password?';
+
+  @override
+  String get accountCreate => 'Create a new account';
+
+  @override
+  String get accountSignupTitle => 'New account';
+
+  @override
+  String get accountSignupIntro => 'We send you an email to check the address.';
+
+  @override
+  String get accountSignup => 'Create account';
+
+  @override
+  String get accountCodeTitle => 'Email code';
+
+  @override
+  String accountCodeSent(String email) {
+    return 'We sent a code to $email. If it is not there, look in spam.';
+  }
+
+  @override
+  String get accountCode => 'Code from the email';
+
+  @override
+  String get accountCodeInvalid => 'Enter the numbers from the email.';
+
+  @override
+  String get accountResend => 'Send the code again';
+
+  @override
+  String get accountResent => 'Code sent again.';
+
+  @override
+  String get accountNewPassword => 'New password';
+
+  @override
+  String get accountContinue => 'Continue';
+
+  @override
+  String get accountSetPassword => 'Save new password';
+
+  @override
+  String get accountStart => 'Start';
+
+  @override
+  String get accountEmailInvalid =>
+      'Enter a full email, like name@example.com.';
+
+  @override
+  String get accountPasswordWeak =>
+      'Use at least 8 characters, with letters and numbers.';
+
+  @override
+  String get accountWrongLogin => 'Email or password is wrong.';
+
+  @override
+  String get accountExists =>
+      'This email already has an account. Log in instead.';
+
+  @override
+  String get accountBadCode => 'That code is wrong or too old. Send a new one.';
+
+  @override
+  String get accountTooMany =>
+      'Too many tries. Wait a few minutes and try again.';
+
+  @override
+  String get accountOffline =>
+      'No internet. Creating an account or logging in needs the internet.';
+
+  @override
+  String get accountDeviceRevoked =>
+      'Your company turned off this phone\'s access.';
+
+  @override
+  String get accountFailed => 'That did not work. Try again.';
+
+  @override
+  String get accountPhoneData =>
+      'This phone already has data. A new account keeps it in the new company. Logging in to another company hides it on this phone. It is not deleted.';
+
+  @override
+  String get accountTitle => 'Account';
+
+  @override
+  String get accountNotInBuild =>
+      'Not in this build. Data stays on this phone only.';
+
+  @override
+  String get logOut => 'Log out';
+
+  @override
+  String get logOutAsk => 'Log out?';
+
+  @override
+  String get logOutBody =>
+      'This company\'s data closes on this phone. Log in again to open it.';
+
+  @override
+  String accountLinkSent(String email) {
+    return 'We emailed $email. Tap the link in it, then come back here and tap Continue. The page the link opens may not load; the email is confirmed anyway. If the email is not there, look in spam.';
+  }
+
+  @override
+  String get accountNotConfirmed =>
+      'The email is not confirmed yet. Tap the link in the email first.';
+
+  @override
+  String get accountResetUnavailable =>
+      'Resetting a password is not available yet. It comes with email codes, soon.';
+
+  @override
+  String get accountOk => 'OK';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -7534,4 +7677,148 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String tsCarryNote(String reason) {
     return 'Company ne ghante kam maane: $reason';
   }
+
+  @override
+  String get accountLoginTitle => 'Login';
+
+  @override
+  String get accountIntro =>
+      'Is phone par apni company ka hisaab kholne ke liye login karein.';
+
+  @override
+  String get accountEmail => 'Email';
+
+  @override
+  String get accountPassword => 'Password';
+
+  @override
+  String get accountPasswordHelp =>
+      'Kam az kam 8 huroof, harf aur number dono.';
+
+  @override
+  String get accountShowPassword => 'Password dikhayein';
+
+  @override
+  String get accountHidePassword => 'Password chhupayein';
+
+  @override
+  String get accountLogin => 'Login karein';
+
+  @override
+  String get accountForgot => 'Password bhool gaye?';
+
+  @override
+  String get accountCreate => 'Naya account banayein';
+
+  @override
+  String get accountSignupTitle => 'Naya account';
+
+  @override
+  String get accountSignupIntro =>
+      'Email theek hai ya nahin, is ke liye hum aap ko email bhejenge.';
+
+  @override
+  String get accountSignup => 'Account banayein';
+
+  @override
+  String get accountCodeTitle => 'Email ka code';
+
+  @override
+  String accountCodeSent(String email) {
+    return '$email par code bheja hai. Na mile to spam folder dekhein.';
+  }
+
+  @override
+  String get accountCode => 'Email wala code';
+
+  @override
+  String get accountCodeInvalid => 'Email wale number likhein.';
+
+  @override
+  String get accountResend => 'Code dobara bhejein';
+
+  @override
+  String get accountResent => 'Code dobara bhej diya.';
+
+  @override
+  String get accountNewPassword => 'Naya password';
+
+  @override
+  String get accountContinue => 'Aage';
+
+  @override
+  String get accountSetPassword => 'Naya password rakhein';
+
+  @override
+  String get accountStart => 'Shuru karein';
+
+  @override
+  String get accountEmailInvalid =>
+      'Poori email likhein, jaise name@example.com.';
+
+  @override
+  String get accountPasswordWeak =>
+      'Kam az kam 8 huroof rakhein, harf aur number dono.';
+
+  @override
+  String get accountWrongLogin => 'Email ya password ghalat hai.';
+
+  @override
+  String get accountExists => 'Is email ka account pehle se hai. Login karein.';
+
+  @override
+  String get accountBadCode =>
+      'Ye code ghalat hai ya purana ho gaya. Naya code mangwayein.';
+
+  @override
+  String get accountTooMany =>
+      'Bohat dafa koshish hui. Kuch minute ruk kar dobara karein.';
+
+  @override
+  String get accountOffline =>
+      'Internet nahin mila. Account banane ya login ke liye internet chahiye.';
+
+  @override
+  String get accountDeviceRevoked =>
+      'Aap ki company ne is phone ka access band kar diya hai.';
+
+  @override
+  String get accountFailed => 'Ye nahin hua. Dobara koshish karein.';
+
+  @override
+  String get accountPhoneData =>
+      'Is phone par pehle se data hai. Naya account banane par ye isi nayi company mein rahega. Kisi aur company mein login karne par ye data is phone par chhup jayega, delete nahin hoga.';
+
+  @override
+  String get accountTitle => 'Account';
+
+  @override
+  String get accountNotInBuild =>
+      'Is build mein nahin. Data sirf isi phone par hai.';
+
+  @override
+  String get logOut => 'Log out';
+
+  @override
+  String get logOutAsk => 'Log out karein?';
+
+  @override
+  String get logOutBody =>
+      'Is phone par is company ka data band ho jayega. Dobara login karne par khul jayega.';
+
+  @override
+  String accountLinkSent(String email) {
+    return '$email par email bheji hai. Us mein diya link dabayein, phir yahan wapas aa kar Aage dabayein. Link ke baad page na khule to fikr na karein, email confirm ho jati hai. Email na mile to spam folder dekhein.';
+  }
+
+  @override
+  String get accountNotConfirmed =>
+      'Email abhi confirm nahin hui. Pehle email mein diya link dabayein.';
+
+  @override
+  String get accountResetUnavailable =>
+      'Password badalna abhi chalu nahin. Ye email ke code se hoga, jo jald aa raha hai.';
+
+  @override
+  String get accountOk => 'Theek hai';
 }

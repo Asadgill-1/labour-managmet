@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/providers.dart';
 import '../../app/settings.dart';
 import '../../app/side_panel.dart';
 import '../../app/theme.dart';
@@ -15,6 +16,7 @@ class SettingsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final settings = ref.watch(settingsProvider);
     final controller = ref.read(settingsProvider.notifier);
+    final account = ref.watch(accountProvider);
     return Scaffold(
       appBar: AppBar(leading: const MenuButton(), title: Text(l10n.tabSettings)),
       body: ListView(
@@ -61,10 +63,32 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const DbCheckScreen())),
           ),
           const Divider(),
+          ListTile(title: Text(l10n.accountTitle), subtitle: Text(account?.email ?? l10n.accountNotInBuild)),
+          if (account != null) ...[
+            const Divider(),
+            ListTile(leading: const Icon(Icons.logout), title: Text(l10n.logOut), onTap: () => _logOut(context, account.logOut)),
+          ],
+          const Divider(),
         ],
       ),
     );
   }
+}
+
+Future<void> _logOut(BuildContext context, Future<void> Function() logOut) async {
+  final l10n = AppLocalizations.of(context);
+  final yes = await showDialog<bool>(
+    context: context,
+    builder: (dialog) => AlertDialog(
+      title: Text(l10n.logOutAsk),
+      content: Text(l10n.logOutBody),
+      actions: [
+        TextButton(onPressed: () => Navigator.of(dialog).pop(false), child: Text(l10n.cancel)),
+        TextButton(onPressed: () => Navigator.of(dialog).pop(true), child: Text(l10n.logOut)),
+      ],
+    ),
+  );
+  if (yes == true) await logOut();
 }
 
 /// A small picture of the colours, so the choice is made by eye, with its name in words as well (UX-04).

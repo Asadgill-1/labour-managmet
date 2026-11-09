@@ -22,7 +22,7 @@ class PeriodLocked implements Exception {
 /// [through] is the last day of the latest closed month, from [TenantDatabase.lockedThrough].
 bool isClosed(String date, String? through) => through != null && date.compareTo(through) <= 0;
 
-/// Replaced by the signed-in user's ID in T19.
+/// Who writes rows in a build without accounts. A signed-in device writes the user's ID instead (T19b).
 const localOwner = 'local-owner';
 
 String newUuid() {
@@ -338,7 +338,7 @@ File tenantFile(Directory dir, String tenantId) {
   return File('${dir.path}/tenant_$tenantId.db');
 }
 
-TenantDatabase openTenantDatabase(File file, String hexKey, {required String tenantId, required String deviceId}) {
+TenantDatabase openTenantDatabase(File file, String hexKey, {required String tenantId, required String deviceId, String actorId = localOwner}) {
   return TenantDatabase(
     NativeDatabase.createInBackground(
       file,
@@ -352,6 +352,7 @@ TenantDatabase openTenantDatabase(File file, String hexKey, {required String ten
     ),
     tenantId: tenantId,
     deviceId: deviceId,
+    actorId: actorId,
   );
 }
 
@@ -370,18 +371,24 @@ Future<String> tenantKey(FlutterSecureStorage storage, String tenantId) async {
   return created;
 }
 
-/// Opens the local tenant. Real sign-in replaces the locally created tenant ID in T19.
-Future<TenantDatabase> openLocalTenant(FlutterSecureStorage storage, Directory dir) async {
-  Future<String> stableId(String name) async {
-    final existing = await storage.read(key: name);
-    if (existing != null) return existing;
-    final created = newUuid();
-    await storage.write(key: name, value: created);
-    return created;
-  }
+/// The tenant a phone made for itself before it had an account. A company made later takes over this id (T19b).
+const localTenantKey = 'local_tenant_id';
 
-  final tenantId = await stableId('local_tenant_id');
-  final deviceId = await stableId('device_id');
-  final key = await tenantKey(storage, tenantId);
-  return openTenantDatabase(tenantFile(dir, tenantId), key, tenantId: tenantId, deviceId: deviceId);
+/// An id kept in secure storage, made on first use.
+Future<String> stableId(FlutterSecureStorage storage, String name) async {
+  final existing = await storage.read(key: name);
+  if (existing != null) return existing;
+  final created = newUuid();
+  await storage.write(key: name, value: created);
+  return created;
 }
+
+/// Opens one company's encrypted file on this device.
+Future<TenantDatabase> openTenant(FlutterSecureStorage storage, Directory dir, String tenantId, {String actorId = localOwner}) async {
+  final deviceId = await stableId(storage, 'device_id');
+  final key = await tenantKey(storage, tenantId);
+  return openTenantDatabase(tenantFile(dir, tenantId), key, tenantId: tenantId, deviceId: deviceId, actorId: actorId);
+}
+
+/// Opens the phone's own tenant, in a build without accounts (D-062).
+Future<TenantDatabase> openLocalTenant(FlutterSecureStorage storage, Directory dir) async => openTenant(storage, dir, await stableId(storage, localTenantKey));
