@@ -36,7 +36,7 @@ Cloud database: migrations and pgTAP tests live in `supabase/`. This computer ha
 
 One account per phone (D-063): to free a phone for another account, turn its device row off in the SQL editor, `update public.devices set revoked_at_utc = now() where device_id = '<id>';`. That account is then refused on the phone too. On Android the id is the phone's Android ID for this app, made into a UUID, so a debug and a release build of the app count as two phones.
 
-Deleting an account (D-066): `20261109130000_delete_account` adds `delete_account`, which removes the caller's own companies, members, devices and `auth.users` row, and only for a session signed in with the password in the last ten minutes. It is not on the live project yet; it goes there through the SQL editor, like the migrations before it, once the owner says yes. Until then the app's Account delete karein is refused by the live project.
+Deleting an account (D-066): `20261109130000_delete_account` adds `delete_account`, which removes the caller's own companies, members, devices and `auth.users` row, and only for a session signed in with the password in the last ten minutes. It went to the live project through the SQL editor on 2026-11-09, on the owner's yes (TC-157). The dashboard warns that the query is destructive, because the function's body deletes; running it deletes nothing.
 
 ## Direct dependency licences
 
