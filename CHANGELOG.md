@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Settings > Purana phone band karein lists the company's phones by name and last login. Band karein turns an old or lost phone off; the next time it opens online, it removes the company's data from itself and says why. Logging in on it again with the password turns it back on (D-073).
 - Backup se data wapas laana brings a backup back in place of the data on the phone. It shows what the backup holds, asks whether papers were given after it so their numbers are never given again, and keeps the data there aside, which Restore se pehle wala data brings back. A new phone's empty company offers it after login (D-070). On a phone with data, the data there is saved to a backup file first, and only then can the backup come in (D-071).
 - Backup, at the foot of the menu, makes the company's whole data into one file locked with a backup password, which the phone keeps, and saves it where the user chooses, such as Google Drive, or sends it. Today asks for one after 7 days without, and the import screen asks first. Bringing a backup back comes next (D-069).
 - An empty end time now opens its clock at 17:00, not 08:00, so tapping OK at once no longer makes a 24-hour shift (TC-158).

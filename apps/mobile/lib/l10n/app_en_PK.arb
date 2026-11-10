@@ -1190,5 +1190,18 @@
   "restoreBackUpTitle": "Pehle abhi wale data ka backup",
   "restoreBackUpWhy": "Backup aane se is phone ka abhi wala data hat jayega. Is liye pehle us ka backup banana zaroori hai, taake wo zaya na ho.",
   "restoreHereNow": "Is phone par abhi {workers} mazdoor aur {invoices} invoice hain.",
-  "restoreBackedUp": "Abhi wale data ka backup {date} ko ban gaya."
+  "restoreBackedUp": "Abhi wale data ka backup {date} ko ban gaya.",
+  "phonesMenu": "Purana phone band karein",
+  "phonesTitle": "Company ke phone",
+  "phonesIntro": "Phone kho gaya, bik gaya ya naya le liya? Purane phone ko yahan band karein. Wo phone jab bhi internet se judega, us par se company ka data mit jayega.",
+  "phonesPassword": "Phone dekhne ke liye apna login password likhein. Is ke liye internet chahiye.",
+  "phonesShow": "Phone dikhayein",
+  "phonesHere": "Yeh phone. Akhri login {date}",
+  "phonesLastLogin": "Akhri login {date}",
+  "phonesNoOther": "Is company ka koi aur phone chalu nahin.",
+  "phonesTurnOff": "Band karein",
+  "phonesOffAsk": "{name} band karein?",
+  "phonesOffBody": "Wo phone jab bhi internet se judega, us par se is company ka data mita diya jayega. Us phone ka jo data kisi backup mein nahin, wo wapas nahin aayega.\n\nPhone wapas mil jaye to us par apne password se login kar ke use dobara chala sakte hain.",
+  "phonesOffDone": "{name} band ho gaya.",
+  "accountPhoneOff": "Company ne ye phone band kar diya tha, is liye company ka data is phone se mita diya gaya. Isi phone par kaam karna hai to login karein, phir backup wapas laayein."
 }

@@ -184,4 +184,50 @@ void main() {
     expect(await storage.read(key: 'db_key_$phoneTenant'), isNull);
     expect(dir.listSync(), isEmpty);
   });
+
+  test("the company's phones show this one first by its name, and turning another off frees it (T20c)", () async {
+    const company = '00000000-0000-4000-8000-0000000000c9';
+    const old = '00000000-0000-4000-8000-0000000000e1';
+    cloud.addUser('owner@test.ae', 'pass1234', company: company);
+    await account.signIn('owner@test.ae', 'pass1234');
+    await account.openCompany();
+    final here = await thisDeviceId(storage);
+    expect(cloud.phoneNames[here], isNotEmpty, reason: 'the phone sends its name');
+    cloud.addPhone('owner@test.ae', old, 'Galaxy A51', '2026-11-03T06:00:00Z');
+
+    final phones = await account.phones();
+    expect(phones.map((p) => p.here), [true, false]);
+    expect(phones.last.name, 'Galaxy A51');
+    expect(phones.last.lastLogin, DateTime.utc(2026, 11, 3, 6));
+
+    await account.turnPhoneOff(phones.last.id);
+    expect(cloud.calls.last.body['p_device_row'], phones.last.id);
+    expect((await account.phones()).map((p) => p.here), [true]);
+    expect(cloud.phones, isNot(contains(old)), reason: 'the phone is free for another account');
+  });
+
+  test('a phone learns the company turned it off; no answer is never a yes, and the owner signing in turns it on (D-073)', () async {
+    const company = '00000000-0000-4000-8000-0000000000c9';
+    cloud.addUser('owner@test.ae', 'pass1234', company: company);
+    await account.signIn('owner@test.ae', 'pass1234');
+    await account.openCompany();
+    expect(await account.phoneIsOff(company), isFalse);
+
+    final here = await thisDeviceId(storage);
+    cloud.offPhones.add(here);
+    cloud.phones.remove(here);
+    expect(await account.phoneIsOff(company), isTrue);
+    cloud.offline = true;
+    expect(await account.phoneIsOff(company), isFalse, reason: 'no network removes nothing');
+    cloud
+      ..offline = false
+      ..phoneCheckFails = true;
+    expect(await account.phoneIsOff(company), isFalse, reason: 'nor does a server error');
+
+    cloud.phoneCheckFails = false;
+    await account.logOut();
+    await account.signIn('owner@test.ae', 'pass1234');
+    await account.openCompany();
+    expect(await account.phoneIsOff(company), isFalse, reason: 'the owner signing in again turns the phone back on');
+  });
 }

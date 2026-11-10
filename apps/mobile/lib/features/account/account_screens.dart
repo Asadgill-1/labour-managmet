@@ -1,3 +1,4 @@
+import 'package:domain/dates.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -72,7 +73,7 @@ String? _emailError(AppLocalizations l10n, String? v) => isEmail(v ?? '') ? null
 String? _newPasswordError(AppLocalizations l10n, String? v) => isStrongPassword(v ?? '') ? null : l10n.accountPasswordWeak;
 
 /// Why the company on this device closed, said on the login screen.
-enum LoginNote { lockedOut, accountDeleted }
+enum LoginNote { lockedOut, accountDeleted, phoneOff }
 
 /// The first screen on a device with no company open: log in, or start an account. The language comes first (UX-02).
 class LoginScreen extends StatefulWidget {
@@ -145,6 +146,7 @@ class _LoginScreenState extends State<LoginScreen> with _Step {
                 MarginNote(switch (note) {
                   LoginNote.lockedOut => l10n.lockGone(AppLock.tries),
                   LoginNote.accountDeleted => l10n.accountDeleted,
+                  LoginNote.phoneOff => l10n.accountPhoneOff,
                 }),
                 fieldGap,
               ],
@@ -643,6 +645,127 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> with _Step {
               _word,
               validator: (v) => (v ?? '').trim() == 'DELETE' ? null : l10n.accountDeleteWordWrong,
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The company's phones, where the owner turns an old one off (T20c, DATA-06). The cloud must trust the step, so it
+/// asks for the password, unless the user signed in during this run of the app, as after moving to a new phone.
+class PhonesScreen extends StatefulWidget {
+  const PhonesScreen({required this.account, super.key});
+
+  final Account account;
+
+  @override
+  State<PhonesScreen> createState() => _PhonesScreenState();
+}
+
+class _PhonesScreenState extends State<PhonesScreen> with _Step {
+  final _form = GlobalKey<FormState>();
+  final _password = TextEditingController();
+  late var _ask = !widget.account.signedIn;
+  List<Phone>? _phones;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!_ask) WidgetsBinding.instance.addPostFrameCallback((_) => _loadFirst());
+  }
+
+  /// With a session from this run; if it no longer works, the password is asked after all.
+  Future<void> _loadFirst() async {
+    await attempt(_load);
+    if (mounted && _phones == null) setState(() => _ask = true);
+  }
+
+  Future<void> _load() async {
+    final phones = await widget.account.phones();
+    if (mounted) setState(() => _phones = phones);
+  }
+
+  Future<void> _signIn() async {
+    if (!validateAndReveal(_form)) return;
+    await attempt(() async {
+      await widget.account.signInAgain(_password.text);
+      _password.clear();
+      await _load();
+    });
+  }
+
+  Future<void> _turnOff(Phone phone) async {
+    final l10n = AppLocalizations.of(context);
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        title: Text(l10n.phonesOffAsk(phone.name)),
+        content: Text(l10n.phonesOffBody),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialog).pop(false), child: Text(l10n.cancel)),
+          TextButton(
+            onPressed: () => Navigator.of(dialog).pop(true),
+            style: TextButton.styleFrom(foregroundColor: due),
+            child: Text(l10n.phonesTurnOff),
+          ),
+        ],
+      ),
+    );
+    if (yes != true) return;
+    await attempt(() async {
+      await widget.account.turnPhoneOff(phone.id);
+      if (!mounted) return;
+      setState(() => _phones = [...?_phones?.where((p) => p.id != phone.id)]);
+      showSavedOnPhone(context, l10n.phonesOffDone(phone.name));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final phones = _phones;
+    final asking = phones == null && _ask;
+    String day(DateTime at) => showDate(dubaiToday(at));
+    return _StepScaffold(
+      title: l10n.phonesTitle,
+      busy: busy,
+      action: asking ? MainActionBar(label: l10n.phonesShow, onPressed: busy ? null : _signIn) : const SizedBox.shrink(),
+      child: Form(
+        key: _form,
+        child: FormBody(
+          children: [
+            MarginNote(l10n.phonesIntro),
+            fieldGap,
+            if (asking) ...[
+              Text(l10n.phonesPassword),
+              fieldGap,
+              PasswordField(
+                l10n.accountPassword,
+                _password,
+                autofillHints: const [AutofillHints.password],
+                validator: (v) => (v ?? '').isEmpty ? l10n.fieldRequired : null,
+              ),
+            ],
+            if (phones != null) ...[
+              for (final phone in phones) ...[
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.smartphone),
+                  title: Text(phone.name, style: const TextStyle(fontWeight: FontWeight.w600, color: ink)),
+                  subtitle: Text(phone.here ? l10n.phonesHere(day(phone.lastLogin)) : l10n.phonesLastLogin(day(phone.lastLogin))),
+                  trailing: phone.here
+                      ? null
+                      : TextButton(
+                          onPressed: busy ? null : () => _turnOff(phone),
+                          style: TextButton.styleFrom(foregroundColor: due),
+                          child: Text(l10n.phonesTurnOff),
+                        ),
+                ),
+                const Divider(height: 1),
+              ],
+              if (phones.every((p) => p.here)) ...[fieldGap, Text(l10n.phonesNoOther, style: const TextStyle(color: muted))],
+            ],
           ],
         ),
       ),

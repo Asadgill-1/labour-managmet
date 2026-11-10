@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.os.Build
 import android.provider.Settings
 import androidx.core.content.FileProvider
 import io.flutter.embedding.android.FlutterFragmentActivity
@@ -26,7 +27,11 @@ class MainActivity : FlutterFragmentActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "labour_app/phone").setMethodCallHandler { call, result ->
-            if (call.method == "id") result.success(phoneId()) else result.notImplemented()
+            when (call.method) {
+                "id" -> result.success(phoneId())
+                "name" -> result.success(phoneName())
+                else -> result.notImplemented()
+            }
         }
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "labour_app/files").setMethodCallHandler { call, result ->
             if (call.method == "pickImage") {
@@ -66,6 +71,14 @@ class MainActivity : FlutterFragmentActivity() {
     @SuppressLint("HardwareIds")
     private fun phoneId(): String? = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
         ?.let { UUID.nameUUIDFromBytes("labour_app:$it".toByteArray()).toString() }
+
+    /** The name the owner knows the phone by, as set in its settings, else its maker and model (T20c). */
+    private fun phoneName(): String {
+        val own = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) Settings.Global.getString(contentResolver, Settings.Global.DEVICE_NAME) else null
+        if (!own.isNullOrBlank()) return own
+        val maker = Build.MANUFACTURER.replaceFirstChar { it.uppercase() }
+        return if (Build.MODEL.startsWith(Build.MANUFACTURER, ignoreCase = true)) Build.MODEL else "$maker ${Build.MODEL}"
+    }
 
     private fun uriOf(file: File) = FileProvider.getUriForFile(this, "$packageName.files", file)
 

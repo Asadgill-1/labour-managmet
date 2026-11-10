@@ -4436,6 +4436,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String restoreBackedUp(String date) {
     return 'The data here now was backed up on $date.';
   }
+
+  @override
+  String get phonesMenu => 'Turn off an old phone';
+
+  @override
+  String get phonesTitle => 'The company\'s phones';
+
+  @override
+  String get phonesIntro =>
+      'Lost, sold or replaced a phone? Turn the old one off here. The next time it goes online, the company\'s data is removed from it.';
+
+  @override
+  String get phonesPassword =>
+      'Type your login password to see the phones. This needs internet.';
+
+  @override
+  String get phonesShow => 'Show the phones';
+
+  @override
+  String phonesHere(String date) {
+    return 'This phone. Last login $date';
+  }
+
+  @override
+  String phonesLastLogin(String date) {
+    return 'Last login $date';
+  }
+
+  @override
+  String get phonesNoOther => 'No other phone of this company is on.';
+
+  @override
+  String get phonesTurnOff => 'Turn off';
+
+  @override
+  String phonesOffAsk(String name) {
+    return 'Turn off $name?';
+  }
+
+  @override
+  String get phonesOffBody =>
+      'The next time that phone goes online, this company\'s data is removed from it. Whatever data of that phone is in no backup will not come back.\n\nIf the phone turns up again, log in on it with your password to use it again.';
+
+  @override
+  String phonesOffDone(String name) {
+    return '$name is off.';
+  }
+
+  @override
+  String get accountPhoneOff =>
+      'The company turned this phone off, so its data was removed from this phone. To work on it again, log in, then bring a backup back.';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -8645,4 +8696,55 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String restoreBackedUp(String date) {
     return 'Abhi wale data ka backup $date ko ban gaya.';
   }
+
+  @override
+  String get phonesMenu => 'Purana phone band karein';
+
+  @override
+  String get phonesTitle => 'Company ke phone';
+
+  @override
+  String get phonesIntro =>
+      'Phone kho gaya, bik gaya ya naya le liya? Purane phone ko yahan band karein. Wo phone jab bhi internet se judega, us par se company ka data mit jayega.';
+
+  @override
+  String get phonesPassword =>
+      'Phone dekhne ke liye apna login password likhein. Is ke liye internet chahiye.';
+
+  @override
+  String get phonesShow => 'Phone dikhayein';
+
+  @override
+  String phonesHere(String date) {
+    return 'Yeh phone. Akhri login $date';
+  }
+
+  @override
+  String phonesLastLogin(String date) {
+    return 'Akhri login $date';
+  }
+
+  @override
+  String get phonesNoOther => 'Is company ka koi aur phone chalu nahin.';
+
+  @override
+  String get phonesTurnOff => 'Band karein';
+
+  @override
+  String phonesOffAsk(String name) {
+    return '$name band karein?';
+  }
+
+  @override
+  String get phonesOffBody =>
+      'Wo phone jab bhi internet se judega, us par se is company ka data mita diya jayega. Us phone ka jo data kisi backup mein nahin, wo wapas nahin aayega.\n\nPhone wapas mil jaye to us par apne password se login kar ke use dobara chala sakte hain.';
+
+  @override
+  String phonesOffDone(String name) {
+    return '$name band ho gaya.';
+  }
+
+  @override
+  String get accountPhoneOff =>
+      'Company ne ye phone band kar diya tha, is liye company ka data is phone se mita diya gaya. Isi phone par kaam karna hai to login karein, phir backup wapas laayein.';
 }

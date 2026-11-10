@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -65,6 +67,18 @@ class _AppRootState extends State<AppRoot> {
   late var _lock = widget.pinSet ? _Lock.locked : _Lock.open;
   LoginNote? _note;
   ({SwapStage stage, Restored done, bool kept})? _swapping;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_opened case final opened?) unawaited(_closeIfOff(opened.binding.tenantId));
+  }
+
+  /// A phone the company turned off removes the company from itself as it opens, even behind the lock (D-073).
+  Future<void> _closeIfOff(String tenantId) async {
+    if (!await widget.account.phoneIsOff(tenantId) || !mounted) return;
+    if (_opened?.binding.tenantId == tenantId && _swapping == null) await _leave(LoginNote.phoneOff);
+  }
 
   Future<void> _open(String tenantId, {String? companyName}) async {
     final binding = (await widget.account.binding())!;
@@ -134,7 +148,7 @@ class _AppRootState extends State<AppRoot> {
     // The company's scope goes with this frame, and its streams with it; only then can the file close.
     await WidgetsBinding.instance.endOfFrame;
     await db.close();
-    if (note == LoginNote.accountDeleted) await widget.deleteTenant(binding.tenantId);
+    if (note == LoginNote.accountDeleted || note == LoginNote.phoneOff) await widget.deleteTenant(binding.tenantId);
     PaintingBinding.instance.imageCache
       ..clear()
       ..clearLiveImages();
@@ -178,7 +192,7 @@ class _AppRootState extends State<AppRoot> {
       overrides: [
         initialSettingsProvider.overrideWithValue(_settings),
         dbProvider.overrideWithValue(opened.db),
-        accountProvider.overrideWithValue((email: opened.binding.email, logOut: _logOut, deleteAccount: _deleteAccount, lock: widget.lock)),
+        accountProvider.overrideWithValue((email: opened.binding.email, logOut: _logOut, deleteAccount: _deleteAccount, lock: widget.lock, account: widget.account)),
         restoreProvider.overrideWithValue(files == null ? null : (dir: files.dir, key: () => files.key(opened.binding.tenantId), swap: _swap)),
       ],
       child: const LabourApp(),

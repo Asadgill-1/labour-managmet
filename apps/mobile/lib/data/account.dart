@@ -23,6 +23,9 @@ class AccountRefused implements Exception {
   String toString() => 'AccountRefused($problem)';
 }
 
+/// One of the company's phones that is on (T20c). [here] is this phone.
+typedef Phone = ({String id, String name, DateTime lastLogin, bool here});
+
 /// The company this device opens without signing in again, and who signed in on it (AUTH-03).
 typedef Binding = ({String tenantId, String userId, String email});
 
@@ -118,19 +121,55 @@ class Account {
   /// Records this device with the company, which refuses one it turned off, then remembers the company here.
   Future<void> _enrol(String tenantId) async {
     final os = Platform.operatingSystem;
-    final host = Platform.localHostname.trim();
     await _client.rpc<String>(
       'register_device',
       params: {
         'p_tenant_id': tenantId,
         'p_device_id': await thisDeviceId(_storage),
-        'p_label': host.isEmpty || host == 'localhost' ? os : host,
+        'p_label': await thisPhoneName(),
         'p_platform': const {'android', 'ios', 'windows'}.contains(os) ? os : 'web',
         'p_operation_id': newUuid(),
       },
     );
     final user = _auth.currentUser!;
     await _storage.write(key: _bindingKey, value: jsonEncode({'tenant_id': tenantId, 'user_id': user.id, 'email': user.email}));
+  }
+
+  /// A sign-in from this run of the app is still here, so a step the cloud must trust needs no password again.
+  bool get signedIn => _auth.currentSession != null;
+
+  Future<void> signInAgain(String password) => _run(() async {
+    await _auth.signInWithPassword(email: (await binding())!.email, password: password);
+  });
+
+  /// The company's phones that are on, this one first, then by the last login. The owner sees every one of them.
+  Future<List<Phone>> phones() => _run(() async {
+    final here = await thisDeviceId(_storage);
+    final rows = await _client
+        .from('devices')
+        .select('id, device_id, label, last_seen_at_utc')
+        .eq('tenant_id', (await binding())!.tenantId)
+        .isFilter('revoked_at_utc', null)
+        .order('last_seen_at_utc');
+    final phones = [
+      for (final r in rows)
+        (id: r['id'] as String, name: r['label'] as String, lastLogin: DateTime.parse(r['last_seen_at_utc'] as String), here: r['device_id'] == here),
+    ];
+    return [...phones.where((p) => p.here), ...phones.where((p) => !p.here)];
+  });
+
+  /// Turns one of the company's phones off. It removes the company from itself the next time it opens online (D-073).
+  Future<void> turnPhoneOff(String id) => _run(() => _client.rpc<void>('turn_phone_off', params: {'p_device_row': id, 'p_operation_id': newUuid()}));
+
+  /// True only when the cloud says for certain that the company turned this phone off. No answer is never a yes, so
+  /// a network error removes nothing (D-073). Asked before any sign-in, so it needs no session.
+  Future<bool> phoneIsOff(String tenantId) async {
+    try {
+      final off = await _client.rpc<bool?>('phone_is_off', params: {'p_tenant_id': tenantId, 'p_device_id': await thisDeviceId(_storage)});
+      return off == true;
+    } catch (_) {
+      return false;
+    }
   }
 
   /// Deletes this account from the cloud, with each company it owns (AUTH-07, D-066). The password is typed again: the

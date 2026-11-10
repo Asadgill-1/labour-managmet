@@ -89,6 +89,13 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
             const Divider(),
+            ListTile(
+              leading: const Icon(Icons.phonelink_erase),
+              title: Text(l10n.phonesMenu),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => PhonesScreen(account: account.account))),
+            ),
+            const Divider(),
             ListTile(leading: const Icon(Icons.logout), title: Text(l10n.logOut), onTap: () => _logOut(context, account.logOut)),
             const Divider(),
             ListTile(

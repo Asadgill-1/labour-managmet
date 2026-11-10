@@ -414,6 +414,13 @@ Future<String> thisDeviceId(FlutterSecureStorage storage) async {
   return phone ?? stableId(storage, 'device_id');
 }
 
+/// The name the owner knows this phone by, such as Galaxy A51, so the company's phones can be told apart (T20c).
+Future<String> thisPhoneName() async {
+  final name = ((Platform.isAndroid ? await _phone.invokeMethod<String>('name') : null) ?? Platform.localHostname).trim();
+  if (name.isEmpty || name == 'localhost') return Platform.operatingSystem;
+  return name.length > 100 ? name.substring(0, 100) : name;
+}
+
 /// Opens one company's encrypted file on this device.
 Future<TenantDatabase> openTenant(FlutterSecureStorage storage, Directory dir, String tenantId, {String actorId = localOwner}) async {
   final deviceId = await thisDeviceId(storage);

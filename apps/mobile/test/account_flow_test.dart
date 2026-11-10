@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:drift/drift.dart' show Value, driftRuntimeOptions;
@@ -423,6 +424,91 @@ void main() {
     await tapAndSettle(tester, find.text('Reports kholein'));
     expect(find.text('Account delete karein'), findsNothing);
     expect(find.text('Sab reports'), findsWidgets);
+    await shutDown(tester, db);
+  });
+
+  /// A phone someone signed in on before, as main finds it after a restart: no session, only the stored company.
+  Future<(TenantDatabase, String)> restartedPhone(WidgetTester tester, {bool off = false, bool pinSet = false}) async {
+    cloud.addUser('owner@test.ae', 'pass1234', company: testTenant);
+    final userId = cloud.users['owner@test.ae']!.id;
+    const storage = FlutterSecureStorage();
+    await real(tester, () async {
+      await storage.write(key: 'account', value: jsonEncode({'tenant_id': testTenant, 'user_id': userId, 'email': 'owner@test.ae'}));
+      final here = await thisDeviceId(storage);
+      cloud.addPhone('owner@test.ae', here, 'Office laptop', '2026-11-10T05:00:00Z');
+      if (off) cloud.offPhones.add(here);
+    });
+    final db = TenantDatabase(NativeDatabase.memory(), tenantId: testTenant, deviceId: 'device-1', actorId: userId);
+    driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
+    await pumpRoot(tester, bound: (db: db, binding: (tenantId: testTenant, userId: userId, email: 'owner@test.ae')), pinSet: pinSet);
+    return (db, userId);
+  }
+
+  testWidgets('Settings turns an old phone off; after a login in this run no password is asked again (T20c)', (tester) async {
+    const old = '00000000-0000-4000-8000-0000000000e1';
+    cloud.addUser('owner@test.ae', 'pass1234', company: testTenant);
+    await pumpRoot(tester);
+    await fill(tester, 'Email', 'owner@test.ae');
+    await fill(tester, 'Password', 'pass1234');
+    await tapAndSettle(tester, find.text('Login karein'));
+    await setPin(tester);
+    await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+    await tapAndSettle(tester, find.text('Save karein'));
+    cloud.addPhone('owner@test.ae', old, 'Galaxy A51', '2026-11-03T06:00:00Z');
+
+    await goTo(tester, 'Settings');
+    await tapAndSettle(tester, find.text('Purana phone band karein'));
+    expect(find.widgetWithText(TextFormField, 'Password'), findsNothing, reason: 'signed in during this run');
+    expect(find.text('Galaxy A51'), findsOneWidget);
+    expect(find.text('Akhri login 03-11-2026'), findsOneWidget);
+    expect(find.textContaining('Yeh phone. Akhri login'), findsOneWidget);
+
+    await tapAndSettle(tester, find.text('Band karein'));
+    expect(find.text('Galaxy A51 band karein?'), findsOneWidget);
+    expect(find.textContaining('kisi backup mein nahin'), findsOneWidget);
+    await tapAndSettle(tester, find.descendant(of: find.byType(AlertDialog), matching: find.text('Band karein')));
+    expect(find.text('Galaxy A51 band ho gaya.'), findsOneWidget);
+    expect(find.text('Galaxy A51'), findsNothing);
+    expect(find.text('Is company ka koi aur phone chalu nahin.'), findsOneWidget);
+    expect(cloud.offPhones, {old});
+    await shutDown(tester, opened.single);
+  });
+
+  testWidgets('after a restart a phone that is on stays open, and its phones page asks for the password first (T20c)', (tester) async {
+    final (db, _) = await restartedPhone(tester);
+    cloud.addPhone('owner@test.ae', '00000000-0000-4000-8000-0000000000e1', 'Galaxy A51', '2026-11-03T06:00:00Z');
+    expect(find.byType(LabourApp), findsOneWidget);
+    expect(deleted, isEmpty);
+    expect(cloud.calls.where((c) => c.path.endsWith('phone_is_off')), hasLength(1), reason: 'the phone asked as it opened');
+    await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+    await tapAndSettle(tester, find.text('Save karein'));
+
+    await goTo(tester, 'Settings');
+    await tapAndSettle(tester, find.text('Purana phone band karein'));
+    expect(find.text('Galaxy A51'), findsNothing);
+    await fill(tester, 'Password', 'wrong999');
+    await tapAndSettle(tester, find.text('Phone dikhayein'));
+    expect(find.text('Email ya password ghalat hai.'), findsOneWidget);
+    expect(find.text('Galaxy A51'), findsNothing);
+    await fill(tester, 'Password', 'pass1234');
+    await tapAndSettle(tester, find.text('Phone dikhayein'));
+    expect(find.text('Office laptop'), findsOneWidget);
+    expect(find.text('Yeh phone. Akhri login 10-11-2026'), findsOneWidget);
+    expect(find.text('Galaxy A51'), findsOneWidget);
+    await shutDown(tester, db);
+  });
+
+  testWidgets('a phone the company turned off removes the company as it opens, even behind its lock (D-073)', (tester) async {
+    shareFolder(tester);
+    final (db, _) = await restartedPhone(tester, off: true, pinSet: true);
+    for (var i = 0; i < 5 && deleted.isEmpty; i++) {
+      await settle(tester);
+    }
+    expect(find.textContaining('Company ne ye phone band kar diya tha'), findsOneWidget);
+    expect(find.byType(LabourApp), findsNothing);
+    expect(deleted, [testTenant], reason: 'the company file and its key leave the phone');
+    expect(await real(tester, account.binding), isNull);
+    expect(await real(tester, lock.hasPin), isFalse);
     await shutDown(tester, db);
   });
 }

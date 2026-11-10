@@ -21,6 +21,16 @@ class FakeCloud {
   final companies = <String, String>{};
   /// The user each phone serves, by device id, as its live device rows say (D-063).
   final phones = <String, String>{};
+
+  /// Each phone's name and last login, by device id, as its device row holds them (T20c).
+  final phoneNames = <String, String>{};
+  final lastLogins = <String, String>{};
+
+  /// Phones the company turned off, by device id (T20c).
+  final offPhones = <String>{};
+
+  /// The check for a phone turned off answers with a server error.
+  bool phoneCheckFails = false;
   final calls = <({String path, Map<String, dynamic> body})>[];
   bool offline = false;
   bool deviceRevoked = false;
@@ -51,6 +61,13 @@ class FakeCloud {
     final id = '00000000-0000-4000-8000-${(users.length + 1).toString().padLeft(12, '0')}';
     users[email] = (id: id, password: password, confirmed: true);
     if (company != null) companies[id] = company;
+  }
+
+  /// Another phone the user signed in on before (T20c).
+  void addPhone(String email, String device, String name, String lastLogin) {
+    phones[device] = users[email]!.id;
+    phoneNames[device] = name;
+    lastLogins[device] = lastLogin;
   }
 
   /// Carries the request, as a real response does: the REST client reads its method.
@@ -110,7 +127,25 @@ class FakeCloud {
         final device = body['p_device_id'] as String;
         if ((phones[device] ?? caller) != caller) return _refused('this phone belongs to another account');
         phones[device] = caller!;
+        phoneNames[device] = body['p_label'] as String;
+        lastLogins[device] = '2026-11-11T05:00:00Z';
+        // The owner signing in again turns a phone the company turned off back on (D-073).
+        offPhones.remove(device);
         return _json('00000000-0000-4000-8000-0000000000d1');
+      case '/rest/v1/devices':
+        return _json([
+          for (final MapEntry(key: device, value: user) in phones.entries)
+            if (user == caller) {'id': 'row-$device', 'device_id': device, 'label': phoneNames[device], 'last_seen_at_utc': lastLogins[device]},
+        ]);
+      case '/rest/v1/rpc/turn_phone_off':
+        final device = (body['p_device_row'] as String).replaceFirst('row-', '');
+        if (phones[device] != caller) return _refused('not a phone of yours');
+        phones.remove(device);
+        offPhones.add(device);
+        return http.Response('', 204);
+      case '/rest/v1/rpc/phone_is_off':
+        if (phoneCheckFails) return _json({'message': 'internal error'}, status: 500);
+        return _json(offPhones.contains(body['p_device_id']));
       case '/rest/v1/rpc/delete_account':
         // The server takes only a session signed in with the password just now (D-066).
         if (calls.length < 2 || calls[calls.length - 2].path != '/auth/v1/token') return _refused('type the password again');

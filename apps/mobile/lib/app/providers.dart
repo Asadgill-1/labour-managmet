@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/account.dart';
 import '../data/app_lock.dart';
 import '../data/changes.dart';
 import '../data/closing.dart';
@@ -17,8 +18,10 @@ import '../data/visa.dart';
 /// Opened in main, or by AppRoot once someone signs in. Disposing this scope at logout closes the tenant's data (AUTH-04).
 final dbProvider = Provider<TenantDatabase>((ref) => throw UnimplementedError('opened in main'));
 
-/// Who is signed in on this device, how to log out, and the phone's lock. Null in a build without accounts (D-062).
-final accountProvider = Provider<({String email, Future<void> Function() logOut, Future<void> Function(String password) deleteAccount, AppLock lock})?>(
+/// Who is signed in on this device, how to log out, the phone's lock, and the account for steps in the cloud such as
+/// the company's phones. Null in a build without accounts (D-062).
+final accountProvider =
+    Provider<({String email, Future<void> Function() logOut, Future<void> Function(String password) deleteAccount, AppLock lock, Account account})?>(
   (ref) => null,
 );
 

@@ -7524,6 +7524,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The data here now was backed up on {date}.'**
   String restoreBackedUp(String date);
+
+  /// No description provided for @phonesMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off an old phone'**
+  String get phonesMenu;
+
+  /// No description provided for @phonesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The company\'s phones'**
+  String get phonesTitle;
+
+  /// No description provided for @phonesIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Lost, sold or replaced a phone? Turn the old one off here. The next time it goes online, the company\'s data is removed from it.'**
+  String get phonesIntro;
+
+  /// No description provided for @phonesPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your login password to see the phones. This needs internet.'**
+  String get phonesPassword;
+
+  /// No description provided for @phonesShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the phones'**
+  String get phonesShow;
+
+  /// No description provided for @phonesHere.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone. Last login {date}'**
+  String phonesHere(String date);
+
+  /// No description provided for @phonesLastLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Last login {date}'**
+  String phonesLastLogin(String date);
+
+  /// No description provided for @phonesNoOther.
+  ///
+  /// In en, this message translates to:
+  /// **'No other phone of this company is on.'**
+  String get phonesNoOther;
+
+  /// No description provided for @phonesTurnOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off'**
+  String get phonesTurnOff;
+
+  /// No description provided for @phonesOffAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off {name}?'**
+  String phonesOffAsk(String name);
+
+  /// No description provided for @phonesOffBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The next time that phone goes online, this company\'s data is removed from it. Whatever data of that phone is in no backup will not come back.\n\nIf the phone turns up again, log in on it with your password to use it again.'**
+  String get phonesOffBody;
+
+  /// No description provided for @phonesOffDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is off.'**
+  String phonesOffDone(String name);
+
+  /// No description provided for @accountPhoneOff.
+  ///
+  /// In en, this message translates to:
+  /// **'The company turned this phone off, so its data was removed from this phone. To work on it again, log in, then bring a backup back.'**
+  String get accountPhoneOff;
 }
 
 class _AppLocalizationsDelegate
