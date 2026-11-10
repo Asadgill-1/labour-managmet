@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/backup/backup_screen.dart';
 import '../features/more/profile_form_screen.dart';
 import '../l10n/app_localizations.dart';
 import 'providers.dart';
@@ -294,7 +295,6 @@ class SidePanel extends ConsumerWidget {
                   children: [
                     for (final label in [
                       l10n.menuTeam,
-                      l10n.menuBackup,
                       l10n.menuPlan,
                       l10n.menuHelp,
                     ])
@@ -317,6 +317,14 @@ class SidePanel extends ConsumerWidget {
                     onTap: () {
                       shellKey.currentState?.closeDrawer();
                       navigator.push(MaterialPageRoute<void>(builder: (_) => ProfileFormScreen(profile: profile)));
+                    },
+                  ),
+                  _FooterRow(
+                    Icons.backup_outlined,
+                    l10n.menuBackup,
+                    onTap: () {
+                      shellKey.currentState?.closeDrawer();
+                      navigator.push(MaterialPageRoute<void>(builder: (_) => const BackupScreen()));
                     },
                   ),
                   _FooterRow(Icons.settings, l10n.tabSettings, selected: current == Section.settings, onTap: () => onSelect(Section.settings)),

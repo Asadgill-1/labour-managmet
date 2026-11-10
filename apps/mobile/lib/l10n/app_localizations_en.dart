@@ -3489,7 +3489,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importBackupNote =>
-      'Backup before an import is not in the app yet. A file is saved whole or not at all, and a wrong line can be archived afterwards.';
+      'Make a backup before an import. A file is saved whole or not at all, and a wrong line can be archived afterwards.';
 
   @override
   String get importChoose => 'Choose CSV file';
@@ -4148,6 +4148,91 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get accountDeleted =>
       'The account and all of its company\'s data were deleted. You can make a new account.';
+
+  @override
+  String get backupWarning =>
+      'If the phone is lost, broken or reset, or the app is removed, and there is no backup, the data cannot come back. Logging in again does not bring it back either.';
+
+  @override
+  String get backupNone => 'No backup has been made yet.';
+
+  @override
+  String backupSavedOn(String date) {
+    return 'Last backup saved on $date.';
+  }
+
+  @override
+  String backupSentOn(String date) {
+    return 'Last backup handed over for sending on $date.';
+  }
+
+  @override
+  String get backupPasswordIntro =>
+      'The backup file is locked with a password. It is separate from the account\'s password, and this phone keeps it, so later backups need no typing.';
+
+  @override
+  String get backupPasswordWriteDown =>
+      'Write this password down somewhere. A new phone needs it to open the backup. Without it nobody can open the backup, not even us.';
+
+  @override
+  String get backupPassword => 'Backup password';
+
+  @override
+  String get backupPasswordAgain => 'Backup password again';
+
+  @override
+  String get backupPasswordMismatch => 'The two passwords are not the same.';
+
+  @override
+  String get backupPasswordKeep => 'Keep this password';
+
+  @override
+  String get backupPasswordChange => 'Change the backup password';
+
+  @override
+  String get backupPasswordOld =>
+      'Backups made before still open only with their old password.';
+
+  @override
+  String get backupPasswordKept => 'Backup password kept';
+
+  @override
+  String get backupSave => 'Save a backup';
+
+  @override
+  String get backupWhere =>
+      'You choose where. Keep it on Google Drive or another device: a backup kept only on this phone goes when the phone goes.';
+
+  @override
+  String get backupSend => 'Send by WhatsApp or email';
+
+  @override
+  String get backupSaved => 'Backup saved';
+
+  @override
+  String get backupSent => 'The backup is ready. Finish sending it.';
+
+  @override
+  String get backupFailed =>
+      'The backup could not be made. The data is as it was. Try again.';
+
+  @override
+  String get backupRestore => 'Bringing data back from a backup';
+
+  @override
+  String get backupDueNever => 'No backup yet';
+
+  @override
+  String backupDueDays(int count) {
+    return 'No backup for $count days';
+  }
+
+  @override
+  String get backupDueBody =>
+      'If the phone is lost, the data goes with it. Make a backup.';
+
+  @override
+  String get importBackupFirst => 'Make a backup first';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -7453,7 +7538,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get importBackupNote =>
-      'Import se pehle backup abhi app mein nahin. File poori save hoti hai ya bilkul nahin, aur ghalat line baad mein archive ho sakti hai.';
+      'Import se pehle backup bana lein. File poori save hoti hai ya bilkul nahin, aur ghalat line baad mein archive ho sakti hai.';
 
   @override
   String get importChoose => 'CSV file chunein';
@@ -8094,4 +8179,89 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String get accountDeleted =>
       'Account aur us ki company ka sara data mit gaya. Naya account bana sakte hain.';
+
+  @override
+  String get backupWarning =>
+      'Phone gum ho jaye, kharab ya reset ho jaye, ya app hata di jaye, aur backup na ho, to data wapas nahin aa sakta. Dobara login karne se bhi data wapas nahin aata.';
+
+  @override
+  String get backupNone => 'Abhi tak koi backup nahin bana.';
+
+  @override
+  String backupSavedOn(String date) {
+    return 'Aakhri backup $date ko save hua.';
+  }
+
+  @override
+  String backupSentOn(String date) {
+    return 'Aakhri backup $date ko bhejne ke liye diya.';
+  }
+
+  @override
+  String get backupPasswordIntro =>
+      'Backup file ek password se band hogi. Ye account ke password se alag hai, aur ye phone isay yaad rakhega, is liye agli backups mein likhna nahin padega.';
+
+  @override
+  String get backupPasswordWriteDown =>
+      'Ye password kahin likh kar rakhein. Naye phone par backup kholne ke liye yahi chahiye hoga. Is ke baghair koi bhi backup nahin khol sakta, hum bhi nahin.';
+
+  @override
+  String get backupPassword => 'Backup password';
+
+  @override
+  String get backupPasswordAgain => 'Backup password dobara';
+
+  @override
+  String get backupPasswordMismatch => 'Dono password ek jaise nahin.';
+
+  @override
+  String get backupPasswordKeep => 'Ye password rakhein';
+
+  @override
+  String get backupPasswordChange => 'Backup password badlein';
+
+  @override
+  String get backupPasswordOld =>
+      'Pehle bani backups apne purane password se hi khulengi.';
+
+  @override
+  String get backupPasswordKept => 'Backup password rakh liya';
+
+  @override
+  String get backupSave => 'Backup save karein';
+
+  @override
+  String get backupWhere =>
+      'Jagah aap chunein. Google Drive ya kisi aur device par rakhein: sirf isi phone mein rakhi backup phone ke saath hi chali jayegi.';
+
+  @override
+  String get backupSend => 'WhatsApp ya email se bhejein';
+
+  @override
+  String get backupSaved => 'Backup save ho gaya';
+
+  @override
+  String get backupSent => 'Backup tayyar hai. Bhejna poora karein.';
+
+  @override
+  String get backupFailed =>
+      'Backup nahin ban saka. Data waise ka waisa hai. Dobara koshish karein.';
+
+  @override
+  String get backupRestore => 'Backup se data wapas laana';
+
+  @override
+  String get backupDueNever => 'Abhi tak backup nahin bana';
+
+  @override
+  String backupDueDays(int count) {
+    return '$count din se backup nahin bana';
+  }
+
+  @override
+  String get backupDueBody =>
+      'Phone gum ho to data saath jata hai. Backup banayein.';
+
+  @override
+  String get importBackupFirst => 'Pehle backup banayein';
 }

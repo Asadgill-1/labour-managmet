@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> with _Step {
           child: FormBody(
             children: [
               if (widget.note case final note?) ...[
-                _Note(switch (note) {
+                MarginNote(switch (note) {
                   LoginNote.lockedOut => l10n.lockGone(AppLock.tries),
                   LoginNote.accountDeleted => l10n.accountDeleted,
                 }),
@@ -158,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> with _Step {
                 validator: (v) => _emailError(l10n, v),
               ),
               fieldGap,
-              _PasswordField(
+              PasswordField(
                 l10n.accountPassword,
                 _password,
                 autofillHints: const [AutofillHints.password],
@@ -168,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> with _Step {
                 alignment: AlignmentDirectional.centerEnd,
                 child: TextButton(onPressed: busy ? null : _forgot, child: Text(l10n.accountForgot)),
               ),
-              if (_phoneData) ...[_Note(l10n.accountPhoneData), fieldGap],
+              if (_phoneData) ...[MarginNote(l10n.accountPhoneData), fieldGap],
               fieldGap,
               OutlinedButton(
                 onPressed: busy ? null : () => push(SignupScreen(account: widget.account, onOpen: widget.onOpen)),
@@ -228,7 +228,7 @@ class _SignupScreenState extends State<SignupScreen> with _Step {
                 validator: (v) => _emailError(l10n, v),
               ),
               fieldGap,
-              _PasswordField(
+              PasswordField(
                 l10n.accountPassword,
                 _password,
                 helper: l10n.accountPasswordHelp,
@@ -314,7 +314,7 @@ class _CodeScreenState extends State<CodeScreen> with _Step {
             ],
             if (widget.recovery) ...[
               fieldGap,
-              _PasswordField(
+              PasswordField(
                 l10n.accountNewPassword,
                 _password,
                 helper: l10n.accountPasswordHelp,
@@ -623,7 +623,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> with _Step {
           children: [
             Text(l10n.accountDeleteWarning(widget.email)),
             fieldGap,
-            _Note(l10n.accountDeleteExport),
+            MarginNote(l10n.accountDeleteExport),
             Align(
               alignment: AlignmentDirectional.centerStart,
               child: TextButton.icon(onPressed: widget.onExport, icon: const Icon(Icons.table_view_outlined), label: Text(l10n.accountDeleteOpenReports)),
@@ -631,7 +631,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> with _Step {
             fieldGap,
             Text(l10n.accountDeleteConfirm),
             fieldGap,
-            _PasswordField(
+            PasswordField(
               l10n.accountPassword,
               _password,
               autofillHints: const [AutofillHints.password],
@@ -690,8 +690,8 @@ class _LanguageButton extends ConsumerWidget {
   }
 }
 
-class _PasswordField extends StatefulWidget {
-  const _PasswordField(this.label, this.controller, {required this.validator, required this.autofillHints, this.helper});
+class PasswordField extends StatefulWidget {
+  const PasswordField(this.label, this.controller, {required this.validator, required this.autofillHints, this.helper, super.key});
 
   final String label;
   final TextEditingController controller;
@@ -700,10 +700,10 @@ class _PasswordField extends StatefulWidget {
   final String? helper;
 
   @override
-  State<_PasswordField> createState() => _PasswordFieldState();
+  State<PasswordField> createState() => _PasswordFieldState();
 }
 
-class _PasswordFieldState extends State<_PasswordField> {
+class _PasswordFieldState extends State<PasswordField> {
   var _hidden = true;
 
   @override
@@ -733,8 +733,8 @@ class _PasswordFieldState extends State<_PasswordField> {
 }
 
 /// A plain remark on the page, set off by a rule at its start like a margin note in a book.
-class _Note extends StatelessWidget {
-  const _Note(this.text);
+class MarginNote extends StatelessWidget {
+  const MarginNote(this.text, {super.key});
 
   final String text;
 

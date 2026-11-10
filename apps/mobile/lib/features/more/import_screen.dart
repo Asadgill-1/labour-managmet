@@ -9,6 +9,7 @@ import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/import.dart';
 import '../../l10n/app_localizations.dart';
+import '../backup/backup_screen.dart';
 import '../rates/rate_labels.dart';
 import '../registers/register_export.dart';
 
@@ -123,6 +124,18 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
         ),
       ),
       NoteRow(icon: Icons.info_outline, text: l10n.importBackupNote, color: warn),
+      // A prompt to back up before a bulk import (MASTER-08).
+      Padding(
+        padding: const EdgeInsetsDirectional.only(start: 8, bottom: 4),
+        child: Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: TextButton.icon(
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const BackupScreen())),
+            icon: const Icon(Icons.backup_outlined),
+            label: Text(l10n.importBackupFirst),
+          ),
+        ),
+      ),
       if (plan == null) ...[
         SectionHeader(l10n.importColumns),
         for (final (field, required) in importFields[widget.kind]!)

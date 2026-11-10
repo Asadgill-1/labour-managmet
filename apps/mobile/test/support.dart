@@ -43,8 +43,8 @@ Future<void> invoiceUpTo(TenantDatabase db, String month) async {
 /// Runs database work on the real clock. Inside testWidgets the fake clock would never let it finish.
 Future<T> real<T>(WidgetTester tester, Future<T> Function() work) async => (await tester.runAsync(work)) as T;
 
-Future<void> pumpApp(WidgetTester tester, TenantDatabase db) async {
-  FlutterSecureStorage.setMockInitialValues({});
+Future<void> pumpApp(WidgetTester tester, TenantDatabase db, {Map<String, String> stored = const {}}) async {
+  FlutterSecureStorage.setMockInitialValues({...stored});
   // Narrow as a real phone, tall enough that detail screens need no scrolling in tests.
   tester.view.physicalSize = const Size(1080, 4800);
   tester.view.devicePixelRatio = 3;

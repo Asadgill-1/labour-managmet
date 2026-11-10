@@ -6010,7 +6010,7 @@ abstract class AppLocalizations {
   /// No description provided for @importBackupNote.
   ///
   /// In en, this message translates to:
-  /// **'Backup before an import is not in the app yet. A file is saved whole or not at all, and a wrong line can be archived afterwards.'**
+  /// **'Make a backup before an import. A file is saved whole or not at all, and a wrong line can be archived afterwards.'**
   String get importBackupNote;
 
   /// No description provided for @importChoose.
@@ -7074,6 +7074,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The account and all of its company\'s data were deleted. You can make a new account.'**
   String get accountDeleted;
+
+  /// No description provided for @backupWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'If the phone is lost, broken or reset, or the app is removed, and there is no backup, the data cannot come back. Logging in again does not bring it back either.'**
+  String get backupWarning;
+
+  /// No description provided for @backupNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No backup has been made yet.'**
+  String get backupNone;
+
+  /// No description provided for @backupSavedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup saved on {date}.'**
+  String backupSavedOn(String date);
+
+  /// No description provided for @backupSentOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup handed over for sending on {date}.'**
+  String backupSentOn(String date);
+
+  /// No description provided for @backupPasswordIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup file is locked with a password. It is separate from the account\'s password, and this phone keeps it, so later backups need no typing.'**
+  String get backupPasswordIntro;
+
+  /// No description provided for @backupPasswordWriteDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Write this password down somewhere. A new phone needs it to open the backup. Without it nobody can open the backup, not even us.'**
+  String get backupPasswordWriteDown;
+
+  /// No description provided for @backupPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup password'**
+  String get backupPassword;
+
+  /// No description provided for @backupPasswordAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup password again'**
+  String get backupPasswordAgain;
+
+  /// No description provided for @backupPasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The two passwords are not the same.'**
+  String get backupPasswordMismatch;
+
+  /// No description provided for @backupPasswordKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep this password'**
+  String get backupPasswordKeep;
+
+  /// No description provided for @backupPasswordChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change the backup password'**
+  String get backupPasswordChange;
+
+  /// No description provided for @backupPasswordOld.
+  ///
+  /// In en, this message translates to:
+  /// **'Backups made before still open only with their old password.'**
+  String get backupPasswordOld;
+
+  /// No description provided for @backupPasswordKept.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup password kept'**
+  String get backupPasswordKept;
+
+  /// No description provided for @backupSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a backup'**
+  String get backupSave;
+
+  /// No description provided for @backupWhere.
+  ///
+  /// In en, this message translates to:
+  /// **'You choose where. Keep it on Google Drive or another device: a backup kept only on this phone goes when the phone goes.'**
+  String get backupWhere;
+
+  /// No description provided for @backupSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send by WhatsApp or email'**
+  String get backupSend;
+
+  /// No description provided for @backupSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup saved'**
+  String get backupSaved;
+
+  /// No description provided for @backupSent.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup is ready. Finish sending it.'**
+  String get backupSent;
+
+  /// No description provided for @backupFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup could not be made. The data is as it was. Try again.'**
+  String get backupFailed;
+
+  /// No description provided for @backupRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Bringing data back from a backup'**
+  String get backupRestore;
+
+  /// No description provided for @backupDueNever.
+  ///
+  /// In en, this message translates to:
+  /// **'No backup yet'**
+  String get backupDueNever;
+
+  /// No description provided for @backupDueDays.
+  ///
+  /// In en, this message translates to:
+  /// **'No backup for {count} days'**
+  String backupDueDays(int count);
+
+  /// No description provided for @backupDueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If the phone is lost, the data goes with it. Make a backup.'**
+  String get backupDueBody;
+
+  /// No description provided for @importBackupFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a backup first'**
+  String get importBackupFirst;
 }
 
 class _AppLocalizationsDelegate

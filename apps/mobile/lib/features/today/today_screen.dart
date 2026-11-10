@@ -10,6 +10,7 @@ import '../../app/theme.dart';
 import '../../data/changes.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../backup/backup_screen.dart';
 import '../changes/change_notes.dart';
 import '../payroll/wages_due_screen.dart';
 import 'attendance_entry_screen.dart';
@@ -91,6 +92,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
             ),
           ),
           const WagesDueBanner(),
+          const BackupDueBanner(),
           if (closed) const ClosedNote(),
           if (missing.isNotEmpty && !closed)
             NoticeRow(

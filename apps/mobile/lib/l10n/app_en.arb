@@ -2039,7 +2039,7 @@
   "importBlankFile": "Get the blank file",
   "importColumns": "Columns",
   "importRequired": "needed",
-  "importBackupNote": "Backup before an import is not in the app yet. A file is saved whole or not at all, and a wrong line can be archived afterwards.",
+  "importBackupNote": "Make a backup before an import. A file is saved whole or not at all, and a wrong line can be archived afterwards.",
   "importChoose": "Choose CSV file",
   "importChooseAgain": "Choose another file",
   "importSave": "Save {count} lines",
@@ -2489,5 +2489,50 @@
   "accountDeleteWord": "Type DELETE",
   "accountDeleteWordWrong": "Type DELETE exactly, in capitals.",
   "accountDeleteGo": "Delete for good",
-  "accountDeleted": "The account and all of its company's data were deleted. You can make a new account."
+  "accountDeleted": "The account and all of its company's data were deleted. You can make a new account.",
+  "backupWarning": "If the phone is lost, broken or reset, or the app is removed, and there is no backup, the data cannot come back. Logging in again does not bring it back either.",
+  "backupNone": "No backup has been made yet.",
+  "backupSavedOn": "Last backup saved on {date}.",
+  "@backupSavedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "backupSentOn": "Last backup handed over for sending on {date}.",
+  "@backupSentOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "backupPasswordIntro": "The backup file is locked with a password. It is separate from the account's password, and this phone keeps it, so later backups need no typing.",
+  "backupPasswordWriteDown": "Write this password down somewhere. A new phone needs it to open the backup. Without it nobody can open the backup, not even us.",
+  "backupPassword": "Backup password",
+  "backupPasswordAgain": "Backup password again",
+  "backupPasswordMismatch": "The two passwords are not the same.",
+  "backupPasswordKeep": "Keep this password",
+  "backupPasswordChange": "Change the backup password",
+  "backupPasswordOld": "Backups made before still open only with their old password.",
+  "backupPasswordKept": "Backup password kept",
+  "backupSave": "Save a backup",
+  "backupWhere": "You choose where. Keep it on Google Drive or another device: a backup kept only on this phone goes when the phone goes.",
+  "backupSend": "Send by WhatsApp or email",
+  "backupSaved": "Backup saved",
+  "backupSent": "The backup is ready. Finish sending it.",
+  "backupFailed": "The backup could not be made. The data is as it was. Try again.",
+  "backupRestore": "Bringing data back from a backup",
+  "backupDueNever": "No backup yet",
+  "backupDueDays": "No backup for {count} days",
+  "@backupDueDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "backupDueBody": "If the phone is lost, the data goes with it. Make a backup.",
+  "importBackupFirst": "Make a backup first"
 }
