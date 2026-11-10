@@ -32,7 +32,7 @@ Money records add `currency` and `posting_date`. An effective date is always sep
 | Documents | `document_assets`, `document_templates`, `issued_documents` | Images are kept for good. One template row says how papers look today. An issued paper holds its number, revision, file, what it said and how it looked, and never changes (DOC-05, D-047) |
 | Closing | `period_locks`, `day_offs` | One row per closed month, with its last day. Everything up to the latest live row is locked. Opening a month again only flags its row, and the reason is in the audit log (REP-04, D-044). A day off is the owner's word that a worker had no work on a date, one row per worker and date, and moves no money (D-045) |
 | Documents | `document_snapshots` | PDF plus data and template snapshot. Later logo changes never alter an issued copy (DOC-05) |
-| System | `audit_events`, `outbox`, `backup_manifests` | See below |
+| System | `audit_events`, `outbox` | See below. A backup carries its own label, in the file, and the phone keeps the last backup's time in its encrypted store, so no table holds backups (D-069) |
 
 ## Balances (REP-08)
 

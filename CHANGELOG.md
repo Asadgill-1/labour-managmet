@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Backup, at the foot of the menu, makes the company's whole data into one file locked with a backup password, which the phone keeps, and saves it where the user chooses, such as Google Drive, or sends it. Today asks for one after 7 days without, and the import screen asks first. Bringing a backup back comes next (D-069).
 - An empty end time now opens its clock at 17:00, not 08:00, so tapping OK at once no longer makes a 24-hour shift (TC-158).
 - Settings can delete the account. The screen first shows the way to take the data out to Excel or PDF, then takes the password again and the word DELETE. The account, its company and its devices go from the cloud at once, and the company's file and key from the phone (D-066).
 - After logging in, the phone offers a PIN of 4 to 6 digits and the fingerprint, and Abhi nahin skips it. With a PIN the company opens with that lock each time the app starts, with no internet. Eight wrong PINs, or PIN bhool gaye, send the user to the email login, which opens the same data. Settings sets, changes or removes the PIN, and logout clears it (D-064, D-065).

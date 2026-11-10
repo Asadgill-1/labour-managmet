@@ -13,8 +13,8 @@ Hidden until the Menu button at the top left of a main screen opens it. The arro
 | Tankhwah aur billing | Tankhwah | Built |
 | Tankhwah aur billing | Timesheet, Invoice | Built |
 | Tankhwah aur billing | Paisay mile (P3) | Jald |
-| Aur | Reports, Documents (P3), Backup, Plan (P4), Help (P5), Team (P6) | Jald |
-| Fixed at the bottom | Apni company, Settings | Built |
+| Aur | Reports, Documents (P3), Plan (P4), Help (P5), Team (P6) | Jald |
+| Fixed at the bottom | Apni company, Backup (D-069), Settings | Built |
 
 ## Main tabs and sub-tabs (D-036)
 
@@ -33,7 +33,7 @@ The panel lists main tabs that open to show sub-tabs. The current tab's sub-tabs
 | Delete hui | Delete hui hazri, Delete hui cash entries, Delete hui allowance aur katoti, Delete hui baqi cheezein |
 | Kaghazat | Bane hue kaghaz, Letterhead |
 | Rooms | Rooms, Room register |
-| Jald aa raha hai | Team, Backup, Plan, Help |
+| Jald aa raha hai | Team, Plan, Help |
 
 A register has a date range with quick choices, filters that take several values, totals on the band, rows under their dates with every field showing, and one export button (D-038).
 

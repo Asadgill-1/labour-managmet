@@ -36,6 +36,8 @@ Cloud database: migrations and pgTAP tests live in `supabase/`. This computer ha
 
 One account per phone (D-063): to free a phone for another account, turn its device row off in the SQL editor, `update public.devices set revoked_at_utc = now() where device_id = '<id>';`. That account is then refused on the phone too. On Android the id is the phone's Android ID for this app, made into a UUID, so a debug and a release build of the app count as two phones.
 
+Opening a backup without the app (D-069): unzip the backup file; `data.db` is a SQLCipher 4 database. In DB Browser for SQLCipher, open it, choose SQLCipher 4 defaults and type the backup password. `manifest.json` names the company's id, the schema version and the time it was made.
+
 Deleting an account (D-066): `20261109130000_delete_account` adds `delete_account`, which removes the caller's own companies, members, devices and `auth.users` row, and only for a session signed in with the password in the last ten minutes. It went to the live project through the SQL editor on 2026-11-09, on the owner's yes (TC-157). The dashboard warns that the query is destructive, because the function's body deletes; running it deletes nothing.
 
 ## Direct dependency licences

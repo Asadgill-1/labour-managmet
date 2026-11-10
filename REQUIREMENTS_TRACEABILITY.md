@@ -119,13 +119,13 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | TEAM-07 | 15 | Team downgrade | T25 | NOT_STARTED | - | - |
 | TEAM-08 | 15 | Pilot safety | T25 | NOT_STARTED | - | - |
 | DATA-01 | 16 | Local database encryption key Android platform ke protected key | T03 | IN_PROGRESS | TC-014 | - |
-| DATA-02 | 16 | Backup bundle | T20 | NOT_STARTED | - | - |
-| DATA-03 | 16 | Owner warning | T20 | NOT_STARTED | - | - |
-| DATA-04 | 16 | Local backup | T20 | NOT_STARTED | - | - |
-| DATA-05 | 16 | Restore | T20 | NOT_STARTED | TC-010, TC-046 | - |
+| DATA-02 | 16 | Backup bundle | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-164 | `apps/mobile/test/backup_test.dart` |
+| DATA-03 | 16 | Owner warning | T20 | IMPLEMENTED_UNVERIFIED | TC-162 | `apps/mobile/test/backup_test.dart` |
+| DATA-04 | 16 | Local backup | T20 | IMPLEMENTED_UNVERIFIED | TC-162, TC-163, TC-164 | `apps/mobile/test/backup_test.dart` |
+| DATA-05 | 16 | Restore | T20 | IN_PROGRESS | TC-010, TC-046, TC-160 | `apps/mobile/test/backup_test.dart` |
 | DATA-06 | 16 | Phone change | T20 | NOT_STARTED | TC-010, TC-046 | - |
-| DATA-07 | 16 | Key recovery | T20 | NOT_STARTED | - | - |
-| DATA-08 | 16 | Retention | T20 | NOT_STARTED | - | - |
+| DATA-07 | 16 | Key recovery | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-161 | `apps/mobile/test/backup_test.dart` |
+| DATA-08 | 16 | Retention | T20 | IN_PROGRESS | - | `DECISIONS.md` D-066, D-069 |
 | ADMIN-01 | 17 | Navigation | T22 | NOT_STARTED | - | - |
 | ADMIN-02 | 17 | Customer register | T22 | NOT_STARTED | - | - |
 | ADMIN-03 | 17 | Subscription operations | T22 | NOT_STARTED | - | - |
