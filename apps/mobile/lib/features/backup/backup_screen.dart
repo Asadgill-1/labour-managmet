@@ -25,8 +25,28 @@ final _hasPasswordProvider = FutureProvider((ref) async => await ref.watch(backu
 /// 10-11-2026, 14:30 in UAE time.
 String shownWhen(DateTime at) => '${showDate(dubaiToday(at))}, ${showMinuteOfDay(dubaiMinuteOfDay(at))}';
 
+/// Makes the company's backup and hands it to the place the user chooses. True once the file left the app; a closed
+/// save screen changes nothing (D-069). A phone that keeps no password yet keeps [password] first.
+Future<bool> handOverBackup(WidgetRef ref, {required bool send, String? password}) async {
+  final store = ref.read(backupStoreProvider);
+  if (password != null && await store.password() == null) {
+    await store.setPassword(password);
+    ref.invalidate(_hasPasswordProvider);
+  }
+  final bytes = await ref.read(dbProvider).backupBytes((await store.password())!, work: await getTemporaryDirectory());
+  final file = await writeExportFile(backupFileName(DateTime.now()), bytes);
+  final done = send
+      ? await _files.invokeMethod<bool>('send', {'path': file.path, 'mime': backupMime, 'whatsapp': false})
+      : await _files.invokeMethod<bool>('save', {'path': file.path, 'mime': backupMime});
+  if (done != true) return false;
+  await store.record(sent: send);
+  ref.invalidate(lastBackupProvider);
+  return true;
+}
+
 /// Makes the company's encrypted backup and hands it to a place the user chooses (DATA-02, DATA-03, DATA-04). The
-/// first visit sets the backup password, which this phone then keeps (D-069). Bringing a backup back comes in T20b.
+/// first visit sets the backup password, which this phone then keeps (D-069). Bringing a backup back is on this page
+/// too (D-070).
 class BackupScreen extends ConsumerStatefulWidget {
   const BackupScreen({super.key});
 
@@ -57,16 +77,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     final l10n = AppLocalizations.of(context);
     setState(() => _busy = true);
     try {
-      final store = ref.read(backupStoreProvider);
-      final bytes = await ref.read(dbProvider).backupBytes((await store.password())!, work: await getTemporaryDirectory());
-      final file = await writeExportFile(backupFileName(DateTime.now()), bytes);
-      final done = send
-          ? await _files.invokeMethod<bool>('send', {'path': file.path, 'mime': backupMime, 'whatsapp': false})
-          : await _files.invokeMethod<bool>('save', {'path': file.path, 'mime': backupMime});
-      // Only a file that left the app counts; a closed save screen changes nothing.
-      if (done != true) return;
-      await store.record(sent: send);
-      ref.invalidate(lastBackupProvider);
+      if (!await handOverBackup(ref, send: send)) return;
       if (mounted) showSavedOnPhone(context, send ? l10n.backupSent : l10n.backupSaved);
     } catch (_) {
       if (mounted) showFormError(context, l10n.backupFailed);

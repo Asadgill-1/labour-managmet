@@ -1156,7 +1156,6 @@
   "restoreKeptOn": "Alag rakha gaya",
   "restoreWorkers": "Mazdoor",
   "restoreInvoices": "Invoice diye",
-  "restoreKeeps": "Is phone par abhi jo data hai wo alag rakh diya jayega. Backup screen se wapas aa sakta hai.",
   "restoreKeptIntro": "Ye wo data hai jo pichhle restore se pehle is phone par tha. Ye wapas aaye to abhi wala data us ki jagah alag rakha jayega.",
   "restoreNumbersQuestion": "Is backup ke baad kisi doosre phone se koi invoice, credit note, timesheet, receipt ya slip diya tha?",
   "restoreNumbersWhy": "Un ke number is backup mein nahin. Bata dein to app wo number dobara nahin degi.",
@@ -1187,5 +1186,9 @@
   "restoreNeedsAccount": "Login wali app mein milta hai",
   "restoreKeptSince": "{date} ko alag rakha gaya",
   "restoreNewPhone": "Purane phone par is company ka data tha?",
-  "restoreNewPhoneBody": "Backup file se wapas laayein"
+  "restoreNewPhoneBody": "Backup file se wapas laayein",
+  "restoreBackUpTitle": "Pehle abhi wale data ka backup",
+  "restoreBackUpWhy": "Backup aane se is phone ka abhi wala data hat jayega. Is liye pehle us ka backup banana zaroori hai, taake wo zaya na ho.",
+  "restoreHereNow": "Is phone par abhi {workers} mazdoor aur {invoices} invoice hain.",
+  "restoreBackedUp": "Abhi wale data ka backup {date} ko ban gaya."
 }

@@ -20,8 +20,8 @@ import 'backup_screen.dart';
 const _files = MethodChannel('labour_app/files');
 
 /// The data that would come in, opened and brought up to date beside the company's file.
-/// [keep] says the data here now is worth setting aside.
-typedef _Ready = ({TenantDatabase db, File file, Restored restored, Map<String, int> own, String invoicePrefix, DateTime? at, bool keep});
+/// [here] is the data on the phone now, and [keep] says it is worth setting aside, and backing up first.
+typedef _Ready = ({TenantDatabase db, File file, Restored restored, Restored here, Map<String, int> own, String invoicePrefix, DateTime? at, bool keep});
 
 /// Brings a backup back in place of the company's data on this phone (DATA-05, DATA-06), or, with [kept], the data the
 /// last restore set aside (D-070). The file is checked, opened and brought up to date, and the owner sees what it
@@ -49,6 +49,7 @@ class _RestoreScreenState extends ConsumerState<RestoreScreen> {
   _Ready? _ready;
   bool? _givenAfter;
   var _mustAnswer = false;
+  DateTime? _backedUp;
   var _handedOver = false;
 
   Restorer get _restorer => ref.read(restoreProvider)!;
@@ -172,16 +173,31 @@ class _RestoreScreenState extends ConsumerState<RestoreScreen> {
         await _discard(db, file);
         return;
       }
-      setState(() => _ready = (db: db, file: file, restored: restored, own: own, invoicePrefix: prefix, at: at, keep: keep));
+      setState(() => _ready = (db: db, file: file, restored: restored, here: here, own: own, invoicePrefix: prefix, at: at, keep: keep));
     } catch (_) {
       await _discard(db, file);
       rethrow;
     }
   }
 
+  /// The data here now goes to a file first, so a wrong backup can never cost it (D-071). A phone with no password yet
+  /// locks it with the one that opened the backup, which the restore would keep anyway.
+  Future<void> _backUpHere({required bool send}) async {
+    final l10n = AppLocalizations.of(context);
+    setState(() => _busy = true);
+    try {
+      if (await handOverBackup(ref, send: send, password: _passwordUsed) && mounted) setState(() => _backedUp = DateTime.now());
+    } catch (_) {
+      if (mounted) showFormError(context, l10n.backupFailed);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
   Future<void> _restore() async {
     final ready = _ready!;
     final l10n = AppLocalizations.of(context);
+    if (ready.keep && _backedUp == null) return;
     if (!widget.kept && _givenAfter == null) {
       setState(() => _mustAnswer = true);
       return;
@@ -264,11 +280,11 @@ class _RestoreScreenState extends ConsumerState<RestoreScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (widget.kept)
-            MarginNote(l10n.restoreKeptIntro)
-          else if (ready.keep) ...[
-            MarginNote(l10n.restoreKeeps),
-            const SizedBox(height: 24),
+          if (widget.kept) MarginNote(l10n.restoreKeptIntro),
+          if (ready.keep) ...[
+            if (widget.kept) const SizedBox(height: 24),
+            ..._backUpFirst(l10n, ready),
+            if (!widget.kept) const SizedBox(height: 28),
           ],
           if (!widget.kept) ...[
             Text(l10n.restoreNumbersQuestion, style: sectionTitleStyle),
@@ -299,6 +315,34 @@ class _RestoreScreenState extends ConsumerState<RestoreScreen> {
       ),
     ),
   ];
+
+  List<Widget> _backUpFirst(AppLocalizations l10n, _Ready ready) {
+    final here = ready.here;
+    final backedUp = _backedUp;
+    return [
+      Text(l10n.restoreBackUpTitle, style: sectionTitleStyle),
+      const SizedBox(height: 6),
+      Text(l10n.restoreBackUpWhy, style: const TextStyle(color: muted)),
+      fieldGap,
+      Text(l10n.restoreHereNow(here.workers, here.invoices), style: const TextStyle(fontWeight: FontWeight.w600, color: ink)),
+      fieldGap,
+      if (backedUp != null)
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.check_circle, color: settled, size: 20),
+            const SizedBox(width: 8),
+            Expanded(child: Text(l10n.restoreBackedUp(shownWhen(backedUp)), style: const TextStyle(color: settled, fontWeight: FontWeight.w600))),
+          ],
+        )
+      else
+        // Saving is the main button below until it is done; sending is the other way.
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: TextButton.icon(onPressed: _busy ? null : () => _backUpHere(send: true), icon: const Icon(Icons.send_outlined), label: Text(l10n.backupSend)),
+        ),
+    ];
+  }
 
   List<Widget> _start(AppLocalizations l10n) => [
     Padding(
@@ -331,7 +375,10 @@ class _RestoreScreenState extends ConsumerState<RestoreScreen> {
     final l10n = AppLocalizations.of(context);
     final ready = _ready;
     final Widget? action;
-    if (ready != null) {
+    if (ready != null && ready.keep && _backedUp == null) {
+      // The main button is always the next step: the data here goes to a backup before any comes in (D-071).
+      action = MainActionBar(label: l10n.backupSave, onPressed: _busy ? null : () => _backUpHere(send: false));
+    } else if (ready != null) {
       action = MainActionBar(label: widget.kept ? l10n.restoreBringKept : l10n.restoreBring, onPressed: _busy ? null : _restore);
     } else if (widget.kept) {
       action = null;

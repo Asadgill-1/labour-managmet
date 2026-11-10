@@ -4289,10 +4289,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restoreInvoices => 'Invoices issued';
 
   @override
-  String get restoreKeeps =>
-      'The data on this phone now is kept aside. It can come back from the Backup screen.';
-
-  @override
   String get restoreKeptIntro =>
       'This is the data this phone had before the last restore. If it comes back, the data here now is kept aside in its place.';
 
@@ -4411,6 +4407,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restoreNewPhoneBody => 'Bring it back from the backup file';
+
+  @override
+  String get restoreBackUpTitle => 'First, back up the data here now';
+
+  @override
+  String get restoreBackUpWhy =>
+      'The backup takes the place of the data on this phone now. Back that data up first, so it is never lost.';
+
+  @override
+  String restoreHereNow(int workers, int invoices) {
+    String _temp0 = intl.Intl.pluralLogic(
+      workers,
+      locale: localeName,
+      other: '$workers workers',
+      one: '1 worker',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      invoices,
+      locale: localeName,
+      other: '$invoices invoices',
+      one: '1 invoice',
+    );
+    return 'This phone has $_temp0 and $_temp1 now.';
+  }
+
+  @override
+  String restoreBackedUp(String date) {
+    return 'The data here now was backed up on $date.';
+  }
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -8497,10 +8522,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get restoreInvoices => 'Invoice diye';
 
   @override
-  String get restoreKeeps =>
-      'Is phone par abhi jo data hai wo alag rakh diya jayega. Backup screen se wapas aa sakta hai.';
-
-  @override
   String get restoreKeptIntro =>
       'Ye wo data hai jo pichhle restore se pehle is phone par tha. Ye wapas aaye to abhi wala data us ki jagah alag rakha jayega.';
 
@@ -8607,4 +8628,21 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get restoreNewPhoneBody => 'Backup file se wapas laayein';
+
+  @override
+  String get restoreBackUpTitle => 'Pehle abhi wale data ka backup';
+
+  @override
+  String get restoreBackUpWhy =>
+      'Backup aane se is phone ka abhi wala data hat jayega. Is liye pehle us ka backup banana zaroori hai, taake wo zaya na ho.';
+
+  @override
+  String restoreHereNow(int workers, int invoices) {
+    return 'Is phone par abhi $workers mazdoor aur $invoices invoice hain.';
+  }
+
+  @override
+  String restoreBackedUp(String date) {
+    return 'Abhi wale data ka backup $date ko ban gaya.';
+  }
 }

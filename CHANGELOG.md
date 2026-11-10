@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Backup se data wapas laana brings a backup back in place of the data on the phone. It shows what the backup holds, asks whether papers were given after it so their numbers are never given again, and keeps the data there aside, which Restore se pehle wala data brings back. A new phone's empty company offers it after login (D-070).
+- Backup se data wapas laana brings a backup back in place of the data on the phone. It shows what the backup holds, asks whether papers were given after it so their numbers are never given again, and keeps the data there aside, which Restore se pehle wala data brings back. A new phone's empty company offers it after login (D-070). On a phone with data, the data there is saved to a backup file first, and only then can the backup come in (D-071).
 - Backup, at the foot of the menu, makes the company's whole data into one file locked with a backup password, which the phone keeps, and saves it where the user chooses, such as Google Drive, or sends it. Today asks for one after 7 days without, and the import screen asks first. Bringing a backup back comes next (D-069).
 - An empty end time now opens its clock at 17:00, not 08:00, so tapping OK at once no longer makes a 24-hour shift (TC-158).
 - Settings can delete the account. The screen first shows the way to take the data out to Excel or PDF, then takes the password again and the word DELETE. The account, its company and its devices go from the cloud at once, and the company's file and key from the phone (D-066).

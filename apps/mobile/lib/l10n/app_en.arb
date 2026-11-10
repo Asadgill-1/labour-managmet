@@ -2551,7 +2551,6 @@
   "restoreKeptOn": "Kept aside",
   "restoreWorkers": "Workers",
   "restoreInvoices": "Invoices issued",
-  "restoreKeeps": "The data on this phone now is kept aside. It can come back from the Backup screen.",
   "restoreKeptIntro": "This is the data this phone had before the last restore. If it comes back, the data here now is kept aside in its place.",
   "restoreNumbersQuestion": "After this backup, was any invoice, credit note, timesheet, receipt or slip given from another phone?",
   "restoreNumbersWhy": "Their numbers are not in this backup. Say so and the app will not give those numbers again.",
@@ -2616,5 +2615,26 @@
     }
   },
   "restoreNewPhone": "Did an old phone have this company's data?",
-  "restoreNewPhoneBody": "Bring it back from the backup file"
+  "restoreNewPhoneBody": "Bring it back from the backup file",
+  "restoreBackUpTitle": "First, back up the data here now",
+  "restoreBackUpWhy": "The backup takes the place of the data on this phone now. Back that data up first, so it is never lost.",
+  "restoreHereNow": "This phone has {workers, plural, =1{1 worker} other{{workers} workers}} and {invoices, plural, =1{1 invoice} other{{invoices} invoices}} now.",
+  "@restoreHereNow": {
+    "placeholders": {
+      "workers": {
+        "type": "int"
+      },
+      "invoices": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreBackedUp": "The data here now was backed up on {date}.",
+  "@restoreBackedUp": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -132,6 +132,9 @@ void main() {
     late String key;
     late Uint8List backup;
     Uint8List? picked;
+
+    /// The backups the app handed to a save or send screen, which takes them.
+    final handed = <String>[];
     final year = DateTime.now().toUtc().add(const Duration(hours: 4)).year;
     const binding = (tenantId: testTenant, userId: 'user-1', email: 'owner@test.ae');
 
@@ -162,6 +165,18 @@ void main() {
 
     TenantDatabase live() => openTenantDatabase(tenantFile(dir, testTenant), key, tenantId: testTenant, deviceId: 'device-1', actorId: 'user-1');
 
+    /// The workers in a backup the app handed over, opened with the kept password.
+    Future<List<String>> backedUpNames(Uint8List bytes) async {
+      final into = File('${work.path}/handed.db');
+      if (into.existsSync()) into.deleteSync();
+      final hex = newHexKey();
+      await unlockBackup(bytes, 'pass1234', into, hex);
+      final db = openTenantDatabase(into, hex, tenantId: testTenant, deviceId: 'check');
+      final found = await names(db);
+      await db.close();
+      return found;
+    }
+
     /// The file the app has open, closed at the end so the folder can go.
     late TenantDatabase open;
     TenantDatabase opening() => open = live();
@@ -174,7 +189,12 @@ void main() {
       const paths = MethodChannel('plugins.flutter.io/path_provider');
       const files = MethodChannel('labour_app/files');
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(paths, (_) async => cache.path);
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(files, (call) async => call.method == 'pickBackup' ? picked : null);
+      handed.clear();
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(files, (call) async {
+        if (call.method == 'pickBackup') return picked;
+        if (call.method == 'save' || call.method == 'send') handed.add((call.arguments as Map)['path'] as String);
+        return true;
+      });
       addTearDown(() {
         tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(paths, null);
         tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(files, null);
@@ -274,7 +294,7 @@ void main() {
 
       expect(find.text('Test Labour LLC'), findsOneWidget);
       expect(find.text('2'), findsOneWidget, reason: 'two workers');
-      expect(find.textContaining('alag rakh diya jayega'), findsNothing, reason: 'this phone has nothing to set aside');
+      expect(find.text('Pehle abhi wale data ka backup'), findsNothing, reason: 'this phone has nothing to back up or set aside');
       expect(find.text('1'), findsOneWidget, reason: 'one invoice');
       await tapNow(tester, find.text('Backup wapas laayein'));
       expect(find.text('Pehle is sawal ka jawab dein.'), findsOneWidget, reason: 'the numbers are reviewed every time');
@@ -305,6 +325,41 @@ void main() {
       expect(numbers, {'invoice': 3, 'timesheet': 1, 'payslip': 7}, reason: 'the next invoice is the 4th, the next slip the 8th');
     });
 
+    testWidgets('a phone with data but no backup password backs it up with the password that opened the backup (D-071)', (tester) async {
+      FlutterSecureStorage.setMockInitialValues({});
+      await setUpPhone(tester);
+      await tester.runAsync(() async {
+        final db = live();
+        await db.saveRow(db.tenantProfiles, id: null, operationId: newUuid(), fields: const TenantProfilesCompanion(legalName: Value('Test Labour LLC')));
+        await addWorker(db, 'Naya');
+        await db.close();
+      });
+      await pumpPhone(tester);
+      await tester.tap(find.text('Menu'));
+      await quiet(tester);
+      await tester.tap(find.text('Backup'));
+      await quiet(tester);
+      await tapNow(tester, find.text('Backup se data wapas laana'));
+      await quiet(tester);
+      picked = backup;
+      await tapNow(tester, find.text('Backup file chunein'));
+      await until(tester, find.text('Backup password'));
+      await field(tester, 'Backup password', 'pass1234');
+      await tapNow(tester, find.text('Backup kholein'));
+      await until(tester, find.text('Backup save karein'));
+      await tapNow(tester, find.text('Backup save karein'));
+      await until(tester, find.textContaining('ko ban gaya.'));
+      expect(await const FlutterSecureStorage().read(key: backupPasswordKey(testTenant)), 'pass1234');
+      expect(await tester.runAsync(() => backedUpNames(File(handed.single).readAsBytesSync())), ['Naya']);
+      await tapNow(tester, find.text('Nahin'));
+      await tapNow(tester, find.text('Backup wapas laayein'));
+      await until(tester, find.text('Data wapas aa gaya'));
+      await tapNow(tester, find.text('Aage'));
+      await quiet(tester);
+      final (workers, _) = await onPhone(tester);
+      expect(workers, unorderedEquals(['Asif', 'Bilal']));
+    });
+
     testWidgets('on the same phone the kept password opens it, the data there is kept aside, and comes back (D-070)', (tester) async {
       FlutterSecureStorage.setMockInitialValues({backupPasswordKey(testTenant): 'pass1234'});
       await setUpPhone(tester);
@@ -325,10 +380,16 @@ void main() {
 
       picked = backup;
       await tapNow(tester, find.text('Backup file chunein'));
-      await until(tester, find.text('Backup wapas laayein'));
+      await until(tester, find.textContaining('Is phone par abhi'));
       expect(find.text('Backup password'), findsNothing, reason: 'the kept password opened it');
-      expect(find.textContaining('alag rakh diya jayega'), findsOneWidget);
+      expect(find.text('Is phone par abhi 1 mazdoor aur 0 invoice hain.'), findsOneWidget);
+      expect(find.text('Backup wapas laayein'), findsNothing, reason: 'the data here must be backed up first (D-071)');
       await tapNow(tester, find.text('Nahin'));
+      await tapNow(tester, find.text('Backup save karein'));
+      await until(tester, find.textContaining('ko ban gaya.'));
+      expect(handed, hasLength(1));
+      final first = File(handed.single).readAsBytesSync();
+      expect(await tester.runAsync(() => backedUpNames(first)), ['Naya'], reason: 'the backup holds the data here now');
       await tapNow(tester, find.text('Backup wapas laayein'));
       await until(tester, find.text('Data wapas aa gaya'));
       expect(find.textContaining('Pehle wala data is phone par alag rakha hai.'), findsOneWidget);
@@ -340,9 +401,13 @@ void main() {
       await tester.tap(find.text('Backup'));
       await quiet(tester);
       await tapNow(tester, find.text('Restore se pehle wala data'));
-      await until(tester, find.text('Ye data wapas laayein'));
+      await until(tester, find.text('Backup save karein'));
       expect(find.text('1'), findsOneWidget, reason: 'Naya alone');
       expect(find.textContaining('Is backup ke baad'), findsNothing, reason: "this phone's own numbers carry over by themselves");
+      expect(find.text('Ye data wapas laayein'), findsNothing, reason: 'the restored data is backed up first too');
+      await tapNow(tester, find.text('WhatsApp ya email se bhejein'));
+      await until(tester, find.textContaining('ko ban gaya.'));
+      expect(await tester.runAsync(() => backedUpNames(File(handed.last).readAsBytesSync())), unorderedEquals(['Asif', 'Bilal']));
       await tapNow(tester, find.text('Ye data wapas laayein'));
       await until(tester, find.text('Data wapas aa gaya'));
       expect(find.text('Test Labour LLC: 1 mazdoor, 0 invoice.'), findsOneWidget);

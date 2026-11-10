@@ -7315,12 +7315,6 @@ abstract class AppLocalizations {
   /// **'Invoices issued'**
   String get restoreInvoices;
 
-  /// No description provided for @restoreKeeps.
-  ///
-  /// In en, this message translates to:
-  /// **'The data on this phone now is kept aside. It can come back from the Backup screen.'**
-  String get restoreKeeps;
-
   /// No description provided for @restoreKeptIntro.
   ///
   /// In en, this message translates to:
@@ -7506,6 +7500,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bring it back from the backup file'**
   String get restoreNewPhoneBody;
+
+  /// No description provided for @restoreBackUpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First, back up the data here now'**
+  String get restoreBackUpTitle;
+
+  /// No description provided for @restoreBackUpWhy.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup takes the place of the data on this phone now. Back that data up first, so it is never lost.'**
+  String get restoreBackUpWhy;
+
+  /// No description provided for @restoreHereNow.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone has {workers, plural, =1{1 worker} other{{workers} workers}} and {invoices, plural, =1{1 invoice} other{{invoices} invoices}} now.'**
+  String restoreHereNow(int workers, int invoices);
+
+  /// No description provided for @restoreBackedUp.
+  ///
+  /// In en, this message translates to:
+  /// **'The data here now was backed up on {date}.'**
+  String restoreBackedUp(String date);
 }
 
 class _AppLocalizationsDelegate
