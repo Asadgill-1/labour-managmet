@@ -43,6 +43,8 @@ Settings shows the three themes as small pictures with their names. A tap applie
 
 ## Onboarding (UX-02)
 
+**A new phone (DATA-06, D-070):** Login > the company opens with no data here, so its form offers Purane phone par is company ka data tha? > Backup file chunein > the backup password, unless this phone keeps it > what the backup holds > whether papers were given after it, and their last numbers > Backup wapas laayein > Data wapas aa gaya > the books. The same page sits on Backup, with Restore se pehle wala data once a restore has kept a copy.
+
 Language > email and password > verify email > company name > optional logo and TRN > first client and site > first worker > first attendance. Optional steps can be skipped. Tax profile is only required before a tax invoice. Before P4 the account steps do not exist, and the app opens on a local dev tenant.
 
 ## Main flows

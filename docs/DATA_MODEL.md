@@ -32,6 +32,7 @@ Money records add `currency` and `posting_date`. An effective date is always sep
 | Documents | `document_assets`, `document_templates`, `issued_documents` | Images are kept for good. One template row says how papers look today. An issued paper holds its number, revision, file, what it said and how it looked, and never changes (DOC-05, D-047) |
 | Closing | `period_locks`, `day_offs` | One row per closed month, with its last day. Everything up to the latest live row is locked. Opening a month again only flags its row, and the reason is in the audit log (REP-04, D-044). A day off is the owner's word that a worker had no work on a date, one row per worker and date, and moves no money (D-045) |
 | Documents | `document_snapshots` | PDF plus data and template snapshot. Later logo changes never alter an issued copy (DOC-05) |
+| Numbers | `number_floors` | The highest number of a kind given where this file has no record of it, set when a backup comes back: by the phone whose data it replaced, or after the backup elsewhere, as the owner said. The next number of that kind and year goes past it. Rows never change (DATA-06, D-070) |
 | System | `audit_events`, `outbox` | See below. A backup carries its own label, in the file, and the phone keeps the last backup's time in its encrypted store, so no table holds backups (D-069) |
 
 ## Balances (REP-08)
@@ -72,3 +73,18 @@ One encrypted file per tenant, `tenant_<uuid>.db` in app-private storage, with a
 Built in T19a (`supabase/migrations/`, D-060): `tenants` (its `tenant_id` is the id every local row carries), `memberships` (owner or manager, revoked rows kept) and `devices`. Members read only their company's rows under row level security; only `create_tenant` and `register_device` write, taking the user from the session. Still to come: auth users' other groups, plans and versions, subscriptions, entitlement leases, verified payments, activation redemptions, support tickets, diagnostic events, monthly metric snapshots, admin audit, Play import batches. Tenant operational tables are added for Team only (T25). Payroll and worker photos from Free and Solo are never uploaded automatically (ARCH-02).
 
 Server-only actions (MODEL-05): tenant creation and membership, trial eligibility, licence issue and revoke, payment posting, Team final invoice numbers, metrics. A client can never grant itself a plan by setting a flag.
+
+## Retention (DATA-08)
+
+Proposed, for the owner and an accountant to confirm (D-070).
+
+| What | Where | How long |
+| --- | --- | --- |
+| A company's records | The phone, in its encrypted file | Until the owner deletes them or the account (AUTH-07). The app deletes nothing by age, and sets no default for how long tax and payroll records must be kept: that is the law's and the company's question |
+| Backups | Where the owner saves them | The app keeps none. The file it hands over sits in its share folder, which empties after a day and at logout (D-069) |
+| The copy a restore keeps | The phone, under the company's key | Until the next restore or the account's deletion (D-070) |
+| The company, its members and devices | The cloud | While the account lives; deleted with it (D-066) |
+| Crash reports and diagnostics | Not sent yet | 30 days, once T23 adds them |
+| Support uploads | None yet | 30 days after the ticket closes, once T23 adds them |
+
+The phone's file and every backup are encrypted with keys only the company holds. The cloud's tables are encrypted at rest by Supabase, which can read them, so they are not end-to-end encrypted.

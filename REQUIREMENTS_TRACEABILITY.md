@@ -122,10 +122,10 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | DATA-02 | 16 | Backup bundle | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-164 | `apps/mobile/test/backup_test.dart` |
 | DATA-03 | 16 | Owner warning | T20 | IMPLEMENTED_UNVERIFIED | TC-162 | `apps/mobile/test/backup_test.dart` |
 | DATA-04 | 16 | Local backup | T20 | IMPLEMENTED_UNVERIFIED | TC-162, TC-163, TC-164 | `apps/mobile/test/backup_test.dart` |
-| DATA-05 | 16 | Restore | T20 | IN_PROGRESS | TC-010, TC-046, TC-160 | `apps/mobile/test/backup_test.dart` |
-| DATA-06 | 16 | Phone change | T20 | NOT_STARTED | TC-010, TC-046 | - |
-| DATA-07 | 16 | Key recovery | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-161 | `apps/mobile/test/backup_test.dart` |
-| DATA-08 | 16 | Retention | T20 | IN_PROGRESS | - | `DECISIONS.md` D-066, D-069 |
+| DATA-05 | 16 | Restore | T20 | IMPLEMENTED_UNVERIFIED | TC-010, TC-046, TC-160, TC-165, TC-167, TC-168 | `apps/mobile/test/restore_test.dart` |
+| DATA-06 | 16 | Phone change | T20 | IN_PROGRESS | TC-010, TC-046, TC-166, TC-167 | `apps/mobile/test/restore_test.dart` |
+| DATA-07 | 16 | Key recovery | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-161, TC-165 | `apps/mobile/test/backup_test.dart`, `apps/mobile/test/restore_test.dart` |
+| DATA-08 | 16 | Retention | T20 | IMPLEMENTED_UNVERIFIED | - | `docs/DATA_MODEL.md` Retention, D-066, D-069, D-070 |
 | ADMIN-01 | 17 | Navigation | T22 | NOT_STARTED | - | - |
 | ADMIN-02 | 17 | Customer register | T22 | NOT_STARTED | - | - |
 | ADMIN-03 | 17 | Subscription operations | T22 | NOT_STARTED | - | - |
