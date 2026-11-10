@@ -38,6 +38,11 @@ class MainActivity : FlutterFragmentActivity() {
                 pick(result, "*/*", arrayOf("text/csv", "text/comma-separated-values", "application/csv", "text/plain", "application/vnd.ms-excel"))
                 return@setMethodCallHandler
             }
+            if (call.method == "pickBackup") {
+                // A backup that came through WhatsApp or Drive may carry any of these labels (DATA-05).
+                pick(result, "*/*", arrayOf("application/zip", "application/x-zip-compressed", "application/octet-stream"))
+                return@setMethodCallHandler
+            }
             if (call.method == "sendAll") {
                 val files = call.argument<List<String>>("paths")!!.map(::File)
                 result.success(sendAll(files, call.argument<String>("mime")!!, call.argument<Boolean>("whatsapp") == true))

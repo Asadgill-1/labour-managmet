@@ -8,6 +8,7 @@ import '../data/documents.dart';
 import '../data/invoices.dart';
 import '../data/payroll.dart';
 import '../data/receipts.dart';
+import '../data/restore.dart';
 import '../data/statement.dart';
 import '../data/tenant_database.dart';
 import '../data/timesheets.dart';
@@ -20,6 +21,10 @@ final dbProvider = Provider<TenantDatabase>((ref) => throw UnimplementedError('o
 final accountProvider = Provider<({String email, Future<void> Function() logOut, Future<void> Function(String password) deleteAccount, AppLock lock})?>(
   (ref) => null,
 );
+
+/// Brings another copy of the company's data in, from AppRoot (DATA-05). Null in a build without accounts, which has no
+/// root to close and open the company around a swap.
+final restoreProvider = Provider<Restorer?>((ref) => null);
 
 final profileProvider = StreamProvider((ref) {
   final db = ref.watch(dbProvider);

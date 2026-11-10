@@ -323,3 +323,12 @@ END;
 CREATE TRIGGER invoice_allocation_no_delete BEFORE DELETE ON invoice_allocations BEGIN
   SELECT RAISE(ABORT, 'invoice allocations are append-only');
 END;
+
+-- A number once given stays given, so its floor stays on record (DATA-06).
+CREATE TRIGGER number_floor_no_update BEFORE UPDATE ON number_floors BEGIN
+  SELECT RAISE(ABORT, 'number floors are append-only');
+END;
+
+CREATE TRIGGER number_floor_no_delete BEFORE DELETE ON number_floors BEGIN
+  SELECT RAISE(ABORT, 'number floors are append-only');
+END;

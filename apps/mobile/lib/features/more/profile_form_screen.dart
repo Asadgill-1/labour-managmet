@@ -9,6 +9,7 @@ import '../../app/theme.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../backup/restore_screen.dart';
 
 /// Own company details (MASTER-01). With no profile yet, this is the first onboarding step (UX-02),
 /// and only the legal name is needed. Logo upload arrives with the document engine in T14.
@@ -76,75 +77,89 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(firstRun ? l10n.welcomeTitle : l10n.myCompany)),
       bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _save),
-      body: Form(
-        key: _form,
-        child: FormBody(
-          children: [
-            if (firstRun) ...[Text(l10n.welcomeBody), fieldGap],
-            Field(l10n.legalName, _legal, validator: (v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null),
-            fieldGap,
-            Field(l10n.tradingName, _trading),
-            fieldGap,
-            Field(l10n.address, _address, lines: 2),
-            fieldGap,
-            Field(l10n.phone, _phone, keyboardType: TextInputType.phone),
-            fieldGap,
-            Field(l10n.email, _email, keyboardType: TextInputType.emailAddress),
-            fieldGap,
-            SwitchListTile(
-              tileColor: Colors.transparent,
-              contentPadding: EdgeInsets.zero,
-              title: Text(l10n.vatRegistered),
-              value: _vat,
-              onChanged: (v) => setState(() => _vat = v),
+      body: Column(
+        children: [
+          // A company opened on a phone without its data: the old phone's backup can come back first (DATA-06).
+          if (firstRun && ref.watch(restoreProvider) != null)
+            NoticeRow(
+              icon: Icons.settings_backup_restore,
+              title: l10n.restoreNewPhone,
+              subtitle: l10n.restoreNewPhoneBody,
+              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const RestoreScreen())),
             ),
-            if (_vat) ...[
-              DateField(l10n.vatEffectiveFrom, value: _vatFrom, onChanged: (v) => setState(() => _vatFrom = v), required: true),
-              fieldGap,
-              Field(
-                l10n.trn,
-                _trn,
-                keyboardType: TextInputType.number,
-                helper: l10n.trnFormatOnly,
-                validator: (v) => isTrnFormat(v ?? '') ? null : l10n.trnFormatError,
-              ),
-              fieldGap,
-            ],
-            Field(l10n.invoicePrefix, _prefix),
-            fieldGap,
-            Field(l10n.paymentTermsDays, _terms, keyboardType: TextInputType.number),
-            fieldGap,
-            Field(l10n.bankDetails, _bank, lines: 3),
-            fieldGap,
-            Field(l10n.documentFooter, _footer, lines: 2),
-            fieldGap,
-            Field(
-              l10n.deductionLimit,
-              _limit,
-              keyboardType: TextInputType.number,
-              helper: l10n.deductionLimitHelp,
-              validator: (v) {
-                final text = (v ?? '').trim();
-                if (text.isEmpty) return null;
-                final percent = int.tryParse(text);
-                return percent == null || percent < 1 || percent > 100 ? l10n.deductionLimitError : null;
-              },
+          Expanded(
+            child: Form(
+              key: _form,
+              child: FormBody(
+              children: [
+                if (firstRun) ...[Text(l10n.welcomeBody), fieldGap],
+                Field(l10n.legalName, _legal, validator: (v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null),
+                fieldGap,
+                Field(l10n.tradingName, _trading),
+                fieldGap,
+                Field(l10n.address, _address, lines: 2),
+                fieldGap,
+                Field(l10n.phone, _phone, keyboardType: TextInputType.phone),
+                fieldGap,
+                Field(l10n.email, _email, keyboardType: TextInputType.emailAddress),
+                fieldGap,
+                SwitchListTile(
+                  tileColor: Colors.transparent,
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(l10n.vatRegistered),
+                  value: _vat,
+                  onChanged: (v) => setState(() => _vat = v),
+                ),
+                if (_vat) ...[
+                  DateField(l10n.vatEffectiveFrom, value: _vatFrom, onChanged: (v) => setState(() => _vatFrom = v), required: true),
+                  fieldGap,
+                  Field(
+                    l10n.trn,
+                    _trn,
+                    keyboardType: TextInputType.number,
+                    helper: l10n.trnFormatOnly,
+                    validator: (v) => isTrnFormat(v ?? '') ? null : l10n.trnFormatError,
+                  ),
+                  fieldGap,
+                ],
+                Field(l10n.invoicePrefix, _prefix),
+                fieldGap,
+                Field(l10n.paymentTermsDays, _terms, keyboardType: TextInputType.number),
+                fieldGap,
+                Field(l10n.bankDetails, _bank, lines: 3),
+                fieldGap,
+                Field(l10n.documentFooter, _footer, lines: 2),
+                fieldGap,
+                Field(
+                  l10n.deductionLimit,
+                  _limit,
+                  keyboardType: TextInputType.number,
+                  helper: l10n.deductionLimitHelp,
+                  validator: (v) {
+                    final text = (v ?? '').trim();
+                    if (text.isEmpty) return null;
+                    final percent = int.tryParse(text);
+                    return percent == null || percent < 1 || percent > 100 ? l10n.deductionLimitError : null;
+                  },
+                ),
+                fieldGap,
+                Field(
+                  l10n.wageDueDays,
+                  _wageDays,
+                  keyboardType: TextInputType.number,
+                  helper: l10n.wageDueDaysHelp,
+                  validator: (v) {
+                    final text = (v ?? '').trim();
+                    if (text.isEmpty) return null;
+                    final days = int.tryParse(text);
+                    return days == null || days < 0 || days > 90 ? l10n.wageDueDaysError : null;
+                  },
+                ),
+              ],
             ),
-            fieldGap,
-            Field(
-              l10n.wageDueDays,
-              _wageDays,
-              keyboardType: TextInputType.number,
-              helper: l10n.wageDueDaysHelp,
-              validator: (v) {
-                final text = (v ?? '').trim();
-                if (text.isEmpty) return null;
-                final days = int.tryParse(text);
-                return days == null || days < 0 || days > 90 ? l10n.wageDueDaysError : null;
-              },
-            ),
-          ],
+          ),
         ),
+        ],
       ),
     );
   }

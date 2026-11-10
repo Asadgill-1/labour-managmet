@@ -4233,6 +4233,184 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importBackupFirst => 'Make a backup first';
+
+  @override
+  String get restoreKeptTitle => 'The data from before the restore';
+
+  @override
+  String get restoreIntro =>
+      'Choose the backup file. Its data takes the place of the data on this phone now. What is here now is kept aside on the phone, so it can come back if needed.';
+
+  @override
+  String get restorePick => 'Choose the backup file';
+
+  @override
+  String get restoreOpen => 'Open the backup';
+
+  @override
+  String get restorePasswordHelp =>
+      'The password kept when the backup was made.';
+
+  @override
+  String get restoreWrongPassword => 'This is not the password of this backup.';
+
+  @override
+  String get restoreNotBackup => 'This file is not a backup from this app.';
+
+  @override
+  String get restoreDamaged =>
+      'This backup file is damaged. Choose another backup.';
+
+  @override
+  String get restoreOtherCompany =>
+      'This backup is of another company. Only this company\'s backup can come here.';
+
+  @override
+  String get restoreNewerApp =>
+      'This backup is from a newer version of the app. Update the app first.';
+
+  @override
+  String get restoreCouldNotOpen =>
+      'The backup could not be opened. The data on this phone is as it was.';
+
+  @override
+  String get restoreCompany => 'Company';
+
+  @override
+  String get restoreMadeOn => 'Backup made';
+
+  @override
+  String get restoreKeptOn => 'Kept aside';
+
+  @override
+  String get restoreWorkers => 'Workers';
+
+  @override
+  String get restoreInvoices => 'Invoices issued';
+
+  @override
+  String get restoreKeeps =>
+      'The data on this phone now is kept aside. It can come back from the Backup screen.';
+
+  @override
+  String get restoreKeptIntro =>
+      'This is the data this phone had before the last restore. If it comes back, the data here now is kept aside in its place.';
+
+  @override
+  String get restoreNumbersQuestion =>
+      'After this backup, was any invoice, credit note, timesheet, receipt or slip given from another phone?';
+
+  @override
+  String get restoreNumbersWhy =>
+      'Their numbers are not in this backup. Say so and the app will not give those numbers again.';
+
+  @override
+  String get restoreNo => 'No';
+
+  @override
+  String get restoreYes => 'Yes, some were';
+
+  @override
+  String get restoreAnswer => 'Answer this question first.';
+
+  @override
+  String get restoreNumbersHelp =>
+      'Write the last number given of each kind, looking at WhatsApp or the papers. Leave a kind empty if none was given.';
+
+  @override
+  String get seriesInvoice => 'Last invoice';
+
+  @override
+  String get seriesCredit => 'Last credit note';
+
+  @override
+  String get seriesTimesheet => 'Last timesheet';
+
+  @override
+  String get seriesClientReceipt => 'Last company receipt';
+
+  @override
+  String get seriesPayslip => 'Last salary slip';
+
+  @override
+  String get seriesPaymentReceipt => 'Last salary receipt';
+
+  @override
+  String get seriesAdvanceReceipt => 'Last advance receipt';
+
+  @override
+  String restoreInBackup(String number) {
+    return 'Last in the backup: $number';
+  }
+
+  @override
+  String get restoreNoneInBackup => 'None this year in the backup';
+
+  @override
+  String restoreNumberLow(String number) {
+    return 'The backup already has $number. Write one after it.';
+  }
+
+  @override
+  String get restoreNumberBad => 'Write only the number, such as 12.';
+
+  @override
+  String get restoreBring => 'Bring the backup back';
+
+  @override
+  String get restoreBringKept => 'Bring this data back';
+
+  @override
+  String get restoreWorking => 'The data is coming back. Do not close the app.';
+
+  @override
+  String get restoreDone => 'The data is back';
+
+  @override
+  String restoreDoneBody(String name, int workers, int invoices) {
+    String _temp0 = intl.Intl.pluralLogic(
+      workers,
+      locale: localeName,
+      other: '$workers workers',
+      one: '1 worker',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      invoices,
+      locale: localeName,
+      other: '$invoices invoices',
+      one: '1 invoice',
+    );
+    return '$name: $_temp0, $_temp1.';
+  }
+
+  @override
+  String get restoreDoneKept =>
+      'The data from before is kept aside on this phone. It can come back from the Backup screen.';
+
+  @override
+  String get restoreDoneBackup =>
+      'Make a new backup from this phone, so the next one is from this phone too.';
+
+  @override
+  String get restoreFailed => 'The data could not come back';
+
+  @override
+  String get restoreFailedBody =>
+      'The data on this phone is as it was. Try again.';
+
+  @override
+  String get restoreNeedsAccount => 'Comes with the app that has a login';
+
+  @override
+  String restoreKeptSince(String date) {
+    return 'Kept aside on $date';
+  }
+
+  @override
+  String get restoreNewPhone => 'Did an old phone have this company\'s data?';
+
+  @override
+  String get restoreNewPhoneBody => 'Bring it back from the backup file';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -8264,4 +8442,169 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get importBackupFirst => 'Pehle backup banayein';
+
+  @override
+  String get restoreKeptTitle => 'Restore se pehle wala data';
+
+  @override
+  String get restoreIntro =>
+      'Backup file chunein. Us ka data is phone ke abhi ke data ki jagah aa jayega. Abhi wala data phone par alag rakha jayega, taake zaroorat ho to wapas aa sake.';
+
+  @override
+  String get restorePick => 'Backup file chunein';
+
+  @override
+  String get restoreOpen => 'Backup kholein';
+
+  @override
+  String get restorePasswordHelp => 'Jo password backup banate waqt rakha tha.';
+
+  @override
+  String get restoreWrongPassword => 'Ye password is backup ka nahin.';
+
+  @override
+  String get restoreNotBackup => 'Ye file is app ki backup nahin.';
+
+  @override
+  String get restoreDamaged =>
+      'Ye backup file kharab hai. Koi aur backup chunein.';
+
+  @override
+  String get restoreOtherCompany =>
+      'Ye backup kisi aur company ka hai. Yahan sirf isi company ka backup aa sakta hai.';
+
+  @override
+  String get restoreNewerApp =>
+      'Ye backup app ke naye version ka hai. Pehle app update karein.';
+
+  @override
+  String get restoreCouldNotOpen =>
+      'Backup khul nahin saka. Is phone ka data waise ka waisa hai.';
+
+  @override
+  String get restoreCompany => 'Company';
+
+  @override
+  String get restoreMadeOn => 'Backup bana';
+
+  @override
+  String get restoreKeptOn => 'Alag rakha gaya';
+
+  @override
+  String get restoreWorkers => 'Mazdoor';
+
+  @override
+  String get restoreInvoices => 'Invoice diye';
+
+  @override
+  String get restoreKeeps =>
+      'Is phone par abhi jo data hai wo alag rakh diya jayega. Backup screen se wapas aa sakta hai.';
+
+  @override
+  String get restoreKeptIntro =>
+      'Ye wo data hai jo pichhle restore se pehle is phone par tha. Ye wapas aaye to abhi wala data us ki jagah alag rakha jayega.';
+
+  @override
+  String get restoreNumbersQuestion =>
+      'Is backup ke baad kisi doosre phone se koi invoice, credit note, timesheet, receipt ya slip diya tha?';
+
+  @override
+  String get restoreNumbersWhy =>
+      'Un ke number is backup mein nahin. Bata dein to app wo number dobara nahin degi.';
+
+  @override
+  String get restoreNo => 'Nahin';
+
+  @override
+  String get restoreYes => 'Haan, diye the';
+
+  @override
+  String get restoreAnswer => 'Pehle is sawal ka jawab dein.';
+
+  @override
+  String get restoreNumbersHelp =>
+      'Har kism ka aakhri number likhein jo diya tha, phone ke WhatsApp ya kaghaz se dekh kar. Jo kism nahin di wo khaali chhor dein.';
+
+  @override
+  String get seriesInvoice => 'Aakhri invoice';
+
+  @override
+  String get seriesCredit => 'Aakhri credit note';
+
+  @override
+  String get seriesTimesheet => 'Aakhri timesheet';
+
+  @override
+  String get seriesClientReceipt => 'Aakhri company receipt';
+
+  @override
+  String get seriesPayslip => 'Aakhri salary slip';
+
+  @override
+  String get seriesPaymentReceipt => 'Aakhri tankhwah receipt';
+
+  @override
+  String get seriesAdvanceReceipt => 'Aakhri advance receipt';
+
+  @override
+  String restoreInBackup(String number) {
+    return 'Backup mein aakhri: $number';
+  }
+
+  @override
+  String get restoreNoneInBackup => 'Backup mein is saal koi nahin';
+
+  @override
+  String restoreNumberLow(String number) {
+    return 'Backup mein $number pehle se hai. Us ke baad wala likhein.';
+  }
+
+  @override
+  String get restoreNumberBad => 'Sirf number likhein, jaise 12.';
+
+  @override
+  String get restoreBring => 'Backup wapas laayein';
+
+  @override
+  String get restoreBringKept => 'Ye data wapas laayein';
+
+  @override
+  String get restoreWorking => 'Data wapas aa raha hai. App band na karein.';
+
+  @override
+  String get restoreDone => 'Data wapas aa gaya';
+
+  @override
+  String restoreDoneBody(String name, int workers, int invoices) {
+    return '$name: $workers mazdoor, $invoices invoice.';
+  }
+
+  @override
+  String get restoreDoneKept =>
+      'Pehle wala data is phone par alag rakha hai. Backup screen se wapas aa sakta hai.';
+
+  @override
+  String get restoreDoneBackup =>
+      'Is phone se ek nayi backup bana lein, taake agla backup bhi isi phone ka ho.';
+
+  @override
+  String get restoreFailed => 'Data wapas nahin aa saka';
+
+  @override
+  String get restoreFailedBody =>
+      'Is phone ka data waise ka waisa hai. Dobara koshish karein.';
+
+  @override
+  String get restoreNeedsAccount => 'Login wali app mein milta hai';
+
+  @override
+  String restoreKeptSince(String date) {
+    return '$date ko alag rakha gaya';
+  }
+
+  @override
+  String get restoreNewPhone => 'Purane phone par is company ka data tha?';
+
+  @override
+  String get restoreNewPhoneBody => 'Backup file se wapas laayein';
 }

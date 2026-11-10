@@ -58,6 +58,7 @@ Future<void> main() async {
       openTenant: (tenantId, {required actorId}) => openTenant(storage, dir, tenantId, actorId: actorId),
       loadSettings: () => AppSettings.load(storage),
       deleteTenant: (tenantId) => deleteTenant(storage, dir, tenantId),
+      files: (dir: dir, key: (tenantId) => tenantKey(storage, tenantId)),
     ),
   );
 }

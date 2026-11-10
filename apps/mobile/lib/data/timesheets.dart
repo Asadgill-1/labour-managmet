@@ -434,12 +434,11 @@ extension TimesheetOps on TenantDatabase {
         if (sheet.number == null) {
           final year = int.parse(dubaiToday(now).substring(0, 4));
           final top = timesheets.seq.max();
-          final seq = ((await (selectOnly(timesheets)
-                        ..addColumns([top])
-                        ..where(timesheets.year.equals(year)))
-                      .getSingle())
-                  .read(top) ??
-              0) + 1;
+          final seq = await nextNumber('timesheet', year, (await (selectOnly(timesheets)
+                ..addColumns([top])
+                ..where(timesheets.year.equals(year)))
+              .getSingle())
+              .read(top));
           await (update(timesheets)..where((t) => t.id.equals(sheet.id))).write(
             TimesheetsCompanion(year: Value(year), seq: Value(seq), number: Value(documentNumber(DocKind.timesheetDaily, year, seq, 1)), version: Value(sheet.version + 1), updatedAtUtc: Value(now)),
           );

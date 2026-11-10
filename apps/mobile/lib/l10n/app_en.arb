@@ -2534,5 +2534,87 @@
     }
   },
   "backupDueBody": "If the phone is lost, the data goes with it. Make a backup.",
-  "importBackupFirst": "Make a backup first"
+  "importBackupFirst": "Make a backup first",
+  "restoreKeptTitle": "The data from before the restore",
+  "restoreIntro": "Choose the backup file. Its data takes the place of the data on this phone now. What is here now is kept aside on the phone, so it can come back if needed.",
+  "restorePick": "Choose the backup file",
+  "restoreOpen": "Open the backup",
+  "restorePasswordHelp": "The password kept when the backup was made.",
+  "restoreWrongPassword": "This is not the password of this backup.",
+  "restoreNotBackup": "This file is not a backup from this app.",
+  "restoreDamaged": "This backup file is damaged. Choose another backup.",
+  "restoreOtherCompany": "This backup is of another company. Only this company's backup can come here.",
+  "restoreNewerApp": "This backup is from a newer version of the app. Update the app first.",
+  "restoreCouldNotOpen": "The backup could not be opened. The data on this phone is as it was.",
+  "restoreCompany": "Company",
+  "restoreMadeOn": "Backup made",
+  "restoreKeptOn": "Kept aside",
+  "restoreWorkers": "Workers",
+  "restoreInvoices": "Invoices issued",
+  "restoreKeeps": "The data on this phone now is kept aside. It can come back from the Backup screen.",
+  "restoreKeptIntro": "This is the data this phone had before the last restore. If it comes back, the data here now is kept aside in its place.",
+  "restoreNumbersQuestion": "After this backup, was any invoice, credit note, timesheet, receipt or slip given from another phone?",
+  "restoreNumbersWhy": "Their numbers are not in this backup. Say so and the app will not give those numbers again.",
+  "restoreNo": "No",
+  "restoreYes": "Yes, some were",
+  "restoreAnswer": "Answer this question first.",
+  "restoreNumbersHelp": "Write the last number given of each kind, looking at WhatsApp or the papers. Leave a kind empty if none was given.",
+  "seriesInvoice": "Last invoice",
+  "seriesCredit": "Last credit note",
+  "seriesTimesheet": "Last timesheet",
+  "seriesClientReceipt": "Last company receipt",
+  "seriesPayslip": "Last salary slip",
+  "seriesPaymentReceipt": "Last salary receipt",
+  "seriesAdvanceReceipt": "Last advance receipt",
+  "restoreInBackup": "Last in the backup: {number}",
+  "@restoreInBackup": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreNoneInBackup": "None this year in the backup",
+  "restoreNumberLow": "The backup already has {number}. Write one after it.",
+  "@restoreNumberLow": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreNumberBad": "Write only the number, such as 12.",
+  "restoreBring": "Bring the backup back",
+  "restoreBringKept": "Bring this data back",
+  "restoreWorking": "The data is coming back. Do not close the app.",
+  "restoreDone": "The data is back",
+  "restoreDoneBody": "{name}: {workers, plural, =1{1 worker} other{{workers} workers}}, {invoices, plural, =1{1 invoice} other{{invoices} invoices}}.",
+  "@restoreDoneBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "workers": {
+        "type": "int"
+      },
+      "invoices": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreDoneKept": "The data from before is kept aside on this phone. It can come back from the Backup screen.",
+  "restoreDoneBackup": "Make a new backup from this phone, so the next one is from this phone too.",
+  "restoreFailed": "The data could not come back",
+  "restoreFailedBody": "The data on this phone is as it was. Try again.",
+  "restoreNeedsAccount": "Comes with the app that has a login",
+  "restoreKeptSince": "Kept aside on {date}",
+  "@restoreKeptSince": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreNewPhone": "Did an old phone have this company's data?",
+  "restoreNewPhoneBody": "Bring it back from the backup file"
 }

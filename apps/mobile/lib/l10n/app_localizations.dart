@@ -7218,6 +7218,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Make a backup first'**
   String get importBackupFirst;
+
+  /// No description provided for @restoreKeptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The data from before the restore'**
+  String get restoreKeptTitle;
+
+  /// No description provided for @restoreIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the backup file. Its data takes the place of the data on this phone now. What is here now is kept aside on the phone, so it can come back if needed.'**
+  String get restoreIntro;
+
+  /// No description provided for @restorePick.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the backup file'**
+  String get restorePick;
+
+  /// No description provided for @restoreOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the backup'**
+  String get restoreOpen;
+
+  /// No description provided for @restorePasswordHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The password kept when the backup was made.'**
+  String get restorePasswordHelp;
+
+  /// No description provided for @restoreWrongPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'This is not the password of this backup.'**
+  String get restoreWrongPassword;
+
+  /// No description provided for @restoreNotBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is not a backup from this app.'**
+  String get restoreNotBackup;
+
+  /// No description provided for @restoreDamaged.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup file is damaged. Choose another backup.'**
+  String get restoreDamaged;
+
+  /// No description provided for @restoreOtherCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup is of another company. Only this company\'s backup can come here.'**
+  String get restoreOtherCompany;
+
+  /// No description provided for @restoreNewerApp.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup is from a newer version of the app. Update the app first.'**
+  String get restoreNewerApp;
+
+  /// No description provided for @restoreCouldNotOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup could not be opened. The data on this phone is as it was.'**
+  String get restoreCouldNotOpen;
+
+  /// No description provided for @restoreCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'Company'**
+  String get restoreCompany;
+
+  /// No description provided for @restoreMadeOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup made'**
+  String get restoreMadeOn;
+
+  /// No description provided for @restoreKeptOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept aside'**
+  String get restoreKeptOn;
+
+  /// No description provided for @restoreWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers'**
+  String get restoreWorkers;
+
+  /// No description provided for @restoreInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoices issued'**
+  String get restoreInvoices;
+
+  /// No description provided for @restoreKeeps.
+  ///
+  /// In en, this message translates to:
+  /// **'The data on this phone now is kept aside. It can come back from the Backup screen.'**
+  String get restoreKeeps;
+
+  /// No description provided for @restoreKeptIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the data this phone had before the last restore. If it comes back, the data here now is kept aside in its place.'**
+  String get restoreKeptIntro;
+
+  /// No description provided for @restoreNumbersQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'After this backup, was any invoice, credit note, timesheet, receipt or slip given from another phone?'**
+  String get restoreNumbersQuestion;
+
+  /// No description provided for @restoreNumbersWhy.
+  ///
+  /// In en, this message translates to:
+  /// **'Their numbers are not in this backup. Say so and the app will not give those numbers again.'**
+  String get restoreNumbersWhy;
+
+  /// No description provided for @restoreNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get restoreNo;
+
+  /// No description provided for @restoreYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, some were'**
+  String get restoreYes;
+
+  /// No description provided for @restoreAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer this question first.'**
+  String get restoreAnswer;
+
+  /// No description provided for @restoreNumbersHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Write the last number given of each kind, looking at WhatsApp or the papers. Leave a kind empty if none was given.'**
+  String get restoreNumbersHelp;
+
+  /// No description provided for @seriesInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Last invoice'**
+  String get seriesInvoice;
+
+  /// No description provided for @seriesCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Last credit note'**
+  String get seriesCredit;
+
+  /// No description provided for @seriesTimesheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Last timesheet'**
+  String get seriesTimesheet;
+
+  /// No description provided for @seriesClientReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Last company receipt'**
+  String get seriesClientReceipt;
+
+  /// No description provided for @seriesPayslip.
+  ///
+  /// In en, this message translates to:
+  /// **'Last salary slip'**
+  String get seriesPayslip;
+
+  /// No description provided for @seriesPaymentReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Last salary receipt'**
+  String get seriesPaymentReceipt;
+
+  /// No description provided for @seriesAdvanceReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Last advance receipt'**
+  String get seriesAdvanceReceipt;
+
+  /// No description provided for @restoreInBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Last in the backup: {number}'**
+  String restoreInBackup(String number);
+
+  /// No description provided for @restoreNoneInBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'None this year in the backup'**
+  String get restoreNoneInBackup;
+
+  /// No description provided for @restoreNumberLow.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup already has {number}. Write one after it.'**
+  String restoreNumberLow(String number);
+
+  /// No description provided for @restoreNumberBad.
+  ///
+  /// In en, this message translates to:
+  /// **'Write only the number, such as 12.'**
+  String get restoreNumberBad;
+
+  /// No description provided for @restoreBring.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring the backup back'**
+  String get restoreBring;
+
+  /// No description provided for @restoreBringKept.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring this data back'**
+  String get restoreBringKept;
+
+  /// No description provided for @restoreWorking.
+  ///
+  /// In en, this message translates to:
+  /// **'The data is coming back. Do not close the app.'**
+  String get restoreWorking;
+
+  /// No description provided for @restoreDone.
+  ///
+  /// In en, this message translates to:
+  /// **'The data is back'**
+  String get restoreDone;
+
+  /// No description provided for @restoreDoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {workers, plural, =1{1 worker} other{{workers} workers}}, {invoices, plural, =1{1 invoice} other{{invoices} invoices}}.'**
+  String restoreDoneBody(String name, int workers, int invoices);
+
+  /// No description provided for @restoreDoneKept.
+  ///
+  /// In en, this message translates to:
+  /// **'The data from before is kept aside on this phone. It can come back from the Backup screen.'**
+  String get restoreDoneKept;
+
+  /// No description provided for @restoreDoneBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a new backup from this phone, so the next one is from this phone too.'**
+  String get restoreDoneBackup;
+
+  /// No description provided for @restoreFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The data could not come back'**
+  String get restoreFailed;
+
+  /// No description provided for @restoreFailedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The data on this phone is as it was. Try again.'**
+  String get restoreFailedBody;
+
+  /// No description provided for @restoreNeedsAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Comes with the app that has a login'**
+  String get restoreNeedsAccount;
+
+  /// No description provided for @restoreKeptSince.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept aside on {date}'**
+  String restoreKeptSince(String date);
+
+  /// No description provided for @restoreNewPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Did an old phone have this company\'s data?'**
+  String get restoreNewPhone;
+
+  /// No description provided for @restoreNewPhoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring it back from the backup file'**
+  String get restoreNewPhoneBody;
 }
 
 class _AppLocalizationsDelegate

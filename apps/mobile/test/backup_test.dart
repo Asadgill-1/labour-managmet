@@ -205,6 +205,7 @@ void main() {
     expect(find.textContaining('ko bhejne ke liye diya.'), findsOneWidget);
     expect(find.text('Backup save karein'), findsOneWidget, reason: 'the kept password needs no typing');
     expect(find.text('Backup se data wapas laana'), findsOneWidget);
+    expect(find.text('Login wali app mein milta hai'), findsOneWidget, reason: 'a build without accounts has no root to swap the file');
     await shutDown(tester, db);
   });
 }

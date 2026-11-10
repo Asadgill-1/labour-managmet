@@ -647,6 +647,19 @@ class PayrollItems extends Table with Common {
   ];
 }
 
+/// The highest number of a series given where this file has no record of it, set when a backup comes back (DATA-06):
+/// by this phone before the backup replaced its data, or after the backup on another phone, as the owner said. The
+/// next number goes past it, so no number is given twice. Rows never change.
+class NumberFloors extends Table with Common {
+  /// 'invoice', 'credit', 'timesheet', or the kind of a numbered paper such as 'payslip'.
+  TextColumn get series => text()();
+  IntColumn get year => integer()();
+  IntColumn get seq => integer()();
+
+  /// 'phone' or 'owner'.
+  TextColumn get source => text()();
+}
+
 @DataClassName('AuditEvent')
 class AuditEvents extends Table {
   TextColumn get id => text()();

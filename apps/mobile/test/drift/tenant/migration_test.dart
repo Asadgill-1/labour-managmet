@@ -10,6 +10,7 @@ import 'package:labour_app/data/documents.dart';
 import 'package:labour_app/data/invoices.dart';
 import 'package:labour_app/data/payroll.dart';
 import 'package:labour_app/data/receipts.dart';
+import 'package:labour_app/data/restore.dart';
 import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/data/tenant_database.dart';
 import 'package:labour_app/data/timesheets.dart';
@@ -30,6 +31,25 @@ void main() {
     final db = TenantDatabase(await verifier.startAt(latest), tenantId: 'tenant', deviceId: 'device');
     addTearDown(db.close);
     await db.validateDatabaseSchema();
+  });
+
+  test('a phone on version 18 upgrades: its invoices keep counting, and a floor a restore sets is never changed (DATA-06)', () async {
+    final old = await verifier.schemaAt(18);
+    old.rawDatabase.execute('''
+      INSERT INTO tenant_profiles (id, $commonColumns, legal_name) VALUES ('p1', $common, 'Labour');
+      INSERT INTO clients (id, $commonColumns, name) VALUES ('c1', $common, 'Fajr');
+      INSERT INTO invoices (id, $commonColumns, client_id, status, from_date, to_date, issue_date, due_date, year, seq, number, parties)
+      VALUES ('i1', $common, 'c1', 'issued', '2026-10-01', '2026-10-31', '2026-11-01', '2026-11-01', 2026, 6, 'INV-2026-0006', '{"supplierName":"Labour","customerName":"Fajr"}');
+    ''');
+
+    final db = TenantDatabase(old.newConnection(), tenantId: 't', deviceId: 'device');
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, db.schemaVersion);
+
+    expect(await db.lastNumbers(2026), {'invoice': 6});
+    await db.recordRestore(from: 'backup', year: 2026, phone: const {}, owner: {'invoice': 9}, operationId: newUuid());
+    expect(await db.nextNumber('invoice', 2026, 6), 10);
+    await expectLater(db.customStatement('DELETE FROM number_floors'), throwsA(anything));
   });
 
   test("a phone on version 17 upgrades: a fixed contract's month charged in part before stays charged whole, and new lines keep their month (D-058)", () async {

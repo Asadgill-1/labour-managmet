@@ -10,9 +10,11 @@ import '../../app/settings.dart';
 import '../../app/theme.dart';
 import '../../data/account.dart';
 import '../../data/backup.dart';
+import '../../data/restore.dart';
 import '../../l10n/app_localizations.dart';
 import '../account/account_screens.dart';
 import '../registers/register_export.dart';
+import 'restore_screen.dart';
 
 const _files = MethodChannel('labour_app/files');
 
@@ -21,7 +23,7 @@ final lastBackupProvider = FutureProvider((ref) => ref.watch(backupStoreProvider
 final _hasPasswordProvider = FutureProvider((ref) async => await ref.watch(backupStoreProvider).password() != null);
 
 /// 10-11-2026, 14:30 in UAE time.
-String _when(DateTime at) => '${showDate(dubaiToday(at))}, ${showMinuteOfDay(dubaiMinuteOfDay(at))}';
+String shownWhen(DateTime at) => '${showDate(dubaiToday(at))}, ${showMinuteOfDay(dubaiMinuteOfDay(at))}';
 
 /// Makes the company's encrypted backup and hands it to a place the user chooses (DATA-02, DATA-03, DATA-04). The
 /// first visit sets the backup password, which this phone then keeps (D-069). Bringing a backup back comes in T20b.
@@ -73,12 +75,17 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     }
   }
 
+  void _push(Widget screen) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final hasPassword = ref.watch(_hasPasswordProvider).value;
     final last = ref.watch(lastBackupProvider).value;
     final setting = hasPassword == false || _changing;
+    final restorer = ref.watch(restoreProvider);
+    final kept = restorer == null ? null : keptFile(restorer.dir, ref.watch(dbProvider).tenantId);
+    final keptAt = kept != null && kept.existsSync() ? kept.lastModifiedSync() : null;
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.menuBackup),
@@ -100,7 +107,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
               child: FormBody(
                 children: [
                   Text(
-                    last == null ? l10n.backupNone : (last.sent ? l10n.backupSentOn(_when(last.at)) : l10n.backupSavedOn(_when(last.at))),
+                    last == null ? l10n.backupNone : (last.sent ? l10n.backupSentOn(shownWhen(last.at)) : l10n.backupSavedOn(shownWhen(last.at))),
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: ink),
                   ),
                   fieldGap,
@@ -143,14 +150,34 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
                         label: Text(l10n.backupPasswordChange),
                       ),
                     ),
-                    const Divider(height: 32),
+                  ],
+                  const Divider(height: 32),
+                  // On a new phone no password is kept yet, so this stays in reach of the password form too.
+                  if (restorer == null)
                     ListTile(
                       contentPadding: EdgeInsets.zero,
                       enabled: false,
                       leading: const Icon(Icons.settings_backup_restore),
                       title: Text(l10n.backupRestore),
-                      subtitle: Text(l10n.groupSoon),
+                      subtitle: Text(l10n.restoreNeedsAccount),
+                    )
+                  else ...[
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const Icon(Icons.settings_backup_restore),
+                      title: Text(l10n.backupRestore),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: _busy ? null : () => _push(const RestoreScreen()),
                     ),
+                    if (keptAt != null)
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: const Icon(Icons.history),
+                        title: Text(l10n.restoreKeptTitle),
+                        subtitle: Text(l10n.restoreKeptSince(shownWhen(keptAt))),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: _busy ? null : () => _push(const RestoreScreen(kept: true)),
+                      ),
                   ],
                 ],
               ),

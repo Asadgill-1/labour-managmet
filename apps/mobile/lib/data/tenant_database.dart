@@ -9,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'attendance.dart';
 import 'backup.dart' show backupLastKey, backupPasswordKey;
+import 'restore.dart' show keptFile, restoringFile;
 import 'tables.dart';
 import 'tenant_database.steps.dart';
 
@@ -67,6 +68,7 @@ String newUuid() {
     PayrollRuns,
     PayrollLines,
     PayrollItems,
+    NumberFloors,
     AuditEvents,
     Outbox,
   ],
@@ -80,7 +82,7 @@ class TenantDatabase extends _$TenantDatabase {
   final String actorId;
 
   @override
-  int get schemaVersion => 18;
+  int get schemaVersion => 19;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -239,6 +241,11 @@ class TenantDatabase extends _$TenantDatabase {
       },
       // A fixed monthly contract's line keeps its month, so a month billed in parts charges what is left (D-058).
       from17To18: (m, schema) => m.addColumn(schema.invoiceLines, schema.invoiceLines.feeMonth),
+      from18To19: (m, schema) async {
+        await m.createTable(schema.numberFloors);
+        await m.createTrigger(schema.numberFloorNoUpdate);
+        await m.createTrigger(schema.numberFloorNoDelete);
+      },
     ),
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -260,6 +267,16 @@ class TenantDatabase extends _$TenantDatabase {
       ..addColumns([latest])
       ..where(periodLocks.reopened.equals(false));
     return (await query.getSingle()).read(latest);
+  }
+
+  /// One past the highest number given in [series] in [year], or past a floor a restore set, whichever is higher
+  /// (DATA-06). [highest] is the series' own top number, read by its caller.
+  Future<int> nextNumber(String series, int year, int? highest) async {
+    final top = numberFloors.seq.max();
+    final query = selectOnly(numberFloors)
+      ..addColumns([top])
+      ..where(numberFloors.series.equals(series) & numberFloors.year.equals(year));
+    return max(highest ?? 0, (await query.getSingle()).read(top) ?? 0) + 1;
   }
 
   /// The single write path. Runs [change] with its audit event and outbox row in one transaction,
@@ -404,16 +421,17 @@ Future<TenantDatabase> openTenant(FlutterSecureStorage storage, Directory dir, S
   return openTenantDatabase(tenantFile(dir, tenantId), key, tenantId: tenantId, deviceId: deviceId, actorId: actorId);
 }
 
-/// Removes a company from this phone for good (AUTH-07). Its key goes first: without it the file cannot be read, even
-/// if deleting the file fails. The file must be closed.
+/// Removes a company from this phone for good (AUTH-07), with any copy a restore kept or left. Its key goes first:
+/// without it the files cannot be read, even if deleting them fails. The file must be closed.
 Future<void> deleteTenant(FlutterSecureStorage storage, Directory dir, String tenantId) async {
   await storage.delete(key: _keyName(tenantId));
   for (final name in [backupPasswordKey(tenantId), backupLastKey(tenantId)]) {
     await storage.delete(key: name);
   }
-  final file = tenantFile(dir, tenantId);
-  for (final part in [file, for (final end in ['-wal', '-shm', '-journal']) File('${file.path}$end')]) {
-    if (part.existsSync()) await part.delete();
+  for (final file in [tenantFile(dir, tenantId), restoringFile(dir, tenantId), keptFile(dir, tenantId)]) {
+    for (final part in [file, for (final end in ['-wal', '-shm', '-journal']) File('${file.path}$end')]) {
+      if (part.existsSync()) await part.delete();
+    }
   }
 }
 

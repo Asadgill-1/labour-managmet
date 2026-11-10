@@ -206,7 +206,7 @@ extension DocumentOps on TenantDatabase {
       final query = selectOnly(issuedDocuments)
         ..addColumns([top])
         ..where(issuedDocuments.kind.equals(kind.name) & issuedDocuments.year.equals(year));
-      seq = ((await query.getSingle()).read(top) ?? 0) + 1;
+      seq = await nextNumber(kind.name, year, (await query.getSingle()).read(top));
     }
     final revision = fixed?.revision ?? (latest?.revision ?? 0) + 1;
     final printed = number ?? documentNumber(kind, year, seq, revision);

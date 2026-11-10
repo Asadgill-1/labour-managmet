@@ -102,15 +102,9 @@ extension BackupOps on TenantDatabase {
   }
 }
 
-/// Opens a backup with [password] and says what it holds, or why it can't be used for [tenantId] on an app at
-/// [schemaVersion] (DATA-05). It only reads.
-Future<BackupSummary> checkBackup(
-  Uint8List bytes,
-  String password, {
-  required String tenantId,
-  required int schemaVersion,
-  required Directory work,
-}) async {
+/// What a backup's label says, checked against its data, before any password: that it is a backup, whole, of
+/// [tenantId], and from an app at [schemaVersion] or older (DATA-05). Throws [BackupRefused].
+({BackupManifest manifest, Uint8List data}) readBackupLabel(Uint8List bytes, {required String tenantId, required int schemaVersion}) {
   final Archive zip;
   try {
     zip = ZipDecoder().decodeBytes(bytes, verify: true);
@@ -139,7 +133,19 @@ Future<BackupSummary> checkBackup(
   if (sha256.convert(data).toString() != manifest.sha256) throw const BackupRefused(BackupProblem.damaged);
   if (manifest.tenantId != tenantId) throw const BackupRefused(BackupProblem.otherCompany);
   if (manifest.schemaVersion > schemaVersion) throw const BackupRefused(BackupProblem.newerApp);
+  return (manifest: manifest, data: data);
+}
 
+/// Opens a backup with [password] and says what it holds, or why it can't be used for [tenantId] on an app at
+/// [schemaVersion] (DATA-05). It only reads.
+Future<BackupSummary> checkBackup(
+  Uint8List bytes,
+  String password, {
+  required String tenantId,
+  required int schemaVersion,
+  required Directory work,
+}) async {
+  final (:manifest, :data) = readBackupLabel(bytes, tenantId: tenantId, schemaVersion: schemaVersion);
   final file = File('${work.path}/check-${newUuid()}.db');
   try {
     await file.writeAsBytes(data, flush: true);
@@ -153,6 +159,29 @@ Future<BackupSummary> checkBackup(
   } finally {
     if (file.existsSync()) await file.delete();
   }
+}
+
+/// Puts a checked backup's data into [into], locked again with this phone's key for the company (DATA-07): the backup
+/// password opens it this once and is gone from the file. [into] keeps the backup's schema until the app opens it.
+Future<void> unlockBackup(Uint8List bytes, String password, File into, String hexKey) async {
+  final data = ZipDecoder().decodeBytes(bytes).findFile('data.db')!.content;
+  for (final part in [into, File('${into.path}-journal')]) {
+    if (part.existsSync()) await part.delete();
+  }
+  await into.writeAsBytes(data, flush: true);
+  final path = into.path;
+  await Isolate.run(() {
+    final db = sqlite3.open(path);
+    try {
+      db.execute(_locked);
+      db.execute('PRAGMA key = ${_quoted(password)}');
+      // The scheme is chosen before the new key, as the phone's own file uses it.
+      db.execute("PRAGMA cipher = 'chacha20'");
+      db.execute("PRAGMA hexrekey = '$hexKey'");
+    } finally {
+      db.close();
+    }
+  });
 }
 
 /// Runs off the main isolate: stretching the password takes a moment on a phone.

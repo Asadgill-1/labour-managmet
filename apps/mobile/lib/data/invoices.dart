@@ -633,7 +633,7 @@ extension InvoiceOps on TenantDatabase {
     final query = selectOnly(invoices)
       ..addColumns([top])
       ..where(invoices.kind.equals(kind) & invoices.year.equals(year));
-    return ((await query.getSingle()).read(top) ?? 0) + 1;
+    return nextNumber(kind, year, (await query.getSingle()).read(top));
   }
 
   /// Issues a draft: its number, its lines and both parties as they stand, and the work it charges, all in one
