@@ -54,7 +54,7 @@ Details in `docs/owner/P2_CHECKLIST.md`.
 6. Try deleting a throwaway account from Settings on a build with `.env` (TC-156); T19c's migration is on the live project. D-066 was confirmed on 2026-11-10 (D-067). Ask an accountant how long a company must keep its records.
 7. Try a backup on the phone (TC-164): Backup at the foot of the menu, keep a password and write it down, save to Google Drive, then send one on WhatsApp. Confirm D-069. Then bring it back (TC-010) on a build with `.env`: Backup se data wapas laana, the file from Drive, and Nahin to the number question; after that, Restore se pehle wala data brings back what was there. With data on the phone, the page first asks to save the data there (D-071). Confirm D-070.
 8. For T19d (D-068, Resend): buy a domain, best named after the app, and make a Resend account. I then send the DNS records to add, and you type Resend's SMTP password into the Supabase dashboard yourself. Until then Supabase's own sender reaches only the project team's addresses, so no customer can sign up.
-9. Before T20d, confirm D-072 (4): the app asks for the backup password once at signup, so every company has a cloud copy it can open.
+9. At T20d, keep the platform's recovery key offline, with a second copy apart (D-072 (4)). The steps come with T20d.
 10. Say yes to running T20c's migration on the live project (`20261111120000_phone_off.sql`), then try it on two phones (TC-173): log in on the new one, Settings > Purana phone band karein, turn the old one off, and open the app on the old one with internet. Confirm D-073.
 
 ## Open

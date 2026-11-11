@@ -83,7 +83,7 @@ Proposed, for the owner and an accountant to confirm (D-070).
 | A company's records | The phone, in its encrypted file | Until the owner deletes them or the account (AUTH-07). The app deletes nothing by age, and sets no default for how long tax and payroll records must be kept: that is the law's and the company's question |
 | Backups | Where the owner saves them | The app keeps none. The file it hands over sits in its share folder, which empties after a day and at logout (D-069) |
 | The copy a restore keeps | The phone, under the company's key | Until the next restore or the account's deletion (D-070) |
-| The cloud backup | The cloud, locked with the backup password | Not built yet (T20d). Without the add-on the latest copy only, with it the copies the plan keeps; deleted with the account (D-072) |
+| The cloud backup | The cloud, locked with the backup password and with the platform's recovery key, whose private half stays offline | Not built yet (T20d). The latest copy always, with the add-on the copies the plan keeps too. After the account is deleted the latest copy stays 60 days, then goes (D-072) |
 | The company, its members and devices | The cloud | While the account lives; deleted with it (D-066) |
 | Crash reports and diagnostics | Not sent yet | 30 days, once T23 adds them |
 | Support uploads | None yet | 30 days after the ticket closes, once T23 adds them |
