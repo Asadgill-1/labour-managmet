@@ -73,8 +73,21 @@ jobs:
       - uses: supabase/setup-cli@v3
         with:
           version: 2.108.0
-      - run: supabase start -x analytics,edge-runtime,functions,imgproxy,inbucket,meta,realtime,storage,studio,vector
+      # Storage runs too, for the payment slips' bucket and its policies (T21a).
+      - run: supabase start -x analytics,edge-runtime,functions,imgproxy,inbucket,meta,realtime,studio,vector
       - run: supabase test db
+
+  # The licence function's signing, and a type check of the function itself (T21a).
+  functions:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno check supabase/functions/licence/index.ts
+      - run: deno test supabase/functions/licence/
 
   # Android builds are slow, so only PRs to main run this.
   android:
