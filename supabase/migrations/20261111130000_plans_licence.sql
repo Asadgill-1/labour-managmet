@@ -266,7 +266,7 @@ $$;
 create function public.licence_signing_key_keep(p_key jsonb) returns jsonb
 language plpgsql security definer set search_path = '' as $$
 begin
-  if p_key is null or jsonb_typeof(p_key -> 'private_pkcs8') is distinct from 'string'
+  if p_key is null or jsonb_typeof(p_key -> 'private_pkcs8') is distinct from 'string' -- gitleaks:allow (a field's name, not a secret)
     or jsonb_typeof(p_key -> 'public_raw') is distinct from 'string' then
     raise exception 'not a key' using errcode = '22023';
   end if;

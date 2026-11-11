@@ -70,7 +70,7 @@ One encrypted file per tenant, `tenant_<uuid>.db` in app-private storage, with a
 
 ## Cloud control data (MODEL-02)
 
-Built in T19a (`supabase/migrations/`, D-060): `tenants` (its `tenant_id` is the id every local row carries), `memberships` (owner or manager, revoked rows kept) and `devices`. Members read only their company's rows under row level security; only `create_tenant` and `register_device` write, taking the user from the session. Still to come: auth users' other groups, plans and versions, subscriptions, entitlement leases, verified payments, activation redemptions, support tickets, diagnostic events, monthly metric snapshots, admin audit, Play import batches. Tenant operational tables are added for Team only (T25). Payroll and worker photos from Free and Solo are never uploaded automatically (ARCH-02).
+Built in T19a (`supabase/migrations/`, D-060): `tenants` (its `tenant_id` is the id every local row carries), `memberships` (owner or manager, revoked rows kept) and `devices`. Members read only their company's rows under row level security; only `create_tenant` and `register_device` write, taking the user from the session. Built in T21a (D-074): `plans` (versioned, in fils), `platform_settings` (the bank details, filled only on the live project), `payment_slips` with the private `payment-slips` bucket, `subscriptions` (the trial and one row per accepted slip), and in `private` the trial claims and each company's latest counts. A licence is signed on request and not stored. Still to come: auth users' other groups, activation redemptions, support tickets, diagnostic events, monthly metric snapshots, admin audit, Play import batches. Tenant operational tables are added for Team only (T25). Payroll and worker photos from Free and Solo are never uploaded automatically (ARCH-02).
 
 Server-only actions (MODEL-05): tenant creation and membership, trial eligibility, licence issue and revoke, payment posting, Team final invoice numbers, metrics. A client can never grant itself a plan by setting a flag.
 
@@ -85,6 +85,8 @@ Proposed, for the owner and an accountant to confirm (D-070).
 | The copy a restore keeps | The phone, under the company's key | Until the next restore or the account's deletion (D-070) |
 | The cloud backup | The cloud, locked with the backup password and with the platform's recovery key, whose private half stays offline | Not built yet (T20d). The latest copy always, with the add-on the copies the plan keeps too. After the account is deleted the latest copy stays 60 days, then goes (D-072) |
 | The company, its members and devices | The cloud | While the account lives; deleted with it (D-066) |
+| Plan periods, payment slips and their files, the counts each licence check sends | The cloud | While the account lives; deleted with it (D-066, D-074), the slip files by the app first (T21b). Whether the platform keeps payment records for its own books is for the owner and an accountant |
+| Trial claims: a hash of the owner's email and of each phone's id | The cloud | Kept after the account is deleted, so nobody gets a second trial (D-074); in the privacy policy (T26) |
 | Crash reports and diagnostics | Not sent yet | 30 days, once T23 adds them |
 | Support uploads | None yet | 30 days after the ticket closes, once T23 adds them |
 
