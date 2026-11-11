@@ -40,6 +40,8 @@ Opening a backup without the app (D-069): unzip the backup file; `data.db` is a 
 
 Deleting an account (D-066): `20261109130000_delete_account` adds `delete_account`, which removes the caller's own companies, members, devices and `auth.users` row, and only for a session signed in with the password in the last ten minutes. It went to the live project through the SQL editor on 2026-11-09, on the owner's yes (TC-157). The dashboard warns that the query is destructive, because the function's body deletes; running it deletes nothing.
 
+Turning a phone off (D-073): `20261111120000_phone_off` adds `turn_phone_off` and `phone_is_off` and replaces `register_device`, so the owner's sign-in turns a phone back on. It went to the live project through the SQL editor on 2026-11-11, on the owner's yes (TC-174). The SQL can be put in the editor by opening `/dashboard/project/<ref>/sql/new?content=<the SQL, URL-encoded>`, then pressing Run. To turn a phone off by hand, set its device row's `revoked_at_utc` as for one account per phone above; it removes the company from itself as it next opens online.
+
 ## Direct dependency licences
 
 | Package | Licence |
