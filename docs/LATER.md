@@ -21,13 +21,10 @@ Everything promised for a later task, in one place, so nothing is lost between s
 - Adding or un-archiving a worker or client company past the plan is refused: "Is plan mein 15 workers hain".
 - A company already over its plan sees "Kaun se 15 active rahein?"; the rest are archived with history and balances untouched (PLAN-04); new entries wait until it is done.
 
-## Going live with T21 (each needs the owner's yes)
+## After T21 went live (2026-11-11)
 
-- Run `20261111130000_plans_licence.sql` on the live project in the SQL editor, then record it in `supabase_migrations.schema_migrations`.
-- Deploy the `licence` Edge Function. Check whether the deployed function gets `SUPABASE_SERVICE_ROLE_KEY`; if the project has only the new secret keys, change the function to read the new variable before it is used.
-- Open the function's GET once, so it makes its key; put the public half in `apps/mobile/.env` as `LICENCE_KEY`.
-- Type the bank name, account number, IBAN and holder into `platform_settings` in the live SQL editor, never in git.
-- Every company made before the migration gets 15 days from the day it runs, including the owner's own test company.
+- The owner types the bank name, account number, IBAN and holder into `platform_settings` in the live SQL editor, never in git, before Plan lein ships (T21b).
+- The app's first live licence: the owner's company fetches a signed trial licence that `LICENCE_KEY` checks (T21b's test on a phone).
 
 ## T22: the owner's dashboard
 
