@@ -7,6 +7,7 @@ import '../data/changes.dart';
 import '../data/closing.dart';
 import '../data/documents.dart';
 import '../data/invoices.dart';
+import '../data/licence.dart';
 import '../data/payroll.dart';
 import '../data/receipts.dart';
 import '../data/restore.dart';
@@ -28,6 +29,15 @@ final accountProvider =
 /// Brings another copy of the company's data in, from AppRoot (DATA-05). Null in a build without accounts, which has no
 /// root to close and open the company around a swap.
 final restoreProvider = Provider<Restorer?>((ref) => null);
+
+/// The open company's licence on this phone, from AppRoot (T21). Null in a build without accounts, which has no plans.
+final licensingProvider = Provider<Licensing?>((ref) => null);
+
+/// What the licence allows now, and why its last check failed. Null in a build without accounts.
+final licenceProvider = StreamProvider<LicenceView?>((ref) {
+  final licensing = ref.watch(licensingProvider);
+  return licensing == null ? Stream.value(null) : licensing.watch();
+});
 
 final profileProvider = StreamProvider((ref) {
   final db = ref.watch(dbProvider);

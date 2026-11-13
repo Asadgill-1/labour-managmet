@@ -6793,6 +6793,24 @@ abstract class AppLocalizations {
   /// **'That did not work. Try again.'**
   String get accountFailed;
 
+  /// No description provided for @accountOtherPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Another phone is on for this account. Turn the old phone off.'**
+  String get accountOtherPhone;
+
+  /// No description provided for @accountSignedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in again with your password to check the plan.'**
+  String get accountSignedOut;
+
+  /// No description provided for @accountSlipsWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Three slips are waiting to be checked already. Wait for the check before sending another.'**
+  String get accountSlipsWaiting;
+
   /// No description provided for @accountPhoneData.
   ///
   /// In en, this message translates to:
@@ -7602,6 +7620,348 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The company turned this phone off, so its data was removed from this phone. To work on it again, log in, then bring a backup back.'**
   String get accountPhoneOff;
+
+  /// No description provided for @planTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get planTitle;
+
+  /// No description provided for @planNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No plan yet'**
+  String get planNone;
+
+  /// No description provided for @planEnds.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends {date}'**
+  String planEnds(String date);
+
+  /// No description provided for @planEndedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended {date}'**
+  String planEndedOn(String date);
+
+  /// No description provided for @planLastCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Last checked {date}'**
+  String planLastCheck(String date);
+
+  /// No description provided for @planNextCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check online before {date}'**
+  String planNextCheck(String date);
+
+  /// No description provided for @planChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking the plan'**
+  String get planChecking;
+
+  /// No description provided for @planNotChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Not checked yet. Open the app with the internet on.'**
+  String get planNotChecked;
+
+  /// No description provided for @planClockBack.
+  ///
+  /// In en, this message translates to:
+  /// **'The phone\'s date or time is wrong. Correct it, then check again.'**
+  String get planClockBack;
+
+  /// No description provided for @planLeaseOver.
+  ///
+  /// In en, this message translates to:
+  /// **'Not checked online for 7 days. Check with the internet on.'**
+  String get planLeaseOver;
+
+  /// No description provided for @planEndedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The plan has ended. Everything entered can still be seen, printed and exported. New entries need a plan.'**
+  String get planEndedNote;
+
+  /// No description provided for @planCheckOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet, so the plan was not checked.'**
+  String get planCheckOffline;
+
+  /// No description provided for @planCheckNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Check now'**
+  String get planCheckNow;
+
+  /// No description provided for @planChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan checked'**
+  String get planChecked;
+
+  /// No description provided for @planPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the plan'**
+  String get planPasswordTitle;
+
+  /// No description provided for @planPasswordBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your login password. This needs the internet.'**
+  String get planPasswordBody;
+
+  /// No description provided for @planTake.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a plan'**
+  String get planTake;
+
+  /// No description provided for @planIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay by bank transfer from your bank, then send the slip here. We find the payment in our bank and open the plan.'**
+  String get planIntro;
+
+  /// No description provided for @planShowPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the plans'**
+  String get planShowPlans;
+
+  /// No description provided for @planChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a plan'**
+  String get planChoose;
+
+  /// No description provided for @planPerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'a month'**
+  String get planPerMonth;
+
+  /// No description provided for @planWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} active workers'**
+  String planWorkers(int count);
+
+  /// No description provided for @planWorkersUnlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited workers'**
+  String get planWorkersUnlimited;
+
+  /// No description provided for @planClients.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} client companies'**
+  String planClients(int count);
+
+  /// No description provided for @planClientsUnlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited client companies'**
+  String get planClientsUnlimited;
+
+  /// No description provided for @planMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'Months'**
+  String get planMonths;
+
+  /// No description provided for @planMonthsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 month} other{{count} months}}'**
+  String planMonthsCount(int count);
+
+  /// No description provided for @planTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total to transfer'**
+  String get planTotal;
+
+  /// No description provided for @planBankTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay into'**
+  String get planBankTitle;
+
+  /// No description provided for @planBankName.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank'**
+  String get planBankName;
+
+  /// No description provided for @planAccountNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Account number'**
+  String get planAccountNumber;
+
+  /// No description provided for @planIban.
+  ///
+  /// In en, this message translates to:
+  /// **'IBAN'**
+  String get planIban;
+
+  /// No description provided for @planAccountHolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Account holder'**
+  String get planAccountHolder;
+
+  /// No description provided for @planCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get planCopy;
+
+  /// No description provided for @planCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} copied'**
+  String planCopied(String name);
+
+  /// No description provided for @planBankMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'The bank details are not ready yet. Look again later.'**
+  String get planBankMissing;
+
+  /// No description provided for @planSlipTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The transfer slip'**
+  String get planSlipTitle;
+
+  /// No description provided for @planSlipHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A photo or a PDF of the transfer, up to 5 MB.'**
+  String get planSlipHint;
+
+  /// No description provided for @planSlipPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the slip'**
+  String get planSlipPick;
+
+  /// No description provided for @planSlipChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another'**
+  String get planSlipChange;
+
+  /// No description provided for @planSlipChosen.
+  ///
+  /// In en, this message translates to:
+  /// **'{kind} chosen, {size} KB'**
+  String planSlipChosen(String kind, int size);
+
+  /// No description provided for @planSlipPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get planSlipPhoto;
+
+  /// No description provided for @planSlipTooBig.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is over 5 MB. Choose a smaller one.'**
+  String get planSlipTooBig;
+
+  /// No description provided for @planSlipWrongType.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a photo (JPG or PNG) or a PDF.'**
+  String get planSlipWrongType;
+
+  /// No description provided for @planSlipPickFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The file could not be opened. Choose it again.'**
+  String get planSlipPickFailed;
+
+  /// No description provided for @planSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send the slip'**
+  String get planSend;
+
+  /// No description provided for @planSendNeedsSlip.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the slip first.'**
+  String get planSendNeedsSlip;
+
+  /// No description provided for @planSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Slip sent. We will check the bank.'**
+  String get planSent;
+
+  /// No description provided for @planSlipsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Slips sent'**
+  String get planSlipsTitle;
+
+  /// No description provided for @planSlipLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{plan}, {months}'**
+  String planSlipLine(String plan, String months);
+
+  /// No description provided for @planSlipWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent {date}, waiting for the check'**
+  String planSlipWaiting(String date);
+
+  /// No description provided for @planSlipAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted, the plan is open'**
+  String get planSlipAccepted;
+
+  /// No description provided for @planSlipRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'Not accepted: {reason}'**
+  String planSlipRefused(String reason);
+
+  /// No description provided for @planSlipNoFile.
+  ///
+  /// In en, this message translates to:
+  /// **'The file did not arrive. Send the slip again.'**
+  String get planSlipNoFile;
+
+  /// No description provided for @trialDaysLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =0{The trial ends today} =1{1 day left in the trial} other{{days} days left in the trial}}'**
+  String trialDaysLeft(int days);
+
+  /// No description provided for @trialNoteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a plan so new entries keep working.'**
+  String get trialNoteBody;
+
+  /// No description provided for @planSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Managers and cloud backup ({amount} a month): coming soon'**
+  String planSoon(String amount);
 }
 
 class _AppLocalizationsDelegate

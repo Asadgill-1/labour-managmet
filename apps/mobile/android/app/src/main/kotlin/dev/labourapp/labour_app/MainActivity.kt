@@ -43,6 +43,11 @@ class MainActivity : FlutterFragmentActivity() {
                 pick(result, "*/*", arrayOf("text/csv", "text/comma-separated-values", "application/csv", "text/plain", "application/vnd.ms-excel"))
                 return@setMethodCallHandler
             }
+            if (call.method == "pickSlip") {
+                // A bank transfer's slip: a photo or a PDF. Dart checks the bytes and the size (T21b).
+                pick(result, "*/*", arrayOf("image/jpeg", "image/png", "application/pdf"))
+                return@setMethodCallHandler
+            }
             if (call.method == "pickBackup") {
                 // A backup that came through WhatsApp or Drive may carry any of these labels (DATA-05).
                 pick(result, "*/*", arrayOf("application/zip", "application/x-zip-compressed", "application/octet-stream"))

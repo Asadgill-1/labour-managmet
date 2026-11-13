@@ -13,6 +13,7 @@ import '../../l10n/app_localizations.dart';
 import '../backup/backup_screen.dart';
 import '../changes/change_notes.dart';
 import '../payroll/wages_due_screen.dart';
+import '../plans/plan_screen.dart';
 import 'attendance_entry_screen.dart';
 import 'attendance_review_screen.dart';
 import 'row_editor_screen.dart';
@@ -91,6 +92,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               ],
             ),
           ),
+          const TrialBanner(),
           const WagesDueBanner(),
           const BackupDueBanner(),
           if (closed) const ClosedNote(),

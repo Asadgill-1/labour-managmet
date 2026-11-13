@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/account.dart';
 import '../data/app_lock.dart';
+import '../data/licence.dart';
 import '../data/masters.dart';
 import '../data/restore.dart';
 import '../data/tenant_database.dart';
@@ -66,12 +67,27 @@ class _AppRootState extends State<AppRoot> {
   late var _opened = widget.opened;
   late var _lock = widget.pinSet ? _Lock.locked : _Lock.open;
   LoginNote? _note;
+  Licensing? _licensing;
   ({SwapStage stage, Restored done, bool kept})? _swapping;
 
   @override
   void initState() {
     super.initState();
-    if (_opened case final opened?) unawaited(_closeIfOff(opened.binding.tenantId));
+    if (_opened case final opened?) {
+      unawaited(_closeIfOff(opened.binding.tenantId));
+      _startLicence(opened.binding.tenantId, resume: true);
+    }
+  }
+
+  /// Reads the licence kept here at once, then renews it from the cloud, with the session kept on the phone when the
+  /// app has just started (D-074). Counted from whichever file is open, as a restore swaps it.
+  void _startLicence(String tenantId, {required bool resume}) {
+    final licensing = _licensing = widget.account.licensing(tenantId, () => activeCounts(_opened!.db));
+    unawaited(() async {
+      await licensing.load();
+      if (resume) await widget.account.resume();
+      if (_licensing == licensing) await licensing.refresh();
+    }());
   }
 
   /// A phone the company turned off removes the company from itself as it opens, even behind the lock (D-073).
@@ -92,6 +108,7 @@ class _AppRootState extends State<AppRoot> {
       _settings = settings;
       _opened = (db: db, binding: binding);
       _lock = _Lock.setPin;
+      _startLicence(tenantId, resume: false);
     });
   }
 
@@ -137,6 +154,8 @@ class _AppRootState extends State<AppRoot> {
 
   Future<void> _leave(LoginNote? note) async {
     final (:db, :binding) = _opened!;
+    final licensing = _licensing;
+    _licensing = null;
     await widget.account.logOut();
     await widget.lock.clear();
     final settings = await widget.loadSettings();
@@ -148,6 +167,7 @@ class _AppRootState extends State<AppRoot> {
     // The company's scope goes with this frame, and its streams with it; only then can the file close.
     await WidgetsBinding.instance.endOfFrame;
     await db.close();
+    await licensing?.dispose();
     if (note == LoginNote.accountDeleted || note == LoginNote.phoneOff) await widget.deleteTenant(binding.tenantId);
     PaintingBinding.instance.imageCache
       ..clear()
@@ -194,6 +214,7 @@ class _AppRootState extends State<AppRoot> {
         dbProvider.overrideWithValue(opened.db),
         accountProvider.overrideWithValue((email: opened.binding.email, logOut: _logOut, deleteAccount: _deleteAccount, lock: widget.lock, account: widget.account)),
         restoreProvider.overrideWithValue(files == null ? null : (dir: files.dir, key: () => files.key(opened.binding.tenantId), swap: _swap)),
+        licensingProvider.overrideWithValue(_licensing),
       ],
       child: const LabourApp(),
     );

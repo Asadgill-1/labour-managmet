@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:domain/dates.dart';
 import 'package:drift/drift.dart' show Value, driftRuntimeOptions;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,10 @@ void main() {
   }
 
   Future<void> tapAndSettle(WidgetTester tester, Finder target) async {
+    // Settings is taller than a phone, so a row far down is built and reached only once scrolled to.
+    if (target.hitTestable().evaluate().isEmpty && find.byType(Scrollable).evaluate().isNotEmpty) {
+      await tester.scrollUntilVisible(target.hitTestable(), 150, scrollable: find.byType(Scrollable).hitTestable().first);
+    }
     await tester.ensureVisible(target);
     await tester.tap(target);
     await settle(tester);
@@ -511,4 +516,157 @@ void main() {
     expect(await real(tester, lock.hasPin), isFalse);
     await shutDown(tester, db);
   });
+
+  group('the plan (T21b)', () {
+    /// The phone's file picker, answering with [bytes] each time.
+    void slipPicker(WidgetTester tester, Uint8List Function() bytes) {
+      const files = MethodChannel('labour_app/files');
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(files, (call) async => call.method == 'pickSlip' ? bytes() : null);
+      addTearDown(() => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(files, null));
+    }
+
+    /// Waits on the cloud's answers, which take real time to parse, until [target] shows.
+    Future<void> until(WidgetTester tester, Finder target) async {
+      for (var i = 0; i < 20 && target.evaluate().isEmpty; i++) {
+        await settle(tester);
+      }
+    }
+
+    /// A message at the foot of the page covers the buttons there until it goes.
+    Future<void> snackGone(WidgetTester tester) async {
+      await tester.pump(const Duration(seconds: 6));
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> loggedIn(WidgetTester tester) async {
+      cloud.addUser('owner@test.ae', 'pass1234', company: testTenant);
+      await pumpRoot(tester);
+      await fill(tester, 'Email', 'owner@test.ae');
+      await fill(tester, 'Password', 'pass1234');
+      await tapAndSettle(tester, find.text('Login karein'));
+      await setPin(tester);
+      await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+      await tapAndSettle(tester, find.text('Save karein'));
+    }
+
+    testWidgets('Settings shows the trial, its end and the checks; Plan lein sends a slip for the plan and months chosen', (tester) async {
+      await loggedIn(tester);
+      expect(cloud.calls.where((c) => c.path == '/functions/v1/licence'), hasLength(1), reason: 'checked right after login');
+      await goTo(tester, 'Settings');
+      expect(find.text('Trial'), findsOneWidget);
+      final end = showDate(dubaiToday(cloud.licenceEnds));
+      expect(find.textContaining('$end ko khatam'), findsOneWidget);
+      expect(find.textContaining('Aakhri check ${showDate(dubaiToday(DateTime.now()))}'), findsOneWidget);
+      expect(find.textContaining('se pehle internet par check zaroori'), findsOneWidget);
+
+      await tapAndSettle(tester, find.text('Plan lein'));
+      await until(tester, find.text('Small Company Plan'));
+expect(find.text('Small Company Plan'), findsOneWidget);
+      expect(find.text('AED 199.00'), findsOneWidget);
+      expect(find.text('15 active workers, 5 client companies'), findsOneWidget);
+      expect(find.text('Managers aur cloud backup (AED 20.00 mahana): jald aa raha'), findsWidgets);
+      await tapAndSettle(tester, find.text('Mid Size Company Plan'));
+      await tester.scrollUntilVisible(find.text('Unlimited workers, Unlimited client companies'), 150, scrollable: find.byType(Scrollable).hitTestable().first);
+      expect(find.text('Managers aur cloud backup (AED 40.00 mahana): jald aa raha'), findsOneWidget);
+      await tapAndSettle(tester, find.text('1 mahina'));
+      await tapAndSettle(tester, find.text('3 mahine').last);
+      expect(find.text('AED 897.00'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('0123456789001'), 150, scrollable: find.byType(Scrollable).hitTestable().first);
+      expect(find.text('Test Bank'), findsOneWidget);
+      expect(find.text('AE070000000123456789001'), findsOneWidget);
+      expect(find.byTooltip('Copy karein'), findsNWidgets(2));
+
+      await tapAndSettle(tester, find.text('Slip bhejein'));
+      expect(find.text('Pehle slip chunein.'), findsOneWidget);
+      await snackGone(tester);
+      var picked = Uint8List(slipBytes + 1)..setAll(0, '%PDF-'.codeUnits);
+      slipPicker(tester, () => picked);
+      await tapAndSettle(tester, find.text('Slip chunein'));
+      expect(find.text('Ye file 5 MB se bari hai. Choti file chunein.'), findsOneWidget);
+      await snackGone(tester);
+      picked = Uint8List.fromList('PK zip'.codeUnits);
+      await tapAndSettle(tester, find.text('Slip chunein'));
+      expect(find.text('Photo (JPG ya PNG) ya PDF chunein.'), findsOneWidget);
+      await snackGone(tester);
+      picked = Uint8List.fromList([...'%PDF-1.7'.codeUnits, ...List.filled(2000, 32)]);
+      await tapAndSettle(tester, find.text('Slip chunein'));
+      expect(find.text('PDF chuni gayi, 2 KB'), findsOneWidget);
+
+      await tapAndSettle(tester, find.text('Slip bhejein'));
+      await until(tester, find.text('Slip chali gayi. Hum bank mein check karenge.'));
+      expect(cloud.slips.single['plan_code'], 'mid');
+      expect(cloud.slips.single['months'], 3);
+      expect(cloud.slipFiles.values.single, picked.length);
+      await tester.scrollUntilVisible(find.text('Mid Size Company Plan, 3 mahine'), 150, scrollable: find.byType(Scrollable).hitTestable().first);
+      expect(find.text('Mid Size Company Plan, 3 mahine'), findsOneWidget);
+      expect(find.textContaining('check ka intezar'), findsOneWidget);
+      expect(find.text('Doosri chunein'), findsNothing, reason: 'the slip sent is no longer chosen');
+      await shutDown(tester, opened.single);
+    });
+
+    testWidgets('a session kept from the last run renews the licence; another phone on says so and opens the phones page', (tester) async {
+      cloud
+        ..addUser('owner@test.ae', 'pass1234', company: testTenant)
+        ..licenceRefusal = 'other_phone';
+      const storage = FlutterSecureStorage();
+      final userId = cloud.users['owner@test.ae']!.id;
+      await real(tester, () async {
+        final before = cloud.account(storage);
+        await before.signIn('owner@test.ae', 'pass1234');
+        await before.openCompany();
+        await Future<void>.delayed(Duration.zero);
+      });
+      final db = TenantDatabase(NativeDatabase.memory(), tenantId: testTenant, deviceId: 'device-1', actorId: userId);
+      await pumpRoot(tester, bound: (db: db, binding: (tenantId: testTenant, userId: userId, email: 'owner@test.ae')));
+      await settle(tester);
+      expect(cloud.calls.where((c) => c.path == '/functions/v1/licence'), hasLength(1));
+      await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+      await tapAndSettle(tester, find.text('Save karein'));
+
+      await goTo(tester, 'Settings');
+      expect(find.text('Is account par ek aur phone chal raha hai. Purana phone band karein.'), findsOneWidget);
+      cloud.licenceRefusal = null;
+      await tapAndSettle(tester, find.text('Abhi check karein'));
+      await until(tester, find.text('Plan check ho gaya'));
+      expect(find.text('Plan check ho gaya'), findsOneWidget);
+      expect(find.text('Trial'), findsOneWidget);
+      expect(find.textContaining('ek aur phone'), findsNothing);
+      await shutDown(tester, db);
+    });
+
+    testWidgets('with no session kept, Check now asks for the password, then the plan shows', (tester) async {
+      final (db, _) = await restartedPhone(tester);
+      await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+      await tapAndSettle(tester, find.text('Save karein'));
+      await goTo(tester, 'Settings');
+      expect(find.text('Plan check karne ke liye password se dobara login karein.'), findsOneWidget);
+      expect(find.text('Abhi koi plan nahin'), findsOneWidget);
+      await tapAndSettle(tester, find.text('Abhi check karein'));
+      await tester.enterText(find.descendant(of: find.byType(AlertDialog), matching: find.byType(TextFormField)), 'pass1234');
+      await tapAndSettle(tester, find.descendant(of: find.byType(AlertDialog), matching: find.text('Abhi check karein')));
+      await until(tester, find.text('Trial'));
+      expect(find.text('Trial'), findsOneWidget);
+      expect(find.textContaining('dobara login karein'), findsNothing);
+      await shutDown(tester, db);
+    });
+
+    testWidgets('the home page shows the trial days left from 5 days before the end, and opens Plan lein', (tester) async {
+      cloud.licenceEnds = DateTime.now().toUtc().add(const Duration(days: 3, hours: 1));
+      await loggedIn(tester);
+      final days = daysBetween(dubaiToday(DateTime.now()), dubaiToday(cloud.licenceEnds));
+      expect(find.text('Trial ke $days din baqi'), findsOneWidget);
+      await tapAndSettle(tester, find.text('Trial ke $days din baqi'));
+      await until(tester, find.text('Small Company Plan'));
+      expect(find.text('Small Company Plan'), findsOneWidget);
+      await shutDown(tester, opened.single);
+    });
+
+    testWidgets('a trial with more than 5 days left shows no note', (tester) async {
+      await loggedIn(tester);
+      expect(find.textContaining('din baqi'), findsNothing);
+      await shutDown(tester, opened.single);
+    });
+  });
 }
+
+const slipBytes = 5 * 1024 * 1024;

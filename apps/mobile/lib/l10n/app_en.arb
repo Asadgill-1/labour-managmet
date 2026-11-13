@@ -2401,6 +2401,9 @@
   "accountOffline": "No internet. Creating an account or logging in needs the internet.",
   "accountDeviceRevoked": "Your company turned off this phone's access.",
   "accountFailed": "That did not work. Try again.",
+  "accountOtherPhone": "Another phone is on for this account. Turn the old phone off.",
+  "accountSignedOut": "Log in again with your password to check the plan.",
+  "accountSlipsWaiting": "Three slips are waiting to be checked already. Wait for the check before sending another.",
   "accountPhoneData": "This phone already has data. Create a new account and it goes into the new company.",
   "accountTitle": "Account",
   "accountNotInBuild": "Not in this build. Data stays on this phone only.",
@@ -2677,5 +2680,166 @@
       }
     }
   },
-  "accountPhoneOff": "The company turned this phone off, so its data was removed from this phone. To work on it again, log in, then bring a backup back."
+  "accountPhoneOff": "The company turned this phone off, so its data was removed from this phone. To work on it again, log in, then bring a backup back.",
+  "planTitle": "Plan",
+  "planNone": "No plan yet",
+  "planEnds": "Ends {date}",
+  "@planEnds": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planEndedOn": "Ended {date}",
+  "@planEndedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planLastCheck": "Last checked {date}",
+  "@planLastCheck": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planNextCheck": "Check online before {date}",
+  "@planNextCheck": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planChecking": "Checking the plan",
+  "planNotChecked": "Not checked yet. Open the app with the internet on.",
+  "planClockBack": "The phone's date or time is wrong. Correct it, then check again.",
+  "planLeaseOver": "Not checked online for 7 days. Check with the internet on.",
+  "planEndedNote": "The plan has ended. Everything entered can still be seen, printed and exported. New entries need a plan.",
+  "planCheckOffline": "No internet, so the plan was not checked.",
+  "planCheckNow": "Check now",
+  "planChecked": "Plan checked",
+  "planPasswordTitle": "Check the plan",
+  "planPasswordBody": "Type your login password. This needs the internet.",
+  "planTake": "Get a plan",
+  "planIntro": "Pay by bank transfer from your bank, then send the slip here. We find the payment in our bank and open the plan.",
+  "planShowPlans": "Show the plans",
+  "planChoose": "Choose a plan",
+  "planPerMonth": "a month",
+  "planWorkers": "{count} active workers",
+  "@planWorkers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planWorkersUnlimited": "Unlimited workers",
+  "planClients": "{count} client companies",
+  "@planClients": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planClientsUnlimited": "Unlimited client companies",
+  "planMonths": "Months",
+  "planMonthsCount": "{count, plural, =1{1 month} other{{count} months}}",
+  "@planMonthsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planTotal": "Total to transfer",
+  "planBankTitle": "Pay into",
+  "planBankName": "Bank",
+  "planAccountNumber": "Account number",
+  "planIban": "IBAN",
+  "planAccountHolder": "Account holder",
+  "planCopy": "Copy",
+  "planCopied": "{name} copied",
+  "@planCopied": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "planBankMissing": "The bank details are not ready yet. Look again later.",
+  "planSlipTitle": "The transfer slip",
+  "planSlipHint": "A photo or a PDF of the transfer, up to 5 MB.",
+  "planSlipPick": "Choose the slip",
+  "planSlipChange": "Choose another",
+  "planSlipChosen": "{kind} chosen, {size} KB",
+  "@planSlipChosen": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      },
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "planSlipPhoto": "Photo",
+  "planSlipTooBig": "This file is over 5 MB. Choose a smaller one.",
+  "planSlipWrongType": "Choose a photo (JPG or PNG) or a PDF.",
+  "planSlipPickFailed": "The file could not be opened. Choose it again.",
+  "planSend": "Send the slip",
+  "planSendNeedsSlip": "Choose the slip first.",
+  "planSent": "Slip sent. We will check the bank.",
+  "planSlipsTitle": "Slips sent",
+  "planSlipLine": "{plan}, {months}",
+  "@planSlipLine": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      },
+      "months": {
+        "type": "String"
+      }
+    }
+  },
+  "planSlipWaiting": "Sent {date}, waiting for the check",
+  "@planSlipWaiting": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planSlipAccepted": "Accepted, the plan is open",
+  "planSlipRefused": "Not accepted: {reason}",
+  "@planSlipRefused": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "planSlipNoFile": "The file did not arrive. Send the slip again.",
+  "trialDaysLeft": "{days, plural, =0{The trial ends today} =1{1 day left in the trial} other{{days} days left in the trial}}",
+  "@trialDaysLeft": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "trialNoteBody": "Get a plan so new entries keep working.",
+  "planSoon": "Managers and cloud backup ({amount} a month): coming soon",
+  "@planSoon": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  }
 }

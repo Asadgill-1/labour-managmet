@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/data/account.dart';
+import 'package:labour_app/data/licence.dart';
 import 'package:labour_app/data/tenant_database.dart';
 
 import 'cloud_fake.dart';
@@ -229,5 +231,96 @@ void main() {
     await account.signIn('owner@test.ae', 'pass1234');
     await account.openCompany();
     expect(await account.phoneIsOff(company), isFalse, reason: 'the owner signing in again turns the phone back on');
+  });
+
+  group('the licence (T21b)', () {
+    const company = '00000000-0000-4000-8000-0000000000c7';
+
+    Future<void> signedInOwner() async {
+      cloud.addUser('owner@test.ae', 'pass1234', company: company);
+      await account.signIn('owner@test.ae', 'pass1234');
+      await account.openCompany();
+      await pumpEventQueue();
+    }
+
+    /// The kept session's access token as one that ran out an hour after 1970 began.
+    Future<void> expireKeptSession() async {
+      final kept = jsonDecode((await storage.read(key: 'session'))!) as Map<String, dynamic>;
+      final parts = (kept['access_token'] as String).split('.');
+      final claims = jsonDecode(utf8.decode(base64Url.decode(base64Url.normalize(parts[1])))) as Map<String, dynamic>;
+      parts[1] = base64Url.encode(utf8.encode(jsonEncode({...claims, 'exp': 3600}))).replaceAll('=', '');
+      await storage.write(key: 'session', value: jsonEncode({...kept, 'access_token': parts.join('.')}));
+    }
+
+    test('the session is kept, so after a restart the licence renews with the counts and no password', () async {
+      await signedInOwner();
+      expect(account.signedIn, isTrue);
+      expect(await storage.read(key: 'session'), isNotNull);
+
+      final restarted = cloud.account(storage);
+      await restarted.resume();
+      expect(restarted.signedIn, isFalse, reason: 'a kept session is not a password typed in this run, so phones still ask');
+      final licensing = restarted.licensing(company, () async => (workers: 3, clients: 1));
+      await licensing.load();
+      await licensing.refresh();
+      expect(licensing.view.status, LicenceStatus.active);
+      expect(licensing.view.licence?.planName, 'Trial');
+      final call = cloud.calls.lastWhere((c) => c.path == '/functions/v1/licence').body;
+      expect(call, {'tenant_id': company, 'device_id': await thisDeviceId(storage), 'active_workers': 3, 'active_clients': 1});
+    });
+
+    test('an expired kept session renews; one the cloud no longer takes is forgotten, and the licence asks for the password', () async {
+      await signedInOwner();
+      await expireKeptSession();
+
+      final renewed = cloud.account(storage);
+      await renewed.resume();
+      expect(cloud.calls.last.path, '/auth/v1/token', reason: 'renewed with the refresh token');
+      await pumpEventQueue();
+      final fresh = jsonDecode((await storage.read(key: 'session'))!) as Map<String, dynamic>;
+      expect(fresh['expires_at'], greaterThan(3600));
+      expect(renewed.signedIn, isFalse, reason: 'a renewed session is no password typed either');
+
+      await expireKeptSession();
+      cloud.refreshRefused = true;
+      final refused = cloud.account(storage);
+      await refused.resume();
+      await pumpEventQueue();
+      expect(await storage.read(key: 'session'), isNull);
+      final licensing = refused.licensing(company, () async => (workers: 0, clients: 0));
+      await licensing.load();
+      await licensing.refresh();
+      expect(licensing.view.problem, AccountProblem.signedOut);
+    });
+
+    test('with no network the kept session stays for the next start', () async {
+      await signedInOwner();
+      await expireKeptSession();
+      cloud.offline = true;
+      final offline = cloud.account(storage);
+      await offline.resume();
+      await pumpEventQueue();
+      expect(await storage.read(key: 'session'), isNotNull);
+      final licensing = offline.licensing(company, () async => (workers: 0, clients: 0));
+      await licensing.load();
+      await licensing.refresh();
+      expect(licensing.view.problem, isIn([AccountProblem.offline, AccountProblem.signedOut]));
+    });
+
+    test('another phone on, or this one turned off, is said plainly; logging out forgets the session', () async {
+      await signedInOwner();
+      final licensing = account.licensing(company, () async => (workers: 0, clients: 0));
+      await licensing.load();
+      cloud.licenceRefusal = 'other_phone';
+      await licensing.refresh();
+      expect(licensing.view.problem, AccountProblem.otherPhone);
+      cloud.licenceRefusal = 'phone_off';
+      await licensing.refresh();
+      expect(licensing.view.problem, AccountProblem.deviceRevoked);
+
+      await account.logOut();
+      await pumpEventQueue();
+      expect(await storage.read(key: 'session'), isNull);
+    });
   });
 }

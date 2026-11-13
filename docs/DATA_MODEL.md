@@ -66,7 +66,7 @@ Written from P1, in the same transaction as the change: `operation_id` (UUID, al
 
 ## Local storage (D-005, D-016)
 
-One encrypted file per tenant, `tenant_<uuid>.db` in app-private storage, with a random 256-bit key per tenant in Keystore-backed storage. Logout closes the handle, clears in-memory state and removes the PDF cache (AUTH-04).
+One encrypted file per tenant, `tenant_<uuid>.db` in app-private storage, with a random 256-bit key per tenant in Keystore-backed storage. Logout closes the handle, clears in-memory state and removes the PDF cache (AUTH-04). The same storage keeps the signed-in session, so the licence renews after a restart, and the latest licence with the latest time the phone has seen (T21b, D-074); logout removes the session.
 
 ## Cloud control data (MODEL-02)
 

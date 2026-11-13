@@ -8,6 +8,7 @@ import '../../app/side_panel.dart';
 import '../../app/theme.dart';
 import '../../l10n/app_localizations.dart';
 import '../account/account_screens.dart';
+import '../plans/plan_screen.dart';
 import 'db_check_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -67,6 +68,8 @@ class SettingsScreen extends ConsumerWidget {
           const Divider(),
           ListTile(title: Text(l10n.accountTitle), subtitle: Text(account?.email ?? l10n.accountNotInBuild)),
           if (account != null) ...[
+            const Divider(),
+            const PlanStatusSection(),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.lock_outline),

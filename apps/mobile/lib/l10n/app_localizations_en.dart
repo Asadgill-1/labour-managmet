@@ -3977,6 +3977,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountFailed => 'That did not work. Try again.';
 
   @override
+  String get accountOtherPhone =>
+      'Another phone is on for this account. Turn the old phone off.';
+
+  @override
+  String get accountSignedOut =>
+      'Log in again with your password to check the plan.';
+
+  @override
+  String get accountSlipsWaiting =>
+      'Three slips are waiting to be checked already. Wait for the check before sending another.';
+
+  @override
   String get accountPhoneData =>
       'This phone already has data. Create a new account and it goes into the new company.';
 
@@ -4487,6 +4499,226 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get accountPhoneOff =>
       'The company turned this phone off, so its data was removed from this phone. To work on it again, log in, then bring a backup back.';
+
+  @override
+  String get planTitle => 'Plan';
+
+  @override
+  String get planNone => 'No plan yet';
+
+  @override
+  String planEnds(String date) {
+    return 'Ends $date';
+  }
+
+  @override
+  String planEndedOn(String date) {
+    return 'Ended $date';
+  }
+
+  @override
+  String planLastCheck(String date) {
+    return 'Last checked $date';
+  }
+
+  @override
+  String planNextCheck(String date) {
+    return 'Check online before $date';
+  }
+
+  @override
+  String get planChecking => 'Checking the plan';
+
+  @override
+  String get planNotChecked =>
+      'Not checked yet. Open the app with the internet on.';
+
+  @override
+  String get planClockBack =>
+      'The phone\'s date or time is wrong. Correct it, then check again.';
+
+  @override
+  String get planLeaseOver =>
+      'Not checked online for 7 days. Check with the internet on.';
+
+  @override
+  String get planEndedNote =>
+      'The plan has ended. Everything entered can still be seen, printed and exported. New entries need a plan.';
+
+  @override
+  String get planCheckOffline => 'No internet, so the plan was not checked.';
+
+  @override
+  String get planCheckNow => 'Check now';
+
+  @override
+  String get planChecked => 'Plan checked';
+
+  @override
+  String get planPasswordTitle => 'Check the plan';
+
+  @override
+  String get planPasswordBody =>
+      'Type your login password. This needs the internet.';
+
+  @override
+  String get planTake => 'Get a plan';
+
+  @override
+  String get planIntro =>
+      'Pay by bank transfer from your bank, then send the slip here. We find the payment in our bank and open the plan.';
+
+  @override
+  String get planShowPlans => 'Show the plans';
+
+  @override
+  String get planChoose => 'Choose a plan';
+
+  @override
+  String get planPerMonth => 'a month';
+
+  @override
+  String planWorkers(int count) {
+    return '$count active workers';
+  }
+
+  @override
+  String get planWorkersUnlimited => 'Unlimited workers';
+
+  @override
+  String planClients(int count) {
+    return '$count client companies';
+  }
+
+  @override
+  String get planClientsUnlimited => 'Unlimited client companies';
+
+  @override
+  String get planMonths => 'Months';
+
+  @override
+  String planMonthsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count months',
+      one: '1 month',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get planTotal => 'Total to transfer';
+
+  @override
+  String get planBankTitle => 'Pay into';
+
+  @override
+  String get planBankName => 'Bank';
+
+  @override
+  String get planAccountNumber => 'Account number';
+
+  @override
+  String get planIban => 'IBAN';
+
+  @override
+  String get planAccountHolder => 'Account holder';
+
+  @override
+  String get planCopy => 'Copy';
+
+  @override
+  String planCopied(String name) {
+    return '$name copied';
+  }
+
+  @override
+  String get planBankMissing =>
+      'The bank details are not ready yet. Look again later.';
+
+  @override
+  String get planSlipTitle => 'The transfer slip';
+
+  @override
+  String get planSlipHint => 'A photo or a PDF of the transfer, up to 5 MB.';
+
+  @override
+  String get planSlipPick => 'Choose the slip';
+
+  @override
+  String get planSlipChange => 'Choose another';
+
+  @override
+  String planSlipChosen(String kind, int size) {
+    return '$kind chosen, $size KB';
+  }
+
+  @override
+  String get planSlipPhoto => 'Photo';
+
+  @override
+  String get planSlipTooBig => 'This file is over 5 MB. Choose a smaller one.';
+
+  @override
+  String get planSlipWrongType => 'Choose a photo (JPG or PNG) or a PDF.';
+
+  @override
+  String get planSlipPickFailed =>
+      'The file could not be opened. Choose it again.';
+
+  @override
+  String get planSend => 'Send the slip';
+
+  @override
+  String get planSendNeedsSlip => 'Choose the slip first.';
+
+  @override
+  String get planSent => 'Slip sent. We will check the bank.';
+
+  @override
+  String get planSlipsTitle => 'Slips sent';
+
+  @override
+  String planSlipLine(String plan, String months) {
+    return '$plan, $months';
+  }
+
+  @override
+  String planSlipWaiting(String date) {
+    return 'Sent $date, waiting for the check';
+  }
+
+  @override
+  String get planSlipAccepted => 'Accepted, the plan is open';
+
+  @override
+  String planSlipRefused(String reason) {
+    return 'Not accepted: $reason';
+  }
+
+  @override
+  String get planSlipNoFile => 'The file did not arrive. Send the slip again.';
+
+  @override
+  String trialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days left in the trial',
+      one: '1 day left in the trial',
+      zero: 'The trial ends today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get trialNoteBody => 'Get a plan so new entries keep working.';
+
+  @override
+  String planSoon(String amount) {
+    return 'Managers and cloud backup ($amount a month): coming soon';
+  }
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -8261,6 +8493,18 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get accountFailed => 'Ye nahin hua. Dobara koshish karein.';
 
   @override
+  String get accountOtherPhone =>
+      'Is account par ek aur phone chal raha hai. Purana phone band karein.';
+
+  @override
+  String get accountSignedOut =>
+      'Plan check karne ke liye password se dobara login karein.';
+
+  @override
+  String get accountSlipsWaiting =>
+      'Teen slips pehle se check ke intezar mein hain. Check ho jaye, phir nayi bhejein.';
+
+  @override
   String get accountPhoneData =>
       'Is phone par pehle se data hai. Naya account banayein, ye data usi nayi company mein chala jayega.';
 
@@ -8747,4 +8991,224 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String get accountPhoneOff =>
       'Company ne ye phone band kar diya tha, is liye company ka data is phone se mita diya gaya. Isi phone par kaam karna hai to login karein, phir backup wapas laayein.';
+
+  @override
+  String get planTitle => 'Plan';
+
+  @override
+  String get planNone => 'Abhi koi plan nahin';
+
+  @override
+  String planEnds(String date) {
+    return '$date ko khatam';
+  }
+
+  @override
+  String planEndedOn(String date) {
+    return '$date ko khatam ho gaya';
+  }
+
+  @override
+  String planLastCheck(String date) {
+    return 'Aakhri check $date';
+  }
+
+  @override
+  String planNextCheck(String date) {
+    return '$date se pehle internet par check zaroori';
+  }
+
+  @override
+  String get planChecking => 'Plan check ho raha hai';
+
+  @override
+  String get planNotChecked =>
+      'Abhi check nahin hua. Internet ke saath app kholein.';
+
+  @override
+  String get planClockBack =>
+      'Phone ki tareekh ya waqt ghalat hai. Theek karein, phir dobara check karein.';
+
+  @override
+  String get planLeaseOver =>
+      '7 din se internet par check nahin hua. Internet ke saath check karein.';
+
+  @override
+  String get planEndedNote =>
+      'Plan khatam ho gaya. Jo likha hai wo dekh, chhap aur export kar sakte hain. Nayi entry ke liye plan lein.';
+
+  @override
+  String get planCheckOffline =>
+      'Internet nahin mila, is liye plan check nahin hua.';
+
+  @override
+  String get planCheckNow => 'Abhi check karein';
+
+  @override
+  String get planChecked => 'Plan check ho gaya';
+
+  @override
+  String get planPasswordTitle => 'Plan check karein';
+
+  @override
+  String get planPasswordBody =>
+      'Apna login password likhein. Is ke liye internet chahiye.';
+
+  @override
+  String get planTake => 'Plan lein';
+
+  @override
+  String get planIntro =>
+      'Apne bank se transfer karein, phir slip yahan bhejein. Hum apne bank mein payment dekh kar plan khol dete hain.';
+
+  @override
+  String get planShowPlans => 'Plans dikhayein';
+
+  @override
+  String get planChoose => 'Plan chunein';
+
+  @override
+  String get planPerMonth => 'mahana';
+
+  @override
+  String planWorkers(int count) {
+    return '$count active workers';
+  }
+
+  @override
+  String get planWorkersUnlimited => 'Unlimited workers';
+
+  @override
+  String planClients(int count) {
+    return '$count client companies';
+  }
+
+  @override
+  String get planClientsUnlimited => 'Unlimited client companies';
+
+  @override
+  String get planMonths => 'Kitne mahine';
+
+  @override
+  String planMonthsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mahine',
+      one: '1 mahina',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get planTotal => 'Kul transfer';
+
+  @override
+  String get planBankTitle => 'Is account mein bhejein';
+
+  @override
+  String get planBankName => 'Bank';
+
+  @override
+  String get planAccountNumber => 'Account number';
+
+  @override
+  String get planIban => 'IBAN';
+
+  @override
+  String get planAccountHolder => 'Account holder';
+
+  @override
+  String get planCopy => 'Copy karein';
+
+  @override
+  String planCopied(String name) {
+    return '$name copy ho gaya';
+  }
+
+  @override
+  String get planBankMissing =>
+      'Bank ki details abhi tayyar nahin. Thori der baad dobara dekhein.';
+
+  @override
+  String get planSlipTitle => 'Transfer ki slip';
+
+  @override
+  String get planSlipHint => 'Transfer ki photo ya PDF, 5 MB tak.';
+
+  @override
+  String get planSlipPick => 'Slip chunein';
+
+  @override
+  String get planSlipChange => 'Doosri chunein';
+
+  @override
+  String planSlipChosen(String kind, int size) {
+    return '$kind chuni gayi, $size KB';
+  }
+
+  @override
+  String get planSlipPhoto => 'Photo';
+
+  @override
+  String get planSlipTooBig => 'Ye file 5 MB se bari hai. Choti file chunein.';
+
+  @override
+  String get planSlipWrongType => 'Photo (JPG ya PNG) ya PDF chunein.';
+
+  @override
+  String get planSlipPickFailed => 'File khul nahin saki. Dobara chunein.';
+
+  @override
+  String get planSend => 'Slip bhejein';
+
+  @override
+  String get planSendNeedsSlip => 'Pehle slip chunein.';
+
+  @override
+  String get planSent => 'Slip chali gayi. Hum bank mein check karenge.';
+
+  @override
+  String get planSlipsTitle => 'Bheji gayi slips';
+
+  @override
+  String planSlipLine(String plan, String months) {
+    return '$plan, $months';
+  }
+
+  @override
+  String planSlipWaiting(String date) {
+    return '$date ko bheji, check ka intezar';
+  }
+
+  @override
+  String get planSlipAccepted => 'Manzoor, plan khul gaya';
+
+  @override
+  String planSlipRefused(String reason) {
+    return 'Manzoor nahin: $reason';
+  }
+
+  @override
+  String get planSlipNoFile => 'File nahin pohanchi. Slip dobara bhejein.';
+
+  @override
+  String trialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Trial ke $days din baqi',
+      one: 'Trial ka 1 din baqi',
+      zero: 'Trial aaj khatam ho raha hai',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get trialNoteBody => 'Plan lein taake nayi entries chalti rahein.';
+
+  @override
+  String planSoon(String amount) {
+    return 'Managers aur cloud backup ($amount mahana): jald aa raha';
+  }
 }

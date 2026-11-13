@@ -29,11 +29,14 @@ String accountProblemText(AppLocalizations l10n, AccountRefused refusal) => swit
   },
   AccountProblem.phoneData => l10n.accountPhoneDataLogin,
   AccountProblem.companyHasMembers => l10n.accountHasMembers,
+  AccountProblem.otherPhone => l10n.accountOtherPhone,
+  AccountProblem.signedOut => l10n.accountSignedOut,
+  AccountProblem.slipsWaiting => l10n.accountSlipsWaiting,
   AccountProblem.failed => l10n.accountFailed,
 };
 
 /// One step at a time: the main action waits while the server answers, and a refusal is said plainly (UX-04).
-mixin _Step<T extends StatefulWidget> on State<T> {
+mixin CloudStep<T extends StatefulWidget> on State<T> {
   bool busy = false;
 
   Future<void> attempt(Future<void> Function() work) async {
@@ -87,7 +90,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with _Step {
+class _LoginScreenState extends State<LoginScreen> with CloudStep {
   final _form = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
@@ -132,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> with _Step {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return _StepScaffold(
+    return StepScaffold(
       title: l10n.accountLoginTitle,
       busy: busy,
       action: MainActionBar(label: l10n.accountLogin, onPressed: busy ? null : _login),
@@ -194,7 +197,7 @@ class SignupScreen extends StatefulWidget {
   State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> with _Step {
+class _SignupScreenState extends State<SignupScreen> with CloudStep {
   final _form = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
@@ -211,7 +214,7 @@ class _SignupScreenState extends State<SignupScreen> with _Step {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return _StepScaffold(
+    return StepScaffold(
       title: l10n.accountSignupTitle,
       busy: busy,
       action: MainActionBar(label: l10n.accountSignup, onPressed: busy ? null : _signUp),
@@ -266,7 +269,7 @@ class CodeScreen extends StatefulWidget {
   State<CodeScreen> createState() => _CodeScreenState();
 }
 
-class _CodeScreenState extends State<CodeScreen> with _Step {
+class _CodeScreenState extends State<CodeScreen> with CloudStep {
   final _form = GlobalKey<FormState>();
   final _code = TextEditingController();
   final _password = TextEditingController();
@@ -295,7 +298,7 @@ class _CodeScreenState extends State<CodeScreen> with _Step {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return _StepScaffold(
+    return StepScaffold(
       title: widget.code ? l10n.accountCodeTitle : l10n.accountSignupTitle,
       busy: busy,
       action: MainActionBar(label: widget.recovery ? l10n.accountSetPassword : l10n.accountContinue, onPressed: busy ? null : _continue),
@@ -346,7 +349,7 @@ class CompanyNameScreen extends StatefulWidget {
   State<CompanyNameScreen> createState() => _CompanyNameScreenState();
 }
 
-class _CompanyNameScreenState extends State<CompanyNameScreen> with _Step {
+class _CompanyNameScreenState extends State<CompanyNameScreen> with CloudStep {
   final _form = GlobalKey<FormState>();
   final _name = TextEditingController();
   final _operationId = newUuid();
@@ -360,7 +363,7 @@ class _CompanyNameScreenState extends State<CompanyNameScreen> with _Step {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return _StepScaffold(
+    return StepScaffold(
       title: l10n.welcomeTitle,
       busy: busy,
       action: MainActionBar(label: l10n.accountStart, onPressed: busy ? null : _start),
@@ -435,7 +438,7 @@ class _SetPinScreenState extends State<SetPinScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return _StepScaffold(
+    return StepScaffold(
       title: l10n.lockSetTitle,
       busy: false,
       action: MainActionBar(label: l10n.lockSet, onPressed: _save),
@@ -529,7 +532,7 @@ class _LockScreenState extends State<LockScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return _StepScaffold(
+    return StepScaffold(
       title: l10n.lockTitle,
       busy: false,
       action: MainActionBar(label: l10n.lockOpen, onPressed: _open),
@@ -602,7 +605,7 @@ class DeleteAccountScreen extends StatefulWidget {
   State<DeleteAccountScreen> createState() => _DeleteAccountScreenState();
 }
 
-class _DeleteAccountScreenState extends State<DeleteAccountScreen> with _Step {
+class _DeleteAccountScreenState extends State<DeleteAccountScreen> with CloudStep {
   final _form = GlobalKey<FormState>();
   final _password = TextEditingController();
   final _word = TextEditingController();
@@ -615,7 +618,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> with _Step {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return _StepScaffold(
+    return StepScaffold(
       title: l10n.accountDeleteTitle,
       busy: busy,
       action: MainActionBar(label: l10n.accountDeleteGo, danger: true, onPressed: busy ? null : _delete),
@@ -663,7 +666,7 @@ class PhonesScreen extends StatefulWidget {
   State<PhonesScreen> createState() => _PhonesScreenState();
 }
 
-class _PhonesScreenState extends State<PhonesScreen> with _Step {
+class _PhonesScreenState extends State<PhonesScreen> with CloudStep {
   final _form = GlobalKey<FormState>();
   final _password = TextEditingController();
   late var _ask = !widget.account.signedIn;
@@ -727,7 +730,7 @@ class _PhonesScreenState extends State<PhonesScreen> with _Step {
     final phones = _phones;
     final asking = phones == null && _ask;
     String day(DateTime at) => showDate(dubaiToday(at));
-    return _StepScaffold(
+    return StepScaffold(
       title: l10n.phonesTitle,
       busy: busy,
       action: asking ? MainActionBar(label: l10n.phonesShow, onPressed: busy ? null : _signIn) : const SizedBox.shrink(),
@@ -774,8 +777,8 @@ class _PhonesScreenState extends State<PhonesScreen> with _Step {
 }
 
 /// The frame every account step shares: the cover's header, a page, and the one action at thumb height.
-class _StepScaffold extends StatelessWidget {
-  const _StepScaffold({required this.title, required this.busy, required this.action, required this.child, this.language = false});
+class StepScaffold extends StatelessWidget {
+  const StepScaffold({required this.title, required this.busy, required this.action, required this.child, this.language = false, super.key});
 
   final String title;
   final bool busy;
