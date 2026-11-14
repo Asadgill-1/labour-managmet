@@ -1263,5 +1263,20 @@
   "planSlipNoFile": "File nahin pohanchi. Slip dobara bhejein.",
   "trialDaysLeft": "{days, plural, =0{Trial aaj khatam ho raha hai} =1{Trial ka 1 din baqi} other{Trial ke {days} din baqi}}",
   "trialNoteBody": "Plan lein taake nayi entries chalti rahein.",
-  "planSoon": "Managers aur cloud backup ({amount} mahana): jald aa raha"
+  "planSoon": "Managers aur cloud backup ({amount} mahana): jald aa raha",
+  "planLockedTitle": "Nayi entry band hai",
+  "planWorkerLimit": "Is plan mein {count} workers hain. Zyada ke liye bara plan lein, ya pehle kisi ko archive karein.",
+  "planClientLimit": "Is plan mein {count} client companies hain. Zyada ke liye bara plan lein, ya pehle kisi ko archive karein.",
+  "planWorkersOver": "Is plan mein {count} workers hain, aap ke {have} active hain. Jab tak aap chun nahin lete, nayi entry ruki hai.",
+  "planClientsOver": "Is plan mein {count} client companies hain, aap ki {have} active hain. Jab tak aap chun nahin lete, nayi entry ruki hai.",
+  "planKeepWorkers": "Kaun se {count} active rahein?",
+  "planKeepClients": "Kaun si {count} companies active rahein?",
+  "planKeepBody": "Jo active rahein un par nishan lagayein. Baqi archive ho jayenge: un ka purana hisaab aur balance waise hi rahega, aur baad mein plan ke andar wapas aa sakte hain.",
+  "planKeepChosen": "{chosen} / {count} chune",
+  "planKeepTooMany": "{count} se zyada nahin chun sakte.",
+  "planKeepGo": "Baqi {rest} archive karein",
+  "planKeepConfirm": "{rest} archive honge. Un ka purana hisaab aur balance waise hi rahega.",
+  "planKeepDone": "{rest} archive ho gaye. Ab nayi entry chal sakti hai.",
+  "planKeepReason": "Plan ki limit",
+  "planKeepOpen": "Chunein"
 }

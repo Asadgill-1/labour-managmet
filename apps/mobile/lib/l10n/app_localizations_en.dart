@@ -4719,6 +4719,74 @@ class AppLocalizationsEn extends AppLocalizations {
   String planSoon(String amount) {
     return 'Managers and cloud backup ($amount a month): coming soon';
   }
+
+  @override
+  String get planLockedTitle => 'New entries are on hold';
+
+  @override
+  String planWorkerLimit(int count) {
+    return 'This plan holds $count workers. Take a bigger plan for more, or archive one first.';
+  }
+
+  @override
+  String planClientLimit(int count) {
+    return 'This plan holds $count client companies. Take a bigger plan for more, or archive one first.';
+  }
+
+  @override
+  String planWorkersOver(int count, int have) {
+    return 'This plan holds $count workers and you have $have active. New entries wait until you choose who stays.';
+  }
+
+  @override
+  String planClientsOver(int count, int have) {
+    return 'This plan holds $count client companies and you have $have active. New entries wait until you choose which stay.';
+  }
+
+  @override
+  String planKeepWorkers(int count) {
+    return 'Which $count stay active?';
+  }
+
+  @override
+  String planKeepClients(int count) {
+    return 'Which $count companies stay active?';
+  }
+
+  @override
+  String get planKeepBody =>
+      'Tick the ones that stay. The rest are archived: their history and balances stay as they are, and you can bring them back later within the plan.';
+
+  @override
+  String planKeepChosen(int chosen, int count) {
+    return '$chosen / $count chosen';
+  }
+
+  @override
+  String planKeepTooMany(int count) {
+    return 'No more than $count can be chosen.';
+  }
+
+  @override
+  String planKeepGo(int rest) {
+    return 'Archive the other $rest';
+  }
+
+  @override
+  String planKeepConfirm(int rest) {
+    return '$rest will be archived. Their history and balances stay as they are.';
+  }
+
+  @override
+  String planKeepDone(int rest) {
+    return '$rest archived. New entries can go on.';
+  }
+
+  @override
+  String get planKeepReason => 'Plan limit';
+
+  @override
+  String get planKeepOpen => 'Choose';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -9211,4 +9279,72 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String planSoon(String amount) {
     return 'Managers aur cloud backup ($amount mahana): jald aa raha';
   }
+
+  @override
+  String get planLockedTitle => 'Nayi entry band hai';
+
+  @override
+  String planWorkerLimit(int count) {
+    return 'Is plan mein $count workers hain. Zyada ke liye bara plan lein, ya pehle kisi ko archive karein.';
+  }
+
+  @override
+  String planClientLimit(int count) {
+    return 'Is plan mein $count client companies hain. Zyada ke liye bara plan lein, ya pehle kisi ko archive karein.';
+  }
+
+  @override
+  String planWorkersOver(int count, int have) {
+    return 'Is plan mein $count workers hain, aap ke $have active hain. Jab tak aap chun nahin lete, nayi entry ruki hai.';
+  }
+
+  @override
+  String planClientsOver(int count, int have) {
+    return 'Is plan mein $count client companies hain, aap ki $have active hain. Jab tak aap chun nahin lete, nayi entry ruki hai.';
+  }
+
+  @override
+  String planKeepWorkers(int count) {
+    return 'Kaun se $count active rahein?';
+  }
+
+  @override
+  String planKeepClients(int count) {
+    return 'Kaun si $count companies active rahein?';
+  }
+
+  @override
+  String get planKeepBody =>
+      'Jo active rahein un par nishan lagayein. Baqi archive ho jayenge: un ka purana hisaab aur balance waise hi rahega, aur baad mein plan ke andar wapas aa sakte hain.';
+
+  @override
+  String planKeepChosen(int chosen, int count) {
+    return '$chosen / $count chune';
+  }
+
+  @override
+  String planKeepTooMany(int count) {
+    return '$count se zyada nahin chun sakte.';
+  }
+
+  @override
+  String planKeepGo(int rest) {
+    return 'Baqi $rest archive karein';
+  }
+
+  @override
+  String planKeepConfirm(int rest) {
+    return '$rest archive honge. Un ka purana hisaab aur balance waise hi rahega.';
+  }
+
+  @override
+  String planKeepDone(int rest) {
+    return '$rest archive ho gaye. Ab nayi entry chal sakti hai.';
+  }
+
+  @override
+  String get planKeepReason => 'Plan ki limit';
+
+  @override
+  String get planKeepOpen => 'Chunein';
 }

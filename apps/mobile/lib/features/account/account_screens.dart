@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> with CloudStep {
     return StepScaffold(
       title: l10n.accountLoginTitle,
       busy: busy,
-      action: MainActionBar(label: l10n.accountLogin, onPressed: busy ? null : _login),
+      action: MainActionBar(free: true, label: l10n.accountLogin, onPressed: busy ? null : _login),
       language: true,
       child: Form(
         key: _form,
@@ -217,7 +217,7 @@ class _SignupScreenState extends State<SignupScreen> with CloudStep {
     return StepScaffold(
       title: l10n.accountSignupTitle,
       busy: busy,
-      action: MainActionBar(label: l10n.accountSignup, onPressed: busy ? null : _signUp),
+      action: MainActionBar(free: true, label: l10n.accountSignup, onPressed: busy ? null : _signUp),
       child: Form(
         key: _form,
         child: AutofillGroup(
@@ -301,7 +301,7 @@ class _CodeScreenState extends State<CodeScreen> with CloudStep {
     return StepScaffold(
       title: widget.code ? l10n.accountCodeTitle : l10n.accountSignupTitle,
       busy: busy,
-      action: MainActionBar(label: widget.recovery ? l10n.accountSetPassword : l10n.accountContinue, onPressed: busy ? null : _continue),
+      action: MainActionBar(free: true, label: widget.recovery ? l10n.accountSetPassword : l10n.accountContinue, onPressed: busy ? null : _continue),
       child: Form(
         key: _form,
         child: FormBody(
@@ -366,7 +366,7 @@ class _CompanyNameScreenState extends State<CompanyNameScreen> with CloudStep {
     return StepScaffold(
       title: l10n.welcomeTitle,
       busy: busy,
-      action: MainActionBar(label: l10n.accountStart, onPressed: busy ? null : _start),
+      action: MainActionBar(free: true, label: l10n.accountStart, onPressed: busy ? null : _start),
       child: Form(
         key: _form,
         child: FormBody(
@@ -441,7 +441,7 @@ class _SetPinScreenState extends State<SetPinScreen> {
     return StepScaffold(
       title: l10n.lockSetTitle,
       busy: false,
-      action: MainActionBar(label: l10n.lockSet, onPressed: _save),
+      action: MainActionBar(free: true, label: l10n.lockSet, onPressed: _save),
       child: Form(
         key: _form,
         child: FormBody(
@@ -535,7 +535,7 @@ class _LockScreenState extends State<LockScreen> {
     return StepScaffold(
       title: l10n.lockTitle,
       busy: false,
-      action: MainActionBar(label: l10n.lockOpen, onPressed: _open),
+      action: MainActionBar(free: true, label: l10n.lockOpen, onPressed: _open),
       child: Form(
         key: _form,
         child: FormBody(
@@ -621,7 +621,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> with CloudSte
     return StepScaffold(
       title: l10n.accountDeleteTitle,
       busy: busy,
-      action: MainActionBar(label: l10n.accountDeleteGo, danger: true, onPressed: busy ? null : _delete),
+      action: MainActionBar(free: true, label: l10n.accountDeleteGo, danger: true, onPressed: busy ? null : _delete),
       child: Form(
         key: _form,
         child: FormBody(
@@ -733,7 +733,7 @@ class _PhonesScreenState extends State<PhonesScreen> with CloudStep {
     return StepScaffold(
       title: l10n.phonesTitle,
       busy: busy,
-      action: asking ? MainActionBar(label: l10n.phonesShow, onPressed: busy ? null : _signIn) : const SizedBox.shrink(),
+      action: asking ? MainActionBar(free: true, label: l10n.phonesShow, onPressed: busy ? null : _signIn) : const SizedBox.shrink(),
       child: Form(
         key: _form,
         child: FormBody(

@@ -160,7 +160,7 @@ class _AttendanceReviewScreenState extends ConsumerState<AttendanceReviewScreen>
       // The operation ID is unchanged, so tapping Save again cannot save twice.
       if (mounted) {
         setState(() => _saving = false);
-        showFormError(context, saveErrorText(l10n, e));
+        showSaveError(context, e);
       }
       return;
     }

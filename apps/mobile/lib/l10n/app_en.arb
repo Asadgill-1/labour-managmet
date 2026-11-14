@@ -2841,5 +2841,106 @@
         "type": "String"
       }
     }
-  }
+  },
+  "planLockedTitle": "New entries are on hold",
+  "planWorkerLimit": "This plan holds {count} workers. Take a bigger plan for more, or archive one first.",
+  "@planWorkerLimit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planClientLimit": "This plan holds {count} client companies. Take a bigger plan for more, or archive one first.",
+  "@planClientLimit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planWorkersOver": "This plan holds {count} workers and you have {have} active. New entries wait until you choose who stays.",
+  "@planWorkersOver": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "have": {
+        "type": "int"
+      }
+    }
+  },
+  "planClientsOver": "This plan holds {count} client companies and you have {have} active. New entries wait until you choose which stay.",
+  "@planClientsOver": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "have": {
+        "type": "int"
+      }
+    }
+  },
+  "planKeepWorkers": "Which {count} stay active?",
+  "@planKeepWorkers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planKeepClients": "Which {count} companies stay active?",
+  "@planKeepClients": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planKeepBody": "Tick the ones that stay. The rest are archived: their history and balances stay as they are, and you can bring them back later within the plan.",
+  "planKeepChosen": "{chosen} / {count} chosen",
+  "@planKeepChosen": {
+    "placeholders": {
+      "chosen": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planKeepTooMany": "No more than {count} can be chosen.",
+  "@planKeepTooMany": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planKeepGo": "Archive the other {rest}",
+  "@planKeepGo": {
+    "placeholders": {
+      "rest": {
+        "type": "int"
+      }
+    }
+  },
+  "planKeepConfirm": "{rest} will be archived. Their history and balances stay as they are.",
+  "@planKeepConfirm": {
+    "placeholders": {
+      "rest": {
+        "type": "int"
+      }
+    }
+  },
+  "planKeepDone": "{rest} archived. New entries can go on.",
+  "@planKeepDone": {
+    "placeholders": {
+      "rest": {
+        "type": "int"
+      }
+    }
+  },
+  "planKeepReason": "Plan limit",
+  "planKeepOpen": "Choose"
 }

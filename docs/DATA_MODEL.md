@@ -46,6 +46,7 @@ No table stores an editable balance. Current balances derive from posted payroll
 | Worker code unique in tenant | `UNIQUE (tenant_id, worker_code)` |
 | Invoice number unique in tenant | `UNIQUE (tenant_id, kind, year, seq)`, null while draft. Credit notes per invoice are limited by its total in the issuing transaction, since v14 dropped the one-credit-note index (D-051) |
 | Duplicate operation rejected | Outbox primary key on `operation_id`, checked by `applyOperation` (D-021) |
+| A write the company's plan does not allow is refused, and leaves nothing | `TenantDatabase.guard`, asked in `applyOperation` inside the transaction, after the retry check; the rule is `planRefusal` in `plan_guard.dart` (T21c, D-074) |
 | Break within shift | `CHECK (break_minutes BETWEEN 0 AND clock_minutes)` |
 | Same work on one current timesheet | Partial unique index on `timesheet_lines (work_key)` where live. `work_key` is the first row of a correction chain, so a corrected row is the same work |
 | Same work not billed twice | Partial unique index on `billed_allocations (work_key)` where not released |

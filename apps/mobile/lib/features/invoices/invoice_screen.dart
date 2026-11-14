@@ -421,7 +421,7 @@ class _InvoiceScreenState extends ConsumerState<InvoiceScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(inv.number ?? l10n.invDraftTitle)),
-      bottomNavigationBar: MainActionBar(label: label, onPressed: _busy ? null : press),
+      bottomNavigationBar: MainActionBar(label: label, free: !isDraft, onPressed: _busy ? null : press),
       body: ListView(children: [...head, ...body, ...foot]),
     );
   }

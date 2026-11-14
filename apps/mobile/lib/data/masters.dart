@@ -46,10 +46,22 @@ extension Masters on TenantDatabase {
 
     var version = 1;
     Facts? before;
+    // What the plan asks of this write (T21c): a row only set aside, a row made active, or any other entry.
+    final written = fields.toColumns(true);
+    final active = switch (written['active']) {
+      Variable<bool>(:final value) => value,
+      _ => null,
+    };
+    var effect = table.columnsByName.containsKey('active') && active != false ? WriteEffect.activates : WriteEffect.entry;
     if (id != null) {
       final existing = (await byId().getSingle()).toJson();
       version = (existing['version'] as int) + 1;
       before = await recordFacts(table.actualTableName, existing);
+      effect = switch (active) {
+        false when written.length == 1 => WriteEffect.archives,
+        true when existing['active'] == false => WriteEffect.activates,
+        _ => WriteEffect.entry,
+      };
     }
     await applyOperation(
       operationId: operationId,
@@ -58,6 +70,7 @@ extension Masters on TenantDatabase {
       version: version,
       action: id == null ? 'create' : 'update',
       reason: reason,
+      effect: effect,
       detail: before == null
           ? null
           : () async => {'from': factsJson(before!), 'to': factsJson((await recordFacts(table.actualTableName, (await byId().getSingle()).toJson()))!)},

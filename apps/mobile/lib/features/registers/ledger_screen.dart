@@ -116,6 +116,7 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
       // Opened from another screen, such as one company's statement, it goes back there.
       appBar: AppBar(leading: Navigator.of(context).canPop() ? const BackButton() : const MenuButton(), title: Text(sectionLabel(l10n, widget.section)), bottom: SubTabs(widget.section)),
       bottomNavigationBar: MainActionBar(
+        free: true,
         label: _busy ? l10n.exportMaking : l10n.regExport,
         onPressed: _busy || data == null || shown.isEmpty ? null : () => _export(data, shown),
       ),

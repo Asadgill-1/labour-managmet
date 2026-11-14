@@ -4,11 +4,14 @@
 // waive: Floor 15 and 16 (CSS stamp, sloplint): this is Flutter, so the stamp sits here and screens are read by eye from golden images.
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/closing.dart';
 import '../data/invoices.dart';
+import '../data/plan_guard.dart';
 import '../data/tenant_database.dart';
 import '../data/timesheets.dart';
+import '../features/plans/plan_lock.dart';
 import '../l10n/app_localizations.dart';
 
 /// The colours a user can choose from in Settings (D-040).
@@ -233,9 +236,10 @@ class BarButton extends StatelessWidget {
   }
 }
 
-/// The screen's one main action, at thumb height (UX-03).
-class MainActionBar extends StatelessWidget {
-  const MainActionBar({required this.label, required this.onPressed, this.danger = false, super.key});
+/// The screen's one main action, at thumb height (UX-03). While the company's plan holds new entries back it carries
+/// a lock, and pressing it says why and what puts it right (T21c).
+class MainActionBar extends ConsumerWidget {
+  const MainActionBar({required this.label, required this.onPressed, this.danger = false, this.free = false, this.adds, super.key});
 
   final String label;
   final VoidCallback? onPressed;
@@ -243,8 +247,16 @@ class MainActionBar extends StatelessWidget {
   /// The action cannot be undone, such as deleting the account.
   final bool danger;
 
+  /// Works whatever the plan: the company's own details, papers and exports of what is entered, backup, restore and
+  /// the account (PLAN-03, PLAN-06).
+  final bool free;
+
+  /// The table this action adds an active row to, where the plan counts them: `workers` or `clients`.
+  final String? adds;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final block = free ? null : planBlock(ref, entity: adds ?? '', effect: adds == null ? WriteEffect.entry : WriteEffect.activates);
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: paper,
@@ -258,9 +270,11 @@ class MainActionBar extends StatelessWidget {
           child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: _corner10,
-              boxShadow: [if (onPressed != null) BoxShadow(color: danger ? dueRim : _palette.rim, offset: const Offset(0, 3))],
+              boxShadow: [if (onPressed != null || block != null) BoxShadow(color: danger ? dueRim : _palette.rim, offset: const Offset(0, 3))],
             ),
-            child: FilledButton(style: danger ? FilledButton.styleFrom(backgroundColor: due) : null, onPressed: onPressed, child: Text(label)),
+            child: block == null
+                ? FilledButton(style: danger ? FilledButton.styleFrom(backgroundColor: due) : null, onPressed: onPressed, child: Text(label))
+                : FilledButton.icon(onPressed: () => showPlanBlock(context, block), icon: const Icon(Icons.lock_outline), label: Text(label)),
           ),
         ),
       ),
@@ -306,13 +320,21 @@ void showSavedOnPhone(BuildContext context, String message) {
 /// Runs a save and says so plainly if it fails, so a failed write is never silent (UX-07).
 /// The caller keeps its operation ID, so trying again cannot apply twice.
 Future<bool> saveOrExplain(BuildContext context, Future<void> Function() work) async {
-  final l10n = AppLocalizations.of(context);
   try {
     await work();
     return true;
   } catch (e) {
-    if (context.mounted) showFormError(context, saveErrorText(l10n, e));
+    if (context.mounted) showSaveError(context, e);
     return false;
+  }
+}
+
+/// Says why a save failed. The plan's refusal comes with the step that puts it right (T21c).
+void showSaveError(BuildContext context, Object error) {
+  if (error is PlanRefused) {
+    showPlanBlock(context, error);
+  } else {
+    showFormError(context, saveErrorText(AppLocalizations.of(context), error));
   }
 }
 

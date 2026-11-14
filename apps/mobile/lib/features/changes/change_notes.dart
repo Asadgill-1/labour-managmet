@@ -289,7 +289,7 @@ Future<bool> deleteOrArchive(
     if (context.mounted) showSavedOnPhone(context, l10n.archivedDone);
     return true;
   } catch (e) {
-    if (context.mounted) showFormError(context, saveErrorText(l10n, e));
+    if (context.mounted) showSaveError(context, e);
     return false;
   }
   if (context.mounted) showSavedOnPhone(context, l10n.deletedDone);

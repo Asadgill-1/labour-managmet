@@ -48,6 +48,10 @@ class FakeCloud {
   DateTime licenceEnds = DateTime.now().toUtc().add(const Duration(days: 15));
   String? licenceRefusal;
 
+  /// The plan's numbers of active workers and client companies. Null is unlimited, as in the trial.
+  int? licenceWorkers;
+  int? licenceClients;
+
   /// The kept session's refresh token is no longer taken.
   bool refreshRefused = false;
 
@@ -214,7 +218,7 @@ class FakeCloud {
           'plan': none ? null : licenceState, 'plan_version': none ? null : 1, 'plan_name': none ? null : licencePlan,
           'starts_at': none ? null : now.toIso8601String(), 'ends_at': licenceEnds.toIso8601String(),
           'lease_until': (none || lease.isBefore(licenceEnds) ? lease : licenceEnds).toIso8601String(),
-          'limits': {'workers': none ? 0 : null, 'clients': none ? 0 : null, 'managers': none ? 0 : null, 'devices': 1},
+          'limits': {'workers': none ? 0 : licenceWorkers, 'clients': none ? 0 : licenceClients, 'managers': none ? 0 : null, 'devices': 1},
         };
         final bytes = utf8.encode(jsonEncode(facts));
         final key = await Ed25519().newKeyPairFromSeed(List.filled(32, 7));

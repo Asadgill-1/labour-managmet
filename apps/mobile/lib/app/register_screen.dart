@@ -31,6 +31,7 @@ class RegisterScreen extends StatefulWidget {
     required this.addLabel,
     required this.onAdd,
     this.onImport,
+    this.adds,
     super.key,
   });
 
@@ -44,6 +45,9 @@ class RegisterScreen extends StatefulWidget {
 
   /// Brings many rows in from a file, beside adding one by hand (MASTER-08).
   final VoidCallback? onImport;
+
+  /// The table a new row goes to, where the company's plan counts them (T21c).
+  final String? adds;
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -65,7 +69,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         bottom: SubTabs(widget.section),
         actions: [BarButton(_showArchived ? l10n.showActive : l10n.showArchived, onPressed: () => setState(() => _showArchived = !_showArchived))],
       ),
-      bottomNavigationBar: MainActionBar(label: widget.addLabel, onPressed: widget.onAdd),
+      bottomNavigationBar: MainActionBar(label: widget.addLabel, adds: widget.adds, onPressed: widget.onAdd),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

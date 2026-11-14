@@ -36,7 +36,7 @@ class PayrollWorkerScreen extends ConsumerWidget {
     } on LaterMonthPosted {
       if (context.mounted) showFormError(context, l10n.payrollUndoLater);
     } catch (e) {
-      if (context.mounted) showFormError(context, saveErrorText(l10n, e));
+      if (context.mounted) showSaveError(context, e);
     }
   }
 

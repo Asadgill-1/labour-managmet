@@ -93,7 +93,7 @@ class CashEntryRow extends ConsumerWidget {
     } on VisaTooHigh {
       if (context.mounted) showFormError(context, l10n.visaUndoBlocked);
     } catch (e) {
-      if (context.mounted) showFormError(context, saveErrorText(l10n, e));
+      if (context.mounted) showSaveError(context, e);
     }
   }
 

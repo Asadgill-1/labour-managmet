@@ -7962,6 +7962,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Managers and cloud backup ({amount} a month): coming soon'**
   String planSoon(String amount);
+
+  /// No description provided for @planLockedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New entries are on hold'**
+  String get planLockedTitle;
+
+  /// No description provided for @planWorkerLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'This plan holds {count} workers. Take a bigger plan for more, or archive one first.'**
+  String planWorkerLimit(int count);
+
+  /// No description provided for @planClientLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'This plan holds {count} client companies. Take a bigger plan for more, or archive one first.'**
+  String planClientLimit(int count);
+
+  /// No description provided for @planWorkersOver.
+  ///
+  /// In en, this message translates to:
+  /// **'This plan holds {count} workers and you have {have} active. New entries wait until you choose who stays.'**
+  String planWorkersOver(int count, int have);
+
+  /// No description provided for @planClientsOver.
+  ///
+  /// In en, this message translates to:
+  /// **'This plan holds {count} client companies and you have {have} active. New entries wait until you choose which stay.'**
+  String planClientsOver(int count, int have);
+
+  /// No description provided for @planKeepWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Which {count} stay active?'**
+  String planKeepWorkers(int count);
+
+  /// No description provided for @planKeepClients.
+  ///
+  /// In en, this message translates to:
+  /// **'Which {count} companies stay active?'**
+  String planKeepClients(int count);
+
+  /// No description provided for @planKeepBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick the ones that stay. The rest are archived: their history and balances stay as they are, and you can bring them back later within the plan.'**
+  String get planKeepBody;
+
+  /// No description provided for @planKeepChosen.
+  ///
+  /// In en, this message translates to:
+  /// **'{chosen} / {count} chosen'**
+  String planKeepChosen(int chosen, int count);
+
+  /// No description provided for @planKeepTooMany.
+  ///
+  /// In en, this message translates to:
+  /// **'No more than {count} can be chosen.'**
+  String planKeepTooMany(int count);
+
+  /// No description provided for @planKeepGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive the other {rest}'**
+  String planKeepGo(int rest);
+
+  /// No description provided for @planKeepConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'{rest} will be archived. Their history and balances stay as they are.'**
+  String planKeepConfirm(int rest);
+
+  /// No description provided for @planKeepDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{rest} archived. New entries can go on.'**
+  String planKeepDone(int rest);
+
+  /// No description provided for @planKeepReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan limit'**
+  String get planKeepReason;
+
+  /// No description provided for @planKeepOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose'**
+  String get planKeepOpen;
 }
 
 class _AppLocalizationsDelegate

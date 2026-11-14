@@ -76,7 +76,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
     final firstRun = widget.profile == null;
     return Scaffold(
       appBar: AppBar(title: Text(firstRun ? l10n.welcomeTitle : l10n.myCompany)),
-      bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _save),
+      bottomNavigationBar: MainActionBar(free: true, label: l10n.save, onPressed: _save),
       body: Column(
         children: [
           // A company opened on a phone without its data: the old phone's backup can come back first (DATA-06).

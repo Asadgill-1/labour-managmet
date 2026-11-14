@@ -377,15 +377,15 @@ class _RestoreScreenState extends ConsumerState<RestoreScreen> {
     final Widget? action;
     if (ready != null && ready.keep && _backedUp == null) {
       // The main button is always the next step: the data here goes to a backup before any comes in (D-071).
-      action = MainActionBar(label: l10n.backupSave, onPressed: _busy ? null : () => _backUpHere(send: false));
+      action = MainActionBar(free: true, label: l10n.backupSave, onPressed: _busy ? null : () => _backUpHere(send: false));
     } else if (ready != null) {
-      action = MainActionBar(label: widget.kept ? l10n.restoreBringKept : l10n.restoreBring, onPressed: _busy ? null : _restore);
+      action = MainActionBar(free: true, label: widget.kept ? l10n.restoreBringKept : l10n.restoreBring, onPressed: _busy ? null : _restore);
     } else if (widget.kept) {
       action = null;
     } else {
       action = _askPassword
-          ? MainActionBar(label: l10n.restoreOpen, onPressed: _busy ? null : _typedPassword)
-          : MainActionBar(label: l10n.restorePick, onPressed: _busy ? null : _pick);
+          ? MainActionBar(free: true, label: l10n.restoreOpen, onPressed: _busy ? null : _typedPassword)
+          : MainActionBar(free: true, label: l10n.restorePick, onPressed: _busy ? null : _pick);
     }
     return Scaffold(
       appBar: AppBar(
@@ -422,7 +422,7 @@ class SwapScreen extends StatelessWidget {
     final done = stage == SwapStage.done;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.backupRestore), automaticallyImplyLeading: false),
-      bottomNavigationBar: stage == SwapStage.working ? null : MainActionBar(label: l10n.accountContinue, onPressed: onDone),
+      bottomNavigationBar: stage == SwapStage.working ? null : MainActionBar(free: true, label: l10n.accountContinue, onPressed: onDone),
       body: stage == SwapStage.working
           ? Center(
               child: Padding(

@@ -105,8 +105,8 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
       bottomNavigationBar: hasPassword == null
           ? null
           : setting
-          ? MainActionBar(label: l10n.backupPasswordKeep, onPressed: _keepPassword)
-          : MainActionBar(label: l10n.backupSave, onPressed: _busy ? null : () => _make(send: false)),
+          ? MainActionBar(free: true, label: l10n.backupPasswordKeep, onPressed: _keepPassword)
+          : MainActionBar(free: true, label: l10n.backupSave, onPressed: _busy ? null : () => _make(send: false)),
       body: Column(
         children: [
           // What no login brings back, before anything else on the page (DATA-03).

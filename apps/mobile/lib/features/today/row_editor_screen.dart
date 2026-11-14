@@ -37,7 +37,7 @@ Future<void> openAttendanceRow(BuildContext context, WidgetRef ref, AttendanceEn
   } on AttendanceInvalid {
     if (context.mounted) showFormError(context, l10n.rowsNeedFix);
   } catch (e) {
-    if (context.mounted) showFormError(context, saveErrorText(l10n, e));
+    if (context.mounted) showSaveError(context, e);
   }
 }
 

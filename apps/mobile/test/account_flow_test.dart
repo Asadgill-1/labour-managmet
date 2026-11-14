@@ -11,10 +11,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/app/app.dart';
 import 'package:labour_app/app/root.dart';
 import 'package:labour_app/app/settings.dart';
+import 'package:labour_app/app/theme.dart';
 import 'package:labour_app/data/account.dart';
 import 'package:labour_app/data/masters.dart';
+import 'package:labour_app/data/plan_guard.dart';
 import 'package:labour_app/data/tenant_database.dart';
+import 'package:labour_app/features/account/account_screens.dart';
+import 'package:labour_app/features/labour/worker_form_screen.dart';
 import 'package:labour_app/features/registers/register_export.dart';
+import 'package:labour_app/features/today/attendance_entry_screen.dart';
 
 import 'cloud_fake.dart';
 import 'support.dart';
@@ -532,6 +537,10 @@ void main() {
       }
     }
 
+    /// The lock a main action carries while the plan holds new entries back (T21c).
+    final lockShown = find.descendant(of: find.byType(MainActionBar), matching: find.byIcon(Icons.lock_outline));
+    Finder inDialog(Finder what) => find.descendant(of: find.byType(AlertDialog), matching: what);
+
     /// A message at the foot of the page covers the buttons there until it goes.
     Future<void> snackGone(WidgetTester tester) async {
       await tester.pump(const Duration(seconds: 6));
@@ -664,7 +673,175 @@ expect(find.text('Small Company Plan'), findsOneWidget);
     testWidgets('a trial with more than 5 days left shows no note', (tester) async {
       await loggedIn(tester);
       expect(find.textContaining('din baqi'), findsNothing);
+      expect(find.text('Nayi entry band hai'), findsNothing);
+      expect(lockShown, findsNothing);
       await shutDown(tester, opened.single);
+    });
+
+    testWidgets('with the trial over the home page says so, entry buttons carry a lock that leads to Plan lein, and nothing is written (T21c)', (tester) async {
+      cloud.licenceEnds = DateTime.now().toUtc().subtract(const Duration(hours: 1));
+      await loggedIn(tester);
+      final db = opened.single;
+      final profile = await real(tester, () => db.select(db.tenantProfiles).getSingle());
+      expect(profile.legalName, 'Al Noor Labour Supply', reason: 'the company\'s own details save whatever the plan');
+      expect(find.text('Nayi entry band hai'), findsOneWidget);
+      expect(find.textContaining('Plan khatam ho gaya.'), findsOneWidget);
+      expect(find.textContaining('din baqi'), findsNothing);
+      expect(lockShown, findsOneWidget);
+
+      await tapAndSettle(tester, find.text('Hazri lagayein'));
+      expect(find.byType(AttendanceEntryScreen), findsNothing);
+      expect(inDialog(find.textContaining('Plan khatam ho gaya.')), findsOneWidget, reason: 'the lock says why');
+      await tapAndSettle(tester, inDialog(find.text('Wapas')));
+
+      await goTo(tester, 'Labour');
+      expect(lockShown, findsOneWidget);
+      await tapAndSettle(tester, find.text('Mazdoor add karein'));
+      await tapAndSettle(tester, inDialog(find.text('Plan lein')));
+      await until(tester, find.text('Small Company Plan'));
+      expect(find.text('Small Company Plan'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('Slip chunein'), 150, scrollable: find.byType(Scrollable).hitTestable().first);
+      expect(find.text('Slip bhejein'), findsOneWidget);
+      expect(lockShown, findsNothing, reason: 'paying is never locked');
+
+      // Whatever a screen does, the write path itself refuses.
+      Object? refused;
+      await tester.runAsync(() async {
+        try {
+          await db.saveRow(db.workers, id: null, operationId: newUuid(), fields: const WorkersCompanion(code: Value('W1'), name: Value('Karim')));
+        } catch (e) {
+          refused = e;
+        }
+      });
+      expect(refused, isA<PlanRefused>().having((e) => e.block, 'block', PlanBlock.ended));
+      expect(await real(tester, () => db.select(db.workers).get()), isEmpty);
+      await shutDown(tester, db);
+    });
+
+    testWidgets('on Small the 16th worker is refused from the list with the number, and so is bringing one back from the archive (T21c)', (tester) async {
+      cloud
+        ..licenceState = 'paid'
+        ..licencePlan = 'Small Company Plan'
+        ..licenceWorkers = 15
+        ..licenceClients = 5;
+      await loggedIn(tester);
+      final db = opened.single;
+      // One transaction: the open pages' lists read again only once all are in.
+      await real(tester, () {
+        return db.transaction(() async {
+          for (var n = 1; n <= 15; n++) {
+            await db.saveRow(db.workers, id: null, operationId: newUuid(), fields: WorkersCompanion(code: Value('W$n'), name: Value('Worker $n')));
+          }
+          await db.saveRow(db.workers, id: null, operationId: newUuid(), fields: const WorkersCompanion(code: Value('W99'), name: Value('Old hand'), active: Value(false)));
+        });
+      });
+      await settle(tester);
+      expect(find.text('Nayi entry band hai'), findsNothing);
+      expect(lockShown, findsNothing, reason: 'at the limit the day\'s work goes on');
+
+      await goTo(tester, 'Labour');
+      expect(lockShown, findsOneWidget);
+      await tapAndSettle(tester, find.text('Mazdoor add karein'));
+      expect(find.byType(WorkerFormScreen), findsNothing);
+      expect(inDialog(find.textContaining('Is plan mein 15 workers hain.')), findsOneWidget);
+      expect(inDialog(find.text('Plan lein')), findsOneWidget);
+      await tapAndSettle(tester, inDialog(find.text('Wapas')));
+
+      await tapAndSettle(tester, find.text('Archived dikhayein'));
+      await tapAndSettle(tester, find.text('Old hand'));
+      await tapAndSettle(tester, find.text('Dobara active karein'));
+      expect(inDialog(find.textContaining('Is plan mein 15 workers hain.')), findsOneWidget);
+      await tapAndSettle(tester, inDialog(find.text('Wapas')));
+      final old = await real(tester, () => (db.select(db.workers)..where((w) => w.code.equals('W99'))).getSingle());
+      expect(old.active, isFalse);
+      await shutDown(tester, db);
+    });
+
+    testWidgets('a company over its plan picks who stays active; the rest are archived and entries go on (PLAN-04)', (tester) async {
+      cloud
+        ..licenceState = 'paid'
+        ..licencePlan = 'Small Company Plan'
+        ..licenceWorkers = 2
+        ..licenceClients = 5;
+      await loggedIn(tester);
+      final db = opened.single;
+      await real(tester, () async {
+        // As a trial that ended left them: more workers than the plan now holds.
+        final guard = db.guard;
+        db.guard = null;
+        await db.transaction(() async {
+          for (final (n, name) in ['Asif', 'Bilal', 'Karim', 'Danish'].indexed) {
+            await db.saveRow(db.workers, id: null, operationId: newUuid(), fields: WorkersCompanion(code: Value('W${n + 1}'), name: Value(name)));
+          }
+        });
+        db.guard = guard;
+      });
+      await settle(tester);
+      expect(find.text('Kaun se 2 active rahein?'), findsOneWidget);
+      expect(find.textContaining('aap ke 4 active hain'), findsOneWidget);
+      expect(lockShown, findsOneWidget, reason: 'new entries wait until the choice is made');
+
+      await tapAndSettle(tester, find.text('Kaun se 2 active rahein?'));
+      expect(find.text('0 / 2 chune'), findsOneWidget);
+      await tapAndSettle(tester, find.text('Asif'));
+      await tapAndSettle(tester, find.text('Karim'));
+      await tapAndSettle(tester, find.text('Danish'));
+      expect(find.text('2 se zyada nahin chun sakte.'), findsOneWidget);
+      await snackGone(tester);
+      expect(find.text('2 / 2 chune'), findsOneWidget);
+      await tapAndSettle(tester, find.text('Baqi 2 archive karein'));
+      await tapAndSettle(tester, inDialog(find.text('Archive karein')));
+      await settle(tester);
+
+      final workers = await real(tester, () => db.select(db.workers).get());
+      expect(workers, hasLength(4), reason: 'nobody is deleted');
+      expect({for (final w in workers.where((w) => w.active)) w.name}, {'Asif', 'Karim'});
+      await snackGone(tester);
+      expect(find.text('Kaun se 2 active rahein?'), findsNothing, reason: 'back on the home page with nothing left to choose');
+      expect(lockShown, findsNothing);
+      await shutDown(tester, db);
+    });
+
+    testWidgets('with no session kept, entries wait; Check now from the lock takes the password and opens them (T21c)', (tester) async {
+      final (db, _) = await restartedPhone(tester);
+      await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+      await tapAndSettle(tester, find.text('Save karein'));
+      expect(find.text('Nayi entry band hai'), findsOneWidget);
+      expect(find.text('Plan check karne ke liye password se dobara login karein.'), findsOneWidget);
+      await tapAndSettle(tester, find.text('Hazri lagayein'));
+      await tapAndSettle(tester, inDialog(find.text('Abhi check karein')));
+      await tester.enterText(inDialog(find.byType(TextFormField)), 'pass1234');
+      await tapAndSettle(tester, inDialog(find.text('Abhi check karein')));
+      await until(tester, find.text('Plan check ho gaya'));
+      await settle(tester);
+      expect(find.text('Nayi entry band hai'), findsNothing);
+      expect(lockShown, findsNothing);
+      await shutDown(tester, db);
+    });
+
+    testWidgets('with another phone on, the lock leads to the phones page (T21c)', (tester) async {
+      cloud
+        ..addUser('owner@test.ae', 'pass1234', company: testTenant)
+        ..licenceRefusal = 'other_phone';
+      const storage = FlutterSecureStorage();
+      final userId = cloud.users['owner@test.ae']!.id;
+      await real(tester, () async {
+        final before = cloud.account(storage);
+        await before.signIn('owner@test.ae', 'pass1234');
+        await before.openCompany();
+        await Future<void>.delayed(Duration.zero);
+      });
+      final db = TenantDatabase(NativeDatabase.memory(), tenantId: testTenant, deviceId: 'device-1', actorId: userId);
+      await pumpRoot(tester, bound: (db: db, binding: (tenantId: testTenant, userId: userId, email: 'owner@test.ae')));
+      await settle(tester);
+      await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+      await tapAndSettle(tester, find.text('Save karein'));
+      expect(find.text('Nayi entry band hai'), findsOneWidget);
+      await tapAndSettle(tester, find.text('Hazri lagayein'));
+      expect(inDialog(find.text('Is account par ek aur phone chal raha hai. Purana phone band karein.')), findsOneWidget);
+      await tapAndSettle(tester, inDialog(find.text('Purana phone band karein')));
+      expect(find.byType(PhonesScreen), findsOneWidget);
+      await shutDown(tester, db);
     });
   });
 }

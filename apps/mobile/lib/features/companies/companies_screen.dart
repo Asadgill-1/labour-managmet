@@ -26,6 +26,7 @@ class CompaniesScreen extends ConsumerWidget {
       emptyIcon: Icons.apartment,
       emptyText: l10n.companiesEmpty,
       addLabel: l10n.addClient,
+      adds: 'clients',
       onAdd: () => open(const ClientFormScreen()),
       onImport: () => open(const ImportScreen(ImportKind.companies)),
       rows: [

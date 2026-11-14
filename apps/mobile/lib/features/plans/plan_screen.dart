@@ -135,9 +135,9 @@ class _PlanScreenState extends ConsumerState<PlanScreen> with CloudStep {
       title: l10n.planTake,
       busy: busy,
       action: _ask
-          ? MainActionBar(label: l10n.planShowPlans, onPressed: busy ? null : _signIn)
+          ? MainActionBar(free: true, label: l10n.planShowPlans, onPressed: busy ? null : _signIn)
           : ready
-          ? MainActionBar(label: l10n.planSend, onPressed: busy ? null : _send)
+          ? MainActionBar(free: true, label: l10n.planSend, onPressed: busy ? null : _send)
           : const SizedBox.shrink(),
       child: Form(
         key: _form,
@@ -348,22 +348,9 @@ class _PlanStatusSectionState extends ConsumerState<PlanStatusSection> {
   var _checking = false;
 
   Future<void> _check(Licensing licensing, Account account) async {
-    final l10n = AppLocalizations.of(context);
     setState(() => _checking = true);
     try {
-      await licensing.refresh();
-      if (licensing.view.problem == AccountProblem.signedOut && mounted) {
-        final password = await _askPassword(context);
-        if (password == null) return;
-        try {
-          await account.signInAgain(password);
-        } on AccountRefused catch (e) {
-          if (mounted) showFormError(context, accountProblemText(l10n, e));
-          return;
-        }
-        await licensing.refresh();
-      }
-      if (licensing.view.problem == null && mounted) showSavedOnPhone(context, l10n.planChecked);
+      await checkPlanNow(context, licensing, account);
     } finally {
       if (mounted) setState(() => _checking = false);
     }
@@ -384,7 +371,7 @@ class _PlanStatusSectionState extends ConsumerState<PlanStatusSection> {
       if (ends != null) now.isBefore(ends) ? l10n.planEnds(_day(ends)) : l10n.planEndedOn(_day(ends)),
       if (licence != null) ...[l10n.planLastCheck(_day(licence.issuedAt)), l10n.planNextCheck(_day(licence.leaseUntil))],
     ];
-    final warning = view == null ? null : _warning(l10n, view);
+    final warning = view == null ? null : planWarning(l10n, view);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -425,17 +412,45 @@ class _PlanStatusSectionState extends ConsumerState<PlanStatusSection> {
     );
   }
 
-  String? _warning(AppLocalizations l10n, LicenceView view) {
-    if (view.problem case final problem?) {
-      return problem == AccountProblem.offline ? l10n.planCheckOffline : accountProblemText(l10n, AccountRefused(problem));
+}
+
+/// What is wrong with the plan on this phone, in words: why the last check failed, or what its state stops. Null when
+/// nothing is.
+String? planWarning(AppLocalizations l10n, LicenceView view) {
+  if (view.problem case final problem?) {
+    return problem == AccountProblem.offline ? l10n.planCheckOffline : accountProblemText(l10n, AccountRefused(problem));
+  }
+  return switch (view.status) {
+    LicenceStatus.active => null,
+    LicenceStatus.none => l10n.planNotChecked,
+    LicenceStatus.ended => l10n.planEndedNote,
+    LicenceStatus.leaseOver => l10n.planLeaseOver,
+    LicenceStatus.clockBack => l10n.planClockBack,
+  };
+}
+
+/// Checks the plan online now and says how it went. When the cloud no longer takes the session kept on the phone, the
+/// password is asked first.
+Future<void> checkPlanNow(BuildContext context, Licensing licensing, Account account) async {
+  final l10n = AppLocalizations.of(context);
+  await licensing.refresh();
+  if (licensing.view.problem == AccountProblem.signedOut && context.mounted) {
+    final password = await _askPassword(context);
+    if (password == null) return;
+    try {
+      await account.signInAgain(password);
+    } on AccountRefused catch (e) {
+      if (context.mounted) showFormError(context, accountProblemText(l10n, e));
+      return;
     }
-    return switch (view.status) {
-      LicenceStatus.active => null,
-      LicenceStatus.none => l10n.planNotChecked,
-      LicenceStatus.ended => l10n.planEndedNote,
-      LicenceStatus.leaseOver => l10n.planLeaseOver,
-      LicenceStatus.clockBack => l10n.planClockBack,
-    };
+    await licensing.refresh();
+  }
+  if (!context.mounted) return;
+  final view = licensing.view;
+  if (view.problem == null) {
+    showSavedOnPhone(context, l10n.planChecked);
+  } else {
+    showFormError(context, planWarning(l10n, view)!);
   }
 }
 

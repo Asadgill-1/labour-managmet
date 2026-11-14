@@ -82,7 +82,7 @@ class LetterheadScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(leading: const MenuButton(), title: Text(l10n.lhTab), bottom: const SubTabs(Section.letterhead)),
-      bottomNavigationBar: MainActionBar(label: l10n.lhSample, onPressed: () => _sample(context, ref)),
+      bottomNavigationBar: MainActionBar(free: true, label: l10n.lhSample, onPressed: () => _sample(context, ref)),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 16),
         children: [
@@ -217,7 +217,7 @@ class _ImageBlockState extends ConsumerState<_ImageBlock> {
       await db.saveDocumentImage(widget.kind, bytes, operationId: newUuid());
       if (mounted) showSavedOnPhone(context, l10n.savedOnPhone);
     } catch (e) {
-      if (mounted) showFormError(context, saveErrorText(l10n, e));
+      if (mounted) showSaveError(context, e);
     }
   }
 

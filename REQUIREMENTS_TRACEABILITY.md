@@ -89,16 +89,16 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | REP-08 | 11 | Ledger design | T11, T12a, T18b | IMPLEMENTED_UNVERIFIED | TC-036, TC-051, TC-055, TC-114, TC-115 | `apps/mobile/test/payroll_test.dart`, `apps/mobile/test/cash_test.dart` |
 | PLAN-01 | 12 | Trial 14 din; Team feature trial owner ki clear | T24 | NOT_STARTED | - | - |
 | PLAN-02 | 12 | Manager trial end par paid Team entitlement na ho | T24 | NOT_STARTED | - | - |
-| PLAN-03 | 12 | Expiry par data delete, hidden balance ya mandatory ransom | T21 | NOT_STARTED | TC-012 | - |
-| PLAN-04 | 12 | Active worker count ko payroll history se alag karein | T21 | IN_PROGRESS | TC-176 | `supabase/tests/database/licence.test.sql`, CI run 43042072782 |
+| PLAN-03 | 12 | Expiry par data delete, hidden balance ya mandatory ransom | T21 | IMPLEMENTED_UNVERIFIED | TC-012, TC-183, TC-185, TC-186, TC-188, TC-189 | `apps/mobile/test/plan_guard_test.dart`, `apps/mobile/test/account_flow_test.dart` |
+| PLAN-04 | 12 | Active worker count ko payroll history se alag karein | T21 | IMPLEMENTED_UNVERIFIED | TC-176, TC-185, TC-187, TC-188, TC-189 | `supabase/tests/database/licence.test.sql`, CI run 43042072782; `apps/mobile/test/plan_guard_test.dart`, `apps/mobile/test/account_flow_test.dart` |
 | PLAN-05 | 12 | Optional annual Solo AED 490 / Team AED 990 | T24 | NOT_STARTED | - | - |
-| PLAN-06 | 12 | Paid upgrade ka sabab real value ho: zyada workers/clients | T21 | IN_PROGRESS | TC-175 | `supabase/tests/database/plans.test.sql`, CI run 43042072782 |
+| PLAN-06 | 12 | Paid upgrade ka sabab real value ho: zyada workers/clients | T21 | IMPLEMENTED_UNVERIFIED | TC-175, TC-185, TC-186, TC-188 | `supabase/tests/database/plans.test.sql`, CI run 43042072782; `apps/mobile/test/plan_guard_test.dart`, `apps/mobile/test/account_flow_test.dart` |
 | BILL-01 | 13 | Manual start | T21, T22 | IN_PROGRESS | TC-177, TC-182 | `supabase/tests/database/slips.test.sql`, CI run 43042072782; `apps/mobile/test/plans_test.dart` |
-| BILL-02 | 13 | Activation | T21 | IN_PROGRESS | TC-176, TC-177, TC-178, TC-179, TC-182, TC-184 | `supabase/tests/database/licence.test.sql`, `supabase/tests/database/slips.test.sql`, `supabase/functions/licence/sign_test.ts`, CI run 43042072782; `apps/mobile/test/plans_test.dart` |
-| BILL-03 | 13 | Safer design | T21 | IN_PROGRESS | TC-047, TC-176, TC-178, TC-179, TC-180 | `supabase/tests/database/licence.test.sql`, `supabase/functions/licence/sign_test.ts`, CI run 43042072782; `apps/mobile/test/licence_test.dart` |
+| BILL-02 | 13 | Activation | T21 | IMPLEMENTED_UNVERIFIED | TC-176, TC-177, TC-178, TC-179, TC-182, TC-184 | `supabase/tests/database/licence.test.sql`, `supabase/tests/database/slips.test.sql`, `supabase/functions/licence/sign_test.ts`, CI run 43042072782; `apps/mobile/test/plans_test.dart` |
+| BILL-03 | 13 | Safer design | T21 | IMPLEMENTED_UNVERIFIED | TC-047, TC-176, TC-178, TC-179, TC-180, TC-186 | `supabase/tests/database/licence.test.sql`, `supabase/functions/licence/sign_test.ts`, CI run 43042072782; `apps/mobile/test/licence_test.dart`, `apps/mobile/test/plan_guard_test.dart` |
 | BILL-04 | 13 | Renewals | T21, T22 | IN_PROGRESS | TC-175, TC-177 | `supabase/tests/database/plans.test.sql`, `supabase/tests/database/slips.test.sql`, CI run 43042072782 |
-| BILL-05 | 13 | Offline | T21 | IN_PROGRESS | TC-047, TC-176, TC-180, TC-181, TC-183, TC-184 | `supabase/tests/database/licence.test.sql`, CI run 43042072782; `apps/mobile/test/licence_test.dart`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart` |
-| BILL-06 | 13 | Tampering | T21 | IN_PROGRESS | TC-176, TC-180 | `supabase/tests/database/licence.test.sql`, CI run 43042072782; `apps/mobile/test/licence_test.dart` |
+| BILL-05 | 13 | Offline | T21 | IMPLEMENTED_UNVERIFIED | TC-047, TC-176, TC-180, TC-181, TC-183, TC-184, TC-185, TC-186, TC-188 | `supabase/tests/database/licence.test.sql`, CI run 43042072782; `apps/mobile/test/licence_test.dart`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `apps/mobile/test/plan_guard_test.dart` |
+| BILL-06 | 13 | Tampering | T21 | IMPLEMENTED_UNVERIFIED | TC-176, TC-180, TC-185 | `supabase/tests/database/licence.test.sql`, CI run 43042072782; `apps/mobile/test/licence_test.dart`, `apps/mobile/test/plan_guard_test.dart` |
 | BILL-07 | 13 | Play Store policy | T26 | NOT_STARTED | - | - |
 | BILL-08 | 13 | Distribution decision | T26 | NOT_STARTED | - | - |
 | BILL-09 | 13 | Business licensing, invoice/tax treatment aur receiving bank-account permissions user | T26 | NOT_STARTED | - | - |

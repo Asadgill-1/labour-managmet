@@ -25,6 +25,7 @@ class LabourScreen extends ConsumerWidget {
       emptyIcon: Icons.groups,
       emptyText: l10n.labourEmpty,
       addLabel: l10n.addWorker,
+      adds: 'workers',
       onAdd: () => open(const WorkerFormScreen()),
       onImport: () => open(const ImportScreen(ImportKind.workers)),
       rows: [

@@ -25,6 +25,20 @@ class PeriodLocked implements Exception {
 /// [through] is the last day of the latest closed month, from [TenantDatabase.lockedThrough].
 bool isClosed(String date, String? through) => through != null && date.compareTo(through) <= 0;
 
+/// What a write does that the company's plan cares about (T21c). Most writes are entries.
+enum WriteEffect {
+  entry,
+
+  /// Only sets a row aside, which a plan that ended still allows (PLAN-03).
+  archives,
+
+  /// Makes a row active: a new one, or one brought back from the archive.
+  activates,
+}
+
+/// Asked at the single write path before each write that is not a retry. Throws to refuse it (T21c).
+typedef WriteGuard = Future<void> Function(String entity, WriteEffect effect);
+
 /// Who writes rows in a build without accounts. A signed-in device writes the user's ID instead (T19b).
 const localOwner = 'local-owner';
 
@@ -80,6 +94,10 @@ class TenantDatabase extends _$TenantDatabase {
   final String tenantId;
   final String deviceId;
   final String actorId;
+
+  /// The company's plan, set by whoever opened the company with an account. Null in a build without accounts, which
+  /// has no plans (D-074).
+  WriteGuard? guard;
 
   @override
   int get schemaVersion => 19;
@@ -281,7 +299,8 @@ class TenantDatabase extends _$TenantDatabase {
 
   /// The single write path. Runs [change] with its audit event and outbox row in one transaction,
   /// once per [operationId], so a retry after a crash or double tap changes nothing (TEAM-04, UX-07).
-  /// [change] returns the stored record, which becomes the outbox payload.
+  /// [change] returns the stored record, which becomes the outbox payload. The company's plan is asked here and
+  /// nowhere else, so no screen can write around it (T21c).
   Future<void> applyOperation({
     required String operationId,
     required String entity,
@@ -291,9 +310,20 @@ class TenantDatabase extends _$TenantDatabase {
     required Future<Map<String, dynamic>> Function() change,
     String? reason,
     Future<Map<String, Object?>?> Function()? detail,
+    WriteEffect effect = WriteEffect.entry,
   }) async {
     try {
-      await _applyOnce(operationId: operationId, entity: entity, recordId: recordId, version: version, action: action, change: change, reason: reason, detail: detail);
+      await _applyOnce(
+        operationId: operationId,
+        entity: entity,
+        recordId: recordId,
+        version: version,
+        action: action,
+        change: change,
+        reason: reason,
+        detail: detail,
+        effect: effect,
+      );
     } catch (e) {
       // From a background database this arrives wrapped, so the words are what stays the same.
       if (e.toString().contains('period is closed')) throw const PeriodLocked();
@@ -310,10 +340,13 @@ class TenantDatabase extends _$TenantDatabase {
     required Future<Map<String, dynamic>> Function() change,
     String? reason,
     Future<Map<String, Object?>?> Function()? detail,
+    required WriteEffect effect,
   }) {
     return transaction(() async {
       final seen = await (select(outbox)..where((o) => o.operationId.equals(operationId))).getSingleOrNull();
       if (seen != null) return;
+      // After the retry check: a second tap on a save that went through must not be refused for the row it added.
+      await guard?.call(entity, effect);
       final payload = await change();
       // What the owner reads about this write (D-056). Callers hold the entry as it was, so this runs after the change.
       final told = await detail?.call();

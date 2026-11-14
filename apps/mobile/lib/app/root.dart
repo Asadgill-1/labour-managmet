@@ -8,6 +8,7 @@ import '../data/account.dart';
 import '../data/app_lock.dart';
 import '../data/licence.dart';
 import '../data/masters.dart';
+import '../data/plan_guard.dart';
 import '../data/restore.dart';
 import '../data/tenant_database.dart';
 import '../features/account/account_screens.dart';
@@ -74,10 +75,14 @@ class _AppRootState extends State<AppRoot> {
   void initState() {
     super.initState();
     if (_opened case final opened?) {
+      _guard(opened.db);
       unawaited(_closeIfOff(opened.binding.tenantId));
       _startLicence(opened.binding.tenantId, resume: true);
     }
   }
+
+  /// Every write of the open company asks its plan, as the licence on this phone gives it now (T21c).
+  void _guard(TenantDatabase db) => db.guard = planGuard(db, () => _licensing?.view);
 
   /// Reads the licence kept here at once, then renews it from the cloud, with the session kept on the phone when the
   /// app has just started (D-074). Counted from whichever file is open, as a restore swaps it.
@@ -109,6 +114,7 @@ class _AppRootState extends State<AppRoot> {
       _opened = (db: db, binding: binding);
       _lock = _Lock.setPin;
       _startLicence(tenantId, resume: false);
+      _guard(db);
     });
   }
 
@@ -141,6 +147,7 @@ class _AppRootState extends State<AppRoot> {
       stage = SwapStage.failed;
     }
     final fresh = await widget.openTenant(binding.tenantId, actorId: binding.userId);
+    _guard(fresh);
     // The old data's images must not show for the new.
     PaintingBinding.instance.imageCache
       ..clear()

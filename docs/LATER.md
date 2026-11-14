@@ -2,17 +2,11 @@
 
 Everything promised for a later task, in one place, so nothing is lost between sessions. Each line names where it was decided. When a task starts, read its part here with its row in `TASKS.md`; when a line is built, delete it here in the same PR.
 
-## T21c: enforcement
-
-- One guard at `TenantDatabase.applyOperation`, the single write path, so no screen can miss it.
-- Safe mode (plan ended, lease past 7 days offline, no valid licence) allows only: viewing, archiving, issuing and reprinting papers of what exists (PDFs), Excel export, the backup file and restore, the company profile and settings, turning a phone off. Everything else is refused with a reason that opens Plan lein; buttons for new entries show a lock (PLAN-03, D-072).
-- Adding or un-archiving a worker or client company past the plan is refused: "Is plan mein 15 workers hain".
-- A company already over its plan sees "Kaun se 15 active rahein?"; the rest are archived with history and balances untouched (PLAN-04); new entries wait until it is done.
-
 ## After T21 went live (2026-11-11)
 
 - The owner types the bank name, account number, IBAN and holder into `platform_settings` in the live SQL editor, never in git, before Plan lein ships (T21b).
 - The app's first live licence on a phone: the owner's company fetches a signed trial licence that `LICENCE_KEY` checks, then Plan lein with the real bank details and a test slip (TC-184).
+- T21c on a phone with a throwaway company: the locks after its trial is taken back, then Small's 16th worker and the chooser (TC-189).
 
 ## T22: the owner's dashboard
 
@@ -21,6 +15,7 @@ Everything promised for a later task, in one place, so nothing is lost between s
 - Upgrading mid-period: today an accepted Mid slip starts after the current Small period ends. The dashboard should offer starting it at once, with the rest of the old period credited or not, as the owner decides then.
 - Grace extension and suspend, plan migration, refund (ADMIN-03).
 - Companies over their limit, from the counts each licence check reports (`private.usage_reports`).
+- Ending or giving back a trial or a period from the dashboard, so safe mode can be shown to a customer or tried without the SQL editor (T21c's phone test uses `private.revoke_subscription`).
 - Slips whose file never arrived (a dropped upload the customer did not retry): shown as such, refused in one tap. The app could also send the file again to the same slip; today it says "File nahin pohanchi" and the customer sends a new slip (T21b).
 - Replacing the licence signing key: a button that makes a new pair, keeps the old public half valid until every phone has the new one, and shows the new public half for the next app build.
 - Freeing a trial claim on request, as the RUNBOOK's SQL does now.

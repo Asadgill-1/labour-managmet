@@ -149,10 +149,11 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
 
     final number = v.sheet.number == null ? l10n.tsTitle : '${v.sheet.number}${v.revision.revision > 1 ? ' R${v.revision.revision}' : ''}';
     final current = v.isLatest;
-    final (label, press) = switch ((current, v.status)) {
-      (true, TsStatus.draft) => (l10n.tsApprove, v.rows.isEmpty ? null : () => _approve(v)),
-      (true, TsStatus.disputed) => (l10n.tsNewRevision, () => _revise(v)),
-      _ => (l10n.tsPaper, () => _paper(v)),
+    // Making the paper of a timesheet works whatever the plan (PLAN-03); approving and revising are new entries.
+    final (label, press, free) = switch ((current, v.status)) {
+      (true, TsStatus.draft) => (l10n.tsApprove, v.rows.isEmpty ? null : () => _approve(v), false),
+      (true, TsStatus.disputed) => (l10n.tsNewRevision, () => _revise(v), false),
+      _ => (l10n.tsPaper, () => _paper(v), true),
     };
     final more = !current
         ? const <(String, VoidCallback)>[]
@@ -294,7 +295,7 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(number)),
-      bottomNavigationBar: MainActionBar(label: label, onPressed: _busy ? null : press),
+      bottomNavigationBar: MainActionBar(label: label, free: free, onPressed: _busy ? null : press),
       body: ListView.builder(
         itemCount: head.length + body.length + foot.length,
         itemBuilder: (_, i) {
