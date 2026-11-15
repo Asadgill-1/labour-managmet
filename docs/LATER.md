@@ -39,23 +39,18 @@ T20d-a, the cloud, is built and not live:
 
 - On the owner's yes: the migration and the `backup` function on the live project, the upload limit checked, the support contact typed into the live settings (TC-194, RUNBOOK under The cloud backup).
 
-T20d-b, sending:
+T20d-b, sending, is built (D-077):
 
-- The backup password asked once at signup, typed twice, to be written down, with D-072's plain words; it can't be skipped. A company that already exists and keeps none sees a notice on Today.
-- Each cloud copy's key locked twice: by the backup password and by the platform's recovery key (`recovery.json` in the zip, sealed with X25519, HKDF-SHA256 and ChaCha20-Poly1305, bound to the company's id and the data's checksum). A file the user saves or sends carries no `recovery.json`.
-- The owner's tool: `make` creates the key pair, locks the private half with a passphrase, writes it to a folder outside any git checkout and prints only the public half; `open` turns a downloaded copy into an ordinary backup with a new password. The private half stays offline with the owner, with a second copy kept apart, never on the server, in git or in `.env`. The RUNBOOK gets the steps, with the check of the company's login email and payment before a copy is opened.
-- `RECOVERY_KEY` in `.env` is the public half; a build without it makes no cloud copy and says the cloud backup is unavailable.
-- The copy sent by itself when the company opens and when the app comes back to the front, at most once a day, only when the data changed, with the plan ended too. A failure changes nothing and shows on the Backup page.
-- The Backup page's cloud section: the last cloud copy's time or why none went, "Abhi cloud mein bhejein", the plain words, and the question when the cloud's copy came from another phone. `replace` is sent only on the owner's choice to keep this phone's data, or after a cloud copy was brought back onto this phone.
-- A copy over 50 MB is not sent, and the Backup page says so.
-- The deletion screen says the latest cloud copy stays 60 days and then goes.
-- Never called end-to-end encrypted (DATA-08).
+- The owner makes the recovery key on his computer with `tool/recovery_key.dart make`, keeps a second copy apart, and puts the printed `RECOVERY_KEY` in `apps/mobile/.env` (RUNBOOK under The cloud backup). Until then a build sends no copy.
+- On a phone, after the live run and the key: a throwaway company's first copy in the cloud, downloaded and opened with the tool (TC-199).
 
 T20d-c, getting it back:
 
 - Plan lein offers each plan with the add-on, its price and the new total (2000 fils for Small and Mid, 4000 for Large), and the add-on alone for the plan the company is on (`submit_slip`'s `p_covers`). Settings shows the add-on's end from the licence's `addon_until`.
 - "Cloud se" beside the file picker in the restore: the copies with date and size; without the add-on it says what is there and leads to Plan lein, and in a Play Store build it says the add-on is unavailable there; with it the copy downloads and goes through the same steps as a file. "Password yaad nahin?" shows the support contact.
 - The offer a new phone's empty company gets (D-070) says when the cloud's copy is from.
+- After a cloud copy is brought back onto this phone, the next copy goes with `replace`, so the brought-back data takes the old phone's place without the question. Until then the Backup page asks (D-077), and "Pehle wo data wapas laayein" opens the restore from a file.
+- Never called end-to-end encrypted (DATA-08).
 - On a phone, by the owner: a copy sent, the phone "lost", the add-on bought with a slip, the copy brought back on a second phone.
 
 After T20d:

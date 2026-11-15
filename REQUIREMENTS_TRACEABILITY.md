@@ -7,7 +7,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | ID | Ch | Summary | Tasks | Status | Tests | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
 | UX-01 | 02 | Left side panel, replaces bottom tabs (D-027) | T04, T05 | IMPLEMENTED_UNVERIFIED | - | - |
-| UX-02 | 02 | Onboarding | T05, T19 | IN_PROGRESS | TC-145 | `apps/mobile/test/account_flow_test.dart` |
+| UX-02 | 02 | Onboarding | T05, T19, T20 | IN_PROGRESS | TC-145, TC-197 | `apps/mobile/test/account_flow_test.dart`, `apps/mobile/test/cloud_screens_test.dart` |
 | UX-03 | 02 | Saaf labels | T05 | IMPLEMENTED_UNVERIFIED | - | - |
 | UX-04 | 02 | Readability | T05 | IMPLEMENTED_UNVERIFIED | - | - |
 | UX-05 | 02 | Kam typing | T10 | IMPLEMENTED_UNVERIFIED | TC-026 | - |
@@ -19,7 +19,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | AUTH-04 | 03 | Har local database tenant/account boundary mein encrypted ho. Logout/account | T19 | IN_PROGRESS | TC-014, TC-045, TC-145, TC-149, TC-150 | `apps/mobile/test/account_flow_test.dart` |
 | AUTH-05 | 03 | Cloud tenant tables par Row Level Security aur membership | T19 | IN_PROGRESS | TC-006, TC-142, TC-143, TC-190 | `supabase/tests/database/tenants.test.sql`, `supabase/tests/database/cloud_backup.test.sql` |
 | AUTH-06 | 03 | App malik ke admin account par MFA lazmi ho | T19 | NOT_STARTED | - | - |
-| AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | IN_PROGRESS | TC-153, TC-154, TC-155, TC-156, TC-157, TC-191 | `supabase/tests/database/delete_account.test.sql`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `supabase/tests/database/cloud_backup.test.sql` |
+| AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | IN_PROGRESS | TC-153, TC-154, TC-155, TC-156, TC-157, TC-191, TC-197 | `supabase/tests/database/delete_account.test.sql`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `supabase/tests/database/cloud_backup.test.sql`, `apps/mobile/test/cloud_screens_test.dart` |
 | AUTH-08 | 03 | Production email login ke liye real SMTP/domain configuration aur | T19 | NOT_STARTED | - | - |
 | MASTER-01 | 04 | Apni company | T07 | IMPLEMENTED_UNVERIFIED | - | - |
 | MASTER-02 | 04 | Client | T07, T18b | IMPLEMENTED_UNVERIFIED | TC-119 | `apps/mobile/test/records_test.dart` |
@@ -119,13 +119,13 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | TEAM-07 | 15 | Team downgrade | T25 | NOT_STARTED | - | - |
 | TEAM-08 | 15 | Pilot safety | T25 | NOT_STARTED | - | - |
 | DATA-01 | 16 | Local database encryption key Android platform ke protected key | T03 | IN_PROGRESS | TC-014 | - |
-| DATA-02 | 16 | Backup bundle | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-164 | `apps/mobile/test/backup_test.dart` |
+| DATA-02 | 16 | Backup bundle | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-164, TC-195 | `apps/mobile/test/backup_test.dart`, `apps/mobile/test/recovery_test.dart` |
 | DATA-03 | 16 | Owner warning | T20 | IMPLEMENTED_UNVERIFIED | TC-162 | `apps/mobile/test/backup_test.dart` |
 | DATA-04 | 16 | Local backup | T20 | IMPLEMENTED_UNVERIFIED | TC-162, TC-163, TC-164 | `apps/mobile/test/backup_test.dart` |
 | DATA-05 | 16 | Restore | T20 | IMPLEMENTED_UNVERIFIED | TC-010, TC-046, TC-160, TC-165, TC-167, TC-168, TC-169 | `apps/mobile/test/restore_test.dart` |
-| DATA-06 | 16 | Phone change | T20 | IMPLEMENTED_UNVERIFIED | TC-010, TC-046, TC-166, TC-167, TC-170, TC-171, TC-172, TC-173, TC-174, TC-190, TC-193, TC-194 | `apps/mobile/test/restore_test.dart`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `supabase/tests/database/phone_off.test.sql`, `supabase/tests/database/cloud_backup.test.sql`, `supabase/functions/backup/request_test.ts`, CI run 43664625445 |
-| DATA-07 | 16 | Key recovery | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-161, TC-165 | `apps/mobile/test/backup_test.dart`, `apps/mobile/test/restore_test.dart` |
-| DATA-08 | 16 | Retention | T20 | IMPLEMENTED_UNVERIFIED | TC-191, TC-194 | `docs/DATA_MODEL.md` Retention, D-066, D-069, D-070, `supabase/tests/database/cloud_backup.test.sql`, D-072, D-075, D-076 |
+| DATA-06 | 16 | Phone change | T20 | IMPLEMENTED_UNVERIFIED | TC-010, TC-046, TC-166, TC-167, TC-170, TC-171, TC-172, TC-173, TC-174, TC-190, TC-193, TC-194, TC-196, TC-197, TC-199 | `apps/mobile/test/restore_test.dart`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `supabase/tests/database/phone_off.test.sql`, `supabase/tests/database/cloud_backup.test.sql`, `supabase/functions/backup/request_test.ts`, CI run 43664625445, `apps/mobile/test/cloud_copy_test.dart`, `apps/mobile/test/cloud_screens_test.dart` |
+| DATA-07 | 16 | Key recovery | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-161, TC-165, TC-195, TC-198 | `apps/mobile/test/backup_test.dart`, `apps/mobile/test/restore_test.dart`, `apps/mobile/test/recovery_test.dart`, `apps/mobile/tool/recovery_key.dart` |
+| DATA-08 | 16 | Retention | T20 | IMPLEMENTED_UNVERIFIED | TC-191, TC-194, TC-195, TC-196, TC-197, TC-199 | `docs/DATA_MODEL.md` Retention, D-066, D-069, D-070, `supabase/tests/database/cloud_backup.test.sql`, D-072, D-075, D-076, D-077, `apps/mobile/test/cloud_copy_test.dart`, `apps/mobile/test/cloud_screens_test.dart` |
 | ADMIN-01 | 17 | Navigation | T22 | NOT_STARTED | - | - |
 | ADMIN-02 | 17 | Customer register | T22 | NOT_STARTED | - | - |
 | ADMIN-03 | 17 | Subscription operations | T22 | NOT_STARTED | - | - |
