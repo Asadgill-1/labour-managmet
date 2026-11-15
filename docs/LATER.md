@@ -19,6 +19,7 @@ Everything promised for a later task, in one place, so nothing is lost between s
 - Slips whose file never arrived (a dropped upload the customer did not retry): shown as such, refused in one tap. The app could also send the file again to the same slip; today it says "File nahin pohanchi" and the customer sends a new slip (T21b).
 - Replacing the licence signing key: a button that makes a new pair, keeps the old public half valid until every phone has the new one, and shows the new public half for the next app build.
 - Freeing a trial claim on request, as the RUNBOOK's SQL does now.
+- The cloud backup (T20d): what a slip covers shown with it; each company's copies and add-on periods; taking an add-on period back; a button that removes the files due from storage, which today happens on the next finished upload or by hand; a deleted account's kept copy found by its email; downloading a copy to open for a company that forgot its backup password, with the check of its login email and payment recorded.
 - The account deletion web way by request (D-067), with T26.
 - The customer register (ADMIN-02): tenant id, contact, signup date, email verified, plan, trial or expiry, seats and phones, last online, app version, payments.
 - MFA for the admin (ADMIN-01), Vercel hosting (D-002).
@@ -28,15 +29,39 @@ Everything promised for a later task, in one place, so nothing is lost between s
 - Signup and reset emails from the app's own domain; reset by code ("Password bhool gaye?" is unavailable until then).
 - An email to the platform's address when a slip arrives, with the company, plan, months and amount expected.
 - The account deletion web request's code (D-067).
+- A way to write to support from the app about a forgotten backup password; until then the app shows the support contact (T20d).
 
-## T20d: the cloud backup, the paid add-on (D-072)
+## T20d: the cloud backup, the paid add-on (D-072, D-075, D-076)
 
-- The backup password asked once at signup, to be written down.
-- Each copy's key locked twice: by the backup password and by the platform's recovery key, whose private half stays offline with the owner, with a second copy kept apart, never on the server, in git or in `.env`.
-- The latest copy always kept; with the add-on, daily copies too, the number set with the plans (PLAN-05).
-- After an account deletion, the latest cloud copy stays 60 days, keeping only the company id and email to find it, then goes; the deletion screen, the terms and Play's answers say so.
-- The add-on in the licence, and its price on Plan lein (2000 fils for Small and Mid, 4000 for Large), once it is built.
+The design is `docs/superpowers/specs/2026-11-14-t20d-cloud-backup-design.md`; what the app calls is in `docs/superpowers/plans/2026-11-14-t20d-a-cloud.md`.
+
+T20d-a, the cloud, is built and not live:
+
+- On the owner's yes: the migration and the `backup` function on the live project, the upload limit checked, the support contact typed into the live settings (TC-194, RUNBOOK under The cloud backup).
+
+T20d-b, sending:
+
+- The backup password asked once at signup, typed twice, to be written down, with D-072's plain words; it can't be skipped. A company that already exists and keeps none sees a notice on Today.
+- Each cloud copy's key locked twice: by the backup password and by the platform's recovery key (`recovery.json` in the zip, sealed with X25519, HKDF-SHA256 and ChaCha20-Poly1305, bound to the company's id and the data's checksum). A file the user saves or sends carries no `recovery.json`.
+- The owner's tool: `make` creates the key pair, locks the private half with a passphrase, writes it to a folder outside any git checkout and prints only the public half; `open` turns a downloaded copy into an ordinary backup with a new password. The private half stays offline with the owner, with a second copy kept apart, never on the server, in git or in `.env`. The RUNBOOK gets the steps, with the check of the company's login email and payment before a copy is opened.
+- `RECOVERY_KEY` in `.env` is the public half; a build without it makes no cloud copy and says the cloud backup is unavailable.
+- The copy sent by itself when the company opens and when the app comes back to the front, at most once a day, only when the data changed, with the plan ended too. A failure changes nothing and shows on the Backup page.
+- The Backup page's cloud section: the last cloud copy's time or why none went, "Abhi cloud mein bhejein", the plain words, and the question when the cloud's copy came from another phone. `replace` is sent only on the owner's choice to keep this phone's data, or after a cloud copy was brought back onto this phone.
+- A copy over 50 MB is not sent, and the Backup page says so.
+- The deletion screen says the latest cloud copy stays 60 days and then goes.
 - Never called end-to-end encrypted (DATA-08).
+
+T20d-c, getting it back:
+
+- Plan lein offers each plan with the add-on, its price and the new total (2000 fils for Small and Mid, 4000 for Large), and the add-on alone for the plan the company is on (`submit_slip`'s `p_covers`). Settings shows the add-on's end from the licence's `addon_until`.
+- "Cloud se" beside the file picker in the restore: the copies with date and size; without the add-on it says what is there and leads to Plan lein, and in a Play Store build it says the add-on is unavailable there; with it the copy downloads and goes through the same steps as a file. "Password yaad nahin?" shows the support contact.
+- The offer a new phone's empty company gets (D-070) says when the cloud's copy is from.
+- On a phone, by the owner: a copy sent, the phone "lost", the add-on bought with a slip, the copy brought back on a second phone.
+
+After T20d:
+
+- Sending while the app is closed, and a Wi-Fi-only switch.
+- Copies over 50 MB, which need a resumable upload.
 
 ## T23: telemetry, health, support
 
