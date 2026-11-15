@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:domain/dates.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +12,7 @@ import '../../app/settings.dart';
 import '../../app/theme.dart';
 import '../../data/account.dart';
 import '../../data/backup.dart';
+import '../../data/cloud_copy.dart';
 import '../../data/restore.dart';
 import '../../l10n/app_localizations.dart';
 import '../account/account_screens.dart';
@@ -21,6 +24,13 @@ const _files = MethodChannel('labour_app/files');
 final backupStoreProvider = Provider((ref) => BackupStore(ref.watch(secureStorageProvider), ref.watch(dbProvider).tenantId));
 final lastBackupProvider = FutureProvider((ref) => ref.watch(backupStoreProvider).last());
 final _hasPasswordProvider = FutureProvider((ref) async => await ref.watch(backupStoreProvider).password() != null);
+
+/// Why the last cloud copy did not go, in the page's words.
+String cloudProblemText(AppLocalizations l10n, AccountProblem problem) => switch (problem) {
+  AccountProblem.offline => l10n.cloudOffline,
+  AccountProblem.signedOut => l10n.cloudSignedOut,
+  _ => accountProblemText(l10n, AccountRefused(problem)),
+};
 
 /// 10-11-2026, 14:30 in UAE time.
 String shownWhen(DateTime at) => '${showDate(dubaiToday(at))}, ${showMinuteOfDay(dubaiMinuteOfDay(at))}';
@@ -66,6 +76,8 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     final l10n = AppLocalizations.of(context);
     await ref.read(backupStoreProvider).setPassword(_password.text);
     ref.invalidate(_hasPasswordProvider);
+    // The first cloud copy needs nothing more pressed.
+    unawaited(ref.read(cloudSenderProvider)?.sendIfDue());
     _password.clear();
     _again.clear();
     if (!mounted) return;
@@ -88,6 +100,35 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
 
   void _push(Widget screen) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
 
+  Future<void> _sendToCloud(CloudSender sender, {bool replace = false}) async {
+    final l10n = AppLocalizations.of(context);
+    await sender.sendNow(replace: replace);
+    if (!mounted) return;
+    final problem = sender.view.problem;
+    // The other phone's question shows on the page itself.
+    if (problem == null) {
+      showSavedOnPhone(context, l10n.cloudSent);
+    } else if (problem != AccountProblem.otherPhoneCopy) {
+      showFormError(context, cloudProblemText(l10n, problem));
+    }
+  }
+
+  /// Keeping this phone's data in place of the other phone's copy can't be undone, so it is asked once more.
+  Future<void> _replaceCloudCopy(CloudSender sender) async {
+    final l10n = AppLocalizations.of(context);
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        content: Text(l10n.cloudReplaceConfirm),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialog).pop(false), child: Text(l10n.cancel)),
+          TextButton(onPressed: () => Navigator.of(dialog).pop(true), child: Text(l10n.cloudReplaceGo)),
+        ],
+      ),
+    );
+    if (yes == true && mounted) await _sendToCloud(sender, replace: true);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -97,10 +138,14 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     final restorer = ref.watch(restoreProvider);
     final kept = restorer == null ? null : keptFile(restorer.dir, ref.watch(dbProvider).tenantId);
     final keptAt = kept != null && kept.existsSync() ? kept.lastModifiedSync() : null;
+    final accounts = ref.watch(accountProvider) != null;
+    final sender = ref.watch(cloudSenderProvider);
+    final cloud = ref.watch(cloudViewProvider).value;
+    final sending = cloud?.sending ?? false;
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.menuBackup),
-        bottom: _busy ? const PreferredSize(preferredSize: Size.fromHeight(3), child: LinearProgressIndicator(minHeight: 3)) : null,
+        bottom: _busy || sending ? const PreferredSize(preferredSize: Size.fromHeight(3), child: LinearProgressIndicator(minHeight: 3)) : null,
       ),
       bottomNavigationBar: hasPassword == null
           ? null
@@ -125,7 +170,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
                   if (setting) ...[
                     Text(l10n.backupPasswordIntro),
                     fieldGap,
-                    MarginNote(l10n.backupPasswordWriteDown),
+                    MarginNote(sender != null ? l10n.backupPasswordWriteDownCloud : l10n.backupPasswordWriteDown),
                     if (_changing) ...[fieldGap, MarginNote(l10n.backupPasswordOld)],
                     fieldGap,
                     PasswordField(
@@ -161,6 +206,55 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
                         label: Text(l10n.backupPasswordChange),
                       ),
                     ),
+                  ],
+                  // The cloud copy (D-072): when the last one went, or why none did, and the owner's say on the other
+                  // phone's copy. Never called end-to-end encrypted, since the platform can open it (DATA-08).
+                  if (accounts) ...[
+                    const Divider(height: 32),
+                    if (sender == null)
+                      Text(l10n.cloudUnavailable, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: ink))
+                    else ...[
+                      Text(
+                        sending ? l10n.cloudSending : (cloud?.lastAt == null ? l10n.cloudNone : l10n.cloudLast(shownWhen(cloud!.lastAt!))),
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: ink),
+                      ),
+                      if (cloud?.problem case final problem? when !sending) ...[
+                        fieldGap,
+                        if (problem == AccountProblem.otherPhoneCopy) ...[
+                          Text(l10n.cloudOtherPhoneAsk),
+                          if (restorer != null)
+                            Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: TextButton.icon(
+                                onPressed: _busy ? null : () => _push(const RestoreScreen()),
+                                icon: const Icon(Icons.settings_backup_restore),
+                                label: Text(l10n.cloudBringBack),
+                              ),
+                            ),
+                          Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: TextButton.icon(
+                              onPressed: _busy || hasPassword != true ? null : () => _replaceCloudCopy(sender),
+                              icon: const Icon(Icons.phone_android),
+                              label: Text(l10n.cloudKeepThis),
+                            ),
+                          ),
+                        ] else
+                          Text(cloudProblemText(l10n, problem), style: const TextStyle(color: warn)),
+                      ],
+                      fieldGap,
+                      MarginNote(l10n.cloudPlainWords),
+                      if (hasPassword == false) ...[fieldGap, MarginNote(l10n.cloudNeedsPassword)],
+                      if (cloud?.problem != AccountProblem.otherPhoneCopy)
+                        Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: TextButton.icon(
+                            onPressed: _busy || sending || hasPassword != true ? null : () => _sendToCloud(sender),
+                            icon: const Icon(Icons.cloud_upload_outlined),
+                            label: Text(l10n.cloudSendNow),
+                          ),
+                        ),
+                    ],
                   ],
                   const Divider(height: 32),
                   // On a new phone no password is kept yet, so this stays in reach of the password form too.
@@ -207,6 +301,11 @@ class BackupDueBanner extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    void open() => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const BackupScreen()));
+    // With the cloud on, a company that keeps no password yet sends no copy, so that comes first (D-072).
+    if (ref.watch(cloudSenderProvider) != null && ref.watch(_hasPasswordProvider).value == false) {
+      return NoticeRow(icon: Icons.key_outlined, title: l10n.backupPasswordDue, subtitle: l10n.backupPasswordDueBody, onTap: open);
+    }
     final workers = ref.watch(workersProvider).value ?? const [];
     final last = ref.watch(lastBackupProvider);
     if (workers.isEmpty || !last.hasValue) return const SizedBox.shrink();
@@ -217,7 +316,7 @@ class BackupDueBanner extends ConsumerWidget {
       icon: Icons.backup_outlined,
       title: days == null ? l10n.backupDueNever : l10n.backupDueDays(days),
       subtitle: l10n.backupDueBody,
-      onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const BackupScreen())),
+      onTap: open,
     );
   }
 }

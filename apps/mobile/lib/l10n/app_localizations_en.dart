@@ -4787,6 +4787,97 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planKeepOpen => 'Choose';
+
+  @override
+  String get accountOtherPhoneCopy =>
+      'The copy in the cloud is from another phone. Choose on the Backup page.';
+
+  @override
+  String get accountNotOwner =>
+      'Only the company\'s owner sends the cloud backup.';
+
+  @override
+  String get accountTooLarge =>
+      'The backup is over 50 MB, too large for the cloud. Save it as a file.';
+
+  @override
+  String get signupBackupBody =>
+      'Your company\'s backup is locked with this password. It is not your account password, and this phone keeps it.';
+
+  @override
+  String get signupBackupWriteDown =>
+      'Write it down and keep it safe. A new phone needs it to open the backup.';
+
+  @override
+  String get cloudPlainWords =>
+      'The locked backup goes to the cloud by itself, once a day. Bringing it back from the cloud needs the add-on. If you forget the password, the platform can open it and give it back to you.';
+
+  @override
+  String get backupPasswordWriteDownCloud =>
+      'Write this password down somewhere. A new phone needs it to open the backup. Without it nobody can open a file you saved, not even us. The platform can open the cloud copy and give it back to you.';
+
+  @override
+  String get cloudTitle => 'Cloud copy';
+
+  @override
+  String cloudLast(String date) {
+    return 'The last cloud copy went on $date.';
+  }
+
+  @override
+  String get cloudNone => 'No copy has gone to the cloud yet.';
+
+  @override
+  String get cloudSending => 'Going to the cloud';
+
+  @override
+  String get cloudSendNow => 'Send to the cloud now';
+
+  @override
+  String get cloudSent => 'The copy reached the cloud';
+
+  @override
+  String get cloudOffline =>
+      'No internet. It goes by itself when the phone is next online.';
+
+  @override
+  String get cloudSignedOut =>
+      'Log in again with the password to send to the cloud.';
+
+  @override
+  String get cloudUnavailable =>
+      'The cloud backup is not available in this app.';
+
+  @override
+  String get cloudNeedsPassword => 'Keep a backup password above first.';
+
+  @override
+  String get cloudOtherPhoneAsk =>
+      'The copy in the cloud is from another phone. Bring that data back here first, or send this phone\'s data in its place?';
+
+  @override
+  String get cloudBringBack => 'Bring that data back first';
+
+  @override
+  String get cloudKeepThis => 'Keep this phone\'s data';
+
+  @override
+  String get cloudReplaceConfirm =>
+      'This phone\'s data goes to the cloud, and the other phone\'s copy may be removed. This can\'t be undone.';
+
+  @override
+  String get cloudReplaceGo => 'Yes, send this phone\'s data';
+
+  @override
+  String get backupPasswordDue => 'No backup password yet';
+
+  @override
+  String get backupPasswordDueBody =>
+      'Without it the backup does not go to the cloud. Tap to set it.';
+
+  @override
+  String get accountDeleteCloud =>
+      'Only the latest backup copy in the cloud stays 60 days, then it goes too.';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -9347,4 +9438,94 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get planKeepOpen => 'Chunein';
+
+  @override
+  String get accountOtherPhoneCopy =>
+      'Cloud mein rakhi copy kisi aur phone ki hai. Backup ke page par chunein.';
+
+  @override
+  String get accountNotOwner =>
+      'Cloud backup sirf company ka maalik bhejta hai.';
+
+  @override
+  String get accountTooLarge =>
+      'Backup 50 MB se bada hai, cloud mein nahin ja sakta. Ise file bana kar save karein.';
+
+  @override
+  String get signupBackupBody =>
+      'Aap ki company ka backup is password se band hoga. Ye account ke password se alag hai, aur ye phone ise yaad rakhega.';
+
+  @override
+  String get signupBackupWriteDown =>
+      'Ise likh kar sambhal lein. Naye phone par backup kholne ke liye yahi chahiye.';
+
+  @override
+  String get cloudPlainWords =>
+      'Band backup khud cloud mein jata hai, din mein ek dafa. Cloud se wapas laane ke liye add-on chahiye. Password bhool jaayein to platform ise khol kar aap ko wapas de sakta hai.';
+
+  @override
+  String get backupPasswordWriteDownCloud =>
+      'Ye password kahin likh kar rakhein. Naye phone par backup kholne ke liye yahi chahiye. Aap ki save ki hui file is ke baghair koi nahin khol sakta, hum bhi nahin. Cloud wali copy platform khol kar aap ko wapas de sakta hai.';
+
+  @override
+  String get cloudTitle => 'Cloud copy';
+
+  @override
+  String cloudLast(String date) {
+    return 'Aakhri cloud copy $date ko gayi.';
+  }
+
+  @override
+  String get cloudNone => 'Abhi tak cloud mein copy nahin gayi.';
+
+  @override
+  String get cloudSending => 'Cloud mein ja rahi hai';
+
+  @override
+  String get cloudSendNow => 'Abhi cloud mein bhejein';
+
+  @override
+  String get cloudSent => 'Copy cloud mein pohanch gayi';
+
+  @override
+  String get cloudOffline =>
+      'Internet nahin mila. Agli dafa internet par khud chali jayegi.';
+
+  @override
+  String get cloudSignedOut =>
+      'Cloud mein bhejne ke liye password se dobara login karein.';
+
+  @override
+  String get cloudUnavailable => 'Cloud backup is app mein dastyab nahin.';
+
+  @override
+  String get cloudNeedsPassword => 'Pehle upar backup password rakhein.';
+
+  @override
+  String get cloudOtherPhoneAsk =>
+      'Cloud mein rakhi copy kisi aur phone ki hai. Pehle wo data yahan wapas laana hai, ya is phone ka data us ki jagah bhejna hai?';
+
+  @override
+  String get cloudBringBack => 'Pehle wo data wapas laayein';
+
+  @override
+  String get cloudKeepThis => 'Is phone ka data rakhein';
+
+  @override
+  String get cloudReplaceConfirm =>
+      'Cloud mein is phone ka data jayega, aur doosre phone ki copy hat sakti hai. Ye wapas nahin hota.';
+
+  @override
+  String get cloudReplaceGo => 'Haan, is phone ka data bhejein';
+
+  @override
+  String get backupPasswordDue => 'Backup password abhi nahin rakha';
+
+  @override
+  String get backupPasswordDueBody =>
+      'Is ke baghair backup cloud mein nahin jata. Rakhne ke liye dabaein.';
+
+  @override
+  String get accountDeleteCloud =>
+      'Bas cloud mein rakhi aakhri backup copy 60 din rehti hai, phir wo bhi mit jaati hai.';
 }

@@ -7,12 +7,36 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:supabase/supabase.dart';
 
+import 'backup.dart' show backupMime, backupPasswordKey;
+import 'cloud_copy.dart';
 import 'licence.dart';
 import 'plans.dart';
+import 'recovery.dart' show isRecoveryKey;
 import 'tenant_database.dart';
 
 /// Why an account step failed, in terms a screen can say plainly (UX-04).
-enum AccountProblem { offline, wrongLogin, notConfirmed, exists, weakPassword, badCode, tooMany, deviceRevoked, phoneTaken, phoneData, companyHasMembers, otherPhone, signedOut, slipsWaiting, failed }
+enum AccountProblem {
+  offline,
+  wrongLogin,
+  notConfirmed,
+  exists,
+  weakPassword,
+  badCode,
+  tooMany,
+  deviceRevoked,
+  phoneTaken,
+  phoneData,
+  companyHasMembers,
+  otherPhone,
+  signedOut,
+  slipsWaiting,
+
+  /// The cloud's latest backup copy came from another phone (T20d).
+  otherPhoneCopy,
+  notOwner,
+  tooLarge,
+  failed,
+}
 
 class AccountRefused implements Exception {
   const AccountRefused(this.problem, [this.holder]);
@@ -35,11 +59,12 @@ typedef Binding = ({String tenantId, String userId, String email});
 const _bindingKey = 'account';
 const _sessionKey = 'session';
 const _slipBucket = 'payment-slips';
+const _backupBucket = 'backups';
 
 /// Sign-up, sign-in and the company this device opens (T19b). The app holds only the publishable key; the company
 /// comes from the signed-in user's membership, never from the app (AUTH-02, AUTH-06).
 class Account {
-  Account(this._client, this._storage, {required this.emailCodes, this.licenceKey = ''}) {
+  Account(this._client, this._storage, {required this.emailCodes, this.licenceKey = '', this.recoveryKey = ''}) {
     // The session is kept on the phone, so the licence renews after a restart without the password (D-062, D-074).
     // Steps the cloud must trust still ask for the password unless it was typed in this run of the app.
     _auth.onAuthStateChange.listen(
@@ -63,6 +88,9 @@ class Account {
   /// The public half of the key the cloud signs licences with, base64, from `.env` (D-074).
   final String licenceKey;
 
+  /// The public half of the platform's recovery key, base64, from `.env`. Empty, or not a key, makes no cloud copy (D-072).
+  final String recoveryKey;
+
   /// The project's emails carry a code. Supabase's own sender sends its fixed emails, which carry only a link, so
   /// a forgotten password cannot be replaced in the app until the project sends through its own SMTP (T19d, D-062).
   final bool emailCodes;
@@ -78,6 +106,7 @@ class Account {
       storage,
       emailCodes: const bool.fromEnvironment('EMAIL_CODES'),
       licenceKey: const String.fromEnvironment('LICENCE_KEY'),
+      recoveryKey: const String.fromEnvironment('RECOVERY_KEY'),
     );
   }
 
@@ -127,11 +156,13 @@ class Account {
   });
 
   /// Makes the signed-in user's company (UX-02). Data the phone made before the account keeps its id, so it stays.
-  /// The caller keeps [operationId] across retries, so a lost answer cannot make a second company (MODEL-06).
-  Future<String> createCompany(String name, String operationId) => _run(() async {
+  /// The caller keeps [operationId] across retries, so a lost answer cannot make a second company (MODEL-06). The
+  /// [backupPassword] asked at signup is kept before the company opens, so its first cloud copy needs no typing (D-072).
+  Future<String> createCompany(String name, String operationId, {String? backupPassword}) => _run(() async {
     final local = await _storage.read(key: localTenantKey);
     final tenantId = await _client.rpc<String>('create_tenant', params: {'p_name': name, 'p_operation_id': operationId, 'p_tenant_id': local});
     await _enrol(tenantId);
+    if (backupPassword != null) await _storage.write(key: backupPasswordKey(tenantId), value: backupPassword);
     // Handed over once: a later company on this phone gets a new id and a file of its own.
     if (tenantId == local) await _storage.delete(key: localTenantKey);
     return tenantId;
@@ -195,6 +226,32 @@ class Account {
       return (payload: m['payload'] as String, sig: m['sig'] as String);
     }),
   );
+
+  /// What sends [tenantId]'s cloud copies from this phone, or null when the build has no recovery key (D-072).
+  CloudSender? cloudSender(String tenantId, {required TenantDatabase Function() db, required Future<Directory> Function() work}) =>
+      isRecoveryKey(recoveryKey) ? CloudSender(account: this, storage: _storage, tenantId: tenantId, db: db, work: work) : null;
+
+  /// A session is here to ask the cloud with, kept or typed.
+  bool get hasSession => _auth.currentSession != null;
+
+  /// Sends one cloud copy of [tenantId] from this phone through the backup function (T20d-a): the cloud names the path,
+  /// the file goes to a one-time upload link, and the copy counts once the cloud sees it. [replace] puts this phone's
+  /// copy in place of one another phone sent, only on the owner's say. Returns when the cloud counted it.
+  Future<DateTime> sendCloudCopy(String tenantId, Uint8List bytes, {required bool replace}) => _run(() async {
+    if (_auth.currentSession == null) throw const AccountRefused(AccountProblem.signedOut);
+    if (_auth.currentSession!.isExpired) await _auth.refreshSession();
+    final operationId = newUuid();
+    final start = await _client.functions.invoke(
+      'backup',
+      body: {'action': 'start', 'tenant_id': tenantId, 'device_id': await thisDeviceId(_storage), 'size_bytes': bytes.length, 'operation_id': operationId, 'replace': replace},
+    );
+    final m = start.data as Map<String, dynamic>;
+    if (m['token'] case final String token) {
+      await _client.storage.from(_backupBucket).uploadBinaryToSignedUrl(m['path'] as String, token, bytes, const FileOptions(contentType: backupMime));
+    }
+    final finish = await _client.functions.invoke('backup', body: {'action': 'finish', 'tenant_id': tenantId, 'operation_id': operationId});
+    return DateTime.parse((finish.data as Map<String, dynamic>)['finished_at'] as String).toUtc();
+  });
 
   Future<void> signInAgain(String password) => _run(() async {
     await _auth.signInWithPassword(email: (await binding())!.email, password: password);
@@ -338,6 +395,10 @@ AccountProblem problemOf(Object error) => switch (error) {
   FunctionException(details: {'error': 'other_phone'}) => AccountProblem.otherPhone,
   FunctionException(details: {'error': 'phone_off'}) => AccountProblem.deviceRevoked,
   FunctionException(details: {'error': 'sign_in'}) => AccountProblem.signedOut,
+  FunctionException(details: {'error': 'other_phone_copy'}) => AccountProblem.otherPhoneCopy,
+  FunctionException(details: {'error': 'not_owner'}) => AccountProblem.notOwner,
+  FunctionException(details: {'error': 'too_large'}) => AccountProblem.tooLarge,
+  FunctionException(details: {'error': 'too_many'}) => AccountProblem.tooMany,
   AuthException(statusCode: '429') => AccountProblem.tooMany,
   AuthException(code: 'over_email_send_rate_limit' || 'over_request_rate_limit') => AccountProblem.tooMany,
   AuthException(code: 'invalid_credentials') => AccountProblem.wrongLogin,

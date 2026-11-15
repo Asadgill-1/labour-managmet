@@ -87,6 +87,14 @@ void main() {
     });
   }
 
+  /// The backup password, asked once as the company is made (D-072).
+  Future<void> backupPassword(WidgetTester tester) async {
+    expect(find.text('Backup password'), findsWidgets);
+    await fill(tester, 'Backup password', 'backup123');
+    await fill(tester, 'Backup password dobara', 'backup123');
+    await tapAndSettle(tester, find.text('Shuru karein'));
+  }
+
   /// The phone's lock, asked for once the company opens after a login (AUTH-03).
   Future<void> setPin(WidgetTester tester, [String pin = '2580']) async {
     expect(find.text('Phone ka taala'), findsOneWidget);
@@ -131,7 +139,16 @@ void main() {
 
     expect(find.text('Apni company'), findsOneWidget);
     await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+    await tapAndSettle(tester, find.text('Aage'));
+    expect(find.text('Ise likh kar sambhal lein. Naye phone par backup kholne ke liye yahi chahiye.'), findsOneWidget);
+    expect(find.textContaining('platform ise khol kar'), findsNothing, reason: 'a build without the recovery key sends no cloud copy');
+    await fill(tester, 'Backup password', 'backup123');
+    await fill(tester, 'Backup password dobara', 'backup124');
     await tapAndSettle(tester, find.text('Shuru karein'));
+    expect(find.text('Dono password ek jaise nahin.'), findsOneWidget);
+    expect(cloud.calls.where((c) => c.path == '/rest/v1/rpc/create_tenant'), isEmpty, reason: 'no company starts without its backup password');
+    await backupPassword(tester);
+    expect(await real(tester, () => const FlutterSecureStorage().read(key: 'backup_password_${cloud.companies.values.single}')), 'backup123');
     await fill(tester, 'PIN', '1234');
     await tapAndSettle(tester, find.text('Ye PIN rakhein'));
     expect(find.text('4 se 6 number rakhein. Ek hi number baar baar ya 1234 jaisi seedhi line nahin.'), findsOneWidget);
@@ -200,7 +217,8 @@ void main() {
     await tapAndSettle(tester, find.text('Aage'));
     expect(find.text('Apni company'), findsOneWidget);
     await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
-    await tapAndSettle(tester, find.text('Shuru karein'));
+    await tapAndSettle(tester, find.text('Aage'));
+    await backupPassword(tester);
     await setPin(tester);
     expect(find.byType(LabourApp), findsOneWidget);
     await shutDown(tester, opened.single);
@@ -229,7 +247,8 @@ void main() {
     await fill(tester, 'Email wala code', FakeCloud.code);
     await tapAndSettle(tester, find.text('Aage'));
     await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
-    await tapAndSettle(tester, find.text('Shuru karein'));
+    await tapAndSettle(tester, find.text('Aage'));
+    await backupPassword(tester);
     await setPin(tester);
     expect(opened.single.tenantId, testTenant, reason: 'the data on the phone opens in the new company');
     expect(find.byType(LabourApp), findsOneWidget);

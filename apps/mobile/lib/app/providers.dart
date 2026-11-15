@@ -5,6 +5,7 @@ import '../data/account.dart';
 import '../data/app_lock.dart';
 import '../data/changes.dart';
 import '../data/closing.dart';
+import '../data/cloud_copy.dart';
 import '../data/documents.dart';
 import '../data/invoices.dart';
 import '../data/licence.dart';
@@ -37,6 +38,15 @@ final licensingProvider = Provider<Licensing?>((ref) => null);
 final licenceProvider = StreamProvider<LicenceView?>((ref) {
   final licensing = ref.watch(licensingProvider);
   return licensing == null ? Stream.value(null) : licensing.watch();
+});
+
+/// Sends the open company's cloud copy, from AppRoot (T20d). Null in a build without accounts or without the recovery
+/// key; the Backup page then says the cloud backup is unavailable.
+final cloudSenderProvider = Provider<CloudSender?>((ref) => null);
+
+final cloudViewProvider = StreamProvider<CloudView?>((ref) {
+  final sender = ref.watch(cloudSenderProvider);
+  return sender == null ? Stream.value(null) : sender.watch();
 });
 
 final profileProvider = StreamProvider((ref) {

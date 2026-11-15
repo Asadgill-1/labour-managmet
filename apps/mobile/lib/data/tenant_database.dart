@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'attendance.dart';
-import 'backup.dart' show backupLastKey, backupPasswordKey;
+import 'backup.dart' show backupLastKey, backupPasswordKey, cloudCopyKey;
 import 'restore.dart' show keptFile, restoringFile;
 import 'tables.dart';
 import 'tenant_database.steps.dart';
@@ -465,7 +465,7 @@ Future<TenantDatabase> openTenant(FlutterSecureStorage storage, Directory dir, S
 /// without it the files cannot be read, even if deleting them fails. The file must be closed.
 Future<void> deleteTenant(FlutterSecureStorage storage, Directory dir, String tenantId) async {
   await storage.delete(key: _keyName(tenantId));
-  for (final name in [backupPasswordKey(tenantId), backupLastKey(tenantId)]) {
+  for (final name in [backupPasswordKey(tenantId), backupLastKey(tenantId), cloudCopyKey(tenantId)]) {
     await storage.delete(key: name);
   }
   for (final file in [tenantFile(dir, tenantId), restoringFile(dir, tenantId), keptFile(dir, tenantId)]) {

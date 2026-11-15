@@ -8,6 +8,7 @@ import '../../app/settings.dart';
 import '../../app/theme.dart';
 import '../../data/account.dart';
 import '../../data/app_lock.dart';
+import '../../data/recovery.dart' show isRecoveryKey;
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -32,6 +33,9 @@ String accountProblemText(AppLocalizations l10n, AccountRefused refusal) => swit
   AccountProblem.otherPhone => l10n.accountOtherPhone,
   AccountProblem.signedOut => l10n.accountSignedOut,
   AccountProblem.slipsWaiting => l10n.accountSlipsWaiting,
+  AccountProblem.otherPhoneCopy => l10n.accountOtherPhoneCopy,
+  AccountProblem.notOwner => l10n.accountNotOwner,
+  AccountProblem.tooLarge => l10n.accountTooLarge,
   AccountProblem.failed => l10n.accountFailed,
 };
 
@@ -338,7 +342,7 @@ class _CodeScreenState extends State<CodeScreen> with CloudStep {
   }
 }
 
-/// The company's name, the last online step before its books open (UX-02).
+/// The company's name, then its backup password, before its books open (UX-02).
 class CompanyNameScreen extends StatefulWidget {
   const CompanyNameScreen({required this.account, required this.onOpen, super.key});
 
@@ -352,12 +356,13 @@ class CompanyNameScreen extends StatefulWidget {
 class _CompanyNameScreenState extends State<CompanyNameScreen> with CloudStep {
   final _form = GlobalKey<FormState>();
   final _name = TextEditingController();
+
+  /// Kept while the name is changed and sent again, so a lost answer cannot make a second company (MODEL-06).
   final _operationId = newUuid();
 
-  Future<void> _start() async {
+  void _next() {
     if (!validateAndReveal(_form)) return;
-    final name = _name.text.trim();
-    await attempt(() async => widget.onOpen(await widget.account.createCompany(name, _operationId), companyName: name));
+    push(BackupPasswordScreen(account: widget.account, onOpen: widget.onOpen, companyName: _name.text.trim(), operationId: _operationId));
   }
 
   @override
@@ -366,7 +371,7 @@ class _CompanyNameScreenState extends State<CompanyNameScreen> with CloudStep {
     return StepScaffold(
       title: l10n.welcomeTitle,
       busy: busy,
-      action: MainActionBar(free: true, label: l10n.accountStart, onPressed: busy ? null : _start),
+      action: MainActionBar(free: true, label: l10n.accountContinue, onPressed: _next),
       child: Form(
         key: _form,
         child: FormBody(
@@ -374,6 +379,68 @@ class _CompanyNameScreenState extends State<CompanyNameScreen> with CloudStep {
             Text(l10n.welcomeBody),
             fieldGap,
             Field(l10n.legalName, _name, validator: (v) => (v ?? '').trim().isEmpty ? l10n.fieldRequired : null),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The backup password, asked once as the company is made, typed twice, to be written down; it can't be skipped
+/// (D-072). The company is made only once it is kept, so no company starts without one.
+class BackupPasswordScreen extends StatefulWidget {
+  const BackupPasswordScreen({required this.account, required this.onOpen, required this.companyName, required this.operationId, super.key});
+
+  final Account account;
+  final OpenCompany onOpen;
+  final String companyName;
+  final String operationId;
+
+  @override
+  State<BackupPasswordScreen> createState() => _BackupPasswordScreenState();
+}
+
+class _BackupPasswordScreenState extends State<BackupPasswordScreen> with CloudStep {
+  final _form = GlobalKey<FormState>();
+  final _password = TextEditingController();
+  final _again = TextEditingController();
+
+  Future<void> _start() async {
+    if (!validateAndReveal(_form)) return;
+    final name = widget.companyName;
+    await attempt(() async => widget.onOpen(await widget.account.createCompany(name, widget.operationId, backupPassword: _password.text), companyName: name));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return StepScaffold(
+      title: l10n.backupPassword,
+      busy: busy,
+      action: MainActionBar(free: true, label: l10n.accountStart, onPressed: busy ? null : _start),
+      child: Form(
+        key: _form,
+        child: FormBody(
+          children: [
+            Text(l10n.signupBackupBody),
+            fieldGap,
+            MarginNote(l10n.signupBackupWriteDown),
+            if (isRecoveryKey(widget.account.recoveryKey)) ...[fieldGap, MarginNote(l10n.cloudPlainWords)],
+            fieldGap,
+            PasswordField(
+              l10n.backupPassword,
+              _password,
+              autofillHints: const [AutofillHints.newPassword],
+              helper: l10n.accountPasswordHelp,
+              validator: (v) => _newPasswordError(l10n, v),
+            ),
+            fieldGap,
+            PasswordField(
+              l10n.backupPasswordAgain,
+              _again,
+              autofillHints: const [AutofillHints.newPassword],
+              validator: (v) => v == _password.text ? null : l10n.backupPasswordMismatch,
+            ),
           ],
         ),
       ),
@@ -633,6 +700,8 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> with CloudSte
               alignment: AlignmentDirectional.centerStart,
               child: TextButton.icon(onPressed: widget.onExport, icon: const Icon(Icons.table_view_outlined), label: Text(l10n.accountDeleteOpenReports)),
             ),
+            fieldGap,
+            MarginNote(l10n.accountDeleteCloud),
             fieldGap,
             Text(l10n.accountDeleteConfirm),
             fieldGap,

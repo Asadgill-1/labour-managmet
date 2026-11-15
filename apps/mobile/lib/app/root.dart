@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../data/account.dart';
 import '../data/app_lock.dart';
+import '../data/cloud_copy.dart';
 import '../data/licence.dart';
 import '../data/masters.dart';
 import '../data/plan_guard.dart';
@@ -63,17 +65,19 @@ class AppRoot extends StatefulWidget {
   State<AppRoot> createState() => _AppRootState();
 }
 
-class _AppRootState extends State<AppRoot> {
+class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
   late var _settings = widget.settings;
   late var _opened = widget.opened;
   late var _lock = widget.pinSet ? _Lock.locked : _Lock.open;
   LoginNote? _note;
   Licensing? _licensing;
+  CloudSender? _cloud;
   ({SwapStage stage, Restored done, bool kept})? _swapping;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     if (_opened case final opened?) {
       _guard(opened.db);
       unawaited(_closeIfOff(opened.binding.tenantId));
@@ -81,17 +85,33 @@ class _AppRootState extends State<AppRoot> {
     }
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// Coming back to the front sends the cloud copy if one is due (D-075).
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _swapping == null) unawaited(_cloud?.sendIfDue());
+  }
+
   /// Every write of the open company asks its plan, as the licence on this phone gives it now (T21c).
   void _guard(TenantDatabase db) => db.guard = planGuard(db, () => _licensing?.view);
 
   /// Reads the licence kept here at once, then renews it from the cloud, with the session kept on the phone when the
-  /// app has just started (D-074). Counted from whichever file is open, as a restore swaps it.
+  /// app has just started (D-074). Counted from whichever file is open, as a restore swaps it. Then the cloud copy goes,
+  /// if one is due (D-075).
   void _startLicence(String tenantId, {required bool resume}) {
     final licensing = _licensing = widget.account.licensing(tenantId, () => activeCounts(_opened!.db));
+    final cloud = _cloud = widget.account.cloudSender(tenantId, db: () => _opened!.db, work: getTemporaryDirectory);
     unawaited(() async {
       await licensing.load();
+      await cloud?.load();
       if (resume) await widget.account.resume();
       if (_licensing == licensing) await licensing.refresh();
+      if (_cloud == cloud && _swapping == null) await cloud?.sendIfDue();
     }());
   }
 
@@ -139,6 +159,8 @@ class _AppRootState extends State<AppRoot> {
       _swapping = (stage: SwapStage.working, done: done, kept: keep);
     });
     await WidgetsBinding.instance.endOfFrame;
+    // A copy being made reads the file, so it closes once the copy is done.
+    await _cloud?.settled();
     await db.close();
     var stage = SwapStage.done;
     try {
@@ -162,7 +184,9 @@ class _AppRootState extends State<AppRoot> {
   Future<void> _leave(LoginNote? note) async {
     final (:db, :binding) = _opened!;
     final licensing = _licensing;
+    final cloud = _cloud;
     _licensing = null;
+    _cloud = null;
     await widget.account.logOut();
     await widget.lock.clear();
     final settings = await widget.loadSettings();
@@ -173,8 +197,10 @@ class _AppRootState extends State<AppRoot> {
     });
     // The company's scope goes with this frame, and its streams with it; only then can the file close.
     await WidgetsBinding.instance.endOfFrame;
+    await cloud?.settled();
     await db.close();
     await licensing?.dispose();
+    await cloud?.dispose();
     if (note == LoginNote.accountDeleted || note == LoginNote.phoneOff) await widget.deleteTenant(binding.tenantId);
     PaintingBinding.instance.imageCache
       ..clear()
@@ -222,6 +248,7 @@ class _AppRootState extends State<AppRoot> {
         accountProvider.overrideWithValue((email: opened.binding.email, logOut: _logOut, deleteAccount: _deleteAccount, lock: widget.lock, account: widget.account)),
         restoreProvider.overrideWithValue(files == null ? null : (dir: files.dir, key: () => files.key(opened.binding.tenantId), swap: _swap)),
         licensingProvider.overrideWithValue(_licensing),
+        cloudSenderProvider.overrideWithValue(_cloud),
       ],
       child: const LabourApp(),
     );

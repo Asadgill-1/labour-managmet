@@ -2942,5 +2942,37 @@
     }
   },
   "planKeepReason": "Plan limit",
-  "planKeepOpen": "Choose"
+  "planKeepOpen": "Choose",
+  "accountOtherPhoneCopy": "The copy in the cloud is from another phone. Choose on the Backup page.",
+  "accountNotOwner": "Only the company's owner sends the cloud backup.",
+  "accountTooLarge": "The backup is over 50 MB, too large for the cloud. Save it as a file.",
+  "signupBackupBody": "Your company's backup is locked with this password. It is not your account password, and this phone keeps it.",
+  "signupBackupWriteDown": "Write it down and keep it safe. A new phone needs it to open the backup.",
+  "cloudPlainWords": "The locked backup goes to the cloud by itself, once a day. Bringing it back from the cloud needs the add-on. If you forget the password, the platform can open it and give it back to you.",
+  "backupPasswordWriteDownCloud": "Write this password down somewhere. A new phone needs it to open the backup. Without it nobody can open a file you saved, not even us. The platform can open the cloud copy and give it back to you.",
+  "cloudTitle": "Cloud copy",
+  "cloudLast": "The last cloud copy went on {date}.",
+  "@cloudLast": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudNone": "No copy has gone to the cloud yet.",
+  "cloudSending": "Going to the cloud",
+  "cloudSendNow": "Send to the cloud now",
+  "cloudSent": "The copy reached the cloud",
+  "cloudOffline": "No internet. It goes by itself when the phone is next online.",
+  "cloudSignedOut": "Log in again with the password to send to the cloud.",
+  "cloudUnavailable": "The cloud backup is not available in this app.",
+  "cloudNeedsPassword": "Keep a backup password above first.",
+  "cloudOtherPhoneAsk": "The copy in the cloud is from another phone. Bring that data back here first, or send this phone's data in its place?",
+  "cloudBringBack": "Bring that data back first",
+  "cloudKeepThis": "Keep this phone's data",
+  "cloudReplaceConfirm": "This phone's data goes to the cloud, and the other phone's copy may be removed. This can't be undone.",
+  "cloudReplaceGo": "Yes, send this phone's data",
+  "backupPasswordDue": "No backup password yet",
+  "backupPasswordDueBody": "Without it the backup does not go to the cloud. Tap to set it.",
+  "accountDeleteCloud": "Only the latest backup copy in the cloud stays 60 days, then it goes too."
 }

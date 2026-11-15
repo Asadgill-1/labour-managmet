@@ -1,0 +1,165 @@
+import 'dart:io';
+
+import 'package:cryptography/cryptography.dart';
+import 'package:drift/drift.dart' show Value;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:labour_app/data/account.dart';
+import 'package:labour_app/data/backup.dart';
+import 'package:labour_app/data/cloud_copy.dart';
+import 'package:labour_app/data/masters.dart';
+import 'package:labour_app/data/recovery.dart';
+import 'package:labour_app/data/tenant_database.dart';
+
+import 'backup_test.dart' show seed;
+import 'cloud_fake.dart';
+import 'recovery_test.dart' show manifestOf, publicOf, recoveryOf, testRecoveryPair;
+import 'support.dart';
+
+void main() {
+  late Directory work;
+  late FakeCloud cloud;
+  late TenantDatabase db;
+  late Account account;
+  late SimpleKeyPair pair;
+  late DateTime now;
+  const storage = FlutterSecureStorage();
+
+  setUp(() async {
+    work = await Directory.systemTemp.createTemp('t20d-send');
+    FlutterSecureStorage.setMockInitialValues({backupPasswordKey(testTenant): 'pass1234'});
+    pair = await testRecoveryPair();
+    cloud = FakeCloud()..addUser('owner@test.ae', 'pass1234', company: testTenant);
+    account = cloud.account(storage, recoveryKey: await publicOf(pair));
+    await account.signIn('owner@test.ae', 'pass1234');
+    db = memoryDb();
+    await seed(db);
+    now = DateTime.utc(2026, 11, 15, 6);
+  });
+
+  tearDown(() async {
+    await db.close();
+    await work.delete(recursive: true);
+  });
+
+  CloudSender sender({int limit = cloudCopyLimit}) =>
+      CloudSender(account: account, storage: storage, tenantId: testTenant, db: () => db, work: () async => work, clock: () => now, limit: limit);
+
+  int starts() => cloud.calls.where((c) => c.path == '/functions/v1/backup' && c.body['action'] == 'start').length;
+
+  Future<void> change() => db.saveRow(db.workers, id: null, operationId: newUuid(), fields: WorkersCompanion(code: Value('W${starts()}x'), name: const Value('Rafiq')));
+
+  test('the first open sends a copy the recovery key opens; the same day, or an unchanged company, sends nothing more (D-075)', () async {
+    final s = sender();
+    await s.load();
+    await s.sendIfDue();
+    expect(cloud.cloudFiles, hasLength(1));
+    expect(s.view, (lastAt: DateTime.utc(2026, 11, 15, 6), problem: null, sending: false));
+    final copy = cloud.cloudFiles.values.single;
+    expect(cloud.cloudCopies.single['replace'], isFalse);
+    expect((await checkBackup(copy, 'pass1234', tenantId: testTenant, schemaVersion: db.schemaVersion, work: work)).workers, 1);
+    expect(await openCopyKey(recoveryOf(copy), pair, tenantId: testTenant, sha256: manifestOf(copy)['sha256'] as String), hasLength(32));
+
+    now = now.add(const Duration(hours: 5));
+    await change();
+    await s.sendIfDue();
+    expect(starts(), 1, reason: 'once a day at most');
+
+    now = now.add(const Duration(days: 1));
+    final again = sender();
+    await again.load();
+    expect(again.view.lastAt, DateTime.utc(2026, 11, 15, 6), reason: 'kept on the phone');
+    await again.sendIfDue();
+    expect(starts(), 2, reason: 'a day on, with a change');
+
+    now = now.add(const Duration(days: 2));
+    await again.sendIfDue();
+    expect(starts(), 2, reason: 'nothing changed since');
+  });
+
+  test('a failed try changes nothing and says why; the next try by itself waits an hour', () async {
+    final s = sender();
+    await s.load();
+    await s.sendIfDue();
+    now = now.add(const Duration(days: 1));
+    await change();
+    cloud.offline = true;
+    await s.sendIfDue();
+    expect(s.view, (lastAt: DateTime.utc(2026, 11, 15, 6), problem: AccountProblem.offline, sending: false));
+
+    cloud.offline = false;
+    now = now.add(const Duration(minutes: 30));
+    await s.sendIfDue();
+    expect(starts(), 1, reason: 'coming back to the app within the hour does not make the copy again');
+    now = now.add(const Duration(minutes: 31));
+    await s.sendIfDue();
+    expect(starts(), 2);
+    expect(s.view.problem, isNull);
+  });
+
+  test("another phone's copy is never replaced by itself; the owner's choice replaces it (D-076)", () async {
+    cloud.addCloudCopy(testTenant, 'old-phone');
+    final s = sender();
+    await s.load();
+    await s.sendIfDue();
+    expect(s.view.problem, AccountProblem.otherPhoneCopy);
+    expect(cloud.cloudFiles, isEmpty);
+
+    now = now.add(const Duration(days: 1));
+    await change();
+    final later = sender();
+    await later.load();
+    await later.sendIfDue();
+    expect(starts(), 1, reason: 'the question waits for the owner');
+
+    await later.sendNow(replace: true);
+    expect(cloud.cloudFiles, hasLength(1));
+    expect(cloud.cloudCopies.last['replace'], isTrue);
+    expect(later.view.problem, isNull);
+  });
+
+  test('a copy over the limit never reaches the cloud, and a refusal the owner must see is kept', () async {
+    final small = sender(limit: 1000);
+    await small.load();
+    await small.sendNow();
+    expect(small.view.problem, AccountProblem.tooLarge);
+    expect(starts(), 0);
+
+    cloud.backupRefusal = 'not_owner';
+    final s = sender();
+    await s.load();
+    await s.sendNow();
+    expect(s.view.problem, AccountProblem.notOwner);
+    now = now.add(const Duration(days: 2));
+    await change();
+    final later = sender();
+    await later.load();
+    await later.sendIfDue();
+    expect(starts(), 1, reason: 'only the owner sends; asking again by itself would not change that');
+  });
+
+  test('no password, no session or no recovery key sends nothing; deleting the company forgets the record', () async {
+    expect(cloud.account(storage).cloudSender(testTenant, db: () => db, work: () async => work), isNull);
+    expect(cloud.account(storage, recoveryKey: 'abc').cloudSender(testTenant, db: () => db, work: () async => work), isNull);
+    expect(account.cloudSender(testTenant, db: () => db, work: () async => work), isNotNull);
+
+    await storage.delete(key: backupPasswordKey(testTenant));
+    final s = sender();
+    await s.load();
+    await s.sendIfDue();
+    await s.sendNow();
+    expect(starts(), 0);
+
+    await storage.write(key: backupPasswordKey(testTenant), value: 'pass1234');
+    final signedOut = cloud.account(storage, recoveryKey: await publicOf(pair));
+    final idle = CloudSender(account: signedOut, storage: storage, tenantId: testTenant, db: () => db, work: () async => work, clock: () => now);
+    await idle.load();
+    await idle.sendIfDue();
+    expect(starts(), 0);
+
+    await s.sendNow();
+    expect(await storage.read(key: cloudCopyKey(testTenant)), isNotNull);
+    await deleteTenant(storage, work, testTenant);
+    expect(await storage.read(key: cloudCopyKey(testTenant)), isNull);
+  });
+}

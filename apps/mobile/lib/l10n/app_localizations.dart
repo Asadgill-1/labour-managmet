@@ -8052,6 +8052,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose'**
   String get planKeepOpen;
+
+  /// No description provided for @accountOtherPhoneCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'The copy in the cloud is from another phone. Choose on the Backup page.'**
+  String get accountOtherPhoneCopy;
+
+  /// No description provided for @accountNotOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the company\'s owner sends the cloud backup.'**
+  String get accountNotOwner;
+
+  /// No description provided for @accountTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup is over 50 MB, too large for the cloud. Save it as a file.'**
+  String get accountTooLarge;
+
+  /// No description provided for @signupBackupBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your company\'s backup is locked with this password. It is not your account password, and this phone keeps it.'**
+  String get signupBackupBody;
+
+  /// No description provided for @signupBackupWriteDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Write it down and keep it safe. A new phone needs it to open the backup.'**
+  String get signupBackupWriteDown;
+
+  /// No description provided for @cloudPlainWords.
+  ///
+  /// In en, this message translates to:
+  /// **'The locked backup goes to the cloud by itself, once a day. Bringing it back from the cloud needs the add-on. If you forget the password, the platform can open it and give it back to you.'**
+  String get cloudPlainWords;
+
+  /// No description provided for @backupPasswordWriteDownCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Write this password down somewhere. A new phone needs it to open the backup. Without it nobody can open a file you saved, not even us. The platform can open the cloud copy and give it back to you.'**
+  String get backupPasswordWriteDownCloud;
+
+  /// No description provided for @cloudTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud copy'**
+  String get cloudTitle;
+
+  /// No description provided for @cloudLast.
+  ///
+  /// In en, this message translates to:
+  /// **'The last cloud copy went on {date}.'**
+  String cloudLast(String date);
+
+  /// No description provided for @cloudNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No copy has gone to the cloud yet.'**
+  String get cloudNone;
+
+  /// No description provided for @cloudSending.
+  ///
+  /// In en, this message translates to:
+  /// **'Going to the cloud'**
+  String get cloudSending;
+
+  /// No description provided for @cloudSendNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Send to the cloud now'**
+  String get cloudSendNow;
+
+  /// No description provided for @cloudSent.
+  ///
+  /// In en, this message translates to:
+  /// **'The copy reached the cloud'**
+  String get cloudSent;
+
+  /// No description provided for @cloudOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet. It goes by itself when the phone is next online.'**
+  String get cloudOffline;
+
+  /// No description provided for @cloudSignedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in again with the password to send to the cloud.'**
+  String get cloudSignedOut;
+
+  /// No description provided for @cloudUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The cloud backup is not available in this app.'**
+  String get cloudUnavailable;
+
+  /// No description provided for @cloudNeedsPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep a backup password above first.'**
+  String get cloudNeedsPassword;
+
+  /// No description provided for @cloudOtherPhoneAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'The copy in the cloud is from another phone. Bring that data back here first, or send this phone\'s data in its place?'**
+  String get cloudOtherPhoneAsk;
+
+  /// No description provided for @cloudBringBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring that data back first'**
+  String get cloudBringBack;
+
+  /// No description provided for @cloudKeepThis.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep this phone\'s data'**
+  String get cloudKeepThis;
+
+  /// No description provided for @cloudReplaceConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone\'s data goes to the cloud, and the other phone\'s copy may be removed. This can\'t be undone.'**
+  String get cloudReplaceConfirm;
+
+  /// No description provided for @cloudReplaceGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, send this phone\'s data'**
+  String get cloudReplaceGo;
+
+  /// No description provided for @backupPasswordDue.
+  ///
+  /// In en, this message translates to:
+  /// **'No backup password yet'**
+  String get backupPasswordDue;
+
+  /// No description provided for @backupPasswordDueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Without it the backup does not go to the cloud. Tap to set it.'**
+  String get backupPasswordDueBody;
+
+  /// No description provided for @accountDeleteCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the latest backup copy in the cloud stays 60 days, then it goes too.'**
+  String get accountDeleteCloud;
 }
 
 class _AppLocalizationsDelegate

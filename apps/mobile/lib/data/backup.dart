@@ -226,6 +226,9 @@ Future<void> unlockBackup(Uint8List bytes, String password, File into, String he
 String backupPasswordKey(String tenantId) => 'backup_password_$tenantId';
 String backupLastKey(String tenantId) => 'backup_last_$tenantId';
 
+/// The last cloud copy and the last failure to send one (T20d).
+String cloudCopyKey(String tenantId) => 'cloud_copy_$tenantId';
+
 /// The last backup that left the app: saved where the user chose, or handed to the share sheet (DATA-04).
 typedef LastBackup = ({DateTime at, bool sent});
 

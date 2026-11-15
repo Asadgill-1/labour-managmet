@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -72,10 +73,23 @@ class FakeCloud {
   /// The upload of a slip's file fails as a dropped connection would.
   bool uploadFails = false;
 
+  /// The cloud's backup copies, as `cloud_backups` rows, and the files in the `backups` bucket, by path (T20d).
+  final cloudCopies = <Map<String, dynamic>>[];
+  final cloudFiles = <String, Uint8List>{};
+
+  /// What the backup function answers a start with instead, such as not_owner or too_many.
+  String? backupRefusal;
+
+  /// A copy another phone of the company sent before this one.
+  void addCloudCopy(String tenant, String device) => cloudCopies.add({
+    'id': 'copy-${cloudCopies.length + 1}', 'tenant_id': tenant, 'device_id': device, 'file_path': '$tenant/old.zip',
+    'operation_id': 'old', 'finished_at_utc': '2026-11-10T08:00:00.000Z', 'replace': false,
+  });
+
   /// A password was typed since the last deletion asked, as the server's recent sign-in rule needs (D-066).
   bool _passwordJustNow = false;
 
-  Account account(FlutterSecureStorage storage, {bool emailCodes = true}) => Account(
+  Account account(FlutterSecureStorage storage, {bool emailCodes = true, String recoveryKey = ''}) => Account(
     SupabaseClient(
       cloudUrl,
       'sb_publishable_test',
@@ -86,6 +100,7 @@ class FakeCloud {
     storage,
     emailCodes: emailCodes,
     licenceKey: licenceKey,
+    recoveryKey: recoveryKey,
   );
 
   /// The owner tapped the link in the email.
@@ -133,6 +148,23 @@ class FakeCloud {
       slipFiles[name] = text.indexOf('\r\n--', start) - start;
       slipTypes[name] = RegExp(r'content-type: (\S+)', caseSensitive: false).firstMatch(text.substring(text.lastIndexOf('--', head), start))![1]!;
       return _json({'Key': 'payment-slips/$name'});
+    }
+    const signed = '/storage/v1/object/upload/sign/backups/';
+    if (path.startsWith(signed) && request.method == 'PUT') {
+      calls.add((path: path, body: const {}));
+      final name = path.substring(signed.length);
+      final row = cloudCopies.where((c) => c['file_path'] == name && c['finished_at_utc'] == null);
+      if (row.isEmpty || request.url.queryParameters['token'] != 'token-${row.first['id']}') {
+        return _json({'statusCode': '400', 'error': 'InvalidSignature', 'message': 'invalid signature'}, status: 400);
+      }
+      // The file's own bytes and type, from the multipart body the storage client sends.
+      final text = latin1.decode(request.bodyBytes);
+      final head = text.indexOf('filename=');
+      final start = text.indexOf('\r\n\r\n', head) + 4;
+      final type = RegExp(r'content-type: (\S+)', caseSensitive: false).firstMatch(text.substring(text.lastIndexOf('--', head), start))![1]!;
+      if (type != 'application/zip') return _json({'statusCode': '415', 'error': 'invalid_mime_type'}, status: 400);
+      cloudFiles[name] = request.bodyBytes.sublist(start, text.indexOf('\r\n--', start));
+      return _json({'Key': 'backups/$name'});
     }
     final body = request.body.isEmpty ? <String, dynamic>{} : jsonDecode(request.body) as Map<String, dynamic>;
     calls.add((path: path, body: body));
@@ -225,6 +257,28 @@ class FakeCloud {
         final signature = await Ed25519().sign(bytes, keyPair: key);
         String b64(List<int> b) => base64Url.encode(b).replaceAll('=', '');
         return _json({'payload': b64(bytes), 'sig': b64(signature.bytes)});
+      case '/functions/v1/backup':
+        if (caller == null) return _json({'error': 'sign_in'}, status: 401);
+        final tenant = body['tenant_id'] as String;
+        if (companies[caller] != tenant) return _json({'error': 'not_owner'}, status: 403);
+        if (body['action'] == 'start') {
+          if (backupRefusal case final refusal?) return _json({'error': refusal}, status: refusal == 'too_many' ? 429 : 403);
+          final done = cloudCopies.where((c) => c['tenant_id'] == tenant && c['finished_at_utc'] != null);
+          if (done.isNotEmpty && done.last['device_id'] != body['device_id'] && body['replace'] != true) {
+            return _json({'error': 'other_phone_copy'}, status: 403);
+          }
+          cloudCopies.removeWhere((c) => c['tenant_id'] == tenant && c['finished_at_utc'] == null);
+          final id = 'copy-${cloudCopies.length + 1}';
+          cloudCopies.add({
+            'id': id, 'tenant_id': tenant, 'device_id': body['device_id'], 'file_path': '$tenant/$id.zip', 'operation_id': body['operation_id'],
+            'finished_at_utc': null, 'replace': body['replace'], 'size': body['size_bytes'],
+          });
+          return _json({'path': '$tenant/$id.zip', 'token': 'token-$id'});
+        }
+        final row = cloudCopies.firstWhere((c) => c['operation_id'] == body['operation_id']);
+        if (!cloudFiles.containsKey(row['file_path'])) return _json({'error': 'not_arrived'}, status: 409);
+        row['finished_at_utc'] = '2026-11-15T06:00:00.000Z';
+        return _json({'finished_at': row['finished_at_utc']});
       case '/rest/v1/plans':
         return _json(plans);
       case '/rest/v1/platform_settings':
