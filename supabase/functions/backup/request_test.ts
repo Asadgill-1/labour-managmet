@@ -20,7 +20,8 @@ test("a start names the company, the phone, the size and the operation", () => {
 
 test("replacing another phone's copy is said outright, never assumed", () => {
   const ask = { action: "start", tenant_id: tenant, device_id: phone, size_bytes: 1, operation_id: operation };
-  assert.equal(parseAsk({ ...ask, replace: true })?.args.p_replace, true);
+  const kept = parseAsk({ ...ask, replace: true });
+  assert.equal(kept?.action === "start" && kept.args.p_replace, true);
   assert.equal(parseAsk({ ...ask, replace: "yes" }), null);
 });
 
