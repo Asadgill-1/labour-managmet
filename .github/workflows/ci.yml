@@ -73,11 +73,11 @@ jobs:
       - uses: supabase/setup-cli@v3
         with:
           version: 2.108.0
-      # Storage runs too, for the payment slips' bucket and its policies (T21a).
+      # Storage runs too, for the payment slips' bucket and its policies (T21a) and the backups' bucket (T20d-a).
       - run: supabase start -x analytics,edge-runtime,functions,imgproxy,inbucket,meta,realtime,studio,vector
       - run: supabase test db
 
-  # The licence function's signing, and a type check of the function itself (T21a).
+  # The licence function's signing, what the backup function accepts, and a type check of both (T21a, T20d-a).
   functions:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
@@ -86,8 +86,8 @@ jobs:
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
-      - run: deno check supabase/functions/licence/index.ts
-      - run: deno test supabase/functions/licence/
+      - run: deno check supabase/functions/licence/index.ts supabase/functions/backup/index.ts
+      - run: deno test supabase/functions/
 
   # Android builds are slow, so only PRs to main run this.
   android:

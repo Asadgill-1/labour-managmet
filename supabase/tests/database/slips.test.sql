@@ -15,7 +15,7 @@ select results_eq(
   $$ values (false, 5242880::bigint, array['image/jpeg', 'image/png', 'application/pdf']) $$,
   'slips are kept private, up to 5 MB, as a photo or a PDF'
 );
-select ok(not has_function_privilege('anon', 'public.submit_slip(uuid, text, integer, text, uuid)', 'execute'), 'a visitor cannot send a slip');
+select ok(not has_function_privilege('anon', 'public.submit_slip(uuid, text, integer, text, uuid, text)', 'execute'), 'a visitor cannot send a slip');
 
 set local role authenticated;
 set local request.jwt.claims to '{"sub": "11111111-1111-1111-1111-111111111111", "role": "authenticated"}';

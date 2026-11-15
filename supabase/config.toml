@@ -416,3 +416,7 @@ enabled = true
 # The licence function checks the session itself, through Postgres, so it works with the new publishable keys (T21a).
 [functions.licence]
 verify_jwt = false
+
+# The backup function too: Postgres, asked as the user, decides who may send or get a copy (T20d-a).
+[functions.backup]
+verify_jwt = false
