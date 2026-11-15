@@ -8,6 +8,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sqlite3/sqlite3.dart';
 
+import 'recovery.dart';
 import 'tenant_database.dart';
 
 /// The backup file (DATA-02): a zip holding `manifest.json` and `data.db`. `data.db` is the company's whole database,
@@ -69,8 +70,9 @@ typedef BackupSummary = ({BackupManifest manifest, String? companyName, int work
 
 extension BackupOps on TenantDatabase {
   /// The backup file's bytes, read back with [password] before they are returned, so a file that would not open is
-  /// never called a backup (DATA-04). [work] holds the copy while it is made; nothing is left there.
-  Future<Uint8List> backupBytes(String password, {required Directory work, DateTime? now}) async {
+  /// never called a backup (DATA-04). [work] holds the copy while it is made; nothing is left there. A cloud copy gives
+  /// the [recoveryKey]'s public half, and carries the copy's key sealed to it (D-072); a file the user keeps never does.
+  Future<Uint8List> backupBytes(String password, {required Directory work, DateTime? now, String? recoveryKey}) async {
     final copy = File('${work.path}/backup-${newUuid()}.db');
     try {
       // The copy starts under the phone's own key, so no unlocked copy ever touches the disk.
@@ -93,6 +95,13 @@ extension BackupOps on TenantDatabase {
       final zip = Archive()
         ..addFile(ArchiveFile.string('manifest.json', jsonEncode(manifest.toJson())))
         ..addFile(ArchiveFile.noCompress('data.db', data.length, data));
+      if (recoveryKey != null) {
+        // Checked against the copy before it is sealed, so the platform never holds a key that would not open it.
+        final key = await copyKey(password, data);
+        if (!opensWithKey(copy.path, key)) throw StateError('the copy key does not open the copy');
+        final sealed = await sealCopyKey(key, recoveryKey, tenantId: tenantId, sha256: manifest.sha256);
+        zip.addFile(ArchiveFile.string(recoveryFile, jsonEncode(sealed)));
+      }
       final bytes = ZipEncoder().encodeBytes(zip);
       await checkBackup(bytes, password, tenantId: tenantId, schemaVersion: schemaVersion, work: work);
       return bytes;
