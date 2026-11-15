@@ -63,6 +63,8 @@ jobs:
       - run: flutter pub get --enforce-lockfile
       - run: flutter analyze
       - run: flutter test
+      # What a Play Store build says about the cloud add-on, which only a build made with this define shows (BILL-07).
+      - run: flutter test --dart-define=PLAY_STORE=true test/cloud_restore_test.dart
 
   # The cloud schema and its two-company security tests (T19, AUTH-05), in Docker on the runner.
   supabase:

@@ -19,6 +19,7 @@ Everything promised for a later task, in one place, so nothing is lost between s
 - Slips whose file never arrived (a dropped upload the customer did not retry): shown as such, refused in one tap. The app could also send the file again to the same slip; today it says "File nahin pohanchi" and the customer sends a new slip (T21b).
 - Replacing the licence signing key: a button that makes a new pair, keeps the old public half valid until every phone has the new one, and shows the new public half for the next app build.
 - Freeing a trial claim on request, as the RUNBOOK's SQL does now.
+- The add-on bought alone shows the price on sale now. Once a plan's price changes, a company on the older version must see its own version's add-on price, which the cloud already charges (D-078). A paying company whose plan has left the sale can buy the add-on only with a plan; the dashboard could sell it the add-on alone.
 - The cloud backup (T20d): what a slip covers shown with it; each company's copies and add-on periods; taking an add-on period back; a button that removes the files due from storage, which today happens on the next finished upload or by hand; a deleted account's kept copy found by its email; downloading a copy to open for a company that forgot its backup password, with the check of its login email and payment recorded.
 - The account deletion web way by request (D-067), with T26.
 - The customer register (ADMIN-02): tenant id, contact, signup date, email verified, plan, trial or expiry, seats and phones, last online, app version, payments.
@@ -44,19 +45,15 @@ T20d-b, sending, is built (D-077):
 - The owner makes the recovery key on his computer with `tool/recovery_key.dart make`, keeps a second copy apart, and puts the printed `RECOVERY_KEY` in `apps/mobile/.env` (RUNBOOK under The cloud backup). Until then a build sends no copy.
 - On a phone, after the live run and the key: a throwaway company's first copy in the cloud, downloaded and opened with the tool (TC-199).
 
-T20d-c, getting it back:
+T20d-c, getting it back, is built (D-078):
 
-- Plan lein offers each plan with the add-on, its price and the new total (2000 fils for Small and Mid, 4000 for Large), and the add-on alone for the plan the company is on (`submit_slip`'s `p_covers`). Settings shows the add-on's end from the licence's `addon_until`.
-- "Cloud se" beside the file picker in the restore: the copies with date and size; without the add-on it says what is there and leads to Plan lein, and in a Play Store build it says the add-on is unavailable there; with it the copy downloads and goes through the same steps as a file. "Password yaad nahin?" shows the support contact.
-- The offer a new phone's empty company gets (D-070) says when the cloud's copy is from.
-- After a cloud copy is brought back onto this phone, the next copy goes with `replace`, so the brought-back data takes the old phone's place without the question. Until then the Backup page asks (D-077), and "Pehle wo data wapas laayein" opens the restore from a file.
-- Never called end-to-end encrypted (DATA-08).
-- On a phone, by the owner: a copy sent, the phone "lost", the add-on bought with a slip, the copy brought back on a second phone.
+- On two phones, by the owner, after the live run and the key: a copy sent, the first phone "lost" and turned off from the second, the add-on bought with a slip, the copy brought back, and the second phone's own copy a day later (TC-204).
 
 After T20d:
 
 - Sending while the app is closed, and a Wi-Fi-only switch.
-- Copies over 50 MB, which need a resumable upload.
+- Copies over 50 MB, which need a resumable upload. Bringing one back holds the whole file in memory and shows a moving bar with no percentage, which is fine up to that size.
+- An older cloud copy brought back leaves the other phone's question on the Backup page (D-078). If owners find that confusing, the question could say that this phone now holds the older copy.
 
 ## T23: telemetry, health, support
 
