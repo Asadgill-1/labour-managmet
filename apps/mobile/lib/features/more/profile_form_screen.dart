@@ -9,6 +9,7 @@ import '../../app/theme.dart';
 import '../../data/masters.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import '../backup/backup_screen.dart';
 import '../backup/restore_screen.dart';
 
 /// Own company details (MASTER-01). With no profile yet, this is the first onboarding step (UX-02),
@@ -74,18 +75,21 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final firstRun = widget.profile == null;
+    final offer = firstRun && ref.watch(restoreProvider) != null;
+    // The old phone's copy in the cloud, when the cloud answers; no answer leaves the offer of a file (D-070).
+    final inCloud = offer ? ref.watch(cloudCopiesProvider).value?.firstOrNull : null;
     return Scaffold(
       appBar: AppBar(title: Text(firstRun ? l10n.welcomeTitle : l10n.myCompany)),
       bottomNavigationBar: MainActionBar(free: true, label: l10n.save, onPressed: _save),
       body: Column(
         children: [
           // A company opened on a phone without its data: the old phone's backup can come back first (DATA-06).
-          if (firstRun && ref.watch(restoreProvider) != null)
+          if (offer)
             NoticeRow(
               icon: Icons.settings_backup_restore,
               title: l10n.restoreNewPhone,
-              subtitle: l10n.restoreNewPhoneBody,
-              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const RestoreScreen())),
+              subtitle: inCloud == null ? l10n.restoreNewPhoneBody : l10n.restoreNewPhoneCloud(shownWhen(inCloud.at)),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => RestoreScreen(cloud: inCloud != null))),
             ),
           Expanded(
             child: Form(

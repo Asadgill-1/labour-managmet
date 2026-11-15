@@ -36,6 +36,7 @@ String accountProblemText(AppLocalizations l10n, AccountRefused refusal) => swit
   AccountProblem.otherPhoneCopy => l10n.accountOtherPhoneCopy,
   AccountProblem.notOwner => l10n.accountNotOwner,
   AccountProblem.tooLarge => l10n.accountTooLarge,
+  AccountProblem.addonNeeded => l10n.cloudAddonNeeded,
   AccountProblem.failed => l10n.accountFailed,
 };
 

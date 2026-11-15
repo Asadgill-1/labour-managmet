@@ -118,6 +118,67 @@ void main() {
     expect(later.view.problem, isNull);
   });
 
+  test("once the cloud's newest copy is brought back, this phone's next copy takes its place without the question (D-078)", () async {
+    cloud.addCloudCopy(testTenant, 'old-phone');
+    final s = sender();
+    await s.load();
+    await s.sendIfDue();
+    expect(s.view.problem, AccountProblem.otherPhoneCopy);
+
+    await s.broughtBack();
+    expect(s.view.problem, isNull, reason: 'the question is answered');
+    // Kept on the phone, so a restart between the restore and the copy changes nothing.
+    final later = sender();
+    await later.load();
+    await later.sendIfDue();
+    expect(cloud.cloudFiles, hasLength(1));
+    expect(cloud.cloudCopies.last['replace'], isTrue);
+
+    now = now.add(const Duration(days: 1));
+    await change();
+    final after = sender();
+    await after.load();
+    await after.sendIfDue();
+    expect(cloud.cloudCopies.last['replace'], isFalse, reason: 'only the one copy');
+  });
+
+  test('the owner sees the copies the cloud keeps, newest first, and brings one back only with the add-on (D-072)', () async {
+    final s = sender();
+    await s.load();
+    await s.sendNow();
+    final mine = cloud.cloudFiles.values.single;
+    cloud.addCloudCopy(testTenant, 'old-phone', at: '2026-11-09T04:00:00.000Z');
+    final copies = await account.cloudCopies(testTenant);
+    expect(copies.map((c) => c.at), [DateTime.utc(2026, 11, 15, 6), DateTime.utc(2026, 11, 9, 4)]);
+    expect(copies.first.sizeBytes, mine.length);
+
+    Future<AccountProblem?> problem() async {
+      try {
+        await account.downloadCloudCopy(testTenant, copies.first.id);
+        return null;
+      } on AccountRefused catch (e) {
+        return e.problem;
+      }
+    }
+
+    expect(await problem(), AccountProblem.addonNeeded, reason: 'the cloud decides, not the app');
+    cloud.addonUntil = DateTime.now().toUtc().add(const Duration(days: 30));
+    cloud.downloadRefusal = 'other_phone';
+    expect(await problem(), AccountProblem.otherPhone);
+    cloud.downloadRefusal = null;
+    expect(await account.downloadCloudCopy(testTenant, copies.first.id), mine);
+    cloud.offline = true;
+    expect(await problem(), AccountProblem.offline);
+  });
+
+  test('the support contact comes from the live settings, and reads as none when blank or unreachable', () async {
+    expect(await account.supportContact(), isNull);
+    cloud.bank = {...cloud.bank, 'support_contact': ' support@test.ae '};
+    expect(await account.supportContact(), 'support@test.ae');
+    cloud.offline = true;
+    expect(await account.supportContact(), isNull);
+  });
+
   test('a copy over the limit never reaches the cloud, and a refusal the owner must see is kept', () async {
     final small = sender(limit: 1000);
     await small.load();

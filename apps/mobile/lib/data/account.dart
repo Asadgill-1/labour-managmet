@@ -35,6 +35,9 @@ enum AccountProblem {
   otherPhoneCopy,
   notOwner,
   tooLarge,
+
+  /// Bringing a cloud copy back needs the add-on (D-072).
+  addonNeeded,
   failed,
 }
 
@@ -64,7 +67,8 @@ const _backupBucket = 'backups';
 /// Sign-up, sign-in and the company this device opens (T19b). The app holds only the publishable key; the company
 /// comes from the signed-in user's membership, never from the app (AUTH-02, AUTH-06).
 class Account {
-  Account(this._client, this._storage, {required this.emailCodes, this.licenceKey = '', this.recoveryKey = ''}) {
+  Account(this._client, this._storage, {required this.emailCodes, this.licenceKey = '', this.recoveryKey = '', http.Client? downloads})
+    : _downloads = downloads ?? http.Client() {
     // The session is kept on the phone, so the licence renews after a restart without the password (D-062, D-074).
     // Steps the cloud must trust still ask for the password unless it was typed in this run of the app.
     _auth.onAuthStateChange.listen(
@@ -83,6 +87,9 @@ class Account {
 
   final SupabaseClient _client;
   final FlutterSecureStorage _storage;
+
+  /// Fetches a cloud copy from the link the cloud hands out, which needs no session.
+  final http.Client _downloads;
   var _typedPassword = false;
 
   /// The public half of the key the cloud signs licences with, base64, from `.env` (D-074).
@@ -253,6 +260,44 @@ class Account {
     return DateTime.parse((finish.data as Map<String, dynamic>)['finished_at'] as String).toUtc();
   });
 
+  /// The copies the cloud keeps for [tenantId], newest first. The owner sees them with or without the add-on (D-076).
+  Future<List<CloudCopy>> cloudCopies(String tenantId) => _run(() async {
+    if (_auth.currentSession == null) throw const AccountRefused(AccountProblem.signedOut);
+    final rows = await _client
+        .from('cloud_backups')
+        .select('id, size_bytes, finished_at_utc')
+        .eq('tenant_id', tenantId)
+        .not('finished_at_utc', 'is', null)
+        .order('finished_at_utc', ascending: false);
+    return [for (final r in rows) (id: r['id'] as String, at: DateTime.parse(r['finished_at_utc'] as String).toUtc(), sizeBytes: r['size_bytes'] as int)];
+  });
+
+  /// Brings one cloud copy's file to this phone. The cloud gives a link good for a minute only to the owner, on the
+  /// phone that is on, while the add-on is active (T20d-a); a changed app gets nothing without it.
+  Future<Uint8List> downloadCloudCopy(String tenantId, String id) => _run(() async {
+    if (_auth.currentSession == null) throw const AccountRefused(AccountProblem.signedOut);
+    if (_auth.currentSession!.isExpired) await _auth.refreshSession();
+    final said = await _client.functions.invoke(
+      'backup',
+      body: {'action': 'download', 'tenant_id': tenantId, 'device_id': await thisDeviceId(_storage), 'backup_id': id},
+    );
+    final file = await _downloads.get(Uri.parse((said.data as Map<String, dynamic>)['url'] as String));
+    if (file.statusCode != 200) throw const AccountRefused(AccountProblem.failed);
+    return file.bodyBytes;
+  });
+
+  /// Where a company that forgot its backup password asks for help, from the live settings. Null when not filled in.
+  Future<String?> supportContact() async {
+    try {
+      final r = await _client.from('platform_settings').select('support_contact').maybeSingle();
+      final text = (r?['support_contact'] as String?)?.trim() ?? '';
+      return text.isEmpty ? null : text;
+    } catch (_) {
+      // Not known is shown as not known; the help's own words still stand.
+      return null;
+    }
+  }
+
   Future<void> signInAgain(String password) => _run(() async {
     await _auth.signInWithPassword(email: (await binding())!.email, password: password);
   });
@@ -323,7 +368,8 @@ class Account {
     final tenantId = (await binding())!.tenantId;
     final rows = await _client
         .from('payment_slips')
-        .select('id, plan_code, months, expected_fils, file_path, state, refuse_reason, submitted_at_utc')
+        // Every column, so a project that has not run the cloud backup's migration, with no `covers` yet, still answers.
+        .select()
         .eq('tenant_id', tenantId)
         .order('submitted_at_utc', ascending: false);
     final files = {for (final f in await _client.storage.from(_slipBucket).list(path: tenantId)) '$tenantId/${f.name}'};
@@ -333,6 +379,7 @@ class Account {
           id: r['id'] as String,
           planCode: r['plan_code'] as String,
           months: r['months'] as int,
+          covers: SlipCovers.values.firstWhere((c) => c.wire == r['covers'], orElse: () => SlipCovers.plan),
           expectedFils: r['expected_fils'] as int,
           state: r['state'] as String,
           refuseReason: r['refuse_reason'] as String?,
@@ -342,13 +389,29 @@ class Account {
     ];
   });
 
-  /// Sends a slip for [months] of a plan: the cloud records it and names the path in the company's own folder, then the
-  /// file goes there. The caller keeps [operationId] across retries, so a dropped upload reaches the same slip (MODEL-06).
-  Future<void> sendSlip({required String planCode, required int months, required Uint8List bytes, required SlipKind kind, required String operationId}) =>
+  /// Sends a slip for [months] of a plan, of the plan with the cloud add-on, or of the add-on alone: the cloud records it
+  /// and names the path in the company's own folder, then the file goes there. The caller keeps [operationId] across
+  /// retries, so a dropped upload reaches the same slip (MODEL-06).
+  Future<void> sendSlip({
+    required String planCode,
+    required int months,
+    required Uint8List bytes,
+    required SlipKind kind,
+    required String operationId,
+    SlipCovers covers = SlipCovers.plan,
+  }) =>
       _run(() async {
         final path = await _client.rpc<String>(
           'submit_slip',
-          params: {'p_tenant_id': (await binding())!.tenantId, 'p_plan_code': planCode, 'p_months': months, 'p_file_type': kind.name, 'p_operation_id': operationId},
+          params: {
+            'p_tenant_id': (await binding())!.tenantId,
+            'p_plan_code': planCode,
+            'p_months': months,
+            'p_file_type': kind.name,
+            'p_operation_id': operationId,
+            // Left out for the plan alone, which is what a project without the cloud backup's migration takes.
+            if (covers != SlipCovers.plan) 'p_covers': covers.wire,
+          },
         );
         try {
           await _client.storage.from(_slipBucket).uploadBinary(path, bytes, fileOptions: FileOptions(contentType: kind.mime));
@@ -398,6 +461,7 @@ AccountProblem problemOf(Object error) => switch (error) {
   FunctionException(details: {'error': 'other_phone_copy'}) => AccountProblem.otherPhoneCopy,
   FunctionException(details: {'error': 'not_owner'}) => AccountProblem.notOwner,
   FunctionException(details: {'error': 'too_large'}) => AccountProblem.tooLarge,
+  FunctionException(details: {'error': 'addon_needed'}) => AccountProblem.addonNeeded,
   FunctionException(details: {'error': 'too_many'}) => AccountProblem.tooMany,
   AuthException(statusCode: '429') => AccountProblem.tooMany,
   AuthException(code: 'over_email_send_rate_limit' || 'over_request_rate_limit') => AccountProblem.tooMany,

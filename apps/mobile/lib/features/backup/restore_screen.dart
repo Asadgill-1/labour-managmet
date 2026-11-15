@@ -16,6 +16,7 @@ import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../account/account_screens.dart';
 import 'backup_screen.dart';
+import 'cloud_copies_screen.dart';
 
 const _files = MethodChannel('labour_app/files');
 
@@ -24,12 +25,15 @@ const _files = MethodChannel('labour_app/files');
 typedef _Ready = ({TenantDatabase db, File file, Restored restored, Restored here, Map<String, int> own, String invoicePrefix, DateTime? at, bool keep});
 
 /// Brings a backup back in place of the company's data on this phone (DATA-05, DATA-06), or, with [kept], the data the
-/// last restore set aside (D-070). The file is checked, opened and brought up to date, and the owner sees what it
-/// holds, before anything on the phone changes.
+/// last restore set aside (D-070). The backup is a file the owner picks or a copy the cloud keeps (D-072). It is
+/// checked, opened and brought up to date, and the owner sees what it holds, before anything on the phone changes.
 class RestoreScreen extends ConsumerStatefulWidget {
-  const RestoreScreen({this.kept = false, super.key});
+  const RestoreScreen({this.kept = false, this.cloud = false, super.key});
 
   final bool kept;
+
+  /// Opens the cloud's copies at once, for the owner who came for one.
+  final bool cloud;
 
   @override
   ConsumerState<RestoreScreen> createState() => _RestoreScreenState();
@@ -42,6 +46,9 @@ class _RestoreScreenState extends ConsumerState<RestoreScreen> {
   final _operationId = newUuid();
   final _year = int.parse(dubaiToday(DateTime.now()).substring(0, 4));
   Uint8List? _bytes;
+
+  /// The backup in hand came from the cloud: when the cloud took it, and whether it is the newest there.
+  ({DateTime at, bool newest})? _cloudCopy;
   String? _passwordUsed;
   var _askPassword = false;
   String? _problem;
@@ -61,6 +68,8 @@ class _RestoreScreenState extends ConsumerState<RestoreScreen> {
     if (widget.kept) {
       final kept = keptFile(_restorer.dir, _live.tenantId);
       _run(() => _prepare((into, _) => kept.copy(into.path), at: kept.lastModifiedSync()));
+    } else if (widget.cloud) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _pickCloud());
     }
   }
 
@@ -105,6 +114,46 @@ class _RestoreScreenState extends ConsumerState<RestoreScreen> {
   Future<void> _pick() async {
     final bytes = await _files.invokeMethod<Uint8List>('pickBackup');
     if (bytes == null || !mounted) return;
+    _cloudCopy = null;
+    await _take(bytes);
+  }
+
+  /// The cloud's copies, shown with the add-on or without. One brought to the phone goes on as a picked file does.
+  Future<void> _pickCloud() async {
+    final account = ref.read(accountProvider)!.account;
+    final pick = await Navigator.of(context).push<CloudPick>(MaterialPageRoute(builder: (_) => CloudCopiesScreen(account: account)));
+    if (pick == null || !mounted) return;
+    _cloudCopy = (at: pick.at, newest: pick.newest);
+    await _take(pick.bytes);
+  }
+
+  /// Only the cloud's copy carries the platform's lock, so only there can a forgotten password be helped (D-072).
+  Future<void> _forgot() async {
+    final l10n = AppLocalizations.of(context);
+    final contact = await ref.read(accountProvider)!.account.supportContact();
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        title: Text(l10n.restoreForgot),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.restoreForgotBody),
+            fieldGap,
+            if (contact == null)
+              Text(l10n.restoreForgotNoContact, style: const TextStyle(color: muted))
+            else
+              SelectableText(l10n.restoreForgotContact(contact), style: const TextStyle(fontWeight: FontWeight.w600, color: ink)),
+          ],
+        ),
+        actions: [TextButton(onPressed: () => Navigator.of(dialog).pop(), child: Text(l10n.cancel))],
+      ),
+    );
+  }
+
+  Future<void> _take(Uint8List bytes) async {
     _password.clear();
     // A file that is not this company's backup is turned away before any password is asked.
     try {
@@ -232,7 +281,7 @@ class _RestoreScreenState extends ConsumerState<RestoreScreen> {
     }
     _handedOver = true;
     // The root closes this screen with the company, puts the file in its place and opens it again.
-    await restorer.swap(ready.restored, keep: ready.keep);
+    await restorer.swap(ready.restored, keep: ready.keep, cloudNewest: _cloudCopy?.newest ?? false);
   }
 
   String _seriesLabel(AppLocalizations l10n, String series) => switch (series) {
@@ -344,31 +393,53 @@ class _RestoreScreenState extends ConsumerState<RestoreScreen> {
     ];
   }
 
-  List<Widget> _start(AppLocalizations l10n) => [
-    Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(widget.kept ? l10n.restoreKeptIntro : l10n.restoreIntro),
-          if (_problem != null) ...[
-            fieldGap,
-            Text(_problem!, style: const TextStyle(color: due, fontWeight: FontWeight.w600)),
+  List<Widget> _start(AppLocalizations l10n) {
+    // A build that keeps no cloud copy offers none back.
+    final cloud = !widget.kept && ref.watch(cloudSenderProvider) != null && ref.watch(accountProvider) != null;
+    final cloudCopy = _cloudCopy;
+    return [
+      Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(widget.kept ? l10n.restoreKeptIntro : (cloud ? l10n.restoreIntroCloud : l10n.restoreIntro)),
+            if (_problem != null) ...[
+              fieldGap,
+              Text(_problem!, style: const TextStyle(color: due, fontWeight: FontWeight.w600)),
+            ],
+            if (_askPassword) ...[
+              if (cloudCopy != null) ...[
+                fieldGap,
+                Text(l10n.restoreFromCloud(shownWhen(cloudCopy.at)), style: const TextStyle(fontWeight: FontWeight.w600, color: ink)),
+              ],
+              fieldGap,
+              PasswordField(
+                l10n.backupPassword,
+                _password,
+                autofillHints: const [AutofillHints.password],
+                helper: l10n.restorePasswordHelp,
+                validator: (v) => (v ?? '').isEmpty ? l10n.fieldRequired : null,
+              ),
+              if (cloudCopy != null)
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: TextButton(onPressed: _busy ? null : _forgot, child: Text(l10n.restoreForgot)),
+                ),
+            ] else if (cloud)
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TextButton.icon(
+                  onPressed: _busy ? null : _pickCloud,
+                  icon: const Icon(Icons.cloud_download_outlined),
+                  label: Text(l10n.cloudFrom),
+                ),
+              ),
           ],
-          if (_askPassword) ...[
-            fieldGap,
-            PasswordField(
-              l10n.backupPassword,
-              _password,
-              autofillHints: const [AutofillHints.password],
-              helper: l10n.restorePasswordHelp,
-              validator: (v) => (v ?? '').isEmpty ? l10n.fieldRequired : null,
-            ),
-          ],
-        ],
+        ),
       ),
-    ),
-  ];
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

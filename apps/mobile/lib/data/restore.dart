@@ -20,7 +20,7 @@ typedef Restored = ({String? companyName, int workers, int invoices});
 
 /// What the restore screens get from the root: the company's folder and key, and the swap that brings the prepared file
 /// in, closing and opening the company around it (DATA-05). [keep] sets the data there now aside.
-typedef Restorer = ({Directory dir, Future<String> Function() key, Future<void> Function(Restored done, {required bool keep}) swap});
+typedef Restorer = ({Directory dir, Future<String> Function() key, Future<void> Function(Restored done, {required bool keep, bool cloudNewest}) swap});
 
 /// Each run of numbers a paper takes, by the key its table counts it under (INV-01, DOC-05).
 const numberSeries = ['invoice', 'credit', 'timesheet', 'clientReceipt', 'payslip', 'paymentReceipt', 'advanceReceipt'];

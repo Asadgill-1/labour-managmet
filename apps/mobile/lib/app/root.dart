@@ -150,7 +150,7 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
 
   /// Closes the company, puts the prepared file in its place and opens it again (DATA-05). The prepared file was opened
   /// and checked already, so only the swap itself can fail, and the company's own file is then still whole.
-  Future<void> _swap(Restored done, {required bool keep}) async {
+  Future<void> _swap(Restored done, {required bool keep, bool cloudNewest = false}) async {
     final (:db, :binding) = _opened!;
     // The language and colours chosen in the books carry through the swap and back into them.
     final settings = await widget.loadSettings();
@@ -168,6 +168,8 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
     } catch (_) {
       stage = SwapStage.failed;
     }
+    // Only once the cloud's newest copy really is this phone's data does the next copy take its place unasked (D-078).
+    if (stage == SwapStage.done && cloudNewest) await _cloud?.broughtBack();
     final fresh = await widget.openTenant(binding.tenantId, actorId: binding.userId);
     _guard(fresh);
     // The old data's images must not show for the new.
@@ -225,7 +227,16 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
         key: const ValueKey('swap'),
         overrides: [initialSettingsProvider.overrideWithValue(_settings)],
         child: AccountApp(
-          home: SwapScreen(stage: swapping.stage, restored: swapping.done, kept: swapping.kept, onDone: () => setState(() => _swapping = null)),
+          home: SwapScreen(
+            stage: swapping.stage,
+            restored: swapping.done,
+            kept: swapping.kept,
+            onDone: () {
+              setState(() => _swapping = null);
+              // The data that came in is what the cloud should hold next.
+              unawaited(_cloud?.sendIfDue());
+            },
+          ),
         ),
       );
     }

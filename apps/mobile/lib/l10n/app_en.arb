@@ -2834,14 +2834,6 @@
     }
   },
   "trialNoteBody": "Get a plan so new entries keep working.",
-  "planSoon": "Managers and cloud backup ({amount} a month): coming soon",
-  "@planSoon": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
   "planLockedTitle": "New entries are on hold",
   "planWorkerLimit": "This plan holds {count} workers. Take a bigger plan for more, or archive one first.",
   "@planWorkerLimit": {
@@ -2974,5 +2966,113 @@
   "cloudReplaceGo": "Yes, send this phone's data",
   "backupPasswordDue": "No backup password yet",
   "backupPasswordDueBody": "Without it the backup does not go to the cloud. Tap to set it.",
-  "accountDeleteCloud": "Only the latest backup copy in the cloud stays 60 days, then it goes too."
+  "accountDeleteCloud": "Only the latest backup copy in the cloud stays 60 days, then it goes too.",
+  "planAddonPrice": "Cloud add-on: {amount} a month",
+  "@planAddonPrice": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "planManagersSoon": "Managers: coming soon",
+  "planAddonTitle": "Bringing the backup back from the cloud",
+  "planAddonBody": "Your locked backup goes to the cloud by itself. To bring it back on a new phone after this one is lost or broken you need this add-on: {amount} a month.",
+  "@planAddonBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "planCoversPlan": "Not now",
+  "planCoversBoth": "With the plan",
+  "planCoversAddon": "Add-on only",
+  "planAddonOwnPlan": "The add-on alone goes at the price of the plan you are on ({plan}).",
+  "@planAddonOwnPlan": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "planAddonNoPlan": "The add-on alone goes at the price of the plan chosen. It does not open a plan.",
+  "planSlipLineBoth": "{plan} with the cloud add-on, {months}",
+  "@planSlipLineBoth": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      },
+      "months": {
+        "type": "String"
+      }
+    }
+  },
+  "planSlipLineAddon": "Cloud add-on only ({plan}), {months}",
+  "@planSlipLineAddon": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      },
+      "months": {
+        "type": "String"
+      }
+    }
+  },
+  "planAddonEnds": "Cloud add-on ends {date}",
+  "@planAddonEnds": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudFrom": "Bring from the cloud",
+  "cloudListTitle": "Copies in the cloud",
+  "cloudListShow": "Show the copies",
+  "cloudListIntro": "Tap the copy to bring back.",
+  "cloudListNone": "The cloud holds no copy of this company.",
+  "cloudCopyNewest": "{size}, the newest",
+  "@cloudCopyNewest": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "cloudAddonNeeded": "Bringing a copy back from the cloud needs the add-on. Send a slip for it, then come back here.",
+  "cloudAddonTake": "Get the add-on",
+  "cloudAddonPlayStore": "Bringing a copy back from the cloud needs the add-on, which is not available in the Play Store app.",
+  "cloudListOffline": "No internet. The cloud's copies need the internet.",
+  "cloudListSignedOut": "Log in again with the password to see the copies.",
+  "cloudListRetry": "Look again",
+  "cloudFetching": "The copy is coming from the cloud. This can take a little while.",
+  "restoreIntroCloud": "Choose the backup file, or bring the copy kept in the cloud. Its data takes the place of the data on this phone now. What is here now is kept aside on the phone, so it can come back if needed.",
+  "restoreFromCloud": "The cloud's copy of {date}",
+  "@restoreFromCloud": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreForgot": "Forgot the password?",
+  "restoreForgotBody": "The platform can open the cloud's copy and give it to you with a new password. It first checks your login email and the add-on's payment.",
+  "restoreForgotContact": "Contact support: {contact}",
+  "@restoreForgotContact": {
+    "placeholders": {
+      "contact": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreForgotNoContact": "The support contact is not set here yet.",
+  "restoreNewPhoneCloud": "The cloud holds a copy from {date}. Tap to bring it back.",
+  "@restoreNewPhoneCloud": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

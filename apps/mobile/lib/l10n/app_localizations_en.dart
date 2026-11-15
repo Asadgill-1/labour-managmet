@@ -4716,11 +4716,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trialNoteBody => 'Get a plan so new entries keep working.';
 
   @override
-  String planSoon(String amount) {
-    return 'Managers and cloud backup ($amount a month): coming soon';
-  }
-
-  @override
   String get planLockedTitle => 'New entries are on hold';
 
   @override
@@ -4878,6 +4873,131 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get accountDeleteCloud =>
       'Only the latest backup copy in the cloud stays 60 days, then it goes too.';
+
+  @override
+  String planAddonPrice(String amount) {
+    return 'Cloud add-on: $amount a month';
+  }
+
+  @override
+  String get planManagersSoon => 'Managers: coming soon';
+
+  @override
+  String get planAddonTitle => 'Bringing the backup back from the cloud';
+
+  @override
+  String planAddonBody(String amount) {
+    return 'Your locked backup goes to the cloud by itself. To bring it back on a new phone after this one is lost or broken you need this add-on: $amount a month.';
+  }
+
+  @override
+  String get planCoversPlan => 'Not now';
+
+  @override
+  String get planCoversBoth => 'With the plan';
+
+  @override
+  String get planCoversAddon => 'Add-on only';
+
+  @override
+  String planAddonOwnPlan(String plan) {
+    return 'The add-on alone goes at the price of the plan you are on ($plan).';
+  }
+
+  @override
+  String get planAddonNoPlan =>
+      'The add-on alone goes at the price of the plan chosen. It does not open a plan.';
+
+  @override
+  String planSlipLineBoth(String plan, String months) {
+    return '$plan with the cloud add-on, $months';
+  }
+
+  @override
+  String planSlipLineAddon(String plan, String months) {
+    return 'Cloud add-on only ($plan), $months';
+  }
+
+  @override
+  String planAddonEnds(String date) {
+    return 'Cloud add-on ends $date';
+  }
+
+  @override
+  String get cloudFrom => 'Bring from the cloud';
+
+  @override
+  String get cloudListTitle => 'Copies in the cloud';
+
+  @override
+  String get cloudListShow => 'Show the copies';
+
+  @override
+  String get cloudListIntro => 'Tap the copy to bring back.';
+
+  @override
+  String get cloudListNone => 'The cloud holds no copy of this company.';
+
+  @override
+  String cloudCopyNewest(String size) {
+    return '$size, the newest';
+  }
+
+  @override
+  String get cloudAddonNeeded =>
+      'Bringing a copy back from the cloud needs the add-on. Send a slip for it, then come back here.';
+
+  @override
+  String get cloudAddonTake => 'Get the add-on';
+
+  @override
+  String get cloudAddonPlayStore =>
+      'Bringing a copy back from the cloud needs the add-on, which is not available in the Play Store app.';
+
+  @override
+  String get cloudListOffline =>
+      'No internet. The cloud\'s copies need the internet.';
+
+  @override
+  String get cloudListSignedOut =>
+      'Log in again with the password to see the copies.';
+
+  @override
+  String get cloudListRetry => 'Look again';
+
+  @override
+  String get cloudFetching =>
+      'The copy is coming from the cloud. This can take a little while.';
+
+  @override
+  String get restoreIntroCloud =>
+      'Choose the backup file, or bring the copy kept in the cloud. Its data takes the place of the data on this phone now. What is here now is kept aside on the phone, so it can come back if needed.';
+
+  @override
+  String restoreFromCloud(String date) {
+    return 'The cloud\'s copy of $date';
+  }
+
+  @override
+  String get restoreForgot => 'Forgot the password?';
+
+  @override
+  String get restoreForgotBody =>
+      'The platform can open the cloud\'s copy and give it to you with a new password. It first checks your login email and the add-on\'s payment.';
+
+  @override
+  String restoreForgotContact(String contact) {
+    return 'Contact support: $contact';
+  }
+
+  @override
+  String get restoreForgotNoContact =>
+      'The support contact is not set here yet.';
+
+  @override
+  String restoreNewPhoneCloud(String date) {
+    return 'The cloud holds a copy from $date. Tap to bring it back.';
+  }
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -9367,11 +9487,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get trialNoteBody => 'Plan lein taake nayi entries chalti rahein.';
 
   @override
-  String planSoon(String amount) {
-    return 'Managers aur cloud backup ($amount mahana): jald aa raha';
-  }
-
-  @override
   String get planLockedTitle => 'Nayi entry band hai';
 
   @override
@@ -9528,4 +9643,129 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String get accountDeleteCloud =>
       'Bas cloud mein rakhi aakhri backup copy 60 din rehti hai, phir wo bhi mit jaati hai.';
+
+  @override
+  String planAddonPrice(String amount) {
+    return 'Cloud add-on: $amount mahana';
+  }
+
+  @override
+  String get planManagersSoon => 'Managers: jald aa raha';
+
+  @override
+  String get planAddonTitle => 'Cloud se backup wapas laana';
+
+  @override
+  String planAddonBody(String amount) {
+    return 'Aap ka band backup cloud mein khud jata hai. Phone kho jaye ya kharab ho jaye to use naye phone par wapas laane ke liye ye add-on chahiye: $amount mahana.';
+  }
+
+  @override
+  String get planCoversPlan => 'Nahin lena';
+
+  @override
+  String get planCoversBoth => 'Plan ke sath';
+
+  @override
+  String get planCoversAddon => 'Sirf add-on';
+
+  @override
+  String planAddonOwnPlan(String plan) {
+    return 'Sirf add-on aap ke maujooda plan ($plan) ki qeemat par milta hai.';
+  }
+
+  @override
+  String get planAddonNoPlan =>
+      'Sirf add-on chune hue plan ki qeemat par milta hai. Is se plan nahin khulta.';
+
+  @override
+  String planSlipLineBoth(String plan, String months) {
+    return '$plan aur cloud add-on, $months';
+  }
+
+  @override
+  String planSlipLineAddon(String plan, String months) {
+    return 'Sirf cloud add-on ($plan), $months';
+  }
+
+  @override
+  String planAddonEnds(String date) {
+    return 'Cloud add-on $date ko khatam';
+  }
+
+  @override
+  String get cloudFrom => 'Cloud se laayein';
+
+  @override
+  String get cloudListTitle => 'Cloud mein rakhi copies';
+
+  @override
+  String get cloudListShow => 'Copies dikhayein';
+
+  @override
+  String get cloudListIntro => 'Jo copy wapas laani hai us par dabaein.';
+
+  @override
+  String get cloudListNone => 'Cloud mein is company ki koi copy nahin.';
+
+  @override
+  String cloudCopyNewest(String size) {
+    return '$size, sab se nayi';
+  }
+
+  @override
+  String get cloudAddonNeeded =>
+      'Cloud se copy wapas laane ke liye add-on chahiye. Slip bhej kar add-on lein, phir yahan wapas aayein.';
+
+  @override
+  String get cloudAddonTake => 'Add-on lein';
+
+  @override
+  String get cloudAddonPlayStore =>
+      'Cloud se copy wapas laane ke liye add-on chahiye. Ye add-on Play Store wali app mein dastyab nahin.';
+
+  @override
+  String get cloudListOffline =>
+      'Internet nahin mila. Cloud ki copies ke liye internet chahiye.';
+
+  @override
+  String get cloudListSignedOut =>
+      'Copies dekhne ke liye password se dobara login karein.';
+
+  @override
+  String get cloudListRetry => 'Dobara dekhein';
+
+  @override
+  String get cloudFetching =>
+      'Copy cloud se aa rahi hai. Is mein thora waqt lag sakta hai.';
+
+  @override
+  String get restoreIntroCloud =>
+      'Backup file chunein, ya cloud mein rakhi copy laayein. Us ka data is phone ke abhi ke data ki jagah aa jayega. Abhi wala data phone par alag rakha jayega, taake zaroorat ho to wapas aa sake.';
+
+  @override
+  String restoreFromCloud(String date) {
+    return 'Cloud ki $date wali copy';
+  }
+
+  @override
+  String get restoreForgot => 'Password yaad nahin?';
+
+  @override
+  String get restoreForgotBody =>
+      'Cloud wali copy platform khol kar naye password ke sath aap ko de sakta hai. Pehle wo aap ka login email aur add-on ki payment check karega.';
+
+  @override
+  String restoreForgotContact(String contact) {
+    return 'Support se rabta karein: $contact';
+  }
+
+  @override
+  String get restoreForgotNoContact =>
+      'Support ka rabta abhi yahan nahin likha.';
+
+  @override
+  String restoreNewPhoneCloud(String date) {
+    return 'Cloud mein $date ki copy rakhi hai. Wapas laane ke liye dabaein.';
+  }
 }

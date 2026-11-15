@@ -44,6 +44,13 @@ final licenceProvider = StreamProvider<LicenceView?>((ref) {
 /// key; the Backup page then says the cloud backup is unavailable.
 final cloudSenderProvider = Provider<CloudSender?>((ref) => null);
 
+/// The copies the cloud keeps for the open company, newest first; none in a build that keeps no cloud copy (T20d-c).
+final cloudCopiesProvider = FutureProvider.autoDispose<List<CloudCopy>>((ref) async {
+  final account = ref.watch(accountProvider)?.account;
+  if (account == null || ref.watch(cloudSenderProvider) == null) return const [];
+  return account.cloudCopies(ref.watch(dbProvider).tenantId);
+});
+
 final cloudViewProvider = StreamProvider<CloudView?>((ref) {
   final sender = ref.watch(cloudSenderProvider);
   return sender == null ? Stream.value(null) : sender.watch();

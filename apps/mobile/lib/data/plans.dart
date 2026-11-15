@@ -11,8 +11,37 @@ extension BankReady on BankDetails {
   bool get ready => accountNumber != null || iban != null;
 }
 
+/// What a slip pays for: the plan, the plan with the cloud add-on, or the add-on alone (T20d-a).
+enum SlipCovers {
+  plan('plan'),
+  planAddon('plan_addon'),
+  addon('addon');
+
+  const SlipCovers(this.wire);
+
+  /// The word the cloud knows it by.
+  final String wire;
+}
+
+/// What one month of [covers] costs on [plan], as the cloud works it out for the slip.
+int monthlyFils(Plan plan, SlipCovers covers) => switch (covers) {
+  SlipCovers.plan => plan.priceFils,
+  SlipCovers.planAddon => plan.priceFils + plan.addonFils,
+  SlipCovers.addon => plan.addonFils,
+};
+
 /// A payment slip the company sent, and how it stands: waiting, accepted or refused with a reason (BILL-01).
-typedef Slip = ({String id, String planCode, int months, int expectedFils, String state, String? refuseReason, DateTime sentAt, bool fileArrived});
+typedef Slip = ({
+  String id,
+  String planCode,
+  int months,
+  SlipCovers covers,
+  int expectedFils,
+  String state,
+  String? refuseReason,
+  DateTime sentAt,
+  bool fileArrived,
+});
 
 enum SlipKind {
   jpg('image/jpeg'),

@@ -65,6 +65,13 @@ void main() {
       expect(licence.endsAt, issued.add(const Duration(days: 15)));
       expect(licence.workers, isNull, reason: 'null is unlimited');
       expect(licence.clients, isNull);
+      expect(licence.addonUntil, isNull, reason: 'a licence from before the add-on, or without one');
+    });
+
+    test("the cloud add-on's end reads from the licence (T20d-a)", () async {
+      final until = issued.add(const Duration(days: 30));
+      final licence = (await check(await sign(key, {...facts(), 'addon_until': '2026-12-11T10:00:00+00:00'})))!;
+      expect(licence.addonUntil, until);
     });
 
     test('Postgres timestamps with an offset and microseconds read', () async {

@@ -35,6 +35,9 @@ String cloudProblemText(AppLocalizations l10n, AccountProblem problem) => switch
 /// 10-11-2026, 14:30 in UAE time.
 String shownWhen(DateTime at) => '${showDate(dubaiToday(at))}, ${showMinuteOfDay(dubaiMinuteOfDay(at))}';
 
+/// A file's size as people say it: 340 KB, 2.4 MB.
+String shownSize(int bytes) => bytes < 1024 * 1024 ? '${(bytes / 1024).ceil()} KB' : '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+
 /// Makes the company's backup and hands it to the place the user chooses. True once the file left the app; a closed
 /// save screen changes nothing (D-069). A phone that keeps no password yet keeps [password] first.
 Future<bool> handOverBackup(WidgetRef ref, {required bool send, String? password}) async {
@@ -226,7 +229,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
                             Align(
                               alignment: AlignmentDirectional.centerStart,
                               child: TextButton.icon(
-                                onPressed: _busy ? null : () => _push(const RestoreScreen()),
+                                onPressed: _busy ? null : () => _push(const RestoreScreen(cloud: true)),
                                 icon: const Icon(Icons.settings_backup_restore),
                                 label: Text(l10n.cloudBringBack),
                               ),

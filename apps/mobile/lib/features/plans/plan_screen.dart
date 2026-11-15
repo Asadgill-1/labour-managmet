@@ -25,9 +25,12 @@ String _day(DateTime at) => showDate(dubaiToday(at));
 /// and how each slip sent stands. The session kept on the phone is enough; the password is asked only when the cloud no
 /// longer takes it. Not in a Play Store build (BILL-07).
 class PlanScreen extends ConsumerStatefulWidget {
-  const PlanScreen({required this.account, super.key});
+  const PlanScreen({required this.account, this.covers = SlipCovers.plan, super.key});
 
   final Account account;
+
+  /// What the page opens set to buy: the add-on, for the owner who came for a cloud copy (T20d-c).
+  final SlipCovers covers;
 
   @override
   ConsumerState<PlanScreen> createState() => _PlanScreenState();
@@ -39,6 +42,7 @@ class _PlanScreenState extends ConsumerState<PlanScreen> with CloudStep {
   var _ask = false;
   ({List<Plan> plans, BankDetails bank, List<Slip> slips})? _shop;
   String? _plan;
+  late var _covers = widget.covers;
   var _months = 1;
   ({Uint8List bytes, SlipKind kind})? _slip;
 
@@ -54,6 +58,8 @@ class _PlanScreenState extends ConsumerState<PlanScreen> with CloudStep {
   Future<void> _loadFirst() async {
     try {
       setState(() => busy = true);
+      // The add-on alone goes with the plan the company is on now, which a fresh licence says.
+      unawaited(ref.read(licensingProvider)?.refresh());
       await _load();
     } on AccountRefused catch (e) {
       if (!mounted) return;
@@ -113,12 +119,12 @@ class _PlanScreenState extends ConsumerState<PlanScreen> with CloudStep {
     _choose(() => _slip = (bytes: bytes!, kind: kind));
   }
 
-  Future<void> _send() async {
+  Future<void> _send(Plan plan, SlipCovers covers) async {
     final l10n = AppLocalizations.of(context);
     final slip = _slip;
     if (slip == null) return showFormError(context, l10n.planSendNeedsSlip);
     await attempt(() async {
-      await widget.account.sendSlip(planCode: _plan!, months: _months, bytes: slip.bytes, kind: slip.kind, operationId: _operationId);
+      await widget.account.sendSlip(planCode: plan.code, months: _months, bytes: slip.bytes, kind: slip.kind, operationId: _operationId, covers: covers);
       if (!mounted) return;
       _choose(() => _slip = null);
       showSavedOnPhone(context, l10n.planSent);
@@ -131,13 +137,27 @@ class _PlanScreenState extends ConsumerState<PlanScreen> with CloudStep {
     final l10n = AppLocalizations.of(context);
     final shop = _shop;
     final ready = shop != null && shop.bank.ready;
+    // A build that keeps no cloud copy sells no add-on for one.
+    final cloud = ref.watch(cloudSenderProvider) != null;
+    final licence = ref.watch(licenceProvider).value?.licence;
+    final paid = licence?.state == 'paid';
+    final own = paid ? shop?.plans.where((p) => p.code == licence!.plan).firstOrNull : null;
+    // The add-on alone goes with the company's own paid plan, so it needs that plan on sale to show its price.
+    // ponytail: the price on sale now; an older plan version's own price comes with price changes (T22).
+    final addonAlone = !paid || own != null;
+    final covers = !cloud
+        ? SlipCovers.plan
+        : (_covers == SlipCovers.addon && !addonAlone ? SlipCovers.planAddon : _covers);
+    final locked = covers == SlipCovers.addon && own != null;
+    final chosen = locked ? own : shop?.plans.where((p) => p.code == _plan).firstOrNull;
+    final addon = cloud && ready && chosen != null ? _addonChoice(l10n, chosen, covers, own: own, alone: addonAlone) : null;
     return StepScaffold(
       title: l10n.planTake,
       busy: busy,
       action: _ask
           ? MainActionBar(free: true, label: l10n.planShowPlans, onPressed: busy ? null : _signIn)
-          : ready
-          ? MainActionBar(free: true, label: l10n.planSend, onPressed: busy ? null : _send)
+          : ready && chosen != null
+          ? MainActionBar(free: true, label: l10n.planSend, onPressed: busy ? null : () => _send(chosen, covers))
           : const SizedBox.shrink(),
       child: Form(
         key: _form,
@@ -160,10 +180,13 @@ class _PlanScreenState extends ConsumerState<PlanScreen> with CloudStep {
                 padding: const EdgeInsets.only(bottom: 24),
                 children: [
                   Padding(padding: const EdgeInsets.fromLTRB(16, 16, 16, 4), child: MarginNote(l10n.planIntro)),
+                  // The owner who came for a cloud copy sees the add-on before the plans.
+                  if (widget.covers != SlipCovers.plan) ...?addon,
                   SectionHeader(l10n.planChoose),
                   for (final plan in shop.plans)
-                    _PlanChoice(plan, selected: plan.code == _plan, onTap: () => _choose(() => _plan = plan.code)),
-                  if (shop.plans.isNotEmpty && shop.bank.ready) ...[
+                    _PlanChoice(plan, selected: plan.code == chosen?.code, addon: cloud, onTap: locked ? null : () => _choose(() => _plan = plan.code)),
+                  if (widget.covers == SlipCovers.plan) ...?addon,
+                  if (chosen != null && shop.bank.ready) ...[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
                       child: DropdownButtonFormField<int>(
@@ -173,7 +196,7 @@ class _PlanScreenState extends ConsumerState<PlanScreen> with CloudStep {
                         onChanged: (m) => _choose(() => _months = m!),
                       ),
                     ),
-                    TotalRow(l10n.planTotal, formatAed(shop.plans.firstWhere((p) => p.code == _plan).priceFils * _months)),
+                    TotalRow(l10n.planTotal, formatAed(monthlyFils(chosen, covers) * _months)),
                   ],
                   SectionHeader(l10n.planBankTitle),
                   if (!shop.bank.ready) NoteRow(icon: Icons.info_outline, text: l10n.planBankMissing, color: warn),
@@ -217,6 +240,36 @@ class _PlanScreenState extends ConsumerState<PlanScreen> with CloudStep {
     );
   }
 
+  /// The cloud add-on: what it is for, its price on the plan [chosen], and whether the slip pays for it. Alone, it goes
+  /// with the company's [own] paid plan, or with the plan chosen when it has none.
+  List<Widget> _addonChoice(AppLocalizations l10n, Plan chosen, SlipCovers covers, {required Plan? own, required bool alone}) => [
+    SectionHeader(l10n.planAddonTitle),
+    Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(l10n.planAddonBody(formatAed(chosen.addonFils)), style: const TextStyle(color: muted)),
+          const SizedBox(height: 12),
+          SegmentedButton<SlipCovers>(
+            segments: [
+              ButtonSegment(value: SlipCovers.plan, label: Text(l10n.planCoversPlan)),
+              ButtonSegment(value: SlipCovers.planAddon, label: Text(l10n.planCoversBoth)),
+              if (alone) ButtonSegment(value: SlipCovers.addon, label: Text(l10n.planCoversAddon)),
+            ],
+            selected: {covers},
+            showSelectedIcon: false,
+            onSelectionChanged: (s) => _choose(() => _covers = s.first),
+          ),
+          if (covers == SlipCovers.addon) ...[
+            const SizedBox(height: 10),
+            Text(own != null ? l10n.planAddonOwnPlan(own.name) : l10n.planAddonNoPlan, style: const TextStyle(color: muted)),
+          ],
+        ],
+      ),
+    ),
+  ];
+
   /// One line of the bank account, only when it is filled in. The account number and IBAN copy with one tap, so
   /// nobody types them into the bank's app by hand.
   Widget? _bankLine(String label, String? value, {bool copy = false}) {
@@ -243,11 +296,16 @@ class _PlanScreenState extends ConsumerState<PlanScreen> with CloudStep {
 
 /// One plan as a choice: its price a month, and what it holds. What is not built yet says so (D-074).
 class _PlanChoice extends StatelessWidget {
-  const _PlanChoice(this.plan, {required this.selected, required this.onTap});
+  const _PlanChoice(this.plan, {required this.selected, required this.addon, required this.onTap});
 
   final Plan plan;
   final bool selected;
-  final VoidCallback onTap;
+
+  /// This build sells the cloud add-on, so the plan shows its price.
+  final bool addon;
+
+  /// Null while the add-on alone holds the choice to the company's own plan.
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -259,8 +317,10 @@ class _PlanChoice extends StatelessWidget {
     return Semantics(
       selected: selected,
       button: true,
+      enabled: onTap != null || selected,
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+        foregroundDecoration: onTap == null && !selected ? BoxDecoration(color: Colors.white.withValues(alpha: 0.6), borderRadius: BorderRadius.circular(12)) : null,
         decoration: BoxDecoration(
           color: selected ? brandSoft : Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -286,7 +346,8 @@ class _PlanChoice extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(lines.join(', '), style: const TextStyle(fontSize: 14.5, color: ink)),
                         const SizedBox(height: 2),
-                        Text(l10n.planSoon(formatAed(plan.addonFils)), style: const TextStyle(fontSize: 13.5, color: muted)),
+                        if (addon) Text(l10n.planAddonPrice(formatAed(plan.addonFils)), style: const TextStyle(fontSize: 13.5, color: ink)),
+                        Text(l10n.planManagersSoon, style: const TextStyle(fontSize: 13.5, color: muted)),
                       ],
                     ),
                   ),
@@ -327,7 +388,11 @@ class _SlipRow extends StatelessWidget {
     return RowCard(
       child: ListTile(
         leading: tag,
-        title: Text(l10n.planSlipLine(planName, l10n.planMonthsCount(slip.months))),
+        title: Text(switch (slip.covers) {
+          SlipCovers.plan => l10n.planSlipLine(planName, l10n.planMonthsCount(slip.months)),
+          SlipCovers.planAddon => l10n.planSlipLineBoth(planName, l10n.planMonthsCount(slip.months)),
+          SlipCovers.addon => l10n.planSlipLineAddon(planName, l10n.planMonthsCount(slip.months)),
+        }),
         subtitle: Text(text, style: TextStyle(color: color)),
         trailing: RowValue(formatAed(slip.expectedFils)),
       ),
@@ -369,6 +434,7 @@ class _PlanStatusSectionState extends ConsumerState<PlanStatusSection> {
     final lines = [
       if (view == null) l10n.planChecking,
       if (ends != null) now.isBefore(ends) ? l10n.planEnds(_day(ends)) : l10n.planEndedOn(_day(ends)),
+      if (licence?.addonUntil case final until?) l10n.planAddonEnds(_day(until)),
       if (licence != null) ...[l10n.planLastCheck(_day(licence.issuedAt)), l10n.planNextCheck(_day(licence.leaseUntil))],
     ];
     final warning = view == null ? null : planWarning(l10n, view);
@@ -435,7 +501,7 @@ Future<void> checkPlanNow(BuildContext context, Licensing licensing, Account acc
   final l10n = AppLocalizations.of(context);
   await licensing.refresh();
   if (licensing.view.problem == AccountProblem.signedOut && context.mounted) {
-    final password = await _askPassword(context);
+    final password = await askLoginPassword(context);
     if (password == null) return;
     try {
       await account.signInAgain(password);
@@ -454,13 +520,15 @@ Future<void> checkPlanNow(BuildContext context, Licensing licensing, Account acc
   }
 }
 
-Future<String?> _askPassword(BuildContext context) {
+/// Asks for the login password when the cloud no longer takes the session kept on the phone. Null when the owner
+/// backed out. The words default to the plan's check.
+Future<String?> askLoginPassword(BuildContext context, {String? title, String? action}) {
   final l10n = AppLocalizations.of(context);
   final password = TextEditingController();
   return showDialog<String>(
     context: context,
     builder: (dialog) => AlertDialog(
-      title: Text(l10n.planPasswordTitle),
+      title: Text(title ?? l10n.planPasswordTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -472,7 +540,7 @@ Future<String?> _askPassword(BuildContext context) {
       ),
       actions: [
         TextButton(onPressed: () => Navigator.of(dialog).pop(), child: Text(l10n.cancel)),
-        TextButton(onPressed: () => Navigator.of(dialog).pop(password.text.isEmpty ? null : password.text), child: Text(l10n.planCheckNow)),
+        TextButton(onPressed: () => Navigator.of(dialog).pop(password.text.isEmpty ? null : password.text), child: Text(action ?? l10n.planCheckNow)),
       ],
     ),
   );

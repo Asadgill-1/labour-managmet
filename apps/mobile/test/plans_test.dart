@@ -79,9 +79,29 @@ void main() {
     final slips = await account.slips();
     expect(slips.single.planCode, 'mid');
     expect(slips.single.months, 3);
+    expect(slips.single.covers, SlipCovers.plan);
     expect(slips.single.expectedFils, 89700);
     expect(slips.single.state, 'waiting');
     expect(slips.single.fileArrived, isTrue);
+  });
+
+  test('a slip names what it covers: the plan with the cloud add-on, or the add-on alone (T20d-a)', () async {
+    final plans = await account.plans();
+    expect(monthlyFils(plans.first, SlipCovers.plan), 19900);
+    expect(monthlyFils(plans.first, SlipCovers.planAddon), 21900);
+    expect(monthlyFils(plans.first, SlipCovers.addon), 2000);
+    expect(monthlyFils(plans.last, SlipCovers.addon), 4000, reason: "Large's add-on has its own price");
+
+    await account.sendSlip(planCode: 'small', months: 2, bytes: pdf, kind: SlipKind.pdf, operationId: 'op-both', covers: SlipCovers.planAddon);
+    await account.sendSlip(planCode: 'large', months: 1, bytes: pdf, kind: SlipKind.pdf, operationId: 'op-addon', covers: SlipCovers.addon);
+    final sent = [for (final c in cloud.calls) if (c.path == '/rest/v1/rpc/submit_slip') c.body['p_covers']];
+    expect(sent, ['plan_addon', 'addon']);
+    final slips = await account.slips();
+    expect(slips.map((s) => (s.covers, s.expectedFils)), [(SlipCovers.addon, 4000), (SlipCovers.planAddon, 43800)]);
+
+    // A project that has not run the cloud backup's migration has no such column: its slips read as the plan's.
+    cloud.slips.last.remove('covers');
+    expect((await account.slips()).first.covers, SlipCovers.plan);
   });
 
   test('a dropped upload is sent again to the same slip, and a file already there counts as sent', () async {

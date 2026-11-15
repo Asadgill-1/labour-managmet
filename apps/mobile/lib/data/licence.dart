@@ -27,6 +27,7 @@ class Licence {
     this.planName,
     this.startsAt,
     this.endsAt,
+    this.addonUntil,
     this.workers,
     this.clients,
     this.managers,
@@ -48,6 +49,9 @@ class Licence {
 
   /// The end of the unbroken run of paid periods, or of the trial.
   final DateTime? endsAt;
+
+  /// The end of the cloud add-on that covers today, or null without one (T20d-a).
+  final DateTime? addonUntil;
 
   /// Active workers, client companies, managers and phones the plan allows. Null is unlimited.
   final int? workers;
@@ -96,6 +100,7 @@ Future<Licence?> verifyLicence(SignedLicence signed, String publicKey, {required
       leaseUntil: at('lease_until')!,
       startsAt: at('starts_at'),
       endsAt: at('ends_at'),
+      addonUntil: at('addon_until'),
       workers: limits['workers'] as int?,
       clients: limits['clients'] as int?,
       managers: limits['managers'] as int?,

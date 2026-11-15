@@ -19,6 +19,9 @@ const cloudCopyEvery = Duration(days: 1);
 /// the copy again each time.
 const cloudRetryAfter = Duration(hours: 1);
 
+/// One finished copy the cloud keeps for the company (T20d-a).
+typedef CloudCopy = ({String id, DateTime at, int sizeBytes});
+
 /// The last copy this phone sent to the cloud, why the last try failed, and whether one is going now.
 typedef CloudView = ({DateTime? lastAt, AccountProblem? problem, bool sending});
 
@@ -55,6 +58,9 @@ class CloudSender {
   DateTime? _failedAt;
   Future<void>? _running;
 
+  /// The cloud's newest copy was brought back onto this phone, so the next copy takes its place unasked (D-078).
+  var _replaceNext = false;
+
   CloudView get view => (lastAt: _lastAt, problem: _problem, sending: _running != null);
 
   /// The view once the kept record is read, then each change.
@@ -71,8 +77,20 @@ class CloudSender {
       _lastAt = m['at'] == null ? null : DateTime.parse(m['at'] as String);
       _mark = m['mark'] as String?;
       _problem = AccountProblem.values.asNameMap()[m['problem']];
+      _replaceNext = m['replace'] == true;
     }
     if (!_loaded.isCompleted) _loaded.complete();
+  }
+
+  /// The cloud's newest copy is now this phone's data. The other phone's question is answered: nothing of that
+  /// phone's is lost when this phone's next copy takes its place, so it goes without asking (D-078).
+  Future<void> broughtBack() async {
+    await _loaded.future;
+    _replaceNext = true;
+    if (_problem == AccountProblem.otherPhoneCopy) _problem = null;
+    _failedAt = null;
+    await _keep();
+    _notify();
   }
 
   /// Sends a copy if one is due. A question only the owner can answer, such as the other phone's copy, waits for them.
@@ -119,10 +137,11 @@ class CloudSender {
       final mark = await _markOf(db);
       final bytes = await db.backupBytes(password, work: await _work(), recoveryKey: _account.recoveryKey);
       if (bytes.length > limit) throw const AccountRefused(AccountProblem.tooLarge);
-      _lastAt = await _account.sendCloudCopy(tenantId, bytes, replace: replace);
+      _lastAt = await _account.sendCloudCopy(tenantId, bytes, replace: replace || _replaceNext);
       _mark = mark;
       _problem = null;
       _failedAt = null;
+      _replaceNext = false;
     } on AccountRefused catch (e) {
       _problem = e.problem;
       _failedAt = _clock().toUtc();
@@ -130,8 +149,13 @@ class CloudSender {
       _problem = AccountProblem.failed;
       _failedAt = _clock().toUtc();
     }
-    await _storage.write(key: cloudCopyKey(tenantId), value: jsonEncode({'at': _lastAt?.toIso8601String(), 'mark': _mark, 'problem': _problem?.name}));
+    await _keep();
   }
+
+  Future<void> _keep() => _storage.write(
+    key: cloudCopyKey(tenantId),
+    value: jsonEncode({'at': _lastAt?.toIso8601String(), 'mark': _mark, 'problem': _problem?.name, if (_replaceNext) 'replace': true}),
+  );
 
   void _notify() {
     if (!_changes.isClosed) _changes.add(view);

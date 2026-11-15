@@ -7957,12 +7957,6 @@ abstract class AppLocalizations {
   /// **'Get a plan so new entries keep working.'**
   String get trialNoteBody;
 
-  /// No description provided for @planSoon.
-  ///
-  /// In en, this message translates to:
-  /// **'Managers and cloud backup ({amount} a month): coming soon'**
-  String planSoon(String amount);
-
   /// No description provided for @planLockedTitle.
   ///
   /// In en, this message translates to:
@@ -8202,6 +8196,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Only the latest backup copy in the cloud stays 60 days, then it goes too.'**
   String get accountDeleteCloud;
+
+  /// No description provided for @planAddonPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud add-on: {amount} a month'**
+  String planAddonPrice(String amount);
+
+  /// No description provided for @planManagersSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Managers: coming soon'**
+  String get planManagersSoon;
+
+  /// No description provided for @planAddonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bringing the backup back from the cloud'**
+  String get planAddonTitle;
+
+  /// No description provided for @planAddonBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your locked backup goes to the cloud by itself. To bring it back on a new phone after this one is lost or broken you need this add-on: {amount} a month.'**
+  String planAddonBody(String amount);
+
+  /// No description provided for @planCoversPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get planCoversPlan;
+
+  /// No description provided for @planCoversBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'With the plan'**
+  String get planCoversBoth;
+
+  /// No description provided for @planCoversAddon.
+  ///
+  /// In en, this message translates to:
+  /// **'Add-on only'**
+  String get planCoversAddon;
+
+  /// No description provided for @planAddonOwnPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'The add-on alone goes at the price of the plan you are on ({plan}).'**
+  String planAddonOwnPlan(String plan);
+
+  /// No description provided for @planAddonNoPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'The add-on alone goes at the price of the plan chosen. It does not open a plan.'**
+  String get planAddonNoPlan;
+
+  /// No description provided for @planSlipLineBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'{plan} with the cloud add-on, {months}'**
+  String planSlipLineBoth(String plan, String months);
+
+  /// No description provided for @planSlipLineAddon.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud add-on only ({plan}), {months}'**
+  String planSlipLineAddon(String plan, String months);
+
+  /// No description provided for @planAddonEnds.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud add-on ends {date}'**
+  String planAddonEnds(String date);
+
+  /// No description provided for @cloudFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring from the cloud'**
+  String get cloudFrom;
+
+  /// No description provided for @cloudListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Copies in the cloud'**
+  String get cloudListTitle;
+
+  /// No description provided for @cloudListShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the copies'**
+  String get cloudListShow;
+
+  /// No description provided for @cloudListIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the copy to bring back.'**
+  String get cloudListIntro;
+
+  /// No description provided for @cloudListNone.
+  ///
+  /// In en, this message translates to:
+  /// **'The cloud holds no copy of this company.'**
+  String get cloudListNone;
+
+  /// No description provided for @cloudCopyNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'{size}, the newest'**
+  String cloudCopyNewest(String size);
+
+  /// No description provided for @cloudAddonNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Bringing a copy back from the cloud needs the add-on. Send a slip for it, then come back here.'**
+  String get cloudAddonNeeded;
+
+  /// No description provided for @cloudAddonTake.
+  ///
+  /// In en, this message translates to:
+  /// **'Get the add-on'**
+  String get cloudAddonTake;
+
+  /// No description provided for @cloudAddonPlayStore.
+  ///
+  /// In en, this message translates to:
+  /// **'Bringing a copy back from the cloud needs the add-on, which is not available in the Play Store app.'**
+  String get cloudAddonPlayStore;
+
+  /// No description provided for @cloudListOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet. The cloud\'s copies need the internet.'**
+  String get cloudListOffline;
+
+  /// No description provided for @cloudListSignedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in again with the password to see the copies.'**
+  String get cloudListSignedOut;
+
+  /// No description provided for @cloudListRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Look again'**
+  String get cloudListRetry;
+
+  /// No description provided for @cloudFetching.
+  ///
+  /// In en, this message translates to:
+  /// **'The copy is coming from the cloud. This can take a little while.'**
+  String get cloudFetching;
+
+  /// No description provided for @restoreIntroCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the backup file, or bring the copy kept in the cloud. Its data takes the place of the data on this phone now. What is here now is kept aside on the phone, so it can come back if needed.'**
+  String get restoreIntroCloud;
+
+  /// No description provided for @restoreFromCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'The cloud\'s copy of {date}'**
+  String restoreFromCloud(String date);
+
+  /// No description provided for @restoreForgot.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot the password?'**
+  String get restoreForgot;
+
+  /// No description provided for @restoreForgotBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The platform can open the cloud\'s copy and give it to you with a new password. It first checks your login email and the add-on\'s payment.'**
+  String get restoreForgotBody;
+
+  /// No description provided for @restoreForgotContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact support: {contact}'**
+  String restoreForgotContact(String contact);
+
+  /// No description provided for @restoreForgotNoContact.
+  ///
+  /// In en, this message translates to:
+  /// **'The support contact is not set here yet.'**
+  String get restoreForgotNoContact;
+
+  /// No description provided for @restoreNewPhoneCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'The cloud holds a copy from {date}. Tap to bring it back.'**
+  String restoreNewPhoneCloud(String date);
 }
 
 class _AppLocalizationsDelegate

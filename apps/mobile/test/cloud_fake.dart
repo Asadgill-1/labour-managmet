@@ -46,12 +46,18 @@ class FakeCloud {
   /// What the licence function answers: the plan's state, name and end, or a refusal such as other_phone.
   String licenceState = 'trial';
   String? licencePlan = 'Trial';
+
+  /// The paid plan's code, when a test names one; else the state stands in for it.
+  String? licencePlanCode;
   DateTime licenceEnds = DateTime.now().toUtc().add(const Duration(days: 15));
   String? licenceRefusal;
 
   /// The plan's numbers of active workers and client companies. Null is unlimited, as in the trial.
   int? licenceWorkers;
   int? licenceClients;
+
+  /// The end of the cloud add-on that covers today, as the licence carries it and the download asks (T20d).
+  DateTime? addonUntil;
 
   /// The kept session's refresh token is no longer taken.
   bool refreshRefused = false;
@@ -80,28 +86,39 @@ class FakeCloud {
   /// What the backup function answers a start with instead, such as not_owner or too_many.
   String? backupRefusal;
 
-  /// A copy another phone of the company sent before this one.
-  void addCloudCopy(String tenant, String device) => cloudCopies.add({
-    'id': 'copy-${cloudCopies.length + 1}', 'tenant_id': tenant, 'device_id': device, 'file_path': '$tenant/old.zip',
-    'operation_id': 'old', 'finished_at_utc': '2026-11-10T08:00:00.000Z', 'replace': false,
-  });
+  /// What it answers a download with instead, such as other_phone.
+  String? downloadRefusal;
+
+  /// A copy another phone of the company sent before this one, with its file when [bytes] is given.
+  void addCloudCopy(String tenant, String device, {Uint8List? bytes, String at = '2026-11-10T08:00:00.000Z'}) {
+    final id = 'copy-${cloudCopies.length + 1}';
+    cloudCopies.add({
+      'id': id, 'tenant_id': tenant, 'device_id': device, 'file_path': '$tenant/old-$id.zip',
+      'operation_id': 'old-$id', 'finished_at_utc': at, 'replace': false, 'size': bytes?.length ?? 2048,
+    });
+    if (bytes != null) cloudFiles['$tenant/old-$id.zip'] = bytes;
+  }
 
   /// A password was typed since the last deletion asked, as the server's recent sign-in rule needs (D-066).
   bool _passwordJustNow = false;
 
-  Account account(FlutterSecureStorage storage, {bool emailCodes = true, String recoveryKey = ''}) => Account(
-    SupabaseClient(
-      cloudUrl,
-      'sb_publishable_test',
-      httpClient: MockClient(_answer),
-      isolate: YAJsonIsolate(),
-      authOptions: const AuthClientOptions(authFlowType: AuthFlowType.implicit, autoRefreshToken: false),
-    ),
-    storage,
-    emailCodes: emailCodes,
-    licenceKey: licenceKey,
-    recoveryKey: recoveryKey,
-  );
+  Account account(FlutterSecureStorage storage, {bool emailCodes = true, String recoveryKey = ''}) {
+    final client = MockClient(_answer);
+    return Account(
+      SupabaseClient(
+        cloudUrl,
+        'sb_publishable_test',
+        httpClient: client,
+        isolate: YAJsonIsolate(),
+        authOptions: const AuthClientOptions(authFlowType: AuthFlowType.implicit, autoRefreshToken: false),
+      ),
+      storage,
+      emailCodes: emailCodes,
+      licenceKey: licenceKey,
+      recoveryKey: recoveryKey,
+      downloads: client,
+    );
+  }
 
   /// The owner tapped the link in the email.
   void confirmByLink(String email) {
@@ -126,7 +143,7 @@ class FakeCloud {
   /// Carries the request, as a real response does: the REST client reads its method.
   Future<http.Response> _answer(http.Request request) async {
     final r = await _route(request);
-    return http.Response(r.body, r.statusCode, headers: r.headers, request: request);
+    return http.Response.bytes(r.bodyBytes, r.statusCode, headers: r.headers, request: request);
   }
 
   Future<http.Response> _route(http.Request request) async {
@@ -165,6 +182,16 @@ class FakeCloud {
       if (type != 'application/zip') return _json({'statusCode': '415', 'error': 'invalid_mime_type'}, status: 400);
       cloudFiles[name] = request.bodyBytes.sublist(start, text.indexOf('\r\n--', start));
       return _json({'Key': 'backups/$name'});
+    }
+    const fetch = '/storage/v1/object/sign/backups/';
+    if (path.startsWith(fetch) && request.method == 'GET') {
+      calls.add((path: path, body: const {}));
+      final name = path.substring(fetch.length);
+      final row = cloudCopies.where((c) => c['file_path'] == name);
+      if (row.isEmpty || request.url.queryParameters['token'] != 'get-${row.first['id']}' || !cloudFiles.containsKey(name)) {
+        return _json({'statusCode': '400', 'error': 'InvalidSignature', 'message': 'invalid signature'}, status: 400);
+      }
+      return http.Response.bytes(cloudFiles[name]!, 200, headers: {'content-type': 'application/zip'});
     }
     final body = request.body.isEmpty ? <String, dynamic>{} : jsonDecode(request.body) as Map<String, dynamic>;
     calls.add((path: path, body: body));
@@ -247,9 +274,10 @@ class FakeCloud {
         final facts = {
           'v': 1, 'iss': 'labour-app', 'jti': 'jti-${calls.length}', 'iat': now.toIso8601String(),
           'tenant_id': body['tenant_id'], 'device_id': body['device_id'], 'state': licenceState,
-          'plan': none ? null : licenceState, 'plan_version': none ? null : 1, 'plan_name': none ? null : licencePlan,
+          'plan': none ? null : (licencePlanCode ?? licenceState), 'plan_version': none ? null : 1, 'plan_name': none ? null : licencePlan,
           'starts_at': none ? null : now.toIso8601String(), 'ends_at': licenceEnds.toIso8601String(),
           'lease_until': (none || lease.isBefore(licenceEnds) ? lease : licenceEnds).toIso8601String(),
+          'addon_until': addonUntil?.toIso8601String(),
           'limits': {'workers': none ? 0 : licenceWorkers, 'clients': none ? 0 : licenceClients, 'managers': none ? 0 : null, 'devices': 1},
         };
         final bytes = utf8.encode(jsonEncode(facts));
@@ -275,10 +303,30 @@ class FakeCloud {
           });
           return _json({'path': '$tenant/$id.zip', 'token': 'token-$id'});
         }
+        if (body['action'] == 'download') {
+          if (downloadRefusal case final refusal?) return _json({'error': refusal}, status: 403);
+          final copy = cloudCopies.where((c) => c['id'] == body['backup_id'] && c['tenant_id'] == tenant && c['finished_at_utc'] != null);
+          if (copy.isEmpty) return _json({'error': 'no_copy'}, status: 404);
+          if (!(addonUntil?.isAfter(DateTime.now().toUtc()) ?? false)) return _json({'error': 'addon_needed'}, status: 403);
+          return _json({'url': '$cloudUrl/storage/v1/object/sign/backups/${copy.first['file_path']}?token=get-${copy.first['id']}'});
+        }
         final row = cloudCopies.firstWhere((c) => c['operation_id'] == body['operation_id']);
         if (!cloudFiles.containsKey(row['file_path'])) return _json({'error': 'not_arrived'}, status: 409);
         row['finished_at_utc'] = '2026-11-15T06:00:00.000Z';
         return _json({'finished_at': row['finished_at_utc']});
+      case '/rest/v1/cloud_backups':
+        // The owner's finished copies, newest first.
+        final done = [
+          for (final c in cloudCopies)
+            if (c['tenant_id'] == companies[caller] && c['finished_at_utc'] != null) c,
+        ];
+        int byNewest(Map<String, dynamic> a, Map<String, dynamic> b) {
+          final at = (b['finished_at_utc'] as String).compareTo(a['finished_at_utc'] as String);
+          return at != 0 ? at : cloudCopies.indexOf(b).compareTo(cloudCopies.indexOf(a));
+        }
+        return _json([
+          for (final c in done..sort(byNewest)) {'id': c['id'], 'size_bytes': c['size'], 'finished_at_utc': c['finished_at_utc']},
+        ]);
       case '/rest/v1/plans':
         return _json(plans);
       case '/rest/v1/platform_settings':
@@ -295,9 +343,15 @@ class FakeCloud {
         }
         final plan = plans.firstWhere((p) => p['code'] == body['p_plan_code']);
         final id = '00000000-0000-4000-8000-${(slips.length + 1).toString().padLeft(12, '0')}';
+        final covers = (body['p_covers'] as String?) ?? 'plan';
+        final monthly = switch (covers) {
+          'plan' => plan['price_fils'] as int,
+          'addon' => plan['addon_price_fils'] as int,
+          _ => (plan['price_fils'] as int) + (plan['addon_price_fils'] as int),
+        };
         final slip = <String, dynamic>{
-          'id': id, 'tenant_id': tenant, 'plan_code': plan['code'], 'plan_version': 1, 'months': body['p_months'],
-          'expected_fils': (plan['price_fils'] as int) * (body['p_months'] as int), 'file_path': '$tenant/$id.${body['p_file_type']}',
+          'id': id, 'tenant_id': tenant, 'plan_code': plan['code'], 'plan_version': 1, 'months': body['p_months'], 'covers': covers,
+          'expected_fils': monthly * (body['p_months'] as int), 'file_path': '$tenant/$id.${body['p_file_type']}',
           'state': 'waiting', 'refuse_reason': null, 'submitted_at_utc': '2026-11-11T08:00:00+00:00', 'source_operation_id': body['p_operation_id'],
         };
         slips.add(slip);

@@ -592,10 +592,10 @@ void main() {
 expect(find.text('Small Company Plan'), findsOneWidget);
       expect(find.text('AED 199.00'), findsOneWidget);
       expect(find.text('15 active workers, 5 client companies'), findsOneWidget);
-      expect(find.text('Managers aur cloud backup (AED 20.00 mahana): jald aa raha'), findsWidgets);
+      expect(find.text('Managers: jald aa raha'), findsWidgets);
+      expect(find.textContaining('add-on'), findsNothing, reason: 'a build that keeps no cloud copy sells no add-on for one');
       await tapAndSettle(tester, find.text('Mid Size Company Plan'));
       await tester.scrollUntilVisible(find.text('Unlimited workers, Unlimited client companies'), 150, scrollable: find.byType(Scrollable).hitTestable().first);
-      expect(find.text('Managers aur cloud backup (AED 40.00 mahana): jald aa raha'), findsOneWidget);
       await tapAndSettle(tester, find.text('1 mahina'));
       await tapAndSettle(tester, find.text('3 mahine').last);
       expect(find.text('AED 897.00'), findsOneWidget);
