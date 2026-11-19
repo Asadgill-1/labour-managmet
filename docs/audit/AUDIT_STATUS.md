@@ -1,6 +1,6 @@
 # Audit status
 
-Independent audit of the built application, started 2026-11-15. Branch `audit/t01-t21`, cut from `p4/t20d-c-restore` at `9ebcd9b` with a clean working tree. Nothing is pushed, deployed or run on the live Supabase project.
+Independent audit of the built application, started 2026-11-15. Branch `audit/t01-t21`, cut from `p4/t20d-c-restore` at `9ebcd9b` with a clean working tree. Pushed on the owner's word on 2026-11-19 as PR #2 (into `p4/t20d-c-restore`). Nothing is deployed or run on the live Supabase project.
 
 ## Scope
 
@@ -66,9 +66,9 @@ Each review file lists the files its reviewer read in full. The four reviews mad
 - The live Supabase project is out of bounds without the owner's yes. The new migration is not on it.
 - T19d (real email) waits on the owner's domain (D-068).
 
-## Uncommitted changes on `audit/t01-t21`
+## Changes on `audit/t01-t21`
 
-Nothing is committed or pushed. `git status` lists every change. In short:
+Committed on the owner's word: `ef7ec88` (the fixes, tests and migration) and `6c86cae` (the records), pushed as PR #2. Then the owner accepted D-079 and handed the audit's questions to Claude on 2026-11-19; the answers, D-080, are built by three more fixers (`fixes/F-owner-billing.md`, `G-owner-payroll.md`, `H-owner-screens.md`, TC-214 to TC-216) and committed on top. In short, the first two commits hold:
 
 - App and domain code for BUG-001 to BUG-024 and BUG-028 to BUG-033 (`apps/mobile/lib`, `packages/domain/lib`, the Android manifest), with their tests in `apps/mobile/test` and `packages/domain/test`; two new test files, `test/android_manifest_test.dart` and `test/audit_journey_test.dart`.
 - The cloud's side of BUG-023, BUG-024, BUG-026 and BUG-027: `supabase/migrations/20261117120000_audit_fixes.sql` and four changed files in `supabase/tests/database/`.
@@ -77,7 +77,7 @@ Nothing is committed or pushed. `git status` lists every change. In short:
 
 ## Next actions
 
-1. The owner reads the final report and decides on committing, D-079 and the questions in `BUG_REGISTER.md`.
+1. Done on 2026-11-19: D-079 accepted, the questions answered as D-080 and built. Left with the owner: BUG-025's limit, and the live migration (`PROGRESS.md`, items 18 and 19).
 2. After a commit and a push, on the owner's yes: CI's `supabase test db` and the Android job are the first runs of the cloud's SQL and of a release build.
 3. On the owner's yes, the live project gets `20261114120000_cloud_backup.sql` (T20d-a) and then `20261117120000_audit_fixes.sql`, per `docs/RUNBOOK.md`.
 4. On a phone: a release APK signs up, logs in, fetches its licence and sends its copy (BUG-001); the T20c and T20d phone tests already listed in `PROGRESS.md`.

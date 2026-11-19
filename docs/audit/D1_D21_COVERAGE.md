@@ -127,3 +127,19 @@ The state once every fix was in and the full re-runs were done (`VERIFICATION.md
 | T21b | VERIFIED | BUG-022 fixed |
 
 Review 05 of the fixes found five more, all fixed on 2026-11-19: BUG-029 and BUG-030 (T11, T18c: payroll items and listing), BUG-031 (T18a: the register's header), BUG-032 (T10: the stale-correction message), BUG-033 (T18: imported due days). No row's status changes for them; T11 and T18c stay PARTIAL for the owner's questions.
+
+## After the owner's answers (2026-11-19)
+
+The owner accepted D-079 and handed the questions to Claude; D-080 holds the answers, built with tests seen failing first and checked by the third full re-run (`VERIFICATION.md`). Rows that change:
+
+| Stage | Status now | What changed, what is left |
+| --- | --- | --- |
+| T05, T05b | VERIFIED | F04-8: chips grow and sub-tab names shrink to fit, checked by a widget test at text scale 2.6 on a 360-wide phone. Not seen on a phone |
+| T09 | VERIFIED | F02-6: a month covered whole is shared by days; F02-7: one rounding |
+| T10 | PARTIAL | F02-9: equal start and end refused at every field and in the write path, an agreed 0 hours refused, a site file's equal times refused. UX-06's timed test still never run |
+| T11 | VERIFIED | F02-5: a worker whose only pay is a late minus no longer stops closing |
+| T13, T13b | VERIFIED | F02-2's second part: closing asks about the days payroll would cut, and about a cut-on worker with nothing recorded |
+| T16 | VERIFIED | F03-1: one fixed amount a company at a time; F03-2: an amount credit cannot take all that is left; F03-3: once a month at the newest rate, and the owner's sheet agrees |
+| T18c | VERIFIED | F02-4: a late day gives its cut back, exactly |
+| T20d-b | PARTIAL | The Backup page's words no longer say the copy is from another phone (D-080 (12)). Not live, not on a phone |
+| T20d-a | PARTIAL | Unchanged: BUG-025 still waits on the owner |

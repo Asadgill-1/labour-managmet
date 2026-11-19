@@ -40,7 +40,7 @@ Severity: Critical = severe compromise or widespread data loss. High = major wor
 - **OBS-009 (R05-4):** if the cloud counts a phone's first copy but its answer is lost, the next try finds that copy and asks the owner, as after a reinstall, and automatic copies wait for the answer. Fixer D named it as a side effect of BUG-020. Open: a marker kept before the first upload would avoid it.
 - **OBS-010 (R05-5, suspected):** a retried account deletion is recognised as done only while the old session is still in memory; once the client refreshes it away, the retry says wrong login, as before BUG-021's fix. Open.
 - **OBS-011 (R05-7, suspected):** if the sign-in that now ends a password reset fails, the new password is already set, but a retry with the same emailed code reads as a bad code. The owner can log in with the new password. Open.
-- **OBS-012 (R05-8):** turning off a phone that is already off now also asks for a recent password, and so does a member turning off their own phone. Stricter, not harmful; the app leads to the password. For the owner with D-079 (1).
+- **OBS-012 (R05-8), decided:** kept as one rule for phones (D-080 (11)). turning off a phone that is already off now also asks for a recent password, and so does a member turning off their own phone. Stricter, not harmful; the app leads to the password. For the owner with D-079 (1).
 
 ## Reviewers' findings and what becomes of each (2026-11-16)
 
@@ -85,17 +85,17 @@ Found by the review of the fixes (`docs/audit/reviews/05-final-diff.md`, 9 findi
 | BUG-032 | R05-6 | Low | A correction refused because its row changed (BUG-008) said only that saving failed | FIXED. Found by review 05 of the fixes; fixed by the auditor, the test seen failing first (`VERIFICATION.md`). It now says the row was changed and to open it again, in both languages |
 | BUG-033 | R05-9 | Low | CSV import took any number of due days, while the company form takes 0 to 365 | FIXED. Found by review 05 of the fixes; fixed by the auditor, the test seen failing first (`VERIFICATION.md`) |
 
-Not defects to fix without a decision. Each is in the review file with its numbers:
+Not defects to fix without a decision. Each is in the review file with its numbers. The owner handed every one to Claude on 2026-11-19 ("do what is best, as simple as it can be"); each answer is in D-080 and built, the test seen failing first (`docs/audit/fixes/F-owner-billing.md`, `G-owner-payroll.md`, `H-owner-screens.md`):
 
-| Finding | Severity | The question | For |
-| --- | --- | --- | --- |
-| F03-1 | High | One company with fixed monthly contracts at two sites is charged one fee, not two, and closing says nothing. D-054 says a fixed fee is charged once a month for each company; the contract form lets a fixed contract be set per site | Owner |
-| F03-2 | Medium | Once credit notes for amounts reach an invoice's total, it can never be credited whole, so its work can never be billed again | Owner and tax adviser |
-| F03-3 | Medium | A fixed monthly contract whose rate changes inside a month is charged at both rates on one invoice (5,000 + 6,000) | Owner |
-| F02-2, second part | Medium | Should closing ask for a monthly worker's missing days when their contract cuts absence (D-045 says no, written before D-057) | Owner |
-| F02-4 | Low | Attendance added late for a day already cut from a posted monthly salary does not give the cut back | Owner |
-| F02-5 | Low | A late correction that lowers pay, with no new work, holds the worker and every later closing, and nothing clears it | Owner |
-| F02-6 | Low | With a fixed divisor, a contract change inside a month pays more or less than one month | Accountant |
-| F02-7 | Low | The absence cut and the part-month pay are each rounded, so a fil can differ from one rounding | Accountant |
-| F02-9 | Low | A shift whose end equals its start is stored as 24 hours with no question | Owner |
-| F04-8 | Low | Fixed-height chip rows may clip at the largest text size. Not checked in a running app | Suspected |
+| Finding | Severity | The question | For | Answer |
+| --- | --- | --- | --- | --- |
+| F03-1 | High | One company with fixed monthly contracts at two sites is charged one fee, not two, and closing says nothing. D-054 says a fixed fee is charged once a month for each company; the contract form lets a fixed contract be set per site | Owner | D-080 (1): one fixed monthly amount a company at a time; a second is refused when saved. BUILT |
+| F03-2 | Medium | Once credit notes for amounts reach an invoice's total, it can never be credited whole, so its work can never be billed again | Owner and tax adviser | D-080 (2): an amount credit cannot take all that is left; the app says to credit the whole invoice. BUILT |
+| F03-3 | Medium | A fixed monthly contract whose rate changes inside a month is charged at both rates on one invoice (5,000 + 6,000) | Owner | D-080 (3): once a month at the newest rate; a fee per worker once each. BUILT |
+| F02-2, second part | Medium | Should closing ask for a monthly worker's missing days when their contract cuts absence (D-045 says no, written before D-057) | Owner | D-080 (4): yes, closing asks about the days payroll would cut, and about a cut-on worker with nothing recorded. BUILT |
+| F02-4 | Low | Attendance added late for a day already cut from a posted monthly salary does not give the cut back | Owner | D-080 (5): the cut comes back in the next payroll, exactly. BUILT |
+| F02-5 | Low | A late correction that lowers pay, with no new work, holds the worker and every later closing, and nothing clears it | Owner | D-080 (6): the worker does not stop closing; the minus waits for the next pay. BUILT |
+| F02-6 | Low | With a fixed divisor, a contract change inside a month pays more or less than one month | Accountant | D-080 (7): a month covered whole is shared by days. BUILT |
+| F02-7 | Low | The absence cut and the part-month pay are each rounded, so a fil can differ from one rounding | Accountant | D-080 (8): rounded once. BUILT |
+| F02-9 | Low | A shift whose end equals its start is stored as 24 hours with no question | Owner | D-080 (9): refused at the field. BUILT |
+| F04-8 | Low | Fixed-height chip rows may clip at the largest text size. Not checked in a running app | Suspected | D-080 (10): chips grow, sub-tab names shrink to fit. BUILT |

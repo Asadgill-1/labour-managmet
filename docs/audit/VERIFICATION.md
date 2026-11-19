@@ -67,6 +67,21 @@ The one failure, `cloud_restore_test.dart`'s first test: every check in it passe
 
 `cloud_restore_test.dart`, which failed in the first re-run's tearDown (OBS-008), passed this time. That does not prove the flake gone: it was not changed, and it may come back under load.
 
+## Third full re-run, after the owner's answers (2026-11-20)
+
+The owner accepted D-079 and handed the audit's questions to Claude; D-080's answers were built by three fixers, one at a time, each test seen failing first (`fixes/F-owner-billing.md`, `G-owner-payroll.md`, `H-owner-screens.md`). Then:
+
+| Command | Where | Result |
+| --- | --- | --- |
+| `python tools/check_trace.py` | repo root | Pass. 166 PRD requirements traced (after TC-214 to TC-216 were added) |
+| `dart analyze --fatal-infos` | `packages/domain` | Pass. No issues |
+| `dart test` | `packages/domain` | Pass. 158 tests (152 before: six new for D-080 (5), (7) and (8)) |
+| `flutter analyze` | `apps/mobile` | Pass. No issues |
+| `flutter test` over the 40 committed test files (`test/zz_*` left out) | `apps/mobile` | Pass. 533 passed, 1 skipped, none failed, in 8 minutes 4 seconds (517 before) |
+| `flutter test --dart-define=PLAY_STORE=true test/cloud_restore_test.dart` | `apps/mobile` | Pass. 1 passed, 3 skipped, as meant |
+
+Nothing of D-080 was checked on a phone or in the running app.
+
 ## Journeys exercised
 
 | Journey | How | Result |

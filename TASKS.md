@@ -100,4 +100,4 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 
 **Gate:** Store, billing and privacy gates plus full regression pass. Only now a release candidate.
 
-**Audit:** an independent audit of T01 to T21 ran on 2026-11-15 to 2026-11-17, on branch `audit/t01-t21` (`docs/audit/`, D-079). It counts toward T26's independent reviews; it is not T26.
+**Audit:** an independent audit of T01 to T21 ran on 2026-11-15 to 2026-11-20, on branch `audit/t01-t21` (`docs/audit/`, D-079, and the owner's answers to its questions, D-080; PR #2). It counts toward T26's independent reviews; it is not T26.
