@@ -82,6 +82,10 @@ The owner accepted D-079 and handed the audit's questions to Claude; D-080's ans
 
 Nothing of D-080 was checked on a phone or in the running app.
 
+## CI on PR #2 (2026-11-19)
+
+GitHub Actions run 44556571275, on `6c86cae`: `trace`, `domain`, `mobile`, `functions`, `secrets` and `supabase` passed; `android` was skipped by the workflow. `supabase test db` ran 8 files, 266 tests, `Result: PASS`: the first run anywhere of `supabase/migrations/20261117120000_audit_fixes.sql` and its four changed test files (TC-212). The migration is not on the live project.
+
 ## Journeys exercised
 
 | Journey | How | Result |

@@ -96,7 +96,7 @@ The state once every fix was in and the full re-runs were done (`VERIFICATION.md
 | Stage | Status now | What changed, what is left |
 | --- | --- | --- |
 | T01 | VERIFIED | BUG-015's `SCREEN_FLOW.md` lines and OBS-005's `DATA_MODEL.md` line corrected |
-| T02 | PARTIAL | BUG-027 written, not run. CI itself not run by this audit |
+| T02 | VERIFIED | BUG-027 passed, and CI ran every job but Android on PR #2: CI run 44556571275 on 2026-11-19 (`supabase test db`: 8 files, 266 tests, PASS) |
 | T03 | PARTIAL | Unchanged: the Keystore never checked on a phone |
 | T04 | VERIFIED | OBS-005 corrected |
 | T05, T05b | PARTIAL | BUG-015, BUG-016, BUG-019 fixed. F04-8 (large text) still not checked in a running app |
@@ -116,14 +116,14 @@ The state once every fix was in and the full re-runs were done (`VERIFICATION.md
 | T18 | VERIFIED | BUG-011, BUG-012 fixed |
 | T18b | VERIFIED | BUG-008, BUG-009 fixed |
 | T18c | PARTIAL | BUG-005 fixed. F02-4 for the owner |
-| T19a | PARTIAL | Unchanged: the SQL tests not run here |
+| T19a | VERIFIED | Its SQL tests passed in CI run 44556571275 on 2026-11-19 (`supabase test db`: 8 files, 266 tests, PASS). Not run on this computer |
 | T19b | PARTIAL | BUG-001 fixed and the release APK's manifest read, but no release build has logged in on a phone. BUG-024's app side fixed |
 | T19c | PARTIAL | BUG-021 fixed, except a retry after the app restarts. The SQL not run here |
 | T19d | BLOCKED | Unchanged |
-| T20c | PARTIAL | BUG-023, BUG-024: app side fixed and run; cloud side written, not run, not live |
+| T20c | PARTIAL | BUG-023, BUG-024: app side fixed and run; cloud side passed in CI run 44556571275 on 2026-11-19 (`supabase test db`: 8 files, 266 tests, PASS); not live, not on a phone |
 | T20d-a | PARTIAL | BUG-025 for the owner. Not run here, not live |
 | T20d-b | PARTIAL | BUG-020 fixed. The Backup page's words after a reinstall for the owner |
-| T21a | PARTIAL | BUG-026, BUG-027 written, not run |
+| T21a | PARTIAL | BUG-026, BUG-027 passed in CI run 44556571275 on 2026-11-19 (`supabase test db`: 8 files, 266 tests, PASS); not live |
 | T21b | VERIFIED | BUG-022 fixed |
 
 Review 05 of the fixes found five more, all fixed on 2026-11-19: BUG-029 and BUG-030 (T11, T18c: payroll items and listing), BUG-031 (T18a: the register's header), BUG-032 (T10: the stale-correction message), BUG-033 (T18: imported due days). No row's status changes for them; T11 and T18c stay PARTIAL for the owner's questions.

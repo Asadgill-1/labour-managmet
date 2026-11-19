@@ -61,7 +61,7 @@ Each review file lists the files its reviewer read in full. The four reviews mad
 
 ## Blockers
 
-- Docker and Deno are missing, so the cloud's SQL tests and the functions' tests cannot be run here. The new migration `supabase/migrations/20261117120000_audit_fixes.sql` and its four test files are written, not run. CI's `supabase test db` is their first run.
+- Docker and Deno are missing, so the cloud's SQL tests and the functions' tests cannot be run here. The new migration `supabase/migrations/20261117120000_audit_fixes.sql` and its four test files passed in CI instead: CI run 44556571275 on 2026-11-19 (`supabase test db`: 8 files, 266 tests, PASS), with the functions' tests also passing.
 - No phone or emulator: nothing on Android is verified (Keystore, share sheet, image picker, fingerprint, print, a release build logging in).
 - The live Supabase project is out of bounds without the owner's yes. The new migration is not on it.
 - T19d (real email) waits on the owner's domain (D-068).
@@ -78,6 +78,6 @@ Committed on the owner's word: `ef7ec88` (the fixes, tests and migration) and `6
 ## Next actions
 
 1. Done on 2026-11-19: D-079 accepted, the questions answered as D-080 and built. Left with the owner: BUG-025's limit, and the live migration (`PROGRESS.md`, items 18 and 19).
-2. After a commit and a push, on the owner's yes: CI's `supabase test db` and the Android job are the first runs of the cloud's SQL and of a release build.
+2. Done for the cloud's SQL: CI run 44556571275 on 2026-11-19 (`supabase test db`: 8 files, 266 tests, PASS). The Android job was skipped on that run, so a release build is still not built by CI.
 3. On the owner's yes, the live project gets `20261114120000_cloud_backup.sql` (T20d-a) and then `20261117120000_audit_fixes.sql`, per `docs/RUNBOOK.md`.
 4. On a phone: a release APK signs up, logs in, fetches its licence and sends its copy (BUG-001); the T20c and T20d phone tests already listed in `PROGRESS.md`.
