@@ -97,7 +97,8 @@ class _RowEditorScreenState extends State<RowEditorScreen> {
           status: _status,
           startMinute: _start,
           endMinute: _end,
-          breakMinutes: int.parse(_break.text.trim()),
+          // The break field and its check are gone on an absent row, so a cleared one counts as no break.
+          breakMinutes: int.tryParse(_break.text.trim()) ?? 0,
           breakPaidClient: _paidClient,
           breakPaidWorker: _paidWorker,
           overtimeApproved: _overtime,

@@ -57,4 +57,12 @@ void main() {
       expect(parseAed(bad), isNull, reason: bad);
     }
   });
+
+  test('parseAed turns an amount too long to hold away, never throwing or wrapping round', () {
+    expect(parseAed('9999999999999.99'), 999999999999999);
+    // 14 digits and more: past any real amount, and far enough that fils could overflow or fail to parse.
+    for (final bad in ['10000000000000', '92233720368547758.07', '99999999999999999999', '1${'0' * 40}']) {
+      expect(parseAed(bad), isNull, reason: bad);
+    }
+  });
 }

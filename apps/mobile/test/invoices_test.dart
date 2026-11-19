@@ -5,7 +5,9 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/app/side_panel.dart';
+import 'package:labour_app/app/theme.dart' show saveErrorText;
 import 'package:labour_app/data/attendance.dart';
+import 'package:labour_app/data/changes.dart';
 import 'package:labour_app/data/closing.dart';
 import 'package:labour_app/data/invoices.dart';
 import 'package:labour_app/data/masters.dart';
@@ -204,6 +206,25 @@ void main() {
       expect((await db.invoiceView(second)).invoice.number, 'INV-$_year-0002');
     });
 
+    test('BUG-013 a stored negative due days never puts the due date before the issue date (F04-2)', () async {
+      final profile = await db.select(db.tenantProfiles).getSingle();
+      await db.saveRow(db.tenantProfiles, id: profile.id, operationId: newUuid(), fields: const TenantProfilesCompanion(paymentTermsDays: Value(-30)));
+      await ts.work(db, '2020-10-05');
+      await approved();
+      final terms = await draft();
+      await issue(terms);
+      final today = dubaiToday(DateTime.now());
+      expect((await db.invoiceView(terms)).invoice.dueDate, today, reason: 'payment terms of -30 fall back to due the day it issues');
+
+      // Old data or an import can hold one on the company too.
+      await db.saveRow(db.clients, id: ts.emaar, operationId: newUuid(), fields: const ClientsCompanion(dueDays: Value(-30)));
+      await ts.work(db, '2020-10-06');
+      await approved();
+      final own = await draft();
+      await issue(own);
+      expect((await db.invoiceView(own)).invoice.dueDate, today);
+    });
+
     test('the company prefix leads the number', () async {
       final profile = await db.select(db.tenantProfiles).getSingle();
       await db.saveRow(db.tenantProfiles, id: profile.id, operationId: newUuid(), fields: const TenantProfilesCompanion(invoicePrefix: Value('ALN')));
@@ -238,6 +259,27 @@ void main() {
       expect((await db.select(db.invoices).getSingle()).number, 'INV-$_year-0001');
       expect(await db.select(db.billedAllocations).get(), hasLength(1));
       expect(await db.select(db.invoiceLines).get(), hasLength(1));
+    });
+
+    test('a retry of a draft, a credit note or an edit gives back the one it made (BUG-010)', () async {
+      await ts.work(db, '2020-10-05');
+      await approved();
+      final op = newUuid();
+      Future<String> start() => db.createInvoice(clientId: ts.emaar, from: ts.from, to: ts.to, operationId: op);
+      final id = await start();
+      expect(await start(), id, reason: 'a second tap on the same form');
+      expect((await db.invoiceView(id)).status, InvoiceStatus.draft);
+      await issue(id);
+
+      final creditOp = newUuid();
+      final credit = await db.creditInvoice(id, reason: 'Rate', amountFils: 1000, operationId: creditOp);
+      expect(await db.creditInvoice(id, reason: 'Rate', amountFils: 1000, operationId: creditOp), credit);
+      expect((await db.invoiceView(credit)).invoice.kind, 'credit');
+
+      final editOp = newUuid();
+      final edited = await db.editInvoice(id, reason: 'Wrong hours', operationId: editOp);
+      expect(await db.editInvoice(id, reason: 'Wrong hours', operationId: editOp), edited);
+      expect((await db.invoiceView(edited)).status, InvoiceStatus.draft);
     });
 
     test('numbers run by year with no gap: a failure part way uses none, and the database refuses one twice (INV-08)', () async {
@@ -507,7 +549,7 @@ void main() {
       expect((await money(id)).totalFils, 14175);
       final op = newUuid();
       final receipt = await receive(6000, {id: 5000}, operationId: op);
-      await receive(6000, {id: 5000}, operationId: op);
+      expect(await receive(6000, {id: 5000}, operationId: op), receipt, reason: 'the retry gives back the receipt it made (BUG-010)');
 
       final m = await money(id);
       expect((m.receivedFils, m.leftFils, m.state(today)), (5000, 9175, PayState.partlyPaid));
@@ -571,6 +613,27 @@ void main() {
       await receive(12000, {null: 10000, id: 2000});
       final after = await db.receivables();
       expect((after.openingLeftFils[ts.emaar], after.invoices[id]!.leftFils, after.creditOf(ts.emaar)), (0, 12175, 0));
+    });
+
+    test("the company's balance from before the app can't drop below what receipts settled of it, or go (BUG-009)", () async {
+      Future<String> save(int fils, {String? id}) => db.saveRow(db.openingBalances, id: id, operationId: newUuid(), fields: OpeningBalancesCompanion(kind: const Value('client_receivable'), clientId: Value(ts.emaar), amountFils: Value(fils), asOfDate: const Value('2020-09-30'), sourceNote: const Value('Old ledger')));
+      final opening = await save(100000);
+      await receive(100000, {null: 100000});
+
+      await expectLater(save(60000, id: opening), throwsA(isA<OpeningSettled>()), reason: 'AED 1,000 received against it would vanish from the credit');
+      await expectLater(db.deleteRecord(db.openingBalances, opening, operationId: newUuid()), throwsA(isA<OpeningSettled>()));
+      final kept = await db.receivables();
+      expect((kept.openingFils[ts.emaar], kept.openingLeftFils[ts.emaar], kept.creditOf(ts.emaar)), (100000, 0, 0));
+
+      await save(120000, id: opening);
+      final raised = await db.receivables();
+      expect((raised.openingLeftFils[ts.emaar], raised.creditOf(ts.emaar)), (20000, 0), reason: 'raising it is fine');
+
+      // The form's save and delete both show this through saveOrExplain and deleteOrArchive.
+      for (final locale in const [Locale('en'), Locale('en', 'PK')]) {
+        final l10n = await AppLocalizations.delegate.load(locale);
+        expect(saveErrorText(l10n, const OpeningSettled()), l10n.openingSettled);
+      }
     });
 
     test('what settled an invoice never changes or goes', () async {

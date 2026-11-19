@@ -29,7 +29,8 @@ class _Line {
 /// splitting them across companies has been chosen.
 Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, String month) async {
   final statements = await db.statementsFor(month);
-  final clients = {for (final c in await db.select(db.clients).get()) c.id: c.name};
+  // Keyed by a label unique to each company, so two companies with one name never share a group or a bill.
+  final clients = companyLabels(await db.select(db.clients).get());
   final sites = {for (final s in await db.select(db.sites).get()) s.id: s.name};
 
   final byKey = <(String, String, String, String?, int?, String?, int?), _Line>{};

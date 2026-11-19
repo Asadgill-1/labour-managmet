@@ -45,7 +45,9 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
   late String? _from = widget.allDates ? null : monthFirstDay(_thisMonth);
   late String? _to = widget.allDates ? null : monthLastDay(_thisMonth);
   late final _chosen = <String, Set<String>>{...widget.chosen};
-  RegisterData? _last;
+
+  /// The last register shown, with the dates it was built for, so other dates never show or export its rows (REP-01).
+  ({RegisterQuery query, RegisterData data})? _last;
   bool _busy = false;
 
   String get _thisMonth => dubaiToday(DateTime.now()).substring(0, 7);
@@ -98,15 +100,21 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
     filterLine: _filterLine(AppLocalizations.of(context), data),
     from: data.dated ? _from : null,
     to: data.dated ? _to : null,
-    onBusy: (busy) => setState(() => _busy = busy),
+    onBusy: (busy) {
+      if (mounted) setState(() => _busy = busy);
+    },
   );
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final asked = ref.watch(registerProvider((section: widget.section, from: _from, to: _to, l10n: l10n)));
-    final data = asked.value ?? _last;
-    if (asked.hasValue) _last = asked.value;
+    final query = (section: widget.section, from: _from, to: _to, l10n: l10n);
+    final asked = ref.watch(registerProvider(query));
+    if (asked.hasValue && !asked.hasError) _last = (query: query, data: asked.value!);
+    // New dates wait for their own rows, and a failed build shows as an error, never as the figures before it.
+    final data = asked.hasError || _last?.query != query ? null : _last!.data;
+    // While new dates load, or if they fail, the header keeps the dates and filters it last had, without their figures.
+    final frame = data ?? _last?.data;
     final shown = data == null ? const <RegisterEntry>[] : filterEntries(data.entries, _chosen);
     // One row at a time, so a date holding a thousand workers doesn't have to be built all at once when it scrolls into view.
     final items = <Object>[
@@ -120,13 +128,18 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
         label: _busy ? l10n.exportMaking : l10n.regExport,
         onPressed: _busy || data == null || shown.isEmpty ? null : () => _export(data, shown),
       ),
-      body: data == null
+      body: frame == null
           ? (asked.hasError ? EmptyState(icon: Icons.error_outline, text: l10n.databaseError) : const Center(child: CircularProgressIndicator()))
           : ListView.builder(
               padding: const EdgeInsets.only(bottom: 12),
-              itemCount: items.length + 1 + (shown.isEmpty ? 1 : 0),
+              itemCount: data == null ? 2 : items.length + 1 + (shown.isEmpty ? 1 : 0),
               itemBuilder: (context, i) {
-                if (i == 0) return _header(l10n, data, shown);
+                if (i == 0) return _header(l10n, frame, shown, current: data != null);
+                if (data == null) {
+                  return asked.hasError
+                      ? EmptyState(icon: Icons.error_outline, text: l10n.databaseError)
+                      : const Padding(padding: EdgeInsets.all(32), child: Center(child: CircularProgressIndicator()));
+                }
                 if (shown.isEmpty) return EmptyState(icon: Icons.filter_alt_off, text: l10n.regEmpty);
                 return switch (items[i - 1]) {
                   final RegisterEntry entry => _EntryCard(data: data, entry: entry),
@@ -144,7 +157,8 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
     );
   }
 
-  Widget _header(AppLocalizations l10n, RegisterData data, List<RegisterEntry> shown) {
+  /// Not [current]: the register drawn is the last one, kept for its dates and filters, so its figures do not show.
+  Widget _header(AppLocalizations l10n, RegisterData data, List<RegisterEntry> shown, {bool current = true}) {
     final today = dubaiToday(DateTime.now());
     final lastMonth = addMonths(_thisMonth, -1);
     final anyFilter = _chosen.values.any((v) => v.isNotEmpty);
@@ -205,23 +219,26 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
                     ),
                 ],
               ),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (var i = 0; i < figures.length; i++) ...[if (i > 0) const SizedBox(width: 8), figures[i]],
-                  ],
+              if (current) ...[
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (var i = 0; i < figures.length; i++) ...[if (i > 0) const SizedBox(width: 8), figures[i]],
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 2),
-          child: Text(l10n.regRows(shown.length), style: const TextStyle(fontSize: 13, color: muted)),
-        ),
+        if (current)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 2),
+            child: Text(l10n.regRows(shown.length), style: const TextStyle(fontSize: 13, color: muted)),
+          ),
         if (data.note != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 2),

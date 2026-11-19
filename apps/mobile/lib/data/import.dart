@@ -129,11 +129,14 @@ class ImportLine {
 }
 
 class ImportPlan {
-  const ImportPlan(this.kind, this.lines, {this.missingColumns = const [], this.ignoredColumns = const []});
+  const ImportPlan(this.kind, this.lines, {this.missingColumns = const [], this.ignoredColumns = const [], this.unclosedQuoteRow});
 
   final ImportKind kind;
   final List<ImportLine> lines;
   final List<ImportField> missingColumns;
+
+  /// The row where a quote opens and never closes. The file is refused whole, since every line after it is unreadable.
+  final int? unclosedQuoteRow;
 
   /// Headings nothing reads, so the owner sees a misspelt one.
   final List<String> ignoredColumns;
@@ -160,7 +163,12 @@ RateBasis? _basis(String text) => switch (_key(text)) {
 extension ImportOps on TenantDatabase {
   /// Reads the file against what the app already holds and says, line by line, what would be saved. Writes nothing.
   Future<ImportPlan> planImport(ImportKind kind, String text) async {
-    final rows = parseCsv(text);
+    final List<CsvRow> rows;
+    try {
+      rows = parseCsv(text);
+    } on UnclosedQuote catch (e) {
+      return ImportPlan(kind, const [], unclosedQuoteRow: e.row);
+    }
     if (rows.isEmpty) return ImportPlan(kind, const []);
     final fields = importFields[kind]!;
     final columns = <ImportField, int>{};
@@ -268,7 +276,7 @@ extension ImportOps on TenantDatabase {
           if (vat == true && (trn == null || !isTrnFormat(trn))) cell.problem(trn == null ? ImportProblem.missing : ImportProblem.badTrn, ImportField.trn);
           if (vat != true && trn != null) cell.problem(ImportProblem.trnWithoutVat, ImportField.trn);
           if (vat == true && trn != null) cell.read.add('TRN $trn');
-          final due = cell.number(ImportField.dueDays);
+          final due = cell.number(ImportField.dueDays, max: 365);
           final po = cell.text(ImportField.poReference);
           final note = cell.text(ImportField.note);
           return ImportLine(r.row, name ?? '', cell.issues, read: cell.read, (db) async {
@@ -380,12 +388,14 @@ class _Cells {
     return fils;
   }
 
-  int? number(ImportField field) {
+  /// A whole number from 0, and at most [max] when given, as the field's own form takes it.
+  int? number(ImportField field, {int? max}) {
     final value = raw(field);
     final n = int.tryParse(value);
-    if (value.isNotEmpty && (n == null || n < 0)) problem(ImportProblem.badNumber, field);
-    if (n != null && n >= 0) read.add('${field.heading} $n');
-    return n != null && n >= 0 ? n : null;
+    final ok = n != null && n >= 0 && (max == null || n <= max);
+    if (value.isNotEmpty && !ok) problem(ImportProblem.badNumber, field);
+    if (ok) read.add('${field.heading} $n');
+    return ok ? n : null;
   }
 
   int? clock(ImportField field) {

@@ -12,6 +12,14 @@ Value<String?> optionalText(TextEditingController c) {
   return Value(text.isEmpty ? null : text);
 }
 
+/// A count of days typed in a field: empty, or a whole number from 0 to [max], else [error] at the field (UX-04).
+String? checkDays(String? value, {required int max, required String error}) {
+  final text = (value ?? '').trim();
+  if (text.isEmpty) return null;
+  final days = int.tryParse(text);
+  return days == null || days < 0 || days > max ? error : null;
+}
+
 /// Gap between form rows, used by every form.
 const fieldGap = SizedBox(height: 14);
 
@@ -210,7 +218,10 @@ Future<String?> askReason(BuildContext context, {required String title, required
       ],
     ),
   );
-  return yes == true ? reason.text.trim() : null;
+  final text = reason.text.trim();
+  // The dialog's field still draws while it closes, so the controller goes a frame later.
+  WidgetsBinding.instance.addPostFrameCallback((_) => reason.dispose());
+  return yes == true ? text : null;
 }
 
 /// The month and arrows to change it, on the coloured band.
@@ -514,11 +525,11 @@ class BandFigure extends StatelessWidget {
 }
 
 /// Asks for one worker's daily wage. Null means cancelled. A null `fils` means the field was left empty.
-Future<({int? fils})?> askDailyWage(BuildContext context, {required String title, required String helper, int? initial, String? label}) {
+Future<({int? fils})?> askDailyWage(BuildContext context, {required String title, required String helper, int? initial, String? label}) async {
   final l10n = AppLocalizations.of(context);
   final amount = TextEditingController(text: initial == null ? '' : plainAmount(initial));
   final form = GlobalKey<FormState>();
-  return showDialog<({int? fils})>(
+  final answer = await showDialog<({int? fils})>(
     context: context,
     builder: (dialog) => AlertDialog(
       title: Text(title),
@@ -543,6 +554,9 @@ Future<({int? fils})?> askDailyWage(BuildContext context, {required String title
       ],
     ),
   );
+  // The dialog's field still draws while it closes, so the controller goes a frame later.
+  WidgetsBinding.instance.addPostFrameCallback((_) => amount.dispose());
+  return answer;
 }
 
 /// Bottom sheet to pick one option, with a search once the list is long. Skips the question when there is only one answer.

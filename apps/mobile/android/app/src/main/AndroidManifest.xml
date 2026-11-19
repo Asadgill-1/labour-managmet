@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Login, the licence and the cloud copy. Debug builds get this from their own manifest; a release build needs it here. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- The phone's fingerprint opens the app's lock (AUTH-03). -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <application

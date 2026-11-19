@@ -8,6 +8,7 @@ import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/cash.dart';
 import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/payroll.dart';
+import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/data/tenant_database.dart';
 
 import 'support.dart';
@@ -467,6 +468,97 @@ void main() {
       final profile = await db.select(db.tenantProfiles).getSingle();
       await db.saveRow(db.tenantProfiles, id: profile.id, operationId: newUuid(), fields: const TenantProfilesCompanion(deductionLimitBps: Value(5000)));
       expect((await row(db, oct, ali)).figures.issues, {PayrollIssue.deductionAboveLimit});
+    });
+
+    group('month order', () {
+      Future<int> balance(String month, String worker) async => (await db.statementsFor(month, workerId: worker)).single.closingFils;
+
+      test('BUG-003 a monthly worker never posted: a later month waits while an earlier month the account counts is not posted (D-033, D-042)', () async {
+        final ali = await addWorker(db, 'Ali');
+        final place = await addSite(db);
+        await addContract(db, ali, RateBasis.month, 100000);
+        await addWork(db, place, ali, '2020-09-15');
+        expect(await balance(oct, ali), 200000, reason: 'September and October both count on the account');
+
+        final posted = await db.postPayroll(oct, operationId: newUuid());
+        expect(await balance(oct, ali), 200000, reason: "posting October first must not drop September's salary");
+        expect(posted, 0);
+        expect((await row(db, oct, ali)).figures.issues, {PayrollIssue.earlierMonthMissing});
+
+        expect(await db.postPayroll(sep, operationId: newUuid()), 1);
+        expect(await db.postPayroll(oct, operationId: newUuid()), 1);
+        expect(await balance(oct, ali), 200000);
+      });
+
+      test('BUG-003 a contract dated years before any activity does not hold the first posting (D-042)', () async {
+        final ali = await addWorker(db, 'Ali');
+        final place = await addSite(db);
+        await addContract(db, ali, RateBasis.month, 100000);
+        await addWork(db, place, ali, '2020-10-01');
+        expect((await row(db, oct, ali)).figures.issues, isEmpty);
+        expect(await db.postPayroll(oct, operationId: newUuid()), 1);
+        expect(await balance(oct, ali), 100000);
+      });
+
+      test('BUG-004 an item left in an earlier month holds the later month, so it is never stranded behind it (PAY-02)', () async {
+        final ali = await addWorker(db, 'Ali');
+        final place = await addSite(db);
+        await addContract(db, ali, RateBasis.day, 7000);
+        await addWork(db, place, ali, '2020-09-15');
+        await addWork(db, place, ali, '2020-10-01');
+        await addItem(db, ali, sep, PayItemKind.allowance, 10000);
+
+        final first = await db.postPayroll(oct, operationId: newUuid());
+        await db.postPayroll(sep, operationId: newUuid());
+        await db.postPayroll(oct, operationId: newUuid());
+        expect(await balance(oct, ali), (await row(db, oct, ali)).closingFils, reason: 'the account and Tankhwah agree');
+        expect((await db.select(db.payrollItems).getSingle()).lineId, isNotNull);
+        expect(first, 0, reason: 'October waits for the September allowance');
+      });
+
+      test('BUG-004 a month behind a later posted one offers no item to add (PAY-02)', () async {
+        final ali = await addWorker(db, 'Ali');
+        final place = await addSite(db);
+        await addContract(db, ali, RateBasis.day, 7000);
+        await addWork(db, place, ali, '2020-10-01');
+        await db.postPayroll(oct, operationId: newUuid());
+        // As data saved before this fix can hold; the app itself now refuses it.
+        final now = DateTime.now().toUtc();
+        await db.into(db.payrollItems).insert(
+          PayrollItemsCompanion.insert(
+            id: newUuid(),
+            tenantId: testTenant,
+            createdAtUtc: now,
+            updatedAtUtc: now,
+            actorId: 'owner',
+            sourceOperationId: newUuid(),
+            workerId: ali,
+            periodFrom: '$sep-01',
+            kind: PayItemKind.allowance.name,
+            amountFils: 10000,
+            reason: 'allowance',
+          ),
+        );
+
+        final september = await row(db, sep, ali);
+        expect(september.figures.issues, contains(PayrollIssue.laterMonthPosted));
+        expect(september.canAddItems, isFalse);
+        expect(september.canAddRoomCharge, isFalse);
+        expect(await db.applyRoomCharges(sep, charges: {ali: 5000}, reason: 'Room', ownerApproved: 'Owner', operationId: newUuid()), 0);
+      });
+
+      test('BUG-004 a worker with nothing in a month behind a later posted one is not on its list, and still gets no item (R05-1)', () async {
+        final ali = await addWorker(db, 'Ali');
+        final place = await addSite(db);
+        await addContract(db, ali, RateBasis.day, 7000);
+        await addWork(db, place, ali, '2020-10-01');
+        await db.postPayroll(oct, operationId: newUuid());
+
+        expect((await db.payrollFor(sep)).where((p) => p.worker.id == ali), isEmpty, reason: 'nothing of his is in September');
+        expect(await db.applyRoomCharges(sep, charges: {ali: 5000}, reason: 'Room', ownerApproved: 'Owner', operationId: newUuid()), 0);
+        await expectLater(addItem(db, ali, sep, PayItemKind.allowance, 10000), throwsA(isA<LaterMonthPosted>()));
+        expect(await db.select(db.payrollItems).get(), isEmpty, reason: 'nothing stranded behind October');
+      });
     });
   });
 

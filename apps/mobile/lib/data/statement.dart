@@ -292,7 +292,13 @@ extension StatementOps on TenantDatabase {
       if (monthly.isNotEmpty) {
         final lastPosted = workerLines.lastOrNull?.periodFrom.substring(0, 7);
         final firstContract = monthly.map((c) => c.effectiveFrom.substring(0, 7)).reduce((a, b) => a.compareTo(b) < 0 ? a : b);
-        final activity = [...own.keys, ...brought.keys, ...payments.map((p) => p.date.substring(0, 7)), month]..sort();
+        final activity = [
+          ...own.keys,
+          // An old balance already holds everything up to its date, so the account starts the day after it, as payroll reads it.
+          for (final b in openingsOf[worker.id] ?? const <OpeningBalance>[]) addDays(b.asOfDate, 1).substring(0, 7),
+          ...payments.map((p) => p.date.substring(0, 7)),
+          month,
+        ]..sort();
         final first = firstContract.compareTo(activity.first) > 0 ? firstContract : activity.first;
         for (var m = first; m.compareTo(month) <= 0 && m.compareTo(thisMonth) <= 0; m = addMonths(m, 1)) {
           if (!salaries.containsKey(m) && (lastPosted == null || m.compareTo(lastPosted) > 0) && !isClosed(monthLastDay(m), closedThrough)) {

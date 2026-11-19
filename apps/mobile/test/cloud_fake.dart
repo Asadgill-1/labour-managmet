@@ -37,6 +37,9 @@ class FakeCloud {
   bool offline = false;
   bool deviceRevoked = false;
 
+  /// The account's deletion goes through, then its answer is lost, as when the connection drops.
+  bool deleteAnswerLost = false;
+
   /// Someone besides the owner still works in the company (T24).
   bool companyHasOthers = false;
 
@@ -98,6 +101,10 @@ class FakeCloud {
     });
     if (bytes != null) cloudFiles['$tenant/old-$id.zip'] = bytes;
   }
+
+  /// The session's password sign-in is more than ten minutes old, or it has none, as after an emailed code. The cloud
+  /// then refuses to turn a phone off, or to turn an owner's phone back on, until the password is typed (D-073).
+  bool passwordOld = false;
 
   /// A password was typed since the last deletion asked, as the server's recent sign-in rule needs (D-066).
   bool _passwordJustNow = false;
@@ -211,6 +218,7 @@ class FakeCloud {
         final user = users[email];
         if (user == null || body['token'] != code) return _authError(403, 'otp_expired', 'Token has expired or is invalid');
         users[email] = (id: user.id, password: user.password, confirmed: true);
+        passwordOld = true;
         return _json(_session(email, user.id));
       case '/auth/v1/token' when request.url.queryParameters['grant_type'] == 'refresh_token':
         final id = (body['refresh_token'] as String).replaceFirst('refresh-', '');
@@ -222,7 +230,13 @@ class FakeCloud {
         if (user == null || user.password != body['password']) return _authError(400, 'invalid_credentials', 'Invalid login credentials');
         if (!user.confirmed) return _authError(400, 'email_not_confirmed', 'Email not confirmed');
         _passwordJustNow = true;
+        passwordOld = false;
         return _json(_session(email, user.id));
+      case '/auth/v1/user' when request.method == 'GET':
+        // The token alone is not enough: the server looks the user up, as GoTrue does.
+        final user = users.entries.where((e) => e.value.id == caller);
+        if (user.isEmpty) return _authError(403, 'user_not_found', 'User from sub claim in JWT does not exist');
+        return _json(_user(user.first.key, caller!));
       case '/auth/v1/user':
         final email = users.entries.firstWhere((e) => e.value.id == caller).key;
         final user = users[email]!;
@@ -245,6 +259,7 @@ class FakeCloud {
         if (deviceRevoked) return _refused('this device was revoked');
         final device = body['p_device_id'] as String;
         if ((phones[device] ?? caller) != caller) return _refused('this phone belongs to another account');
+        if (offPhones.contains(device) && passwordOld) return _refused('type the password again');
         phones[device] = caller!;
         phoneNames[device] = body['p_label'] as String;
         lastLogins[device] = '2026-11-11T05:00:00Z';
@@ -259,6 +274,7 @@ class FakeCloud {
       case '/rest/v1/rpc/turn_phone_off':
         final device = (body['p_device_row'] as String).replaceFirst('row-', '');
         if (phones[device] != caller) return _refused('not a phone of yours');
+        if (passwordOld) return _refused('type the password again');
         phones.remove(device);
         offPhones.add(device);
         return http.Response('', 204);
@@ -313,6 +329,13 @@ class FakeCloud {
         final row = cloudCopies.firstWhere((c) => c['operation_id'] == body['operation_id']);
         if (!cloudFiles.containsKey(row['file_path'])) return _json({'error': 'not_arrived'}, status: 409);
         row['finished_at_utc'] = '2026-11-15T06:00:00.000Z';
+        // As backup_finish does: with the add-on it is a daily copy the cloud keeps; every other earlier copy goes,
+        // whichever phone sent it.
+        row['keep'] = addonUntil?.isAfter(DateTime.now().toUtc()) ?? false;
+        for (final gone in cloudCopies.where((c) => c['tenant_id'] == tenant && c != row && c['finished_at_utc'] != null && c['keep'] != true).toList()) {
+          cloudCopies.remove(gone);
+          cloudFiles.remove(gone['file_path']);
+        }
         return _json({'finished_at': row['finished_at_utc']});
       case '/rest/v1/cloud_backups':
         // The owner's finished copies, newest first.
@@ -376,6 +399,7 @@ class FakeCloud {
         users.removeWhere((_, user) => user.id == caller);
         companies.remove(caller);
         phones.removeWhere((_, user) => user == caller);
+        if (deleteAnswerLost) throw http.ClientException('Connection closed');
         return http.Response('', 204);
     }
     return _json({'message': 'no route $path'}, status: 404);

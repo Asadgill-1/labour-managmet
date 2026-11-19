@@ -82,7 +82,8 @@ class PayrollFigures {
 
   /// What posting adds to the worker's account.
   int get dueFils => netFils + adjustmentFils;
-  bool get isEmpty => grossFils == 0 && adjustmentFils == 0 && allowancesFils == 0 && deductionsFils == 0 && recoveryFils == 0 && visaFils == 0;
+  /// A salary cut whole for absence is not empty, since the cut shows day by day (D-057).
+  bool get isEmpty => grossFils == 0 && absenceFils == 0 && adjustmentFils == 0 && allowancesFils == 0 && deductionsFils == 0 && recoveryFils == 0 && visaFils == 0;
 }
 
 /// A worker's monthly pay for one period (CALC-04). Each day goes to one contract, so overlapping contracts never pay
@@ -144,7 +145,9 @@ bool _monthlyCovers(Iterable<RateTerms> contracts, String month) {
 }
 
 /// One worker's month before posting (PAY-01). [limitBps] is the company's own deduction limit, as a share of
-/// earnings. No limit is built in, because that is law for a reviewer to configure (PAY-07).
+/// earnings. No limit is built in, because that is law for a reviewer to configure (PAY-07). With nothing posted yet,
+/// [firstMonth] is the month the worker's account starts counting a salary from, so no month from then on can be skipped (D-042 (5)).
+/// [itemMonths] are earlier months still holding an item no line has taken: this month waits for them, or they could never post.
 PayrollFigures workerPayroll({
   required String month,
   required String currentMonth,
@@ -155,6 +158,8 @@ PayrollFigures workerPayroll({
   int visaLeftFils = 0,
   int unpricedRows = 0,
   String? lastPostedMonth,
+  String? firstMonth,
+  Set<String> itemMonths = const {},
   String? closedMonth,
   int? limitBps,
   Set<String> present = const {},
@@ -177,6 +182,7 @@ PayrollFigures workerPayroll({
   final later = lastPostedMonth != null && lastPostedMonth.compareTo(month) >= 0;
   final closed = closedMonth != null && month.compareTo(closedMonth) <= 0;
   // A month behind the latest posted one cannot pay a salary any more, and nor can a closed one. Only late rows carry forward.
+  final checkFrom = lastPostedMonth != null ? addMonths(lastPostedMonth, 1) : firstMonth;
   final pay = later || closed ? (fils: 0, cutFils: 0, absent: const <String>[]) : periodSalary(contracts, month, present: present, excused: excused, through: through);
   final salary = pay?.fils;
   final allowances = sum(const {PayItemKind.allowance});
@@ -196,10 +202,12 @@ PayrollFigures workerPayroll({
     if (later) PayrollIssue.laterMonthPosted,
     if (closed) PayrollIssue.monthClosed,
     if (askRecovery) PayrollIssue.recoveryNotAnswered,
-    if (lastPostedMonth != null)
-      for (var m = addMonths(lastPostedMonth, 1); m.compareTo(month) < 0; m = addMonths(m, 1))
+    if (checkFrom != null)
+      for (var m = checkFrom; m.compareTo(month) < 0; m = addMonths(m, 1))
         // A closed month can no longer be posted, so it never holds up a later one (REP-04).
         if ((closedMonth == null || m.compareTo(closedMonth) > 0) && _monthlyCovers(contracts, m)) PayrollIssue.earlierMonthMissing,
+    for (final m in itemMonths)
+      if (m.compareTo(month) < 0 && (closedMonth == null || m.compareTo(closedMonth) > 0)) PayrollIssue.earlierMonthMissing,
     // Never carried as debt by itself (D-104).
     if (net < 0 || net + adjustment < 0) PayrollIssue.negativeNet,
   };

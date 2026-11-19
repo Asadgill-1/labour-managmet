@@ -145,4 +145,44 @@ void main() {
     expect(client.trn, '100123456700003');
     await shutDown(tester, db);
   });
+
+  testWidgets('BUG-013 payment terms and a company due days refuse a negative number or words at the field, and take terms up to a year (F04-2, UX-04)', (tester) async {
+    final db = memoryDb();
+    await real(tester, () => seedProfile(db));
+    await pumpApp(tester, db);
+    const error = '0 se 365 tak poora number likhein.';
+    Future<void> typeAndSave(String label, String text) async {
+      final field = find.widgetWithText(TextFormField, label);
+      await tester.ensureVisible(field);
+      await tester.enterText(field, text);
+      await tester.tap(find.text('Save karein'));
+      await settle(tester);
+    }
+
+    await tester.tap(find.text('Menu'));
+    await settle(tester);
+    await tester.tap(find.text('Apni company'));
+    await settle(tester);
+    for (final bad in ['-30', '30 days', '366']) {
+      await typeAndSave('Payment ke din', bad);
+      expect(find.text(error), findsOneWidget, reason: bad);
+      expect((await real(tester, () => db.select(db.tenantProfiles).getSingle())).paymentTermsDays, isNull, reason: 'nothing saved');
+    }
+    // Invoice terms run longer than the wage field's 90 days.
+    await typeAndSave('Payment ke din', '120');
+    expect((await real(tester, () => db.select(db.tenantProfiles).getSingle())).paymentTermsDays, 120);
+
+    await goTo(tester, 'Companies');
+    await tester.tap(find.text('Company add karein'));
+    await settle(tester);
+    await tester.enterText(find.widgetWithText(TextFormField, 'Company ka naam'), 'Emaar');
+    for (final bad in ['-30', '30 days']) {
+      await typeAndSave('Kitne din baad payment', bad);
+      expect(find.text(error), findsOneWidget, reason: bad);
+      expect(await real(tester, () => db.select(db.clients).get()), isEmpty, reason: 'nothing saved');
+    }
+    await typeAndSave('Kitne din baad payment', '120');
+    expect((await real(tester, () => db.select(db.clients).getSingle())).dueDays, 120);
+    await shutDown(tester, db);
+  });
 }

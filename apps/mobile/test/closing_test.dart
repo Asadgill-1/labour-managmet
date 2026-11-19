@@ -106,7 +106,8 @@ void main() {
       await db.savePayItem(id: null, workerId: asif, month: sep, kind: PayItemKind.deduction, amountFils: 500, reason: 'Helmet', authorizedBy: 'Asif', note: null, roomId: null, operationId: newUuid());
       await db.postPayroll(oct, operationId: newUuid());
       final held = (await db.closingFor(oct)).findings.where((f) => f.issue == ClosingIssue.payrollNotPosted).toList();
-      expect(held.single.date, '2020-09-30');
+      // October waits behind the September deduction, so it is not posted either (BUG-004).
+      expect(held.map((f) => f.date), ['2020-09-30', '2020-10-31']);
     });
 
     test('a month that has not ended cannot close, and nor can one already closed', () async {

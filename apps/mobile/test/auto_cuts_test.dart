@@ -1,6 +1,7 @@
 import 'package:domain/calc.dart';
 import 'package:domain/cash.dart';
 import 'package:domain/dates.dart';
+import 'package:domain/payroll.dart';
 import 'package:drift/drift.dart' show BooleanExpressionOperators, Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -82,6 +83,55 @@ void main() {
       final karim = await monthlyWorker(db, cut: false);
       final f = (await db.payrollFor(oct)).singleWhere((p) => p.worker.id == karim).figures;
       expect((f.salaryFils, f.absenceFils), (310000, 0));
+    });
+
+    test('BUG-005 a whole month with no attendance still shows, cut day by day, and posts, so the next month is not held', () async {
+      final nadeem = await db.saveRow(db.workers, id: null, operationId: newUuid(), fields: const WorkersCompanion(code: Value('W8'), name: Value('Nadeem')));
+      await db.saveRow(
+        db.payContracts,
+        id: null,
+        operationId: newUuid(),
+        fields: PayContractsCompanion(
+          workerId: Value(nadeem),
+          basis: Value(RateBasis.month.name),
+          rateFils: const Value(310000),
+          effectiveFrom: const Value('2020-01-01'),
+          partialMethod: Value(PartialMethod.calendarDays.name),
+          cutAbsence: const Value(true),
+        ),
+      );
+      await ts.work(db, '2020-09-10', worker: nadeem);
+      await db.postPayroll('2020-09', operationId: newUuid());
+
+      final october = (await db.payrollFor(oct)).where((p) => p.worker.id == nadeem).firstOrNull;
+      expect(october, isNotNull, reason: 'the cut shows on the payroll line day by day (D-057)');
+      expect((october!.figures.salaryFils, october.figures.absenceFils, october.figures.absentDays.length, october.canPost), (0, 310000, 31, true));
+      await db.postPayroll(oct, operationId: newUuid());
+      expect((await db.payrollFor(oct)).singleWhere((p) => p.worker.id == nadeem).line!.absenceFils, 310000);
+      expect((await db.payrollFor('2020-11')).singleWhere((p) => p.worker.id == nadeem).figures.issues, isNot(contains(PayrollIssue.earlierMonthMissing)));
+    });
+
+    test('BUG-005 a contract dated from the hiring date lists no month cut whole before the account starts (D-042 (5), R05-2)', () async {
+      final bilal = await db.saveRow(db.workers, id: null, operationId: newUuid(), fields: const WorkersCompanion(code: Value('W9'), name: Value('Bilal')));
+      await db.saveRow(
+        db.payContracts,
+        id: null,
+        operationId: newUuid(),
+        fields: PayContractsCompanion(
+          workerId: Value(bilal),
+          basis: Value(RateBasis.month.name),
+          rateFils: const Value(310000),
+          effectiveFrom: const Value('2020-01-01'),
+          partialMethod: Value(PartialMethod.calendarDays.name),
+          cutAbsence: const Value(true),
+        ),
+      );
+      await ts.work(db, '2020-11-03', worker: bilal);
+
+      expect((await db.payrollFor(oct)).where((p) => p.worker.id == bilal), isEmpty, reason: 'October is before his first row, so it has nothing to post');
+      final november = (await db.payrollFor('2020-11')).singleWhere((p) => p.worker.id == bilal);
+      expect(november.figures.issues, isNot(contains(PayrollIssue.earlierMonthMissing)));
+      expect(november.figures.absenceFils, greaterThan(0), reason: 'from his first month the cut still shows');
     });
   });
 

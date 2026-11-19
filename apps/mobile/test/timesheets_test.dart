@@ -190,6 +190,29 @@ void main() {
       expect(await db.select(db.timesheetLines).get(), hasLength(1));
     });
 
+    test('a retry of a draft, a day, a correction or a new record gives back the one it made (BUG-010)', () async {
+      final dayOp = newUuid();
+      Future<String> day() => db.saveAttendanceBatch(workDate: '2020-10-05', clientId: emaar, siteId: marina, inputs: [EntryInput(workerId: asif, shift: shift)], operationId: dayOp);
+      final batch = await day();
+      expect(await day(), batch);
+
+      final op = newUuid();
+      final id = await db.createTimesheet(clientId: emaar, from: from, to: to, operationId: op);
+      expect(await db.createTimesheet(clientId: emaar, from: from, to: to, operationId: op), id);
+      expect((await db.timesheetView(id)).rows, hasLength(1));
+
+      final old = await db.select(db.attendanceEntries).getSingle();
+      final fixOp = newUuid();
+      final fixed = await db.correctEntry(old, EntryInput(workerId: asif, shift: shift, overlapReason: 'Noted'), reason: 'Noted', operationId: fixOp);
+      expect(await db.correctEntry(old, EntryInput(workerId: asif, shift: shift, overlapReason: 'Noted'), reason: 'Noted', operationId: fixOp), fixed);
+
+      final workerOp = newUuid();
+      Future<String> hire() => db.saveRow(db.workers, id: null, operationId: workerOp, fields: const WorkersCompanion(code: Value('W9'), name: Value('Omar')));
+      final omar = await hire();
+      expect(await hire(), omar);
+      expect((await (db.select(db.workers)..where((w) => w.id.equals(omar))).getSingle()).name, 'Omar');
+    });
+
     test('what is stored refuses to change', () async {
       await work(db, '2020-10-05');
       final id = await approved();

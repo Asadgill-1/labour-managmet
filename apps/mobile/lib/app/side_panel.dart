@@ -295,7 +295,6 @@ class SidePanel extends ConsumerWidget {
                   children: [
                     for (final label in [
                       l10n.menuTeam,
-                      l10n.menuPlan,
                       l10n.menuHelp,
                     ])
                       _SubRow(label),

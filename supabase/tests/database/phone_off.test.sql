@@ -1,8 +1,9 @@
 -- T20c: the owner turns an old phone off from the new one (D-072, D-073). The old phone learns it at start, before any
--- sign-in. The owner signing in on it again turns it back on; a manager's phone stays off.
+-- sign-in. The owner signing in on it again turns it back on; a manager's phone stays off. Turning a phone off, and
+-- back on, needs the password typed in the last ten minutes (BUG-023, BUG-024).
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(17);
+select plan(24);
 
 insert into auth.users (id, aud, role, email, email_confirmed_at) values
   ('11111111-1111-1111-1111-111111111111', 'authenticated', 'authenticated', 'owner@example.test', now()),
@@ -55,8 +56,25 @@ select throws_ok(
   '42501', 'not a phone of yours', 'a manager cannot turn off the owner''s phone'
 );
 
--- From the new phone, the owner turns the old one off, and the manager's too.
+-- The owner's session alone cannot turn a phone off: the password must be typed again in the last ten minutes.
 set local request.jwt.claims to '{"sub": "11111111-1111-1111-1111-111111111111", "role": "authenticated"}';
+select throws_ok(
+  $$ select public.turn_phone_off(current_setting('test.old')::uuid, gen_random_uuid()) $$,
+  '42501', 'type the password again', 'a session with no password typed cannot turn a phone off'
+);
+select set_config('request.jwt.claims', jsonb_build_object('sub', '11111111-1111-1111-1111-111111111111', 'role', 'authenticated', 'amr', jsonb_build_array(jsonb_build_object('method', 'password', 'timestamp', extract(epoch from now())::bigint - 601)))::text, true);
+select throws_ok(
+  $$ select public.turn_phone_off(current_setting('test.old')::uuid, gen_random_uuid()) $$,
+  '42501', 'type the password again', 'nor one whose password was typed over ten minutes ago'
+);
+select set_config('request.jwt.claims', jsonb_build_object('sub', '11111111-1111-1111-1111-111111111111', 'role', 'authenticated', 'amr', jsonb_build_array(jsonb_build_object('method', 'otp', 'timestamp', extract(epoch from now())::bigint)))::text, true);
+select throws_ok(
+  $$ select public.turn_phone_off(current_setting('test.old')::uuid, gen_random_uuid()) $$,
+  '42501', 'type the password again', 'nor an email code in place of the password'
+);
+
+-- From the new phone, with the password just typed, the owner turns the old one off, and the manager's too.
+select set_config('request.jwt.claims', jsonb_build_object('sub', '11111111-1111-1111-1111-111111111111', 'role', 'authenticated', 'amr', jsonb_build_array(jsonb_build_object('method', 'password', 'timestamp', extract(epoch from now())::bigint)))::text, true);
 select lives_ok($$ select public.turn_phone_off(current_setting('test.old')::uuid, gen_random_uuid()) $$, 'the owner turns the old phone off');
 select lives_ok($$ select public.turn_phone_off(current_setting('test.old')::uuid, gen_random_uuid()) $$, 'turning it off again is no error');
 select lives_ok($$ select public.turn_phone_off(current_setting('test.manager')::uuid, gen_random_uuid()) $$, 'the owner turns the manager''s phone off');
@@ -76,10 +94,26 @@ select throws_ok(
   $$ select public.register_device('eeeeeeee-0000-0000-0000-000000000001', 'dddddddd-0000-0000-0000-00000000000c', 'Manager phone', 'android', gen_random_uuid()) $$,
   '42501', 'this device was revoked', 'the manager''s phone stays off'
 );
+-- A phone that is on signs in again as before, with no password typed; turning one back on needs the password.
 set local request.jwt.claims to '{"sub": "11111111-1111-1111-1111-111111111111", "role": "authenticated"}';
 select lives_ok(
+  $$ select public.register_device('eeeeeeee-0000-0000-0000-000000000001', 'dddddddd-0000-0000-0000-00000000000b', 'New phone', 'android', gen_random_uuid()) $$,
+  'a phone that is on signs in again with no password typed'
+);
+select throws_ok(
   $$ select public.register_device('eeeeeeee-0000-0000-0000-000000000001', 'dddddddd-0000-0000-0000-00000000000a', 'Galaxy A51', 'android', gen_random_uuid()) $$,
-  'the owner signs in on the old phone again'
+  '42501', 'type the password again', 'the owner''s session alone does not turn the old phone back on'
+);
+select set_config('request.jwt.claims', jsonb_build_object('sub', '11111111-1111-1111-1111-111111111111', 'role', 'authenticated', 'amr', jsonb_build_array(jsonb_build_object('method', 'password', 'timestamp', extract(epoch from now())::bigint - 601)))::text, true);
+select throws_ok(
+  $$ select public.register_device('eeeeeeee-0000-0000-0000-000000000001', 'dddddddd-0000-0000-0000-00000000000a', 'Galaxy A51', 'android', gen_random_uuid()) $$,
+  '42501', 'type the password again', 'nor does a password typed over ten minutes ago'
+);
+select is(public.phone_is_off('eeeeeeee-0000-0000-0000-000000000001', 'dddddddd-0000-0000-0000-00000000000a'), true, 'so the old phone is still off');
+select set_config('request.jwt.claims', jsonb_build_object('sub', '11111111-1111-1111-1111-111111111111', 'role', 'authenticated', 'amr', jsonb_build_array(jsonb_build_object('method', 'password', 'timestamp', extract(epoch from now())::bigint)))::text, true);
+select lives_ok(
+  $$ select public.register_device('eeeeeeee-0000-0000-0000-000000000001', 'dddddddd-0000-0000-0000-00000000000a', 'Galaxy A51', 'android', gen_random_uuid()) $$,
+  'the owner signs in on the old phone again, with the password'
 );
 set local role anon;
 set local request.jwt.claims to '{"role": "anon"}';

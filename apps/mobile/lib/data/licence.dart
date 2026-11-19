@@ -153,7 +153,14 @@ class Licensing {
   DateTime _latestSeen = DateTime.utc(2000);
   AccountProblem? _problem;
 
-  LicenceView get view => (licence: _licence, status: licenceStatus(_licence, _clock().toUtc(), _latestSeen), problem: _problem);
+  LicenceView get view {
+    final now = _clock().toUtc();
+    // Time spent in the app counts too, as the write guard reads this on each entry, so a clock set back to the same
+    // time before each start still needs a check. Only once the kept time is read, so it never moves back; at most once
+    // a minute, well inside the clock's slack.
+    if (_loaded.isCompleted && now.isAfter(_latestSeen.add(const Duration(minutes: 1)))) unawaited(_see(now));
+    return (licence: _licence, status: licenceStatus(_licence, now, _latestSeen), problem: _problem);
+  }
 
   /// The view once the kept licence is read, then each change.
   Stream<LicenceView> watch() async* {

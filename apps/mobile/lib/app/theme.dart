@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/attendance.dart';
 import '../data/closing.dart';
 import '../data/invoices.dart';
 import '../data/plan_guard.dart';
+import '../data/receipts.dart';
 import '../data/tenant_database.dart';
 import '../data/timesheets.dart';
 import '../features/plans/plan_lock.dart';
@@ -352,5 +354,7 @@ String saveErrorText(AppLocalizations l10n, Object error) => switch (error) {
   InvoiceRefused(problem: InvoiceProblem.wrongStep) => l10n.invWrongStep,
   InvoiceRefused(problem: InvoiceProblem.creditTooBig) => l10n.invCreditNothingLeft,
   AlreadyBilled() => l10n.invWrongStep,
+  OpeningSettled() => l10n.openingSettled,
+  EntryChanged() => l10n.entryChanged,
   _ => l10n.saveFailed,
 };

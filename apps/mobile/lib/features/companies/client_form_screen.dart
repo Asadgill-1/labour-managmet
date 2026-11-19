@@ -103,7 +103,7 @@ class _ClientFormScreenState extends ConsumerState<ClientFormScreen> {
             ],
             Field(l10n.invoiceAddress, _invoiceAddress, lines: 2),
             fieldGap,
-            Field(l10n.dueDays, _due, keyboardType: TextInputType.number),
+            Field(l10n.dueDays, _due, keyboardType: TextInputType.number, validator: (v) => checkDays(v, max: 365, error: l10n.termsDaysError)),
             fieldGap,
             Field(l10n.poReference, _po),
             fieldGap,

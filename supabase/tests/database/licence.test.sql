@@ -87,6 +87,8 @@ select throws_ok(
   $$ select public.licence_facts('eeeeeeee-0000-0000-0000-000000000001', 'dddddddd-0000-0000-0000-00000000000b', 0, 0) $$,
   '42501', 'another phone is on', 'the new phone gets no licence while the first is on'
 );
+-- Turning a phone off needs the password typed again (BUG-023).
+select set_config('request.jwt.claims', jsonb_build_object('sub', '11111111-1111-1111-1111-111111111111', 'role', 'authenticated', 'amr', jsonb_build_array(jsonb_build_object('method', 'password', 'timestamp', extract(epoch from now())::bigint)))::text, true);
 select lives_ok($$ select public.turn_phone_off(current_setting('test.first')::uuid, gen_random_uuid()) $$, 'the owner turns the first phone off');
 select throws_ok(
   $$ select public.licence_facts('eeeeeeee-0000-0000-0000-000000000001', 'dddddddd-0000-0000-0000-00000000000a', 0, 0) $$,

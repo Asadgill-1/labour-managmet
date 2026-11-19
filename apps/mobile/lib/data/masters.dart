@@ -2,6 +2,7 @@ import 'package:domain/calc.dart';
 import 'package:drift/drift.dart';
 
 import 'changes.dart';
+import 'receipts.dart';
 import 'tenant_database.dart';
 
 /// What a worker earns in one group, set by hand there, per day or per hour (D-042).
@@ -46,6 +47,7 @@ extension Masters on TenantDatabase {
 
     var version = 1;
     Facts? before;
+    Map<String, dynamic>? existing;
     // What the plan asks of this write (T21c): a row only set aside, a row made active, or any other entry.
     final written = fields.toColumns(true);
     final active = switch (written['active']) {
@@ -54,7 +56,7 @@ extension Masters on TenantDatabase {
     };
     var effect = table.columnsByName.containsKey('active') && active != false ? WriteEffect.activates : WriteEffect.entry;
     if (id != null) {
-      final existing = (await byId().getSingle()).toJson();
+      existing = (await byId().getSingle()).toJson();
       version = (existing['version'] as int) + 1;
       before = await recordFacts(table.actualTableName, existing);
       effect = switch (active) {
@@ -63,7 +65,7 @@ extension Masters on TenantDatabase {
         _ => WriteEffect.entry,
       };
     }
-    await applyOperation(
+    return applyOperation(
       operationId: operationId,
       entity: table.actualTableName,
       recordId: rowId,
@@ -88,10 +90,11 @@ extension Masters on TenantDatabase {
         } else {
           await (update(table)..where((_) => idColumn.equals(rowId))).write(_Stamped(fields, shared));
         }
+        // What receipts settled of a company's old balance stays settled (INV-05).
+        if (existing != null && table.actualTableName == 'opening_balances') await keepOpeningSettled(existing);
         return (await byId().getSingle()).toJson();
       },
     );
-    return rowId;
   }
 
   /// Saves a group and its members as one operation. Members no longer listed leave the group;
@@ -111,7 +114,7 @@ extension Masters on TenantDatabase {
       version = (await (select(workerGroups)..where((g) => g.id.equals(id))).getSingle()).version + 1;
       before = await facts();
     }
-    await applyOperation(
+    return applyOperation(
       operationId: operationId,
       entity: 'worker_groups',
       recordId: rowId,
@@ -175,7 +178,6 @@ extension Masters on TenantDatabase {
         return {...group.toJson(), 'members': stored.map((m) => m.toJson()).toList()};
       },
     );
-    return rowId;
   }
 
   /// True if another pay contract with the same scope covers any of these dates, which would make the rate ambiguous.

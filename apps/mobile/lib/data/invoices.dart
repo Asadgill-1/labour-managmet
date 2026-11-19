@@ -573,7 +573,7 @@ extension InvoiceOps on TenantDatabase {
   Future<String> createInvoice({required String clientId, String? siteId, required String from, required String to, String? replaces, required String operationId}) async {
     final client = await (select(clients)..where((c) => c.id.equals(clientId))).getSingle();
     final id = newUuid();
-    await applyOperation(
+    return applyOperation(
       operationId: operationId,
       entity: 'invoices',
       recordId: id,
@@ -602,7 +602,6 @@ extension InvoiceOps on TenantDatabase {
         return (await _invoice(id)).toJson();
       },
     );
-    return id;
   }
 
   /// Saves a draft's choices. An issued invoice never changes (INV-06).
@@ -660,7 +659,9 @@ extension InvoiceOps on TenantDatabase {
         final today = dubaiToday(now);
         final year = int.parse(today.substring(0, 4));
         final seq = await _nextSeq('invoice', year);
-        final dueDays = view.client.dueDays ?? profile.paymentTermsDays ?? 0;
+        // Old data or an import can hold a negative number, and an invoice is never due before it issues.
+        final terms = view.client.dueDays ?? profile.paymentTermsDays ?? 0;
+        final dueDays = terms < 0 ? 0 : terms;
         await _storeLines(id, view.lines, describe: describe, operationId: operationId);
         await (update(invoices)..where((i) => i.id.equals(id))).write(
           InvoicesCompanion(
@@ -720,7 +721,7 @@ extension InvoiceOps on TenantDatabase {
   /// work stays charged. The invoice itself stays as issued.
   Future<String> creditInvoice(String id, {required String reason, int? amountFils, required String operationId}) async {
     final creditId = newUuid();
-    await applyOperation(
+    return applyOperation(
       operationId: operationId,
       entity: 'invoices',
       recordId: creditId,
@@ -801,7 +802,6 @@ extension InvoiceOps on TenantDatabase {
         return (await _invoice(creditId)).toJson();
       },
     );
-    return creditId;
   }
 
   /// Edit on an issued invoice (D-056). UAE VAT never changes one once issued, so in one step a whole credit note dated
@@ -810,7 +810,7 @@ extension InvoiceOps on TenantDatabase {
   /// again from the day it issues. The owner changes the draft and issues it. Returns the draft.
   Future<String> editInvoice(String id, {required String reason, required String operationId}) async {
     final draftId = newUuid();
-    await applyOperation(
+    return applyOperation(
       operationId: operationId,
       entity: 'invoices',
       recordId: draftId,
@@ -842,7 +842,6 @@ extension InvoiceOps on TenantDatabase {
         return (await _invoice(draftId)).toJson();
       },
     );
-    return draftId;
   }
 
   /// The timesheet revisions an invoice charged, to send with it (TS-07).

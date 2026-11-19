@@ -5,6 +5,7 @@ import 'package:domain/dates.dart';
 import 'package:flutter/material.dart' show Locale, TextFormField;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/app/side_panel.dart';
+import 'package:labour_app/app/theme.dart' show saveErrorText;
 import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/cash.dart';
 import 'package:labour_app/data/changes.dart';
@@ -61,6 +62,24 @@ void main() {
       final notes = (await edits('attendance_entries'))[latest.id]!;
       expect([for (final n in notes) (n.note, n.changes.firstWhere((c) => c.fact == Fact.time).to)], [(null, '08:00-15:00'), ('Rain', '08:00-13:00')]);
       expect(await db.select(db.attendanceEntries).get(), hasLength(2), reason: 'the approved original stays; its correction changes in place until it is approved');
+    });
+
+    test('BUG-008 a row already corrected cannot be corrected again from a stale copy, so one piece of work keeps one row (ATT-08)', () async {
+      await ts.work(db, '2020-10-05');
+      await db.approveEntries([await row('2020-10-05')], operationId: newUuid());
+      final stale = (await (db.select(db.attendanceEntries)..where((e) => e.workDate.equals('2020-10-05'))).get()).single;
+      await db.correctEntry(stale, leftAt(15), operationId: newUuid());
+      Object? refused;
+      try {
+        // A delete, so the overlap check that stops a second timed row does not stop it first.
+        await db.correctEntry(stale, EntryInput(workerId: ts.asif, shift: const ShiftInput(status: AttendanceStatus.absent)), operationId: newUuid(), deleted: true);
+      } catch (e) {
+        refused = e;
+      }
+      final standing = await (db.select(db.attendanceEntries)..where((e) => e.workDate.equals('2020-10-05') & e.superseded.equals(false))).get();
+      expect(standing, hasLength(1));
+      expect(refused, isA<EntryChanged>());
+      expect(saveErrorText(l10n, refused!), l10n.entryChanged, reason: 'says the row changed, not that saving failed (R05-6)');
     });
 
     test('an edit that changes nothing is not shown as one', () async {
@@ -186,6 +205,28 @@ void main() {
 
     await goTo(tester, words.regDeletedAttendance);
     expect(find.text('Asif (W1)'), findsOneWidget);
+    await shutDown(tester, app);
+  });
+
+  testWidgets('BUG-006 the row editor applies Absent after the break field was cleared (F02-10)', (tester) async {
+    final app = memoryDb();
+    final today = dubaiToday(DateTime.now());
+    await real(tester, () async {
+      await ts.seed(app);
+      await ts.work(app, today);
+    });
+    final words = await real(tester, () => AppLocalizations.delegate.load(const Locale('en', 'PK')));
+    await pumpApp(tester, app);
+
+    await tester.tap(find.text('Asif'));
+    await settle(tester);
+    await tester.enterText(find.widgetWithText(TextFormField, words.breakMinutes), '');
+    await tester.tap(find.text(words.statusAbsent));
+    await settle(tester);
+    await tester.tap(find.text(words.applyChanges));
+    await settle(tester);
+    final saved = await real(tester, () => (app.select(app.attendanceEntries)..where((e) => e.superseded.equals(false))).getSingle());
+    expect((saved.attendanceStatus, saved.breakMinutes), (AttendanceStatus.absent.name, 0));
     await shutDown(tester, app);
   });
 

@@ -21,7 +21,8 @@ String formatAed(int fils) {
 /// 110050 -> "1100.50", for prefilling an amount field that [parseAed] reads back.
 String plainAmount(int fils) => '${fils ~/ 100}.${(fils % 100).toString().padLeft(2, '0')}';
 
-final _amount = RegExp(r'^(\d+)(?:\.(\d{1,2}))?$');
+// 13 digits of dirhams at most: more could not be held as fils, and would throw or wrap round instead of being refused.
+final _amount = RegExp(r'^(\d{1,13})(?:\.(\d{1,2}))?$');
 
 /// "1,100.5" -> 110050. Returns null for anything that is not a non-negative AED amount.
 int? parseAed(String input) {

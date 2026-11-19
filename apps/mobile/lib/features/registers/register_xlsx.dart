@@ -23,7 +23,11 @@ const _totalNumber = 13;
 /// Rows above the column headings: company, register, filters, then a gap.
 const _headRow = 5;
 
-String _escape(String text) => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+/// XML forbids control characters other than tab and line breaks, and Excel refuses a whole file holding one. A name
+/// pasted or imported can carry one, so it is dropped here.
+final _forbidden = RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F]');
+
+String _escape(String text) => text.replaceAll(_forbidden, '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 
 String _letter(int column) {
   var text = '';

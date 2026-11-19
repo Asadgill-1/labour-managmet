@@ -21,7 +21,7 @@
   "workersHeading": "Workers",
   "searchGroup": "Search groups",
   "searchWorker": "Search workers",
-  "membersCount": "{count} workers",
+  "membersCount": "{count, plural, =1{1 worker} other{{count} workers}}",
   "@membersCount": {
     "placeholders": {
       "count": {
@@ -29,7 +29,7 @@
       }
     }
   },
-  "saveWithCount": "Save ({count} workers)",
+  "saveWithCount": "Save ({count, plural, =1{1 worker} other{{count} workers}})",
   "@saveWithCount": {
     "placeholders": {
       "count": {
@@ -154,7 +154,6 @@
   "menuDocuments": "Documents",
   "menuTeam": "Team",
   "menuBackup": "Backup",
-  "menuPlan": "Plan",
   "menuHelp": "Help",
   "countWorkers": "Workers",
   "countShifts": "Shifts",
@@ -354,9 +353,9 @@
   "correctedTag": "Corrected",
   "cancel": "Cancel",
   "localOnlyNote": "This data is only on this phone.",
-  "nextWithCount": "Next ({count} workers)",
+  "nextWithCount": "Next ({count, plural, =1{1 worker} other{{count} workers}})",
   "countsLine": "{workers} workers, {shifts} shifts, {days} worker-days",
-  "missingWorkers": "{count} workers have no attendance: {names}",
+  "missingWorkers": "{count, plural, =1{1 worker has} other{{count} workers have}} no attendance: {names}",
   "hoursPaid": "{duration} hours",
   "@nextWithCount": {
     "placeholders": {
@@ -483,7 +482,7 @@
       }
     }
   },
-  "payrollPosted": "Payroll posted for {count} workers",
+  "payrollPosted": "Payroll posted for {count, plural, =1{1 worker} other{{count} workers}}",
   "@payrollPosted": {
     "placeholders": {
       "count": {
@@ -503,7 +502,7 @@
     }
   },
   "applyRoomCharges": "Add room charge",
-  "roomChargesApplied": "Room charge added for {count} workers",
+  "roomChargesApplied": "Room charge added for {count, plural, =1{1 worker} other{{count} workers}}",
   "@roomChargesApplied": {
     "placeholders": {
       "count": {
@@ -637,6 +636,7 @@
   "wageDueDays": "Days to pay salary after month end",
   "wageDueDaysHelp": "Your own figure, ask your accountant. Empty means late from the day after month end.",
   "wageDueDaysError": "A whole number from 0 to 90.",
+  "termsDaysError": "A whole number from 0 to 365.",
   "tabClosing": "Close month",
   "closingWorkersLeft": "Left on workers' accounts",
   "closingState": "This month",
@@ -1075,7 +1075,7 @@
   "slipMoney": "Money taken",
   "slipNoWork": "No work this month.",
   "slipNoMoney": "No money taken this month.",
-  "slipDayCount": "{days} days",
+  "slipDayCount": "{days, plural, =1{1 day} other{{days} days}}",
   "@slipDayCount": {
     "placeholders": {
       "days": {
@@ -1107,7 +1107,7 @@
   "sheetByCompany": "By company",
   "sheetDetail": "Company wise",
   "sheetWorkers": "Workers' accounts",
-  "sheetCompanyHead": "{workers} workers, {sites} sites",
+  "sheetCompanyHead": "{workers, plural, =1{1 worker} other{{workers} workers}}, {sites, plural, =1{1 site} other{{sites} sites}}",
   "@sheetCompanyHead": {
     "placeholders": {
       "workers": {
@@ -1318,7 +1318,7 @@
   },
   "tsMonthlyRow": "Monthly",
   "tsNotCharged": "Not charged",
-  "tsMonthlyLine": "{basis}, {rate}: {from} to {to}, {count} people. The contract amount goes on the invoice by the month, not from these rows.",
+  "tsMonthlyLine": "{basis}, {rate}: {from} to {to}, {count, plural, =1{1 person} other{{count} people}}. The contract amount goes on the invoice by the month, not from these rows.",
   "@tsMonthlyLine": {
     "placeholders": {
       "basis": {
@@ -1338,7 +1338,7 @@
       }
     }
   },
-  "tsMonthlyLinePlain": "{basis}: {from} to {to}, {count} people.",
+  "tsMonthlyLinePlain": "{basis}: {from} to {to}, {count, plural, =1{1 person} other{{count} people}}.",
   "@tsMonthlyLinePlain": {
     "placeholders": {
       "basis": {
@@ -2042,7 +2042,7 @@
   "importBackupNote": "Make a backup before an import. A file is saved whole or not at all, and a wrong line can be archived afterwards.",
   "importChoose": "Choose CSV file",
   "importChooseAgain": "Choose another file",
-  "importSave": "Save {count} lines",
+  "importSave": "Save {count, plural, =1{1 line} other{{count} lines}}",
   "@importSave": {
     "placeholders": {
       "count": {
@@ -2058,7 +2058,7 @@
       }
     }
   },
-  "importSummary": "{total} lines: {bad} with mistakes, {warned} to check",
+  "importSummary": "{total, plural, =1{1 line} other{{total} lines}}: {bad} with mistakes, {warned} to check",
   "@importSummary": {
     "placeholders": {
       "total": {
@@ -2091,6 +2091,14 @@
     }
   },
   "importEmpty": "The file has no lines under its headings.",
+  "importUnclosedQuote": "Row {row} opens a quote mark (\") that never closes, so the rest of the file can't be read. Fix that row in the file and choose it again. Nothing has been saved.",
+  "@importUnclosedQuote": {
+    "placeholders": {
+      "row": {
+        "type": "int"
+      }
+    }
+  },
   "importRow": "Row {row}",
   "@importRow": {
     "placeholders": {
@@ -2266,6 +2274,8 @@
   "inUseTitle": "This can't be deleted",
   "inUseBody": "Entries carry its name, and would lose it. Archive it instead: it leaves the lists, and its entries stay as they are.",
   "inUseArchived": "Entries carry its name, so it can't be deleted. It is archived already.",
+  "entryChanged": "This row was changed after you opened it. Open it again.",
+  "openingSettled": "Money received from this company already settled this old amount. It can't go below what was received against it, or be deleted. Delete those receipts in the cash book first.",
   "archivedDone": "Archived. Its entries stay as they are.",
   "regDeletedPayItems": "Deleted allowances and deductions",
   "regDeletedRecords": "Other deleted records",
@@ -2403,6 +2413,7 @@
   "accountFailed": "That did not work. Try again.",
   "accountOtherPhone": "Another phone is on for this account. Turn the old phone off.",
   "accountSignedOut": "Log in again with your password to check the plan.",
+  "accountPasswordAgain": "For this step, type your login password again.",
   "accountSlipsWaiting": "Three slips are waiting to be checked already. Wait for the check before sending another.",
   "accountPhoneData": "This phone already has data. Create a new account and it goes into the new company.",
   "accountTitle": "Account",
@@ -2528,7 +2539,7 @@
   "backupFailed": "The backup could not be made. The data is as it was. Try again.",
   "backupRestore": "Bringing data back from a backup",
   "backupDueNever": "No backup yet",
-  "backupDueDays": "No backup for {count} days",
+  "backupDueDays": "No backup for {count, plural, =1{1 day} other{{count} days}}",
   "@backupDueDays": {
     "placeholders": {
       "count": {

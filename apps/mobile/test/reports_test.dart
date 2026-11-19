@@ -104,6 +104,14 @@ void main() {
       expect(parseCsv(importTemplate(ImportKind.sites)).single.fields, ['Company', 'Site', 'Location', 'Contact', 'Start', 'End', 'Break minutes']);
     });
 
+    test('a quote that never closes refuses the file at the row it opened on, so no line takes in the rest (BUG-011)', () async {
+      final plan = await db.planImport(ImportKind.workers, 'Code,Name\nW1,"Ali\nW2,Bilal\nW3,Omar\n');
+      expect([for (final l in plan.lines) l.title], isEmpty, reason: 'no worker named Ali and the rest of the file');
+      expect((plan.unclosedQuoteRow, plan.ready), (2, false));
+      await expectLater(db.applyImport(plan), throwsStateError);
+      expect(await workers(), hasLength(2));
+    });
+
     test('if saving fails part way, the lines already written are taken back', () async {
       final plan = await db.planImport(ImportKind.workers, 'Code,Name\nW20,First\nW21,Second\n');
       expect(plan.ready, isTrue);
@@ -128,6 +136,8 @@ void main() {
       final saved = {for (final c in await db.select(db.clients).get()) c.name: (c.vatRegistered, c.trn, c.dueDays)};
       expect(saved['Nakheel'], (true, '100555444300003', 30));
       expect(saved['Dubai Holding'], (false, null, null));
+      // The company form takes 0 to 365 days, so an import does too (R05-9).
+      expect(problems(await db.planImport(ImportKind.companies, 'Name,Due days\nArabtec,366\nDrake,365\n')), ['2 badNumber', '3']);
 
       const sites =
           'Company,Site,Start,End,Break minutes\n'
@@ -240,6 +250,10 @@ void main() {
     await settle(tester);
     expect(find.text(words.problemExists('Code')), findsOneWidget);
     expect(find.text(words.importFix), findsOneWidget);
+    file = 'Code,Name\nW1,"Ali\nW2,Bilal\nW3,Omar\n';
+    await tester.tap(find.text(words.importChooseAgain).last);
+    await settle(tester);
+    expect(find.text(words.importUnclosedQuote(2)), findsOneWidget, reason: 'the file is refused at the row its quote opened (BUG-011)');
     file = 'Code,Name\nW30,Sajid\n';
     await tester.tap(find.text(words.importChooseAgain).last);
     await settle(tester);

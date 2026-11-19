@@ -63,8 +63,11 @@ class WorkerPayroll {
 
   bool get posted => line != null;
   bool get canPost => !posted && figures.issues.isEmpty && !figures.isEmpty;
-  bool get canAddRoomCharge => !posted && !items.any((i) => i.kind == PayItemKind.roomCharge.name);
-  bool get needsVisaInstalment => !posted && (worker.visaInstalmentFils ?? 0) > 0 && visaLeftFils > 0 && !items.any((i) => i.kind == PayItemKind.visaRecovery.name);
+
+  /// An item added to a month behind a later posted one could never post, so none is added there (PAY-02).
+  bool get canAddItems => !posted && !figures.issues.contains(PayrollIssue.laterMonthPosted);
+  bool get canAddRoomCharge => canAddItems && !items.any((i) => i.kind == PayItemKind.roomCharge.name);
+  bool get needsVisaInstalment => canAddItems && (worker.visaInstalmentFils ?? 0) > 0 && visaLeftFils > 0 && !items.any((i) => i.kind == PayItemKind.visaRecovery.name);
   int get payableFils => openingFils + figures.dueFils;
   int get closingFils => payableFils - paidFils;
 }
@@ -131,6 +134,33 @@ extension PayrollOps on TenantDatabase {
     final openings = await select(openingBalances).get();
     final cash = await (select(cashEntries)..where((c) => c.workerId.isNotNull())).get();
     final reversed = {for (final c in cash) ?c.reversesEntryId};
+    // With nothing posted, a salary counts on the account from its first activity, as the statement reads it (D-042 (5)), so a
+    // later month cannot be posted past an earlier one the account already counts (D-033). A mistake undone in its own month is no activity.
+    final cashDate = {for (final c in cash) c.id: c.entryDate};
+    final undone = {
+      for (final c in cash)
+        if (c.reversesEntryId != null && c.entryDate.substring(0, 7) == cashDate[c.reversesEntryId]?.substring(0, 7)) ...[c.id, c.reversesEntryId!],
+    };
+    final counted = {CashKind.salaryPaid.name, CashKind.advanceGiven.name, CashKind.advanceReturned.name};
+
+    final firstItem = payrollItems.periodFrom.min();
+    final firstItemOf = {
+      for (final r in await (selectOnly(payrollItems)
+            ..addColumns([payrollItems.workerId, firstItem])
+            ..where(payrollItems.kind.equals(PayItemKind.advanceRecovery.name).not())
+            ..groupBy([payrollItems.workerId]))
+          .get())
+        r.read(payrollItems.workerId)!: r.read(firstItem)!,
+    };
+    // An item no line has taken in an earlier month holds this one, or posting it would leave the item behind for ever.
+    final itemMonthsOf = <String, Set<String>>{};
+    for (final r in await (selectOnly(payrollItems, distinct: true)
+          ..addColumns([payrollItems.workerId, payrollItems.periodFrom])
+          ..where(payrollItems.lineId.isNull() & payrollItems.periodFrom.isSmallerThanValue(from)))
+        .get()) {
+      final String id = r.read(payrollItems.workerId)!;
+      (itemMonthsOf[id] ??= <String>{}).add(r.read(payrollItems.periodFrom)!.substring(0, 7));
+    }
     // A recovery waiting on another unposted month has taken its share of the advance already.
     final waiting = groupedBy(
       await (select(payrollItems)..where((i) => i.kind.equals(PayItemKind.advanceRecovery.name) & i.lineId.isNull() & i.periodFrom.equals(from).not())).get(),
@@ -181,6 +211,17 @@ extension PayrollOps on TenantDatabase {
           WorkLine(r.workDate, r.amountFils ?? 0, alreadyPaidFils: r.revisesEntryId == null ? 0 : await _alreadyPaid(r.revisesEntryId)),
       ];
       final unpriced = rows.where((r) => r.state == 'draft').length;
+      final activity = [
+        if (workerLines.isEmpty) ...[
+          for (final r in rows) r.workDate,
+          ?firstItemOf[worker.id],
+          // An old balance already holds everything up to its date, so the account starts the day after it.
+          for (final b in openingsOf[worker.id] ?? const <OpeningBalance>[])
+            if (b.kind == 'worker_salary_owed' || b.kind == 'worker_advance') addDays(b.asOfDate, 1),
+          for (final c in cashOf[worker.id] ?? const <CashEntry>[])
+            if (counted.contains(c.kind) && !undone.contains(c.id)) c.entryDate,
+        ],
+      ]..sort();
       PayrollFigures figuresWith({int recovery = 0, bool ask = false}) => workerPayroll(
         month: month,
         currentMonth: dubaiToday(DateTime.now()).substring(0, 7),
@@ -195,6 +236,8 @@ extension PayrollOps on TenantDatabase {
         visaLeftFils: visaLeft,
         unpricedRows: unpriced,
         lastPostedMonth: workerLines.lastOrNull?.periodFrom.substring(0, 7),
+        firstMonth: activity.firstOrNull?.substring(0, 7),
+        itemMonths: itemMonthsOf[worker.id] ?? const {},
         closedMonth: closedThrough?.substring(0, 7),
         limitBps: limitBps,
         present: {
@@ -227,7 +270,16 @@ extension PayrollOps on TenantDatabase {
         if (due.askFils > 0 && figures.netFils > auto) ask = due.askFils;
         if (auto > 0 || ask > 0) figures = figuresWith(recovery: auto, ask: ask > 0);
       }
-      if (figures.isEmpty && unpriced == 0) continue;
+      // Before the account's first activity a salary counts for nothing (D-042 (5)), so a month cut whole for absence there
+      // is no month to post. From the first activity on, a whole month's cut still shows (BUG-005).
+      final beforeAccount = workerLines.isEmpty && (activity.isEmpty || activity.first.substring(0, 7).compareTo(month) > 0);
+      final onlyCut = figures.grossFils == 0 &&
+          figures.adjustmentFils == 0 &&
+          figures.allowancesFils == 0 &&
+          figures.deductionsFils == 0 &&
+          figures.recoveryFils == 0 &&
+          figures.visaFils == 0;
+      if ((figures.isEmpty || beforeAccount && onlyCut) && unpriced == 0) continue;
       final posted = workerLines.fold(0, (total, l) => total + l.netFils + l.adjustmentFils);
       result.add(
         WorkerPayroll(
@@ -398,7 +450,16 @@ extension PayrollOps on TenantDatabase {
     );
   }
 
-  /// Adds or changes an allowance or deduction. A recovery above what the worker still owes is refused here,
+  /// Workers among [workerIds] with a month after [month] posted, so an item added to [month] could never post (PAY-02).
+  Future<Set<String>> _postedAfter(Iterable<String> workerIds, String month) async => {
+    for (final l in await (select(payrollLines)
+          ..where((l) => l.workerId.isIn(workerIds) & l.reversed.equals(false) & l.periodFrom.isBiggerThanValue(monthFirstDay(month))))
+        .get())
+      l.workerId,
+  };
+
+  /// Adds or changes an allowance or deduction. Refused for a month behind a later posted one, where it could never
+  /// post (LaterMonthPosted). A recovery above what the worker still owes is refused here,
   /// and checked again at posting (PAY-05).
   Future<void> savePayItem({
     required String? id,
@@ -413,6 +474,7 @@ extension PayrollOps on TenantDatabase {
     required String operationId,
     String? changeNote,
   }) async {
+    if ((await _postedAfter([workerId], month)).isNotEmpty) throw const LaterMonthPosted();
     if (kind == PayItemKind.advanceRecovery) {
       final others = await (select(payrollItems)
             ..where((i) => i.workerId.equals(workerId) & i.kind.equals(kind.name) & i.lineId.isNull()))
@@ -498,9 +560,11 @@ extension PayrollOps on TenantDatabase {
         final now = DateTime.now().toUtc();
         final saved = <Map<String, dynamic>>[];
         final current = await payrollFor(month);
+        // A worker with nothing in this month is not on its list, so a later posted month is asked for itself.
+        final later = await _postedAfter(charges.keys, month);
         final ticked = await (select(workers)..where((w) => w.id.isIn(charges.keys))).get();
         for (final worker in ticked) {
-          if (current.where((p) => p.worker.id == worker.id && !p.canAddRoomCharge).isNotEmpty) continue;
+          if (later.contains(worker.id) || current.where((p) => p.worker.id == worker.id && !p.canAddRoomCharge).isNotEmpty) continue;
           final row = await into(payrollItems).insertReturning(
             PayrollItemsCompanion.insert(
               id: newUuid(),

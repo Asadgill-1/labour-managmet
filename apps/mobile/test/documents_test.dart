@@ -166,6 +166,14 @@ void main() {
       expect(audit.map((a) => a.toJson().toString()).join(), isNot(contains(base64Encode(png1))));
       expect((await db.documentTemplate())!.logoAssetId, isNotNull);
     });
+
+    test('a retry of the same upload gives back the image it kept, and the template still points at it (BUG-010)', () async {
+      final op = newUuid();
+      final id = await db.saveDocumentImage(AssetKind.logo, png1, operationId: op);
+      expect(await db.saveDocumentImage(AssetKind.logo, png1, operationId: op), id);
+      expect(await db.select(db.documentAssets).get(), hasLength(1));
+      expect((await db.documentTemplate())!.logoAssetId, id);
+    });
   });
 
   group('the frame on every paper (DOC-01 to DOC-03, DOC-08)', () {

@@ -1,25 +1,33 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:domain/calc.dart';
 import 'package:domain/cash.dart';
+import 'package:domain/money.dart';
 import 'package:domain/payroll.dart';
 import 'package:drift/drift.dart' show BooleanExpressionOperators, Value;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/documents/document_frame.dart';
+import 'package:labour_app/app/providers.dart';
 import 'package:labour_app/app/side_panel.dart';
+import 'package:labour_app/app/theme.dart' show MainActionBar;
 import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/cash.dart';
+import 'package:labour_app/data/import.dart';
 import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/payroll.dart';
 import 'package:labour_app/data/tenant_database.dart';
+import 'package:labour_app/features/registers/ledger_screen.dart';
 import 'package:labour_app/features/registers/register_defs.dart';
 import 'package:labour_app/features/registers/register_export.dart';
 import 'package:labour_app/features/registers/register_model.dart';
 import 'package:labour_app/features/registers/register_pdf.dart';
 import 'package:labour_app/features/registers/register_xlsx.dart';
+import 'package:labour_app/features/registers/salary_sheet.dart';
 import 'package:labour_app/l10n/app_localizations.dart';
 
 import 'support.dart';
@@ -220,6 +228,56 @@ void main() {
     expect(day.cells[7], 2 * 9 * 1200 - (9 * 1000 + 9 * 800));
     expect(day.cells[8], 0, reason: 'every row here has a company rate');
     expect(filterEntries(data.entries, {'client': {emaar}}), hasLength(1));
+  });
+
+  test('BUG-012 two companies with the same name keep their own accounts in every company register (F04-1, INV-07)', () async {
+    // The seed already has one "Emaar". Two more share the name, one with a TRN.
+    Future<String> company(int fils, String workDate, {String? trn}) async {
+      final id = await db.saveRow(db.clients, id: null, operationId: newUuid(), fields: ClientsCompanion(name: const Value('Emaar'), trn: Value(trn)));
+      await db.saveRow(
+        db.openingBalances,
+        id: null,
+        operationId: newUuid(),
+        fields: OpeningBalancesCompanion(kind: const Value('client_receivable'), clientId: Value(id), amountFils: Value(fils), asOfDate: const Value('2020-08-31'), sourceNote: const Value('Old ledger')),
+      );
+      final site = await db.saveRow(db.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(id), name: Value('Site $fils')));
+      await db.saveAttendanceBatch(workDate: workDate, clientId: id, siteId: site, inputs: [EntryInput(workerId: asif, shift: shift)], operationId: newUuid());
+      return id;
+    }
+
+    final first = await company(100000, '2020-11-02', trn: '100200300400500');
+    final second = await company(50000, '2020-11-03');
+    final owed = {first: 100000, second: 50000};
+    String? clientOf(List<RegisterEntry> rows) => rows.first.tags['client']?.single;
+
+    final data = await build(Section.statementRegister);
+    final both = filterEntries(data.entries, {'client': {first, second}});
+    final balance = data.columns.indexWhere((c) => c.closing);
+    expect(columnFigure(data.columns, both, balance), 150000, reason: 'the band adds where each account ended');
+    final groups = groupEntries(both);
+    expect(groups, hasLength(2), reason: 'one heading per company');
+    for (final g in groups) {
+      expect(data.groupFeet[g.group], contains(l10n.regCompanyOwes(formatAed(owed[clientOf(g.rows)]!))), reason: 'each footer is its own company');
+    }
+    expect(groupEntries(data.entries).map((g) => g.group).toSet(), {'Emaar (1)', 'Emaar (100200300400500)', 'Emaar (2)'}, reason: 'the seed Emaar stands alone too, the TRN or a number in the order added names each');
+    final rollup = data.rollupsOf!(both).single;
+    expect(rollup.rows.map((r) => r.cells[1]).toSet(), {'100200300400500', null});
+    expect({for (final r in rollup.rows) r.cells[2]: r.cells.last}, {100000: 100000, 50000: 50000}, reason: 'invoiced and balance on one row belong together');
+
+    final aging = await build(Section.agingRegister);
+    final owing = groupEntries(filterEntries(aging.entries, {'client': {first, second}}));
+    expect(owing, hasLength(2));
+    expect(aging.rollupsOf!(filterEntries(aging.entries, {'client': {first, second}})).single.rows.map((r) => r.cells.last).toSet(), {100000, 50000});
+
+    final work = await build(Section.workRegister);
+    expect(groupEntries(filterEntries(work.entries, {'client': {first, second}})), hasLength(2));
+    expect(groupEntries(work.entries).map((g) => g.group).toSet(), hasLength(groupEntries(work.entries).length), reason: 'a company never splits into two headings either');
+
+    final sheet = await buildSalarySheet(db, l10n, '2020-11');
+    expect(groupEntries(sheet.entries), hasLength(2));
+    expect(sheet.groupHeads, hasLength(2));
+    final byCompany = sheet.rollupsOf!(sheet.entries).singleWhere((r) => r.title == l10n.sheetByCompany);
+    expect(byCompany.rows.map((r) => r.cells.first).toSet(), hasLength(2));
   });
 
   group('worker register', () {
@@ -431,6 +489,25 @@ void main() {
       expect(a.findFile('xl/worksheets/sheet2.xml'), isNull, reason: 'no sums, no second sheet');
     });
 
+    test('BUG-018 a control character imported into a name never reaches the sheet, so Excel still opens it (F04-7)', () async {
+      // CSV import keeps it: the file is read with allowMalformed and a cell is only trimmed.
+      final plan = await db.planImport(ImportKind.workers, 'Code,Name,Trade\r\nW9,Ali\u0001,Helper\r\n');
+      expect(await db.applyImport(plan), 1);
+      final ali = await (db.select(db.workers)..where((w) => w.code.equals('W9'))).getSingle();
+      expect(ali.name, 'Ali\u0001', reason: 'the path is real');
+      await db.saveAttendanceBatch(workDate: '2020-11-05', clientId: emaar, siteId: marina, inputs: [EntryInput(workerId: ali.id, shift: shift)], operationId: newUuid());
+
+      final data = await build(Section.attendanceRegister);
+      final a = ZipDecoder().decodeBytes(
+        registerXlsx(company: 'Al Noor', title: data.title, filterLine: '', columns: data.columns, entries: data.entries, totalLabel: 'Total', brandHex: '143E8F', softHex: 'E0EEFF', rollups: data.rollupsOf!(data.entries), rollupSheet: 'Sab'),
+      );
+      final forbidden = RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F]');
+      for (final f in a.files) {
+        expect(forbidden.hasMatch(utf8.decode(f.content as List<int>)), isFalse, reason: '${f.name} holds a character XML forbids');
+      }
+      expect(part(a, 'xl/worksheets/sheet1.xml'), contains('>Ali<'), reason: 'the name itself still shows');
+    });
+
     test('sums go on a second sheet, and a running balance totals where each group ended', () {
       const account = [
         RegisterColumn('Date', kind: CellKind.date),
@@ -569,6 +646,59 @@ void main() {
     expect(find.text('Excel'), findsOneWidget);
     expect(find.text('WhatsApp'), findsNWidgets(2));
     await shutDown(tester, db);
+  });
+
+  testWidgets("BUG-014 a new date range never shows or exports the last range's rows while it loads, and an error shows as one (F04-3, REP-01)", (tester) async {
+    final all = await real(tester, () => build(Section.attendanceRegister));
+    final lastMonth = Completer<RegisterData>();
+    var broken = false;
+    // Every date answers at once; last month answers late, as a big company's register does; then the disk fails.
+    await tester.pumpWidget(
+      ProviderScope(
+        retry: (_, _) => null,
+        overrides: [
+          dbProvider.overrideWithValue(db),
+          registerProvider.overrideWith(
+            (ref, q) => q.from == null ? Stream.value(all) : (broken ? Stream<RegisterData>.error(StateError('disk')) : Stream.fromFuture(lastMonth.future)),
+          ),
+        ],
+        child: MaterialApp(
+          locale: const Locale('en', 'PK'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const LedgerScreen(Section.attendanceRegister, allDates: true),
+        ),
+      ),
+    );
+    await tester.pump();
+    MainActionBar bar() => tester.widget<MainActionBar>(find.byType(MainActionBar));
+    expect(find.text('4 entries'), findsOneWidget);
+    expect(bar().onPressed, isNotNull);
+
+    await tester.tap(find.text(l10n.regLastMonth));
+    await tester.pump();
+    expect(find.text('4 entries'), findsNothing, reason: "every date's rows are not last month's");
+    expect(bar().onPressed, isNull, reason: 'no file of the old rows under the new dates');
+    expect(find.text(l10n.regThisMonth), findsOneWidget, reason: 'the dates stay, so the owner can pick others while it loads (R05-3)');
+
+    lastMonth.complete(all);
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('4 entries'), findsOneWidget, reason: 'the asked dates have come back');
+    expect(bar().onPressed, isNotNull);
+
+    broken = true;
+    await tester.tap(find.text(l10n.regThisMonth));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text(l10n.databaseError), findsOneWidget);
+    expect(find.text('4 entries'), findsNothing, reason: 'an error never shows the old figures');
+    expect(find.text(l10n.regAll), findsOneWidget, reason: 'nor leaves the owner without the dates (R05-3)');
+    await tester.tap(find.text(l10n.regAll));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('4 entries'), findsOneWidget, reason: 'other dates can still be picked after an error');
+    await tester.pumpWidget(const SizedBox());
   });
 }
 
