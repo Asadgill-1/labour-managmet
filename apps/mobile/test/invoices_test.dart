@@ -379,6 +379,31 @@ void main() {
       expect((v.status, v.leftFils, v.creditNotes.length), (InvoiceStatus.credited, 0, 2));
       expect(await db.unbilledLines(sheet), hasLength(1), reason: 'taken back whole, the work is free again');
     });
+
+    test('F03-2 for an amount can never take all that is left, so the whole invoice can still be taken back (D-080 (2))', () async {
+      await register();
+      await ts.work(db, '2020-10-05');
+      final sheet = await approved();
+      final id = await draft();
+      await issue(id);
+      await db.creditInvoice(id, reason: 'Rate agreed lower', amountFils: 3000, operationId: newUuid());
+      // 105.00 and its 5.25 of VAT is exactly the 110.25 left.
+      await expectLater(db.creditInvoice(id, reason: 'All of it', amountFils: 10500, operationId: newUuid()), refused(InvoiceProblem.creditTakesAll));
+      expect((await db.invoiceView(id)).creditNotes, hasLength(1), reason: 'nothing was written');
+
+      // Edit goes through a whole credit note, which takes back the rest and frees the work.
+      final again = await db.editInvoice(id, reason: 'Wrong hours', operationId: newUuid());
+      final v = await db.invoiceView(id);
+      expect((v.status, v.leftFils, v.creditNotes.length), (InvoiceStatus.credited, 0, 2));
+      expect(await db.unbilledLines(sheet), hasLength(1));
+      expect((await db.invoiceView(again)).lines.single.amountFils, 13500);
+
+      // The credit sheet and the invoice screen show it through saveErrorText.
+      for (final locale in const [Locale('en'), Locale('en', 'PK')]) {
+        final l10n = await AppLocalizations.delegate.load(locale);
+        expect(saveErrorText(l10n, const InvoiceRefused(InvoiceProblem.creditTakesAll)), l10n.invCreditTakesAll);
+      }
+    });
   });
 
   group('a line the owner writes (INV-01)', () {
@@ -524,6 +549,92 @@ void main() {
       final line = (await db.invoiceView(second)).lines.single;
       expect((line.quantity, line.amountFils), (1, 200000), reason: 'Asif is charged for October already');
       expect(invoiceLineText(paperWords, line), startsWith('Monthly contract amount for 10-2020, Per month, each worker ('));
+    });
+
+    // A company whose monthly contract changes from [old] to [now] on 16 October 2020, with Asif working on the 6th and
+    // 21st and Bilal on the 6th, all on one approved timesheet. The group's own company has them on the 5th and 20th.
+    Future<String> rateChanged(RateBasis basis, int old, int now) async {
+      final client = await db.saveRow(db.clients, id: null, operationId: newUuid(), fields: const ClientsCompanion(name: Value('Raised')));
+      final site = await db.saveRow(db.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(client), name: const Value('Depot')));
+      for (final (fils, from) in [(old, '2020-01-01'), (now, '2020-10-16')]) {
+        await db.saveRow(
+          db.billingContracts,
+          id: null,
+          operationId: newUuid(),
+          fields: BillingContractsCompanion(clientId: Value(client), basis: Value(basis.name), rateFils: Value(fils), effectiveFrom: Value(from)),
+        );
+      }
+      for (final (w, date) in [(ts.asif, '2020-10-06'), (ts.bilal, '2020-10-06'), (ts.asif, '2020-10-21')]) {
+        await db.saveAttendanceBatch(workDate: date, clientId: client, siteId: site, inputs: [EntryInput(workerId: w, shift: ts.shift)], operationId: newUuid());
+      }
+      final sheet = await db.createTimesheet(clientId: client, from: ts.from, to: ts.to, operationId: newUuid());
+      await db.approveTimesheet((await db.timesheetView(sheet)).revision.id, operationId: newUuid());
+      return client;
+    }
+
+    test('F03-3 a fixed amount whose rate changes inside a month is charged once, at the newest rate (D-080 (3))', () async {
+      final client = await rateChanged(RateBasis.monthFixed, 500000, 600000);
+      final id = await db.createInvoice(clientId: client, from: ts.from, to: ts.to, operationId: newUuid());
+      final lines = (await db.invoiceView(id)).lines;
+      expect([for (final l in lines) (l.quantity, l.unitPriceFils, l.amountFils)], [(1, 600000, 600000)], reason: 'one month, not 5,000 and 6,000');
+      final line = lines.single;
+      expect((line.fromDate, line.toDate, line.sources.length), ('2020-10-06', '2020-10-21', 3));
+
+      // A draft saved before keyed the line by its rate too. That key is no longer read, so the line starts again at the
+      // month's amount; nothing breaks.
+      await db.saveInvoiceDraft(id, InvoicesCompanion(draft: Value(const InvoiceDraft(fees: {'fee|monthFixed|500000|2020-10': 250000}).toJson())), operationId: newUuid());
+      expect((await db.invoiceView(id)).lines.single.amountFils, 600000);
+      // The owner can still change it.
+      await db.saveInvoiceDraft(id, InvoicesCompanion(draft: Value(InvoiceDraft(fees: {line.key: 550000}).toJson())), operationId: newUuid());
+      expect((await db.invoiceView(id)).totals.totalFils, 550000);
+
+      await db.saveInvoiceDraft(id, InvoicesCompanion(draft: Value(const InvoiceDraft().toJson())), operationId: newUuid());
+      await issue(id);
+      await expectLater(db.createInvoice(clientId: client, from: ts.from, to: ts.to, operationId: newUuid()), refused(InvoiceProblem.nothingToBill));
+      expect(await db.uninvoicedWork(to: ts.to), isNot(contains((client, '2020-10'))), reason: 'the month is charged');
+    });
+
+    test('a fee per worker whose rate changes inside a month charges each worker once, at their newest rate', () async {
+      final client = await rateChanged(RateBasis.monthPerWorker, 200000, 250000);
+      final id = await db.createInvoice(clientId: client, from: ts.from, to: ts.to, operationId: newUuid());
+      final lines = (await db.invoiceView(id)).lines;
+      expect({for (final l in lines) (l.quantity, l.unitPriceFils, l.amountFils)}, {(1, 200000, 200000), (1, 250000, 250000)}, reason: 'Bilal at the old rate, Asif once at the new');
+    });
+
+    test('F03-1 a company has one fixed monthly amount at a time, at any site, so none goes unbilled (D-080 (1))', () async {
+      final yard = await db.saveRow(db.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(fixed), name: const Value('Yard')));
+      Future<String> contract({String? id, String? site, RateBasis basis = RateBasis.monthFixed, int fils = 300000, String from = '2020-01-01', String? to}) => db.saveRow(
+        db.billingContracts,
+        id: id,
+        operationId: newUuid(),
+        fields: BillingContractsCompanion(clientId: Value(fixed), siteId: Value(site), basis: Value(basis.name), rateFils: Value(fils), effectiveFrom: Value(from), effectiveTo: Value(to)),
+      );
+      Future<List<(String?, String, int)>> stored() async => [for (final c in await (db.select(db.billingContracts)..where((c) => c.clientId.equals(fixed))).get()) (c.siteId, c.basis, c.rateFils)];
+      final first = (await (db.select(db.billingContracts)..where((c) => c.clientId.equals(fixed))).getSingle()).id;
+
+      // Yard's 3,000 would share the month's one fee with the 5,000 for every site, and never be billed.
+      await expectLater(contract(site: yard), throwsA(isA<SecondFixedAmount>()));
+      await expectLater(contract(site: yard, from: '2020-10-16', to: '2020-10-20'), throwsA(isA<SecondFixedAmount>()), reason: 'any day in common');
+      await expectLater(contract(), throwsA(isA<SecondFixedAmount>()), reason: 'two amounts for every site from the same day');
+      // Another site can be paid another way, but that can't then become a second fixed amount.
+      final hourly = await contract(site: yard, basis: RateBasis.hour, fils: 1500);
+      await expectLater(contract(id: hourly, site: yard), throwsA(isA<SecondFixedAmount>()));
+      expect(await stored(), unorderedEquals([(null, 'monthFixed', 500000), (yard, 'hour', 1500)]), reason: 'nothing was written');
+
+      // Changing the amount, or ending it, is fine. A new rate from a later date replaces it, even over its dates.
+      await contract(id: first, fils: 500000, to: '2020-10-31');
+      await contract(fils: 600000, from: '2020-11-01', to: '2020-12-31');
+      await contract(fils: 650000, from: '2020-12-01', to: '2020-12-31');
+      await expectLater(contract(site: yard, from: '2020-12-15'), throwsA(isA<SecondFixedAmount>()));
+      // Once they end, Yard can have its own.
+      await contract(site: yard, from: '2021-01-01');
+      expect(await stored(), hasLength(5));
+
+      // The contract form shows it through saveOrExplain.
+      for (final locale in const [Locale('en'), Locale('en', 'PK')]) {
+        final l10n = await AppLocalizations.delegate.load(locale);
+        expect(saveErrorText(l10n, const SecondFixedAmount()), l10n.contractSecondFixed);
+      }
     });
   });
 

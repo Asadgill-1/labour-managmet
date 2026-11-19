@@ -7,6 +7,7 @@ import 'package:drift/drift.dart';
 
 import 'attendance.dart';
 import 'masters.dart';
+import 'payroll.dart' show PayrollOps;
 import 'tenant_database.dart';
 
 enum StatementMoneyKind { advance, advanceReturned, room, visa, deduction, paid }
@@ -193,6 +194,7 @@ extension StatementOps on TenantDatabase {
       }
     }
     final yesterday = addDays(dubaiToday(DateTime.now()), -1);
+    final givenBack = await cutsGivenBack(workerId: workerId);
 
     final result = <WorkerStatement>[];
     for (final worker in people) {
@@ -288,6 +290,14 @@ extension StatementOps on TenantDatabase {
       final workerLines = linesOf[worker.id] ?? const <PayrollLine>[];
       final salaries = {for (final l in workerLines) l.periodFrom.substring(0, 7): l.salaryFils};
       final absence = {for (final l in workerLines) l.periodFrom.substring(0, 7): (fils: l.absenceFils, days: l.absentDays?.split(',') ?? const <String>[])};
+      // A day a posted salary cut, worked after all, gives its cut back in that month, as late work counts in its own (D-080 (5)).
+      for (final MapEntry(key: m, value: given) in (givenBack[worker.id] ?? const <String, Map<String, int>>{}).entries) {
+        final cut = absence[m];
+        if (cut == null) continue;
+        final total = given.values.fold(0, (sum, fils) => sum + fils);
+        salaries[m] = salaries[m]! + total;
+        absence[m] = (fils: cut.fils - total, days: [for (final d in cut.days) if (!given.containsKey(d)) d]);
+      }
       final monthly = worker.active ? (contractsOf[worker.id] ?? const <PayContract>[]).map(payTerms).toList() : const <RateTerms>[];
       if (monthly.isNotEmpty) {
         final lastPosted = workerLines.lastOrNull?.periodFrom.substring(0, 7);

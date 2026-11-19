@@ -99,6 +99,7 @@ enum ImportProblem {
   rateNeedsDate,
   noCompany,
   twoCompanies,
+  sameTimes,
 
   /// Warnings, which don't stop the import.
   sameName,
@@ -326,6 +327,8 @@ extension ImportOps on TenantDatabase {
           if (cell.raw(ImportField.start).isEmpty != cell.raw(ImportField.end).isEmpty) {
             cell.problem(ImportProblem.missing, cell.raw(ImportField.start).isEmpty ? ImportField.start : ImportField.end);
           }
+          // A day that ends where it starts would be paid as 24 hours (D-080 (9)).
+          if (start != null && start == end) cell.problem(ImportProblem.sameTimes, ImportField.end);
           final breakMinutes = cell.number(ImportField.breakMinutes);
           return ImportLine(r.row, [?companyName, ?name].join(', '), cell.issues, read: cell.read, (db) async {
             await db.saveRow(

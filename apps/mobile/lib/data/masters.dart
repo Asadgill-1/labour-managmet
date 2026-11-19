@@ -5,6 +5,12 @@ import 'changes.dart';
 import 'receipts.dart';
 import 'tenant_database.dart';
 
+/// A second fixed monthly amount for a company over the same dates. One fee a month covers a company, so the second
+/// would never be billed (D-080 (1)). Nothing was written.
+class SecondFixedAmount implements Exception {
+  const SecondFixedAmount();
+}
+
 /// What a worker earns in one group, set by hand there, per day or per hour (D-042).
 typedef MemberRate = ({int fils, RateBasis basis});
 
@@ -92,6 +98,7 @@ extension Masters on TenantDatabase {
         }
         // What receipts settled of a company's old balance stays settled (INV-05).
         if (existing != null && table.actualTableName == 'opening_balances') await keepOpeningSettled(existing);
+        if (table.actualTableName == 'billing_contracts') await _oneFixedAmount(rowId);
         return (await byId().getSingle()).toJson();
       },
     );
@@ -205,6 +212,17 @@ extension Masters on TenantDatabase {
     return rows.any(
       (c) => c.id != exceptId && c.siteId == siteId && c.workerId == workerId && datesOverlap(c.effectiveFrom, c.effectiveTo, from, to),
     );
+  }
+
+  /// Runs inside the write of billing contract [id]: refuses a fixed monthly amount whose dates meet another one of the
+  /// same company, at any site, since one fee a month covers the company (D-080 (1)). The same site and worker from
+  /// another start date is that amount's new rate, which replaces it from then on (CALC-06), not a second amount.
+  Future<void> _oneFixedAmount(String id) async {
+    final saved = await (select(billingContracts)..where((c) => c.id.equals(id))).getSingle();
+    if (saved.basis != RateBasis.monthFixed.name) return;
+    final others = await (select(billingContracts)..where((c) => c.clientId.equals(saved.clientId) & c.basis.equals(RateBasis.monthFixed.name) & c.id.equals(id).not())).get();
+    bool newRate(BillingContract c) => c.siteId == saved.siteId && c.workerId == saved.workerId && c.effectiveFrom != saved.effectiveFrom;
+    if (others.any((c) => !newRate(c) && datesOverlap(c.effectiveFrom, c.effectiveTo, saved.effectiveFrom, saved.effectiveTo))) throw const SecondFixedAmount();
   }
 
   /// Suggestion only. The owner can type any code, and uniqueness is still checked on save.

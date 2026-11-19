@@ -8,11 +8,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/app/side_panel.dart';
 import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/cash.dart';
+import 'package:labour_app/data/changes.dart';
 import 'package:labour_app/data/closing.dart';
 import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/payroll.dart';
 import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/data/tenant_database.dart';
+import 'package:labour_app/features/payroll/payroll_screen.dart';
 import 'package:labour_app/features/registers/register_defs.dart';
 import 'package:labour_app/l10n/app_localizations.dart';
 
@@ -89,6 +91,31 @@ void main() {
       expect((await db.closingFor(oct)).canClose, isTrue);
       await db.closeMonth(oct, operationId: newUuid());
       expect(await db.lockedThrough(), '2020-10-31');
+    });
+
+    test('D-080 (6) a worker whose only pay is a late correction taking money back does not stop closing, and it comes off the next pay', () async {
+      await db.postPayroll(sep, operationId: newUuid());
+      await db.postPayroll(oct, operationId: newUuid());
+      final paid = (await db.select(db.attendanceEntries).get()).firstWhere((e) => e.workDate == '2020-10-05');
+      await db.deleteAttendance(paid, reopenReason: 'x', operationId: newUuid());
+      await db.saveRow(db.workers, id: asif, operationId: newUuid(), fields: const WorkersCompanion(visaInstalmentFils: Value(5000)));
+      await db.addCashEntry(operationId: newUuid(), date: '2020-11-01', kind: CashKind.visaPaid, amountFils: 50000, workerId: asif);
+
+      final november = (await db.payrollFor(nov)).singleWhere((p) => p.worker.id == asif);
+      expect(november.figures.issues, {PayrollIssue.takesBackLater}, reason: 'nothing negative posts and no debt is made (D-104)');
+      final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+      expect(issueText(l10n, PayrollIssue.takesBackLater, november), 'AED 90.00 to take back from the next pay.');
+      expect(november.needsVisaInstalment, isFalse, reason: 'a month with nothing to cut from is given no instalment that would stop it');
+      await restOff(db, nov);
+      expect((await db.closingFor(nov)).findings, isEmpty);
+      await db.closeMonth(nov, operationId: newUuid());
+
+      await work(db, '2020-12-01');
+      await work(db, '2020-12-02');
+      final december = (await db.payrollFor('2020-12')).singleWhere((p) => p.worker.id == asif);
+      expect((december.figures.netFils, december.figures.adjustmentFils, december.canPost), (18000, -9000, true));
+      await db.postPayroll('2020-12', operationId: newUuid());
+      expect((await db.payrollFor('2020-12')).single.line!.adjustmentFils, -9000, reason: 'the minus came off the next pay with work');
     });
 
     test('attendance with no pay rate shows on its own date, and stops it', () async {
@@ -234,6 +261,70 @@ void main() {
       final bilal = await oldWorker('Bilal');
       await rate(db, bilal, 300000, from: '2020-01-01', basis: RateBasis.month);
       expect(await gapsOf('Bilal', '2020-08'), isEmpty);
+    });
+
+    test('D-080 (4) a monthly worker whose contract cuts absence is asked about exactly the days payroll cuts', () async {
+      final bilal = await oldWorker('Bilal');
+      await db.saveRow(
+        db.payContracts,
+        id: null,
+        operationId: newUuid(),
+        fields: PayContractsCompanion(
+          workerId: Value(bilal),
+          basis: Value(RateBasis.month.name),
+          rateFils: const Value(300000),
+          effectiveFrom: const Value('2020-01-01'),
+          partialMethod: Value(PartialMethod.calendarDays.name),
+          cutAbsence: const Value(true),
+          offWeekdays: const Value('5'),
+        ),
+      );
+      // His account starts at his first attendance, so August, which payroll does not cut, is not asked about (D-079 (3)).
+      await work(db, '2020-09-10', worker: bilal);
+      await work(db, '2020-09-15', worker: bilal, input: const ShiftInput(status: AttendanceStatus.absent));
+      await db.markDayOff('2020-09-16', [bilal], operationId: newUuid());
+
+      expect((await db.payrollFor('2020-08')).where((p) => p.worker.id == bilal), isEmpty, reason: 'before his account August is no month to post, though its Fridays are not cut');
+      final cut = (await db.payrollFor(sep)).singleWhere((p) => p.worker.id == bilal).figures.absentDays;
+      expect(cut, hasLength(30 - 4 - 2), reason: 'September less its four Fridays, the day worked and the day off');
+      final asked = await gapsOf('Bilal', sep);
+      expect(asked, [for (final d in cut) if (d != '2020-09-15') d], reason: 'the day marked absent is answered already');
+
+      await db.postPayroll(sep, operationId: newUuid());
+      expect((await gapsOf('Bilal', oct)).where((d) => d.startsWith(sep)), asked, reason: 'a posted cut is still asked about, so attendance left out can still come in');
+    });
+
+    test('D-080 (4) a monthly worker with nothing recorded at all is asked about as a daily worker is, from the day the app knew them', () async {
+      // Added on 15 September with a contract from his hiring date two years before (BUG-030): nothing before the 15th is asked.
+      final nadeem = newUuid();
+      await db.into(db.workers).insert(
+        WorkersCompanion.insert(id: nadeem, tenantId: testTenant, createdAtUtc: DateTime.utc(2020, 9, 15), updatedAtUtc: DateTime.utc(2020, 9, 15), actorId: 'a', sourceOperationId: 'op', code: 'Nadeem', name: 'Nadeem', joiningDate: const Value('2018-01-01')),
+      );
+      await db.saveRow(
+        db.payContracts,
+        id: null,
+        operationId: newUuid(),
+        fields: PayContractsCompanion(
+          workerId: Value(nadeem),
+          basis: Value(RateBasis.month.name),
+          rateFils: const Value(300000),
+          effectiveFrom: const Value('2018-01-01'),
+          partialMethod: Value(PartialMethod.calendarDays.name),
+          cutAbsence: const Value(true),
+          offWeekdays: const Value('5'),
+        ),
+      );
+      await db.markDayOff('2020-09-22', [nadeem], operationId: newUuid());
+      expect((await db.payrollFor(sep)).where((p) => p.worker.id == nadeem), isEmpty, reason: 'payroll still lists no month before his account starts');
+
+      final asked = await gapsOf('Nadeem', sep);
+      expect(asked, [
+        for (var d = '2020-09-15'; d.compareTo('2020-09-30') <= 0; d = addDays(d, 1))
+          if (weekdayOf(d) != DateTime.friday && d != '2020-09-22') d,
+      ], reason: 'no Friday, no day off, nothing before the app knew him');
+
+      await work(db, '2020-09-28', worker: nadeem);
+      expect(await gapsOf('Nadeem', sep), [for (final d in asked) if (d != '2020-09-28') d], reason: "once a row starts his account, payroll's cut days take over");
     });
 
     test('a closed month is not asked about again, and a day off cannot be dated in it', () async {

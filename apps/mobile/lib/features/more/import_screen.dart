@@ -51,6 +51,7 @@ String importProblemText(AppLocalizations l10n, ImportIssue issue) {
     ImportProblem.rateNeedsDate => l10n.problemRateDate,
     ImportProblem.noCompany => l10n.problemNoCompany,
     ImportProblem.twoCompanies => l10n.problemTwoCompanies,
+    ImportProblem.sameTimes => l10n.timesSame,
     ImportProblem.sameName => l10n.problemSameName,
     ImportProblem.trnWithoutVat => l10n.problemTrnWithoutVat,
   };

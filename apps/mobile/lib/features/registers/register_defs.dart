@@ -11,6 +11,7 @@ import '../../data/cash.dart';
 import '../../data/changes.dart';
 import '../../data/invoices.dart';
 import '../../data/masters.dart';
+import '../../data/payroll.dart' show PayrollOps;
 import '../../data/receipts.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
@@ -20,6 +21,7 @@ import '../invoices/invoice_paper.dart';
 import '../invoices/invoice_screen.dart' show vatCategoryLabel;
 import '../invoices/invoices_screen.dart' show invoiceStatusLabel;
 import '../payroll/pay_item_form_screen.dart' show payKindLabel;
+import '../payroll/salary_slip.dart' show absentDayList;
 import '../rates/rate_labels.dart';
 import '../today/attendance_review_screen.dart' show statusLabel;
 import 'register_model.dart';
@@ -462,6 +464,7 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
   final cash = groupedBy(await (db.select(db.cashEntries)..where((c) => c.workerId.isNotNull())).get(), (c) => c.workerId);
   final parts = await _salaryParts(db);
   final lines = groupedBy(await (db.select(db.payrollLines)..where((l) => l.reversed.equals(false))).get(), (l) => l.workerId);
+  final givenBack = await db.cutsGivenBack();
   final items = groupedBy(await db.select(db.payrollItems).get(), (i) => i.workerId);
   final openings = groupedBy(await (db.select(db.openingBalances)..where((b) => b.workerId.isNotNull())).get(), (b) => b.workerId);
   final members = groupedBy(await db.select(db.workerGroupMembers).get(), (g) => g.workerId);
@@ -497,6 +500,16 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
         ),
       for (final l in (lines[w.id] ?? const <PayrollLine>[]).where((l) => l.salaryFils != 0))
         _AccountLine(monthLastDay(l.periodFrom.substring(0, 7)), l.createdAtUtc, l10n.payrollSalary, earned: l.salaryFils, note: showMonth(l.periodFrom.substring(0, 7))),
+      // A day the salary cut, worked after all, gives its cut back on the month it was cut, as late work counts (D-080 (5)).
+      for (final l in lines[w.id] ?? const <PayrollLine>[])
+        if (givenBack[w.id]?[l.periodFrom.substring(0, 7)] case final given?)
+          _AccountLine(
+            monthLastDay(l.periodFrom.substring(0, 7)),
+            l.createdAtUtc,
+            l10n.payrollCutBack(given.length, absentDayList(given.keys.toList())),
+            earned: given.values.fold<int>(0, (total, fils) => total + fils),
+            note: showMonth(l.periodFrom.substring(0, 7)),
+          ),
       for (final i in items[w.id] ?? const <PayrollItem>[])
         () {
           final date = monthLastDay(i.periodFrom.substring(0, 7));

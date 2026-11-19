@@ -272,6 +272,7 @@
   "basisMonthFixed": "Per month, fixed contract",
   "endBeforeStart": "The end date is before the start date",
   "contractOverlap": "Another rate already covers these dates for the same site and worker. End that rate first.",
+  "contractSecondFixed": "This company already has a fixed monthly amount for these dates. Change that amount, or end it first.",
   "openingHeading": "Carried over from before",
   "openingSalaryOwed": "Old salary still owed to this worker",
   "openingAdvance": "Old advance to recover from this worker",
@@ -316,6 +317,7 @@
   "noLastTeam": "No earlier team found for this site.",
   "needSetupFirst": "Add a company, a site and a worker first.",
   "timesRequired": "Choose the start and end time.",
+  "timesSame": "Start and end are the same. Fix the end time.",
   "reviewTitle": "Review attendance",
   "totalClient": "To collect from company",
   "totalWorker": "To pay workers",
@@ -1415,6 +1417,7 @@
   "tsAdjustReason": "Why",
   "tsAdjustClear": "Back to the attendance figure",
   "tsAdjustSave": "Save",
+  "tsZeroHours": "0 hours means no work. To charge nothing, choose \"Not charged\".",
   "tsNotTaken": "Not charged",
   "tsAgreedRow": "Agreed: {reason}",
   "@tsAgreedRow": {
@@ -1749,7 +1752,7 @@
       }
     }
   },
-  "invCreditPartHelp": "Takes back part of the invoice, up to {amount}, such as a rate agreed lower later. The work stays charged on this invoice.",
+  "invCreditPartHelp": "Takes back part of the invoice, less than {amount}, such as a rate agreed lower later. The work stays charged on this invoice.",
   "@invCreditPartHelp": {
     "placeholders": {
       "amount": {
@@ -1769,6 +1772,7 @@
     }
   },
   "invCreditNothingLeft": "There is not that much left of this invoice to take back.",
+  "invCreditTakesAll": "That is all that is left of this invoice. Choose Whole invoice instead, so its work can go on a new invoice.",
   "findingChangedAfterInvoice": "{count, plural, =1{1 timesheet has attendance that changed after it was invoiced: {names}. Approve its new revision, then put the invoice right.} other{{count} timesheets have attendance that changed after it was invoiced: {names}. Approve their new revisions, then put the invoices right.}}",
   "@findingChangedAfterInvoice": {
     "placeholders": {
@@ -2351,6 +2355,25 @@
   "@issueRecoveryAsk": {
     "placeholders": {
       "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "issueTakesBackLater": "{amount} to take back from the next pay.",
+  "@issueTakesBackLater": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payrollCutBack": "Absence cut given back, {count, plural, =1{1 day} other{{count} days}}: {days}",
+  "@payrollCutBack": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "days": {
         "type": "String"
       }
     }
@@ -2946,7 +2969,7 @@
   },
   "planKeepReason": "Plan limit",
   "planKeepOpen": "Choose",
-  "accountOtherPhoneCopy": "The copy in the cloud is from another phone. Choose on the Backup page.",
+  "accountOtherPhoneCopy": "The cloud already has a copy of this company's data. Choose on the Backup page.",
   "accountNotOwner": "Only the company's owner sends the cloud backup.",
   "accountTooLarge": "The backup is over 50 MB, too large for the cloud. Save it as a file.",
   "signupBackupBody": "Your company's backup is locked with this password. It is not your account password, and this phone keeps it.",
@@ -2970,10 +2993,10 @@
   "cloudSignedOut": "Log in again with the password to send to the cloud.",
   "cloudUnavailable": "The cloud backup is not available in this app.",
   "cloudNeedsPassword": "Keep a backup password above first.",
-  "cloudOtherPhoneAsk": "The copy in the cloud is from another phone. Bring that data back here first, or send this phone's data in its place?",
+  "cloudOtherPhoneAsk": "The cloud already has a copy of this company's data. Bring that data back here first, or send this phone's data in its place?",
   "cloudBringBack": "Bring that data back first",
   "cloudKeepThis": "Keep this phone's data",
-  "cloudReplaceConfirm": "This phone's data goes to the cloud, and the other phone's copy may be removed. This can't be undone.",
+  "cloudReplaceConfirm": "This phone's data replaces the copy in the cloud. This can't be undone.",
   "cloudReplaceGo": "Yes, send this phone's data",
   "backupPasswordDue": "No backup password yet",
   "backupPasswordDueBody": "Without it the backup does not go to the cloud. Tap to set it.",

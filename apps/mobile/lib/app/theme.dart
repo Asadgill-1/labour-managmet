@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/attendance.dart';
 import '../data/closing.dart';
 import '../data/invoices.dart';
+import '../data/masters.dart';
 import '../data/plan_guard.dart';
 import '../data/receipts.dart';
 import '../data/tenant_database.dart';
@@ -353,8 +354,11 @@ String saveErrorText(AppLocalizations l10n, Object error) => switch (error) {
   InvoiceRefused(problem: InvoiceProblem.discountTooBig) => l10n.invDiscountTooBig,
   InvoiceRefused(problem: InvoiceProblem.wrongStep) => l10n.invWrongStep,
   InvoiceRefused(problem: InvoiceProblem.creditTooBig) => l10n.invCreditNothingLeft,
+  InvoiceRefused(problem: InvoiceProblem.creditTakesAll) => l10n.invCreditTakesAll,
   AlreadyBilled() => l10n.invWrongStep,
   OpeningSettled() => l10n.openingSettled,
+  SecondFixedAmount() => l10n.contractSecondFixed,
   EntryChanged() => l10n.entryChanged,
+  SameStartEnd() => l10n.timesSame,
   _ => l10n.saveFailed,
 };

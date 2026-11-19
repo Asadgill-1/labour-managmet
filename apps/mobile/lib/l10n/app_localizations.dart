@@ -1375,6 +1375,12 @@ abstract class AppLocalizations {
   /// **'Another rate already covers these dates for the same site and worker. End that rate first.'**
   String get contractOverlap;
 
+  /// No description provided for @contractSecondFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'This company already has a fixed monthly amount for these dates. Change that amount, or end it first.'**
+  String get contractSecondFixed;
+
   /// No description provided for @openingHeading.
   ///
   /// In en, this message translates to:
@@ -1536,6 +1542,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose the start and end time.'**
   String get timesRequired;
+
+  /// No description provided for @timesSame.
+  ///
+  /// In en, this message translates to:
+  /// **'Start and end are the same. Fix the end time.'**
+  String get timesSame;
 
   /// No description provided for @reviewTitle.
   ///
@@ -4519,6 +4531,12 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get tsAdjustSave;
 
+  /// No description provided for @tsZeroHours.
+  ///
+  /// In en, this message translates to:
+  /// **'0 hours means no work. To charge nothing, choose \"Not charged\".'**
+  String get tsZeroHours;
+
   /// No description provided for @tsNotTaken.
   ///
   /// In en, this message translates to:
@@ -5362,7 +5380,7 @@ abstract class AppLocalizations {
   /// No description provided for @invCreditPartHelp.
   ///
   /// In en, this message translates to:
-  /// **'Takes back part of the invoice, up to {amount}, such as a rate agreed lower later. The work stays charged on this invoice.'**
+  /// **'Takes back part of the invoice, less than {amount}, such as a rate agreed lower later. The work stays charged on this invoice.'**
   String invCreditPartHelp(String amount);
 
   /// No description provided for @invCreditAmount.
@@ -5394,6 +5412,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'There is not that much left of this invoice to take back.'**
   String get invCreditNothingLeft;
+
+  /// No description provided for @invCreditTakesAll.
+  ///
+  /// In en, this message translates to:
+  /// **'That is all that is left of this invoice. Choose Whole invoice instead, so its work can go on a new invoice.'**
+  String get invCreditTakesAll;
 
   /// No description provided for @findingChangedAfterInvoice.
   ///
@@ -6558,6 +6582,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{amount} of advance has no instalment. Say how much to cut this month.'**
   String issueRecoveryAsk(String amount);
+
+  /// No description provided for @issueTakesBackLater.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} to take back from the next pay.'**
+  String issueTakesBackLater(String amount);
+
+  /// No description provided for @payrollCutBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Absence cut given back, {count, plural, =1{1 day} other{{count} days}}: {days}'**
+  String payrollCutBack(int count, String days);
 
   /// No description provided for @cashInstalment.
   ///
@@ -8074,7 +8110,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountOtherPhoneCopy.
   ///
   /// In en, this message translates to:
-  /// **'The copy in the cloud is from another phone. Choose on the Backup page.'**
+  /// **'The cloud already has a copy of this company\'s data. Choose on the Backup page.'**
   String get accountOtherPhoneCopy;
 
   /// No description provided for @accountNotOwner.
@@ -8176,7 +8212,7 @@ abstract class AppLocalizations {
   /// No description provided for @cloudOtherPhoneAsk.
   ///
   /// In en, this message translates to:
-  /// **'The copy in the cloud is from another phone. Bring that data back here first, or send this phone\'s data in its place?'**
+  /// **'The cloud already has a copy of this company\'s data. Bring that data back here first, or send this phone\'s data in its place?'**
   String get cloudOtherPhoneAsk;
 
   /// No description provided for @cloudBringBack.
@@ -8194,7 +8230,7 @@ abstract class AppLocalizations {
   /// No description provided for @cloudReplaceConfirm.
   ///
   /// In en, this message translates to:
-  /// **'This phone\'s data goes to the cloud, and the other phone\'s copy may be removed. This can\'t be undone.'**
+  /// **'This phone\'s data replaces the copy in the cloud. This can\'t be undone.'**
   String get cloudReplaceConfirm;
 
   /// No description provided for @cloudReplaceGo.

@@ -121,12 +121,13 @@ void main() {
     cloud.addCloudCopy(tenant, 'old-phone');
     await tester.tap(find.text('Abhi cloud mein bhejein'));
     await until(tester, () => find.text('Is phone ka data rakhein').evaluate().isNotEmpty);
-    expect(find.textContaining('Cloud mein rakhi copy kisi aur phone ki hai. Pehle wo data yahan wapas laana hai'), findsOneWidget);
+    expect(find.textContaining('Cloud mein is company ke data ki copy pehle se rakhi hai. Pehle wo data yahan wapas laana hai'), findsOneWidget);
+    expect(find.textContaining('kisi aur phone'), findsNothing, reason: 'a reinstalled phone keeps its id, so the copy may be its own (D-080 (12))');
     expect(find.text('Pehle wo data wapas laayein'), findsOneWidget);
     expect(find.text('Abhi cloud mein bhejein'), findsNothing, reason: 'the question comes first');
 
     await tapAndSettle(tester, find.text('Is phone ka data rakhein'));
-    expect(find.text('Cloud mein is phone ka data jayega, aur doosre phone ki copy hat sakti hai. Ye wapas nahin hota.'), findsOneWidget);
+    expect(find.text('Cloud mein rakhi copy ki jagah is phone ka data jayega. Ye wapas nahin hota.'), findsOneWidget);
     await tapAndSettle(tester, find.text('Wapas'));
     expect(starts(), 2, reason: 'saying no sends nothing');
     await tapAndSettle(tester, find.text('Is phone ka data rakhein'));

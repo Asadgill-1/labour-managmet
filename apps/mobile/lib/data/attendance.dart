@@ -42,6 +42,18 @@ class AttendanceInvalid implements Exception {
   String toString() => 'AttendanceInvalid($workerIds)';
 }
 
+/// A worked row whose end equals its start would be paid as 24 hours, so it is never written (D-080 (9)). The screens
+/// say so at the field first.
+class SameStartEnd implements Exception {
+  const SameStartEnd();
+}
+
+/// Throws [SameStartEnd] for a worked row whose end equals its start. Every write of typed times goes through here:
+/// a batch, an edit before approval and a correction after it.
+void _refuseSameTimes(ShiftInput shift) {
+  if (shift.status != AttendanceStatus.absent && shift.startMinute != null && shift.startMinute == shift.endMinute) throw const SameStartEnd();
+}
+
 /// The row was corrected or deleted since it was read, so a correction of it would leave two rows for one piece of work (ATT-08).
 class EntryChanged implements Exception {
   const EntryChanged();
@@ -243,6 +255,9 @@ extension AttendanceOps on TenantDatabase {
       version: 1,
       action: 'create',
       change: () async {
+        for (final input in inputs) {
+          _refuseSameTimes(input.shift);
+        }
         final now = DateTime.now().toUtc();
         final bad = <String>[];
         final rows = <AttendanceEntriesCompanion>[];
@@ -291,6 +306,7 @@ extension AttendanceOps on TenantDatabase {
       reason: note,
       detail: detail,
       change: () async {
+        _refuseSameTimes(input.shift);
         final preview = await previewRow(workDate: old.workDate, clientId: old.clientId, siteId: old.siteId, input: input, exceptId: old.id);
         if (preview.blocksSave) throw AttendanceInvalid([input.workerId]);
         await (update(attendanceEntries)..where((e) => e.id.equals(old.id))).write(
@@ -328,6 +344,7 @@ extension AttendanceOps on TenantDatabase {
       change: () async {
         // The caller's copy can be stale: a row already corrected stays the original of that one correction only.
         if ((await (select(attendanceEntries)..where((e) => e.id.equals(old.id))).getSingle()).superseded) throw const EntryChanged();
+        _refuseSameTimes(input.shift);
         final preview = await previewRow(workDate: old.workDate, clientId: old.clientId, siteId: old.siteId, input: input, exceptId: old.id);
         if (preview.blocksSave) throw AttendanceInvalid([input.workerId]);
         await (update(attendanceEntries)..where((e) => e.id.equals(old.id))).write(const AttendanceEntriesCompanion(superseded: Value(true)));

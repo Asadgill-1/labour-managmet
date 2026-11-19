@@ -345,6 +345,15 @@ void main() {
     await tester.tap(find.text('Asif (W1)'));
     await settle(tester);
     expect(find.text(words.tsAdjustHelp), findsOneWidget);
+    // 0 hours on a worked row is refused at the field, so it can never be carried as a 24-hour day (D-080 (9)).
+    await tester.enterText(find.widgetWithText(TextFormField, words.tsAdjustHours), '0');
+    await tester.enterText(find.widgetWithText(TextFormField, words.tsAdjustReason), 'Typo');
+    await tester.tap(find.text(words.tsAdjustSave));
+    await settle(tester);
+    expect(find.text(words.tsZeroHours), findsOneWidget);
+    expect(find.text(words.tsCarryTitle), findsNothing, reason: 'nothing to carry');
+    expect(find.text(words.tsAdjustHelp), findsOneWidget, reason: 'the sheet stays open');
+    expect((await real(tester, () => app.select(app.timesheetRevisions).getSingle())).adjustments, isNot(contains('Typo')));
     await tester.enterText(find.widgetWithText(TextFormField, words.tsAdjustHours), '8');
     await tester.enterText(find.widgetWithText(TextFormField, words.tsAdjustReason), 'Site says eight hours');
     await tester.tap(find.text(words.tsAdjustSave));

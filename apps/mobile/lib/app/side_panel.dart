@@ -212,9 +212,13 @@ class _SubTab extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border(bottom: BorderSide(color: selected ? Colors.white : Colors.transparent, width: 3)),
           ),
-          child: Text(
-            label,
-            style: TextStyle(fontFamily: headingFont, fontSize: 14.5, fontWeight: selected ? FontWeight.w700 : FontWeight.w400, color: selected ? Colors.white : Colors.white.withValues(alpha: 0.82)),
+          // The bar keeps its height under the header, so a name too big for it shrinks to fit, never cut off (D-080 (10)).
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              style: TextStyle(fontFamily: headingFont, fontSize: 14.5, fontWeight: selected ? FontWeight.w700 : FontWeight.w400, color: selected ? Colors.white : Colors.white.withValues(alpha: 0.82)),
+            ),
           ),
         ),
       ),

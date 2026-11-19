@@ -17,6 +17,7 @@ import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/receipts.dart';
 import 'package:labour_app/data/tenant_database.dart';
 import 'package:labour_app/data/timesheets.dart';
+import 'package:labour_app/features/more/import_screen.dart' show importProblemText;
 import 'package:labour_app/features/registers/register_defs.dart';
 import 'package:labour_app/features/registers/register_model.dart';
 import 'package:labour_app/features/registers/salary_sheet.dart';
@@ -150,6 +151,16 @@ void main() {
       await db.applyImport(await db.planImport(ImportKind.sites, sites.split('\n').take(2).join('\n')));
       final palm = await (db.select(db.sites)..where((s) => s.name.equals('Palm'))).getSingle();
       expect((palm.defaultStartMinute, palm.defaultEndMinute, palm.defaultBreakMinutes), (420, 960, 60));
+    });
+
+    test('a site whose start and end are the same is a row problem, so it never comes in as a 24-hour day (D-080 (9))', () async {
+      final plan = await db.planImport(ImportKind.sites, 'Company,Site,Start,End\nEmaar,Gate,08:00,08:00\nEmaar,Yard,20:00,08:00\n');
+      expect(problems(plan), ['2 sameTimes', '3'], reason: 'an end before the start is the next day (ATT-06)');
+      final issue = plan.lines.first.issues.single;
+      expect((issue.field, plan.ready), (ImportField.end, false));
+      expect(importProblemText(l10n, issue), l10n.timesSame);
+      await expectLater(db.applyImport(plan), throwsStateError);
+      expect(await (db.select(db.sites)..where((s) => s.name.equals('Gate'))).get(), isEmpty);
     });
   });
 
@@ -308,5 +319,38 @@ void main() {
     expect({for (final r in byCompany.rows) '${r.cells[0]}': (r.cells[4], r.cells[6])}, {'Crew': (400000, 400000 - 27000), 'Fixed': (500000, 500000 - 27000)});
     expect([for (final e in sheet.entries) if (e.cells[7] != 0) '${e.group}: ${e.cells[2]}, ${e.cells[7]}'], ['Crew: ${l10n.sheetContract}, ${l10n.tsPeople(2)}, 400000', 'Fixed: ${l10n.sheetContract}, 500000']);
     expect(columnTotal(sheet.entries, 7), 900000, reason: 'the detail adds up to the same bill');
+  });
+
+  test("the owner's sheet counts a monthly contract whose rate changes inside the month once, at the newest rate, as the invoice charges it (D-080 (3))", () async {
+    Future<String> raised(String name, RateBasis basis, int old, int now, {required String before, required String after}) async {
+      final client = await db.saveRow(db.clients, id: null, operationId: newUuid(), fields: ClientsCompanion(name: Value(name)));
+      final site = await db.saveRow(db.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(client), name: const Value('Depot')));
+      for (final (fils, from) in [(old, '2020-01-01'), (now, '2020-10-16')]) {
+        await db.saveRow(db.billingContracts, id: null, operationId: newUuid(), fields: BillingContractsCompanion(clientId: Value(client), basis: Value(basis.name), rateFils: Value(fils), effectiveFrom: Value(from)));
+      }
+      for (final (worker, date) in [(ts.asif, before), (ts.bilal, before), (ts.asif, after)]) {
+        await db.saveAttendanceBatch(workDate: date, clientId: client, siteId: site, inputs: [EntryInput(workerId: worker, shift: ts.shift)], operationId: newUuid());
+      }
+      return client;
+    }
+
+    final fixed = await raised('Fixed', RateBasis.monthFixed, 500000, 600000, before: '2020-10-06', after: '2020-10-21');
+    final crew = await raised('Crew', RateBasis.monthPerWorker, 200000, 250000, before: '2020-10-07', after: '2020-10-22');
+    final sheet = await buildSalarySheet(db, l10n, '2020-10');
+    final [contribution, _, byCompany, _] = sheet.rollupsOf!(sheet.entries);
+    expect({for (final r in byCompany.rows) '${r.cells[0]}': r.cells[4]}, {'Crew': 200000 + 250000, 'Fixed': 600000}, reason: 'Bilal at the old rate, Asif once at the new; the fixed amount once, not 5,000 and 6,000');
+    expect(
+      [for (final e in sheet.entries) if (e.cells[7] != 0) '${e.group}: ${e.cells[2]}, ${e.cells[7]}'],
+      unorderedEquals(['Crew: ${l10n.sheetContract}, ${l10n.tsPeople(1)}, 200000', 'Crew: ${l10n.sheetContract}, ${l10n.tsPeople(1)}, 250000', 'Fixed: ${l10n.sheetContract}, 600000']),
+    );
+    expect(contribution.rows.first.cells[1], 600000 + 450000);
+
+    // The same figures the invoice charges.
+    for (final (client, fils) in [(fixed, 600000), (crew, 450000)]) {
+      final timesheet = await db.createTimesheet(clientId: client, from: ts.from, to: ts.to, operationId: newUuid());
+      await db.approveTimesheet((await db.timesheetView(timesheet)).revision.id, operationId: newUuid());
+      final invoice = await db.createInvoice(clientId: client, from: ts.from, to: ts.to, operationId: newUuid());
+      expect((await db.invoiceView(invoice)).lines.fold<int>(0, (total, l) => total + l.amountFils), fils);
+    }
   });
 }

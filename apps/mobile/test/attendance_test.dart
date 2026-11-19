@@ -1,11 +1,19 @@
 import 'package:domain/calc.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
-import 'package:flutter/widgets.dart' show Semantics;
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:labour_app/app/providers.dart';
+import 'package:labour_app/app/theme.dart' show saveErrorText;
 import 'package:labour_app/data/attendance.dart';
+import 'package:labour_app/data/changes.dart';
 import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/tenant_database.dart';
+import 'package:labour_app/features/companies/site_form_screen.dart';
+import 'package:labour_app/features/groups/group_form_screen.dart';
+import 'package:labour_app/features/today/row_editor_screen.dart';
+import 'package:labour_app/l10n/app_localizations.dart';
 
 import 'support.dart';
 
@@ -122,6 +130,30 @@ void main() {
       expect(await db.select(db.outbox).get(), hasLength(greaterThan(0)));
       final outbox = await db.select(db.outbox).get();
       expect(outbox.where((o) => o.entity == 'attendance_batches'), isEmpty);
+    });
+
+    test('D-080 (9) a worked row whose end equals its start is never written, new, edited or corrected; absent, or an end before the start, is', () async {
+      const same = ShiftInput(startMinute: 8 * 60, endMinute: 8 * 60);
+      await expectLater(world.save(world.rows(same)), throwsA(isA<SameStartEnd>()));
+      expect(await world.stored(), isEmpty);
+
+      await world.save([
+        EntryInput(workerId: world.workers[0], shift: const ShiftInput(status: AttendanceStatus.absent, startMinute: 8 * 60, endMinute: 8 * 60)),
+        EntryInput(workerId: world.workers[1], shift: const ShiftInput(startMinute: 20 * 60, endMinute: 8 * 60)),
+      ]);
+      Future<AttendanceEntry> night() async => (await world.stored()).singleWhere((e) => e.workerId == world.workers[1] && !e.superseded);
+      expect((await night()).clockMinutes, 12 * 60, reason: 'an end before the start is the next day (ATT-06)');
+
+      EntryInput typo(AttendanceEntry e) => EntryInput(workerId: e.workerId, shift: same);
+      await expectLater(db.editAttendance(await night(), typo(await night()), reopenReason: 'Edited', operationId: newUuid()), throwsA(isA<SameStartEnd>()));
+      await db.approveEntries(await world.stored(), operationId: newUuid());
+      await expectLater(db.editAttendance(await night(), typo(await night()), reopenReason: 'Edited', operationId: newUuid()), throwsA(isA<SameStartEnd>()), reason: 'a correction after approval too');
+      expect([for (final e in await world.stored()) (e.workerId, e.clockMinutes, e.superseded)], unorderedEquals([(world.workers[0], 0, false), (world.workers[1], 12 * 60, false)]));
+
+      for (final locale in const [Locale('en'), Locale('en', 'PK')]) {
+        final l10n = await AppLocalizations.delegate.load(locale);
+        expect(saveErrorText(l10n, const SameStartEnd()), l10n.timesSame, reason: 'the screens say it in plain words');
+      }
     });
 
     test('TC-008: a retry with the same operation saves once', () async {
@@ -392,5 +424,109 @@ void main() {
     expect(rows.where((r) => r.attendanceStatus == 'absent'), hasLength(1));
     expect(rows.every((r) => r.state == 'submitted'), isTrue);
     await shutDown(tester, db);
+  });
+
+  group('F02-9 a shift whose end equals its start is refused at the field, so a typo is not paid as 24 hours (D-080 (9))', () {
+    const same = 'Shuru aur khatam ka waqt ek hi hai. Khatam ka waqt theek karein.';
+
+    /// Opens [screen] over a blank page, as the app does, so a screen that saves shows it by closing with [closed].
+    Future<void> open(WidgetTester tester, TenantDatabase db, Widget screen, {ValueChanged<Object?>? closed}) async {
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [dbProvider.overrideWithValue(db)],
+          child: MaterialApp(
+            locale: const Locale('en', 'PK'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Builder(
+              builder: (context) => TextButton(
+                onPressed: () async => closed?.call(await Navigator.of(context).push<Object?>(MaterialPageRoute<Object?>(builder: (_) => screen))),
+                child: const Text('open'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('open'));
+      await settle(tester);
+    }
+
+    testWidgets("the day's attendance says so at the end field and does not go on", (tester) async {
+      final db = memoryDb();
+      // A site file brings its usual times in as written, so a site can hold 08:00 to 08:00.
+      await real(tester, () async {
+        final world = await seedWorld(db, workerCount: 1);
+        await db.saveRow(db.sites, id: world.siteId, operationId: newUuid(), fields: const SitesCompanion(defaultStartMinute: Value(8 * 60), defaultEndMinute: Value(8 * 60)));
+      });
+      await pumpApp(tester, db);
+      await tester.tap(find.text('Hazri lagayein'));
+      await settle(tester);
+      await tester.tap(find.text('Company').last);
+      await settle(tester);
+      await tester.tap(find.text('Emaar').last);
+      await settle(tester);
+      await tester.tap(find.text('Site').last);
+      await settle(tester);
+      await tester.tap(find.text('Marina').last);
+      await settle(tester);
+      expect(find.text(same), findsOneWidget, reason: 'said at the field as soon as the times match');
+
+      await tester.tap(find.text('Sab ko select'));
+      await settle(tester);
+      await tester.tap(find.text('Aage (1 mazdoor)'));
+      await settle(tester);
+      expect(find.text('Hazri review karein'), findsNothing, reason: 'a 24-hour shift never reaches the review');
+      expect(find.text(same), findsWidgets);
+      await shutDown(tester, db);
+    });
+
+    testWidgets('a row, a site and a group say so too and keep the screen open; an end before the start is still next day (ATT-06)', (tester) async {
+      final db = memoryDb();
+      late World world;
+      late WorkerGroup group;
+      await real(tester, () async {
+        world = await seedWorld(db, workerCount: 1);
+        await db.saveRow(db.sites, id: world.siteId, operationId: newUuid(), fields: const SitesCompanion(defaultStartMinute: Value(8 * 60), defaultEndMinute: Value(8 * 60)));
+        final id = await db.saveWorkerGroup(
+          id: null,
+          operationId: newUuid(),
+          members: {world.workers.single: null},
+          fields: const WorkerGroupsCompanion(name: Value('Team A'), startMinute: Value(8 * 60), endMinute: Value(8 * 60)),
+        );
+        group = await (db.select(db.workerGroups)..where((g) => g.id.equals(id))).getSingle();
+      });
+      EntryInput row(int end) => EntryInput(workerId: world.workers.single, shift: ShiftInput(startMinute: 8 * 60, endMinute: end));
+      Object? closed = 'open';
+
+      await open(tester, db, RowEditorScreen(title: 'Worker 1', input: row(8 * 60)), closed: (v) => closed = v);
+      expect(find.text(same), findsOneWidget);
+      await tester.tap(find.text('Theek hai'));
+      await settle(tester);
+      expect(closed, 'open', reason: 'the row is not handed back');
+
+      await open(tester, db, RowEditorScreen(title: 'Worker 1', input: row(7 * 60)), closed: (v) => closed = v);
+      expect(find.text(same), findsNothing);
+      await tester.tap(find.text('Theek hai'));
+      await settle(tester);
+      expect((closed! as RowEdit).input!.shift.endMinute, 7 * 60, reason: '08:00 to 07:00 is 23 hours, ending the next day');
+
+      final site = await real(tester, () => db.select(db.sites).getSingle());
+      closed = 'open';
+      await open(tester, db, SiteFormScreen(clientId: world.clientId, site: site), closed: (v) => closed = v);
+      expect(find.text(same), findsOneWidget);
+      await tester.tap(find.text('Save karein'));
+      await settle(tester);
+      expect(closed, 'open');
+      expect((await real(tester, () => db.select(db.sites).getSingle())).version, site.version, reason: 'nothing written');
+
+      await open(tester, db, GroupFormScreen(group: group), closed: (v) => closed = v);
+      expect(find.text(same), findsOneWidget);
+      await tester.tap(find.textContaining('Save karein'));
+      await settle(tester);
+      expect(closed, 'open');
+      expect((await real(tester, () => db.select(db.workerGroups).getSingle())).version, group.version);
+      await shutDown(tester, db);
+    });
   });
 }

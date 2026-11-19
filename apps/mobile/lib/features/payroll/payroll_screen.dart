@@ -28,6 +28,7 @@ String issueText(AppLocalizations l10n, PayrollIssue issue, WorkerPayroll p) => 
   PayrollIssue.monthNotStarted => l10n.issueNotStarted,
   PayrollIssue.monthClosed => l10n.issueClosed,
   PayrollIssue.recoveryNotAnswered => l10n.issueRecoveryAsk(formatAed(p.askRecoveryFils)),
+  PayrollIssue.takesBackLater => l10n.issueTakesBackLater(formatAed(-p.figures.adjustmentFils)),
 };
 
 /// One month's pay for everyone: review, then post with one confirmation (PAY-01).
@@ -159,7 +160,8 @@ class _PayrollRow extends StatelessWidget {
     final issue = p.figures.issues.firstOrNull;
     final (state, color) = p.posted
         ? (l10n.payrollStatePosted, settled)
-        : (issue != null ? (issueText(l10n, issue, p), due) : (l10n.payrollStateReady, muted));
+        // A minus waiting for the next pay is said plainly, not as a block (D-080 (6)).
+        : (issue != null ? (issueText(l10n, issue, p), issue == PayrollIssue.takesBackLater ? muted : due) : (l10n.payrollStateReady, muted));
     return RowCard(
       child: ListTile(
         leading: RowTag(initial(p.worker.name)),

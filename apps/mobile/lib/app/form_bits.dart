@@ -20,6 +20,10 @@ String? checkDays(String? value, {required int max, required String error}) {
   return days == null || days < 0 || days > max ? error : null;
 }
 
+/// A shift's end equal to its start is a typo, never 24 hours, so [error] at the end field (D-080 (9)). An end before
+/// the start is next day (ATT-06).
+String? checkShiftEnd(int? start, int? end, {required String error}) => start != null && start == end ? error : null;
+
 /// Gap between form rows, used by every form.
 const fieldGap = SizedBox(height: 14);
 
@@ -68,7 +72,7 @@ class Field extends StatelessWidget {
       keyboardType: keyboardType,
       autofillHints: autofillHints,
       maxLines: lines,
-      decoration: InputDecoration(labelText: label, helperText: helper, helperMaxLines: 4),
+      decoration: InputDecoration(labelText: label, helperText: helper, helperMaxLines: 4, errorMaxLines: 4),
     );
   }
 }
@@ -122,11 +126,14 @@ class DateField extends StatelessWidget {
 
 /// Time picked on a clock, held as minutes from midnight.
 class TimeField extends StatelessWidget {
-  const TimeField(this.label, {required this.value, required this.onChanged, this.startAt = 8 * 60, super.key});
+  const TimeField(this.label, {required this.value, required this.onChanged, this.startAt = 8 * 60, this.errorText, super.key});
 
   final String label;
   final int? value;
   final ValueChanged<int> onChanged;
+
+  /// Said under the field, such as [checkShiftEnd]'s.
+  final String? errorText;
 
   /// Where the clock opens while the field is empty. An end time opens later, so tapping OK at once never makes a
   /// 24-hour shift.
@@ -148,7 +155,7 @@ class TimeField extends StatelessWidget {
         if (picked != null) onChanged(picked.hour * 60 + picked.minute);
       },
       child: InputDecorator(
-        decoration: InputDecoration(labelText: label, suffixIcon: const Icon(Icons.schedule)),
+        decoration: InputDecoration(labelText: label, errorText: errorText, errorMaxLines: 4, suffixIcon: const Icon(Icons.schedule)),
         child: Text(value == null ? '' : showMinuteOfDay(value!)),
       ),
     );

@@ -261,13 +261,17 @@ class _Strip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 36,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+    // As tall as its chips, so they grow with the phone's text size instead of cutting it off (D-080 (10)).
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
         children: [
-          for (final child in children) Padding(padding: const EdgeInsets.only(right: 6), child: child),
+          for (final child in children)
+            Padding(
+              padding: const EdgeInsets.only(right: 6),
+              child: ConstrainedBox(constraints: const BoxConstraints(minHeight: 36), child: child),
+            ),
         ],
       ),
     );

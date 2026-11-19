@@ -15,8 +15,9 @@ import 'timesheets.dart';
 /// How far an invoice has gone (INV-07). Paid, partly paid and overdue derive from its receipts (`PayState`).
 enum InvoiceStatus { draft, issued, credited }
 
-/// Why an invoice can't be made or issued as it stands. Nothing was written.
-enum InvoiceProblem { nothingToBill, noCompanyDetails, noTrn, discountTooBig, wrongStep, creditTooBig }
+/// Why an invoice can't be made or issued as it stands. Nothing was written. [creditTakesAll]: a credit for an amount
+/// would take all that is left, which only a whole credit note may do, since that frees the work (D-080 (2)).
+enum InvoiceProblem { nothingToBill, noCompanyDetails, noTrn, discountTooBig, wrongStep, creditTooBig, creditTakesAll }
 
 class InvoiceRefused implements Exception {
   const InvoiceRefused(this.problem);
@@ -307,8 +308,8 @@ extension InvoiceOps on TenantDatabase {
     final draft = InvoiceDraft.fromJson(inv.draft);
     final sheets = await _timesheetsFor(inv);
     final all = sheets.isEmpty ? const <BillableLine>[] : await billableLines(sheets.map((t) => t.id), from: inv.fromDate, to: inv.toDate, siteId: inv.siteId);
-    final byKey = <String, List<TimesheetLine>>{};
     final sources = <InvoiceSource>[];
+    final billing = <(Timesheet, TimesheetLine)>[];
     for (final t in sheets) {
       final mine = all.where((b) => b.line.timesheetId == t.id).toList();
       final ready = mine.where((b) => b.hold == null).toList();
@@ -316,13 +317,25 @@ extension InvoiceOps on TenantDatabase {
       if (ready.isEmpty && count(BillHold.disputed) == 0 && count(BillHold.changed) == 0) continue;
       final skipped = draft.skipped.contains(t.id);
       sources.add(InvoiceSource(timesheet: t, skipped: skipped, ready: ready.length, disputed: count(BillHold.disputed), changed: count(BillHold.changed)));
-      if (skipped) continue;
-      for (final b in ready) {
-        final l = b.line;
-        // One fee a month, whichever timesheets hold its work (TS-08).
-        final key = l.amountFils == null ? 'fee|${l.basis}|${l.rateFils}|${l.workDate.substring(0, 7)}' : 'ts|${t.id}|${l.siteId}|${l.trade ?? ''}|${l.basis}|${l.rateFils}';
-        (byKey[key] ??= []).add(l);
-      }
+      if (!skipped) billing.addAll([for (final b in ready) (t, b.line)]);
+    }
+    // A monthly fee goes at the rate of its newest row in the month, so a rate changed mid-month charges it once: a fixed
+    // fee once a month, a fee per worker once for each worker (D-080 (3)).
+    final newest = <String, TimesheetLine>{};
+    String? coverOf(TimesheetLine l) => l.amountFils == null ? feeCover(inv.clientId, l.basis, l.workDate, l.workerId) : null;
+    for (final (_, l) in billing) {
+      if (coverOf(l) case final cover? when (newest[cover]?.workDate ?? '').compareTo(l.workDate) <= 0) newest[cover] = l;
+    }
+    int rateOf(TimesheetLine l) => newest[coverOf(l)]?.rateFils ?? l.rateFils;
+    final byKey = <String, List<TimesheetLine>>{};
+    for (final (t, l) in billing) {
+      // One fee a month, whichever timesheets hold its work (TS-08). A fixed fee's key has no rate, so a figure the owner
+      // typed stays with its month.
+      final month = l.workDate.substring(0, 7);
+      final key = l.amountFils == null
+          ? (l.basis == RateBasis.monthFixed.name ? 'fee|${l.basis}|$month' : 'fee|${l.basis}|${rateOf(l)}|$month')
+          : 'ts|${t.id}|${l.siteId}|${l.trade ?? ''}|${l.basis}|${l.rateFils}';
+      (byKey[key] ??= []).add(l);
     }
     final numbers = {for (final t in sheets) t.id: t.number};
     final before = await fixedFeeCharges(clientId: inv.clientId);
@@ -330,6 +343,7 @@ extension InvoiceOps on TenantDatabase {
       for (final MapEntry(:key, value: rows) in byKey.entries)
         () {
           final first = rows.first;
+          final rate = rateOf(first);
           final basis = RateBasis.values.byName(first.basis);
           final dates = rows.map((l) => l.workDate).toList()..sort();
           final sites = rows.map((l) => l.siteName).toSet();
@@ -340,7 +354,7 @@ extension InvoiceOps on TenantDatabase {
               for (final c in before)
                 if (c.month == dates.first.substring(0, 7)) (number: c.number, fils: c.fils),
           ];
-          final rest = clientMonthlyCharge(basis, rateFils: first.rateFils, workerCount: persons) - earlier.fold<int>(0, (total, c) => total + c.fils);
+          final rest = clientMonthlyCharge(basis, rateFils: rate, workerCount: persons) - earlier.fold<int>(0, (total, c) => total + c.fils);
           final amount = isPeriodBasis(basis) ? draft.fees[key] ?? rest : rows.fold(0, (total, l) => total + l.amountFils!);
           final discount = draft.discounts[key] ?? 0;
           return InvoiceLineView(
@@ -359,7 +373,7 @@ extension InvoiceOps on TenantDatabase {
             },
             // One month at what this invoice charges of it, so the paper's quantity times price is its amount (D-059).
             // ponytail: a fee per worker the owner changed still prints its rate; split it per worker if that is billed in parts.
-            unitPriceFils: basis == RateBasis.monthFixed ? amount : first.rateFils,
+            unitPriceFils: basis == RateBasis.monthFixed ? amount : rate,
             amountFils: amount,
             discountFils: discount,
             fromDate: dates.first,
@@ -757,6 +771,8 @@ extension InvoiceOps on TenantDatabase {
         };
         final taken = invoiceTotals(lines.map((l) => l.tax)).totalFils;
         if (taken <= 0 || taken > left.totalFils) throw const InvoiceRefused(InvoiceProblem.creditTooBig);
+        // Taken back for an amount, the invoice still stands, so a whole credit note must always be left to free its work.
+        if (!whole && taken == left.totalFils) throw const InvoiceRefused(InvoiceProblem.creditTakesAll);
 
         final now = DateTime.now().toUtc();
         final today = dubaiToday(now);

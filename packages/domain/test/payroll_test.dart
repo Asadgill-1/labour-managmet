@@ -72,6 +72,27 @@ void main() {
       expect(periodSalary([noRule], month, through: '2026-10-31'), isNull);
       expect(periodSalary([noRule], month, present: days(month, (_) => true), through: '2026-10-31')?.fils, 300000);
     });
+
+    test('D-080 (8) a part month with a day cut rounds once, and the cut is the part pay less what is paid (D-101)', () {
+      final late = RateTerms(basis: RateBasis.month, rateFils: 100000, effectiveFrom: '2026-10-29', partialMethod: PartialMethod.calendarDays, cutAbsence: true);
+      final pay = periodSalary([late], month, present: const {'2026-10-30', '2026-10-31'}, through: '2026-10-31');
+      // 100,000 x 2 / 31 = 6,451.6, so 6,452. The part month alone is 100,000 x 3 / 31 = 9,677.
+      expect((pay?.fils, pay?.cutFils), (6452, 9677 - 6452));
+    });
+
+    test('D-080 (5) attendance added late gives each cut day back, and all of them give back exactly the cut, never a fil more', () {
+      final late = RateTerms(basis: RateBasis.month, rateFils: 100000, effectiveFrom: '2026-10-29', partialMethod: PartialMethod.calendarDays, cutAbsence: true);
+      final posted = periodSalary([late], month, present: const {'2026-10-31'}, through: '2026-10-31')!;
+      expect((posted.cutFils, posted.absent.join(' ')), (6451, '2026-10-29 2026-10-30'));
+      Map<String, int> back({Set<String> before = const {}, required Set<String> worked}) =>
+          cutGivenBack([late], month, cutFils: posted.cutFils, cutDays: posted.absent, back: before, worked: worked);
+
+      // One day alone would round to 3,226 twice, which is 6,452: one fil more than was cut.
+      expect(back(worked: const {'2026-10-29', '2026-10-30'}), {'2026-10-29': 3226, '2026-10-30': 3225});
+      expect(back(worked: const {'2026-10-30', '2026-10-31', '2026-09-30'}), {'2026-10-30': 3226}, reason: 'a day that was never cut gives nothing back');
+      expect(back(before: const {'2026-10-29'}, worked: const {'2026-10-29', '2026-10-30'}), {'2026-10-30': 3225}, reason: 'a day given back already is not given twice');
+      expect(back(worked: const {}), isEmpty);
+    });
   });
 
   group('a closed month (REP-04)', () {
@@ -143,6 +164,16 @@ void main() {
       expect(f.issues, {PayrollIssue.negativeNet});
     });
 
+    test('D-080 (6) a month with no work and no item of its own, only a late correction taking money back, waits for the next pay', () {
+      const back = WorkLine('2026-09-15', 0, alreadyPaidFils: 10000);
+      final waiting = figures(work: const [back]);
+      expect((waiting.netFils, waiting.adjustmentFils), (0, -10000));
+      expect(waiting.issues, {PayrollIssue.takesBackLater});
+      expect(figures(work: const [back, WorkLine('2026-10-15', 15000)]).issues, isEmpty, reason: 'next pay with work takes it off');
+      expect(figures(work: const [back], items: const [PayItemLine(PayItemKind.allowance, 5000)]).issues, {PayrollIssue.negativeNet}, reason: 'a month with an item of its own still stops');
+      expect(figures(work: const [back], contracts: [monthly(5000)]).issues, {PayrollIssue.negativeNet}, reason: 'and so does one with a salary');
+    });
+
     test('no limit is built in, and a company limit counts recovery too', () {
       const work = [WorkLine('2026-10-15', 100000)];
       const items = [PayItemLine(PayItemKind.roomCharge, 40000), PayItemLine(PayItemKind.advanceRecovery, 10001)];
@@ -176,6 +207,35 @@ void main() {
       ];
       expect(figures(contracts: raise).salaryFils, 210000 + 200000);
       expect(figures(contracts: [monthly(200000), monthly(900000, site: 'site-1')]).salaryFils, 200000);
+    });
+
+    group('D-080 (7) when monthly contracts cover the whole month between them, each part is its share of the month by its days', () {
+      const divisor = PartialMethod.fixedDivisor;
+
+      test('the same salary either side of a change pays exactly one month, by a fixed divisor too', () {
+        final same = [monthly(300000, to: '2026-10-15', method: divisor, divisor: 30), monthly(300000, from: '2026-10-16', method: divisor, divisor: 30)];
+        expect(figures(contracts: same).salaryFils, 300000, reason: 'not 1,500 + 1,600 = 3,100 by a divisor of 30 in a 31-day month');
+        expect(figures(contracts: [monthly(300000, method: divisor, divisor: 30)]).salaryFils, 300000, reason: 'one contract for the whole month is its amount exactly');
+      });
+
+      test('a raise in February pays between the two salaries', () {
+        final raise = [monthly(300000, to: '2026-02-14', method: divisor, divisor: 30), monthly(330000, from: '2026-02-15', method: divisor, divisor: 30)];
+        // 3,000 x 14/28 + 3,300 x 14/28, where the divisor would give 1,400 + 1,540 = 2,940, less than either month.
+        expect(figures(contracts: raise, period: '2026-02', current: '2026-02').salaryFils, 315000);
+      });
+
+      test("a month joined or left part way is still the contract's own rule, and calendar days pay as before", () {
+        expect(figures(contracts: [monthly(300000, from: '2026-10-22', method: divisor, divisor: 30)]).salaryFils, 100000);
+        expect(figures(contracts: [monthly(300000, to: '2026-10-10', method: divisor, divisor: 30)]).salaryFils, 100000);
+        final joinedThenRaised = [monthly(300000, from: '2026-10-12', to: '2026-10-21', method: divisor, divisor: 30), monthly(600000, from: '2026-10-22', method: divisor, divisor: 30)];
+        expect(figures(contracts: joinedThenRaised).salaryFils, 100000 + 200000);
+        expect(figures(contracts: [monthly(310000, from: '2026-10-22', method: PartialMethod.calendarDays)]).salaryFils, 100000);
+        final calendar = [
+          monthly(310000, to: '2026-10-21', method: PartialMethod.calendarDays),
+          monthly(620000, from: '2026-10-22', method: PartialMethod.calendarDays),
+        ];
+        expect(figures(contracts: calendar).salaryFils, 410000);
+      });
     });
 
     test('a daily worker has no period pay', () {

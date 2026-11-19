@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:domain/calc.dart';
@@ -9,12 +10,14 @@ import 'package:domain/money.dart';
 import 'package:domain/payroll.dart';
 import 'package:drift/drift.dart' show BooleanExpressionOperators, Value;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show RenderParagraph;
+import 'package:flutter/services.dart' show FontLoader;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/documents/document_frame.dart';
 import 'package:labour_app/app/providers.dart';
 import 'package:labour_app/app/side_panel.dart';
-import 'package:labour_app/app/theme.dart' show MainActionBar;
+import 'package:labour_app/app/theme.dart' show AppPalette, MainActionBar, usePalette;
 import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/cash.dart';
 import 'package:labour_app/data/import.dart';
@@ -379,6 +382,34 @@ void main() {
       expect(first[l10n.colBalance], -13000);
     });
 
+    test('D-080 (5) a day a posted salary cut, worked after all, gives its cut back on the account, so the balance still equals pay owed', () async {
+      final karim = await db.saveRow(db.workers, id: null, operationId: newUuid(), fields: const WorkersCompanion(code: Value('W3'), name: Value('Karim')));
+      await db.saveRow(
+        db.payContracts,
+        id: null,
+        operationId: newUuid(),
+        fields: PayContractsCompanion(
+          workerId: Value(karim),
+          basis: Value(RateBasis.month.name),
+          rateFils: const Value(300000),
+          effectiveFrom: const Value('2020-10-01'),
+          partialMethod: Value(PartialMethod.calendarDays.name),
+          cutAbsence: const Value(true),
+        ),
+      );
+      Future<void> work(String date) => db.saveAttendanceBatch(workDate: date, clientId: emaar, siteId: marina, inputs: [EntryInput(workerId: karim, shift: shift)], operationId: newUuid());
+      for (var d = 1; d <= 31; d++) {
+        if (d != 5) await work('2020-10-${d.toString().padLeft(2, '0')}');
+      }
+      await db.postPayroll('2020-10', operationId: newUuid());
+      await work('2020-10-05');
+
+      final rows = rowsOf(await build(Section.workerRegister), 'Karim');
+      // 3,000 less 3,000 x 30 / 31 = 2,903.23 is the day the posting cut.
+      expect(rows.singleWhere((r) => r[l10n.colWhat] == l10n.payrollCutBack(1, '5'))[l10n.colEarned], 300000 - 290323);
+      expect(rows.last[l10n.colBalance], (await db.payrollFor('2020-11')).singleWhere((p) => p.worker.id == karim).payableFils);
+    });
+
     test('allowances, deductions and monthly salary all land on the account, and an undone month stays honest', () async {
       await db.savePayItem(id: null, workerId: imran, month: '2020-10', kind: PayItemKind.allowance, amountFils: 500, reason: 'Food', authorizedBy: null, note: null, roomId: null, operationId: newUuid());
       await db.applyRoomCharges('2020-10', charges: {imran: 300}, reason: l10n.payKindRoom, ownerApproved: 'Owner', operationId: newUuid());
@@ -698,6 +729,59 @@ void main() {
     await tester.pump();
     await tester.pump();
     expect(find.text('4 entries'), findsOneWidget, reason: 'other dates can still be picked after an error');
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets("F04-8 large text never cuts off a register's date chips or a sub-tab's name (D-080 (10))", (tester) async {
+    // The app's own font, since the test font's short lines fit where a phone's do not.
+    await tester.runAsync(() async {
+      final roboto = FontLoader('Roboto');
+      for (final weight in ['Regular', 'Medium', 'Bold']) {
+        roboto.addFont(File('assets/fonts/Roboto-$weight.ttf').readAsBytes().then(ByteData.sublistView));
+      }
+      await roboto.load();
+    });
+    final all = await real(tester, () => build(Section.attendanceRegister));
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    Future<void> pumpAt(double scale) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [dbProvider.overrideWithValue(db), registerProvider.overrideWith((ref, q) => Stream.value(all))],
+          child: MaterialApp(
+            theme: usePalette(AppPalette.blue),
+            locale: const Locale('en', 'PK'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            builder: (context, child) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)), child: child!),
+            home: const LedgerScreen(Section.attendanceRegister, allDates: true),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      expect(tester.takeException(), isNull, reason: 'nothing overflows');
+    }
+
+    // A phone's largest text, 2.0, under the app's own large text, which adds 1.3 times (app.dart).
+    await pumpAt(2.6);
+
+    /// Cut off is a text box shorter than its text, or a box poking out of its row.
+    void expectWhole(Finder label, Finder row) {
+      final paragraph = tester.renderObject<RenderParagraph>(label);
+      expect(paragraph.size.height, greaterThanOrEqualTo(paragraph.getMaxIntrinsicHeight(paragraph.size.width) - 0.01), reason: 'the text is clipped to a shorter box');
+      final (text, box) = (tester.getRect(label), tester.getRect(row));
+      expect((text.top >= box.top - 0.01, text.bottom <= box.bottom + 0.01), (true, true), reason: '$text lies inside $box');
+    }
+
+    final chip = find.text(l10n.regThisMonth);
+    final tab = find.descendant(of: find.byType(SubTabs), matching: find.text(l10n.regAttendance));
+    expectWhole(chip, find.ancestor(of: chip, matching: find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.right)).first);
+    expectWhole(tab, find.byType(SubTabs));
+
+    await pumpAt(1);
+    expect(tester.getRect(tab).height, closeTo(tester.renderObject<RenderParagraph>(tab).size.height, 0.01), reason: 'a name that fits keeps its size');
     await tester.pumpWidget(const SizedBox());
   });
 }

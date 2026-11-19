@@ -518,7 +518,16 @@ class _AdjustSheetState extends State<_AdjustSheet> {
               if (_byHour && _status != AttendanceStatus.absent) ...[
                 Row(
                   children: [
-                    Expanded(child: Field(l10n.tsAdjustHours, _hours, keyboardType: TextInputType.number, validator: whole, onChanged: (_) => _refigure())),
+                    Expanded(
+                      child: Field(
+                        l10n.tsAdjustHours,
+                        _hours,
+                        keyboardType: TextInputType.number,
+                        // No hours is no work, and carried to the attendance it would end where it starts: 24 hours (D-080 (9)).
+                        validator: (v) => whole(v) ?? (_typedMinutes == 0 ? l10n.tsZeroHours : null),
+                        onChanged: (_) => _refigure(),
+                      ),
+                    ),
                     const SizedBox(width: 12),
                     Expanded(child: Field(l10n.tsAdjustMinutes, _minutes, keyboardType: TextInputType.number, validator: whole, onChanged: (_) => _refigure())),
                   ],

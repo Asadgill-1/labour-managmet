@@ -3,6 +3,7 @@ import 'package:domain/cash.dart';
 
 import '../../data/statement.dart';
 import '../../data/tenant_database.dart';
+import '../../data/timesheets.dart' show feeCover;
 import '../../l10n/app_localizations.dart';
 import 'register_defs.dart';
 import 'register_model.dart';
@@ -35,13 +36,15 @@ Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, 
 
   final byKey = <(String, String, String, String?, int?, String?, int?), _Line>{};
   // A monthly contract's days carry no amount, so its amount for the month is the company's bill, invoiced or not: once
-  // on a fixed contract, once a worker on one per worker (D-055). Each contract is a line of its own under its company.
-  final contracts = <(String, String, int), Set<String>>{};
+  // on a fixed contract, once a worker on one per worker (D-055), at the newest rate in the month, as the invoice
+  // charges it (D-080 (3)). Each rate is a line of its own under its company.
+  final newest = <String, AttendanceEntry>{};
   for (final s in statements) {
     for (final e in s.work) {
       if (e.attendanceStatus == AttendanceStatus.absent.name) continue;
       if (e.clientBasis case final basis? when e.clientRateFils != null && isPeriodBasis(RateBasis.values.byName(basis))) {
-        (contracts[(e.clientId, basis, e.clientRateFils!)] ??= {}).add(e.workerId);
+        final cover = feeCover(e.clientId, basis, e.workDate, e.workerId);
+        if ((newest[cover]?.workDate ?? '').compareTo(e.workDate) <= 0) newest[cover] = e;
       }
       final line = byKey[(e.clientId, e.siteId, e.workerId, e.clientBasis, e.clientRateFils, e.workerBasis, e.workerRateFils)] ??= _Line(e.clientId, e.siteId, s, e);
       line.days++;
@@ -51,6 +54,10 @@ Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, 
       line.pay += e.workerAmountFils ?? 0;
       if (e.clientRateFils == null) line.noRate++;
     }
+  }
+  final contracts = <(String, String, int), Set<String>>{};
+  for (final e in newest.values) {
+    (contracts[(e.clientId, e.clientBasis!, e.clientRateFils!)] ??= {}).add(e.workerId);
   }
   String company(_Line l) => clients[l.clientId] ?? '';
   final lines = byKey.values.toList()
