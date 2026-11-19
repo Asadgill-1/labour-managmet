@@ -77,12 +77,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String membersCount(int count) {
-    return '$count workers';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count workers',
+      one: '1 worker',
+    );
+    return '$_temp0';
   }
 
   @override
   String saveWithCount(int count) {
-    return 'Save ($count workers)';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count workers',
+      one: '1 worker',
+    );
+    return 'Save ($_temp0)';
   }
 
   @override
@@ -317,9 +329,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get menuBackup => 'Backup';
-
-  @override
-  String get menuPlan => 'Plan';
 
   @override
   String get menuHelp => 'Help';
@@ -690,6 +699,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Another rate already covers these dates for the same site and worker. End that rate first.';
 
   @override
+  String get contractSecondFixed =>
+      'This company already has a fixed monthly amount for these dates. Change that amount, or end it first.';
+
+  @override
   String get openingHeading => 'Carried over from before';
 
   @override
@@ -774,6 +787,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timesRequired => 'Choose the start and end time.';
+
+  @override
+  String get timesSame => 'Start and end are the same. Fix the end time.';
 
   @override
   String get reviewTitle => 'Review attendance';
@@ -893,7 +909,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String nextWithCount(int count) {
-    return 'Next ($count workers)';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count workers',
+      one: '1 worker',
+    );
+    return 'Next ($_temp0)';
   }
 
   @override
@@ -903,7 +925,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String missingWorkers(int count, String names) {
-    return '$count workers have no attendance: $names';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count workers have',
+      one: '1 worker has',
+    );
+    return '$_temp0 no attendance: $names';
   }
 
   @override
@@ -1078,7 +1106,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String payrollPosted(int count) {
-    return 'Payroll posted for $count workers';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count workers',
+      one: '1 worker',
+    );
+    return 'Payroll posted for $_temp0';
   }
 
   @override
@@ -1091,7 +1125,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String roomChargesApplied(int count) {
-    return 'Room charge added for $count workers';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count workers',
+      one: '1 worker',
+    );
+    return 'Room charge added for $_temp0';
   }
 
   @override
@@ -1301,6 +1341,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wageDueDaysError => 'A whole number from 0 to 90.';
+
+  @override
+  String get termsDaysError => 'A whole number from 0 to 365.';
 
   @override
   String get tabClosing => 'Close month';
@@ -1945,7 +1988,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String slipDayCount(int days) {
-    return '$days days';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -2003,7 +2052,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String sheetCompanyHead(int workers, int sites) {
-    return '$workers workers, $sites sites';
+    String _temp0 = intl.Intl.pluralLogic(
+      workers,
+      locale: localeName,
+      other: '$workers workers',
+      one: '1 worker',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      sites,
+      locale: localeName,
+      other: '$sites sites',
+      one: '1 site',
+    );
+    return '$_temp0, $_temp1';
   }
 
   @override
@@ -2403,12 +2464,24 @@ class AppLocalizationsEn extends AppLocalizations {
     String to,
     int count,
   ) {
-    return '$basis, $rate: $from to $to, $count people. The contract amount goes on the invoice by the month, not from these rows.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count people',
+      one: '1 person',
+    );
+    return '$basis, $rate: $from to $to, $_temp0. The contract amount goes on the invoice by the month, not from these rows.';
   }
 
   @override
   String tsMonthlyLinePlain(String basis, String from, String to, int count) {
-    return '$basis: $from to $to, $count people.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count people',
+      one: '1 person',
+    );
+    return '$basis: $from to $to, $_temp0.';
   }
 
   @override
@@ -2548,6 +2621,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tsAdjustSave => 'Save';
+
+  @override
+  String get tsZeroHours =>
+      '0 hours means no work. To charge nothing, choose \"Not charged\".';
 
   @override
   String get tsNotTaken => 'Not charged';
@@ -3078,7 +3155,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String invCreditPartHelp(String amount) {
-    return 'Takes back part of the invoice, up to $amount, such as a rate agreed lower later. The work stays charged on this invoice.';
+    return 'Takes back part of the invoice, less than $amount, such as a rate agreed lower later. The work stays charged on this invoice.';
   }
 
   @override
@@ -3098,6 +3175,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get invCreditNothingLeft =>
       'There is not that much left of this invoice to take back.';
+
+  @override
+  String get invCreditTakesAll =>
+      'That is all that is left of this invoice. Choose Whole invoice instead, so its work can go on a new invoice.';
 
   @override
   String findingChangedAfterInvoice(int count, String names) {
@@ -3499,7 +3580,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String importSave(int count) {
-    return 'Save $count lines';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lines',
+      one: '1 line',
+    );
+    return 'Save $_temp0';
   }
 
   @override
@@ -3509,7 +3596,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String importSummary(int total, int bad, int warned) {
-    return '$total lines: $bad with mistakes, $warned to check';
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total lines',
+      one: '1 line',
+    );
+    return '$_temp0: $bad with mistakes, $warned to check';
   }
 
   @override
@@ -3532,6 +3625,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importEmpty => 'The file has no lines under its headings.';
+
+  @override
+  String importUnclosedQuote(int row) {
+    return 'Row $row opens a quote mark (\") that never closes, so the rest of the file can\'t be read. Fix that row in the file and choose it again. Nothing has been saved.';
+  }
 
   @override
   String importRow(int row) {
@@ -3746,6 +3844,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Entries carry its name, so it can\'t be deleted. It is archived already.';
 
   @override
+  String get entryChanged =>
+      'This row was changed after you opened it. Open it again.';
+
+  @override
+  String get openingSettled =>
+      'Money received from this company already settled this old amount. It can\'t go below what was received against it, or be deleted. Delete those receipts in the cash book first.';
+
+  @override
   String get archivedDone => 'Archived. Its entries stay as they are.';
 
   @override
@@ -3833,6 +3939,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String issueRecoveryAsk(String amount) {
     return '$amount of advance has no instalment. Say how much to cut this month.';
+  }
+
+  @override
+  String issueTakesBackLater(String amount) {
+    return '$amount to take back from the next pay.';
+  }
+
+  @override
+  String payrollCutBack(int count, String days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return 'Absence cut given back, $_temp0: $days';
   }
 
   @override
@@ -3983,6 +4105,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get accountSignedOut =>
       'Log in again with your password to check the plan.';
+
+  @override
+  String get accountPasswordAgain =>
+      'For this step, type your login password again.';
 
   @override
   String get accountSlipsWaiting =>
@@ -4236,7 +4362,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String backupDueDays(int count) {
-    return 'No backup for $count days';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return 'No backup for $_temp0';
   }
 
   @override
@@ -4785,7 +4917,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountOtherPhoneCopy =>
-      'The copy in the cloud is from another phone. Choose on the Backup page.';
+      'The cloud already has a copy of this company\'s data. Choose on the Backup page.';
 
   @override
   String get accountNotOwner =>
@@ -4848,7 +4980,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cloudOtherPhoneAsk =>
-      'The copy in the cloud is from another phone. Bring that data back here first, or send this phone\'s data in its place?';
+      'The cloud already has a copy of this company\'s data. Bring that data back here first, or send this phone\'s data in its place?';
 
   @override
   String get cloudBringBack => 'Bring that data back first';
@@ -4858,7 +4990,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cloudReplaceConfirm =>
-      'This phone\'s data goes to the cloud, and the other phone\'s copy may be removed. This can\'t be undone.';
+      'This phone\'s data replaces the copy in the cloud. This can\'t be undone.';
 
   @override
   String get cloudReplaceGo => 'Yes, send this phone\'s data';
@@ -5313,9 +5445,6 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get menuBackup => 'Backup';
 
   @override
-  String get menuPlan => 'Plan';
-
-  @override
   String get menuHelp => 'Madad';
 
   @override
@@ -5685,6 +5814,10 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
       'In tareekhon ke liye isi site aur mazdoor ka doosra rate pehle se hai. Pehle us rate ko khatam karein.';
 
   @override
+  String get contractSecondFixed =>
+      'In tareekhon ke liye is company ki fixed mahana raqam pehle se hai. Usi raqam ko badlein, ya pehle use khatam karein.';
+
+  @override
   String get openingHeading => 'Pichla baqaya';
 
   @override
@@ -5769,6 +5902,10 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get timesRequired => 'Shuru aur khatam ka waqt chunein.';
+
+  @override
+  String get timesSame =>
+      'Shuru aur khatam ka waqt ek hi hai. Khatam ka waqt theek karein.';
 
   @override
   String get reviewTitle => 'Hazri review karein';
@@ -6284,6 +6421,9 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get wageDueDaysError => '0 se 90 tak poora number likhein.';
+
+  @override
+  String get termsDaysError => '0 se 365 tak poora number likhein.';
 
   @override
   String get tabClosing => 'Mahina band';
@@ -7509,6 +7649,10 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get tsAdjustSave => 'Save karein';
 
   @override
+  String get tsZeroHours =>
+      '0 ghante ka matlab hai koi kaam nahin. Kuch charge na karna ho to \"Bill nahin\" chunein.';
+
+  @override
   String get tsNotTaken => 'Bill nahin';
 
   @override
@@ -7891,7 +8035,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String invCreditPartHelp(String amount) {
-    return 'Invoice ka kuch hissa wapas leta hai, $amount tak, jaise baad mein kam tay hua rate. Kaam isi invoice par rehta hai.';
+    return 'Invoice ka kuch hissa wapas leta hai, $amount se kam, jaise baad mein kam tay hua rate. Kaam isi invoice par rehta hai.';
   }
 
   @override
@@ -7911,6 +8055,10 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String get invCreditNothingLeft =>
       'Is invoice mein itni raqam baqi nahin jo wapas ho sake.';
+
+  @override
+  String get invCreditTakesAll =>
+      'Yeh is invoice ki saari baqi raqam hai. Is ke bajaye Poora invoice chunein, taake is ka kaam naye invoice par ja sake.';
 
   @override
   String findingChangedAfterInvoice(int count, String names) {
@@ -8348,6 +8496,11 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String get importEmpty => 'File mein headings ke neeche koi line nahin.';
 
   @override
+  String importUnclosedQuote(int row) {
+    return 'Line $row mein ek quote (\") khulta hai jo band nahin hota, is liye baqi file parhi nahin ja sakti. File mein woh line theek karein aur dobara chunein. Abhi kuch save nahin hua.';
+  }
+
+  @override
   String importRow(int row) {
     return 'Line $row';
   }
@@ -8560,6 +8713,14 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
       'Is ke naam se entries hain, is liye delete nahin ho sakta. Yeh pehle se archived hai.';
 
   @override
+  String get entryChanged =>
+      'Yeh entry aap ke kholne ke baad badal gayi. Dobara kholein.';
+
+  @override
+  String get openingSettled =>
+      'Is company se mila paisa is purane lene mein lag chuka hai. Yeh us se kam nahin ho sakta, na delete ho sakta hai. Pehle cash book se woh raseedein delete karein.';
+
+  @override
   String get archivedDone => 'Archive ho gaya. Entries waisi hi hain.';
 
   @override
@@ -8627,6 +8788,16 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String issueRecoveryAsk(String amount) {
     return '$amount advance ki qist nahin likhi. Batayein is mahine kitna katna hai.';
+  }
+
+  @override
+  String issueTakesBackLater(String amount) {
+    return '$amount agli tankhwah se kaat liya jayega.';
+  }
+
+  @override
+  String payrollCutBack(int count, String days) {
+    return '$count din ki chhutti ki katoti wapas: $days';
   }
 
   @override
@@ -8778,6 +8949,10 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String get accountSignedOut =>
       'Plan check karne ke liye password se dobara login karein.';
+
+  @override
+  String get accountPasswordAgain =>
+      'Is kaam ke liye apna login password dobara likhein.';
 
   @override
   String get accountSlipsWaiting =>
@@ -9556,7 +9731,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get accountOtherPhoneCopy =>
-      'Cloud mein rakhi copy kisi aur phone ki hai. Backup ke page par chunein.';
+      'Cloud mein is company ke data ki copy pehle se rakhi hai. Backup ke page par chunein.';
 
   @override
   String get accountNotOwner =>
@@ -9618,7 +9793,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get cloudOtherPhoneAsk =>
-      'Cloud mein rakhi copy kisi aur phone ki hai. Pehle wo data yahan wapas laana hai, ya is phone ka data us ki jagah bhejna hai?';
+      'Cloud mein is company ke data ki copy pehle se rakhi hai. Pehle wo data yahan wapas laana hai, ya is phone ka data us ki jagah bhejna hai?';
 
   @override
   String get cloudBringBack => 'Pehle wo data wapas laayein';
@@ -9628,7 +9803,7 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
 
   @override
   String get cloudReplaceConfirm =>
-      'Cloud mein is phone ka data jayega, aur doosre phone ki copy hat sakti hai. Ye wapas nahin hota.';
+      'Cloud mein rakhi copy ki jagah is phone ka data jayega. Ye wapas nahin hota.';
 
   @override
   String get cloudReplaceGo => 'Haan, is phone ka data bhejein';

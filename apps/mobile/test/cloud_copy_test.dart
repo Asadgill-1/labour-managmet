@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:drift/drift.dart' show Value;
@@ -110,12 +111,40 @@ void main() {
     final later = sender();
     await later.load();
     await later.sendIfDue();
-    expect(starts(), 1, reason: 'the question waits for the owner');
+    expect(starts(), 0, reason: 'the question waits for the owner; this phone never sent a copy, so it asks before the cloud does (BUG-020)');
 
     await later.sendNow(replace: true);
     expect(cloud.cloudFiles, hasLength(1));
     expect(cloud.cloudCopies.last['replace'], isTrue);
     expect(later.view.problem, isNull);
+
+    // Once this phone has sent, the cloud itself refuses when another phone's copy is newer.
+    cloud.addCloudCopy(testTenant, 'old-phone', at: '2026-11-16T08:00:00.000Z');
+    now = now.add(const Duration(days: 1));
+    await change();
+    await later.sendIfDue();
+    expect(starts(), 2);
+    expect(later.view.problem, AccountProblem.otherPhoneCopy);
+  });
+
+  test("after a reinstall the phone's empty company never replaces this same phone's earlier copy by itself (BUG-020)", () async {
+    // The phone's id survives a reinstall or clearing the app's data (D-063); the kept record of the copies does not.
+    final here = await thisDeviceId(storage);
+    cloud.addCloudCopy(testTenant, here, bytes: Uint8List.fromList(List.filled(64, 7)));
+    final old = cloud.cloudFiles.keys.single;
+    final s = sender();
+    await s.load();
+    await s.sendIfDue();
+    expect(starts(), 0, reason: 'the cloud would take it, as the copy is from this phone, and then remove the real one');
+    expect(cloud.cloudFiles.keys, [old]);
+    expect(s.view.problem, AccountProblem.otherPhoneCopy, reason: 'the Backup page asks the owner');
+    await s.sendNow();
+    expect(starts(), 0, reason: 'sending without the choice asks the same');
+
+    await s.sendNow(replace: true);
+    expect(cloud.cloudCopies.single['replace'], isTrue, reason: "the owner's choice still replaces it");
+    expect(cloud.cloudFiles.keys, isNot(contains(old)));
+    expect(s.view.problem, isNull);
   });
 
   test("once the cloud's newest copy is brought back, this phone's next copy takes its place without the question (D-078)", () async {

@@ -51,6 +51,7 @@ String importProblemText(AppLocalizations l10n, ImportIssue issue) {
     ImportProblem.rateNeedsDate => l10n.problemRateDate,
     ImportProblem.noCompany => l10n.problemNoCompany,
     ImportProblem.twoCompanies => l10n.problemTwoCompanies,
+    ImportProblem.sameTimes => l10n.timesSame,
     ImportProblem.sameName => l10n.problemSameName,
     ImportProblem.trnWithoutVat => l10n.problemTrnWithoutVat,
   };
@@ -151,7 +152,9 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
           l10n.importSummary(plan.lines.length, bad, warned),
           action: TextButton(onPressed: _busy ? null : _choose, child: Text(l10n.importChooseAgain)),
         ),
-        if (plan.missingColumns.isNotEmpty)
+        if (plan.unclosedQuoteRow case final row?)
+          NoteRow(icon: Icons.error_outline, text: l10n.importUnclosedQuote(row), color: due)
+        else if (plan.missingColumns.isNotEmpty)
           NoteRow(icon: Icons.error_outline, text: l10n.importMissingColumns(plan.missingColumns.map((f) => f.heading).join(', ')), color: due)
         else if (plan.lines.isEmpty)
           NoteRow(icon: Icons.error_outline, text: l10n.importEmpty, color: due)

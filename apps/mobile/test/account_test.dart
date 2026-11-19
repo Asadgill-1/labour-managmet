@@ -174,6 +174,24 @@ void main() {
     expect(cloud.phones, isEmpty, reason: 'the phone is free for a new account');
   });
 
+  test('a deletion whose answer was lost finishes on the retry once the cloud says the login is gone; no answer never does (BUG-021)', () async {
+    cloud.addUser('owner@test.ae', 'pass1234', company: phoneTenant);
+    await account.signIn('owner@test.ae', 'pass1234');
+    await account.openCompany();
+
+    cloud.deleteAnswerLost = true;
+    expect(await problem(() => account.deleteAccount('pass1234')), AccountProblem.offline);
+    expect(cloud.users, isEmpty, reason: 'the cloud deleted it; only the answer was lost');
+    cloud
+      ..deleteAnswerLost = false
+      ..offline = true;
+    expect(await problem(() => account.deleteAccount('pass1234')), AccountProblem.offline, reason: 'no answer is never "gone" (D-067)');
+
+    cloud.offline = false;
+    await account.deleteAccount('pass1234');
+    expect(cloud.calls.where((c) => c.path == '/rest/v1/rpc/delete_account'), hasLength(1), reason: 'nothing is sent again');
+  });
+
   test('a deleted company leaves no key and no file on the phone', () async {
     final dir = await Directory.systemTemp.createTemp('t19c');
     addTearDown(() => dir.delete(recursive: true));
@@ -231,6 +249,42 @@ void main() {
     await account.signIn('owner@test.ae', 'pass1234');
     await account.openCompany();
     expect(await account.phoneIsOff(company), isFalse, reason: 'the owner signing in again turns the phone back on');
+  });
+
+  test('turning a phone off with a password typed over ten minutes ago asks for it again, then works (BUG-023)', () async {
+    const company = '00000000-0000-4000-8000-0000000000c9';
+    const old = '00000000-0000-4000-8000-0000000000e1';
+    cloud.addUser('owner@test.ae', 'pass1234', company: company);
+    await account.signIn('owner@test.ae', 'pass1234');
+    await account.openCompany();
+    cloud.addPhone('owner@test.ae', old, 'Galaxy A51', '2026-11-03T06:00:00Z');
+    final phone = (await account.phones()).last;
+
+    cloud.passwordOld = true;
+    expect(account.signedIn, isTrue, reason: 'signed in earlier in this run');
+    expect(await problem(() => account.turnPhoneOff(phone.id)), AccountProblem.passwordAgain);
+    expect(cloud.offPhones, isEmpty);
+    await account.signInAgain('pass1234');
+    await account.turnPhoneOff(phone.id);
+    expect(cloud.offPhones, {old});
+  });
+
+  test("an owner's phone turned off opens again only with the password typed; after an emailed code it is asked (BUG-024)", () async {
+    const company = '00000000-0000-4000-8000-0000000000c9';
+    cloud.addUser('owner@test.ae', 'pass1234', company: company);
+    // The company turned this phone off earlier; its session's password is old, as a session kept on a lost phone is.
+    final here = await thisDeviceId(storage);
+    cloud.offPhones.add(here);
+    await account.signIn('owner@test.ae', 'pass1234');
+    cloud.passwordOld = true;
+    expect(await problem(account.openCompany), AccountProblem.passwordAgain, reason: 'said plainly, never a generic failure');
+    expect(await account.binding(), isNull);
+
+    // A forgotten password replaced with the emailed code: the new password is typed, so the phone comes back on.
+    await account.sendReset('owner@test.ae');
+    await account.resetPassword('owner@test.ae', FakeCloud.code, 'newpass99');
+    expect(await account.openCompany(), company);
+    expect(cloud.offPhones, isEmpty);
   });
 
   group('the licence (T21b)', () {

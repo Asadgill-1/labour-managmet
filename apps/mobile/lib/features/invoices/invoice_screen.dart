@@ -662,7 +662,9 @@ class _CreditSheetState extends State<_CreditSheet> {
                   validator: (text) {
                     final fils = parseAed(text ?? '');
                     if (fils == null || fils <= 0) return l10n.amountInvalid;
-                    return lineTax(fils, bps: inv.vatBps, inclusive: inv.pricesIncludeVat).totalFils > v.leftFils ? l10n.invCreditTooBig(left) : null;
+                    final taken = lineTax(fils, bps: inv.vatBps, inclusive: inv.pricesIncludeVat).totalFils;
+                    if (taken > v.leftFils) return l10n.invCreditTooBig(left);
+                    return taken == v.leftFils ? l10n.invCreditTakesAll : null;
                   },
                 ),
                 fieldGap,

@@ -99,3 +99,5 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 | T26 | Independent reviews, pilot fixes, benchmarks, store forms, full regression | BILL-07..09, BUILD-02, BUILD-04..06, OPS-07, QA-01 | NOT_STARTED | - |
 
 **Gate:** Store, billing and privacy gates plus full regression pass. Only now a release candidate.
+
+**Audit:** an independent audit of T01 to T21 ran on 2026-11-15 to 2026-11-20, on branch `audit/t01-t21` (`docs/audit/`, D-079, and the owner's answers to its questions, D-080; PR #2). It counts toward T26's independent reviews; it is not T26.

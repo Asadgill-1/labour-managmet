@@ -24,6 +24,10 @@ enum PayrollIssue {
 
   /// An advance with no instalment is left, and the owner has not said how much of it to cut this month (D-057).
   recoveryNotAnswered,
+
+  /// No work and no item of the month's own, only a late correction taking money back. Nothing negative posts (D-104):
+  /// the minus waits for the next pay, and the month can still close (D-080 (6)).
+  takesBackLater,
 }
 
 class PayItemLine {
@@ -82,13 +86,30 @@ class PayrollFigures {
 
   /// What posting adds to the worker's account.
   int get dueFils => netFils + adjustmentFils;
-  bool get isEmpty => grossFils == 0 && adjustmentFils == 0 && allowancesFils == 0 && deductionsFils == 0 && recoveryFils == 0 && visaFils == 0;
+  /// A salary cut whole for absence is not empty, since the cut shows day by day (D-057).
+  bool get isEmpty => grossFils == 0 && absenceFils == 0 && adjustmentFils == 0 && allowancesFils == 0 && deductionsFils == 0 && recoveryFils == 0 && visaFils == 0;
 }
 
-/// A worker's monthly pay for one period (CALC-04). Each day goes to one contract, so overlapping contracts never pay
-/// twice. On a contract that cuts absence, a day up to [through] with no attendance in [present], that is no weekly day
-/// off and not [excused] by the owner, is cut at the contract's own part-month rule, so no legal default is built
-/// (D-057). No [through] cuts nothing. Null when a part period or a cut has no method: stop for review (D-102).
+/// The monthly contract that pays [day]: a general one before a site's, then the latest start. Each day goes to one
+/// contract, so overlapping contracts never pay twice (CALC-04).
+RateTerms? salaryContractOn(Iterable<RateTerms> contracts, String day) => (contracts.where((c) => c.basis == RateBasis.month && c.coversDate(day)).toList()
+      ..sort((a, b) {
+        final general = (a.siteId == null ? 0 : 1).compareTo(b.siteId == null ? 0 : 1);
+        return general != 0 ? general : b.effectiveFrom.compareTo(a.effectiveFrom);
+      }))
+    .firstOrNull;
+
+/// A day with no attendance cuts [contract]'s salary: the contract cuts absence and the day is no weekly day off (D-057).
+bool cutsOn(RateTerms contract, String day) => contract.cutAbsence && !contract.offWeekdays.contains(weekdayOf(day));
+
+int _lcm(int a, int b) => a ~/ a.gcd(b) * b;
+
+/// A worker's monthly pay for one period (CALC-04). When the monthly contracts cover the whole month between them, each
+/// part is its share of the month by its days, so one salary either side of a change pays one month exactly (D-080 (7)).
+/// A month joined or left part way is each contract's own part-month rule. On a contract that cuts absence, a day up to
+/// [through] with no attendance in [present], that is no weekly day off and not [excused] by the owner, is cut at the
+/// contract's own rule, so no legal default is built (D-057). No [through] cuts nothing. The pay and what is left of it
+/// after the cut each round once (D-101). Null when a part period or a cut has no method: stop for review (D-102).
 ({int fils, int cutFils, List<String> absent})? periodSalary(
   Iterable<RateTerms> contracts,
   String month, {
@@ -96,47 +117,69 @@ class PayrollFigures {
   Set<String> excused = const {},
   String? through,
 }) {
-  final monthly = contracts.where((c) => c.basis == RateBasis.month).toList()
-    ..sort((a, b) {
-      final general = (a.siteId == null ? 0 : 1).compareTo(b.siteId == null ? 0 : 1);
-      return general != 0 ? general : b.effectiveFrom.compareTo(a.effectiveFrom);
-    });
+  final monthly = contracts.where((c) => c.basis == RateBasis.month).toList();
   final last = monthLastDay(month);
   final covered = <RateTerms, int>{};
   final absent = <RateTerms, List<String>>{};
   var days = 0;
   for (var day = monthFirstDay(month); day.compareTo(last) <= 0; day = addDays(day, 1)) {
     days++;
-    final contract = monthly.where((c) => c.coversDate(day)).firstOrNull;
+    final contract = salaryContractOn(monthly, day);
     if (contract == null) continue;
     covered[contract] = (covered[contract] ?? 0) + 1;
-    if (contract.cutAbsence &&
-        through != null &&
-        day.compareTo(through) <= 0 &&
-        !present.contains(day) &&
-        !excused.contains(day) &&
-        !contract.offWeekdays.contains(weekdayOf(day))) {
+    if (through != null && day.compareTo(through) <= 0 && !present.contains(day) && !excused.contains(day) && cutsOn(contract, day)) {
       (absent[contract] ??= []).add(day);
     }
   }
-  var total = 0;
-  var cut = 0;
-  for (final MapEntry(key: c, value: coveredDays) in covered.entries) {
-    final pay = monthlySalary(monthlyFils: c.rateFils, coveredDays: coveredDays, daysInPeriod: days, method: c.partialMethod, fixedDivisor: c.partialDivisor);
-    if (pay == null) return null;
-    final off = absent[c]?.length ?? 0;
-    final perDay = switch (c.partialMethod) {
-      PartialMethod.calendarDays => days,
-      PartialMethod.fixedDivisor when (c.partialDivisor ?? 0) > 0 => c.partialDivisor,
-      _ => null,
-    };
-    if (off > 0 && perDay == null) return null;
-    // A fixed divisor below the month's days could cut more than the month pays.
-    final less = off == 0 ? 0 : min(pay, divRoundHalfUp(c.rateFils * off, perDay!));
-    total += pay - less;
-    cut += less;
+  final whole = covered.values.fold(0, (total, n) => total + n) == days;
+  int? ownRule(RateTerms c) => switch (c.partialMethod) {
+    PartialMethod.calendarDays => days,
+    PartialMethod.fixedDivisor when (c.partialDivisor ?? 0) > 0 => c.partialDivisor,
+    _ => null,
+  };
+  // Every part over one denominator, so the sums are exact before their one rounding.
+  // ponytail: rate x days x denominator stays in 64 bits up to about AED 10^12 a month even with mixed divisors.
+  var units = 1;
+  for (final c in covered.keys) {
+    final share = whole ? days : ownRule(c);
+    final cut = absent.containsKey(c) ? ownRule(c) : 1;
+    if (share == null || cut == null) return null;
+    units = _lcm(_lcm(units, share), cut);
   }
-  return (fils: total, cutFils: cut, absent: [for (final d in absent.values) ...d]..sort());
+  var pay = 0;
+  var left = 0;
+  for (final MapEntry(key: c, value: n) in covered.entries) {
+    final part = c.rateFils * n * (units ~/ (whole ? days : ownRule(c)!));
+    final off = absent[c]?.length ?? 0;
+    pay += part;
+    // A fixed divisor below the month's days could cut more than the part pays.
+    left += off == 0 ? part : max(0, part - c.rateFils * off * (units ~/ ownRule(c)!));
+  }
+  final fils = divRoundHalfUp(left, units);
+  return (fils: fils, cutFils: divRoundHalfUp(pay, units) - fils, absent: [for (final d in absent.values) ...d]..sort());
+}
+
+/// What attendance added after posting gives back of a posted month's absence cut, day by day in date order (D-080 (5)).
+/// [cutDays] are the days the posting cut for [cutFils], [back] those a later posting gave back already, and [worked] those
+/// with attendance now. Each day gives the cut on the days still missing before it less the cut after it, priced as the
+/// posting priced it, so the days together give back exactly the cut, never a fil more.
+Map<String, int> cutGivenBack(Iterable<RateTerms> contracts, String month, {required int cutFils, required List<String> cutDays, Set<String> back = const {}, required Set<String> worked}) {
+  final terms = contracts.toList();
+  final last = monthLastDay(month);
+  final missing = {...cutDays}..removeAll(back);
+  // Null only if a contract lost its rule since, and then nothing more is given back.
+  int? cutOnMissing() => periodSalary(terms, month, present: {for (var d = monthFirstDay(month); d.compareTo(last) <= 0; d = addDays(d, 1)) if (!missing.contains(d)) d}, through: last)?.cutFils;
+  int? left;
+  final given = <String, int>{};
+  for (final day in cutDays) {
+    if (back.contains(day) || !worked.contains(day)) continue;
+    left ??= missing.length == cutDays.length ? cutFils : cutOnMissing() ?? 0;
+    missing.remove(day);
+    final after = cutOnMissing() ?? left;
+    given[day] = left - after;
+    left = after;
+  }
+  return given;
 }
 
 bool _monthlyCovers(Iterable<RateTerms> contracts, String month) {
@@ -144,7 +187,9 @@ bool _monthlyCovers(Iterable<RateTerms> contracts, String month) {
 }
 
 /// One worker's month before posting (PAY-01). [limitBps] is the company's own deduction limit, as a share of
-/// earnings. No limit is built in, because that is law for a reviewer to configure (PAY-07).
+/// earnings. No limit is built in, because that is law for a reviewer to configure (PAY-07). With nothing posted yet,
+/// [firstMonth] is the month the worker's account starts counting a salary from, so no month from then on can be skipped (D-042 (5)).
+/// [itemMonths] are earlier months still holding an item no line has taken: this month waits for them, or they could never post.
 PayrollFigures workerPayroll({
   required String month,
   required String currentMonth,
@@ -155,6 +200,8 @@ PayrollFigures workerPayroll({
   int visaLeftFils = 0,
   int unpricedRows = 0,
   String? lastPostedMonth,
+  String? firstMonth,
+  Set<String> itemMonths = const {},
   String? closedMonth,
   int? limitBps,
   Set<String> present = const {},
@@ -177,6 +224,7 @@ PayrollFigures workerPayroll({
   final later = lastPostedMonth != null && lastPostedMonth.compareTo(month) >= 0;
   final closed = closedMonth != null && month.compareTo(closedMonth) <= 0;
   // A month behind the latest posted one cannot pay a salary any more, and nor can a closed one. Only late rows carry forward.
+  final checkFrom = lastPostedMonth != null ? addMonths(lastPostedMonth, 1) : firstMonth;
   final pay = later || closed ? (fils: 0, cutFils: 0, absent: const <String>[]) : periodSalary(contracts, month, present: present, excused: excused, through: through);
   final salary = pay?.fils;
   final allowances = sum(const {PayItemKind.allowance});
@@ -196,12 +244,14 @@ PayrollFigures workerPayroll({
     if (later) PayrollIssue.laterMonthPosted,
     if (closed) PayrollIssue.monthClosed,
     if (askRecovery) PayrollIssue.recoveryNotAnswered,
-    if (lastPostedMonth != null)
-      for (var m = addMonths(lastPostedMonth, 1); m.compareTo(month) < 0; m = addMonths(m, 1))
+    if (checkFrom != null)
+      for (var m = checkFrom; m.compareTo(month) < 0; m = addMonths(m, 1))
         // A closed month can no longer be posted, so it never holds up a later one (REP-04).
         if ((closedMonth == null || m.compareTo(closedMonth) > 0) && _monthlyCovers(contracts, m)) PayrollIssue.earlierMonthMissing,
-    // Never carried as debt by itself (D-104).
-    if (net < 0 || net + adjustment < 0) PayrollIssue.negativeNet,
+    for (final m in itemMonths)
+      if (m.compareTo(month) < 0 && (closedMonth == null || m.compareTo(closedMonth) > 0)) PayrollIssue.earlierMonthMissing,
+    // Never carried as debt by itself (D-104). With no work and no item of the month's own, the minus waits (D-080 (6)).
+    if (net < 0 || net + adjustment < 0) earned == 0 && salary == 0 && items.isEmpty ? PayrollIssue.takesBackLater : PayrollIssue.negativeNet,
   };
   return PayrollFigures(
     earnedFils: earned,

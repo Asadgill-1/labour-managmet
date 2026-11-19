@@ -42,6 +42,11 @@ void main() {
     await tester.drag(panel, const Offset(0, -3000));
     await settle(tester);
     expect(find.text('Jald'), findsWidgets);
+    // BUG-015: only what is not built stays here. Plan is built and opens from Settings (F04-4).
+    for (final soon in ['Team', 'Madad']) {
+      expect(find.text(soon), findsOneWidget, reason: soon);
+    }
+    expect(find.text('Plan'), findsNothing, reason: 'built, so it left the list');
     // The list is longer than the screen now, so bring the row up first.
     await tester.ensureVisible(find.text('Reports'));
     await tester.pump();

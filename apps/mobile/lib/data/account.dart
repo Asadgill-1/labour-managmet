@@ -31,6 +31,9 @@ enum AccountProblem {
   signedOut,
   slipsWaiting,
 
+  /// The cloud takes this step only with the password typed in the last ten minutes (D-066, D-073).
+  passwordAgain,
+
   /// The cloud's latest backup copy came from another phone (T20d).
   otherPhoneCopy,
   notOwner,
@@ -147,6 +150,9 @@ class Account {
   Future<void> resetPassword(String email, String code, String password) => _run(() async {
     await _auth.verifyOTP(email: email, token: code, type: OtpType.recovery);
     await _auth.updateUser(UserAttributes(password: password));
+    // A session from the emailed code carries no password, and the cloud turns an owner's phone back on only with
+    // one typed just now (D-073), so the new password signs in.
+    await _auth.signInWithPassword(email: email, password: password);
   });
 
   /// After a sign-in, puts the user's company on this device. Null means they have none yet.
@@ -425,12 +431,31 @@ class Account {
   /// server takes only a session signed in with it in the last minutes, so a phone left open cannot. The company's slip
   /// files go first, as SQL cannot remove a stored file. The caller then removes the company from this phone.
   Future<void> deleteAccount(String password) => _run(() async {
+    // A deletion sent before may have gone through with its answer lost. Only the cloud saying this login no longer
+    // exists counts as gone, never a network error (D-067), and then the phone's side finishes as after any deletion.
+    if (_deleteSent && await _userGone()) return;
     await _auth.signInWithPassword(email: (await binding())!.email, password: password);
     final paths = await _client.from('payment_slips').select('file_path').eq('tenant_id', (await binding())!.tenantId);
     if (paths.isNotEmpty) await _client.storage.from(_slipBucket).remove([for (final p in paths) p['file_path'] as String]);
+    // ponytail: kept in memory, so a retry after the app restarts says "wrong login"; keep it in storage if that bites.
+    _deleteSent = true;
     // An empty body, not null, as PostgREST takes for a function with no arguments.
     await _client.rpc<void>('delete_account', params: const <String, dynamic>{});
   });
+
+  var _deleteSent = false;
+
+  /// The cloud says the signed-in user no longer exists. Any other answer, or none, is no.
+  Future<bool> _userGone() async {
+    try {
+      await _auth.getUser();
+      return false;
+    } on AuthException catch (e) {
+      return e.code == 'user_not_found';
+    } catch (_) {
+      return false;
+    }
+  }
 
   /// Ends the account on this device (AUTH-04), without waiting on the network: signing out drops the session here at
   /// once, and the server is told when it answers. Offline it never is, and the session, held only in memory, dies
@@ -474,6 +499,7 @@ AccountProblem problemOf(Object error) => switch (error) {
   PostgrestException(:final message) when message.contains('another account') => AccountProblem.phoneTaken,
   PostgrestException(:final message) when message.contains('other members') => AccountProblem.companyHasMembers,
   PostgrestException(:final message) when message.contains('slips are waiting') => AccountProblem.slipsWaiting,
+  PostgrestException(:final message) when message.contains('type the password again') => AccountProblem.passwordAgain,
   StorageException(statusCode: 'ClientException' || 'SocketException') => AccountProblem.offline,
   _ => AccountProblem.failed,
 };

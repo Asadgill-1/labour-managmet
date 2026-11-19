@@ -135,7 +135,7 @@ class PayrollWorkerScreen extends ConsumerWidget {
             ListTile(subtitle: Text(l10n.payrollNoItems)),
             const Divider(),
           ],
-          if (!p.posted)
+          if (p.canAddItems)
             _TwoColumns(
               children: [
                 _addButton(context, PayItemKind.allowance, l10n.payKindAllowance),

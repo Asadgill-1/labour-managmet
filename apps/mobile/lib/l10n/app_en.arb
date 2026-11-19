@@ -21,7 +21,7 @@
   "workersHeading": "Workers",
   "searchGroup": "Search groups",
   "searchWorker": "Search workers",
-  "membersCount": "{count} workers",
+  "membersCount": "{count, plural, =1{1 worker} other{{count} workers}}",
   "@membersCount": {
     "placeholders": {
       "count": {
@@ -29,7 +29,7 @@
       }
     }
   },
-  "saveWithCount": "Save ({count} workers)",
+  "saveWithCount": "Save ({count, plural, =1{1 worker} other{{count} workers}})",
   "@saveWithCount": {
     "placeholders": {
       "count": {
@@ -154,7 +154,6 @@
   "menuDocuments": "Documents",
   "menuTeam": "Team",
   "menuBackup": "Backup",
-  "menuPlan": "Plan",
   "menuHelp": "Help",
   "countWorkers": "Workers",
   "countShifts": "Shifts",
@@ -273,6 +272,7 @@
   "basisMonthFixed": "Per month, fixed contract",
   "endBeforeStart": "The end date is before the start date",
   "contractOverlap": "Another rate already covers these dates for the same site and worker. End that rate first.",
+  "contractSecondFixed": "This company already has a fixed monthly amount for these dates. Change that amount, or end it first.",
   "openingHeading": "Carried over from before",
   "openingSalaryOwed": "Old salary still owed to this worker",
   "openingAdvance": "Old advance to recover from this worker",
@@ -317,6 +317,7 @@
   "noLastTeam": "No earlier team found for this site.",
   "needSetupFirst": "Add a company, a site and a worker first.",
   "timesRequired": "Choose the start and end time.",
+  "timesSame": "Start and end are the same. Fix the end time.",
   "reviewTitle": "Review attendance",
   "totalClient": "To collect from company",
   "totalWorker": "To pay workers",
@@ -354,9 +355,9 @@
   "correctedTag": "Corrected",
   "cancel": "Cancel",
   "localOnlyNote": "This data is only on this phone.",
-  "nextWithCount": "Next ({count} workers)",
+  "nextWithCount": "Next ({count, plural, =1{1 worker} other{{count} workers}})",
   "countsLine": "{workers} workers, {shifts} shifts, {days} worker-days",
-  "missingWorkers": "{count} workers have no attendance: {names}",
+  "missingWorkers": "{count, plural, =1{1 worker has} other{{count} workers have}} no attendance: {names}",
   "hoursPaid": "{duration} hours",
   "@nextWithCount": {
     "placeholders": {
@@ -483,7 +484,7 @@
       }
     }
   },
-  "payrollPosted": "Payroll posted for {count} workers",
+  "payrollPosted": "Payroll posted for {count, plural, =1{1 worker} other{{count} workers}}",
   "@payrollPosted": {
     "placeholders": {
       "count": {
@@ -503,7 +504,7 @@
     }
   },
   "applyRoomCharges": "Add room charge",
-  "roomChargesApplied": "Room charge added for {count} workers",
+  "roomChargesApplied": "Room charge added for {count, plural, =1{1 worker} other{{count} workers}}",
   "@roomChargesApplied": {
     "placeholders": {
       "count": {
@@ -637,6 +638,7 @@
   "wageDueDays": "Days to pay salary after month end",
   "wageDueDaysHelp": "Your own figure, ask your accountant. Empty means late from the day after month end.",
   "wageDueDaysError": "A whole number from 0 to 90.",
+  "termsDaysError": "A whole number from 0 to 365.",
   "tabClosing": "Close month",
   "closingWorkersLeft": "Left on workers' accounts",
   "closingState": "This month",
@@ -1075,7 +1077,7 @@
   "slipMoney": "Money taken",
   "slipNoWork": "No work this month.",
   "slipNoMoney": "No money taken this month.",
-  "slipDayCount": "{days} days",
+  "slipDayCount": "{days, plural, =1{1 day} other{{days} days}}",
   "@slipDayCount": {
     "placeholders": {
       "days": {
@@ -1107,7 +1109,7 @@
   "sheetByCompany": "By company",
   "sheetDetail": "Company wise",
   "sheetWorkers": "Workers' accounts",
-  "sheetCompanyHead": "{workers} workers, {sites} sites",
+  "sheetCompanyHead": "{workers, plural, =1{1 worker} other{{workers} workers}}, {sites, plural, =1{1 site} other{{sites} sites}}",
   "@sheetCompanyHead": {
     "placeholders": {
       "workers": {
@@ -1318,7 +1320,7 @@
   },
   "tsMonthlyRow": "Monthly",
   "tsNotCharged": "Not charged",
-  "tsMonthlyLine": "{basis}, {rate}: {from} to {to}, {count} people. The contract amount goes on the invoice by the month, not from these rows.",
+  "tsMonthlyLine": "{basis}, {rate}: {from} to {to}, {count, plural, =1{1 person} other{{count} people}}. The contract amount goes on the invoice by the month, not from these rows.",
   "@tsMonthlyLine": {
     "placeholders": {
       "basis": {
@@ -1338,7 +1340,7 @@
       }
     }
   },
-  "tsMonthlyLinePlain": "{basis}: {from} to {to}, {count} people.",
+  "tsMonthlyLinePlain": "{basis}: {from} to {to}, {count, plural, =1{1 person} other{{count} people}}.",
   "@tsMonthlyLinePlain": {
     "placeholders": {
       "basis": {
@@ -1415,6 +1417,7 @@
   "tsAdjustReason": "Why",
   "tsAdjustClear": "Back to the attendance figure",
   "tsAdjustSave": "Save",
+  "tsZeroHours": "0 hours means no work. To charge nothing, choose \"Not charged\".",
   "tsNotTaken": "Not charged",
   "tsAgreedRow": "Agreed: {reason}",
   "@tsAgreedRow": {
@@ -1749,7 +1752,7 @@
       }
     }
   },
-  "invCreditPartHelp": "Takes back part of the invoice, up to {amount}, such as a rate agreed lower later. The work stays charged on this invoice.",
+  "invCreditPartHelp": "Takes back part of the invoice, less than {amount}, such as a rate agreed lower later. The work stays charged on this invoice.",
   "@invCreditPartHelp": {
     "placeholders": {
       "amount": {
@@ -1769,6 +1772,7 @@
     }
   },
   "invCreditNothingLeft": "There is not that much left of this invoice to take back.",
+  "invCreditTakesAll": "That is all that is left of this invoice. Choose Whole invoice instead, so its work can go on a new invoice.",
   "findingChangedAfterInvoice": "{count, plural, =1{1 timesheet has attendance that changed after it was invoiced: {names}. Approve its new revision, then put the invoice right.} other{{count} timesheets have attendance that changed after it was invoiced: {names}. Approve their new revisions, then put the invoices right.}}",
   "@findingChangedAfterInvoice": {
     "placeholders": {
@@ -2042,7 +2046,7 @@
   "importBackupNote": "Make a backup before an import. A file is saved whole or not at all, and a wrong line can be archived afterwards.",
   "importChoose": "Choose CSV file",
   "importChooseAgain": "Choose another file",
-  "importSave": "Save {count} lines",
+  "importSave": "Save {count, plural, =1{1 line} other{{count} lines}}",
   "@importSave": {
     "placeholders": {
       "count": {
@@ -2058,7 +2062,7 @@
       }
     }
   },
-  "importSummary": "{total} lines: {bad} with mistakes, {warned} to check",
+  "importSummary": "{total, plural, =1{1 line} other{{total} lines}}: {bad} with mistakes, {warned} to check",
   "@importSummary": {
     "placeholders": {
       "total": {
@@ -2091,6 +2095,14 @@
     }
   },
   "importEmpty": "The file has no lines under its headings.",
+  "importUnclosedQuote": "Row {row} opens a quote mark (\") that never closes, so the rest of the file can't be read. Fix that row in the file and choose it again. Nothing has been saved.",
+  "@importUnclosedQuote": {
+    "placeholders": {
+      "row": {
+        "type": "int"
+      }
+    }
+  },
   "importRow": "Row {row}",
   "@importRow": {
     "placeholders": {
@@ -2266,6 +2278,8 @@
   "inUseTitle": "This can't be deleted",
   "inUseBody": "Entries carry its name, and would lose it. Archive it instead: it leaves the lists, and its entries stay as they are.",
   "inUseArchived": "Entries carry its name, so it can't be deleted. It is archived already.",
+  "entryChanged": "This row was changed after you opened it. Open it again.",
+  "openingSettled": "Money received from this company already settled this old amount. It can't go below what was received against it, or be deleted. Delete those receipts in the cash book first.",
   "archivedDone": "Archived. Its entries stay as they are.",
   "regDeletedPayItems": "Deleted allowances and deductions",
   "regDeletedRecords": "Other deleted records",
@@ -2345,6 +2359,25 @@
       }
     }
   },
+  "issueTakesBackLater": "{amount} to take back from the next pay.",
+  "@issueTakesBackLater": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payrollCutBack": "Absence cut given back, {count, plural, =1{1 day} other{{count} days}}: {days}",
+  "@payrollCutBack": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
   "cashInstalment": "Cut each month (instalment)",
   "cashInstalmentHelp": "Payroll cuts this much each month by itself. Leave it empty to be asked each month.",
   "recoveryZeroHelp": "0 cuts nothing this month.",
@@ -2403,6 +2436,7 @@
   "accountFailed": "That did not work. Try again.",
   "accountOtherPhone": "Another phone is on for this account. Turn the old phone off.",
   "accountSignedOut": "Log in again with your password to check the plan.",
+  "accountPasswordAgain": "For this step, type your login password again.",
   "accountSlipsWaiting": "Three slips are waiting to be checked already. Wait for the check before sending another.",
   "accountPhoneData": "This phone already has data. Create a new account and it goes into the new company.",
   "accountTitle": "Account",
@@ -2528,7 +2562,7 @@
   "backupFailed": "The backup could not be made. The data is as it was. Try again.",
   "backupRestore": "Bringing data back from a backup",
   "backupDueNever": "No backup yet",
-  "backupDueDays": "No backup for {count} days",
+  "backupDueDays": "No backup for {count, plural, =1{1 day} other{{count} days}}",
   "@backupDueDays": {
     "placeholders": {
       "count": {
@@ -2935,7 +2969,7 @@
   },
   "planKeepReason": "Plan limit",
   "planKeepOpen": "Choose",
-  "accountOtherPhoneCopy": "The copy in the cloud is from another phone. Choose on the Backup page.",
+  "accountOtherPhoneCopy": "The cloud already has a copy of this company's data. Choose on the Backup page.",
   "accountNotOwner": "Only the company's owner sends the cloud backup.",
   "accountTooLarge": "The backup is over 50 MB, too large for the cloud. Save it as a file.",
   "signupBackupBody": "Your company's backup is locked with this password. It is not your account password, and this phone keeps it.",
@@ -2959,10 +2993,10 @@
   "cloudSignedOut": "Log in again with the password to send to the cloud.",
   "cloudUnavailable": "The cloud backup is not available in this app.",
   "cloudNeedsPassword": "Keep a backup password above first.",
-  "cloudOtherPhoneAsk": "The copy in the cloud is from another phone. Bring that data back here first, or send this phone's data in its place?",
+  "cloudOtherPhoneAsk": "The cloud already has a copy of this company's data. Bring that data back here first, or send this phone's data in its place?",
   "cloudBringBack": "Bring that data back first",
   "cloudKeepThis": "Keep this phone's data",
-  "cloudReplaceConfirm": "This phone's data goes to the cloud, and the other phone's copy may be removed. This can't be undone.",
+  "cloudReplaceConfirm": "This phone's data replaces the copy in the cloud. This can't be undone.",
   "cloudReplaceGo": "Yes, send this phone's data",
   "backupPasswordDue": "No backup password yet",
   "backupPasswordDueBody": "Without it the backup does not go to the cloud. Tap to set it.",

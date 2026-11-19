@@ -61,8 +61,8 @@ void main() {
     test('keeps its members, and a retry of the same operation changes nothing', () async {
       final team = await seedTeam(db);
       final op = newUuid();
-      await saveGroup(db, team, {team.workers[0]: null, team.workers[1]: 12000}, op: op);
-      await saveGroup(db, team, {team.workers[0]: null, team.workers[1]: 12000}, op: op);
+      final first = await saveGroup(db, team, {team.workers[0]: null, team.workers[1]: 12000}, op: op);
+      expect(await saveGroup(db, team, {team.workers[0]: null, team.workers[1]: 12000}, op: op), first, reason: 'the retry gives back the group it made (BUG-010)');
       expect(await db.select(db.workerGroups).get(), hasLength(1));
       final members = await db.select(db.workerGroupMembers).get();
       expect(members, hasLength(2));

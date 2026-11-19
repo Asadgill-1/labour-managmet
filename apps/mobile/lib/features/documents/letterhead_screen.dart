@@ -157,6 +157,13 @@ class _BlankSpaceState extends State<_BlankSpace> {
   late final _top = TextEditingController(text: '${widget.top}');
   late final _bottom = TextEditingController(text: '${widget.bottom}');
 
+  @override
+  void dispose() {
+    _top.dispose();
+    _bottom.dispose();
+    super.dispose();
+  }
+
   void _save() {
     final top = int.tryParse(_top.text.trim());
     final bottom = int.tryParse(_bottom.text.trim());

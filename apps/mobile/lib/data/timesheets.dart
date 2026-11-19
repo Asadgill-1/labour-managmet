@@ -278,7 +278,7 @@ extension TimesheetOps on TenantDatabase {
   /// Starts a draft. It holds no rows of its own, so it always reads the attendance as it stands.
   Future<String> createTimesheet({required String clientId, String? siteId, required String from, required String to, required String operationId}) async {
     final id = newUuid();
-    await applyOperation(
+    return applyOperation(
       operationId: operationId,
       entity: 'timesheets',
       recordId: id,
@@ -294,7 +294,6 @@ extension TimesheetOps on TenantDatabase {
         return (await _sheet(id)).toJson();
       },
     );
-    return id;
   }
 
   /// One step on a revision. [step] checks it fits and says what to write, inside the operation, so a retry of a step

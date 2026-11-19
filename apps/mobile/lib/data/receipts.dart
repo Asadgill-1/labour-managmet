@@ -13,6 +13,12 @@ class ReceiptTooHigh implements Exception {
   const ReceiptTooHigh();
 }
 
+/// Receipts that still stand settled more of a company's balance from before the app than the change leaves of it, so
+/// that money would vanish from the company's credit (INV-05, REP-08). Nothing was written.
+class OpeningSettled implements Exception {
+  const OpeningSettled();
+}
+
 /// The money on one issued invoice, all derived from its lines, its credit notes and what settled it (REP-08).
 class InvoiceMoney {
   const InvoiceMoney({required this.invoice, required this.totalFils, required this.creditedFils, required this.receivedFils, required this.lostFils});
@@ -135,6 +141,16 @@ extension ReceiptOps on TenantDatabase {
     }
   }
 
+  /// Runs inside a write that changed or deleted [old], an opening balance as stored (its JSON): refuses the write when
+  /// receipts still standing settled more of that company's balance from before the app than is left of it.
+  Future<void> keepOpeningSettled(Map<String, dynamic> old) async {
+    final clientId = old['clientId'] as String?;
+    if (old['kind'] != 'client_receivable' || clientId == null) return;
+    final money = await receivables(clientId: clientId);
+    final settled = money.parts.where((a) => a.invoiceId == null).fold(0, (total, a) => total + a.amountFils);
+    if (settled > (money.openingFils[clientId] ?? 0)) throw const OpeningSettled();
+  }
+
   Future<void> _allocate({required String operationId, required String clientId, required String? invoiceId, required String? paymentId, required String date, required int fils, String? reason}) {
     final now = DateTime.now().toUtc();
     return into(invoiceAllocations).insert(
@@ -169,7 +185,7 @@ extension ReceiptOps on TenantDatabase {
     String? note,
   }) async {
     final id = newUuid();
-    await applyOperation(
+    return applyOperation(
       operationId: operationId,
       entity: 'cash_entries',
       recordId: id,
@@ -203,7 +219,6 @@ extension ReceiptOps on TenantDatabase {
         return {'receipt': row.toJson(), 'parts': {for (final p in parts.entries) p.key ?? 'opening': p.value}};
       },
     );
-    return id;
   }
 
   /// Sets the company's unused credit against this invoice, oldest receipt first, up to what it still owes (INV-05).

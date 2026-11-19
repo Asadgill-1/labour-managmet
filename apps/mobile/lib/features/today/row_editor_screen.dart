@@ -84,6 +84,10 @@ class _RowEditorScreenState extends State<RowEditorScreen> {
       showFormError(context, l10n.timesRequired);
       return;
     }
+    if (checkShiftEnd(_start, _end, error: l10n.timesSame) case final same? when _status != AttendanceStatus.absent) {
+      showFormError(context, same);
+      return;
+    }
     Navigator.of(context).pop<RowEdit>((
       delete: false,
       note: _text(_change),
@@ -97,7 +101,8 @@ class _RowEditorScreenState extends State<RowEditorScreen> {
           status: _status,
           startMinute: _start,
           endMinute: _end,
-          breakMinutes: int.parse(_break.text.trim()),
+          // The break field and its check are gone on an absent row, so a cleared one counts as no break.
+          breakMinutes: int.tryParse(_break.text.trim()) ?? 0,
           breakPaidClient: _paidClient,
           breakPaidWorker: _paidWorker,
           overtimeApproved: _overtime,
@@ -135,13 +140,20 @@ class _RowEditorScreenState extends State<RowEditorScreen> {
             fieldGap,
             if (worked) ...[
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: TimeField(l10n.shiftStart, value: _start, onChanged: (v) => setState(() => _start = v)),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: TimeField(l10n.shiftEnd, value: _end, startAt: 17 * 60, onChanged: (v) => setState(() => _end = v)),
+                    child: TimeField(
+                      l10n.shiftEnd,
+                      value: _end,
+                      startAt: 17 * 60,
+                      errorText: checkShiftEnd(_start, _end, error: l10n.timesSame),
+                      onChanged: (v) => setState(() => _end = v),
+                    ),
                   ),
                 ],
               ),

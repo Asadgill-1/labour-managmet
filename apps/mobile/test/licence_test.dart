@@ -250,6 +250,40 @@ void main() {
       expect(turnedBack.view.status, LicenceStatus.active);
     });
 
+    test('time spent in the app moves the latest time seen, so a clock set back to the same time each start needs a check (BUG-022)', () async {
+      answers.add(await sign(key, facts()));
+      final first = make();
+      await first.load();
+      await first.refresh();
+      // Offline from here: each day the clock is set back to the same time before the app opens, then used five hours,
+      // with the plan read as each entry is saved.
+      for (var day = 0; day < 8; day++) {
+        now = issued;
+        final open = make();
+        await open.load();
+        expect(open.view.status, day == 0 ? LicenceStatus.active : LicenceStatus.clockBack, reason: 'day $day');
+        now = issued.add(const Duration(hours: 5));
+        open.view;
+        await pumpEventQueue();
+      }
+    });
+
+    test('reading the plan before the kept time is read never moves it back (BUG-022)', () async {
+      answers.add(await sign(key, facts()));
+      final first = make();
+      await first.load();
+      await first.refresh();
+      now = issued.add(const Duration(days: 3));
+      await make().load();
+
+      now = issued.add(const Duration(days: 1));
+      final early = make();
+      early.view;
+      await pumpEventQueue();
+      await early.load();
+      expect(early.view.status, LicenceStatus.clockBack);
+    });
+
     test('watch gives the view once loaded, then each change', () async {
       answers.add(await sign(key, facts()));
       final licensing = make();

@@ -226,13 +226,13 @@ abstract class AppLocalizations {
   /// No description provided for @membersCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} workers'**
+  /// **'{count, plural, =1{1 worker} other{{count} workers}}'**
   String membersCount(int count);
 
   /// No description provided for @saveWithCount.
   ///
   /// In en, this message translates to:
-  /// **'Save ({count} workers)'**
+  /// **'Save ({count, plural, =1{1 worker} other{{count} workers}})'**
   String saveWithCount(int count);
 
   /// No description provided for @wageOf.
@@ -666,12 +666,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Backup'**
   String get menuBackup;
-
-  /// No description provided for @menuPlan.
-  ///
-  /// In en, this message translates to:
-  /// **'Plan'**
-  String get menuPlan;
 
   /// No description provided for @menuHelp.
   ///
@@ -1381,6 +1375,12 @@ abstract class AppLocalizations {
   /// **'Another rate already covers these dates for the same site and worker. End that rate first.'**
   String get contractOverlap;
 
+  /// No description provided for @contractSecondFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'This company already has a fixed monthly amount for these dates. Change that amount, or end it first.'**
+  String get contractSecondFixed;
+
   /// No description provided for @openingHeading.
   ///
   /// In en, this message translates to:
@@ -1542,6 +1542,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose the start and end time.'**
   String get timesRequired;
+
+  /// No description provided for @timesSame.
+  ///
+  /// In en, this message translates to:
+  /// **'Start and end are the same. Fix the end time.'**
+  String get timesSame;
 
   /// No description provided for @reviewTitle.
   ///
@@ -1768,7 +1774,7 @@ abstract class AppLocalizations {
   /// No description provided for @nextWithCount.
   ///
   /// In en, this message translates to:
-  /// **'Next ({count} workers)'**
+  /// **'Next ({count, plural, =1{1 worker} other{{count} workers}})'**
   String nextWithCount(int count);
 
   /// No description provided for @countsLine.
@@ -1780,7 +1786,7 @@ abstract class AppLocalizations {
   /// No description provided for @missingWorkers.
   ///
   /// In en, this message translates to:
-  /// **'{count} workers have no attendance: {names}'**
+  /// **'{count, plural, =1{1 worker has} other{{count} workers have}} no attendance: {names}'**
   String missingWorkers(int count, String names);
 
   /// No description provided for @hoursPaid.
@@ -2092,7 +2098,7 @@ abstract class AppLocalizations {
   /// No description provided for @payrollPosted.
   ///
   /// In en, this message translates to:
-  /// **'Payroll posted for {count} workers'**
+  /// **'Payroll posted for {count, plural, =1{1 worker} other{{count} workers}}'**
   String payrollPosted(int count);
 
   /// No description provided for @payrollSplit.
@@ -2110,7 +2116,7 @@ abstract class AppLocalizations {
   /// No description provided for @roomChargesApplied.
   ///
   /// In en, this message translates to:
-  /// **'Room charge added for {count} workers'**
+  /// **'Room charge added for {count, plural, =1{1 worker} other{{count} workers}}'**
   String roomChargesApplied(int count);
 
   /// No description provided for @payKindRoom.
@@ -2454,6 +2460,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A whole number from 0 to 90.'**
   String get wageDueDaysError;
+
+  /// No description provided for @termsDaysError.
+  ///
+  /// In en, this message translates to:
+  /// **'A whole number from 0 to 365.'**
+  String get termsDaysError;
 
   /// No description provided for @tabClosing.
   ///
@@ -3514,7 +3526,7 @@ abstract class AppLocalizations {
   /// No description provided for @slipDayCount.
   ///
   /// In en, this message translates to:
-  /// **'{days} days'**
+  /// **'{days, plural, =1{1 day} other{{days} days}}'**
   String slipDayCount(int days);
 
   /// No description provided for @slipVisaLeft.
@@ -3622,7 +3634,7 @@ abstract class AppLocalizations {
   /// No description provided for @sheetCompanyHead.
   ///
   /// In en, this message translates to:
-  /// **'{workers} workers, {sites} sites'**
+  /// **'{workers, plural, =1{1 worker} other{{workers} workers}}, {sites, plural, =1{1 site} other{{sites} sites}}'**
   String sheetCompanyHead(int workers, int sites);
 
   /// No description provided for @sheetNote.
@@ -4288,7 +4300,7 @@ abstract class AppLocalizations {
   /// No description provided for @tsMonthlyLine.
   ///
   /// In en, this message translates to:
-  /// **'{basis}, {rate}: {from} to {to}, {count} people. The contract amount goes on the invoice by the month, not from these rows.'**
+  /// **'{basis}, {rate}: {from} to {to}, {count, plural, =1{1 person} other{{count} people}}. The contract amount goes on the invoice by the month, not from these rows.'**
   String tsMonthlyLine(
     String basis,
     String rate,
@@ -4300,7 +4312,7 @@ abstract class AppLocalizations {
   /// No description provided for @tsMonthlyLinePlain.
   ///
   /// In en, this message translates to:
-  /// **'{basis}: {from} to {to}, {count} people.'**
+  /// **'{basis}: {from} to {to}, {count, plural, =1{1 person} other{{count} people}}.'**
   String tsMonthlyLinePlain(String basis, String from, String to, int count);
 
   /// No description provided for @tsAgreedHeading.
@@ -4518,6 +4530,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get tsAdjustSave;
+
+  /// No description provided for @tsZeroHours.
+  ///
+  /// In en, this message translates to:
+  /// **'0 hours means no work. To charge nothing, choose \"Not charged\".'**
+  String get tsZeroHours;
 
   /// No description provided for @tsNotTaken.
   ///
@@ -5362,7 +5380,7 @@ abstract class AppLocalizations {
   /// No description provided for @invCreditPartHelp.
   ///
   /// In en, this message translates to:
-  /// **'Takes back part of the invoice, up to {amount}, such as a rate agreed lower later. The work stays charged on this invoice.'**
+  /// **'Takes back part of the invoice, less than {amount}, such as a rate agreed lower later. The work stays charged on this invoice.'**
   String invCreditPartHelp(String amount);
 
   /// No description provided for @invCreditAmount.
@@ -5394,6 +5412,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'There is not that much left of this invoice to take back.'**
   String get invCreditNothingLeft;
+
+  /// No description provided for @invCreditTakesAll.
+  ///
+  /// In en, this message translates to:
+  /// **'That is all that is left of this invoice. Choose Whole invoice instead, so its work can go on a new invoice.'**
+  String get invCreditTakesAll;
 
   /// No description provided for @findingChangedAfterInvoice.
   ///
@@ -6028,7 +6052,7 @@ abstract class AppLocalizations {
   /// No description provided for @importSave.
   ///
   /// In en, this message translates to:
-  /// **'Save {count} lines'**
+  /// **'Save {count, plural, =1{1 line} other{{count} lines}}'**
   String importSave(int count);
 
   /// No description provided for @importSaved.
@@ -6040,7 +6064,7 @@ abstract class AppLocalizations {
   /// No description provided for @importSummary.
   ///
   /// In en, this message translates to:
-  /// **'{total} lines: {bad} with mistakes, {warned} to check'**
+  /// **'{total, plural, =1{1 line} other{{total} lines}}: {bad} with mistakes, {warned} to check'**
   String importSummary(int total, int bad, int warned);
 
   /// No description provided for @importFix.
@@ -6072,6 +6096,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The file has no lines under its headings.'**
   String get importEmpty;
+
+  /// No description provided for @importUnclosedQuote.
+  ///
+  /// In en, this message translates to:
+  /// **'Row {row} opens a quote mark (\") that never closes, so the rest of the file can\'t be read. Fix that row in the file and choose it again. Nothing has been saved.'**
+  String importUnclosedQuote(int row);
 
   /// No description provided for @importRow.
   ///
@@ -6415,6 +6445,18 @@ abstract class AppLocalizations {
   /// **'Entries carry its name, so it can\'t be deleted. It is archived already.'**
   String get inUseArchived;
 
+  /// No description provided for @entryChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'This row was changed after you opened it. Open it again.'**
+  String get entryChanged;
+
+  /// No description provided for @openingSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'Money received from this company already settled this old amount. It can\'t go below what was received against it, or be deleted. Delete those receipts in the cash book first.'**
+  String get openingSettled;
+
   /// No description provided for @archivedDone.
   ///
   /// In en, this message translates to:
@@ -6540,6 +6582,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{amount} of advance has no instalment. Say how much to cut this month.'**
   String issueRecoveryAsk(String amount);
+
+  /// No description provided for @issueTakesBackLater.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} to take back from the next pay.'**
+  String issueTakesBackLater(String amount);
+
+  /// No description provided for @payrollCutBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Absence cut given back, {count, plural, =1{1 day} other{{count} days}}: {days}'**
+  String payrollCutBack(int count, String days);
 
   /// No description provided for @cashInstalment.
   ///
@@ -6804,6 +6858,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Log in again with your password to check the plan.'**
   String get accountSignedOut;
+
+  /// No description provided for @accountPasswordAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'For this step, type your login password again.'**
+  String get accountPasswordAgain;
 
   /// No description provided for @accountSlipsWaiting.
   ///
@@ -7222,7 +7282,7 @@ abstract class AppLocalizations {
   /// No description provided for @backupDueDays.
   ///
   /// In en, this message translates to:
-  /// **'No backup for {count} days'**
+  /// **'No backup for {count, plural, =1{1 day} other{{count} days}}'**
   String backupDueDays(int count);
 
   /// No description provided for @backupDueBody.
@@ -8050,7 +8110,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountOtherPhoneCopy.
   ///
   /// In en, this message translates to:
-  /// **'The copy in the cloud is from another phone. Choose on the Backup page.'**
+  /// **'The cloud already has a copy of this company\'s data. Choose on the Backup page.'**
   String get accountOtherPhoneCopy;
 
   /// No description provided for @accountNotOwner.
@@ -8152,7 +8212,7 @@ abstract class AppLocalizations {
   /// No description provided for @cloudOtherPhoneAsk.
   ///
   /// In en, this message translates to:
-  /// **'The copy in the cloud is from another phone. Bring that data back here first, or send this phone\'s data in its place?'**
+  /// **'The cloud already has a copy of this company\'s data. Bring that data back here first, or send this phone\'s data in its place?'**
   String get cloudOtherPhoneAsk;
 
   /// No description provided for @cloudBringBack.
@@ -8170,7 +8230,7 @@ abstract class AppLocalizations {
   /// No description provided for @cloudReplaceConfirm.
   ///
   /// In en, this message translates to:
-  /// **'This phone\'s data goes to the cloud, and the other phone\'s copy may be removed. This can\'t be undone.'**
+  /// **'This phone\'s data replaces the copy in the cloud. This can\'t be undone.'**
   String get cloudReplaceConfirm;
 
   /// No description provided for @cloudReplaceGo.

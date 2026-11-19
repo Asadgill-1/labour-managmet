@@ -3,9 +3,17 @@ const _bom = 0xFEFF;
 /// One record of a CSV file and its row number as a spreadsheet shows it, counting the heading as row 1.
 typedef CsvRow = ({int row, List<String> fields});
 
+/// A quote opened on [row] and never closed, so the rest of the file would read as one cell (MASTER-08).
+class UnclosedQuote implements Exception {
+  const UnclosedQuote(this.row);
+
+  final int row;
+}
+
 /// Reads a CSV file the way Excel and Google Sheets save one. A quoted field may hold the separator, a line break, or a
 /// quote written twice. A file saved with semicolons, as Excel does in some regions, reads too. Blank rows are dropped
-/// but still counted, so a row number points at the same row in the spreadsheet (MASTER-08).
+/// but still counted, so a row number points at the same row in the spreadsheet (MASTER-08). A quote that never closes
+/// throws [UnclosedQuote].
 List<CsvRow> parseCsv(String text) {
   if (text.isNotEmpty && text.codeUnitAt(0) == _bom) text = text.substring(1);
   final heading = text.split('\n').first;
@@ -16,6 +24,7 @@ List<CsvRow> parseCsv(String text) {
   final field = StringBuffer();
   var quoted = false;
   var row = 0;
+  var quoteRow = 0;
   void endRecord() {
     fields.add(field.toString());
     field.clear();
@@ -37,6 +46,7 @@ List<CsvRow> parseCsv(String text) {
       }
     } else if (c == '"') {
       quoted = true;
+      quoteRow = row + 1;
     } else if (c == separator) {
       fields.add(field.toString());
       field.clear();
@@ -47,6 +57,7 @@ List<CsvRow> parseCsv(String text) {
       field.write(c);
     }
   }
+  if (quoted) throw UnclosedQuote(quoteRow);
   if (field.isNotEmpty || fields.isNotEmpty) endRecord();
   return rows;
 }

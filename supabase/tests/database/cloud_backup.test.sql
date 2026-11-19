@@ -229,6 +229,8 @@ select throws_ok(
   $$ select public.backup_start('eeeeeeee-0000-0000-0000-000000000001', 'dddddddd-0000-0000-0000-00000000000b', 500, gen_random_uuid()) $$,
   '42501', 'another phone is on', 'which cannot send while the first is on'
 );
+-- Turning a phone off needs the password typed again (BUG-023).
+select set_config('request.jwt.claims', jsonb_build_object('sub', '11111111-1111-1111-1111-111111111111', 'role', 'authenticated', 'amr', jsonb_build_array(jsonb_build_object('method', 'password', 'timestamp', extract(epoch from now())::bigint)))::text, true);
 select lives_ok(
   $$ select public.turn_phone_off((select id from public.devices where device_id = 'dddddddd-0000-0000-0000-00000000000a'), gen_random_uuid()) $$,
   'the owner turns the old phone off'

@@ -81,7 +81,7 @@ extension DocumentOps on TenantDatabase {
     if (problem != null) throw ImageRejected(problem);
     final facts = readImageFacts(bytes)!;
     final id = newUuid();
-    await applyOperation(
+    return applyOperation(
       operationId: operationId,
       entity: 'document_assets',
       recordId: id,
@@ -107,7 +107,6 @@ extension DocumentOps on TenantDatabase {
         return {'kind': kind, 'mime': facts.mime, 'width': facts.width, 'height': facts.height, 'size': bytes.length};
       },
     );
-    return id;
   }
 
   /// Points the template at an image, or at none. The image itself stays, since a paper may still use it.
@@ -213,7 +212,7 @@ extension DocumentOps on TenantDatabase {
     final meta = metaFor(printed);
     final pdf = await render(meta);
     final id = newUuid();
-    await applyOperation(
+    final stored = await applyOperation(
       operationId: operationId,
       entity: 'issued_documents',
       recordId: id,
@@ -247,7 +246,7 @@ extension DocumentOps on TenantDatabase {
         return {'number': printed, 'kind': kind.name, 'subject': subjectId, 'period': period, 'data': data};
       },
     );
-    return (select(issuedDocuments)..where((d) => d.id.equals(id))).getSingle();
+    return (select(issuedDocuments)..where((d) => d.id.equals(stored))).getSingle();
   }
 
   Future<IssuedDocument> issuedDocument(String id) => (select(issuedDocuments)..where((d) => d.id.equals(id))).getSingle();

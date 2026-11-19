@@ -41,6 +41,14 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
   late bool _vat = widget.profile?.vatRegistered ?? false;
   late String? _vatFrom = widget.profile?.vatEffectiveFrom;
 
+  @override
+  void dispose() {
+    for (final c in [_legal, _trading, _address, _phone, _email, _trn, _prefix, _terms, _bank, _footer, _limit, _wageDays]) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
   Future<void> _save() async {
     if (!validateAndReveal(_form)) return;
     final l10n = AppLocalizations.of(context);
@@ -128,7 +136,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
                 ],
                 Field(l10n.invoicePrefix, _prefix),
                 fieldGap,
-                Field(l10n.paymentTermsDays, _terms, keyboardType: TextInputType.number),
+                Field(l10n.paymentTermsDays, _terms, keyboardType: TextInputType.number, validator: (v) => checkDays(v, max: 365, error: l10n.termsDaysError)),
                 fieldGap,
                 Field(l10n.bankDetails, _bank, lines: 3),
                 fieldGap,
@@ -152,12 +160,7 @@ class _ProfileFormScreenState extends ConsumerState<ProfileFormScreen> {
                   _wageDays,
                   keyboardType: TextInputType.number,
                   helper: l10n.wageDueDaysHelp,
-                  validator: (v) {
-                    final text = (v ?? '').trim();
-                    if (text.isEmpty) return null;
-                    final days = int.tryParse(text);
-                    return days == null || days < 0 || days > 90 ? l10n.wageDueDaysError : null;
-                  },
+                  validator: (v) => checkDays(v, max: 90, error: l10n.wageDueDaysError),
                 ),
               ],
             ),

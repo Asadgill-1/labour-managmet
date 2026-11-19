@@ -17,6 +17,12 @@ void main() {
     expect(flat(parseCsv('Code;Name\nW001;Asif')), [(1, 'Code|Name'), (2, 'W001|Asif')]);
   });
 
+  test('a quote that never closes is refused, naming the row it opened on, instead of swallowing the rest (BUG-011)', () {
+    Matcher opensOn(int row) => throwsA(isA<UnclosedQuote>().having((e) => e.row, 'row', row));
+    expect(() => parseCsv('Code,Name\nW1,"Ali\nW2,Bilal\nW3,Omar'), opensOn(2));
+    expect(() => parseCsv('Code,Note\r\nW1,"two\r\nlines"\r\n\r\nW2,"open\r\nW3,x\r\n'), opensOn(4), reason: 'rows count as the spreadsheet does');
+  });
+
   test('what it writes reads back the same', () {
     final rows = [
       ['Code', 'Name'],

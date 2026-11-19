@@ -503,6 +503,37 @@ void main() {
     await shutDown(tester, opened.single);
   });
 
+  testWidgets('a login in this run older than ten minutes: the cloud refuses to turn a phone off, and the password is asked (BUG-023)', (tester) async {
+    const old = '00000000-0000-4000-8000-0000000000e1';
+    cloud.addUser('owner@test.ae', 'pass1234', company: testTenant);
+    await pumpRoot(tester);
+    await fill(tester, 'Email', 'owner@test.ae');
+    await fill(tester, 'Password', 'pass1234');
+    await tapAndSettle(tester, find.text('Login karein'));
+    await setPin(tester);
+    await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+    await tapAndSettle(tester, find.text('Save karein'));
+    cloud
+      ..addPhone('owner@test.ae', old, 'Galaxy A51', '2026-11-03T06:00:00Z')
+      ..passwordOld = true;
+
+    await goTo(tester, 'Settings');
+    await tapAndSettle(tester, find.text('Purana phone band karein'));
+    await tapAndSettle(tester, find.text('Band karein'));
+    await tapAndSettle(tester, find.descendant(of: find.byType(AlertDialog), matching: find.text('Band karein')));
+    expect(find.text('Is kaam ke liye apna login password dobara likhein.'), findsOneWidget);
+    expect(find.widgetWithText(TextFormField, 'Password'), findsOneWidget, reason: 'the password is asked, not a dead end');
+    expect(cloud.offPhones, isEmpty);
+
+    await fill(tester, 'Password', 'pass1234');
+    await tapAndSettle(tester, find.text('Phone dikhayein'));
+    await tapAndSettle(tester, find.text('Band karein'));
+    await tapAndSettle(tester, find.descendant(of: find.byType(AlertDialog), matching: find.text('Band karein')));
+    expect(find.text('Galaxy A51 band ho gaya.'), findsOneWidget);
+    expect(cloud.offPhones, {old});
+    await shutDown(tester, opened.single);
+  });
+
   testWidgets('after a restart a phone that is on stays open, and its phones page asks for the password first (T20c)', (tester) async {
     final (db, _) = await restartedPhone(tester);
     cloud.addPhone('owner@test.ae', '00000000-0000-4000-8000-0000000000e1', 'Galaxy A51', '2026-11-03T06:00:00Z');

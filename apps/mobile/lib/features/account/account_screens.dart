@@ -33,6 +33,7 @@ String accountProblemText(AppLocalizations l10n, AccountRefused refusal) => swit
   AccountProblem.otherPhone => l10n.accountOtherPhone,
   AccountProblem.signedOut => l10n.accountSignedOut,
   AccountProblem.slipsWaiting => l10n.accountSlipsWaiting,
+  AccountProblem.passwordAgain => l10n.accountPasswordAgain,
   AccountProblem.otherPhoneCopy => l10n.accountOtherPhoneCopy,
   AccountProblem.notOwner => l10n.accountNotOwner,
   AccountProblem.tooLarge => l10n.accountTooLarge,
@@ -787,7 +788,18 @@ class _PhonesScreenState extends State<PhonesScreen> with CloudStep {
     );
     if (yes != true) return;
     await attempt(() async {
-      await widget.account.turnPhoneOff(phone.id);
+      try {
+        await widget.account.turnPhoneOff(phone.id);
+      } on AccountRefused catch (e) {
+        // The cloud takes only a password typed in the last ten minutes, and a login earlier in this run can be older.
+        if (e.problem == AccountProblem.passwordAgain && mounted) {
+          setState(() {
+            _phones = null;
+            _ask = true;
+          });
+        }
+        rethrow;
+      }
       if (!mounted) return;
       setState(() => _phones = [...?_phones?.where((p) => p.id != phone.id)]);
       showSavedOnPhone(context, l10n.phonesOffDone(phone.name));

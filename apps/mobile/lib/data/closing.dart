@@ -2,6 +2,7 @@ import 'package:domain/calc.dart';
 import 'package:domain/cash.dart';
 import 'package:domain/dates.dart';
 import 'package:domain/money.dart';
+import 'package:domain/payroll.dart';
 import 'package:drift/drift.dart';
 
 import 'attendance.dart';
@@ -105,14 +106,17 @@ extension ClosingOps on TenantDatabase {
       add(ClosingIssue.noCompanyRate, date, id, clients[id] ?? id);
     }
 
-    for (final p in await payrollFor(month)) {
-      if (!p.posted && (!p.figures.isEmpty || p.unpricedRows > 0)) add(ClosingIssue.payrollNotPosted, to, p.worker.id, p.worker.name);
+    final payroll = await payrollFor(month);
+    for (final p in payroll) {
+      // A minus waiting for the next pay posts nothing, so it holds nothing up (D-080 (6)).
+      final waits = p.figures.issues.contains(PayrollIssue.takesBackLater) && p.unpricedRows == 0;
+      if (!p.posted && !waits && (!p.figures.isEmpty || p.unpricedRows > 0)) add(ClosingIssue.payrollNotPosted, to, p.worker.id, p.worker.name);
     }
     for (final i in await (select(payrollItems)..where((i) => i.lineId.isNull() & inRange(i.periodFrom))).get()) {
       add(ClosingIssue.payrollNotPosted, monthLastDay(i.periodFrom.substring(0, 7)), i.workerId, nameOf[i.workerId] ?? i.workerId);
     }
 
-    await _findGaps(to, closedThrough, people, (date, w) => add(ClosingIssue.noHazri, date, w.id, w.name));
+    await _findGaps(to, closedThrough, people, payroll, (date, w) => add(ClosingIssue.noHazri, date, w.id, w.name));
 
     final shifts = selectOnly(e)
       ..addColumns([e.id, e.workerId, e.workDate, e.startUtc, e.endUtc, e.overlapReason])
@@ -175,8 +179,10 @@ extension ClosingOps on TenantDatabase {
 
   /// Days a working worker has neither attendance nor a day off, from the day they started. Nobody is asked about days
   /// before the app knew them, or about today. A worker on a monthly salary is paid whatever the register says, so their
-  /// days are not asked for (D-045).
-  Future<void> _findGaps(String to, String? closedThrough, List<Worker> people, void Function(String date, Worker worker) report) async {
+  /// days are not asked for (D-045), unless the contract cuts absence: then the days payroll cuts are asked, and no others,
+  /// so none before the account starts or in a month behind a later posted one (D-080 (4), D-079 (3)). A worker with no
+  /// account at all is asked as a daily worker is. [payroll] is the month's own, already read.
+  Future<void> _findGaps(String to, String? closedThrough, List<Worker> people, List<WorkerPayroll> payroll, void Function(String date, Worker worker) report) async {
     final e = attendanceEntries;
     final firstDay = e.workDate.min();
     final firstOf = {
@@ -198,15 +204,33 @@ extension ClosingOps on TenantDatabase {
 
     final yesterday = addDays(dubaiToday(DateTime.now()), -1);
     final last = to.compareTo(yesterday) < 0 ? to : yesterday;
+    final cutting = <String, List<(String, Worker)>>{};
     for (final w in people.where((w) => w.active)) {
       var start = dubaiToday(w.createdAtUtc);
       if (w.joiningDate != null && w.joiningDate!.compareTo(start) > 0) start = w.joiningDate!;
       final first = firstOf[w.id];
       if (first != null && first.compareTo(start) < 0) start = first;
       if (closedThrough != null && closedThrough.compareTo(start) >= 0) start = addDays(closedThrough, 1);
+      final terms = (monthly[w.id] ?? const <PayContract>[]).map(payTerms).toList();
       for (var date = start; date.compareTo(last) <= 0; date = addDays(date, 1)) {
-        final salaried = (monthly[w.id] ?? const <PayContract>[]).any((c) => c.effectiveFrom.compareTo(date) <= 0 && (c.effectiveTo == null || c.effectiveTo!.compareTo(date) >= 0));
-        if (!salaried && !seen.contains((w.id, date))) report(date, w);
+        if (seen.contains((w.id, date))) continue;
+        final contract = salaryContractOn(terms, date);
+        if (contract == null) {
+          report(date, w);
+        } else if (cutsOn(contract, date)) {
+          (cutting[date.substring(0, 7)] ??= []).add((date, w));
+        }
+      }
+    }
+    // Someone with nothing recorded at all has no account yet, so payroll lists no month of theirs: they are asked as a daily
+    // worker is, so one whose attendance was forgotten is not left out (D-080 (4)).
+    final unstarted = cutting.isEmpty ? const <String>{} : await workersWithoutAccount();
+    // ponytail: one payroll read per earlier open month with such a day; fine while months close in turn. Share one read if owners leave many open.
+    for (final MapEntry(key: m, value: days) in cutting.entries) {
+      final cuts = m == to.substring(0, 7) ? payroll : await payrollFor(m);
+      final cut = {for (final p in cuts) for (final d in p.figures.absentDays) (p.worker.id, d)};
+      for (final (date, w) in days) {
+        if (unstarted.contains(w.id) || cut.contains((w.id, date))) report(date, w);
       }
     }
   }

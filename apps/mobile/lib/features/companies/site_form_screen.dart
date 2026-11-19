@@ -38,6 +38,10 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
   Future<void> _save() async {
     if (!validateAndReveal(_form)) return;
     final l10n = AppLocalizations.of(context);
+    if (checkShiftEnd(_start, _end, error: l10n.timesSame) case final same?) {
+      showFormError(context, same);
+      return;
+    }
     final db = ref.read(dbProvider);
     final saved = await saveOrExplain(context, () => db.saveRow(
       db.sites,
@@ -90,10 +94,19 @@ class _SiteFormScreenState extends ConsumerState<SiteFormScreen> {
             Field(l10n.contactPerson, _contact),
             fieldGap,
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(child: TimeField(l10n.defaultStart, value: _start, onChanged: (v) => setState(() => _start = v))),
                 const SizedBox(width: 12),
-                Expanded(child: TimeField(l10n.defaultEnd, value: _end, startAt: 17 * 60, onChanged: (v) => setState(() => _end = v))),
+                Expanded(
+                  child: TimeField(
+                    l10n.defaultEnd,
+                    value: _end,
+                    startAt: 17 * 60,
+                    errorText: checkShiftEnd(_start, _end, error: l10n.timesSame),
+                    onChanged: (v) => setState(() => _end = v),
+                  ),
+                ),
               ],
             ),
             fieldGap,

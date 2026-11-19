@@ -182,6 +182,10 @@ class _AttendanceEntryScreenState extends ConsumerState<AttendanceEntryScreen> {
       showFormError(context, l10n.timesRequired);
       return;
     }
+    if (checkShiftEnd(_start, _end, error: l10n.timesSame) case final same?) {
+      showFormError(context, same);
+      return;
+    }
     final breakMinutes = int.tryParse(_break.text.trim()) ?? -1;
     if (breakMinutes < 0) {
       showFormError(context, l10n.wholeNumberRequired);
@@ -290,10 +294,19 @@ class _AttendanceEntryScreenState extends ConsumerState<AttendanceEntryScreen> {
                 ),
                 fieldGap,
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(child: TimeField(l10n.shiftStart, value: _start, onChanged: (v) => setState(() => _start = v))),
                     const SizedBox(width: 12),
-                    Expanded(child: TimeField(l10n.shiftEnd, value: _end, startAt: 17 * 60, onChanged: (v) => setState(() => _end = v))),
+                    Expanded(
+                      child: TimeField(
+                        l10n.shiftEnd,
+                        value: _end,
+                        startAt: 17 * 60,
+                        errorText: checkShiftEnd(_start, _end, error: l10n.timesSame),
+                        onChanged: (v) => setState(() => _end = v),
+                      ),
+                    ),
                   ],
                 ),
                 fieldGap,

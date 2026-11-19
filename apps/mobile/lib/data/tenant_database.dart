@@ -300,8 +300,9 @@ class TenantDatabase extends _$TenantDatabase {
   /// The single write path. Runs [change] with its audit event and outbox row in one transaction,
   /// once per [operationId], so a retry after a crash or double tap changes nothing (TEAM-04, UX-07).
   /// [change] returns the stored record, which becomes the outbox payload. The company's plan is asked here and
-  /// nowhere else, so no screen can write around it (T21c).
-  Future<void> applyOperation({
+  /// nowhere else, so no screen can write around it (T21c). Gives the record id that is stored: on a retry, the first
+  /// call's, so a caller that made a fresh id for this call returns the one that exists.
+  Future<String> applyOperation({
     required String operationId,
     required String entity,
     required String recordId,
@@ -313,7 +314,7 @@ class TenantDatabase extends _$TenantDatabase {
     WriteEffect effect = WriteEffect.entry,
   }) async {
     try {
-      await _applyOnce(
+      return await _applyOnce(
         operationId: operationId,
         entity: entity,
         recordId: recordId,
@@ -331,7 +332,7 @@ class TenantDatabase extends _$TenantDatabase {
     }
   }
 
-  Future<void> _applyOnce({
+  Future<String> _applyOnce({
     required String operationId,
     required String entity,
     required String recordId,
@@ -344,7 +345,7 @@ class TenantDatabase extends _$TenantDatabase {
   }) {
     return transaction(() async {
       final seen = await (select(outbox)..where((o) => o.operationId.equals(operationId))).getSingleOrNull();
-      if (seen != null) return;
+      if (seen != null) return seen.recordId;
       // After the retry check: a second tap on a save that went through must not be refused for the row it added.
       await guard?.call(entity, effect);
       final payload = await change();
@@ -378,6 +379,7 @@ class TenantDatabase extends _$TenantDatabase {
           createdAtUtc: now,
         ),
       );
+      return recordId;
     });
   }
 }

@@ -222,6 +222,24 @@ void main() {
       expect(p.monthly.single, contains(l10n.basisMonthFixed));
       expect(p.monthly.single, isNot(contains('5,000')));
     });
+
+    test('BUG-016 in English one worker on the contract reads "1 person", and a slip "1 day" (F04-5)', () async {
+      final solo = await db.saveRow(db.clients, id: null, operationId: newUuid(), fields: const ClientsCompanion(name: Value('Solo')));
+      final yard = await db.saveRow(db.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(solo), name: const Value('Yard')));
+      await db.saveRow(db.billingContracts, id: null, operationId: newUuid(), fields: BillingContractsCompanion(clientId: Value(solo), basis: Value(RateBasis.monthFixed.name), rateFils: const Value(300000), effectiveFrom: const Value('2020-01-01')));
+      await db.saveAttendanceBatch(workDate: '2020-10-06', clientId: solo, siteId: yard, inputs: [EntryInput(workerId: asif, shift: shift)], operationId: newUuid());
+      final id = await db.createTimesheet(clientId: solo, from: from, to: to, operationId: newUuid());
+      await db.approveTimesheet((await db.timesheetView(id)).revision.id, operationId: newUuid());
+      final v = await db.timesheetView(id);
+      final english = await AppLocalizations.delegate.load(const Locale('en'));
+      for (final priced in [true, false]) {
+        final line = timesheetPaper(v, workers: false, priced: priced, l10n: english).monthly.single;
+        expect(line, contains(', 1 person.'), reason: 'priced: $priced');
+      }
+      expect(english.slipDayCount(1), '1 day');
+      expect(english.slipDayCount(2), '2 days');
+      expect(timesheetPaper(v, workers: false, priced: true, l10n: l10n).monthly.single, contains('1 log'), reason: 'Roman Urdu unchanged');
+    });
   });
 
   group('the issued paper (DOC-05, TS-07)', () {
@@ -327,6 +345,15 @@ void main() {
     await tester.tap(find.text('Asif (W1)'));
     await settle(tester);
     expect(find.text(words.tsAdjustHelp), findsOneWidget);
+    // 0 hours on a worked row is refused at the field, so it can never be carried as a 24-hour day (D-080 (9)).
+    await tester.enterText(find.widgetWithText(TextFormField, words.tsAdjustHours), '0');
+    await tester.enterText(find.widgetWithText(TextFormField, words.tsAdjustReason), 'Typo');
+    await tester.tap(find.text(words.tsAdjustSave));
+    await settle(tester);
+    expect(find.text(words.tsZeroHours), findsOneWidget);
+    expect(find.text(words.tsCarryTitle), findsNothing, reason: 'nothing to carry');
+    expect(find.text(words.tsAdjustHelp), findsOneWidget, reason: 'the sheet stays open');
+    expect((await real(tester, () => app.select(app.timesheetRevisions).getSingle())).adjustments, isNot(contains('Typo')));
     await tester.enterText(find.widgetWithText(TextFormField, words.tsAdjustHours), '8');
     await tester.enterText(find.widgetWithText(TextFormField, words.tsAdjustReason), 'Site says eight hours');
     await tester.tap(find.text(words.tsAdjustSave));

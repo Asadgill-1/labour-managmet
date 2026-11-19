@@ -76,6 +76,9 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
   /// Once the owner types a month's share, the amount stops sharing itself out over it.
   bool _partsEdited = false;
 
+  /// A salary payment waits for its months, or all of it would look like extra and go on the advance (D-043).
+  bool _loadingUnpaid = false;
+
   /// What the company still owes, oldest first, and how much of this receipt goes on each (INV-05). The invoice the
   /// screen was opened from comes first.
   List<OpenItem> _owed = const [];
@@ -94,6 +97,8 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
     final workerId = _workerId;
     final month = _date?.substring(0, 7);
     if (_kind != CashKind.salaryPaid || workerId == null || month == null) return;
+    // Set without a rebuild, since this also runs from initState. A change of kind, worker or date rebuilds first.
+    _loadingUnpaid = true;
     final db = ref.read(dbProvider);
     final statements = await db.statementsFor(month, workerId: workerId, withWork: false);
     // An edited payment's months are owed again once it is replaced, so it can settle them as before.
@@ -107,6 +112,7 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
       unpaid[a.month] = (unpaid[a.month] ?? 0) + a.amountFils;
     }
     setState(() {
+      _loadingUnpaid = false;
       _unpaid = {for (final m in unpaid.keys.toList()..sort()) m: unpaid[m]!};
       for (final m in _unpaid.keys) {
         _parts[m] ??= TextEditingController();
@@ -372,7 +378,7 @@ class _CashEntryFormScreenState extends ConsumerState<CashEntryFormScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(widget.editing == null ? l10n.addCash : l10n.cashEdit)),
-      bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _save),
+      bottomNavigationBar: MainActionBar(label: l10n.save, onPressed: _kind == CashKind.salaryPaid && _loadingUnpaid ? null : _save),
       body: Form(
         key: _form,
         child: FormBody(

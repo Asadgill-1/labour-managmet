@@ -8,6 +8,7 @@ import 'package:drift/drift.dart';
 import 'attendance.dart';
 import 'cash.dart';
 import 'closing.dart';
+import 'receipts.dart';
 import 'tenant_database.dart';
 
 /// What the owner reads about an entry or record that was edited or deleted (D-056). Values are plain: dates as stored,
@@ -330,6 +331,8 @@ extension ChangeOps on TenantDatabase {
             if (name == 'worker_groups') await (delete(workerGroupMembers)..where((m) => m.groupId.equals(id))).go();
             if (name == 'workers') await (delete(workerGroupMembers)..where((m) => m.workerId.equals(id))).go();
             await (delete(table)..where((_) => idColumn.equals(id))).go();
+            // Nothing names an old balance by key, but receipts may have settled it (INV-05).
+            if (name == 'opening_balances') await keepOpeningSettled(row);
             return {'id': id, 'deleted': true};
           },
         );

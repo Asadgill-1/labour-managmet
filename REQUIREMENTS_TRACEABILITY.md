@@ -8,50 +8,50 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | --- | --- | --- | --- | --- | --- | --- |
 | UX-01 | 02 | Left side panel, replaces bottom tabs (D-027) | T04, T05 | IMPLEMENTED_UNVERIFIED | - | - |
 | UX-02 | 02 | Onboarding | T05, T19, T20 | IN_PROGRESS | TC-145, TC-197 | `apps/mobile/test/account_flow_test.dart`, `apps/mobile/test/cloud_screens_test.dart` |
-| UX-03 | 02 | Saaf labels | T05 | IMPLEMENTED_UNVERIFIED | - | - |
-| UX-04 | 02 | Readability | T05 | IMPLEMENTED_UNVERIFIED | - | - |
+| UX-03 | 02 | Saaf labels | T05 | IMPLEMENTED_UNVERIFIED | TC-210 | `docs/audit/BUG_REGISTER.md` |
+| UX-04 | 02 | Readability | T05 | IMPLEMENTED_UNVERIFIED | TC-210, TC-216 | `docs/audit/BUG_REGISTER.md` |
 | UX-05 | 02 | Kam typing | T10 | IMPLEMENTED_UNVERIFIED | TC-026 | - |
 | UX-06 | 02 | Measurable usability test | T10 | NOT_STARTED | TC-031 | - |
-| UX-07 | 02 | Save ki imaandari | T05 | IN_PROGRESS | TC-008 | - |
-| AUTH-01 | 03 | Email/password primary login ho. Email verification, forgot-password, safe password | T19 | IN_PROGRESS | TC-142, TC-143, TC-144, TC-145, TC-146 | `supabase/tests/database/tenants.test.sql`, `apps/mobile/test/account_test.dart` |
+| UX-07 | 02 | Save ki imaandari | T05 | IN_PROGRESS | TC-008, TC-209 | `docs/audit/BUG_REGISTER.md` |
+| AUTH-01 | 03 | Email/password primary login ho. Email verification, forgot-password, safe password | T19 | IN_PROGRESS | TC-142, TC-143, TC-144, TC-145, TC-146, TC-205 | `supabase/tests/database/tenants.test.sql`, `apps/mobile/test/account_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | AUTH-02 | 03 | Signup par immutable tenant ID bane. Naam, phone number | T19 | IN_PROGRESS | TC-006, TC-142, TC-144, TC-147, TC-148, TC-149 | `supabase/tests/database/tenants.test.sql`, `supabase/tests/database/phones.test.sql`, `apps/mobile/test/account_test.dart` |
-| AUTH-03 | 03 | Pehla signup, naya device login, password reset aur invite | T19 | IN_PROGRESS | TC-144, TC-145, TC-146, TC-147, TC-148, TC-149, TC-150, TC-151, TC-152 | `apps/mobile/test/account_flow_test.dart`, `apps/mobile/test/app_lock_test.dart`, `supabase/tests/database/phones.test.sql` |
+| AUTH-03 | 03 | Pehla signup, naya device login, password reset aur invite | T19 | IN_PROGRESS | TC-144, TC-145, TC-146, TC-147, TC-148, TC-149, TC-150, TC-151, TC-152, TC-211, TC-212 | `apps/mobile/test/account_flow_test.dart`, `apps/mobile/test/app_lock_test.dart`, `supabase/tests/database/phones.test.sql`, `docs/audit/BUG_REGISTER.md` |
 | AUTH-04 | 03 | Har local database tenant/account boundary mein encrypted ho. Logout/account | T19 | IN_PROGRESS | TC-014, TC-045, TC-145, TC-149, TC-150 | `apps/mobile/test/account_flow_test.dart` |
 | AUTH-05 | 03 | Cloud tenant tables par Row Level Security aur membership | T19 | IN_PROGRESS | TC-006, TC-142, TC-143, TC-190 | `supabase/tests/database/tenants.test.sql`, `supabase/tests/database/cloud_backup.test.sql` |
 | AUTH-06 | 03 | App malik ke admin account par MFA lazmi ho | T19 | NOT_STARTED | - | - |
-| AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | IN_PROGRESS | TC-153, TC-154, TC-155, TC-156, TC-157, TC-191, TC-197 | `supabase/tests/database/delete_account.test.sql`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `supabase/tests/database/cloud_backup.test.sql`, `apps/mobile/test/cloud_screens_test.dart` |
+| AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | IN_PROGRESS | TC-153, TC-154, TC-155, TC-156, TC-157, TC-191, TC-197, TC-211 | `supabase/tests/database/delete_account.test.sql`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `supabase/tests/database/cloud_backup.test.sql`, `apps/mobile/test/cloud_screens_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | AUTH-08 | 03 | Production email login ke liye real SMTP/domain configuration aur | T19 | NOT_STARTED | - | - |
 | MASTER-01 | 04 | Apni company | T07 | IMPLEMENTED_UNVERIFIED | - | - |
 | MASTER-02 | 04 | Client | T07, T18b | IMPLEMENTED_UNVERIFIED | TC-119 | `apps/mobile/test/records_test.dart` |
 | MASTER-03 | 04 | Sites | T07 | IMPLEMENTED_UNVERIFIED | - | - |
 | MASTER-04 | 04 | Worker | T07, T18b | IMPLEMENTED_UNVERIFIED | TC-118, TC-119 | `apps/mobile/test/records_test.dart` |
-| MASTER-05 | 04 | Opening balances | T08, T18b | IMPLEMENTED_UNVERIFIED | TC-030, TC-122 | `apps/mobile/test/records_test.dart` |
+| MASTER-05 | 04 | Opening balances | T08, T18b | IMPLEMENTED_UNVERIFIED | TC-030, TC-122, TC-209 | `apps/mobile/test/records_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | MASTER-06 | 04 | Rate cards | T08, T18b | IMPLEMENTED_UNVERIFIED | TC-120 | `apps/mobile/test/records_test.dart` |
 | MASTER-07 | 04 | Archive | T07, T18b | IMPLEMENTED_UNVERIFIED | TC-029, TC-118, TC-119, TC-123 | `apps/mobile/test/records_test.dart` |
-| MASTER-08 | 04 | Import | T18, T20 | IMPLEMENTED_UNVERIFIED | TC-103, TC-104, TC-105, TC-108 | `apps/mobile/test/reports_test.dart` |
+| MASTER-08 | 04 | Import | T18, T20 | IMPLEMENTED_UNVERIFIED | TC-103, TC-104, TC-105, TC-108, TC-209, TC-213, TC-214, TC-216 | `apps/mobile/test/reports_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | ATT-01 | 05 | Flow | T10 | IMPLEMENTED_UNVERIFIED | - | - |
 | ATT-02 | 05 | Entry fields | T10 | IMPLEMENTED_UNVERIFIED | TC-158 | `apps/mobile/test/groups_test.dart` |
 | ATT-03 | 05 | Bulk apply | T10 | IMPLEMENTED_UNVERIFIED | TC-023 | - |
 | ATT-04 | 05 | Exceptions | T10 | IMPLEMENTED_UNVERIFIED | TC-024 | - |
 | ATT-05 | 05 | Duplication | T10 | IMPLEMENTED_UNVERIFIED | TC-008, TC-025 | - |
-| ATT-06 | 05 | Midnight shift | T10 | IMPLEMENTED_UNVERIFIED | TC-018 | - |
+| ATT-06 | 05 | Midnight shift | T10 | IMPLEMENTED_UNVERIFIED | TC-018, TC-216 | - |
 | ATT-07 | 05 | Attendance states | T10, T11e | IMPLEMENTED_UNVERIFIED | TC-060 | `apps/mobile/test/payroll_test.dart` |
-| ATT-08 | 05 | Correction | T10, T18b, T18c | IMPLEMENTED_UNVERIFIED | TC-027, TC-113, TC-114, TC-130, TC-133 | `apps/mobile/test/auto_cuts_test.dart`, `apps/mobile/test/changes_test.dart` |
+| ATT-08 | 05 | Correction | T10, T18b, T18c | IMPLEMENTED_UNVERIFIED | TC-027, TC-113, TC-114, TC-130, TC-133, TC-208, TC-213, TC-215 | `apps/mobile/test/auto_cuts_test.dart`, `apps/mobile/test/changes_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | ATT-09 | 05 | Maaloomati summary | T10 | IMPLEMENTED_UNVERIFIED | TC-028 | - |
-| CALC-01 | 06 | Duration integer minutes mein; amounts integer fils ya exact | T04, T09 | IN_PROGRESS | TC-015 | - |
+| CALC-01 | 06 | Duration integer minutes mein; amounts integer fils ya exact | T04, T09 | IN_PROGRESS | TC-015, TC-206, TC-207, TC-215 | `docs/audit/BUG_REGISTER.md` |
 | CALC-02 | 06 | Hourly | T09 | IMPLEMENTED_UNVERIFIED | TC-003, TC-016 | - |
 | CALC-03 | 06 | Shift/day | T09 | IMPLEMENTED_UNVERIFIED | TC-017 | - |
-| CALC-04 | 06 | Monthly | T09, T18c | IMPLEMENTED_UNVERIFIED | TC-019, TC-128 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/auto_cuts_test.dart` |
-| CALC-05 | 06 | Monthly client billing | T09 | IMPLEMENTED_UNVERIFIED | TC-020 | - |
+| CALC-04 | 06 | Monthly | T09, T18c | IMPLEMENTED_UNVERIFIED | TC-019, TC-128, TC-208, TC-215 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/auto_cuts_test.dart`, `docs/audit/BUG_REGISTER.md` |
+| CALC-05 | 06 | Monthly client billing | T09 | IMPLEMENTED_UNVERIFIED | TC-020, TC-214 | - |
 | CALC-06 | 06 | Rate priority | T09 | IMPLEMENTED_UNVERIFIED | TC-021 | - |
 | CALC-07 | 06 | Overtime | T09 | IMPLEMENTED_UNVERIFIED | TC-022 | - |
-| PAY-01 | 07 | Payroll cycle | T11 | IMPLEMENTED_UNVERIFIED | TC-036, TC-055 | `apps/mobile/test/payroll_test.dart` |
-| PAY-02 | 07 | Do alag concepts | T11 | IMPLEMENTED_UNVERIFIED | TC-001, TC-054 | `packages/domain/test/payroll_test.dart` |
+| PAY-01 | 07 | Payroll cycle | T11 | IMPLEMENTED_UNVERIFIED | TC-036, TC-055, TC-208 | `apps/mobile/test/payroll_test.dart`, `docs/audit/BUG_REGISTER.md` |
+| PAY-02 | 07 | Do alag concepts | T11 | IMPLEMENTED_UNVERIFIED | TC-001, TC-054, TC-206, TC-208, TC-213, TC-215 | `packages/domain/test/payroll_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | PAY-03 | 07 | User ki misal | T11 | IMPLEMENTED_UNVERIFIED | TC-001 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart` |
 | PAY-04 | 07 | Katoti ki misal | T11, T18b, T18c | IMPLEMENTED_UNVERIFIED | TC-032, TC-121, TC-128, TC-134 | `packages/domain/test/payroll_test.dart`, `apps/mobile/test/payroll_test.dart`, `apps/mobile/test/records_test.dart` |
 | PAY-05 | 07 | Advance sub-ledger | T11, T12, T12a, T18c | IMPLEMENTED_UNVERIFIED | TC-002, TC-035, TC-051, TC-070, TC-129 | `apps/mobile/test/salary_payment_test.dart` |
-| PAY-06 | 07 | Salary payments | T12, T12a | IMPLEMENTED_UNVERIFIED | TC-034, TC-051, TC-068, TC-069 | - |
-| PAY-07 | 07 | Deductions | T11, T11e | IMPLEMENTED_UNVERIFIED | TC-033, TC-061 | `apps/mobile/test/payroll_test.dart` |
+| PAY-06 | 07 | Salary payments | T12, T12a | IMPLEMENTED_UNVERIFIED | TC-034, TC-051, TC-068, TC-069, TC-209 | `docs/audit/BUG_REGISTER.md` |
+| PAY-07 | 07 | Deductions | T11, T11e | IMPLEMENTED_UNVERIFIED | TC-033, TC-061, TC-208, TC-215 | `apps/mobile/test/payroll_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | PAY-08 | 07 | Compliance | T12 | IMPLEMENTED_UNVERIFIED | TC-071 | - |
 | PAY-09 | 07 | Payslip | T11f, T14 | IMPLEMENTED_UNVERIFIED | TC-064, TC-083 | `apps/mobile/test/statement_test.dart` |
 | TS-01 | 08 | Client/date range/site chunein aur approved attendance se timesheet banayein | T15 | IMPLEMENTED_UNVERIFIED | TC-084 | - |
@@ -61,14 +61,14 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | TS-05 | 08 | Invoice source | T15 | IMPLEMENTED_UNVERIFIED | TC-004, TC-086, TC-109 | - |
 | TS-06 | 08 | Revision | T15, T18c | IMPLEMENTED_UNVERIFIED | TC-087, TC-130 | `apps/mobile/test/auto_cuts_test.dart` |
 | TS-07 | 08 | Output | T15, T16 | IMPLEMENTED_UNVERIFIED | TC-088, TC-093 | - |
-| TS-08 | 08 | Monthly contracts | T15, T16, T18c | IMPLEMENTED_UNVERIFIED | TC-020, TC-089, TC-094, TC-109, TC-138, TC-139, TC-141 | `apps/mobile/test/invoices_test.dart`, `apps/mobile/test/invoice_edit_test.dart` |
+| TS-08 | 08 | Monthly contracts | T15, T16, T18c | IMPLEMENTED_UNVERIFIED | TC-020, TC-089, TC-094, TC-109, TC-138, TC-139, TC-141, TC-214 | `apps/mobile/test/invoices_test.dart`, `apps/mobile/test/invoice_edit_test.dart` |
 | INV-01 | 09 | Creation | T16 | IMPLEMENTED_UNVERIFIED | TC-041, TC-096 | - |
 | INV-02 | 09 | Minimum fields | T16 | IMPLEMENTED_UNVERIFIED | TC-090 | - |
 | INV-03 | 09 | VAT | T16 | IMPLEMENTED_UNVERIFIED | TC-040 | - |
-| INV-04 | 09 | Arithmetic | T16 | IMPLEMENTED_UNVERIFIED | TC-005, TC-040 | - |
-| INV-05 | 09 | Receipt | T17 | IMPLEMENTED_UNVERIFIED | TC-005, TC-099, TC-100, TC-136 | `apps/mobile/test/invoices_test.dart` |
-| INV-06 | 09 | Corrections | T16, T18b | IMPLEMENTED_UNVERIFIED | TC-004, TC-041, TC-097, TC-124, TC-125, TC-126, TC-127, TC-137 | `apps/mobile/test/invoice_edit_test.dart`, `apps/mobile/test/invoices_test.dart` |
-| INV-07 | 09 | Status | T17 | IMPLEMENTED_UNVERIFIED | TC-101, TC-102, TC-136 | `apps/mobile/test/invoices_test.dart` |
+| INV-04 | 09 | Arithmetic | T16 | IMPLEMENTED_UNVERIFIED | TC-005, TC-040, TC-206 | `docs/audit/BUG_REGISTER.md` |
+| INV-05 | 09 | Receipt | T17 | IMPLEMENTED_UNVERIFIED | TC-005, TC-099, TC-100, TC-136, TC-206, TC-209 | `apps/mobile/test/invoices_test.dart`, `docs/audit/BUG_REGISTER.md` |
+| INV-06 | 09 | Corrections | T16, T18b | IMPLEMENTED_UNVERIFIED | TC-004, TC-041, TC-097, TC-124, TC-125, TC-126, TC-127, TC-137, TC-214 | `apps/mobile/test/invoice_edit_test.dart`, `apps/mobile/test/invoices_test.dart` |
+| INV-07 | 09 | Status | T17 | IMPLEMENTED_UNVERIFIED | TC-101, TC-102, TC-136, TC-210 | `apps/mobile/test/invoices_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | INV-08 | 09 | Online/offline numbering | T16 | IMPLEMENTED_UNVERIFIED | TC-091, TC-110 | - |
 | INV-09 | 09 | e-Invoicing gate | T16 | IMPLEMENTED_UNVERIFIED | TC-090, TC-092 | - |
 | DOC-01 | 10 | Aik shared engine | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-009, TC-058, TC-077 | - |
@@ -79,10 +79,10 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | DOC-06 | 10 | Actions | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-059, TC-081 | - |
 | DOC-07 | 10 | Data safety | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-059, TC-081 | - |
 | DOC-08 | 10 | Tests | T14, T18a | IMPLEMENTED_UNVERIFIED | TC-058, TC-082 | - |
-| REP-01 | 11 | Reports | T18, T18a, T11e, T11f | IMPLEMENTED_UNVERIFIED | TC-057, TC-058, TC-062, TC-063, TC-067, TC-106, TC-107, TC-108, TC-135 | `apps/mobile/test/reports_test.dart` |
+| REP-01 | 11 | Reports | T18, T18a, T11e, T11f | IMPLEMENTED_UNVERIFIED | TC-057, TC-058, TC-062, TC-063, TC-067, TC-106, TC-107, TC-108, TC-135, TC-210, TC-213, TC-216 | `apps/mobile/test/reports_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | REP-02 | 11 | Hisaab ki separation | T18 | IMPLEMENTED_UNVERIFIED | TC-044 | `apps/mobile/test/reports_test.dart` |
-| REP-03 | 11 | Margin | T11f, T18 | IMPLEMENTED_UNVERIFIED | TC-044, TC-065, TC-112 | `apps/mobile/test/statement_test.dart`, `apps/mobile/test/reports_test.dart` |
-| REP-04 | 11 | Closing | T13, T13b, T16, T18b | IMPLEMENTED_UNVERIFIED | TC-037, TC-072, TC-073, TC-074, TC-076, TC-095, TC-098, TC-116 | - |
+| REP-03 | 11 | Margin | T11f, T18 | IMPLEMENTED_UNVERIFIED | TC-044, TC-065, TC-112, TC-210 | `apps/mobile/test/statement_test.dart`, `apps/mobile/test/reports_test.dart`, `docs/audit/BUG_REGISTER.md` |
+| REP-04 | 11 | Closing | T13, T13b, T16, T18b | IMPLEMENTED_UNVERIFIED | TC-037, TC-072, TC-073, TC-074, TC-076, TC-095, TC-098, TC-116, TC-215 | - |
 | REP-05 | 11 | Historical integrity | T13 | IMPLEMENTED_UNVERIFIED | TC-075 | - |
 | REP-06 | 11 | Backup/export | T18, T18a, T20 | IN_PROGRESS | TC-058, TC-103 | - |
 | REP-07 | 11 | Expenses | T13, T12a | IMPLEMENTED_UNVERIFIED | TC-052 | - |
@@ -94,10 +94,10 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | PLAN-05 | 12 | Optional annual Solo AED 490 / Team AED 990 | T24 | NOT_STARTED | - | - |
 | PLAN-06 | 12 | Paid upgrade ka sabab real value ho: zyada workers/clients | T21 | IMPLEMENTED_UNVERIFIED | TC-175, TC-185, TC-186, TC-188, TC-192, TC-203 | `supabase/tests/database/plans.test.sql`, CI run 43042072782; `apps/mobile/test/plan_guard_test.dart`, `apps/mobile/test/account_flow_test.dart`, `supabase/tests/database/cloud_backup.test.sql`, `apps/mobile/test/cloud_restore_test.dart` |
 | BILL-01 | 13 | Manual start | T21, T22 | IN_PROGRESS | TC-177, TC-182 | `supabase/tests/database/slips.test.sql`, CI run 43042072782; `apps/mobile/test/plans_test.dart` |
-| BILL-02 | 13 | Activation | T21 | IMPLEMENTED_UNVERIFIED | TC-176, TC-177, TC-178, TC-179, TC-182, TC-184, TC-192, TC-200, TC-201, TC-203, TC-204 | `supabase/tests/database/licence.test.sql`, `supabase/tests/database/slips.test.sql`, `supabase/functions/licence/sign_test.ts`, CI run 43042072782; `apps/mobile/test/plans_test.dart`, `supabase/tests/database/cloud_backup.test.sql`, CI run 43664625445, `apps/mobile/test/cloud_restore_test.dart` |
-| BILL-03 | 13 | Safer design | T21 | IMPLEMENTED_UNVERIFIED | TC-047, TC-176, TC-178, TC-179, TC-180, TC-186 | `supabase/tests/database/licence.test.sql`, `supabase/functions/licence/sign_test.ts`, CI run 43042072782; `apps/mobile/test/licence_test.dart`, `apps/mobile/test/plan_guard_test.dart` |
+| BILL-02 | 13 | Activation | T21 | IMPLEMENTED_UNVERIFIED | TC-176, TC-177, TC-178, TC-179, TC-182, TC-184, TC-192, TC-200, TC-201, TC-203, TC-204, TC-212 | `supabase/tests/database/licence.test.sql`, `supabase/tests/database/slips.test.sql`, `supabase/functions/licence/sign_test.ts`, CI run 43042072782; `apps/mobile/test/plans_test.dart`, `supabase/tests/database/cloud_backup.test.sql`, CI run 43664625445, `apps/mobile/test/cloud_restore_test.dart`, `docs/audit/BUG_REGISTER.md` |
+| BILL-03 | 13 | Safer design | T21 | IMPLEMENTED_UNVERIFIED | TC-047, TC-176, TC-178, TC-179, TC-180, TC-186, TC-211 | `supabase/tests/database/licence.test.sql`, `supabase/functions/licence/sign_test.ts`, CI run 43042072782; `apps/mobile/test/licence_test.dart`, `apps/mobile/test/plan_guard_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | BILL-04 | 13 | Renewals | T21, T22 | IN_PROGRESS | TC-175, TC-177 | `supabase/tests/database/plans.test.sql`, `supabase/tests/database/slips.test.sql`, CI run 43042072782 |
-| BILL-05 | 13 | Offline | T21 | IMPLEMENTED_UNVERIFIED | TC-047, TC-176, TC-180, TC-181, TC-183, TC-184, TC-185, TC-186, TC-188 | `supabase/tests/database/licence.test.sql`, CI run 43042072782; `apps/mobile/test/licence_test.dart`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `apps/mobile/test/plan_guard_test.dart` |
+| BILL-05 | 13 | Offline | T21 | IMPLEMENTED_UNVERIFIED | TC-047, TC-176, TC-180, TC-181, TC-183, TC-184, TC-185, TC-186, TC-188, TC-205 | `supabase/tests/database/licence.test.sql`, CI run 43042072782; `apps/mobile/test/licence_test.dart`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `apps/mobile/test/plan_guard_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | BILL-06 | 13 | Tampering | T21 | IMPLEMENTED_UNVERIFIED | TC-176, TC-180, TC-185 | `supabase/tests/database/licence.test.sql`, CI run 43042072782; `apps/mobile/test/licence_test.dart`, `apps/mobile/test/plan_guard_test.dart` |
 | BILL-07 | 13 | Play Store policy | T26 | NOT_STARTED | - | - |
 | BILL-08 | 13 | Distribution decision | T26 | NOT_STARTED | - | - |
@@ -113,7 +113,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | TEAM-01 | 15 | Invite | T24 | NOT_STARTED | - | - |
 | TEAM-02 | 15 | Permission presets | T24 | NOT_STARTED | - | - |
 | TEAM-03 | 15 | Payload isolation | T24 | NOT_STARTED | TC-007 | - |
-| TEAM-04 | 15 | Sync | T25 | IN_PROGRESS | TC-008 | - |
+| TEAM-04 | 15 | Sync | T25 | IN_PROGRESS | TC-008, TC-209 | `docs/audit/BUG_REGISTER.md` |
 | TEAM-05 | 15 | Conflicts | T25 | NOT_STARTED | TC-048 | - |
 | TEAM-06 | 15 | Revocation | T25 | NOT_STARTED | TC-048 | - |
 | TEAM-07 | 15 | Team downgrade | T25 | NOT_STARTED | - | - |
@@ -122,9 +122,9 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | DATA-02 | 16 | Backup bundle | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-164, TC-195 | `apps/mobile/test/backup_test.dart`, `apps/mobile/test/recovery_test.dart` |
 | DATA-03 | 16 | Owner warning | T20 | IMPLEMENTED_UNVERIFIED | TC-162 | `apps/mobile/test/backup_test.dart` |
 | DATA-04 | 16 | Local backup | T20 | IMPLEMENTED_UNVERIFIED | TC-162, TC-163, TC-164 | `apps/mobile/test/backup_test.dart` |
-| DATA-05 | 16 | Restore | T20 | IMPLEMENTED_UNVERIFIED | TC-010, TC-046, TC-160, TC-165, TC-167, TC-168, TC-169 | `apps/mobile/test/restore_test.dart` |
-| DATA-06 | 16 | Phone change | T20 | IMPLEMENTED_UNVERIFIED | TC-010, TC-046, TC-166, TC-167, TC-170, TC-171, TC-172, TC-173, TC-174, TC-190, TC-193, TC-194, TC-196, TC-197, TC-199, TC-200, TC-201, TC-202, TC-204 | `apps/mobile/test/restore_test.dart`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `supabase/tests/database/phone_off.test.sql`, `supabase/tests/database/cloud_backup.test.sql`, `supabase/functions/backup/request_test.ts`, CI run 43664625445, `apps/mobile/test/cloud_copy_test.dart`, `apps/mobile/test/cloud_screens_test.dart`, `apps/mobile/test/cloud_restore_test.dart`, D-078 |
-| DATA-07 | 16 | Key recovery | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-161, TC-165, TC-195, TC-198, TC-201 | `apps/mobile/test/backup_test.dart`, `apps/mobile/test/restore_test.dart`, `apps/mobile/test/recovery_test.dart`, `apps/mobile/tool/recovery_key.dart`, `apps/mobile/test/cloud_restore_test.dart` |
+| DATA-05 | 16 | Restore | T20 | IMPLEMENTED_UNVERIFIED | TC-010, TC-046, TC-160, TC-165, TC-167, TC-168, TC-169, TC-206 | `apps/mobile/test/restore_test.dart`, `docs/audit/BUG_REGISTER.md` |
+| DATA-06 | 16 | Phone change | T20 | IMPLEMENTED_UNVERIFIED | TC-010, TC-046, TC-166, TC-167, TC-170, TC-171, TC-172, TC-173, TC-174, TC-190, TC-193, TC-194, TC-196, TC-197, TC-199, TC-200, TC-201, TC-202, TC-204, TC-205, TC-211, TC-212, TC-216 | `apps/mobile/test/restore_test.dart`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `supabase/tests/database/phone_off.test.sql`, `supabase/tests/database/cloud_backup.test.sql`, `supabase/functions/backup/request_test.ts`, CI run 43664625445, `apps/mobile/test/cloud_copy_test.dart`, `apps/mobile/test/cloud_screens_test.dart`, `apps/mobile/test/cloud_restore_test.dart`, D-078, `docs/audit/BUG_REGISTER.md` |
+| DATA-07 | 16 | Key recovery | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-161, TC-165, TC-195, TC-198, TC-201, TC-211 | `apps/mobile/test/backup_test.dart`, `apps/mobile/test/restore_test.dart`, `apps/mobile/test/recovery_test.dart`, `apps/mobile/tool/recovery_key.dart`, `apps/mobile/test/cloud_restore_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | DATA-08 | 16 | Retention | T20 | IMPLEMENTED_UNVERIFIED | TC-191, TC-194, TC-195, TC-196, TC-197, TC-199, TC-201, TC-204 | `docs/DATA_MODEL.md` Retention, D-066, D-069, D-070, `supabase/tests/database/cloud_backup.test.sql`, D-072, D-075, D-076, D-077, `apps/mobile/test/cloud_copy_test.dart`, `apps/mobile/test/cloud_screens_test.dart`, `apps/mobile/test/cloud_restore_test.dart`, D-078 |
 | ADMIN-01 | 17 | Navigation | T22 | NOT_STARTED | - | - |
 | ADMIN-02 | 17 | Customer register | T22 | NOT_STARTED | - | - |
@@ -171,4 +171,4 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | AI-06 | 22 | CI gates | T02 | IMPLEMENTED_UNVERIFIED | - | - |
 | AI-07 | 22 | No silent changes | T01 | IN_PROGRESS | - | - |
 | AI-08 | 22 | Full ownership | T01 | IN_PROGRESS | - | - |
-| QA-01 | 23 | Aik complete end-to-end test: signup > apni company > | T26 | NOT_STARTED | TC-013 | - |
+| QA-01 | 23 | Aik complete end-to-end test: signup > apni company > | T26 | NOT_STARTED | TC-013, TC-206 | `docs/audit/BUG_REGISTER.md` |

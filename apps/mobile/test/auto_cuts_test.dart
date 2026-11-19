@@ -1,9 +1,11 @@
 import 'package:domain/calc.dart';
 import 'package:domain/cash.dart';
 import 'package:domain/dates.dart';
+import 'package:domain/payroll.dart';
 import 'package:drift/drift.dart' show BooleanExpressionOperators, Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/cash.dart';
 import 'package:labour_app/data/closing.dart';
 import 'package:labour_app/data/masters.dart';
@@ -78,10 +80,79 @@ void main() {
       expect(db.customStatement("UPDATE payroll_lines SET absence_fils = 0 WHERE id = '${line.id}'"), throwsA(anything), reason: 'posted payroll is immutable');
     });
 
+    test('D-080 (5) attendance added late for a day a posted salary cut gives that day back in the next payroll, once, and an absent row gives nothing', () async {
+      final karim = await monthlyWorker(db);
+      await october(db, karim);
+      await db.postPayroll(oct, operationId: newUuid());
+      await ts.work(db, '2020-10-05', worker: karim);
+      await ts.work(db, '2020-10-12', worker: karim, input: const ShiftInput(status: AttendanceStatus.absent));
+
+      final november = (await db.payrollFor('2020-11')).singleWhere((p) => p.worker.id == karim);
+      expect(november.figures.adjustmentFils, 10000, reason: 'one day of AED 3,100 by calendar days, the 5th; the 12th marked absent gives nothing');
+      final slip = (await db.statementsFor(oct, workerId: karim)).single;
+      expect((slip.salaryFils, slip.absenceFils, slip.absentDays.join(' ')), (290000, 20000, '2020-10-12 2020-10-26'), reason: 'the slip counts it in the month it was cut, as it counts late work');
+      final owedBefore = november.payableFils;
+
+      await db.postPayroll('2020-11', operationId: newUuid());
+      final posted = (await db.payrollFor('2020-11')).singleWhere((p) => p.worker.id == karim);
+      expect((posted.line!.adjustmentFils, posted.payableFils), (10000, owedBefore));
+      expect((await db.payrollFor('2020-12')).singleWhere((p) => p.worker.id == karim).figures.adjustmentFils, 0, reason: 'a day is given back once');
+      expect((await db.statementsFor(oct, workerId: karim)).single.salaryFils, 290000, reason: 'and counted once on the slip');
+    });
+
     test('a contract with the cut off pays the whole month whatever the register says', () async {
       final karim = await monthlyWorker(db, cut: false);
       final f = (await db.payrollFor(oct)).singleWhere((p) => p.worker.id == karim).figures;
       expect((f.salaryFils, f.absenceFils), (310000, 0));
+    });
+
+    test('BUG-005 a whole month with no attendance still shows, cut day by day, and posts, so the next month is not held', () async {
+      final nadeem = await db.saveRow(db.workers, id: null, operationId: newUuid(), fields: const WorkersCompanion(code: Value('W8'), name: Value('Nadeem')));
+      await db.saveRow(
+        db.payContracts,
+        id: null,
+        operationId: newUuid(),
+        fields: PayContractsCompanion(
+          workerId: Value(nadeem),
+          basis: Value(RateBasis.month.name),
+          rateFils: const Value(310000),
+          effectiveFrom: const Value('2020-01-01'),
+          partialMethod: Value(PartialMethod.calendarDays.name),
+          cutAbsence: const Value(true),
+        ),
+      );
+      await ts.work(db, '2020-09-10', worker: nadeem);
+      await db.postPayroll('2020-09', operationId: newUuid());
+
+      final october = (await db.payrollFor(oct)).where((p) => p.worker.id == nadeem).firstOrNull;
+      expect(october, isNotNull, reason: 'the cut shows on the payroll line day by day (D-057)');
+      expect((october!.figures.salaryFils, october.figures.absenceFils, october.figures.absentDays.length, october.canPost), (0, 310000, 31, true));
+      await db.postPayroll(oct, operationId: newUuid());
+      expect((await db.payrollFor(oct)).singleWhere((p) => p.worker.id == nadeem).line!.absenceFils, 310000);
+      expect((await db.payrollFor('2020-11')).singleWhere((p) => p.worker.id == nadeem).figures.issues, isNot(contains(PayrollIssue.earlierMonthMissing)));
+    });
+
+    test('BUG-005 a contract dated from the hiring date lists no month cut whole before the account starts (D-042 (5), R05-2)', () async {
+      final bilal = await db.saveRow(db.workers, id: null, operationId: newUuid(), fields: const WorkersCompanion(code: Value('W9'), name: Value('Bilal')));
+      await db.saveRow(
+        db.payContracts,
+        id: null,
+        operationId: newUuid(),
+        fields: PayContractsCompanion(
+          workerId: Value(bilal),
+          basis: Value(RateBasis.month.name),
+          rateFils: const Value(310000),
+          effectiveFrom: const Value('2020-01-01'),
+          partialMethod: Value(PartialMethod.calendarDays.name),
+          cutAbsence: const Value(true),
+        ),
+      );
+      await ts.work(db, '2020-11-03', worker: bilal);
+
+      expect((await db.payrollFor(oct)).where((p) => p.worker.id == bilal), isEmpty, reason: 'October is before his first row, so it has nothing to post');
+      final november = (await db.payrollFor('2020-11')).singleWhere((p) => p.worker.id == bilal);
+      expect(november.figures.issues, isNot(contains(PayrollIssue.earlierMonthMissing)));
+      expect(november.figures.absenceFils, greaterThan(0), reason: 'from his first month the cut still shows');
     });
   });
 
@@ -101,6 +172,16 @@ void main() {
     }
 
     const agreed = TsAdjustment(status: AttendanceStatus.present, minutes: 7 * 60, amountFils: 10500, reason: 'Left early');
+
+    test('D-080 (9) 0 hours agreed on a worked row with no unpaid break is refused, never stored or paid as 24 hours', () async {
+      await db.saveAttendanceBatch(workDate: '2020-10-05', clientId: ts.emaar, siteId: ts.marina, inputs: [EntryInput(workerId: ts.asif, shift: const ShiftInput(startMinute: 8 * 60, endMinute: 18 * 60))], operationId: newUuid());
+      final (revision, row) = await draftRow();
+      const none = TsAdjustment(status: AttendanceStatus.present, minutes: 0, amountFils: 0, reason: 'Typo');
+      // 08:00 plus 0 hours and no break ends at 08:00, which the clock reads as the next day.
+      await expectLater(db.carryAgreedToAttendance(revision, row.entryId, none, note: 'Company: Typo', reopenReason: 'Edited'), throwsA(isA<SameStartEnd>()));
+      final entries = await db.select(db.attendanceEntries).get();
+      expect([for (final e in entries) (e.id, e.clockMinutes, e.workerPayableMinutes, e.workerAmountFils)], [(row.entryId, 600, 600, 10000)], reason: 'nothing carried');
+    });
 
     test('the attendance takes the same hours with the note, so the pay follows, and the agreement stays on the draft', () async {
       await ts.work(db, '2020-10-05');

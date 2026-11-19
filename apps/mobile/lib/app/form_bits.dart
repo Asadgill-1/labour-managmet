@@ -12,6 +12,18 @@ Value<String?> optionalText(TextEditingController c) {
   return Value(text.isEmpty ? null : text);
 }
 
+/// A count of days typed in a field: empty, or a whole number from 0 to [max], else [error] at the field (UX-04).
+String? checkDays(String? value, {required int max, required String error}) {
+  final text = (value ?? '').trim();
+  if (text.isEmpty) return null;
+  final days = int.tryParse(text);
+  return days == null || days < 0 || days > max ? error : null;
+}
+
+/// A shift's end equal to its start is a typo, never 24 hours, so [error] at the end field (D-080 (9)). An end before
+/// the start is next day (ATT-06).
+String? checkShiftEnd(int? start, int? end, {required String error}) => start != null && start == end ? error : null;
+
 /// Gap between form rows, used by every form.
 const fieldGap = SizedBox(height: 14);
 
@@ -60,7 +72,7 @@ class Field extends StatelessWidget {
       keyboardType: keyboardType,
       autofillHints: autofillHints,
       maxLines: lines,
-      decoration: InputDecoration(labelText: label, helperText: helper, helperMaxLines: 4),
+      decoration: InputDecoration(labelText: label, helperText: helper, helperMaxLines: 4, errorMaxLines: 4),
     );
   }
 }
@@ -114,11 +126,14 @@ class DateField extends StatelessWidget {
 
 /// Time picked on a clock, held as minutes from midnight.
 class TimeField extends StatelessWidget {
-  const TimeField(this.label, {required this.value, required this.onChanged, this.startAt = 8 * 60, super.key});
+  const TimeField(this.label, {required this.value, required this.onChanged, this.startAt = 8 * 60, this.errorText, super.key});
 
   final String label;
   final int? value;
   final ValueChanged<int> onChanged;
+
+  /// Said under the field, such as [checkShiftEnd]'s.
+  final String? errorText;
 
   /// Where the clock opens while the field is empty. An end time opens later, so tapping OK at once never makes a
   /// 24-hour shift.
@@ -140,7 +155,7 @@ class TimeField extends StatelessWidget {
         if (picked != null) onChanged(picked.hour * 60 + picked.minute);
       },
       child: InputDecorator(
-        decoration: InputDecoration(labelText: label, suffixIcon: const Icon(Icons.schedule)),
+        decoration: InputDecoration(labelText: label, errorText: errorText, errorMaxLines: 4, suffixIcon: const Icon(Icons.schedule)),
         child: Text(value == null ? '' : showMinuteOfDay(value!)),
       ),
     );
@@ -210,7 +225,10 @@ Future<String?> askReason(BuildContext context, {required String title, required
       ],
     ),
   );
-  return yes == true ? reason.text.trim() : null;
+  final text = reason.text.trim();
+  // The dialog's field still draws while it closes, so the controller goes a frame later.
+  WidgetsBinding.instance.addPostFrameCallback((_) => reason.dispose());
+  return yes == true ? text : null;
 }
 
 /// The month and arrows to change it, on the coloured band.
@@ -514,11 +532,11 @@ class BandFigure extends StatelessWidget {
 }
 
 /// Asks for one worker's daily wage. Null means cancelled. A null `fils` means the field was left empty.
-Future<({int? fils})?> askDailyWage(BuildContext context, {required String title, required String helper, int? initial, String? label}) {
+Future<({int? fils})?> askDailyWage(BuildContext context, {required String title, required String helper, int? initial, String? label}) async {
   final l10n = AppLocalizations.of(context);
   final amount = TextEditingController(text: initial == null ? '' : plainAmount(initial));
   final form = GlobalKey<FormState>();
-  return showDialog<({int? fils})>(
+  final answer = await showDialog<({int? fils})>(
     context: context,
     builder: (dialog) => AlertDialog(
       title: Text(title),
@@ -543,6 +561,9 @@ Future<({int? fils})?> askDailyWage(BuildContext context, {required String title
       ],
     ),
   );
+  // The dialog's field still draws while it closes, so the controller goes a frame later.
+  WidgetsBinding.instance.addPostFrameCallback((_) => amount.dispose());
+  return answer;
 }
 
 /// Bottom sheet to pick one option, with a search once the list is long. Skips the question when there is only one answer.

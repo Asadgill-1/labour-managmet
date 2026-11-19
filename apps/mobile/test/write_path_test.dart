@@ -8,7 +8,7 @@ const tenant = '00000000-0000-4000-8000-00000000000a';
 
 TenantDatabase testDb() => TenantDatabase(NativeDatabase.memory(), tenantId: tenant, deviceId: 'device-1');
 
-Future<void> insertClient(TenantDatabase db, String id, String op, {String name = 'Client'}) {
+Future<String> insertClient(TenantDatabase db, String id, String op, {String name = 'Client'}) {
   return db.applyOperation(
     operationId: op,
     entity: 'clients',
@@ -68,6 +68,14 @@ void main() {
     expect(await db.select(db.clients).get(), hasLength(1));
     expect(await db.select(db.outbox).get(), hasLength(1));
     expect(await db.select(db.auditEvents).get(), hasLength(1));
+  });
+
+  test('a retry gives back the id the first call stored, not the one it was handed (BUG-010)', () async {
+    final db = testDb();
+    addTearDown(db.close);
+    expect(await insertClient(db, 'c1', 'op1'), 'c1');
+    expect(await insertClient(db, 'c2', 'op1'), 'c1', reason: 'a caller that makes a fresh id each time gets the stored one back');
+    expect((await db.select(db.clients).getSingle()).id, 'c1');
   });
 
   test('a failing change leaves nothing behind', () async {

@@ -3,7 +3,7 @@
 -- renewal continues the paid period from its end and keeps its anchor day. Deleting the account takes the slips.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(40);
+select plan(41);
 
 insert into auth.users (id, aud, role, email, email_confirmed_at) values
   ('11111111-1111-1111-1111-111111111111', 'authenticated', 'authenticated', 'owner@example.test', now()),
@@ -166,11 +166,26 @@ select throws_ok(
   'no waiting slip with this id', 'once'
 );
 
--- Paid to Feb 28 from Jan 31, two months more run to Apr 30, not Apr 28: the anchor day holds (BILL-04).
+-- Accepting a slip locks its company first, so two slips of one company accepted at once do not start from the same
+-- day (BUG-026). One session cannot race another, so the lock is checked in the function's text.
+select ok(
+  pg_get_functiondef('private.accept_slip(uuid, bigint, text, date, text)'::regprocedure)
+    like '%perform 1 from public.tenants t where t.tenant_id = v_slip.tenant_id for update;%',
+  'accepting a slip locks its company'
+);
+
+-- Paid to Feb's last day from Jan 31, two months more run to Apr 30, not Apr 28: the anchor day holds (BILL-04). The
+-- dates are next year's in Dubai, so the period has not ended on whatever day the test runs (BUG-027).
+do $$ begin
+  perform set_config('test.year', (extract(year from now() at time zone 'Asia/Dubai')::int + 1)::text, true);
+end $$;
 insert into public.payment_slips (id, tenant_id, plan_code, plan_version, months, expected_fils, file_path, state, decided_at_utc, submitted_by, source_operation_id) values
   ('5b000000-0000-0000-0000-000000000001', 'eeeeeeee-0000-0000-0000-000000000002', 'small', 1, 1, 19900, 'eeeeeeee-0000-0000-0000-000000000002/old.jpg', 'accepted', now(), '33333333-3333-3333-3333-333333333333', gen_random_uuid());
 insert into public.subscriptions (tenant_id, plan_code, plan_version, source, slip_id, starts_at_utc, ends_at_utc, anchor_at_utc, anchor_months, amount_fils, bank_reference, received_on) values
-  ('eeeeeeee-0000-0000-0000-000000000002', 'small', 1, 'slip', '5b000000-0000-0000-0000-000000000001', '2027-01-31 10:00+04', '2027-02-28 10:00+04', '2027-01-31 10:00+04', 1, 19900, 'RAK-B1', current_date);
+  ('eeeeeeee-0000-0000-0000-000000000002', 'small', 1, 'slip', '5b000000-0000-0000-0000-000000000001',
+    make_timestamptz(current_setting('test.year')::int, 1, 31, 10, 0, 0, 'Asia/Dubai'),
+    make_timestamptz(current_setting('test.year')::int, 3, 1, 10, 0, 0, 'Asia/Dubai') - interval '24 hours',
+    make_timestamptz(current_setting('test.year')::int, 1, 31, 10, 0, 0, 'Asia/Dubai'), 1, 19900, 'RAK-B1', current_date);
 set local role authenticated;
 select lives_ok(
   $$ select public.submit_slip('eeeeeeee-0000-0000-0000-000000000002', 'small', 2, 'jpg', 'cccccccc-0000-0000-0000-000000000009') $$,
@@ -184,8 +199,9 @@ select lives_ok(
 select results_eq(
   $$ select s.starts_at_utc, s.ends_at_utc from public.subscriptions s join public.payment_slips p on p.id = s.slip_id
      where p.source_operation_id = 'cccccccc-0000-0000-0000-000000000009' $$,
-  $$ values ('2027-02-28 10:00+04'::timestamptz, '2027-04-30 10:00+04'::timestamptz) $$,
-  'which run from Feb 28 to Apr 30'
+  $$ values (make_timestamptz(current_setting('test.year')::int, 3, 1, 10, 0, 0, 'Asia/Dubai') - interval '24 hours',
+            make_timestamptz(current_setting('test.year')::int, 4, 30, 10, 0, 0, 'Asia/Dubai')) $$,
+  'which run from Feb''s last day to Apr 30'
 );
 
 -- Deleting the account takes its slips and plan periods.

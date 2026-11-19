@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:domain/calc.dart';
 import 'package:domain/cash.dart';
 import 'package:domain/dates.dart';
@@ -12,6 +14,7 @@ import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/payroll.dart';
 import 'package:labour_app/data/statement.dart';
 import 'package:labour_app/data/tenant_database.dart';
+import 'package:labour_app/features/cash/cash_entry_form_screen.dart';
 import 'package:labour_app/features/registers/register_defs.dart';
 import 'package:labour_app/l10n/app_localizations.dart';
 
@@ -340,6 +343,32 @@ void main() {
     final lines = await real(tester, () => app.select(app.cashEntries).get());
     expect(lines.map((l) => (l.kind, l.amountFils)), unorderedEquals([(CashKind.salaryPaid.name, 27000), (CashKind.advanceGiven.name, 5000)]));
     expect(find.text(l10n.wagesDueNone), findsOneWidget);
+    await shutDown(tester, app);
+  });
+
+  testWidgets('BUG-007 a salary payment cannot be saved before its months have loaded, so none of it goes on the advance by mistake (D-043)', (tester) async {
+    final app = memoryDb();
+    await real(tester, () => seed(app));
+    final l10n = await real(tester, () => AppLocalizations.delegate.load(const Locale('en', 'PK')));
+    await pumpApp(tester, app);
+    // The database is busy, as on a slow phone, so the form's months have not come back yet.
+    final busy = Completer<void>();
+    final held = app.transaction(() => busy.future);
+    final navigator = tester.state<NavigatorState>(find.byType(Navigator).first);
+    navigator.push(MaterialPageRoute<void>(builder: (_) => CashEntryFormScreen(kind: CashKind.salaryPaid, workerId: asif, amountFils: 27000)));
+    await tester.pump();
+    await tester.pump();
+    await tester.tap(find.text(l10n.save));
+    await tester.pump();
+    expect(find.text(l10n.salaryExtraTitle('AED 270.00')), findsNothing, reason: 'the whole payment would go on the advance');
+
+    busy.complete();
+    await real(tester, () => held);
+    await settle(tester);
+    await tester.tap(find.text(l10n.save));
+    await settle(tester);
+    final lines = await real(tester, () => app.select(app.cashEntries).get());
+    expect(lines.map((l) => (l.kind, l.amountFils)), [(CashKind.salaryPaid.name, 27000)]);
     await shutDown(tester, app);
   });
 }

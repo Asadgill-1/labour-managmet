@@ -108,7 +108,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     await sender.sendNow(replace: replace);
     if (!mounted) return;
     final problem = sender.view.problem;
-    // The other phone's question shows on the page itself.
+    // The question about the copy already in the cloud shows on the page itself.
     if (problem == null) {
       showSavedOnPhone(context, l10n.cloudSent);
     } else if (problem != AccountProblem.otherPhoneCopy) {
@@ -116,7 +116,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     }
   }
 
-  /// Keeping this phone's data in place of the other phone's copy can't be undone, so it is asked once more.
+  /// Sending this phone's data in place of the copy already in the cloud can't be undone, so it is asked once more.
   Future<void> _replaceCloudCopy(CloudSender sender) async {
     final l10n = AppLocalizations.of(context);
     final yes = await showDialog<bool>(

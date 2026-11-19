@@ -170,6 +170,15 @@ void main() {
       expect(september.openingFils, 50000);
       expect(september.earnedFils, 200000);
     });
+
+    test("a balance dated a month's last day already holds that month's salary, so the next month counts only its own, as payroll does (BUG-028)", () async {
+      await db.saveRow(db.openingBalances, id: null, operationId: newUuid(), fields: OpeningBalancesCompanion(workerId: Value(imran), kind: const Value('worker_salary_owed'), amountFils: const Value(50000), asOfDate: const Value('2020-09-30'), sourceNote: const Value('Old book')));
+      final october = await statementOf(imran, oct);
+      expect(october.openingFils, 50000, reason: "the old balance alone, with no September salary on top of it");
+      expect((october.salaryFils, october.closingFils), (200000, 250000));
+      final line = (await db.payrollFor(oct)).singleWhere((p) => p.worker.id == imran);
+      expect(october.closingFils, line.closingFils, reason: 'the statement and Tankhwah read the same account');
+    });
   });
 
   group('salary slip', () {

@@ -11,6 +11,7 @@ import '../../data/cash.dart';
 import '../../data/changes.dart';
 import '../../data/invoices.dart';
 import '../../data/masters.dart';
+import '../../data/payroll.dart' show PayrollOps;
 import '../../data/receipts.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
@@ -20,6 +21,7 @@ import '../invoices/invoice_paper.dart';
 import '../invoices/invoice_screen.dart' show vatCategoryLabel;
 import '../invoices/invoices_screen.dart' show invoiceStatusLabel;
 import '../payroll/pay_item_form_screen.dart' show payKindLabel;
+import '../payroll/salary_slip.dart' show absentDayList;
 import '../rates/rate_labels.dart';
 import '../today/attendance_review_screen.dart' show statusLabel;
 import 'register_model.dart';
@@ -44,11 +46,37 @@ class _Masters {
     {for (final g in await (db.select(db.workerGroups)..orderBy([(g) => OrderingTerm.asc(g.name)])).get()) g.id: g},
   );
 
+  late final Map<String, String> clientLabels = companyLabels(clients.values);
+
   List<_Option> get workerOptions => [for (final w in workers.values) (value: w.id, label: '${w.name} (${w.code})')];
-  List<_Option> get clientOptions => [for (final c in clients.values) (value: c.id, label: c.name)];
+  List<_Option> get clientOptions => [for (final c in clients.values) (value: c.id, label: clientLabels[c.id]!)];
   List<_Option> get siteOptions => [for (final s in sites.values) (value: s.id, label: '${s.name} (${clients[s.clientId]?.name ?? ''})')];
   List<_Option> get roomOptions => [for (final r in rooms.values) (value: r.id, label: r.name)];
   List<_Option> get groupOptions => [for (final g in groups.values) (value: g.id, label: g.name)];
+}
+
+/// What a register calls each company. Names need not be unique, so a repeated name carries the company's TRN, or else a
+/// number in the order the companies were added, and two accounts never merge under one heading (INV-07).
+Map<String, String> companyLabels(Iterable<Client> clients) {
+  final added = clients.toList()..sort((a, b) => a.createdAtUtc != b.createdAtUtc ? a.createdAtUtc.compareTo(b.createdAtUtc) : a.id.compareTo(b.id));
+  final named = <String, int>{};
+  for (final c in added) {
+    named[c.name] = (named[c.name] ?? 0) + 1;
+  }
+  final used = {for (final c in added) if (named[c.name] == 1) c.name};
+  return {
+    for (final c in added)
+      c.id: () {
+        if (named[c.name] == 1) return c.name;
+        final trn = c.trn?.trim() ?? '';
+        var n = 1;
+        var label = trn.isEmpty ? '${c.name} ($n)' : '${c.name} ($trn)';
+        while (!used.add(label)) {
+          label = '${c.name} (${++n})';
+        }
+        return label;
+      }(),
+  };
 }
 
 bool _inRange(String date, String? from, String? to) => (from == null || date.compareTo(from) >= 0) && (to == null || date.compareTo(to) <= 0);
@@ -436,6 +464,7 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
   final cash = groupedBy(await (db.select(db.cashEntries)..where((c) => c.workerId.isNotNull())).get(), (c) => c.workerId);
   final parts = await _salaryParts(db);
   final lines = groupedBy(await (db.select(db.payrollLines)..where((l) => l.reversed.equals(false))).get(), (l) => l.workerId);
+  final givenBack = await db.cutsGivenBack();
   final items = groupedBy(await db.select(db.payrollItems).get(), (i) => i.workerId);
   final openings = groupedBy(await (db.select(db.openingBalances)..where((b) => b.workerId.isNotNull())).get(), (b) => b.workerId);
   final members = groupedBy(await db.select(db.workerGroupMembers).get(), (g) => g.workerId);
@@ -471,6 +500,16 @@ Future<RegisterData> _workers(TenantDatabase db, AppLocalizations l10n, _Masters
         ),
       for (final l in (lines[w.id] ?? const <PayrollLine>[]).where((l) => l.salaryFils != 0))
         _AccountLine(monthLastDay(l.periodFrom.substring(0, 7)), l.createdAtUtc, l10n.payrollSalary, earned: l.salaryFils, note: showMonth(l.periodFrom.substring(0, 7))),
+      // A day the salary cut, worked after all, gives its cut back on the month it was cut, as late work counts (D-080 (5)).
+      for (final l in lines[w.id] ?? const <PayrollLine>[])
+        if (givenBack[w.id]?[l.periodFrom.substring(0, 7)] case final given?)
+          _AccountLine(
+            monthLastDay(l.periodFrom.substring(0, 7)),
+            l.createdAtUtc,
+            l10n.payrollCutBack(given.length, absentDayList(given.keys.toList())),
+            earned: given.values.fold<int>(0, (total, fils) => total + fils),
+            note: showMonth(l.periodFrom.substring(0, 7)),
+          ),
       for (final i in items[w.id] ?? const <PayrollItem>[])
         () {
           final date = monthLastDay(i.periodFrom.substring(0, 7));
@@ -1157,6 +1196,7 @@ Future<RegisterData> _statement(TenantDatabase db, AppLocalizations l10n, _Maste
   final feet = <String, String>{};
   final facts = <String, List<Object?>>{};
   for (final c in m.clients.values) {
+    final name = m.clientLabels[c.id]!;
     final account = (byClient[c.id] ?? const <_StatementLine>[]).toList()
       ..sort((a, b) {
         final date = a.date.compareTo(b.date);
@@ -1170,14 +1210,14 @@ Future<RegisterData> _statement(TenantDatabase db, AppLocalizations l10n, _Maste
     };
     if (from != null) {
       account.where((l) => l.date.compareTo(from) < 0).forEach(count);
-      if (balance != 0) shown.add(RegisterEntry([from, c.name, l10n.regBrought, null, null, null, null, null, balance, null], group: c.name, tags: tags));
+      if (balance != 0) shown.add(RegisterEntry([from, name, l10n.regBrought, null, null, null, null, null, balance, null], group: name, tags: tags));
     }
     for (final l in account.where((l) => _inRange(l.date, from, to))) {
       count(l);
       shown.add(
         RegisterEntry(
-          [l.date, c.name, l.what, l.number, l.invoiced == 0 ? null : l.invoiced, l.credited == 0 ? null : l.credited, l.received == 0 ? null : l.received, l.lost == 0 ? null : l.lost, balance, l.note],
-          group: c.name,
+          [l.date, name, l.what, l.number, l.invoiced == 0 ? null : l.invoiced, l.credited == 0 ? null : l.credited, l.received == 0 ? null : l.received, l.lost == 0 ? null : l.lost, balance, l.note],
+          group: name,
           tags: tags,
         ),
       );
@@ -1186,12 +1226,12 @@ Future<RegisterData> _statement(TenantDatabase db, AppLocalizations l10n, _Maste
     rows.addAll(shown);
     final overdue = money.invoices.values.where((i) => i.invoice.clientId == c.id && i.invoice.status == InvoiceStatus.issued.name && i.state(today) == PayState.overdue).fold(0, (total, i) => total + i.leftFils);
     final credit = money.creditOf(c.id);
-    feet[c.name] = [
+    feet[name] = [
       if (balance > 0) l10n.regCompanyOwes(formatAed(balance)) else if (balance < 0) l10n.regCompanyCredit(formatAed(-balance)) else l10n.regSettled,
       if (overdue > 0) l10n.regOverdue(formatAed(overdue)),
       if (credit > 0 && balance > 0) l10n.regUnusedCredit(formatAed(credit)),
     ].join('   ');
-    facts[c.name] = [c.name, c.trn];
+    facts[name] = [name, c.trn];
   }
 
   List<RegisterRollup> rollups(List<RegisterEntry> shown) {
@@ -1541,12 +1581,13 @@ Future<RegisterData> _aging(TenantDatabase db, AppLocalizations l10n, _Masters m
   final rows = <RegisterEntry>[];
   final feet = <String, String>{};
   for (final c in m.clients.values) {
+    final name = m.clientLabels[c.id]!;
     final open = money.openOf(c.id);
     if (open.isEmpty) {
       // A company that only has credit left still shows, or its credit would be out of sight.
       final credit = money.creditOf(c.id);
       if (credit > 0) {
-        rows.add(RegisterEntry([c.name, l10n.regUnusedCredit(formatAed(credit)), null, null, null, null, null, null], group: c.name, tags: {'client': {c.id}, 'age': <String>{}}));
+        rows.add(RegisterEntry([name, l10n.regUnusedCredit(formatAed(credit)), null, null, null, null, null, null], group: name, tags: {'client': {c.id}, 'age': <String>{}}));
       }
       continue;
     }
@@ -1557,8 +1598,8 @@ Future<RegisterData> _aging(TenantDatabase db, AppLocalizations l10n, _Masters m
       final age = _ageOf(late);
       rows.add(
         RegisterEntry(
-          [c.name, o.number ?? l10n.receiptOldBalance, invoice?.issueDate ?? openingDates[c.id], due, late > 0 ? late : null, _ageLabel(l10n, age), late > 0 ? o.leftFils : null, o.leftFils],
-          group: c.name,
+          [name, o.number ?? l10n.receiptOldBalance, invoice?.issueDate ?? openingDates[c.id], due, late > 0 ? late : null, _ageLabel(l10n, age), late > 0 ? o.leftFils : null, o.leftFils],
+          group: name,
           tags: {
             'client': {c.id},
             'age': {age.name},
@@ -1567,7 +1608,7 @@ Future<RegisterData> _aging(TenantDatabase db, AppLocalizations l10n, _Masters m
       );
     }
     final credit = money.creditOf(c.id);
-    if (credit > 0) feet[c.name] = l10n.regUnusedCredit(formatAed(credit));
+    if (credit > 0) feet[name] = l10n.regUnusedCredit(formatAed(credit));
   }
 
   List<RegisterRollup> rollups(List<RegisterEntry> shown) => [
@@ -1632,7 +1673,7 @@ Future<RegisterData> _work(TenantDatabase db, AppLocalizations l10n, _Masters m,
   for (final w in await db.workCharges(from: from, to: to)) {
     (lines[(w.clientId, w.workDate.substring(0, 7), w.siteId)] ??= []).add(w);
   }
-  String company(String id) => m.clients[id]?.name ?? '';
+  String company(String id) => m.clientLabels[id] ?? '';
   final keys = lines.keys.toList()
     ..sort((a, b) {
       final byCompany = company(a.$1).compareTo(company(b.$1));

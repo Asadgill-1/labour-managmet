@@ -133,6 +133,11 @@ class CloudSender {
     // The Backup page asks for the password first.
     if (password == null) return;
     try {
+      // This install never sent a copy, so the cloud's copy may hold data this phone does not: after a reinstall the
+      // phone's id is the same and the cloud would take this copy in its place. The owner chooses on the Backup page.
+      if (!replace && !_replaceNext && _lastAt == null && (await _account.cloudCopies(tenantId)).isNotEmpty) {
+        throw const AccountRefused(AccountProblem.otherPhoneCopy);
+      }
       final db = _db();
       final mark = await _markOf(db);
       final bytes = await db.backupBytes(password, work: await _work(), recoveryKey: _account.recoveryKey);

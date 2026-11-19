@@ -59,7 +59,13 @@ owed now        = opening balance + every posted net and adjustment - all salary
 
 - Opening unpaid is old debt: never new earnings, never a second wage expense.
 - Current net below zero, or net plus adjustment below zero: block posting and send to review, never auto-carry as debt (D-104, PAY-07).
-- Monthly salary splits by days when a contract changes mid-month. Each day goes to one contract, so overlapping contracts never pay twice.
+- Attendance added after posting for a day a posted salary cut gives that day's cut back in the next payroll, in the adjustment, as late work does (ATT-08, D-080 (5)). Each day gives back the cut on the days still missing before it less the cut after it, so all the days together give back exactly the posted cut. An absent row gives nothing back. The slip and the worker register count it in the month it was cut, as they count late work.
+- A month with no work and no item of its own, whose only figure is a late correction taking money back, posts nothing and makes no debt (D-104). It does not stop closing; the minus waits and comes off the next pay (D-080 (6)).
+- Monthly salary (CALC-04, D-080 (7)). Each day goes to one monthly contract: a general one before a site's, then the latest start, so overlapping contracts never pay twice.
+  - Contracts that cover every day of the month between them: each part is its share of the month by its days, salary = sum(rate x days covered) / days in month. One contract for the whole month is its amount exactly; the same salary either side of a change is one month exactly; a raise pays between the two.
+  - A month the worker joins or leaves in (a day no monthly contract covers): each part by its contract's own rule, calendar days rate x days / days in month, fixed divisor rate x days / divisor. No rule: stop for review (D-102).
+  - A day cut for absence (D-057) is priced by the contract's own rule, rate / days in month or rate / divisor, and never takes more than its part pays.
+  - Rounding (D-101, D-080 (8)): the parts are summed exactly over one denominator, then rounded once: paid = round(sum over parts of max(0, share - rate x days cut / unit)); cut shown = round(sum of shares) - paid. Example: AED 1,000 by calendar days from the 29th of a 31-day month, one day cut: paid round(100,000 x 2 / 31) = 6,452 fils, cut shown 9,677 - 6,452 = 3,225.
 - Approved overtime on a monthly contract is earned per attendance line at the contract's own overtime rate. With no such rate, the row stops for review (CALC-07).
 - A company's optional deduction limit: `(deductions + recovery) * 10000 <= (gross + allowances) * limit_bps`. Above it, posting stops for review. None is built in (D-034).
 - Overpayment: classified as a worker advance or credit, never a negative salary (PAY-06).

@@ -1,25 +1,36 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:domain/calc.dart';
 import 'package:domain/cash.dart';
+import 'package:domain/money.dart';
 import 'package:domain/payroll.dart';
 import 'package:drift/drift.dart' show BooleanExpressionOperators, Value;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show RenderParagraph;
+import 'package:flutter/services.dart' show FontLoader;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/documents/document_frame.dart';
+import 'package:labour_app/app/providers.dart';
 import 'package:labour_app/app/side_panel.dart';
+import 'package:labour_app/app/theme.dart' show AppPalette, MainActionBar, usePalette;
 import 'package:labour_app/data/attendance.dart';
 import 'package:labour_app/data/cash.dart';
+import 'package:labour_app/data/import.dart';
 import 'package:labour_app/data/masters.dart';
 import 'package:labour_app/data/payroll.dart';
 import 'package:labour_app/data/tenant_database.dart';
+import 'package:labour_app/features/registers/ledger_screen.dart';
 import 'package:labour_app/features/registers/register_defs.dart';
 import 'package:labour_app/features/registers/register_export.dart';
 import 'package:labour_app/features/registers/register_model.dart';
 import 'package:labour_app/features/registers/register_pdf.dart';
 import 'package:labour_app/features/registers/register_xlsx.dart';
+import 'package:labour_app/features/registers/salary_sheet.dart';
 import 'package:labour_app/l10n/app_localizations.dart';
 
 import 'support.dart';
@@ -222,6 +233,56 @@ void main() {
     expect(filterEntries(data.entries, {'client': {emaar}}), hasLength(1));
   });
 
+  test('BUG-012 two companies with the same name keep their own accounts in every company register (F04-1, INV-07)', () async {
+    // The seed already has one "Emaar". Two more share the name, one with a TRN.
+    Future<String> company(int fils, String workDate, {String? trn}) async {
+      final id = await db.saveRow(db.clients, id: null, operationId: newUuid(), fields: ClientsCompanion(name: const Value('Emaar'), trn: Value(trn)));
+      await db.saveRow(
+        db.openingBalances,
+        id: null,
+        operationId: newUuid(),
+        fields: OpeningBalancesCompanion(kind: const Value('client_receivable'), clientId: Value(id), amountFils: Value(fils), asOfDate: const Value('2020-08-31'), sourceNote: const Value('Old ledger')),
+      );
+      final site = await db.saveRow(db.sites, id: null, operationId: newUuid(), fields: SitesCompanion(clientId: Value(id), name: Value('Site $fils')));
+      await db.saveAttendanceBatch(workDate: workDate, clientId: id, siteId: site, inputs: [EntryInput(workerId: asif, shift: shift)], operationId: newUuid());
+      return id;
+    }
+
+    final first = await company(100000, '2020-11-02', trn: '100200300400500');
+    final second = await company(50000, '2020-11-03');
+    final owed = {first: 100000, second: 50000};
+    String? clientOf(List<RegisterEntry> rows) => rows.first.tags['client']?.single;
+
+    final data = await build(Section.statementRegister);
+    final both = filterEntries(data.entries, {'client': {first, second}});
+    final balance = data.columns.indexWhere((c) => c.closing);
+    expect(columnFigure(data.columns, both, balance), 150000, reason: 'the band adds where each account ended');
+    final groups = groupEntries(both);
+    expect(groups, hasLength(2), reason: 'one heading per company');
+    for (final g in groups) {
+      expect(data.groupFeet[g.group], contains(l10n.regCompanyOwes(formatAed(owed[clientOf(g.rows)]!))), reason: 'each footer is its own company');
+    }
+    expect(groupEntries(data.entries).map((g) => g.group).toSet(), {'Emaar (1)', 'Emaar (100200300400500)', 'Emaar (2)'}, reason: 'the seed Emaar stands alone too, the TRN or a number in the order added names each');
+    final rollup = data.rollupsOf!(both).single;
+    expect(rollup.rows.map((r) => r.cells[1]).toSet(), {'100200300400500', null});
+    expect({for (final r in rollup.rows) r.cells[2]: r.cells.last}, {100000: 100000, 50000: 50000}, reason: 'invoiced and balance on one row belong together');
+
+    final aging = await build(Section.agingRegister);
+    final owing = groupEntries(filterEntries(aging.entries, {'client': {first, second}}));
+    expect(owing, hasLength(2));
+    expect(aging.rollupsOf!(filterEntries(aging.entries, {'client': {first, second}})).single.rows.map((r) => r.cells.last).toSet(), {100000, 50000});
+
+    final work = await build(Section.workRegister);
+    expect(groupEntries(filterEntries(work.entries, {'client': {first, second}})), hasLength(2));
+    expect(groupEntries(work.entries).map((g) => g.group).toSet(), hasLength(groupEntries(work.entries).length), reason: 'a company never splits into two headings either');
+
+    final sheet = await buildSalarySheet(db, l10n, '2020-11');
+    expect(groupEntries(sheet.entries), hasLength(2));
+    expect(sheet.groupHeads, hasLength(2));
+    final byCompany = sheet.rollupsOf!(sheet.entries).singleWhere((r) => r.title == l10n.sheetByCompany);
+    expect(byCompany.rows.map((r) => r.cells.first).toSet(), hasLength(2));
+  });
+
   group('worker register', () {
     Map<String, Object?> at(RegisterData d, RegisterEntry e) => {for (var i = 0; i < d.columns.length; i++) d.columns[i].label: e.cells[i]};
     List<Map<String, Object?>> rowsOf(RegisterData d, String name) => [for (final e in d.entries.where((e) => e.cells[1] == name)) at(d, e)];
@@ -319,6 +380,34 @@ void main() {
       expect(first[l10n.payKindDeduction], 10000);
       expect(first[l10n.colPaid], 1000);
       expect(first[l10n.colBalance], -13000);
+    });
+
+    test('D-080 (5) a day a posted salary cut, worked after all, gives its cut back on the account, so the balance still equals pay owed', () async {
+      final karim = await db.saveRow(db.workers, id: null, operationId: newUuid(), fields: const WorkersCompanion(code: Value('W3'), name: Value('Karim')));
+      await db.saveRow(
+        db.payContracts,
+        id: null,
+        operationId: newUuid(),
+        fields: PayContractsCompanion(
+          workerId: Value(karim),
+          basis: Value(RateBasis.month.name),
+          rateFils: const Value(300000),
+          effectiveFrom: const Value('2020-10-01'),
+          partialMethod: Value(PartialMethod.calendarDays.name),
+          cutAbsence: const Value(true),
+        ),
+      );
+      Future<void> work(String date) => db.saveAttendanceBatch(workDate: date, clientId: emaar, siteId: marina, inputs: [EntryInput(workerId: karim, shift: shift)], operationId: newUuid());
+      for (var d = 1; d <= 31; d++) {
+        if (d != 5) await work('2020-10-${d.toString().padLeft(2, '0')}');
+      }
+      await db.postPayroll('2020-10', operationId: newUuid());
+      await work('2020-10-05');
+
+      final rows = rowsOf(await build(Section.workerRegister), 'Karim');
+      // 3,000 less 3,000 x 30 / 31 = 2,903.23 is the day the posting cut.
+      expect(rows.singleWhere((r) => r[l10n.colWhat] == l10n.payrollCutBack(1, '5'))[l10n.colEarned], 300000 - 290323);
+      expect(rows.last[l10n.colBalance], (await db.payrollFor('2020-11')).singleWhere((p) => p.worker.id == karim).payableFils);
     });
 
     test('allowances, deductions and monthly salary all land on the account, and an undone month stays honest', () async {
@@ -429,6 +518,25 @@ void main() {
       expect(book, contains('name="Hazri  register"'), reason: 'a sheet name cannot hold a colon');
       expect(book, contains('_xlnm.Print_Titles'));
       expect(a.findFile('xl/worksheets/sheet2.xml'), isNull, reason: 'no sums, no second sheet');
+    });
+
+    test('BUG-018 a control character imported into a name never reaches the sheet, so Excel still opens it (F04-7)', () async {
+      // CSV import keeps it: the file is read with allowMalformed and a cell is only trimmed.
+      final plan = await db.planImport(ImportKind.workers, 'Code,Name,Trade\r\nW9,Ali\u0001,Helper\r\n');
+      expect(await db.applyImport(plan), 1);
+      final ali = await (db.select(db.workers)..where((w) => w.code.equals('W9'))).getSingle();
+      expect(ali.name, 'Ali\u0001', reason: 'the path is real');
+      await db.saveAttendanceBatch(workDate: '2020-11-05', clientId: emaar, siteId: marina, inputs: [EntryInput(workerId: ali.id, shift: shift)], operationId: newUuid());
+
+      final data = await build(Section.attendanceRegister);
+      final a = ZipDecoder().decodeBytes(
+        registerXlsx(company: 'Al Noor', title: data.title, filterLine: '', columns: data.columns, entries: data.entries, totalLabel: 'Total', brandHex: '143E8F', softHex: 'E0EEFF', rollups: data.rollupsOf!(data.entries), rollupSheet: 'Sab'),
+      );
+      final forbidden = RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F]');
+      for (final f in a.files) {
+        expect(forbidden.hasMatch(utf8.decode(f.content as List<int>)), isFalse, reason: '${f.name} holds a character XML forbids');
+      }
+      expect(part(a, 'xl/worksheets/sheet1.xml'), contains('>Ali<'), reason: 'the name itself still shows');
     });
 
     test('sums go on a second sheet, and a running balance totals where each group ended', () {
@@ -569,6 +677,112 @@ void main() {
     expect(find.text('Excel'), findsOneWidget);
     expect(find.text('WhatsApp'), findsNWidgets(2));
     await shutDown(tester, db);
+  });
+
+  testWidgets("BUG-014 a new date range never shows or exports the last range's rows while it loads, and an error shows as one (F04-3, REP-01)", (tester) async {
+    final all = await real(tester, () => build(Section.attendanceRegister));
+    final lastMonth = Completer<RegisterData>();
+    var broken = false;
+    // Every date answers at once; last month answers late, as a big company's register does; then the disk fails.
+    await tester.pumpWidget(
+      ProviderScope(
+        retry: (_, _) => null,
+        overrides: [
+          dbProvider.overrideWithValue(db),
+          registerProvider.overrideWith(
+            (ref, q) => q.from == null ? Stream.value(all) : (broken ? Stream<RegisterData>.error(StateError('disk')) : Stream.fromFuture(lastMonth.future)),
+          ),
+        ],
+        child: MaterialApp(
+          locale: const Locale('en', 'PK'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const LedgerScreen(Section.attendanceRegister, allDates: true),
+        ),
+      ),
+    );
+    await tester.pump();
+    MainActionBar bar() => tester.widget<MainActionBar>(find.byType(MainActionBar));
+    expect(find.text('4 entries'), findsOneWidget);
+    expect(bar().onPressed, isNotNull);
+
+    await tester.tap(find.text(l10n.regLastMonth));
+    await tester.pump();
+    expect(find.text('4 entries'), findsNothing, reason: "every date's rows are not last month's");
+    expect(bar().onPressed, isNull, reason: 'no file of the old rows under the new dates');
+    expect(find.text(l10n.regThisMonth), findsOneWidget, reason: 'the dates stay, so the owner can pick others while it loads (R05-3)');
+
+    lastMonth.complete(all);
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('4 entries'), findsOneWidget, reason: 'the asked dates have come back');
+    expect(bar().onPressed, isNotNull);
+
+    broken = true;
+    await tester.tap(find.text(l10n.regThisMonth));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text(l10n.databaseError), findsOneWidget);
+    expect(find.text('4 entries'), findsNothing, reason: 'an error never shows the old figures');
+    expect(find.text(l10n.regAll), findsOneWidget, reason: 'nor leaves the owner without the dates (R05-3)');
+    await tester.tap(find.text(l10n.regAll));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('4 entries'), findsOneWidget, reason: 'other dates can still be picked after an error');
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets("F04-8 large text never cuts off a register's date chips or a sub-tab's name (D-080 (10))", (tester) async {
+    // The app's own font, since the test font's short lines fit where a phone's do not.
+    await tester.runAsync(() async {
+      final roboto = FontLoader('Roboto');
+      for (final weight in ['Regular', 'Medium', 'Bold']) {
+        roboto.addFont(File('assets/fonts/Roboto-$weight.ttf').readAsBytes().then(ByteData.sublistView));
+      }
+      await roboto.load();
+    });
+    final all = await real(tester, () => build(Section.attendanceRegister));
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    Future<void> pumpAt(double scale) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [dbProvider.overrideWithValue(db), registerProvider.overrideWith((ref, q) => Stream.value(all))],
+          child: MaterialApp(
+            theme: usePalette(AppPalette.blue),
+            locale: const Locale('en', 'PK'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            builder: (context, child) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)), child: child!),
+            home: const LedgerScreen(Section.attendanceRegister, allDates: true),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      expect(tester.takeException(), isNull, reason: 'nothing overflows');
+    }
+
+    // A phone's largest text, 2.0, under the app's own large text, which adds 1.3 times (app.dart).
+    await pumpAt(2.6);
+
+    /// Cut off is a text box shorter than its text, or a box poking out of its row.
+    void expectWhole(Finder label, Finder row) {
+      final paragraph = tester.renderObject<RenderParagraph>(label);
+      expect(paragraph.size.height, greaterThanOrEqualTo(paragraph.getMaxIntrinsicHeight(paragraph.size.width) - 0.01), reason: 'the text is clipped to a shorter box');
+      final (text, box) = (tester.getRect(label), tester.getRect(row));
+      expect((text.top >= box.top - 0.01, text.bottom <= box.bottom + 0.01), (true, true), reason: '$text lies inside $box');
+    }
+
+    final chip = find.text(l10n.regThisMonth);
+    final tab = find.descendant(of: find.byType(SubTabs), matching: find.text(l10n.regAttendance));
+    expectWhole(chip, find.ancestor(of: chip, matching: find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.right)).first);
+    expectWhole(tab, find.byType(SubTabs));
+
+    await pumpAt(1);
+    expect(tester.getRect(tab).height, closeTo(tester.renderObject<RenderParagraph>(tab).size.height, 0.01), reason: 'a name that fits keeps its size');
+    await tester.pumpWidget(const SizedBox());
   });
 }
 
