@@ -104,7 +104,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | BILL-09 | 13 | Business licensing, invoice/tax treatment aur receiving bank-account permissions user | T26 | NOT_STARTED | - | - |
 | ARCH-01 | 14 | Mobile | T03 | IMPLEMENTED_UNVERIFIED | TC-014 | - |
 | ARCH-02 | 14 | Chhota control backend | T19 | NOT_STARTED | - | - |
-| ARCH-03 | 14 | App malik web | T22 | NOT_STARTED | - | - |
+| ARCH-03 | 14 | App malik web | T22 | IN_PROGRESS | - | Design: `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081) |
 | ARCH-04 | 14 | Paid Team | T25 | NOT_STARTED | - | - |
 | ARCH-05 | 14 | Cost | T23 | NOT_STARTED | - | - |
 | ARCH-06 | 14 | Budget controls | T23 | NOT_STARTED | - | - |
@@ -126,14 +126,14 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | DATA-06 | 16 | Phone change | T20 | IMPLEMENTED_UNVERIFIED | TC-010, TC-046, TC-166, TC-167, TC-170, TC-171, TC-172, TC-173, TC-174, TC-190, TC-193, TC-194, TC-196, TC-197, TC-199, TC-200, TC-201, TC-202, TC-204, TC-205, TC-211, TC-212, TC-216 | `apps/mobile/test/restore_test.dart`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `supabase/tests/database/phone_off.test.sql`, `supabase/tests/database/cloud_backup.test.sql`, `supabase/functions/backup/request_test.ts`, CI run 43664625445, `apps/mobile/test/cloud_copy_test.dart`, `apps/mobile/test/cloud_screens_test.dart`, `apps/mobile/test/cloud_restore_test.dart`, D-078, `docs/audit/BUG_REGISTER.md` |
 | DATA-07 | 16 | Key recovery | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-161, TC-165, TC-195, TC-198, TC-201, TC-211 | `apps/mobile/test/backup_test.dart`, `apps/mobile/test/restore_test.dart`, `apps/mobile/test/recovery_test.dart`, `apps/mobile/tool/recovery_key.dart`, `apps/mobile/test/cloud_restore_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | DATA-08 | 16 | Retention | T20 | IMPLEMENTED_UNVERIFIED | TC-191, TC-194, TC-195, TC-196, TC-197, TC-199, TC-201, TC-204 | `docs/DATA_MODEL.md` Retention, D-066, D-069, D-070, `supabase/tests/database/cloud_backup.test.sql`, D-072, D-075, D-076, D-077, `apps/mobile/test/cloud_copy_test.dart`, `apps/mobile/test/cloud_screens_test.dart`, `apps/mobile/test/cloud_restore_test.dart`, D-078 |
-| ADMIN-01 | 17 | Navigation | T22 | NOT_STARTED | - | - |
-| ADMIN-02 | 17 | Customer register | T22 | NOT_STARTED | - | - |
-| ADMIN-03 | 17 | Subscription operations | T22 | NOT_STARTED | - | - |
+| ADMIN-01 | 17 | Navigation | T22 | IN_PROGRESS | - | Design: `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081) |
+| ADMIN-02 | 17 | Customer register | T22 | IN_PROGRESS | - | Design: `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md`; D-081 (2) changes what the register may hold |
+| ADMIN-03 | 17 | Subscription operations | T22 | IN_PROGRESS | - | Design: `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081) |
 | ADMIN-04 | 17 | Product funnel | T23 | NOT_STARTED | TC-011 | - |
 | ADMIN-05 | 17 | Offline visibility | T23 | NOT_STARTED | - | - |
 | ADMIN-06 | 17 | Health | T23 | NOT_STARTED | - | - |
 | ADMIN-07 | 17 | Support | T23 | NOT_STARTED | - | - |
-| ADMIN-08 | 17 | Access | T22 | NOT_STARTED | - | - |
+| ADMIN-08 | 17 | Access | T22 | IN_PROGRESS | - | Design: `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081 (4), one role until T23) |
 | MET-01 | 18 | Dashboard fancy totals ke bajaye reproducible data de. Trial | T23 | NOT_STARTED | TC-011 | - |
 | MET-02 | 18 | Manual renewals | T23 | NOT_STARTED | - | - |
 | MET-03 | 18 | MRR bridge | T23 | NOT_STARTED | - | - |

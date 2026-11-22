@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Malik ka dashboard v5</title>
+<meta name="description" content="Labour app ke malik ke dashboard ka doosra khaka: filters, charts, company ki timeline, slips ki qatar, business aur audit log.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+<style>
+/* Hallmark · v2.0.0 · shape: app screen · scope: app · theme: dose, the project's bound account book (theme.dart) · genre: modern-minimal · deal: manual (project system) · signature: the Aaj ke kaam ledger beside the funnel, the day's slips, limits and trials as ruled rows */
+/* critique: the cover band carries the nav and the figures as in the app; one blue marks the main action, the selection and every chart mark; rows are ruled, never carded; every figure and name here is sample data, said at the top */
+/* Hallmark · waive 39b · button.sort 17px · the sort controls are the table heads themselves, whose cells give the 44px hit target */
+:root {
+  --cover: #0B2648;
+  --cover-soft: #E0EEFF;
+  --on-cover: #FFFFFF;
+  --on-cover-muted: #B8C6DA;
+  --action: #155AA7;
+  --rim: #034486;
+  --ink: #15201B;
+  --muted: #5A6259;
+  --paper: #FAF7EF;
+  --sheet: #FFFDF8;
+  --desk: #ECE8DC;
+  --rule: #DDD8CB;
+  --grid: #E9E4D8;
+  --field-edge: #858277;
+  --skeleton: #E6E1D4;
+  --due: #9E2320;
+  --due-soft: #FBE7E2;
+  --settled: #036639;
+  --settled-soft: #DBF4E3;
+  --warn: #7E4F04;
+  --warn-soft: #FBEDD1;
+  --face: "Roboto", system-ui, sans-serif;
+  --radius: 6px;
+  --dur-micro: 120ms;
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body { margin: 0; background: var(--desk); color: var(--ink); font-family: var(--face); font-size: 16px; line-height: 1.5; }
+h1, h2, h3, h4 { text-wrap: balance; margin: 0; font-weight: 700; color: var(--ink); overflow-wrap: break-word; min-width: 0; }
+p { text-wrap: pretty; }
+svg { flex: none; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 24px 16px 64px; }
+.intro h1 { font-size: 26px; }
+.intro p { margin: 8px 0 0; color: var(--muted); max-width: 66ch; }
+.sample { display: inline-block; margin-top: 12px; padding: 4px 12px; background: var(--warn-soft); color: var(--warn); border-radius: var(--radius); font-size: 14px; }
+.caption { margin: 48px 0 12px; }
+.caption h2 { font-size: 20px; }
+.caption p { margin: 4px 0 0; color: var(--muted); font-size: 15px; max-width: 70ch; }
+.screen { background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
+.phone { max-width: 375px; }
+
+/* cover: nav, search, who */
+.bar { background: var(--cover); color: var(--on-cover); display: flex; align-items: center; gap: 16px; padding: 0 20px; min-height: 60px; }
+.mark { font-weight: 700; font-size: 17px; white-space: nowrap; }
+.nav { display: flex; gap: 4px; overflow-x: auto; flex: 1; min-width: 0; }
+.nav, .views, .tabs, .seg { scrollbar-width: none; }
+.nav a { color: var(--on-cover-muted); text-decoration: none; font-size: 15px; padding: 8px 12px; border-radius: var(--radius); white-space: nowrap; }
+.nav a[aria-current="page"] { color: var(--on-cover); background: var(--rim); }
+.nav a:hover { color: var(--on-cover); }
+.find { display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 4px 12px; border-radius: var(--radius); border: 1px solid var(--on-cover-muted); background: transparent; color: var(--on-cover-muted); font-family: var(--face); font-size: 14px; cursor: pointer; white-space: nowrap; }
+.find:hover { color: var(--on-cover); border-color: var(--on-cover); }
+.find kbd { font-family: var(--face); font-size: 12px; padding: 0 4px; border: 1px solid var(--on-cover-muted); border-radius: 4px; }
+.who { font-size: 14px; color: var(--on-cover-muted); white-space: nowrap; }
+.bar :focus-visible, .band :focus-visible { outline-color: var(--on-cover); }
+
+/* the range bar under the cover */
+.range { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 12px 20px; border-bottom: 1px solid var(--rule); background: var(--sheet); }
+.seg { display: inline-flex; max-width: 100%; overflow-x: auto; border: 1px solid var(--field-edge); border-radius: var(--radius); overflow: hidden; }
+.seg button { white-space: nowrap; border: 0; border-radius: 0; min-height: 32px; padding: 4px 12px; font-size: 14px; border-right: 1px solid var(--rule); }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--cover-soft); color: var(--rim); font-weight: 500; }
+.switch { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink); }
+.switch input { width: 18px; height: 18px; accent-color: var(--action); }
+.fresh { margin-left: auto; font-size: 13px; color: var(--muted); }
+
+/* figures on the cover */
+.band { background: var(--cover); color: var(--on-cover); padding: 16px 20px 24px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
+.band.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.fig dt { font-size: 14px; color: var(--on-cover-muted); }
+.fig dd { margin: 4px 0 0; font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fig small { display: block; font-size: 13px; font-weight: 400; color: var(--on-cover-muted); white-space: normal; }
+
+.page { padding: 4px 20px 24px; }
+.grid2 { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 0 32px; }
+.grid2.even { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 24px 0 8px; }
+.section-head h3 { font-size: 16px; }
+.section-head span, .src { font-size: 13px; color: var(--muted); }
+.src { margin: 8px 0 0; }
+
+/* ruled rows */
+.ledger { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.ledger li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.ledger .what { font-weight: 500; }
+.ledger .why { grid-column: 1; font-size: 14px; color: var(--muted); }
+.ledger .act { grid-row: 1 / span 2; grid-column: 2; }
+.total-row td { border-top: 3px double var(--ink); border-bottom: 0; font-weight: 700; }
+
+.tag { display: inline-block; font-size: 13px; padding: 2px 8px; border-radius: var(--radius); white-space: nowrap; }
+.tag.paid { background: var(--settled-soft); color: var(--settled); }
+.tag.trial, .tag.part { background: var(--cover-soft); color: var(--rim); }
+.tag.over, .tag.ended { background: var(--due-soft); color: var(--due); }
+.tag.wait { background: var(--warn-soft); color: var(--warn); }
+
+button, .btn { font-family: var(--face); font-size: 15px; min-height: 36px; padding: 4px 16px; border-radius: var(--radius); cursor: pointer; border: 1px solid var(--field-edge); background: var(--sheet); color: var(--ink); transition: background-color var(--dur-micro) ease, color var(--dur-micro) ease; display: inline-flex; align-items: center; gap: 8px; }
+button:hover { background: var(--paper); }
+button.primary { background: var(--action); color: var(--on-cover); border-color: var(--rim); box-shadow: 0 2px 0 var(--rim); }
+button.primary:hover { background: var(--rim); }
+button.quiet { border-color: transparent; background: transparent; color: var(--action); padding-inline: 8px; }
+button.quiet:hover { background: var(--cover-soft); }
+button:active { transform: translateY(1px); }
+button:disabled { opacity: 0.55; cursor: not-allowed; }
+:focus-visible { outline: 3px solid var(--action); outline-offset: 2px; }
+.bar :focus-visible { outline-color: var(--on-cover); }
+
+/* charts: one blue, thin bars, data-ends rounded at the top */
+.chart { margin: 0; }
+.plot { position: relative; height: 180px; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; align-items: end; padding: 0 0 0 48px; background: linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 100% 45px; border-bottom: 1px solid var(--ink); }
+.plot .bar-v { display: block; height: var(--v); background: var(--action); border-radius: 4px 4px 0 0; min-height: 2px; }
+.plot .bar-v:hover { background: var(--rim); }
+.plot .bar-v.now { background: var(--cover); }
+.yaxis { position: absolute; left: 0; top: -8px; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.xaxis { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; padding-left: 48px; font-size: 12px; color: var(--muted); text-align: center; margin-top: 4px; }
+details { margin-top: 8px; font-size: 14px; }
+summary { cursor: pointer; color: var(--action); }
+summary:focus-visible { outline-offset: 2px; }
+
+.hbars { list-style: none; margin: 0; padding: 0; }
+.hbars li { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr) 3rem 3.5rem; gap: 8px; align-items: center; padding: 4px 0; font-size: 14px; }
+.hbars .track { height: 14px; background: var(--grid); border-radius: 0 4px 4px 0; }
+.hbars .fill { display: block; height: 100%; width: var(--v); background: var(--action); border-radius: 0 4px 4px 0; }
+.hbars .n { text-align: right; font-weight: 500; font-variant-numeric: tabular-nums; }
+.hbars .pct { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+.hbars li.later { color: var(--muted); }
+.hbars li.later .track { background: transparent; border: 1px dashed var(--field-edge); }
+
+/* tables */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th { text-align: left; font-weight: 500; color: var(--muted); font-size: 14px; padding: 12px 12px 8px 0; border-bottom: 1px solid var(--ink); white-space: nowrap; }
+th button.sort { border: 0; background: transparent; padding: 0; min-height: 0; font-size: 14px; color: var(--muted); font-weight: 500; gap: 4px; }
+th[aria-sort] button.sort { color: var(--ink); }
+td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; vertical-align: top; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+td .sub { display: block; font-size: 13px; color: var(--muted); }
+td a { color: var(--action); font-weight: 500; text-decoration: none; }
+td a:hover { text-decoration: underline; }
+.late { color: var(--due); }
+.pick { width: 18px; height: 18px; accent-color: var(--action); }
+tr.chosen td { background: var(--cover-soft); }
+.sticky th:nth-child(2), .sticky td:nth-child(2) { position: sticky; left: 0; background: var(--paper); }
+.sticky tr.chosen td:nth-child(2) { background: var(--cover-soft); }
+
+/* filters */
+.views { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--rule); margin: 0 -20px; padding: 0 20px; }
+.views a { padding: 12px 12px 8px; font-size: 15px; color: var(--muted); text-decoration: none; white-space: nowrap; border-bottom: 3px solid transparent; }
+.views a[aria-current="page"] { color: var(--ink); font-weight: 500; border-bottom-color: var(--action); }
+.views a:hover { color: var(--ink); }
+.views .count { font-size: 13px; color: var(--muted); margin-left: 4px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 16px 0 8px; }
+.filters input[type="search"] { font-family: var(--face); font-size: 15px; min-height: 36px; padding: 4px 12px; border: 1px solid var(--field-edge); border-radius: var(--radius); background: var(--sheet); color: var(--ink); width: 18rem; max-width: 100%; }
+.filters input:focus-visible { outline-offset: -2px; }
+.chip { min-height: 32px; font-size: 14px; padding: 4px 12px; }
+.chip b { font-weight: 500; }
+.chip.on { background: var(--cover-soft); color: var(--rim); border-color: var(--action); }
+.chip.add { border-style: dashed; color: var(--action); }
+.spacer { flex: 1; }
+.bulk { display: flex; align-items: center; gap: 8px; padding: 8px 12px; margin: 8px 0; background: var(--cover-soft); border-radius: var(--radius); font-size: 14px; flex-wrap: wrap; }
+.pager { display: flex; align-items: center; gap: 12px; justify-content: flex-end; padding-top: 12px; font-size: 14px; color: var(--muted); flex-wrap: wrap; }
+.menu-pop { margin: 4px 0 0; padding: 8px 0; list-style: none; width: 16rem; background: var(--sheet); border: 1px solid var(--field-edge); border-radius: var(--radius); font-size: 14px; }
+.menu-pop li { padding: 8px 16px; display: flex; justify-content: space-between; gap: 12px; }
+.menu-pop li:hover { background: var(--paper); }
+.menu-pop .hint2 { color: var(--muted); font-size: 13px; }
+.popwrap { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+
+/* one company */
+.crumbs { font-size: 14px; color: var(--muted); padding: 12px 20px 0; }
+.crumbs a { color: var(--action); text-decoration: none; }
+.head { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 8px 20px 16px; flex-wrap: wrap; }
+.head h3 { font-size: 22px; }
+.head .tags { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+.tabs { display: flex; gap: 4px; overflow-x: auto; padding: 0 20px; border-bottom: 1px solid var(--rule); background: var(--paper); }
+.tabs a { padding: 12px 12px 8px; color: var(--muted); text-decoration: none; white-space: nowrap; border-bottom: 3px solid transparent; font-size: 15px; }
+.tabs a[aria-selected="true"] { color: var(--ink); font-weight: 500; border-bottom-color: var(--action); }
+dl.facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 20px; margin: 0; font-size: 15px; }
+dl.facts dt { color: var(--muted); }
+dl.facts dd { margin: 0; font-weight: 500; }
+.timeline { list-style: none; margin: 0; padding: 0 0 0 20px; border-left: 2px solid var(--rule); }
+.timeline li { position: relative; padding: 0 0 16px; }
+.timeline li::before { content: ""; position: absolute; left: -27px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--sheet); border: 2px solid var(--action); }
+.timeline li.money::before { background: var(--action); }
+.timeline .when { font-size: 13px; color: var(--muted); }
+.timeline .ev { font-weight: 500; }
+.timeline .more { font-size: 14px; color: var(--muted); }
+.checks { list-style: none; margin: 0; padding: 0; }
+.checks li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 15px; }
+.ok { color: var(--settled); font-weight: 500; }
+.bad { color: var(--due); font-weight: 500; }
+.soon { color: var(--muted); }
+.subtabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+
+/* slips queue */
+.queue { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); min-height: 560px; }
+.queue-list { border-right: 1px solid var(--rule); background: var(--sheet); }
+.queue-list .filters { padding: 0 16px; }
+.qitem { display: block; padding: 12px 16px; border-bottom: 1px solid var(--rule); text-decoration: none; color: var(--ink); }
+.qitem:hover { background: var(--paper); }
+.qitem[aria-current="true"] { background: var(--cover-soft); box-shadow: inset 3px 0 0 var(--action); }
+.qitem .l1 { display: flex; justify-content: space-between; gap: 8px; font-weight: 500; }
+.qitem .l2 { font-size: 13px; color: var(--muted); }
+.review { padding: 20px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px; align-content: start; }
+.slot { aspect-ratio: 3 / 4; background: var(--sheet); border: 1px dashed var(--field-edge); border-radius: var(--radius); display: grid; place-items: center; text-align: center; color: var(--muted); font-size: 14px; padding: 16px; }
+form { display: grid; gap: 16px; margin-top: 16px; }
+label { display: grid; gap: 4px; font-size: 14px; color: var(--muted); }
+label input, label textarea, label select { font-family: var(--face); font-size: 16px; color: var(--ink); min-height: 40px; padding: 8px 12px; border: 1px solid var(--field-edge); border-radius: var(--radius); background: var(--sheet); }
+label input:focus-visible, label textarea:focus-visible, label select:focus-visible { outline-offset: -2px; }
+.field-warn { font-size: 13px; color: var(--due); min-height: 1lh; }
+.autocheck { list-style: none; margin: 16px 0 0; padding: 0; font-size: 14px; }
+.autocheck li { display: flex; gap: 8px; padding: 4px 0; }
+.hint { font-size: 14px; color: var(--warn); background: var(--warn-soft); padding: 8px 12px; border-radius: var(--radius); margin: 0; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+
+/* states */
+.states { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding: 20px; }
+.states h3 { font-size: 15px; margin-bottom: 8px; }
+.skel { display: block; height: 14px; border-radius: 4px; background: var(--skeleton); margin: 12px 0; }
+.skel.w60 { width: 60%; } .skel.w80 { width: 80%; } .skel.w40 { width: 40%; }
+.empty { text-align: left; padding: 16px; border: 1px dashed var(--field-edge); border-radius: var(--radius); }
+.empty p { margin: 4px 0 12px; color: var(--muted); font-size: 14px; }
+.banner { padding: 12px 16px; background: var(--due-soft); color: var(--due); border-radius: var(--radius); font-size: 14px; }
+.banner b { display: block; }
+
+/* account controls */
+fieldset.choices { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; }
+fieldset.choices legend { font-size: 14px; color: var(--muted); margin-bottom: 8px; padding: 0; }
+.choice { display: flex; gap: 12px; align-items: flex-start; padding: 12px 16px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--sheet); color: var(--ink); cursor: pointer; font-size: 15px; }
+.choice input { width: 18px; height: 18px; margin-top: 4px; accent-color: var(--action); }
+.choice b { display: block; font-weight: 500; }
+.choice span span { display: block; color: var(--muted); font-size: 14px; }
+.choice:has(input:checked) { border-color: var(--action); background: var(--cover-soft); }
+.phone-mini { max-width: 320px; background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
+.pm-top { background: var(--cover); color: var(--on-cover); padding: 12px 16px; font-weight: 700; }
+.pm-banner { background: var(--warn-soft); color: var(--warn); padding: 12px 16px; font-size: 14px; }
+.pm-banner b { display: block; }
+.pm-link { display: block; margin-top: 8px; color: var(--action); font-weight: 500; }
+.pm-rows { padding: 0 16px; border-top: 0; }
+.steps { margin: 0; padding-left: 24px; display: grid; gap: 8px; font-size: 15px; }
+.steps b { font-weight: 500; }
+input[readonly] { background: var(--paper); color: var(--muted); }
+
+.thumb { display: inline-grid; place-items: center; width: 40px; height: 52px; border: 1px solid var(--field-edge); border-radius: 4px; background: var(--sheet); font-size: 12px; color: var(--muted); }
+.thumb.missing { border-style: dashed; }
+
+.statusrow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.statusrow > div { border-top: 3px solid var(--rule); padding-top: 8px; }
+.statusrow span, .statusrow small { display: block; font-size: 13px; color: var(--muted); }
+.statusrow b { display: block; font-size: 16px; font-weight: 500; }
+.sub-total td { font-weight: 700; border-top: 1px solid var(--ink); }
+.plot.pl { border-bottom: 0; background: linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 100% 60px; }
+.pl-col { align-self: stretch; display: grid; grid-template-rows: 2fr 1fr; background: linear-gradient(var(--ink), var(--ink)) 0 66.67% / 100% 1px no-repeat; }
+.pl-col .bar-v { grid-row: 1; align-self: end; width: 60%; justify-self: center; }
+.pl-col .bar-loss { grid-row: 2; align-self: start; height: var(--v); width: 60%; justify-self: center; background: var(--due); border-radius: 0 0 4px 4px; }
+.hbars .fill.loss { background: var(--due); }
+@media (max-width: 60rem) { .statusrow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* the question */
+.ask { margin-top: 48px; }
+.ask p { margin: 4px 0 0; color: var(--muted); }
+.options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+.option { text-align: left; background: var(--sheet); border: 1px solid var(--rule); padding: 16px; min-height: 44px; display: block; }
+.option strong { display: block; font-size: 16px; }
+.option span { display: block; font-size: 14px; color: var(--muted); margin-top: 4px; }
+.option.selected { border-color: var(--action); box-shadow: inset 0 0 0 2px var(--action); }
+
+@media (max-width: 60rem) {
+  .band, .band.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid2, .grid2.even, .queue, .review, .options, .states { grid-template-columns: minmax(0, 1fr); }
+  .who, .fresh { display: none; }
+  .queue-list { border-right: 0; border-bottom: 1px solid var(--rule); }
+}
+.phone .bar { gap: 8px; padding: 0 12px 0 16px; }
+.phone .band { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 8px 16px 20px; gap: 16px; }
+.phone .fig dd { font-size: 22px; }
+.phone .page { padding: 4px 16px 20px; }
+.phone .range { padding: 8px 16px; }
+button.menu-btn { color: var(--on-cover); }
+button.menu-btn:hover { background: var(--rim); }
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+  button:active { transform: none; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="intro">
+    <h1>Aap ka dashboard, paanchwan khaka</h1>
+    <p>Stripe, Shopify aur ChartMogul jaise admin dashboards ki tarz par: har safhe par waqt ka filter aur pichhle se muqabla, companies ke liye saved views aur filters, company ki poori timeline, slips ki qatar, investors ke liye business ka safha, audit log aur settings. Naye: plan aur paison ka khata, account rokna, account ki settings, aur kitab theek karna. Aur Subscriptions ka safha: kis ne bheji, kaunsa plan, kitne paise, kis bank se, slip ki tasveer. Ab har account ka apna Business khulasa (2a), aur nafa ya nuqsan har jagah: accounts ki list, Business, aur Jaiza par aap ka apna nafa.</p>
+    <span class="sample">Saare naam aur numbers namoona hain, asli data nahin. Banate waqt menu English mein, baqi Roman Urdu (malik ka faisla, 22 Nov 2026).</span>
+  </header>
+
+  <!-- ============ 1. Jaiza ============ -->
+  <div class="caption"><h2>1. Jaiza</h2><p>Upar waqt chunein (aaj se 12 mahine tak). Har figure ke neeche pichhle se muqabla, har panel ke neeche ke data kahan se aaya.</p></div>
+  <section class="screen" aria-label="Jaiza ka safha">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard">
+        <a href="#" aria-current="page">Jaiza</a><a href="#">Accounts</a><a href="#">Subscriptions</a><a href="#">Business</a><a href="#">Investors</a><a href="#">Audit log</a><a href="#">Settings</a>
+      </nav>
+      <button type="button" class="find" aria-label="Dhoondein"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6"/></svg>Dhoondein <kbd>Ctrl K</kbd></button>
+      <span class="who">MFA se andar</span>
+    </div>
+    <div class="range">
+      <div class="seg" role="group" aria-label="Waqt">
+        <button type="button" aria-pressed="false">Aaj</button><button type="button" aria-pressed="false">7 din</button><button type="button" aria-pressed="true">30 din</button><button type="button" aria-pressed="false">3 mahine</button><button type="button" aria-pressed="false">12 mahine</button><button type="button" aria-pressed="false">Apni tareekh</button>
+      </div>
+      <label class="switch"><input type="checkbox" checked> Pichhle 30 din se muqabla</label>
+      <label class="switch"><input type="checkbox" checked> Test companies chhupayein</label>
+      <span class="fresh">Cloud se, 22 Nov 10:45 tak. Offline phones ka data der se aata hai.</span>
+    </div>
+    <dl class="band">
+      <div class="fig"><dt>Mahana kamai (MRR)</dt><dd>AED 1,016<small>+319 pichhle 30 din se</small></dd></div>
+      <div class="fig"><dt>Is mahine aaye</dt><dd>AED 1,455<small>3 slips, bank mein dekhe hue</small></dd></div>
+      <div class="fig"><dt>Paid accounts</dt><dd>4<small>+1, aur 1 ne chhora</small></dd></div>
+      <div class="fig"><dt>Trial par</dt><dd>7<small>3 agle 5 din mein khatam</small></dd></div>
+      <div class="fig"><dt>Trial se paid</dt><dd>36%<small>pichhle 90 din ke trial</small></dd></div>
+      <div class="fig"><dt>Customers ne bill kiya</dt><dd>AED 341,200<small>is mahine, hissa 2</small></dd></div>
+    </dl>
+    <div class="page">
+      <div class="grid2">
+        <div>
+          <div class="section-head"><h3>Aaj ke kaam</h3><span>6 kaam</span></div>
+          <ul class="ledger">
+            <li><span class="what">Sahil Workforce ki slip</span><span class="why">Small Company Plan, 1 mahina, AED 199.00, 2 ghante pehle</span><span class="act"><button type="button" class="primary">Slip dekhein</button></span></li>
+            <li><span class="what">Desert Rose ki slip</span><span class="why">Small add-on ke sath, 3 mahine, AED 657.00, kal</span><span class="act"><button type="button">Slip dekhein</button></span></li>
+            <li><span class="what">Al Noor Labour Supply plan ki had se upar</span><span class="why">17 active workers, Small ki had 15, 4 din se</span><span class="act"><button type="button">Company</button></span></li>
+            <li><span class="what">3 trial 5 din mein khatam</span><span class="why">Desert Rose, Sahil Workforce, Palm Crew</span><span class="act"><button type="button">List</button></span></li>
+            <li><span class="what">2 companies 7 din se offline</span><span class="why">Desert Rose 5 din, Bright Way 19 din</span><span class="act"><button type="button">List</button></span></li>
+            <li><span class="what">Bright Way ki slip ki file nahin pohanchi</span><span class="why">Upload beech mein ruk gaya, 3 din pehle</span><span class="act"><button type="button">Refuse karein</button></span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-head"><h3>Signup se paid tak</h3><span>30 din</span></div>
+          <ol class="hbars" aria-label="Signup se paid tak har qadam">
+            <li class="later"><span>Play se install</span><span class="track"></span><span class="n">-</span><span class="pct">Play</span></li>
+            <li><span>App pehli baar khuli</span><span class="track"><span class="fill" style="--v:100%"></span></span><span class="n">64</span><span class="pct">100%</span></li>
+            <li><span>Account bana</span><span class="track"><span class="fill" style="--v:64%"></span></span><span class="n">41</span><span class="pct">64%</span></li>
+            <li><span>Email confirm</span><span class="track"><span class="fill" style="--v:58%"></span></span><span class="n">37</span><span class="pct">58%</span></li>
+            <li><span>Company bani</span><span class="track"><span class="fill" style="--v:47%"></span></span><span class="n">30</span><span class="pct">47%</span></li>
+            <li><span>Pehla worker</span><span class="track"><span class="fill" style="--v:34%"></span></span><span class="n">22</span><span class="pct">34%</span></li>
+            <li><span>Pehli attendance</span><span class="track"><span class="fill" style="--v:28%"></span></span><span class="n">18</span><span class="pct">28%</span></li>
+            <li><span>Pehli invoice</span><span class="track"><span class="fill" style="--v:17%"></span></span><span class="n">11</span><span class="pct">17%</span></li>
+            <li><span>Paid</span><span class="track"><span class="fill" style="--v:6%"></span></span><span class="n">4</span><span class="pct">6%</span></li>
+          </ol>
+          <p class="src">Zariya: app ke events aur cloud ke accounts. Play installs app ke Play par aane ke baad, 1 se 2 din der se.</p>
+        </div>
+      </div>
+
+      <div class="grid2 even">
+        <div>
+          <div class="section-head"><h3>Aap ki kamai, har mahina</h3><span>12 mahine, AED</span></div>
+          <figure class="chart">
+            <div class="plot" role="img" aria-label="Har mahine bank mein aaye paise, December se November tak">
+              <div class="yaxis" aria-hidden="true"><span>1,500</span><span>1,000</span><span>500</span><span>0</span></div>
+              <span class="bar-v" style="--v:1%" title="Dec: 0"></span><span class="bar-v" style="--v:1%" title="Jan: 0"></span><span class="bar-v" style="--v:1%" title="Feb: 0"></span><span class="bar-v" style="--v:1%" title="Mar: 0"></span><span class="bar-v" style="--v:1%" title="Apr: 0"></span><span class="bar-v" style="--v:1%" title="May: 0"></span><span class="bar-v" style="--v:1%" title="Jun: 0"></span><span class="bar-v" style="--v:1%" title="Jul: 0"></span><span class="bar-v" style="--v:1%" title="Aug: 0"></span><span class="bar-v" style="--v:13%" title="Sep: AED 199.00"></span><span class="bar-v" style="--v:40%" title="Oct: AED 597.00"></span><span class="bar-v now" style="--v:97%" title="Nov, abhi chal raha: AED 1,455.00"></span>
+            </div>
+            <div class="xaxis" aria-hidden="true"><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span></div>
+            <details><summary>Table mein dekhein</summary>
+              <table><thead><tr><th>Mahina</th><th class="num">Aaye (AED)</th><th class="num">Slips</th></tr></thead>
+              <tbody><tr><td>Sep 2026</td><td class="num">199.00</td><td class="num">1</td></tr><tr><td>Oct 2026</td><td class="num">597.00</td><td class="num">3</td></tr><tr><td>Nov 2026, abhi tak</td><td class="num">1,455.00</td><td class="num">3</td></tr></tbody></table>
+            </details>
+          </figure>
+          <p class="src">Zariya: accept ki hui slips, bank mein aane ki tareekh se. Gehra bar abhi chalta mahina hai.</p>
+        </div>
+        <div>
+          <div class="section-head"><h3>MRR ka hisaab, November</h3><span>AED</span></div>
+          <table>
+            <tbody>
+              <tr><td>Mahine ke shuru mein</td><td class="num">796.00</td></tr>
+              <tr><td>Nayi companies <span class="sub">Gulf Star, Mid</span></td><td class="num">+299.00</td></tr>
+              <tr><td>Bara plan ya add-on <span class="sub">Fajr Builders, Small se Mid aur add-on</span></td><td class="num">+120.00</td></tr>
+              <tr><td>Wapas aayin</td><td class="num">0.00</td></tr>
+              <tr><td>Chhota plan</td><td class="num">0.00</td></tr>
+              <tr><td>Chhor gayin <span class="sub">Bright Way, Small</span></td><td class="num late">-199.00</td></tr>
+              <tr class="total-row"><td>Mahine ke aakhir mein</td><td class="num">1,016.00</td></tr>
+            </tbody>
+          </table>
+          <p class="src">Advance mein diye 3 mahine ke paise ek mahine ki kamai nahin gine jate (MET-02).</p>
+        </div>
+      </div>
+
+      <div class="grid2 even">
+        <div>
+          <div class="section-head"><h3>Plan kis ke paas</h3><span>aaj</span></div>
+          <ol class="hbars" aria-label="Har plan par kitni companies">
+            <li><span>Trial</span><span class="track"><span class="fill" style="--v:100%"></span></span><span class="n">7</span><span class="pct">58%</span></li>
+            <li><span>Small Company Plan</span><span class="track"><span class="fill" style="--v:29%"></span></span><span class="n">2</span><span class="pct">17%</span></li>
+            <li><span>Mid Size Company Plan</span><span class="track"><span class="fill" style="--v:29%"></span></span><span class="n">2</span><span class="pct">17%</span></li>
+            <li><span>Large Size Company Plan</span><span class="track"><span class="fill" style="--v:0%"></span></span><span class="n">0</span><span class="pct">0%</span></li>
+            <li><span>Plan khatam</span><span class="track"><span class="fill" style="--v:14%"></span></span><span class="n">1</span><span class="pct">8%</span></li>
+            <li><span>Cloud add-on</span><span class="track"><span class="fill" style="--v:14%"></span></span><span class="n">1</span><span class="pct">8%</span></li>
+          </ol>
+        </div>
+        <div>
+          <div class="section-head"><h3>Haal ki harkat</h3><span>Sab companies</span></div>
+          <ul class="ledger">
+            <li><span class="what">Gulf Star ne pehli invoice banayi</span><span class="why">Aaj 09:20</span></li>
+            <li><span class="what">Palm Crew ka account bana</span><span class="why">Aaj 08:51, email confirm baqi</span></li>
+            <li><span class="what">Aap ne Desert Rose ki slip accept ki</span><span class="why">Kal 10:42, AED 199.00, ref FT2611220042</span></li>
+            <li><span class="what">Bright Way ka plan khatam</span><span class="why">31 Oct, renewal nahin aaya</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid2 even">
+        <div>
+          <div class="section-head"><h3>Aap ka apna nafa, November</h3><span>kamai minus platform ke kharche</span></div>
+          <table>
+            <tbody>
+              <tr><td>Subscriptions se aaye</td><td class="num">1,455.00</td></tr>
+              <tr><td>Supabase <span class="sub">free plan</span></td><td class="num">0.00</td></tr>
+              <tr><td>Domain <span class="sub">abhi nahin liya</span></td><td class="num soon">likha nahin</td></tr>
+              <tr><td>Email bhejne ki service</td><td class="num soon">likha nahin</td></tr>
+              <tr><td>Play developer account</td><td class="num soon">likha nahin</td></tr>
+              <tr class="total-row"><td>Nafa, jitne kharche likhe hain</td><td class="num">1,455.00</td></tr>
+            </tbody>
+          </table>
+          <p class="src">Jo kharche likhe nahin, wo is mein nahin, is liye sab likhne tak ise asal nafa na kahein (MET-04).</p>
+          <div class="actions" style="margin-top:8px"><button type="button">Kharcha likhein</button></div>
+        </div>
+        <div>
+          <div class="section-head"><h3>Customers ka nafa, November</h3><span>hissa 2</span></div>
+          <ul class="checks">
+            <li><span>Nafa mein</span><span class="ok">9 accounts</span></li>
+            <li><span>Nuqsan mein</span><span class="bad">2 accounts</span></li>
+            <li><span>Sab ka andazan nafa</span><span>AED 52,450.00</span></li>
+            <li><span>Sab ki labour ki tankhwah</span><span>AED 196,700.00</span></li>
+          </ul>
+          <div class="actions" style="margin-top:12px"><button type="button">Business mein dekhein</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. Companies ============ -->
+  <div class="caption"><h2>2. Accounts</h2><p>Upar saved views, phir filters. “+ Filter” se koi bhi shart. Column chunein, CSV nikalein, kai companies ek sath chunein, har column par sort.</p></div>
+  <section class="screen" aria-label="Companies ka safha">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#">Jaiza</a><a href="#" aria-current="page">Accounts</a><a href="#">Subscriptions</a><a href="#">Business</a><a href="#">Investors</a><a href="#">Audit log</a><a href="#">Settings</a></nav>
+      <button type="button" class="find" aria-label="Dhoondein"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6"/></svg>Dhoondein <kbd>Ctrl K</kbd></button>
+    </div>
+    <div class="page">
+      <nav class="views" aria-label="Saved views">
+        <a href="#" aria-current="page">Sab<span class="count">12</span></a>
+        <a href="#">Trial khatam hone wale<span class="count">3</span></a>
+        <a href="#">7 din se offline<span class="count">2</span></a>
+        <a href="#">Had se upar<span class="count">1</span></a>
+        <a href="#">Slip intezar mein<span class="count">2</span></a>
+        <a href="#">Plan khatam<span class="count">1</span></a>
+        <a href="#">Nuqsan mein<span class="count">2</span></a>
+        <a href="#">+ Nayi view</a>
+      </nav>
+      <div class="filters" role="group" aria-label="Filters">
+        <input type="search" name="q" aria-label="Company, email, phone ya tenant id" placeholder="Company, email, phone ya tenant id">
+        <button type="button" class="chip">Plan: <b>sab</b></button>
+        <button type="button" class="chip on">Haalat: <b>paid, trial</b></button>
+        <button type="button" class="chip">Signup: <b>har waqt</b></button>
+        <button type="button" class="chip">Emirate: <b>sab</b></button>
+        <button type="button" class="chip">Version: <b>sab</b></button>
+        <button type="button" class="chip add">+ Filter</button>
+        <span class="spacer"></span>
+        <button type="button" class="chip">Columns</button>
+        <button type="button" class="chip">CSV nikalein</button>
+      </div>
+      <div class="popwrap">
+        <ul class="menu-pop" aria-label="Filter ki shartein">
+          <li>Aakhri baar online <span class="hint2">7 din se zyada</span></li>
+          <li>Labour ki ginti <span class="hint2">se, tak</span></li>
+          <li>Is mahine ka bill <span class="hint2">AED se, tak</span></li>
+          <li>Phone kitne <span class="hint2">1, 2, 3+</span></li>
+          <li>Cloud add-on <span class="hint2">hai, nahin</span></li>
+          <li>Backup <span class="hint2">7 din se nahin</span></li>
+          <li>Slip refuse hui <span class="hint2">is mahine</span></li>
+          <li>Test company <span class="hint2">dikhayein</span></li>
+        </ul>
+        <p class="src" style="margin:8px 0 0">“+ Filter” dabane par ye list khulti hai. Har filter URL mein rehta hai, is liye view save ya kisi ko bhej sakte hain.</p>
+      </div>
+      <div class="bulk" role="status"><b>2 chuni hain</b><button type="button" class="chip">CSV nikalein</button><button type="button" class="chip">Note likhein</button><button type="button" class="quiet">Chunna khatam</button></div>
+      <div class="table-wrap">
+        <table class="sticky">
+          <thead><tr>
+            <th><input type="checkbox" class="pick" aria-label="Sab chunein"></th>
+            <th aria-sort="none"><button type="button" class="sort">Company</button></th>
+            <th>Haalat</th>
+            <th aria-sort="ascending"><button type="button" class="sort">Khatam<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 6l3-3 3 3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></th>
+            <th>Emirate</th>
+            <th class="num">Phone</th>
+            <th><button type="button" class="sort">Aakhri baar online</button></th>
+            <th>Version</th>
+            <th class="num"><button type="button" class="sort">Labour</button></th>
+            <th class="num"><button type="button" class="sort">Bill is mahine</button></th><th class="num">Tankhwah</th><th class="num"><button type="button" class="sort">Nafa ya nuqsan</button></th>
+            <th class="num">Diya kul</th>
+          </tr></thead>
+          <tbody>
+            <tr><td><input type="checkbox" class="pick" aria-label="Desert Rose chunein"></td><td><a href="#">Desert Rose Services</a><span class="sub">rose.ops@mail.com, 10 Nov</span></td><td><span class="tag wait">Trial, slip aayi</span></td><td>25 Nov</td><td>Abu Dhabi</td><td class="num">1</td><td class="late">5 din pehle</td><td>1.3.2</td><td class="num">6</td><td class="num">9,800.00</td><td class="num">6,900.00</td><td class="num">1,250.00</td><td class="num">199.00</td></tr>
+            <tr class="chosen"><td><input type="checkbox" class="pick" checked aria-label="Sahil chunein"></td><td><a href="#">Sahil Workforce</a><span class="sub">sahil.hr@mail.com, 12 Nov</span></td><td><span class="tag wait">Trial, slip aayi</span></td><td>27 Nov</td><td>Sharjah</td><td class="num">1</td><td>Aaj 07:40</td><td>1.4.0</td><td class="num">9</td><td class="num">14,300.00</td><td class="num">9,600.00</td><td class="num">2,100.00</td><td class="num">0.00</td></tr>
+            <tr><td><input type="checkbox" class="pick" aria-label="Emirates Hands chunein"></td><td><a href="#">Emirates Hands</a><span class="sub">eh.office@mail.com, 2 Oct</span></td><td><span class="tag paid">Small, paid</span></td><td>9 Dec</td><td>Ajman</td><td class="num">1</td><td>Aaj 08:02</td><td>1.4.0</td><td class="num">12</td><td class="num">30,100.00</td><td class="num">19,800.00</td><td class="num">4,700.00</td><td class="num">398.00</td></tr>
+            <tr class="chosen"><td><input type="checkbox" class="pick" checked aria-label="Gulf Star chunein"></td><td><a href="#">Gulf Star Manpower</a><span class="sub">owner@gulfstar.ae, 3 Nov</span></td><td><span class="tag paid">Mid, paid</span></td><td>18 Dec</td><td>Dubai</td><td class="num">2</td><td>Aaj 09:15</td><td>1.4.0</td><td class="num">28</td><td class="num">86,450.00</td><td class="num">52,300.00</td><td class="num">15,000.00</td><td class="num">299.00</td></tr>
+            <tr><td><input type="checkbox" class="pick" aria-label="Al Noor chunein"></td><td><a href="#">Al Noor Labour Supply</a><span class="sub">alnoor@mail.com, 5 Sep</span></td><td><span class="tag over">Small, had se upar</span></td><td>20 Dec</td><td>Sharjah</td><td class="num">1</td><td>Kal 21:40</td><td>1.4.0</td><td class="num">17</td><td class="num">41,900.00</td><td class="num">26,100.00</td><td class="num">7,850.00</td><td class="num">597.00</td></tr>
+            <tr><td><input type="checkbox" class="pick" aria-label="Fajr chunein"></td><td><a href="#">Fajr Builders</a><span class="sub">fajr.hr@mail.com, 8 Oct</span></td><td><span class="tag paid">Mid, add-on</span></td><td>22 Feb</td><td>Dubai</td><td class="num">1</td><td>Kal 12:02</td><td>1.3.2</td><td class="num">24</td><td class="num">62,750.00</td><td class="num">44,900.00</td><td class="num late">Nuqsan 2,300.00</td><td class="num">1,156.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pager"><span>1 se 6, kul 9 is filter mein</span><label class="switch">Har safhe par <select aria-label="Har safhe par kitni" style="font-family:var(--face);font-size:14px;min-height:32px;border:1px solid var(--field-edge);border-radius:var(--radius);background:var(--sheet);color:var(--ink)"><option>25</option><option>50</option><option>100</option></select></label><button type="button" class="chip" disabled>Pichhla</button><button type="button" class="chip">Agla</button></div>
+    </div>
+  </section>
+
+  <!-- ============ 2a. Har account ka khulasa ============ -->
+  <div class="caption"><h2>2a. Har account ka khulasa <span class="tag part">Hissa 2</span></h2><p>Jo bhi register ho, us ka apna safha khud ban jata hai. Pehla tab yahi hai: account chal raha hai ya nahin, kaunsa plan, aur us ka poora business: bill, labour, tankhwah, nafa ya nuqsan.</p></div>
+  <section class="screen" aria-label="Account ka khulasa">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#">Jaiza</a><a href="#" aria-current="page">Accounts</a><a href="#">Subscriptions</a><a href="#">Business</a><a href="#">Investors</a><a href="#">Audit log</a><a href="#">Settings</a></nav>
+    </div>
+    <div class="crumbs"><a href="#">Accounts</a> / Al Noor Labour Supply</div>
+    <div class="head">
+      <div>
+        <h3>Al Noor Labour Supply</h3>
+        <div class="tags"><span class="tag paid">Account chal raha hai</span><span class="tag over">Plan ki had se upar</span><span class="tag part">Sharjah</span><span class="tag part">5 Sep se</span></div>
+      </div>
+      <div class="actions" style="margin-top:0"><button type="button">Note likhein</button><button type="button">Aur kaam</button></div>
+    </div>
+    <nav class="tabs" aria-label="Account ke hisse">
+      <a href="#" aria-selected="true">Business khulasa</a><a href="#">Plan aur paise</a><a href="#">Phone</a><a href="#">Kitab</a><a href="#">Backup</a><a href="#">Timeline</a><a href="#">Account</a><a href="#">Notes</a>
+    </nav>
+    <div class="page" style="padding-bottom:0">
+      <div class="statusrow" role="list" aria-label="Account ki haalat">
+        <div role="listitem"><span>Account</span><b class="ok">Chal raha hai</b><small>aakhri baar online kal 21:40</small></div>
+        <div role="listitem"><span>Plan</span><b>Small Company Plan, paid</b><small>20 Dec tak, AED 199.00 mahana</small></div>
+        <div role="listitem"><span>Had</span><b class="bad">17 of 15 labour</b><small>4 din se upar, 4 of 5 clients</small></div>
+        <div role="listitem"><span>Log</span><b>1 owner, 0 manager</b><small>manager ki had 1</small></div>
+        <div role="listitem"><span>Data aaya</span><b>Kal 21:41 tak</b><small>1 phone se, version 1.4.0</small></div>
+      </div>
+      <div class="range" style="margin:16px -20px 0">
+        <div class="seg" role="group" aria-label="Waqt"><button type="button" aria-pressed="true">Is mahina</button><button type="button" aria-pressed="false">Pichhla mahina</button><button type="button" aria-pressed="false">3 mahine</button><button type="button" aria-pressed="false">Shuru se</button></div>
+        <span class="fresh">November 2026, kal 21:41 tak ka data</span>
+      </div>
+    </div>
+    <dl class="band">
+      <div class="fig"><dt>Clients ko bill</dt><dd>AED 39,900<small>9 invoices, VAT ke baghair</small></dd></div>
+      <div class="fig"><dt>Labour ki tankhwah</dt><dd>AED 26,100<small>17 workers ki mazdoori</small></dd></div>
+      <div class="fig"><dt>Andazan nafa</dt><dd>AED 7,850<small>Oktober mein nuqsan 1,400</small></dd></div>
+      <div class="fig"><dt>Active labour</dt><dd>17<small>3 naye is mahine, 1 chhora</small></dd></div>
+      <div class="fig"><dt>Client companies</dt><dd>4<small>6 sites</small></dd></div>
+      <div class="fig"><dt>Clients se lena baqi</dt><dd>AED 18,400<small>6,200 waqt guzar gaya</small></dd></div>
+    </dl>
+    <div class="page">
+      <div class="grid2">
+        <div>
+          <div class="section-head"><h3>Nafa aur nuqsan, November</h3><span>Malik ki sheet wala hisaab</span></div>
+          <table>
+            <tbody>
+              <tr><td>Clients ka bill</td><td class="num">39,900.00</td></tr>
+              <tr><td>Us kaam ki mazdoori</td><td class="num">-26,100.00</td></tr>
+              <tr class="sub-total"><td>Mazdoori ke baad bacha</td><td class="num">13,800.00</td></tr>
+              <tr><td>Mahana tankhwah, client par nahin bati</td><td class="num">-2,500.00</td></tr>
+              <tr><td>Allowance</td><td class="num">-600.00</td></tr>
+              <tr><td>Tankhwah se doosri katoti</td><td class="num">200.00</td></tr>
+              <tr><td>Room se aaya</td><td class="num">1,500.00</td></tr>
+              <tr><td>Room ka kiraya diya</td><td class="num">-3,000.00</td></tr>
+              <tr><td>Doosre kharche</td><td class="num">-1,550.00</td></tr>
+              <tr class="total-row"><td>Andazan nafa, audit shuda nahin</td><td class="num">7,850.00</td></tr>
+            </tbody>
+          </table>
+          <p class="src">Wahi hisaab jo customer ki app mein &ldquo;Malik ki sheet&rdquo; banati hai, us ke phone ke data se. VAT bill mein nahin; advance aur visa ke paise kharcha nahin, kyun ke worker wapas karta hai.</p>
+        </div>
+        <div>
+          <div class="section-head"><h3>Har mahine ka nafa ya nuqsan</h3><span>shuru se, AED</span></div>
+          <figure class="chart">
+            <div class="plot pl" role="img" aria-label="Har mahine ka andazan nafa ya nuqsan: September 4,300 nafa, October 1,400 nuqsan, November 7,850 nafa">
+              <div class="yaxis" aria-hidden="true"><span>10,000</span><span>5,000</span><span>0</span><span>-5,000</span></div>
+              <span class="pl-col"><span class="bar-v" style="--v:43%" title="September: nafa 4,300.00"></span></span>
+              <span class="pl-col"><span class="bar-loss" style="--v:14%" title="October: nuqsan 1,400.00"></span></span>
+              <span class="pl-col"><span class="bar-v now" style="--v:79%" title="November, abhi chal raha: nafa 7,850.00"></span></span>
+            </div>
+            <div class="xaxis" aria-hidden="true"><span>Sep, nafa 4,300</span><span>Oct, nuqsan 1,400</span><span>Nov, nafa 7,850</span></div>
+            <details><summary>Table mein dekhein</summary>
+              <table><thead><tr><th>Mahina</th><th class="num">Bill</th><th class="num">Tankhwah</th><th class="num">Nafa ya nuqsan</th></tr></thead>
+              <tbody><tr><td>Sep 2026</td><td class="num">28,600.00</td><td class="num">19,200.00</td><td class="num">Nafa 4,300.00</td></tr><tr><td>Oct 2026</td><td class="num">31,200.00</td><td class="num">24,900.00</td><td class="num late">Nuqsan 1,400.00</td></tr><tr><td>Nov 2026</td><td class="num">39,900.00</td><td class="num">26,100.00</td><td class="num">Nafa 7,850.00</td></tr></tbody></table>
+            </details>
+          </figure>
+          <p class="src">October mein nuqsan: Hamriyah Steel ki 2 invoices aadhi wapas (credit note), aur room ka kiraya 2 mahine ka ek sath diya.</p>
+          <div class="section-head"><h3>Paison ki haalat</h3><span>aaj</span></div>
+          <ul class="checks">
+            <li><span>Clients se lena baqi</span><span>18,400.00</span></li>
+            <li><span>Is mein waqt guzar gaya</span><span class="bad">6,200.00, 2 invoices</span></li>
+            <li><span>Workers ko dena baqi</span><span>3,250.00, pichhle mahine se</span></li>
+            <li><span>Workers par advance baqi</span><span>1,800.00, 4 workers</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid2 even">
+        <div>
+          <div class="section-head"><h3>Client companies</h3><span>November, bill ke hisab se</span></div>
+          <table>
+            <thead><tr><th>Client</th><th class="num">Labour</th><th class="num">Bill</th><th class="num">Baqi</th></tr></thead>
+            <tbody>
+              <tr><td>Sharjah Ports Co</td><td class="num">6</td><td class="num">14,200.00</td><td class="num">7,100.00</td></tr>
+              <tr><td>Al Qasba Hotel</td><td class="num">5</td><td class="num">11,300.00</td><td class="num">0.00</td></tr>
+              <tr><td>Sahara Mall FM</td><td class="num">4</td><td class="num">9,100.00</td><td class="num late">6,200.00</td></tr>
+              <tr><td>Hamriyah Steel</td><td class="num">2</td><td class="num">5,300.00</td><td class="num">5,100.00</td></tr>
+              <tr class="total-row"><td>4 clients</td><td class="num">17</td><td class="num">39,900.00</td><td class="num">18,400.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div class="section-head"><h3>Labour</h3><span>November</span></div>
+          <table>
+            <tbody>
+              <tr><td>Active workers</td><td class="num">17</td></tr>
+              <tr><td>Hazri wale din</td><td class="num">402</td></tr>
+              <tr><td>Overtime ke ghante</td><td class="num">138</td></tr>
+              <tr><td>Aust mazdoori, ek worker</td><td class="num">1,535.29</td></tr>
+              <tr><td>Visa wale workers</td><td class="num">12</td></tr>
+              <tr><td>Visa 30 din mein khatam</td><td class="num late">2</td></tr>
+            </tbody>
+          </table>
+          <div class="actions"><button type="button">Workers ki list</button><button type="button">Clients ki list</button><button type="button">Invoices ki list</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. Ek company ============ -->
+  <div class="caption"><h2>3. Ek account: Khulasa</h2><p>Upar har waqt ke kaam, neeche tabs: Khulasa, Plan aur paise, Phone, Kitab (hissa 2), Backup, Timeline, Account, Notes. Khulasa par company ki poori kahani, signup se aaj tak.</p></div>
+  <section class="screen" aria-label="Ek company ka safha">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#">Jaiza</a><a href="#" aria-current="page">Accounts</a><a href="#">Subscriptions</a><a href="#">Business</a><a href="#">Investors</a><a href="#">Audit log</a><a href="#">Settings</a></nav>
+    </div>
+    <div class="crumbs"><a href="#">Accounts</a> / Gulf Star Manpower</div>
+    <div class="head">
+      <div>
+        <h3>Gulf Star Manpower</h3>
+        <div class="tags"><span class="tag paid">Mid, paid</span><span class="tag part">Dubai</span><span class="tag part">Version 1.4.0</span></div>
+      </div>
+      <div class="actions" style="margin-top:0">
+        <button type="button">Note likhein</button>
+        <button type="button">Grace din badhayein</button>
+        <button type="button">Aur kaam</button>
+      </div>
+    </div>
+    <dl class="band four">
+      <div class="fig"><dt>Plan</dt><dd>Mid, paid<small>18 Dec tak, phir 7 din grace</small></dd></div>
+      <div class="fig"><dt>Ab tak diye</dt><dd>AED 299.00<small>1 slip, 0 refuse</small></dd></div>
+      <div class="fig"><dt>Active labour</dt><dd>28<small>had 35, clients 6 of 9</small></dd></div>
+      <div class="fig"><dt>Aakhri baar online</dt><dd>Aaj 09:15<small>Samsung A15</small></dd></div>
+    </dl>
+    <nav class="tabs" aria-label="Company ke hisse">
+      <a href="#">Business khulasa</a><a href="#" aria-selected="true">Khulasa</a><a href="#">Plan aur paise</a><a href="#">Phone</a><a href="#">Kitab</a><a href="#">Backup</a><a href="#">Timeline</a><a href="#">Account</a><a href="#">Notes 1</a>
+    </nav>
+    <div class="page">
+      <div class="grid2">
+        <div>
+          <div class="section-head"><h3>Company</h3></div>
+          <dl class="facts">
+            <dt>Malik</dt><dd>owner@gulfstar.ae, email confirm</dd>
+            <dt>Phone</dt><dd>+971 50 xxx xx12, profile se</dd>
+            <dt>Bani</dt><dd>3 Nov 2026, Dubai</dd>
+            <dt>Tenant id</dt><dd>7f3a2c1e…</dd>
+            <dt>Members</dt><dd>1 owner, 0 manager</dd>
+            <dt>Cloud backup</dt><dd>Aakhri copy aaj 09:16, add-on nahin</dd>
+            <dt>Aap ka note</dt><dd>Referral, Al Noor se. Large plan mein dilchaspi.</dd>
+          </dl>
+          <div class="section-head"><h3>Sehat</h3><span>aakhri 7 din</span></div>
+          <ul class="checks">
+            <li><span>Licence check</span><span class="ok">Aaj 09:15, theek</span></li>
+            <li><span>Backup cloud par</span><span class="ok">Aaj 09:16</span></li>
+            <li><span>Plan ki had</span><span class="ok">28 of 35 labour</span></li>
+            <li><span>Crash aur errors</span><span class="soon">Hissa 3, app mukammal hone par</span></li>
+          </ul>
+          <div class="section-head"><h3>Kitab, is mahine <span class="tag part">Hissa 2</span></h3><span>Phone se aaya: aaj 09:16</span></div>
+          <div class="subtabs" role="group" aria-label="Kitab">
+            <button type="button" class="chip">Workers 28</button><button type="button" class="chip">Clients 6</button><button type="button" class="chip on">Invoices 14</button><button type="button" class="chip">Attendance</button><button type="button" class="chip">Payroll</button><button type="button" class="chip">Kharche</button>
+          </div>
+          <div class="filters" style="margin-top:4px">
+            <button type="button" class="chip">Mahina: <b>Nov 2026</b></button><button type="button" class="chip">Client: <b>sab</b></button><button type="button" class="chip">Haalat: <b>sab</b></button><span class="spacer"></span><button type="button" class="chip">CSV nikalein</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Invoice</th><th>Client</th><th>Tareekh</th><th>Haalat</th><th class="num">VAT</th><th class="num">Kul</th></tr></thead>
+              <tbody>
+                <tr><td>INV-2026-0014</td><td>Emaar Site 4</td><td>20 Nov</td><td><span class="tag wait">Baqi</span></td><td class="num">412.50</td><td class="num">8,662.50</td></tr>
+                <tr><td>INV-2026-0013</td><td>Nakheel Phase 2</td><td>18 Nov</td><td><span class="tag paid">Mil gaya</span></td><td class="num">1,050.00</td><td class="num">22,050.00</td></tr>
+                <tr><td>INV-2026-0012</td><td>Al Futtaim Logistics</td><td>15 Nov</td><td><span class="tag over">Waqt guzar gaya</span></td><td class="num">630.00</td><td class="num">13,230.00</td></tr>
+                <tr class="total-row"><td colspan="4">14 invoices, November</td><td class="num">4,116.67</td><td class="num">86,450.00</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div class="section-head"><h3>Company ki kahani</h3><span>naya upar</span></div>
+          <ol class="timeline">
+            <li class="money"><div class="when">18 Nov, 11:02</div><div class="ev">Aap ne slip accept ki, Mid 1 mahina</div><div class="more">AED 299.00, ref FT2611180311</div></li>
+            <li><div class="when">18 Nov, 09:20</div><div class="ev">Pehli invoice bani</div><div class="more">INV-2026-0001</div></li>
+            <li><div class="when">18 Nov, 08:40</div><div class="ev">Trial khatam hua</div><div class="more">15 din pure</div></li>
+            <li><div class="when">12 Nov, 17:05</div><div class="ev">Purana phone band kiya</div><div class="more">Redmi Note 9, owner ne khud</div></li>
+            <li><div class="when">6 Nov, 08:10</div><div class="ev">Pehli attendance</div><div class="more">22 workers ek din mein</div></li>
+            <li><div class="when">4 Nov, 19:30</div><div class="ev">Pehla worker</div><div class="more">CSV import, 26 workers</div></li>
+            <li><div class="when">3 Nov, 16:12</div><div class="ev">Company bani, trial shuru</div><div class="more">15 din</div></li>
+            <li><div class="when">3 Nov, 16:02</div><div class="ev">Account bana, email confirm</div><div class="more">Android, version 1.3.0</div></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3a. Plan aur paise ============ -->
+  <div class="caption"><h2>3a. Ek account: Plan aur paise</h2><p>Is company ka poora hisaab. Har paisa, refund aur darusti ek nayi line hai; purani line kabhi badli nahin jati (BILL-04).</p></div>
+  <section class="screen" aria-label="Plan aur paise ka tab">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#">Jaiza</a><a href="#" aria-current="page">Accounts</a><a href="#">Subscriptions</a><a href="#">Business</a><a href="#">Investors</a><a href="#">Audit log</a><a href="#">Settings</a></nav>
+    </div>
+    <div class="crumbs"><a href="#">Accounts</a> / Gulf Star Manpower</div>
+    <nav class="tabs" aria-label="Company ke hisse">
+      <a href="#">Business khulasa</a><a href="#">Khulasa</a><a href="#" aria-selected="true">Plan aur paise</a><a href="#">Phone</a><a href="#">Kitab</a><a href="#">Backup</a><a href="#">Timeline</a><a href="#">Account</a><a href="#">Notes 1</a>
+    </nav>
+    <div class="page">
+      <div class="grid2">
+        <div>
+          <div class="section-head"><h3>Abhi ka plan</h3><span>version 1 ki qeemat par</span></div>
+          <dl class="facts">
+            <dt>Plan</dt><dd>Mid Size Company Plan, AED 299.00 mahana</dd>
+            <dt>Chal raha</dt><dd>18 Nov se 18 Dec, phir 7 din grace</dd>
+            <dt>Cloud add-on</dt><dd>Nahin</dd>
+            <dt>Had</dt><dd>35 labour, 9 clients, 2 manager</dd>
+            <dt>Agli tajdeed</dt><dd>18 Dec, slip ka intezar</dd>
+          </dl>
+          <div class="section-head"><h3>Plan par kaam</h3></div>
+          <div class="actions" style="margin-top:4px">
+            <button type="button">Plan badlein</button>
+            <button type="button">Muddat barhayein</button>
+            <button type="button">Muft din dein</button>
+            <button type="button">Add-on dein</button>
+            <button type="button">Had mein chhoot</button>
+            <button type="button">Refund likhein</button>
+          </div>
+          <p class="src">Har kaam par wajah likhna zaroori, aur har kaam audit log mein. Plan badalne par aap chunte hain: abhi se, ya maujooda mahina khatam hone par, aur bacha hua hissa credit ho ya nahin.</p>
+        </div>
+        <div>
+          <div class="section-head"><h3>Had mein chhoot</h3><span>misaal</span></div>
+          <form onsubmit="return false" style="margin-top:4px">
+            <label>Kis cheez ki had<select name="limit"><option>Active labour</option><option>Client companies</option><option>Managers</option></select></label>
+            <label>Nayi had<input name="cap" inputmode="numeric" value="40"></label>
+            <label>Kab tak<input name="until" type="date" value="2026-12-18"></label>
+            <label>Wajah, audit log mein jayegi<input name="why" value="Season ka kaam, Large ki baat chal rahi hai"></label>
+            <div class="actions" style="margin-top:4px"><button type="submit" class="primary">Chhoot dein</button><button type="button" class="quiet">Rehne dein</button></div>
+          </form>
+        </div>
+      </div>
+      <div class="section-head"><h3>Paison ka khata</h3><span>naya upar</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Slip</th><th>Tareekh</th><th>Kya</th><th>Period</th><th>Kis ne bheji</th><th>Bank</th><th>Reference</th><th>Faisla, wajah</th><th class="num">Aaya</th><th class="num">Wapas</th></tr></thead>
+          <tbody>
+            <tr><td>-</td><td>21 Nov</td><td>Darusti</td><td>-</td><td>-</td><td>-</td><td>FT2611180311</td><td>Aap: bank ki tareekh 17 thi, 18 likhi</td><td class="num">0.00</td><td class="num">0.00</td></tr>
+            <tr><td><span class="thumb" aria-label="Slip ki tasveer">JPG</span></td><td>18 Nov</td><td>Mid, 1 mahina</td><td>18 Nov se 18 Dec</td><td>Faisal Anwar</td><td>Emirates Islamic<span class="sub">aakhri 2290</span></td><td>FT2611180311</td><td>Aap: ENBD mein dekh li</td><td class="num">299.00</td><td class="num">0.00</td></tr>
+            <tr><td>-</td><td>3 Nov</td><td>Trial</td><td>3 Nov se 18 Nov</td><td>Khud, signup par</td><td>-</td><td>-</td><td>-</td><td class="num">0.00</td><td class="num">0.00</td></tr>
+            <tr class="total-row"><td colspan="8">Kul</td><td class="num">299.00</td><td class="num">0.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3b. Account par qaboo ============ -->
+  <div class="caption"><h2>3b. Account rokna: suspend, arzi ya block</h2><p>&ldquo;Aur kaam&rdquo; se khulta hai. Customer ki kitab kabhi mitti ya chhupti nahin: wo dekh sakta hai, Excel aur backup nikal sakta hai, sirf nayi entry band hoti hai.</p></div>
+  <section class="screen" aria-label="Account rokna">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#">Jaiza</a><a href="#" aria-current="page">Accounts</a><a href="#">Subscriptions</a><a href="#">Business</a><a href="#">Investors</a><a href="#">Audit log</a><a href="#">Settings</a></nav>
+    </div>
+    <div class="page">
+      <div class="grid2">
+        <div>
+          <div class="section-head"><h3>Bright Way Contracting ko rokein</h3></div>
+          <fieldset class="choices">
+            <legend>Kis tarah</legend>
+            <label class="choice"><input type="radio" name="stop" checked><span><b>Arzi suspend</b><span>Chuni tareekh tak, phir khud khul jata hai.</span></span></label>
+            <label class="choice"><input type="radio" name="stop"><span><b>Suspend</b><span>Jab tak aap khud na kholein.</span></span></label>
+            <label class="choice"><input type="radio" name="stop"><span><b>Block</b><span>Suspend ke sath naya login aur naya phone bhi band. Dhoka ya ghalat istemal ke liye.</span></span></label>
+          </fieldset>
+          <form onsubmit="return false">
+            <label>Kab tak<input name="until" type="date" value="2026-11-29"></label>
+            <label>Customer ko kya likha aaye<textarea name="told" rows="2">Aap ki slip ka masla hai. Support se rabta karein.</textarea></label>
+            <label>Aap ka note, sirf aap ke liye<input name="note" value="Do slips ki raqam bank mein nahin"></label>
+            <label>MFA code dobara<input name="code" inputmode="numeric" autocomplete="one-time-code" placeholder="6 hindse"></label>
+            <div class="actions" style="margin-top:4px"><button type="submit" class="primary">Suspend karein</button><button type="button" class="quiet">Rehne dein</button></div>
+          </form>
+          <p class="src">Phone agle online check par ruk jata hai. Offline phone zyada se zyada 7 din mein khud ruk jata hai (D-074). Kholna ek button se, wo bhi audit log mein.</p>
+        </div>
+        <div>
+          <div class="section-head"><h3>Customer ke phone par</h3><span>suspend ke baad</span></div>
+          <div class="phone-mini" aria-label="Customer ke phone ka namoona">
+            <div class="pm-top">Bright Way Contracting</div>
+            <div class="pm-banner"><b>Account ruka hua hai, 29 Nov tak</b>Aap ki slip ka masla hai. Support se rabta karein.<span class="pm-link">Support se baat karein</span></div>
+            <ul class="ledger pm-rows">
+              <li><span class="what">Attendance</span><span class="why">Dekh sakte hain, nayi entry band</span></li>
+              <li><span class="what">Invoices</span><span class="why">Dekh, PDF aur share kar sakte hain</span></li>
+              <li><span class="what">Excel aur backup</span><span class="why">Hamesha khule</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3c. Account ki settings ============ -->
+  <div class="caption"><h2>3c. Account ki settings</h2><p>Customer ki ghalti ya darkhwast par account ki cheezein theek karna. Har badlav wajah ke sath audit log mein, aur customer ko app mein bataya jata hai.</p></div>
+  <section class="screen" aria-label="Account ki settings">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#">Jaiza</a><a href="#" aria-current="page">Accounts</a><a href="#">Subscriptions</a><a href="#">Business</a><a href="#">Investors</a><a href="#">Audit log</a><a href="#">Settings</a></nav>
+    </div>
+    <nav class="tabs" aria-label="Company ke hisse">
+      <a href="#">Business khulasa</a><a href="#">Khulasa</a><a href="#">Plan aur paise</a><a href="#">Phone</a><a href="#">Kitab</a><a href="#">Backup</a><a href="#">Timeline</a><a href="#" aria-selected="true">Account</a><a href="#">Notes 1</a>
+    </nav>
+    <div class="page">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Cheez</th><th>Abhi</th><th>Kya kar sakte hain</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>Login email</td><td>owner@gulfstar.ae, confirm</td><td>Naya email, customer ke purane aur naye dono email par code</td><td><button type="button" class="chip">Badlein</button></td></tr>
+            <tr><td>Company ka naam</td><td>Gulf Star Manpower</td><td>Spelling theek karna</td><td><button type="button" class="chip">Badlein</button></td></tr>
+            <tr><td>Members</td><td>1 owner, 0 manager</td><td>Manager hatana, owner badalna (dono ki ijazat se)</td><td><button type="button" class="chip">Dekhein</button></td></tr>
+            <tr><td>Phone</td><td>1 on, 1 band</td><td>Gum hua phone band karna, galti se band phone kholna</td><td><button type="button" class="chip">Dekhein</button></td></tr>
+            <tr><td>Trial</td><td>Istemal ho chuka</td><td>Trial claim azad karna, trial dobara dena</td><td><button type="button" class="chip">Badlein</button></td></tr>
+            <tr><td>Test company</td><td>Nahin</td><td>Hisaab aur investors ke numbers se bahar rakhna</td><td><button type="button" class="chip">Badlein</button></td></tr>
+            <tr><td>Company ka data</td><td>Cloud par, aaj 09:16 tak</td><td>Customer ki darkhwast par CSV ya Excel nikalna</td><td><button type="button" class="chip">Nikalein</button></td></tr>
+            <tr><td>Account mitana</td><td>-</td><td>Customer ki likhi darkhwast par, 60 din backup rehta hai (D-066)</td><td><button type="button" class="chip">Darkhwast</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3d. Kitab theek karna ============ -->
+  <div class="caption"><h2>3d. Customer ki kitab theek karna <span class="tag part">Hissa 4</span></h2><p>Kitab customer ke phone par hai, is liye darusti customer ki &ldquo;haan&rdquo; se hi lagti hai. Purani entry mitti nahin: darusti nayi entry ban kar lagti hai, jaise app mein hoti hai.</p></div>
+  <section class="screen" aria-label="Kitab theek karna">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#">Jaiza</a><a href="#" aria-current="page">Accounts</a><a href="#">Subscriptions</a><a href="#">Business</a><a href="#">Investors</a><a href="#">Audit log</a><a href="#">Settings</a></nav>
+    </div>
+    <div class="page">
+      <div class="grid2">
+        <div>
+          <div class="section-head"><h3>Kaise chalta hai</h3></div>
+          <ol class="steps">
+            <li><b>Customer ijazat deta hai.</b> App mein &ldquo;Support ko kitab dikhayein&rdquo;, 24 ghante ke liye.</li>
+            <li><b>Aap ghalti dhoondte hain</b> aur darusti likhte hain, wajah ke sath.</li>
+            <li><b>Customer ke phone par darkhwast aati hai:</b> pehle kya tha, ab kya hoga.</li>
+            <li><b>Customer &ldquo;Manzoor&rdquo; dabata hai</b> to darusti lagti hai, &ldquo;Rad&rdquo; par kuch nahin badalta.</li>
+          </ol>
+          <div class="section-head"><h3>Gulf Star ki ijazat</h3><span class="ok">On, 21 ghante baqi</span></div>
+          <form onsubmit="return false">
+            <label>Kaunsi entry<input name="entry" value="Attendance, 12 Nov, Ali Raza, Emaar Site 4"></label>
+            <label>Pehle<input name="before" value="07:00 se 19:00, 12 ghante" readonly></label>
+            <label>Ab<input name="after" value="07:00 se 17:00, 10 ghante"></label>
+            <label>Wajah, customer ko dikhegi<input name="why" value="Site manager ki sheet par 17:00 likha hai"></label>
+            <p class="hint">Is se November ka payroll badlega: Ali Raza ki tankhwah AED 25.00 kam. Payroll band ho chuka ho to farq agle mahine mein jayega.</p>
+            <div class="actions" style="margin-top:4px"><button type="submit" class="primary">Customer ko bhejein</button><button type="button" class="quiet">Rehne dein</button></div>
+          </form>
+        </div>
+        <div>
+          <div class="section-head"><h3>Bheji hui darustiyan</h3><span>30 din</span></div>
+          <ul class="ledger">
+            <li><span class="what">Attendance, Ali Raza, 12 Nov</span><span class="why">Aaj 10:10 bheji, intezar mein</span><span class="act"><span class="tag wait">Intezar</span></span></li>
+            <li><span class="what">Client ka TRN, Nakheel Phase 2</span><span class="why">Kal bheji, customer ne manzoor ki 14:22</span><span class="act"><span class="tag paid">Lag gayi</span></span></li>
+            <li><span class="what">Invoice INV-2026-0009 ki raqam</span><span class="why">Issue ho chuki invoice: credit note ki tajweez, customer ne rad ki</span><span class="act"><span class="tag over">Rad</span></span></li>
+          </ul>
+          <p class="src">Issue ho chuki invoice badli nahin jati; us ki darusti credit note se hoti hai (INV-06). Ye hissa sync ke sath banega, kyun ke cloud se phone tak darkhwast pohanchani hai.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. Slips ============ -->
+  <div class="caption"><h2>4. Subscriptions: intezar wali slips</h2><p>Baen taraf qatar aur filters, daen taraf chuni hui slip. App khud jaanchti hai: raqam, purana reference, file. Accept ke baad agli slip khud khulti hai.</p></div>
+  <section class="screen" aria-label="Slips ka safha">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#">Jaiza</a><a href="#">Accounts</a><a href="#" aria-current="page">Subscriptions</a><a href="#">Business</a><a href="#">Investors</a><a href="#">Audit log</a><a href="#">Settings</a></nav>
+    </div>
+    <div class="queue">
+      <div class="queue-list">
+        <nav class="views" aria-label="Slips" style="margin:0;padding:0 16px">
+          <a href="#" aria-current="page">Intezar<span class="count">3</span></a><a href="#">Accept<span class="count">7</span></a><a href="#">Refuse<span class="count">1</span></a>
+        </nav>
+        <div class="filters"><button type="button" class="chip">Plan: <b>sab</b></button><button type="button" class="chip">Waqt: <b>30 din</b></button></div>
+        <a class="qitem" href="#" aria-current="true"><span class="l1"><span>Sahil Workforce</span><span>199.00</span></span><span class="l2">Small, 1 mahina, 2 ghante pehle</span></a>
+        <a class="qitem" href="#"><span class="l1"><span>Desert Rose Services</span><span>657.00</span></span><span class="l2">Small add-on ke sath, 3 mahine, kal</span></a>
+        <a class="qitem" href="#"><span class="l1"><span>Bright Way Contracting</span><span>199.00</span></span><span class="l2 late">File nahin pohanchi, 3 din pehle</span></a>
+      </div>
+      <div class="review">
+        <div class="slot">Slip ki tasveer ya PDF. Click se bari, ghuma sakte hain.</div>
+        <div>
+          <h3>Sahil Workforce</h3>
+          <dl class="facts" style="margin-top:12px">
+            <dt>Plan</dt><dd>Small Company Plan, 1 mahina</dd>
+            <dt>Kya cover</dt><dd>Sirf plan</dd>
+            <dt>Aani chahiye</dt><dd>AED 199.00</dd>
+            <dt>Kis ne bheji</dt><dd>Imran Qureshi, owner, sahil.hr@mail.com</dd>
+            <dt>Kab</dt><dd>22 Nov, 08:30, Redmi 12 se</dd>
+            <dt>Pichhli slips</dt><dd>Koi nahin, pehli dafa</dd>
+          </dl>
+          <ul class="autocheck" aria-label="Khud jaanch">
+            <li><span class="ok">Theek</span>File poori pohanchi, 1.2 MB JPG</li>
+            <li><span class="ok">Theek</span>Ye company abhi trial par, plan 27 Nov tak</li>
+            <li><span class="bad">Dekhein</span>Bank reference likhte hi purane references se milaya jayega</li>
+          </ul>
+          <form onsubmit="return false">
+            <p class="hint">Pehle bank mein raqam dekhein. Sirf screenshot saboot nahin.</p>
+            <label>Bank mein kitni aayi (AED)<input name="amount" inputmode="decimal" autocomplete="off" value="189.00"><span class="field-warn">Aani chahiye 199.00, 10.00 kam. Phir bhi accept ho sakti hai, note likhein.</span></label>
+            <label>Bhejne wale ka bank<select name="payer_bank"><option>Mashreq</option><option>Emirates Islamic</option><option>Dubai Islamic Bank</option><option>Doosra</option></select></label>
+            <label>Bhejne wale account ke aakhri 4 hindse<input name="payer_last4" inputmode="numeric" maxlength="4" autocomplete="off" value="7731"></label>
+            <label>Bank reference<input name="reference" autocomplete="off" placeholder="FT..."></label>
+            <label>Kis din aayi<input name="received" type="date" value="2026-11-22"></label>
+            <label>Plan kab se shuru<select name="starts"><option>Trial khatam hone par, 27 Nov</option><option>Abhi se</option></select></label>
+            <label>Note, sirf aap ke liye<textarea name="note" rows="2"></textarea></label>
+            <div class="actions"><button type="submit" class="primary">Accept karein</button><button type="button">Refuse karein</button><button type="button" class="quiet">Chhorein, agli</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4a. Subscriptions ka record ============ -->
+  <div class="caption"><h2>4a. Subscriptions: sab ka record</h2><p>Har subscription ek line mein: kis company ne, kis shakhs ne bheji, kaunsa plan, kitne mahine, kitne paise aane the aur kitne aaye, kis bank se, reference, aur slip ki tasveer. Tasveer par click se poori slip.</p></div>
+  <section class="screen" aria-label="Subscriptions ka record">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#">Jaiza</a><a href="#">Accounts</a><a href="#" aria-current="page">Subscriptions</a><a href="#">Business</a><a href="#">Investors</a><a href="#">Audit log</a><a href="#">Settings</a></nav>
+    </div>
+    <div class="page">
+      <nav class="views" aria-label="Subscriptions">
+        <a href="#">Intezar<span class="count">3</span></a>
+        <a href="#" aria-current="page">Sab subscriptions<span class="count">11</span></a>
+        <a href="#">Paison ka khata<span class="count">14</span></a>
+        <a href="#">Refund<span class="count">0</span></a>
+        <a href="#">Tajdeed is hafte<span class="count">2</span></a>
+      </nav>
+      <div class="filters" role="group" aria-label="Filters">
+        <input type="search" aria-label="Company, shakhs, reference ya account" placeholder="Company, shakhs, reference ya account">
+        <button type="button" class="chip">Haalat: <b>sab</b></button>
+        <button type="button" class="chip">Plan: <b>sab</b></button>
+        <button type="button" class="chip">Kya cover: <b>sab</b></button>
+        <button type="button" class="chip">Bank: <b>sab</b></button>
+        <button type="button" class="chip on">Waqt: <b>Nov 2026</b></button>
+        <button type="button" class="chip">Raqam kam ya zyada</button>
+        <button type="button" class="chip add">+ Filter</button>
+        <span class="spacer"></span>
+        <button type="button" class="chip">CSV nikalein</button>
+        <button type="button" class="chip">Accountant ke liye Excel</button>
+      </div>
+      <div class="table-wrap">
+        <table class="sticky">
+          <thead><tr>
+            <th>Slip</th><th>Company</th><th>Kis ne bheji</th><th>Subscription</th><th>Period</th><th class="num">Aani thi</th><th class="num">Aayi</th><th>Bhejne wala bank</th><th>Reference</th><th>Bank mein</th><th>Haalat</th><th>Faisla</th>
+          </tr></thead>
+          <tbody>
+            <tr><td><span class="thumb" aria-label="Slip ki tasveer">JPG</span></td><td><a href="#">Sahil Workforce</a></td><td>Imran Qureshi<span class="sub">owner, sahil.hr@mail.com</span></td><td>Small, sirf plan<span class="sub">1 mahina, version 1</span></td><td>27 Nov se 27 Dec</td><td class="num">199.00</td><td class="num late">189.00</td><td>Mashreq<span class="sub">account aakhri 7731</span></td><td>-</td><td>-</td><td><span class="tag wait">Intezar</span></td><td>-</td></tr>
+            <tr><td><span class="thumb" aria-label="Slip ki tasveer">PDF</span></td><td><a href="#">Desert Rose Services</a></td><td>Rashid Mehmood<span class="sub">owner, rose.ops@mail.com</span></td><td>Small, add-on ke sath<span class="sub">3 mahine, version 1</span></td><td>25 Nov se 25 Feb</td><td class="num">657.00</td><td class="num">-</td><td>Dubai Islamic Bank<span class="sub">account aakhri 0418</span></td><td>-</td><td>-</td><td><span class="tag wait">Intezar</span></td><td>-</td></tr>
+            <tr><td><span class="thumb" aria-label="Slip ki tasveer">JPG</span></td><td><a href="#">Desert Rose Services</a></td><td>Rashid Mehmood<span class="sub">owner</span></td><td>Small, sirf plan<span class="sub">1 mahina</span></td><td>10 Nov se 25 Nov</td><td class="num">199.00</td><td class="num">199.00</td><td>Dubai Islamic Bank<span class="sub">account aakhri 0418</span></td><td>FT2611220042</td><td>22 Nov</td><td><span class="tag paid">Accept</span></td><td>Aap, 22 Nov 10:42</td></tr>
+            <tr><td><span class="thumb" aria-label="Slip ki tasveer">JPG</span></td><td><a href="#">Gulf Star Manpower</a></td><td>Faisal Anwar<span class="sub">owner, owner@gulfstar.ae</span></td><td>Mid, sirf plan<span class="sub">1 mahina</span></td><td>18 Nov se 18 Dec</td><td class="num">299.00</td><td class="num">299.00</td><td>Emirates Islamic<span class="sub">account aakhri 2290</span></td><td>FT2611180311</td><td>17 Nov</td><td><span class="tag paid">Accept</span></td><td>Aap, 18 Nov 11:02</td></tr>
+            <tr><td><span class="thumb" aria-label="Slip ki tasveer">JPG</span></td><td><a href="#">Fajr Builders</a></td><td>Usman Tariq<span class="sub">owner, fajr.hr@mail.com</span></td><td>Mid, add-on ke sath<span class="sub">3 mahine</span></td><td>22 Nov se 22 Feb</td><td class="num">957.00</td><td class="num">957.00</td><td>Mashreq<span class="sub">account aakhri 5562</span></td><td>MR2611150908</td><td>15 Nov</td><td><span class="tag paid">Accept</span></td><td>Aap, 15 Nov 16:20</td></tr>
+            <tr><td><span class="thumb missing" aria-label="Slip ki file nahin">-</span></td><td><a href="#">Bright Way Contracting</a></td><td>Saeed Ahmed<span class="sub">owner</span></td><td>Small, sirf plan<span class="sub">1 mahina</span></td><td>-</td><td class="num">199.00</td><td class="num">-</td><td>-</td><td>-</td><td>-</td><td><span class="tag over">Refuse</span></td><td>Aap, 19 Nov: raqam bank mein nahin</td></tr>
+            <tr class="total-row"><td colspan="5">November, 6 slips</td><td class="num">2,510.00</td><td class="num">1,455.00</td><td colspan="5">3 accept, 2 intezar, 1 refuse</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="grid2" style="margin-top:8px">
+        <div>
+          <div class="section-head"><h3>Ek subscription khol kar</h3><span>Gulf Star, 18 Nov</span></div>
+          <dl class="facts">
+            <dt>Company</dt><dd>Gulf Star Manpower, Dubai</dd>
+            <dt>Kis ne bheji</dt><dd>Faisal Anwar, owner, owner@gulfstar.ae, Samsung A15 se</dd>
+            <dt>Subscription</dt><dd>Mid Size Company Plan, sirf plan, 1 mahina, qeemat version 1</dd>
+            <dt>Period</dt><dd>18 Nov 2026 se 18 Dec 2026, phir 7 din grace</dd>
+            <dt>Aani thi</dt><dd>AED 299.00</dd>
+            <dt>Aayi</dt><dd>AED 299.00, 17 Nov ko, aap ke Emirates NBD account mein</dd>
+            <dt>Bhejne wala</dt><dd>Emirates Islamic, account aakhri 2290, naam Gulf Star Manpower LLC</dd>
+            <dt>Reference</dt><dd>FT2611180311</dd>
+            <dt>Slip bheji</dt><dd>17 Nov 21:40, JPG 1.2 MB</dd>
+            <dt>Faisla</dt><dd>Accept, aap ne, 18 Nov 11:02, MFA ke sath</dd>
+            <dt>Aap ka note</dt><dd>ENBD app mein dekh li</dd>
+          </dl>
+          <div class="actions"><button type="button">Slip download</button><button type="button">Raseed PDF</button><button type="button">Refund likhein</button><button type="button">Darusti likhein</button></div>
+        </div>
+        <div>
+          <div class="section-head"><h3>Slip ki tasveer</h3></div>
+          <div class="slot" style="aspect-ratio:auto;min-height:320px">Customer ki bheji hui slip yahan bari khulti hai: zoom, ghumana, download.</div>
+        </div>
+      </div>
+      <p class="src">Bhejne wale ka poora account number nahin rakha jata, sirf bank aur aakhri 4 hindse: milane ke liye kaafi, aur leak ho to nuqsan kam. Poora number slip ki tasveer mein maujood hai.</p>
+    </div>
+  </section>
+
+  <!-- ============ 5. Business ============ -->
+  <div class="caption"><h2>5. Business <span class="tag part">Hissa 2</span></h2><p>Sab companies ki kitabon ka jod: kitni labour, kitna bill, kis emirate mein. Investors ko yahi dikhega. Customers ka bill aap ki kamai se alag likha hai (MET-01).</p></div>
+  <section class="screen" aria-label="Business ka safha">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#">Jaiza</a><a href="#">Accounts</a><a href="#">Subscriptions</a><a href="#" aria-current="page">Business</a><a href="#">Investors</a><a href="#">Audit log</a><a href="#">Settings</a></nav>
+    </div>
+    <div class="range">
+      <div class="seg" role="group" aria-label="Waqt"><button type="button" aria-pressed="false">30 din</button><button type="button" aria-pressed="false">3 mahine</button><button type="button" aria-pressed="true">12 mahine</button><button type="button" aria-pressed="false">Apni tareekh</button></div>
+      <button type="button" class="chip">Emirate: <b>sab</b></button>
+      <button type="button" class="chip">Plan: <b>sab</b></button>
+      <button type="button" class="chip">Company ka size: <b>sab</b></button>
+      <span class="spacer"></span>
+      <button type="button" class="chip">Investor pack, PDF</button><button type="button" class="chip">CSV nikalein</button>
+    </div>
+    <dl class="band">
+      <div class="fig"><dt>Kul labour</dt><dd>148<small>12 companies mein, aaj</small></dd></div>
+      <div class="fig"><dt>Customers ka bill</dt><dd>AED 1.12M<small>12 mahine, VAT ke sath</small></dd></div>
+      <div class="fig"><dt>Invoices</dt><dd>486<small>12 mahine</small></dd></div>
+      <div class="fig"><dt>Attendance ke din</dt><dd>21,940<small>12 mahine</small></dd></div>
+      <div class="fig"><dt>Payroll</dt><dd>AED 690K<small>12 mahine</small></dd></div>
+      <div class="fig"><dt>Andazan nafa</dt><dd>AED 192K<small>sab accounts, audit shuda nahin</small></dd></div>
+    </dl>
+    <div class="page">
+      <div class="grid2">
+        <div>
+          <div class="section-head"><h3>Customers ka bill, har mahina</h3><span>AED hazar mein</span></div>
+          <figure class="chart">
+            <div class="plot" role="img" aria-label="Sab companies ki invoices ka jod, har mahina">
+              <div class="yaxis" aria-hidden="true"><span>400</span><span>300</span><span>200</span><span>100</span><span>0</span></div>
+              <span class="bar-v" style="--v:4%" title="Dec: 14K"></span><span class="bar-v" style="--v:6%" title="Jan: 22K"></span><span class="bar-v" style="--v:9%" title="Feb: 35K"></span><span class="bar-v" style="--v:12%" title="Mar: 48K"></span><span class="bar-v" style="--v:15%" title="Apr: 61K"></span><span class="bar-v" style="--v:18%" title="May: 72K"></span><span class="bar-v" style="--v:22%" title="Jun: 88K"></span><span class="bar-v" style="--v:28%" title="Jul: 110K"></span><span class="bar-v" style="--v:33%" title="Aug: 131K"></span><span class="bar-v" style="--v:46%" title="Sep: 183K"></span><span class="bar-v" style="--v:62%" title="Oct: 249K"></span><span class="bar-v now" style="--v:85%" title="Nov, abhi chal raha: 341K"></span>
+            </div>
+            <div class="xaxis" aria-hidden="true"><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span></div>
+          </figure>
+          <p class="src">Zariya: har company ki invoices, phone se cloud par. Jo phone offline hai us ka mahina adhoora ho sakta hai; adhoore mahine ki nishani lagti hai.</p>
+        </div>
+        <div>
+          <div class="section-head"><h3>Emirate ke hisab se</h3><span>12 mahine</span></div>
+          <table>
+            <thead><tr><th>Emirate</th><th class="num">Companies</th><th class="num">Labour</th><th class="num">Bill (AED)</th></tr></thead>
+            <tbody>
+              <tr><td>Dubai</td><td class="num">5</td><td class="num">71</td><td class="num">552,300</td></tr>
+              <tr><td>Sharjah</td><td class="num">4</td><td class="num">41</td><td class="num">301,900</td></tr>
+              <tr><td>Abu Dhabi</td><td class="num">2</td><td class="num">24</td><td class="num">186,400</td></tr>
+              <tr><td>Ajman</td><td class="num">1</td><td class="num">12</td><td class="num">80,100</td></tr>
+              <tr class="total-row"><td>Kul</td><td class="num">12</td><td class="num">148</td><td class="num">1,120,700</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="grid2 even">
+        <div>
+          <div class="section-head"><h3>Sab accounts ka nafa aur nuqsan</h3><span>12 mahine, AED</span></div>
+          <table>
+            <tbody>
+              <tr><td>Clients ka bill</td><td class="num">1,067,300</td></tr>
+              <tr><td>Us kaam ki mazdoori</td><td class="num">-690,000</td></tr>
+              <tr class="sub-total"><td>Mazdoori ke baad bacha</td><td class="num">377,300</td></tr>
+              <tr><td>Mahana tankhwah aur allowance</td><td class="num">-110,400</td></tr>
+              <tr><td>Katoti</td><td class="num">5,200</td></tr>
+              <tr><td>Room, aaya minus kiraya</td><td class="num">-38,400</td></tr>
+              <tr><td>Doosre kharche</td><td class="num">-41,700</td></tr>
+              <tr class="total-row"><td>Andazan nafa, audit shuda nahin</td><td class="num">192,000</td></tr>
+            </tbody>
+          </table>
+          <p class="src">Har account ki apni &ldquo;Malik ki sheet&rdquo; ka jod. Ye customers ka nafa hai, aap ka nahin.</p>
+        </div>
+        <div>
+          <div class="section-head"><h3>Kaun nafa mein, kaun nuqsan mein</h3><span>November</span></div>
+          <ol class="hbars" aria-label="Nafa aur nuqsan wale accounts">
+            <li><span>Nafa mein</span><span class="track"><span class="fill" style="--v:75%"></span></span><span class="n">9</span><span class="pct">75%</span></li>
+            <li><span>Nuqsan mein</span><span class="track"><span class="fill loss" style="--v:17%"></span></span><span class="n">2</span><span class="pct">17%</span></li>
+            <li class="later"><span>Data nahin aaya</span><span class="track"></span><span class="n">1</span><span class="pct">8%</span></li>
+          </ol>
+          <ul class="ledger" style="margin-top:12px">
+            <li><span class="what">Fajr Builders, nuqsan 2,300.00</span><span class="why">Tankhwah bill ka 72%, 3 workers bina kaam</span><span class="act"><button type="button">Account</button></span></li>
+            <li><span class="what">Bright Way Contracting, nuqsan 650.00</span><span class="why">Plan khatam, sirf kharche likhe</span><span class="act"><button type="button">Account</button></span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="section-head"><h3>Sab se bara bill</h3><span>12 mahine, top 5</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Company</th><th>Emirate</th><th class="num">Labour</th><th class="num">Invoices</th><th class="num">Bill (AED)</th><th class="num">Payroll (AED)</th><th class="num">App par kitne mahine</th></tr></thead>
+          <tbody>
+            <tr><td>Gulf Star Manpower</td><td>Dubai</td><td class="num">28</td><td class="num">14</td><td class="num">86,450</td><td class="num">52,300</td><td class="num">1</td></tr>
+            <tr><td>Fajr Builders</td><td>Dubai</td><td class="num">24</td><td class="num">61</td><td class="num">248,900</td><td class="num">151,200</td><td class="num">2</td></tr>
+            <tr><td>Al Noor Labour Supply</td><td>Sharjah</td><td class="num">17</td><td class="num">88</td><td class="num">231,400</td><td class="num">140,800</td><td class="num">3</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. Audit log ============ -->
+  <div class="caption"><h2>6. Audit log</h2><p>Dashboard par har kaam: kis ne, kab, kis company par, kyun, aur pehle kya tha. Ye log na badla ja sakta hai na mitaya (ADMIN-03).</p></div>
+  <section class="screen" aria-label="Audit log ka safha">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#">Jaiza</a><a href="#">Accounts</a><a href="#">Subscriptions</a><a href="#">Business</a><a href="#">Investors</a><a href="#" aria-current="page">Audit log</a><a href="#">Settings</a></nav>
+    </div>
+    <div class="page">
+      <div class="filters">
+        <input type="search" aria-label="Log mein dhoondein" placeholder="Company, reference ya wajah">
+        <button type="button" class="chip">Kis ne: <b>sab</b></button>
+        <button type="button" class="chip on">Kaam: <b>paise wale</b></button>
+        <button type="button" class="chip">Company: <b>sab</b></button>
+        <button type="button" class="chip">Waqt: <b>30 din</b></button>
+        <span class="spacer"></span><button type="button" class="chip">CSV nikalein</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Waqt</th><th>Kis ne</th><th>Kaam</th><th>Company</th><th>Wajah</th><th>Pehle</th><th>Baad</th></tr></thead>
+          <tbody>
+            <tr><td>22 Nov, 10:42</td><td>Aap, MFA</td><td>Slip accept</td><td>Desert Rose</td><td>ENBD mein dekh li</td><td>Intezar</td><td>Small, 25 Nov se 25 Dec</td></tr>
+            <tr><td>21 Nov, 18:05</td><td>Aap, MFA</td><td>Trial claim azad</td><td>Sahil Workforce</td><td>Naya email, purani company band</td><td>Claim</td><td>Azad</td></tr>
+            <tr><td>20 Nov, 12:30</td><td>Aap, MFA</td><td>Grace din</td><td>Al Noor</td><td>Bank chhutti par</td><td>20 Dec</td><td>27 Dec</td></tr>
+            <tr><td>19 Nov, 09:14</td><td>Aap, MFA</td><td>Slip refuse</td><td>Bright Way</td><td>Raqam bank mein nahin</td><td>Intezar</td><td>Refuse</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. Settings ============ -->
+  <div class="caption"><h2>7. Settings</h2><p>Kaun dashboard khol sakta hai aur kya kar sakta hai, bank ki details, plans ki qeematein, support ka rabta, test companies.</p></div>
+  <section class="screen" aria-label="Settings ka safha">
+    <div class="bar">
+      <span class="mark">Labour app, malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#">Jaiza</a><a href="#">Accounts</a><a href="#">Subscriptions</a><a href="#">Business</a><a href="#">Investors</a><a href="#">Audit log</a><a href="#" aria-current="page">Settings</a></nav>
+    </div>
+    <div class="page">
+      <div class="grid2 even">
+        <div>
+          <div class="section-head"><h3>Dashboard ke log</h3><span>Kirdar aur ijazat</span></div>
+          <table>
+            <thead><tr><th>Kaun</th><th>Kirdar</th><th>MFA</th><th>Kya kar sakta</th></tr></thead>
+            <tbody>
+              <tr><td>Aap</td><td>Malik</td><td class="ok">On</td><td>Sab kuch</td></tr>
+              <tr><td class="soon">Baad mein</td><td>Finance</td><td>-</td><td>Slips aur paise</td></tr>
+              <tr><td class="soon">Baad mein</td><td>Support</td><td>-</td><td>Companies dekhna, kitab nahin</td></tr>
+            </tbody>
+          </table>
+          <p class="src">Naya log sirf aap jod sakte hain, MFA ke baghair koi andar nahin.</p>
+        </div>
+        <div>
+          <div class="section-head"><h3>Platform</h3></div>
+          <ul class="checks">
+            <li><span>Bank ki details</span><span>Emirates NBD, aakhri hindse 4521</span></li>
+            <li><span>Support ka rabta</span><span>WhatsApp, set hai</span></li>
+            <li><span>Plans aur qeematein</span><span>Version 1, 11 Nov se</span></li>
+            <li><span>Test companies</span><span>2 chhupi hui</span></li>
+            <li><span>Licence ki chabi</span><span>11 Nov se, badlein</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. States ============ -->
+  <div class="caption"><h2>8. Jab data na ho, aa raha ho, ya rabta toote</h2><p>Har panel ke ye teen haal bhi bante hain.</p></div>
+  <section class="screen" aria-label="Haalaat">
+    <div class="states">
+      <div><h3>Aa raha hai</h3><span class="skel w80"></span><span class="skel w60"></span><span class="skel w80"></span><span class="skel w40"></span></div>
+      <div><h3>Khali</h3><div class="empty"><b>Koi slip intezar mein nahin</b><p>Nayi slip aate hi yahan aur Jaiza par dikhegi.</p><button type="button" class="chip">Accept hui slips dekhein</button></div></div>
+      <div><h3>Rabta toota</h3><div class="banner"><b>Cloud se rabta nahin hua</b>10:45 ka data dikh raha hai. Internet dekh kar dobara koshish karein.</div><div class="actions" style="margin-top:12px"><button type="button">Dobara koshish</button></div></div>
+    </div>
+  </section>
+
+  <!-- ============ 9. Phone ============ -->
+  <div class="caption"><h2>9. Phone par</h2><p>Wahi jaiza, phone ke browser mein. Baqi safhe “Aur” mein.</p></div>
+  <section class="screen phone" aria-label="Phone par jaiza">
+    <div class="bar">
+      <span class="mark">Malik</span>
+      <nav class="nav" aria-label="Dashboard"><a href="#" aria-current="page">Jaiza</a><a href="#">Accounts</a><a href="#">Subscriptions</a></nav>
+      <button type="button" class="quiet menu-btn" aria-label="Baqi safhe">Aur</button>
+    </div>
+    <div class="range"><div class="seg" role="group" aria-label="Waqt"><button type="button" aria-pressed="false">7 din</button><button type="button" aria-pressed="true">30 din</button><button type="button" aria-pressed="false">12 mahine</button></div></div>
+    <dl class="band">
+      <div class="fig"><dt>MRR</dt><dd>AED 1,016<small>+319</small></dd></div>
+      <div class="fig"><dt>Slips</dt><dd>3<small>intezar mein</small></dd></div>
+    </dl>
+    <div class="page">
+      <div class="section-head"><h3>Aaj ke kaam</h3></div>
+      <ul class="ledger">
+        <li><span class="what">Sahil ki slip</span><span class="why">Small, AED 199.00</span><span class="act"><button type="button" class="primary">Dekhein</button></span></li>
+        <li><span class="what">Al Noor had se upar</span><span class="why">17 workers, had 15</span><span class="act"><button type="button">Company</button></span></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

@@ -78,7 +78,7 @@ Every phase also delivers a test APK, sample documents, a 5-minute walkthrough a
 
 | Task | Title | Requirements | Status | Branch / PR |
 | --- | --- | --- | --- | --- |
-| T22 | Admin web with MFA, customers, manual payments, renewals, audit log | ADMIN-01..03, ADMIN-08, BILL-01, BILL-04, ARCH-03 | NOT_STARTED | - |
+| T22 | Admin web with MFA, customers, manual payments, renewals, audit log. In parts (D-081): part 1 the dashboard on today's cloud data, part 2 the books in the cloud with the customer's consent; design written on 2026-11-22 for the owner's approval | ADMIN-01..03, ADMIN-08, BILL-01, BILL-04, ARCH-03 | IN_PROGRESS | `p5/t22-dashboard` |
 | T23 | Telemetry, investor metrics, health, support tickets, alerts, budget limits | ADMIN-04..07, MET-01..07, OPS-01..06, OPS-08, ARCH-05, ARCH-06 | NOT_STARTED | - |
 
 **Gate:** Real-source metrics, admin MFA and error-ticket tests pass. Solo pilot allowed from here.

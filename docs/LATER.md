@@ -10,6 +10,7 @@ Everything promised for a later task, in one place, so nothing is lost between s
 
 ## T22: the owner's dashboard
 
+- The design is `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081): part 1, the dashboard on today's cloud data, then part 2, the books in the cloud. The lines below are what it must cover.
 - Slips: a list of waiting slips with the file, accept with amount, bank reference, received date and a note, or refuse with a reason. Until then the prepared SQL in `docs/RUNBOOK.md` (BILL-01, ADMIN-03).
 - Every accept, refuse, revoke, refund and correction with actor, time and reason in an audit log; a finance change never overwrites the first entry (ADMIN-03, BILL-04).
 - Upgrading mid-period: today an accepted Mid slip starts after the current Small period ends. The dashboard should offer starting it at once, with the rest of the old period credited or not, as the owner decides then.
@@ -57,6 +58,10 @@ After T20d:
 
 ## T23: telemetry, health, support
 
+- Part 3 of D-081, when the app is complete: crashes and errors from customers' phones, the known ones (a failed paper, backup or licence check) and the hidden ones (any uncaught error), kept on the phone while offline and sent when online, with version, screen and a redacted stack, grouped on the dashboard so an update can fix them. Our own record in the same cloud, not Sentry (the owner, 2026-11-22). Android's native crashes from Play Console after Play.
+- The dashboard's Investors page: the investor pack (MET-06) as PDF and CSV, cohort retention, month-end snapshots (MET-07). Hidden from the menu until built (D-081).
+- Finance and support roles for the dashboard (ADMIN-08): finance sees subscriptions and money, support sees accounts but not books. One role, the owner, until then (D-081).
+- Play installs and first opens in the funnel, from Play Console's reports, after the app is on Play (MET-05, D-081).
 - Sentry with session replay off (D-002); minimal events; support tickets kept 30 days after they close.
 - Investor metrics from real sources only: 1 tenant with 2 users and 2 devices counts as 1 customer.
 - Alerts and budget limits.
@@ -72,6 +77,7 @@ After T20d:
 
 ## T25: sync
 
+- Part 4 of D-081: fixing a customer's books from the dashboard. The customer allows support for 24 hours in the app; the owner writes a correction with a reason; the customer's phone shows what was and what will be; the customer's yes applies it as a correction through the write path, never an edit; an issued invoice is corrected only by a credit note (OPS-05, INV-06). Needs the cloud to reach the phone, as sync does.
 - Sync ADR (custom outbox or PowerSync); two phones of one company in step; conflicts.
 - Each device its own paper, timesheet and invoice numbers, or numbers from the server for Team tenants (INV-08).
 - Images and stored files carried on their own, since the outbox holds no bytes.
