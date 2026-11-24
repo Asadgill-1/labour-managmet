@@ -1,6 +1,6 @@
 # T22: the owner's dashboard
 
-Status: for the owner's approval, 2026-11-22. Requirements: ADMIN-01, ADMIN-02, ADMIN-03, ADMIN-08, ARCH-03, BILL-01, BILL-04, with parts of ADMIN-04, ADMIN-05, MET-01 to MET-03 and MET-07. Changes D-072 and the PRD's OPS-01, OPS-02 and ADMIN-02 on the owner's word (D-081). Builds on D-074 (plans, slips, the signed licence), D-076 (the add-on's periods) and D-073 (phones turned off).
+Status: for the owner's approval, 2026-11-22; his answer on consent added 2026-11-24. Requirements: ADMIN-01, ADMIN-02, ADMIN-03, ADMIN-08, ARCH-03, BILL-01, BILL-04, with parts of ADMIN-04, ADMIN-05, MET-01 to MET-03 and MET-07. Changes D-072 and the PRD's OPS-01, OPS-02 and ADMIN-02 on the owner's word (D-081). Builds on D-074 (plans, slips, the signed licence), D-076 (the add-on's periods) and D-073 (phones turned off).
 
 The look is settled by the mockup the owner approved on 2026-11-22: `docs/superpowers/specs/2026-11-22-t22-dashboard-mockup.html` (every name and number in it is sample data).
 
@@ -205,6 +205,6 @@ Table and function names beyond those above; the exact SQL for the metrics; how 
 7. **One admin role, the owner.** Finance and support roles wait until someone else needs a login.
 8. **Part 1 first, part 2 after**: part 1 needs only today's data, part 2 needs app changes and consent.
 
-## Open question for the owner
+## The owner's answer, 2026-11-24
 
-- May a company that does not agree to send its data still use the app? If yes, it gets only the counts the app sends today, and its account page says so. If no, signup stops at the consent page. Claude's recommendation: **no**, because the owner wants all data and nothing goes up without the agreement either way; but UAE law asks consent to be freely given, so the lawyer in step 5 should look at this choice first.
+- A company that does not agree to send its data cannot use the app: "Nahin, ijazat zaroori". Signup stops at the consent page, with a way back and a way to log out; an account made before part 2 that does not agree is held at that page on its next open, its books still readable, exportable and backed up, as with a held account. UAE law asks consent to be freely given, so the lawyer in "What the owner does", step 5, reads this choice first, before Play.
