@@ -253,7 +253,7 @@ select pg_temp.paid('f0000000-0000-0000-0000-000000000001', 'plan', 'small', '20
 select pg_temp.paid('f0000000-0000-0000-0000-000000000002', 'plan', 'small', '2026-05-05', '2026-06-05');
 select pg_temp.paid('f0000000-0000-0000-0000-000000000002', 'plan_addon', 'mid', '2026-06-05', '2026-07-05');
 select pg_temp.paid('f0000000-0000-0000-0000-000000000003', 'plan', 'small', '2026-05-10', '2026-06-10');
-select pg_temp.paid('f0000000-0000-0000-0000-000000000005', 'plan', 'large', '2026-06-01', '2026-07-01');
+select pg_temp.paid('f0000000-0000-0000-0000-000000000005', 'plan', 'large', '2026-06-02', '2026-07-02');
 insert into public.subscriptions (tenant_id, plan_code, plan_version, source, starts_at_utc, ends_at_utc, anchor_at_utc)
   values ('f0000000-0000-0000-0000-000000000004', 'trial', 1, 'trial', '2026-06-01', '2026-06-16', '2026-06-01');
 insert into private.money_entries (tenant_id, kind, subscription_id, amount_fils, reference, on_date, reason, created_by)
