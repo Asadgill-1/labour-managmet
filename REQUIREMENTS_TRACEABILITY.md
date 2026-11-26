@@ -18,7 +18,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | AUTH-03 | 03 | Pehla signup, naya device login, password reset aur invite | T19 | IN_PROGRESS | TC-144, TC-145, TC-146, TC-147, TC-148, TC-149, TC-150, TC-151, TC-152, TC-211, TC-212 | `apps/mobile/test/account_flow_test.dart`, `apps/mobile/test/app_lock_test.dart`, `supabase/tests/database/phones.test.sql`, `docs/audit/BUG_REGISTER.md` |
 | AUTH-04 | 03 | Har local database tenant/account boundary mein encrypted ho. Logout/account | T19 | IN_PROGRESS | TC-014, TC-045, TC-145, TC-149, TC-150 | `apps/mobile/test/account_flow_test.dart` |
 | AUTH-05 | 03 | Cloud tenant tables par Row Level Security aur membership | T19 | IN_PROGRESS | TC-006, TC-142, TC-143, TC-190 | `supabase/tests/database/tenants.test.sql`, `supabase/tests/database/cloud_backup.test.sql` |
-| AUTH-06 | 03 | App malik ke admin account par MFA lazmi ho | T19 | NOT_STARTED | - | - |
+| AUTH-06 | 03 | App malik ke admin account par MFA lazmi ho | T19, T22 | IN_PROGRESS | TC-217, TC-220 | `admin.test.sql` refuses the admin at `aal1` (TC-217); `apps/admin` signs in with the TOTP code (TC-220); live with TC-223 |
 | AUTH-07 | 03 | Account deletion app aur web dono se request ki | T19 | IN_PROGRESS | TC-153, TC-154, TC-155, TC-156, TC-157, TC-191, TC-197, TC-211 | `supabase/tests/database/delete_account.test.sql`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `supabase/tests/database/cloud_backup.test.sql`, `apps/mobile/test/cloud_screens_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | AUTH-08 | 03 | Production email login ke liye real SMTP/domain configuration aur | T19 | NOT_STARTED | - | - |
 | MASTER-01 | 04 | Apni company | T07 | IMPLEMENTED_UNVERIFIED | - | - |
@@ -104,7 +104,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | BILL-09 | 13 | Business licensing, invoice/tax treatment aur receiving bank-account permissions user | T26 | NOT_STARTED | - | - |
 | ARCH-01 | 14 | Mobile | T03 | IMPLEMENTED_UNVERIFIED | TC-014 | - |
 | ARCH-02 | 14 | Chhota control backend | T19 | NOT_STARTED | - | - |
-| ARCH-03 | 14 | App malik web | T22 | IN_PROGRESS | - | Design: `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081) |
+| ARCH-03 | 14 | App malik web | T22 | IN_PROGRESS | TC-220 | `apps/admin`, a static Next.js site, CI run 45838390057 (TC-220); not hosted until the owner's yes (D-002) |
 | ARCH-04 | 14 | Paid Team | T25 | NOT_STARTED | - | - |
 | ARCH-05 | 14 | Cost | T23 | NOT_STARTED | - | - |
 | ARCH-06 | 14 | Budget controls | T23 | NOT_STARTED | - | - |
@@ -126,17 +126,17 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | DATA-06 | 16 | Phone change | T20 | IMPLEMENTED_UNVERIFIED | TC-010, TC-046, TC-166, TC-167, TC-170, TC-171, TC-172, TC-173, TC-174, TC-190, TC-193, TC-194, TC-196, TC-197, TC-199, TC-200, TC-201, TC-202, TC-204, TC-205, TC-211, TC-212, TC-216 | `apps/mobile/test/restore_test.dart`, `apps/mobile/test/account_test.dart`, `apps/mobile/test/account_flow_test.dart`, `supabase/tests/database/phone_off.test.sql`, `supabase/tests/database/cloud_backup.test.sql`, `supabase/functions/backup/request_test.ts`, CI run 43664625445, `apps/mobile/test/cloud_copy_test.dart`, `apps/mobile/test/cloud_screens_test.dart`, `apps/mobile/test/cloud_restore_test.dart`, D-078, `docs/audit/BUG_REGISTER.md` |
 | DATA-07 | 16 | Key recovery | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-161, TC-165, TC-195, TC-198, TC-201, TC-211 | `apps/mobile/test/backup_test.dart`, `apps/mobile/test/restore_test.dart`, `apps/mobile/test/recovery_test.dart`, `apps/mobile/tool/recovery_key.dart`, `apps/mobile/test/cloud_restore_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | DATA-08 | 16 | Retention | T20 | IMPLEMENTED_UNVERIFIED | TC-191, TC-194, TC-195, TC-196, TC-197, TC-199, TC-201, TC-204 | `docs/DATA_MODEL.md` Retention, D-066, D-069, D-070, `supabase/tests/database/cloud_backup.test.sql`, D-072, D-075, D-076, D-077, `apps/mobile/test/cloud_copy_test.dart`, `apps/mobile/test/cloud_screens_test.dart`, `apps/mobile/test/cloud_restore_test.dart`, D-078 |
-| ADMIN-01 | 17 | Navigation | T22 | IN_PROGRESS | - | Design: `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081) |
+| ADMIN-01 | 17 | Navigation | T22 | IN_PROGRESS | TC-220 | `apps/admin`, CI run 45838390057 (TC-220): every page says when its data was fetched and keeps its filters in the URL; the live run waits for TC-223 |
 | ADMIN-02 | 17 | Customer register | T22 | IN_PROGRESS | TC-217 | `supabase/tests/database/admin.test.sql`, CI run 45451896062 (TC-217): `admin_accounts` and `admin_account`; D-081 (2) changes what the register may hold |
-| ADMIN-03 | 17 | Subscription operations | T22 | IN_PROGRESS | TC-217, TC-218 | `supabase/tests/database/admin.test.sql`, CI run 45451896062 (TC-217); the app's hold in `apps/mobile/test/account_flow_test.dart`; the web pages wait for T22c |
+| ADMIN-03 | 17 | Subscription operations | T22 | IN_PROGRESS | TC-217, TC-218 | `supabase/tests/database/admin.test.sql`, CI run 45451896062 (TC-217); the app's hold in `apps/mobile/test/account_flow_test.dart`; the web pages and plans changed from now in `apps/admin` and `plan_from_now.test.sql`, CI runs 45838390057 and 45838390057 (TC-220, TC-222) |
 | ADMIN-04 | 17 | Product funnel | T23 | NOT_STARTED | TC-011 | - |
-| ADMIN-05 | 17 | Offline visibility | T23 | NOT_STARTED | - | - |
+| ADMIN-05 | 17 | Offline visibility | T22, T23 | IN_PROGRESS | TC-220 | `apps/admin` (TC-220): last online by the Dubai day on Accounts and each account, and the Overview's 7-day offline list; health checks wait for T23 |
 | ADMIN-06 | 17 | Health | T23 | NOT_STARTED | - | - |
 | ADMIN-07 | 17 | Support | T23 | NOT_STARTED | - | - |
 | ADMIN-08 | 17 | Access | T22 | IN_PROGRESS | TC-217 | `supabase/tests/database/admin.test.sql`, CI run 45451896062 (TC-217): admin row and `aal2` checked in every function; one role until T23 |
 | MET-01 | 18 | Dashboard fancy totals ke bajaye reproducible data de. Trial | T23 | NOT_STARTED | TC-011 | - |
 | MET-02 | 18 | Manual renewals | T23 | NOT_STARTED | - | - |
-| MET-03 | 18 | MRR bridge | T23 | NOT_STARTED | - | - |
+| MET-03 | 18 | MRR bridge | T22, T23 | IN_PROGRESS | TC-217, TC-220, TC-222 | `admin_overview`'s bridge adds up on sample data (TC-217) and keeps a plan cut from now (TC-222); shown on the Overview (TC-220) |
 | MET-04 | 18 | Costs | T23 | NOT_STARTED | - | - |
 | MET-05 | 18 | Source of truth | T23 | NOT_STARTED | - | - |
 | MET-06 | 18 | Investor pack | T23 | NOT_STARTED | - | - |

@@ -10,23 +10,16 @@ Everything promised for a later task, in one place, so nothing is lost between s
 
 ## T22: the owner's dashboard
 
-- The design is `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081): part 1, the dashboard on today's cloud data, then part 2, the books in the cloud. The lines below are what it must cover. The cloud side and the app's holds are built (T22a, T22b, D-082); the web pages are T22c.
-- With T22c, the `admin` Edge Function (it holds the service-role key on the server and checks `aal2` and the admin row itself): changing a login email with a code to both addresses, and banning a blocked account's users in Supabase Auth until the block is lifted (D-082 (8)).
-- With T22c, changing a plan from now: the current period ends early by a new row that says from when, read by `licence_facts`, with the rest credited or not as the owner chooses (D-082 (8)).
-- Slips: a list of waiting slips with the file, accept with amount, bank reference, received date and a note, or refuse with a reason. Until then the prepared SQL in `docs/RUNBOOK.md` (BILL-01, ADMIN-03).
-- Every accept, refuse, revoke, refund and correction with actor, time and reason in an audit log; a finance change never overwrites the first entry (ADMIN-03, BILL-04).
-- Upgrading mid-period: today an accepted Mid slip starts after the current Small period ends. The dashboard should offer starting it at once, with the rest of the old period credited or not, as the owner decides then.
-- Grace extension and suspend, plan migration, refund (ADMIN-03).
-- Companies over their limit, from the counts each licence check reports (`private.usage_reports`).
-- Ending or giving back a trial or a period from the dashboard, so safe mode can be shown to a customer or tried without the SQL editor (T21c's phone test uses `private.revoke_subscription`).
-- Slips whose file never arrived (a dropped upload the customer did not retry): shown as such, refused in one tap. The app could also send the file again to the same slip; today it says "File nahin pohanchi" and the customer sends a new slip (T21b).
+- The design is `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081). Part 1 is built: the cloud side (T22a, D-082), the app's holds (T22b) and the web dashboard with the `admin` function and plans changed from now (T22c, D-083). Next is part 2, the books in the cloud: the consent page, `push_book_changes`, the month summaries and the Business page. Part 3, crash and error records, waits until the app is complete; part 4, fixing a customer's books with the customer's yes, comes with T25's sync.
+- Accounts: choosing columns, saving a view of one's own, selecting rows for a note or CSV, and the filters the design lists that need more than today's rows: signup date and last-online ranges, labour from and to, phones, backup age and a refused slip this month.
+- Subscriptions: a receipt PDF for an accepted slip, and the accountant's ledger as an Excel file (today a CSV, which Excel opens).
 - Replacing the licence signing key: a button that makes a new pair, keeps the old public half valid until every phone has the new one, and shows the new public half for the next app build.
-- Freeing a trial claim on request, as the RUNBOOK's SQL does now.
 - The add-on bought alone shows the price on sale now. Once a plan's price changes, a company on the older version must see its own version's add-on price, which the cloud already charges (D-078). A paying company whose plan has left the sale can buy the add-on only with a plan; the dashboard could sell it the add-on alone.
-- The cloud backup (T20d): what a slip covers shown with it; each company's copies and add-on periods; taking an add-on period back; a button that removes the files due from storage, which today happens on the next finished upload or by hand; a deleted account's kept copy found by its email; downloading a copy to open for a company that forgot its backup password, with the check of its login email and payment recorded.
+- The cloud backup (T20d): a button that removes the files due from storage, which today happens on the next finished upload or by hand; a deleted account's kept copy found by its email; downloading a copy to open for a company that forgot its backup password, with the check of its login email and payment recorded.
+- Slips whose file never arrived: the dashboard shows them and refuses them with a reason ready; the app could also send the file again to the same slip, where today it says "File nahin pohanchi" and the customer sends a new slip (T21b).
 - The account deletion web way by request (D-067), with T26.
-- The customer register (ADMIN-02): tenant id, contact, signup date, email verified, plan, trial or expiry, seats and phones, last online, app version, payments.
-- MFA for the admin (ADMIN-01), Vercel hosting (D-002).
+- Hosting the dashboard on Vercel, on the owner's yes (D-002); until then it runs on his computer (`docs/RUNBOOK.md`).
+- The `licence` and `admin` functions read the server key from the legacy variable; read the new secret key instead if the project drops legacy keys, checked when they go live.
 
 ## T19d: real email through Resend (BLOCKED until the owner has a domain and a Resend account, D-068)
 
@@ -34,6 +27,7 @@ Everything promised for a later task, in one place, so nothing is lost between s
 - An email to the platform's address when a slip arrives, with the company, plan, months and amount expected.
 - The account deletion web request's code (D-067).
 - A way to write to support from the app about a forgotten backup password; until then the app shows the support contact (T20d).
+- Changing a customer's login email from the dashboard, with a code to the old and the new address so neither can be taken over by asking the platform; the Account tab shows it as unavailable until then (T22c).
 
 ## T20d: the cloud backup, the paid add-on (D-072, D-075, D-076)
 

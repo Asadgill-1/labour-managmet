@@ -10,3 +10,8 @@ packages/domain/.dart_tool/
 drift_schemas/
 Labour_Management_PRD_Roman_Urdu.docx
 apps/mobile/lib/data/tenant_database.steps.dart
+apps/admin/node_modules/
+apps/admin/.next/
+apps/admin/out/
+apps/admin/pnpm-lock.yaml
+apps/admin/next-env.d.ts
