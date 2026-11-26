@@ -8,7 +8,7 @@ import { Shell } from "@/components/Shell";
 import { Fresh, Region, Tag } from "@/components/ui";
 import { ago, showDate } from "@/lib/dates";
 import { showFils } from "@/lib/money";
-import type { Account } from "@/lib/types";
+import type { Account, Settings as Platform } from "@/lib/types";
 import { useRpc } from "@/lib/use-rpc";
 import { planShort, stateTag, stateWord } from "@/lib/words";
 
@@ -32,6 +32,7 @@ function AccountBody() {
   const tab = tabs.find((t) => t.key === params.get("tab"))?.key ?? "khulasa";
   const ok = /^[0-9a-f-]{36}$/i.test(id);
   const load = useRpc<Account>("admin_account", { p_tenant: id }, !ok);
+  const settings = useRpc<Platform>("admin_settings", {}, !ok);
   const [ask, setAsk] = useState<Ask | null>(null);
 
   if (!ok) {
@@ -72,7 +73,7 @@ function AccountBody() {
                 ))}
               </nav>
               {tab === "khulasa" ? <Khulasa a={a} act={setAsk} /> : null}
-              {tab === "plan" ? <Money a={a} act={setAsk} /> : null}
+              {tab === "plan" ? <Money a={a} act={setAsk} plans={settings.data?.plans ?? []} /> : null}
               {tab === "phone" ? <div style={{ marginTop: 16 }}><Phones a={a} act={setAsk} /></div> : null}
               {tab === "backup" ? <Backups a={a} act={setAsk} /> : null}
               {tab === "timeline" ? <div style={{ marginTop: 24 }}><Story events={a.story} /></div> : null}

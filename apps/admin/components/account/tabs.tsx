@@ -3,7 +3,7 @@ import { Tag } from "@/components/ui";
 import { ago, showDate, showTime } from "@/lib/dates";
 import { showFils } from "@/lib/money";
 import { coveringPlan, refundedOf, slipLink } from "@/lib/periods";
-import type { Account, StoryEvent } from "@/lib/types";
+import type { Account, Plan, StoryEvent } from "@/lib/types";
 import { coversWord, holdWord, kindWord, limitWord, months, planShort, roleWord, slipStateTag, slipStateWord, sourceWord, storyDetail, storyWord } from "@/lib/words";
 import type { Ask } from "./actions";
 
@@ -58,7 +58,7 @@ export function Story({ events }: { events: StoryEvent[] }) {
   );
 }
 
-export function Money({ a, act }: Props) {
+export function Money({ a, act, plans }: Props & { plans: Plan[] }) {
   const cur = coveringPlan(a.periods);
   const addon = a.periods.find((p) => p.kind === "addon" && !p.revoked_at_utc && p.starts_at_utc <= new Date().toISOString() && p.ends_at_utc > new Date().toISOString());
   const live = a.overrides.filter((o) => !o.ended_at_utc && Date.parse(o.until_utc) > Date.now());
@@ -80,6 +80,7 @@ export function Money({ a, act }: Props) {
           <div className="actions">
             <button type="button" onClick={() => act({ kind: "days", what: "plan" })}>Muft din dein</button>
             <button type="button" onClick={() => act({ kind: "days", what: "addon" })}>Add-on ke din dein</button>
+            <button type="button" onClick={() => act({ kind: "changePlan", plans })} disabled={plans.length === 0}>Plan abhi se badlein</button>
             <button type="button" onClick={() => act({ kind: "override" })}>Had mein chhoot</button>
             <button type="button" onClick={() => act({ kind: "money", money: "refund" })}>Refund likhein</button>
             <button type="button" onClick={() => act({ kind: "money", money: "correction" })}>Darusti likhein</button>

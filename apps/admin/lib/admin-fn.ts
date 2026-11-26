@@ -1,5 +1,6 @@
 "use client";
 import { cloud } from "./cloud";
+import { cloudSays } from "./words";
 
 /**
  * Makes Supabase Auth match the account's hold: a live block bans its users' logins until it ends, anything else
@@ -11,7 +12,7 @@ export async function syncBan(tenant: string): Promise<string | null> {
   const { data, error } = await c.functions.invoke("admin", { body: { action: "sync_ban", tenant_id: tenant } });
   if (error) {
     const said = await (error as { context?: Response }).context?.json?.().catch(() => null);
-    return said?.error ?? "Login ka badlav nahin hua: admin function tak rabta nahin hua.";
+    return said?.error ? cloudSays(said.error) : "Login ka badlav nahin hua: admin function tak rabta nahin hua.";
   }
   return data?.ok ? null : "Login ka badlav nahin hua.";
 }

@@ -4,9 +4,10 @@ import { ActionDialog } from "@/components/ui";
 import { syncBan } from "@/lib/admin-fn";
 import { rpc } from "@/lib/cloud";
 import { dubaiDay, showDate } from "@/lib/dates";
+import { creditFor } from "@/lib/credit";
 import { readAed, showFils } from "@/lib/money";
 import { endOfDubaiDay, refundedOf } from "@/lib/periods";
-import type { Account, Device, HoldRow, Override, Period } from "@/lib/types";
+import type { Account, Device, HoldRow, Override, Period, Plan } from "@/lib/types";
 import { kindWord, limitWord, planShort, sourceWord } from "@/lib/words";
 
 // Every action the owner takes on one account. Each writes its audit row in Postgres; the page reloads after it.
@@ -23,7 +24,8 @@ export type Ask =
   | { kind: "test" }
   | { kind: "rename" }
   | { kind: "phone"; device: Device }
-  | { kind: "ban" };
+  | { kind: "ban" }
+  | { kind: "changePlan"; plans: Plan[] };
 
 const tomorrow = () => dubaiDay(new Date(Date.now() + 86_400_000));
 
@@ -77,6 +79,7 @@ export function AccountActions({ a, ask, close, done }: { a: Account; ask: Ask |
           <p>{ask.device.label}, {ask.device.platform}, {ask.device.user_email ?? ""}. {ask.device.off_at ? "Ye phone phir licence le sakega." : "Ye phone agle check par ruk jayega; kitab phone par rehti hai (D-073)."}</p>
         </ActionDialog>
       );
+    case "changePlan": return <ChangePlanDialog a={a} plans={ask.plans} {...shared} />;
     case "ban":
       return (
         <ActionDialog {...shared} reason={false} title="Login ko rok ke mutabiq karein" submit="Abhi karein"
@@ -268,6 +271,38 @@ function RenameDialog({ a, ...shared }: { a: Account } & Shared) {
     <ActionDialog {...shared} title="Company ka naam theek karein" submit="Naam rakhein"
       run={(why) => rpc("admin_rename", { p_tenant: a.tenant_id, p_name: name, p_reason: why }).then((r) => r.error)}>
       <label>Naya naam<input value={name} maxLength={100} onChange={(e) => setName(e.target.value)} required /></label>
+    </ActionDialog>
+  );
+}
+
+// Another plan from now, with no money: the running plan ends now and the new one is given for the days the owner
+// chooses; the suggestion is what was left of the old plan, priced at the new one (D-083).
+function ChangePlanDialog({ a, plans, ...shared }: { a: Account; plans: Plan[] } & Shared) {
+  const onSale = plans.filter((p) => p.on_sale && p.code !== "trial");
+  const [code, setCode] = useState(onSale.find((p) => p.code !== a.plan)?.code ?? onSale[0]?.code ?? "");
+  const price = onSale.find((p) => p.code === code)?.price_fils ?? 0;
+  const now = new Date().toISOString();
+  const running = a.periods.filter((p) => p.kind === "plan" && p.plan_code !== "trial" && !p.revoked_at_utc && (p.cut_at ?? p.ends_at_utc) > now)
+    .map((p) => ({ ...p, ends_at_utc: p.cut_at ?? p.ends_at_utc }));
+  const suggestion = creditFor(running, price);
+  const [days, setDays] = useState(String(Math.max(1, suggestion.days)));
+  return (
+    <ActionDialog {...shared} needsCode title="Plan abhi se badlein" submit="Plan badlein"
+      run={(why) => {
+        const n = Number(days);
+        if (!Number.isInteger(n) || n < 1 || n > 366) return Promise.resolve("from 1 to 366 days");
+        return rpc("admin_change_plan", { p_tenant: a.tenant_id, p_plan_code: code, p_days: n, p_reason: why }).then((r) => r.error);
+      }}>
+      <label>Naya plan
+        <select value={code} onChange={(e) => { setCode(e.target.value); setDays(String(Math.max(1, creditFor(running, onSale.find((p) => p.code === e.target.value)?.price_fils ?? 0).days))); }}>
+          {onSale.map((p) => <option key={p.code} value={p.code}>{p.name}, AED {showFils(p.price_fils)} mahana</option>)}
+        </select>
+      </label>
+      <label>Naye plan ke din
+        <input inputMode="numeric" value={days} onChange={(e) => setDays(e.target.value)} required />
+        <span className="field-note">Tajweez {suggestion.days} din: chalte plan ka bacha hissa AED {showFils(suggestion.fils)}{running.some((p) => p.source === "grant") ? ", aur diye hue din" : ""}. Customer naya plan le kar slip bheje to us ki slip ko Subscriptions mein "Abhi se" accept karein.</span>
+      </label>
+      <p className="field-note">Chalta plan abhi khatam hota hai, us ki line wahi rehti hai; naya plan in dinon ke liye muft diya jata hai. Agli slip in dinon ke baad se chalegi.</p>
     </ActionDialog>
   );
 }

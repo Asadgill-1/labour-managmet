@@ -111,6 +111,13 @@ const cloudWords: Record<string, string> = {
   "no live override with this id": "Ye chhoot ab lagi hui nahin.",
   "say what is corrected and to what": "Kya theek hua aur sahi value kya hai, dono likhein.",
   "a range from a start to an end": "Shuru aur aakhir ki tareekh theek chunein.",
+  "from 0 to 366 days": "Credit ke din 0 se 366 tak.",
+  "the add-on alone starts with its own period": "Sirf add-on ki slip apne period se chalti hai; use abhi se shuru nahin kiya jata.",
+  // What the admin function answers (T22c).
+  admins_only: "Ye kaam sirf platform ke malik ka hai, MFA code ke sath. Dobara sign in karein.",
+  sign_in: "Session khatam ho gaya. Dobara sign in karein.",
+  no_account: "Ye account nahin mila.",
+  ban_failed: "Supabase ne kuch logins nahin badle. Thori der baad dobara koshish karein.",
   "Failed to fetch": "Cloud se rabta nahin hua. Internet dekh kar dobara koshish karein.",
 };
 
