@@ -11,6 +11,7 @@ import '../../data/app_lock.dart';
 import '../../data/recovery.dart' show isRecoveryKey;
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
+import 'consent_screen.dart';
 
 /// Opens a company on this device. [companyName] comes with a company just made, so its first screen need not ask again.
 typedef OpenCompany = Future<void> Function(String tenantId, {String? companyName});
@@ -362,9 +363,20 @@ class _CompanyNameScreenState extends State<CompanyNameScreen> with CloudStep {
   /// Kept while the name is changed and sent again, so a lost answer cannot make a second company (MODEL-06).
   final _operationId = newUuid();
 
+  /// The consent page comes between the name and the backup password, so no company is made without it (D-084).
   void _next() {
     if (!validateAndReveal(_form)) return;
-    push(BackupPasswordScreen(account: widget.account, onOpen: widget.onOpen, companyName: _name.text.trim(), operationId: _operationId));
+    final name = _name.text.trim();
+    push(
+      ConsentScreen(
+        signup: true,
+        onAgree: () async => push(BackupPasswordScreen(account: widget.account, onOpen: widget.onOpen, companyName: name, operationId: _operationId, consent: true)),
+        onLogOut: () async {
+          await widget.account.logOut();
+          if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
+        },
+      ),
+    );
   }
 
   @override
@@ -391,12 +403,22 @@ class _CompanyNameScreenState extends State<CompanyNameScreen> with CloudStep {
 /// The backup password, asked once as the company is made, typed twice, to be written down; it can't be skipped
 /// (D-072). The company is made only once it is kept, so no company starts without one.
 class BackupPasswordScreen extends StatefulWidget {
-  const BackupPasswordScreen({required this.account, required this.onOpen, required this.companyName, required this.operationId, super.key});
+  const BackupPasswordScreen({
+    required this.account,
+    required this.onOpen,
+    required this.companyName,
+    required this.operationId,
+    this.consent = false,
+    super.key,
+  });
 
   final Account account;
   final OpenCompany onOpen;
   final String companyName;
   final String operationId;
+
+  /// The owner agreed on the consent page just before.
+  final bool consent;
 
   @override
   State<BackupPasswordScreen> createState() => _BackupPasswordScreenState();
@@ -410,7 +432,7 @@ class _BackupPasswordScreenState extends State<BackupPasswordScreen> with CloudS
   Future<void> _start() async {
     if (!validateAndReveal(_form)) return;
     final name = widget.companyName;
-    await attempt(() async => widget.onOpen(await widget.account.createCompany(name, widget.operationId, backupPassword: _password.text), companyName: name));
+    await attempt(() async => widget.onOpen(await widget.account.createCompany(name, widget.operationId, backupPassword: _password.text, consent: widget.consent), companyName: name));
   }
 
   @override

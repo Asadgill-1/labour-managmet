@@ -9,6 +9,7 @@ import 'package:supabase/supabase.dart';
 
 import '../app/version.dart';
 import 'backup.dart' show backupMime, backupPasswordKey;
+import 'books.dart';
 import 'cloud_copy.dart';
 import 'licence.dart';
 import 'plans.dart';
@@ -172,10 +173,12 @@ class Account {
   /// Makes the signed-in user's company (UX-02). Data the phone made before the account keeps its id, so it stays.
   /// The caller keeps [operationId] across retries, so a lost answer cannot make a second company (MODEL-06). The
   /// [backupPassword] asked at signup is kept before the company opens, so its first cloud copy needs no typing (D-072).
-  Future<String> createCompany(String name, String operationId, {String? backupPassword}) => _run(() async {
+  /// The consent page came before, so the company's answer goes with it and nothing waits to be asked (D-084).
+  Future<String> createCompany(String name, String operationId, {String? backupPassword, bool consent = false}) => _run(() async {
     final local = await _storage.read(key: localTenantKey);
     final tenantId = await _client.rpc<String>('create_tenant', params: {'p_name': name, 'p_operation_id': operationId, 'p_tenant_id': local});
     await _enrol(tenantId);
+    if (consent) await _giveConsent(tenantId, consentVersion);
     if (backupPassword != null) await _storage.write(key: backupPasswordKey(tenantId), value: backupPassword);
     // Handed over once: a later company on this phone gets a new id and a file of its own.
     if (tenantId == local) await _storage.delete(key: localTenantKey);
@@ -244,6 +247,33 @@ class Account {
   /// What sends [tenantId]'s cloud copies from this phone, or null when the build has no recovery key (D-072).
   CloudSender? cloudSender(String tenantId, {required TenantDatabase Function() db, required Future<Directory> Function() work}) =>
       isRecoveryKey(recoveryKey) ? CloudSender(account: this, storage: _storage, tenantId: tenantId, db: db, work: work) : null;
+
+  /// What sends [tenantId]'s books to the cloud from this phone, once the company agreed (T22d, D-084).
+  BookSender bookSender(String tenantId, {required TenantDatabase Function() db, required BookSummary summary}) => BookSender(
+    storage: _storage,
+    tenantId: tenantId,
+    db: db,
+    summary: summary,
+    push: (changes) => _run(() async {
+      if (_auth.currentSession == null) throw const AccountRefused(AccountProblem.signedOut);
+      if (_auth.currentSession!.isExpired) await _auth.refreshSession();
+      await _client.rpc<int>('push_book_changes', params: {'p_tenant_id': tenantId, 'p_device_id': await thisDeviceId(_storage), 'p_changes': changes});
+    }),
+    cloudConsent: () => _run(() async {
+      if (_auth.currentSession == null) return null;
+      final rows = await _client.from('tenants').select('data_consent_version').eq('tenant_id', tenantId);
+      return rows.isEmpty ? null : rows.first['data_consent_version'] as int?;
+    }),
+    giveConsent: (version) => _run(() => _giveConsent(tenantId, version)),
+  );
+
+  /// The cloud keeps the company's yes first, then this phone does, so a yes the cloud never heard is asked again.
+  Future<void> _giveConsent(String tenantId, int version) async {
+    if (_auth.currentSession == null) throw const AccountRefused(AccountProblem.signedOut);
+    if (_auth.currentSession!.isExpired) await _auth.refreshSession();
+    await _client.rpc<String>('give_data_consent', params: {'p_tenant_id': tenantId, 'p_version': version});
+    await _storage.write(key: bookConsentKey(tenantId), value: '$version');
+  }
 
   /// A session is here to ask the cloud with, kept or typed.
   bool get hasSession => _auth.currentSession != null;

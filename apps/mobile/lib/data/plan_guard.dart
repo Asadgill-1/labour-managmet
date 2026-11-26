@@ -15,6 +15,9 @@ enum PlanBlock {
   /// The platform's owner holds the account: suspended or blocked (D-081 (7)).
   held,
 
+  /// The company has not agreed to send its books to the cloud (D-081 part 2, D-084).
+  noConsent,
+
   /// Seven days, or the plan's end, passed since the last check online.
   leaseOver,
 
@@ -55,9 +58,17 @@ class PlanRefused implements Exception {
 const _alwaysAllowed = {'tenant_profiles', 'document_templates', 'document_assets', 'issued_documents', 'restores'};
 
 /// Why the plan [view] shows holds back a write to [entity], or null when it may go through. [workers] and [clients]
-/// are the company's active counts before the write.
-PlanRefused? planRefusal(LicenceView view, {required String entity, required WriteEffect effect, required int workers, required int clients}) {
+/// are the company's active counts before the write. A company that has not agreed to send its books reads only.
+PlanRefused? planRefusal(
+  LicenceView view, {
+  required String entity,
+  required WriteEffect effect,
+  required int workers,
+  required int clients,
+  bool consented = true,
+}) {
   if (effect == WriteEffect.archives || _alwaysAllowed.contains(entity)) return null;
+  if (!consented) return const PlanRefused(PlanBlock.noConsent);
   final block = switch (view.status) {
     LicenceStatus.active => null,
     LicenceStatus.none => PlanBlock.noLicence,
@@ -76,13 +87,21 @@ PlanRefused? planRefusal(LicenceView view, {required String entity, required Wri
 }
 
 /// The guard for [db]'s single write path under the licence on this phone. A null view is a company with no plans.
-/// The rows are counted only when the plan has a number to hold them to.
-WriteGuard planGuard(TenantDatabase db, LicenceView? Function() view) => (entity, effect) async {
+/// The rows are counted only when the plan has a number to hold them to. [refuses] is true while the company has not
+/// agreed to send its books (D-084).
+WriteGuard planGuard(TenantDatabase db, LicenceView? Function() view, {bool Function()? refuses}) => (entity, effect) async {
   final now = view();
   if (now == null || effect == WriteEffect.archives) return;
   final counted = now.status == LicenceStatus.active && (now.licence!.workers != null || now.licence!.clients != null);
   final counts = counted ? await activeCounts(db) : (workers: 0, clients: 0);
-  final refusal = planRefusal(now, entity: entity, effect: effect, workers: counts.workers, clients: counts.clients);
+  final refusal = planRefusal(
+    now,
+    entity: entity,
+    effect: effect,
+    workers: counts.workers,
+    clients: counts.clients,
+    consented: !(refuses?.call() ?? false),
+  );
   if (refusal != null) throw refusal;
 };
 

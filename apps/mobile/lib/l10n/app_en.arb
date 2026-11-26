@@ -3113,5 +3113,29 @@
         "type": "String"
       }
     }
-  }
+  },
+  "consentTitle": "Your books in the cloud",
+  "consentLead": "When the phone is online, your company's whole books go to the platform's cloud. Read this first.",
+  "consentWhatHead": "What goes",
+  "consentWhat": "All of the company's records: labour, companies and sites, attendance, payroll, invoices, cash, papers and pictures.",
+  "consentWhoHead": "Who can see it",
+  "consentWho": "Only the owner of this app's platform. No other company can see your books.",
+  "consentWhyHead": "Why",
+  "consentWhy": "To run and improve the app, to help you put a mistake right, and to show investors every company's totals added together, without your company's name.",
+  "consentHowLongHead": "For how long",
+  "consentHowLong": "As long as you have the account. Delete the account and they leave the cloud at once.",
+  "consentNeverHead": "What never goes",
+  "consentNever": "Your password, the phone's PIN and the backup password never leave the phone. The company's signature and stamp pictures stay on it too.",
+  "consentWorkersHead": "Your labour",
+  "consentWorkers": "Your labour's details go too. Telling them that the platform keeps their details is your duty.",
+  "consentNeeded": "The app can't be used without this consent.",
+  "consentLaterNote": "Without it, new entries stay on hold. Reading the books, papers, Excel and the backup keep working.",
+  "consentAgree": "Yes, I agree",
+  "consentLater": "Not now, only read the books",
+  "consentGiven": "You agreed. The books go to the cloud by themselves.",
+  "consentSentAt": "Last reached the cloud: {when}",
+  "@consentSentAt": {"placeholders": {"when": {"type": "String"}}},
+  "consentFailed": "The last try did not go through. It tries again when the app opens.",
+  "planNoConsent": "You have not agreed to send the books to the cloud. Agree, and new entries open.",
+  "planGiveConsent": "Give consent"
 }

@@ -37,9 +37,10 @@ void main() {
   final year = int.parse(dubaiToday(DateTime.now()).substring(0, 4));
   final slip = Uint8List.fromList([...'%PDF-1.7'.codeUnits, ...List.filled(2000, 32)]);
 
-  /// What the phone keeps: the company it opens, as a login left it, and [more].
+  /// What the phone keeps: the company it opens, as a login left it, with its consent given (D-084), and [more].
   Map<String, String> kept([Map<String, String> more = const {}]) => {
     'account': jsonEncode({'tenant_id': testTenant, 'user_id': cloud.users['owner@test.ae']!.id, 'email': 'owner@test.ae'}),
+    'book_consent_$testTenant': '1',
     ...more,
   };
 

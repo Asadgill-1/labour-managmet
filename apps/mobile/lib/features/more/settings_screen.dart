@@ -8,6 +8,7 @@ import '../../app/side_panel.dart';
 import '../../app/theme.dart';
 import '../../l10n/app_localizations.dart';
 import '../account/account_screens.dart';
+import '../account/consent_screen.dart';
 import '../plans/plan_screen.dart';
 import 'db_check_screen.dart';
 
@@ -20,6 +21,8 @@ class SettingsScreen extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     final controller = ref.read(settingsProvider.notifier);
     final account = ref.watch(accountProvider);
+    final books = ref.watch(bookSenderProvider);
+    final consented = ref.watch(bookViewProvider).value?.consented;
     return Scaffold(
       appBar: AppBar(leading: const MenuButton(), title: Text(l10n.tabSettings)),
       body: ListView(
@@ -71,6 +74,16 @@ class SettingsScreen extends ConsumerWidget {
             const Divider(),
             const PlanStatusSection(),
             const Divider(),
+            if (books != null) ...[
+              ListTile(
+                leading: const Icon(Icons.cloud_outlined),
+                title: Text(l10n.consentTitle),
+                subtitle: consented == null ? null : Text(consented ? l10n.consentGiven : l10n.planNoConsent),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => ConsentPage(books: books, account: account.account))),
+              ),
+              const Divider(),
+            ],
             ListTile(
               leading: const Icon(Icons.lock_outline),
               title: Text(l10n.lockSettings),

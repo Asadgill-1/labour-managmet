@@ -301,6 +301,37 @@ void main() {
     expect(summary.totalLabel, contains('not audited'));
   });
 
+  test("the month summary is Malik ki sheet's figures, with the month's invoices net of VAT (T22d)", () async {
+    final profile = await db.select(db.tenantProfiles).getSingle();
+    await db.saveRow(db.tenantProfiles, id: profile.id, operationId: newUuid(), fields: const TenantProfilesCompanion(vatRegistered: Value(true), trn: Value('100000000000003')));
+    final room = await db.saveRow(db.rooms, id: null, operationId: newUuid(), fields: const RoomsCompanion(name: Value('Room 1')));
+    await ts.work(db, '2020-10-05');
+    await issued();
+    await db.addCashEntry(operationId: newUuid(), date: '2020-10-09', kind: CashKind.roomRentReceived, amountFils: 1000, workerId: ts.asif, roomId: room);
+    await db.addCashEntry(operationId: newUuid(), date: '2020-10-10', kind: CashKind.roomRentPaid, amountFils: 5000, roomId: room);
+    await db.addCashEntry(operationId: newUuid(), date: '2020-10-11', kind: CashKind.expense, amountFils: 700);
+
+    final sheet = await buildSalarySheet(db, l10n, '2020-10');
+    final [contribution, summary, ..._] = sheet.rollupsOf!(sheet.entries);
+    final rows = {for (final r in [...contribution.rows, ...summary.rows]) r.cells[0]: r.cells[1] as int};
+    final m = await monthSummary(db, '2020-10');
+    expect(m['bill'], rows[l10n.sheetBill]);
+    expect(m['wages'], -rows[l10n.sheetWages]!);
+    expect(m['salaries'], -rows[l10n.sheetSalaries]!);
+    expect(m['allowances'], -rows[l10n.sheetAllowances]!);
+    expect(m['cuts'], rows[l10n.sheetCuts]);
+    expect(m['room_in'], rows[l10n.sheetRoomIn]);
+    expect(m['room_out'], -rows[l10n.sheetRoomOut]!);
+    expect(m['expenses'], -rows[l10n.sheetExpenses]!);
+    expect(m['estimate'], columnTotal(summary.rows, 1), reason: "the sheet's own estimate");
+    expect((m['bill'], m['estimate']), (13500, 13500 - 9000 + 1000 - 5000 - 700));
+    expect(m['days'], 1);
+    // An invoice counts in the month it was issued, net of its 5% VAT.
+    final issuedOn = (await db.select(db.invoices).getSingle()).issueDate!;
+    final billed = await monthSummary(db, issuedOn.substring(0, 7));
+    expect((billed['invoices'], billed['invoiced'], billed['credited']), (1, 13500, 0));
+  });
+
   test("the owner's sheet counts a monthly contract's amount for the month, invoiced or not: once fixed, once a worker (D-055)", () async {
     Future<void> contract(String name, RateBasis basis, int fils, List<(String, String)> work) async {
       final client = await db.saveRow(db.clients, id: null, operationId: newUuid(), fields: ClientsCompanion(name: Value(name)));

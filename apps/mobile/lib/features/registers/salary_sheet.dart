@@ -1,5 +1,6 @@
 import 'package:domain/calc.dart';
 import 'package:domain/cash.dart';
+import 'package:drift/drift.dart' show Variable;
 
 import '../../data/statement.dart';
 import '../../data/tenant_database.dart';
@@ -38,6 +39,36 @@ typedef _Month = ({List<WorkerStatement> statements, Map<String, String> clients
 
 /// [month]'s figures, as the owner's sheet shows them.
 Future<OwnerMonth> ownerMonth(TenantDatabase db, String month) async => (await _work(db, month)).figures;
+
+/// [month]'s summary for the cloud (T22d, D-084): the sheet's figures and its estimate, and the invoices and credit notes
+/// issued in the month, net of VAT. Keys as `admin_business` adds them up.
+Future<Map<String, Object?>> monthSummary(TenantDatabase db, String month) async {
+  final f = await ownerMonth(db, month);
+  final issued = await db.customSelect(
+    "SELECT i.kind AS kind, count(DISTINCT i.id) AS n, coalesce(sum(l.net_fils), 0) AS net FROM invoices i "
+    "LEFT JOIN invoice_lines l ON l.invoice_id = i.id WHERE i.status IN ('issued', 'credited') AND substr(i.issue_date, 1, 7) = ? GROUP BY i.kind",
+    variables: [Variable<String>(month)],
+  ).get();
+  int of(String kind, String column) => issued.where((r) => r.read<String>('kind') == kind).fold(0, (total, r) => total + r.read<int>(column));
+  return {
+    'month': month,
+    'bill': f.bill,
+    'wages': f.wages,
+    'salaries': f.salaries,
+    'allowances': f.allowances,
+    'cuts': f.cuts,
+    'room_in': f.roomIn,
+    'room_out': f.roomOut,
+    'expenses': f.expenses,
+    'estimate': estimateOf(f),
+    'days': f.days,
+    'workers': f.workers,
+    'no_rate': f.noRate,
+    'invoices': of('invoice', 'n'),
+    'invoiced': of('invoice', 'net'),
+    'credited': of('credit', 'net'),
+  };
+}
 
 Future<_Month> _work(TenantDatabase db, String month) async {
   final statements = await db.statementsFor(month);

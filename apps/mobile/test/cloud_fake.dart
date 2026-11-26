@@ -138,11 +138,19 @@ class FakeCloud {
   }
 
   /// A user who signed up and confirmed the email already.
-  void addUser(String email, String password, {String? company}) {
+  /// [consented]: the company agreed to send its books, as every company made after the consent page has (D-084).
+  void addUser(String email, String password, {String? company, bool consented = true}) {
     final id = '00000000-0000-4000-8000-${(users.length + 1).toString().padLeft(12, '0')}';
     users[email] = (id: id, password: password, confirmed: true);
     if (company != null) companies[id] = company;
+    if (company != null && consented) consents[company] = 1;
   }
+
+  /// Each company's yes on the consent page, by the wording's version (T22d).
+  final consents = <String, int>{};
+
+  /// The books each company sent, by record type and id, as the cloud keeps them (T22d).
+  final books = <String, Map<String, dynamic>>{};
 
   /// Another phone the user signed in on before (T20c).
   void addPhone(String email, String device, String name, String lastLogin) {
@@ -397,6 +405,21 @@ class FakeCloud {
             if (slipFiles.remove(name) != null) {'name': name},
         ];
         return _json(removed);
+      case '/rest/v1/rpc/give_data_consent':
+        if (companies[caller] != body['p_tenant_id']) return _refused('only the owner gives consent');
+        consents[body['p_tenant_id'] as String] = body['p_version'] as int;
+        return _json('2026-11-26T09:00:00+00:00');
+      case '/rest/v1/rpc/push_book_changes':
+        if (companies[caller] != body['p_tenant_id']) return _refused('not a member of this company');
+        if (!consents.containsKey(body['p_tenant_id'])) return _refused('give consent first');
+        final changes = (body['p_changes'] as List).cast<Map<String, dynamic>>();
+        for (final c in changes) {
+          books['${c['entity']}/${c['id']}'] = c;
+        }
+        return _json(changes.length);
+      case '/rest/v1/tenants':
+        final tenant = request.url.queryParameters['tenant_id']?.replaceFirst('eq.', '');
+        return _json([if (tenant != null && companies[caller] == tenant) {'data_consent_version': consents[tenant]}]);
       case '/rest/v1/rpc/delete_account':
         // The server takes only a session signed in with the password just now (D-066).
         if (!_passwordJustNow) return _refused('type the password again');

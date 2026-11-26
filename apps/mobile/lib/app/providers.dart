@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/account.dart';
 import '../data/app_lock.dart';
+import '../data/books.dart';
 import '../data/changes.dart';
 import '../data/closing.dart';
 import '../data/cloud_copy.dart';
@@ -43,6 +44,12 @@ final licenceProvider = StreamProvider<LicenceView?>((ref) {
 /// Sends the open company's cloud copy, from AppRoot (T20d). Null in a build without accounts or without the recovery
 /// key; the Backup page then says the cloud backup is unavailable.
 final cloudSenderProvider = Provider<CloudSender?>((ref) => null);
+
+/// What sends the open company's books to the cloud, or null in a build without accounts (T22d).
+final bookSenderProvider = Provider<BookSender?>((ref) => null);
+
+/// Whether the company agreed, and when its books last went. Null until the answer is read, or without accounts.
+final bookViewProvider = StreamProvider<BookView?>((ref) => ref.watch(bookSenderProvider)?.watch() ?? Stream.value(null));
 
 /// The copies the cloud keeps for the open company, newest first; none in a build that keeps no cloud copy (T20d-c).
 final cloudCopiesProvider = FutureProvider.autoDispose<List<CloudCopy>>((ref) async {

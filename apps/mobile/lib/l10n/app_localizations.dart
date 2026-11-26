@@ -8466,6 +8466,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The cloud holds a copy from {date}. Tap to bring it back.'**
   String restoreNewPhoneCloud(String date);
+
+  /// No description provided for @consentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your books in the cloud'**
+  String get consentTitle;
+
+  /// No description provided for @consentLead.
+  ///
+  /// In en, this message translates to:
+  /// **'When the phone is online, your company\'s whole books go to the platform\'s cloud. Read this first.'**
+  String get consentLead;
+
+  /// No description provided for @consentWhatHead.
+  ///
+  /// In en, this message translates to:
+  /// **'What goes'**
+  String get consentWhatHead;
+
+  /// No description provided for @consentWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'All of the company\'s records: labour, companies and sites, attendance, payroll, invoices, cash, papers and pictures.'**
+  String get consentWhat;
+
+  /// No description provided for @consentWhoHead.
+  ///
+  /// In en, this message translates to:
+  /// **'Who can see it'**
+  String get consentWhoHead;
+
+  /// No description provided for @consentWho.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the owner of this app\'s platform. No other company can see your books.'**
+  String get consentWho;
+
+  /// No description provided for @consentWhyHead.
+  ///
+  /// In en, this message translates to:
+  /// **'Why'**
+  String get consentWhyHead;
+
+  /// No description provided for @consentWhy.
+  ///
+  /// In en, this message translates to:
+  /// **'To run and improve the app, to help you put a mistake right, and to show investors every company\'s totals added together, without your company\'s name.'**
+  String get consentWhy;
+
+  /// No description provided for @consentHowLongHead.
+  ///
+  /// In en, this message translates to:
+  /// **'For how long'**
+  String get consentHowLongHead;
+
+  /// No description provided for @consentHowLong.
+  ///
+  /// In en, this message translates to:
+  /// **'As long as you have the account. Delete the account and they leave the cloud at once.'**
+  String get consentHowLong;
+
+  /// No description provided for @consentNeverHead.
+  ///
+  /// In en, this message translates to:
+  /// **'What never goes'**
+  String get consentNeverHead;
+
+  /// No description provided for @consentNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password, the phone\'s PIN and the backup password never leave the phone. The company\'s signature and stamp pictures stay on it too.'**
+  String get consentNever;
+
+  /// No description provided for @consentWorkersHead.
+  ///
+  /// In en, this message translates to:
+  /// **'Your labour'**
+  String get consentWorkersHead;
+
+  /// No description provided for @consentWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Your labour\'s details go too. Telling them that the platform keeps their details is your duty.'**
+  String get consentWorkers;
+
+  /// No description provided for @consentNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'The app can\'t be used without this consent.'**
+  String get consentNeeded;
+
+  /// No description provided for @consentLaterNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Without it, new entries stay on hold. Reading the books, papers, Excel and the backup keep working.'**
+  String get consentLaterNote;
+
+  /// No description provided for @consentAgree.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, I agree'**
+  String get consentAgree;
+
+  /// No description provided for @consentLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now, only read the books'**
+  String get consentLater;
+
+  /// No description provided for @consentGiven.
+  ///
+  /// In en, this message translates to:
+  /// **'You agreed. The books go to the cloud by themselves.'**
+  String get consentGiven;
+
+  /// No description provided for @consentSentAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Last reached the cloud: {when}'**
+  String consentSentAt(String when);
+
+  /// No description provided for @consentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The last try did not go through. It tries again when the app opens.'**
+  String get consentFailed;
+
+  /// No description provided for @planNoConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not agreed to send the books to the cloud. Agree, and new entries open.'**
+  String get planNoConsent;
+
+  /// No description provided for @planGiveConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Give consent'**
+  String get planGiveConsent;
 }
 
 class _AppLocalizationsDelegate

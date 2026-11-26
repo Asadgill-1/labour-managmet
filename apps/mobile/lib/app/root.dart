@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../data/account.dart';
 import '../data/app_lock.dart';
+import '../data/books.dart';
 import '../data/cloud_copy.dart';
 import '../data/licence.dart';
 import '../data/masters.dart';
@@ -14,8 +15,10 @@ import '../data/plan_guard.dart';
 import '../data/restore.dart';
 import '../data/tenant_database.dart';
 import '../features/account/account_screens.dart';
+import '../features/account/consent_screen.dart';
 import '../features/backup/restore_screen.dart';
 import '../features/registers/register_export.dart';
+import '../features/registers/salary_sheet.dart' show monthSummary;
 import 'app.dart';
 import 'providers.dart';
 import 'settings.dart';
@@ -72,7 +75,11 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
   LoginNote? _note;
   Licensing? _licensing;
   CloudSender? _cloud;
+  BookSender? _books;
   ({SwapStage stage, Restored done, bool kept})? _swapping;
+
+  /// The owner chose to read only for now on the consent page; it asks again on the next open (D-084).
+  var _consentLater = false;
 
   @override
   void initState() {
@@ -94,11 +101,13 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
   /// Coming back to the front sends the cloud copy if one is due (D-075).
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && _swapping == null) unawaited(_cloud?.sendIfDue());
+    if (state != AppLifecycleState.resumed || _swapping != null) return;
+    unawaited(_cloud?.sendIfDue());
+    unawaited(_books?.send());
   }
 
   /// Every write of the open company asks its plan, as the licence on this phone gives it now (T21c).
-  void _guard(TenantDatabase db) => db.guard = planGuard(db, () => _licensing?.view);
+  void _guard(TenantDatabase db) => db.guard = planGuard(db, () => _licensing?.view, refuses: () => _books?.refuses ?? false);
 
   /// Reads the licence kept here at once, then renews it from the cloud, with the session kept on the phone when the
   /// app has just started (D-074). Counted from whichever file is open, as a restore swaps it. Then the cloud copy goes,
@@ -106,12 +115,17 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
   void _startLicence(String tenantId, {required bool resume}) {
     final licensing = _licensing = widget.account.licensing(tenantId, () => activeCounts(_opened!.db));
     final cloud = _cloud = widget.account.cloudSender(tenantId, db: () => _opened!.db, work: getTemporaryDirectory);
+    final books = _books = widget.account.bookSender(tenantId, db: () => _opened!.db, summary: monthSummary);
     unawaited(() async {
       await licensing.load();
       await cloud?.load();
       if (resume) await widget.account.resume();
+      await books.load();
+      // An account made before the consent page sees it now, before anything is sent.
+      if (mounted && _books == books) setState(() {});
       if (_licensing == licensing) await licensing.refresh();
       if (_cloud == cloud && _swapping == null) await cloud?.sendIfDue();
+      if (_books == books && _swapping == null) await books.send();
     }());
   }
 
@@ -161,6 +175,7 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
     await WidgetsBinding.instance.endOfFrame;
     // A copy being made reads the file, so it closes once the copy is done.
     await _cloud?.settled();
+    await _books?.settled();
     await db.close();
     var stage = SwapStage.done;
     try {
@@ -170,6 +185,8 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
     }
     // Only once the cloud's newest copy really is this phone's data does the next copy take its place unasked (D-078).
     if (stage == SwapStage.done && cloudNewest) await _cloud?.broughtBack();
+    // The copy's records may be older than the cloud's, so every one goes again; the cloud keeps the newest (D-084).
+    if (stage == SwapStage.done) await _books?.restored();
     final fresh = await widget.openTenant(binding.tenantId, actorId: binding.userId);
     _guard(fresh);
     // The old data's images must not show for the new.
@@ -187,8 +204,10 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
     final (:db, :binding) = _opened!;
     final licensing = _licensing;
     final cloud = _cloud;
+    final books = _books;
     _licensing = null;
     _cloud = null;
+    _books = null;
     await widget.account.logOut();
     await widget.lock.clear();
     final settings = await widget.loadSettings();
@@ -196,13 +215,16 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
       _settings = settings;
       _opened = null;
       _note = note;
+      _consentLater = false;
     });
     // The company's scope goes with this frame, and its streams with it; only then can the file close.
     await WidgetsBinding.instance.endOfFrame;
     await cloud?.settled();
+    await books?.settled();
     await db.close();
     await licensing?.dispose();
     await cloud?.dispose();
+    await books?.dispose();
     if (note == LoginNote.accountDeleted || note == LoginNote.phoneOff) await widget.deleteTenant(binding.tenantId);
     PaintingBinding.instance.imageCache
       ..clear()
@@ -235,6 +257,7 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
               setState(() => _swapping = null);
               // The data that came in is what the cloud should hold next.
               unawaited(_cloud?.sendIfDue());
+              unawaited(_books?.send());
             },
           ),
         ),
@@ -251,6 +274,23 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
         ),
       );
     }
+    final books = _books;
+    if (books != null && books.refuses && !_consentLater) {
+      return ProviderScope(
+        key: const ValueKey('consent'),
+        overrides: [initialSettingsProvider.overrideWithValue(_settings)],
+        child: AccountApp(
+          home: ConsentScreen(
+            signIn: widget.account,
+            onAgree: () async {
+              await books.agree();
+              if (mounted) setState(() {});
+            },
+            onLater: () => setState(() => _consentLater = true),
+          ),
+        ),
+      );
+    }
     return ProviderScope(
       key: ObjectKey(opened.db),
       overrides: [
@@ -260,6 +300,7 @@ class _AppRootState extends State<AppRoot> with WidgetsBindingObserver {
         restoreProvider.overrideWithValue(files == null ? null : (dir: files.dir, key: () => files.key(opened.binding.tenantId), swap: _swap)),
         licensingProvider.overrideWithValue(_licensing),
         cloudSenderProvider.overrideWithValue(_cloud),
+        bookSenderProvider.overrideWithValue(_books),
       ],
       child: const LabourApp(),
     );

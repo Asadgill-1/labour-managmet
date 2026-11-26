@@ -144,10 +144,10 @@ void main() {
     final events = (await db.select(db.auditEvents).get()).length;
     final backup = await db.backupBytes('pass1234', work: oldPhone);
     await db.close();
-    final summary = await checkBackup(backup, 'pass1234', tenantId: testTenant, schemaVersion: 19, work: oldPhone);
+    final summary = await checkBackup(backup, 'pass1234', tenantId: testTenant, schemaVersion: db.schemaVersion, work: oldPhone);
     expect((summary.companyName, summary.workers, summary.invoices), ('Al Noor Labour Supply LLC', 3, 2));
     await expectLater(
-      checkBackup(backup, 'wrong-one', tenantId: testTenant, schemaVersion: 19, work: oldPhone),
+      checkBackup(backup, 'wrong-one', tenantId: testTenant, schemaVersion: db.schemaVersion, work: oldPhone),
       throwsA(isA<BackupRefused>().having((e) => e.problem, 'problem', BackupProblem.wrongPassword)),
     );
 

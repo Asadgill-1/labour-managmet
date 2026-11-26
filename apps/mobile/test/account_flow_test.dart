@@ -90,6 +90,8 @@ void main() {
 
   /// The backup password, asked once as the company is made (D-072).
   Future<void> backupPassword(WidgetTester tester) async {
+    // The consent page comes first, between the name and the backup password (D-084).
+    if (find.text('Haan, ijazat hai').evaluate().isNotEmpty) await tapAndSettle(tester, find.text('Haan, ijazat hai'));
     expect(find.text('Backup password'), findsWidgets);
     await fill(tester, 'Backup password', 'backup123');
     await fill(tester, 'Backup password dobara', 'backup123');
@@ -108,6 +110,8 @@ void main() {
   /// A phone someone signed in on before, opening with no network.
   Future<TenantDatabase> boundPhone(WidgetTester tester, {required bool pinSet}) async {
     cloud.offline = true;
+    // Agreed on an earlier open, so it opens offline without the consent page (D-084).
+    await tester.runAsync(() => const FlutterSecureStorage().write(key: 'book_consent_$testTenant', value: '1'));
     final db = TenantDatabase(NativeDatabase.memory(), tenantId: testTenant, deviceId: 'device-1', actorId: 'user-1');
     driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
     await pumpRoot(tester, bound: (db: db, binding: (tenantId: testTenant, userId: 'user-1', email: 'owner@test.ae')), pinSet: pinSet);
@@ -141,6 +145,13 @@ void main() {
     expect(find.text('Apni company'), findsOneWidget);
     await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
     await tapAndSettle(tester, find.text('Aage'));
+    // The consent page, before the backup password and before any company is made (D-084).
+    expect(find.text('Cloud par kitab'), findsOneWidget);
+    expect(find.text('Is ijazat ke baghair app istemal nahin ho sakti.'), findsOneWidget);
+    expect(find.text('Abhi nahin, sirf kitab dekhni hai'), findsNothing, reason: 'signup cannot go on without it');
+    expect(find.text('Log out'), findsOneWidget);
+    expect(cloud.calls.where((c) => c.path == '/rest/v1/rpc/create_tenant'), isEmpty);
+    await tapAndSettle(tester, find.text('Haan, ijazat hai'));
     expect(find.text('Ise likh kar sambhal lein. Naye phone par backup kholne ke liye yahi chahiye.'), findsOneWidget);
     expect(find.textContaining('platform ise khol kar'), findsNothing, reason: 'a build without the recovery key sends no cloud copy');
     await fill(tester, 'Backup password', 'backup123');
@@ -150,6 +161,9 @@ void main() {
     expect(cloud.calls.where((c) => c.path == '/rest/v1/rpc/create_tenant'), isEmpty, reason: 'no company starts without its backup password');
     await backupPassword(tester);
     expect(await real(tester, () => const FlutterSecureStorage().read(key: 'backup_password_${cloud.companies.values.single}')), 'backup123');
+    expect(cloud.consents, {cloud.companies.values.single: 1}, reason: 'the company is made with its yes');
+    final paths = [for (final c in cloud.calls) c.path];
+    expect(paths.indexOf('/rest/v1/rpc/give_data_consent'), greaterThan(paths.indexOf('/rest/v1/rpc/create_tenant')));
     await fill(tester, 'PIN', '1234');
     await tapAndSettle(tester, find.text('Ye PIN rakhein'));
     expect(find.text('4 se 6 number rakhein. Ek hi number baar baar ya 1234 jaisi seedhi line nahin.'), findsOneWidget);
@@ -458,12 +472,14 @@ void main() {
   });
 
   /// A phone someone signed in on before, as main finds it after a restart: no session, only the stored company.
-  Future<(TenantDatabase, String)> restartedPhone(WidgetTester tester, {bool off = false, bool pinSet = false}) async {
-    cloud.addUser('owner@test.ae', 'pass1234', company: testTenant);
+  /// [consented]: the company agreed on an earlier open, which this phone kept (D-084).
+  Future<(TenantDatabase, String)> restartedPhone(WidgetTester tester, {bool off = false, bool pinSet = false, bool consented = true}) async {
+    cloud.addUser('owner@test.ae', 'pass1234', company: testTenant, consented: consented);
     final userId = cloud.users['owner@test.ae']!.id;
     const storage = FlutterSecureStorage();
     await real(tester, () async {
       await storage.write(key: 'account', value: jsonEncode({'tenant_id': testTenant, 'user_id': userId, 'email': 'owner@test.ae'}));
+      if (consented) await storage.write(key: 'book_consent_$testTenant', value: '1');
       final here = await thisDeviceId(storage);
       cloud.addPhone('owner@test.ae', here, 'Office laptop', '2026-11-10T05:00:00Z');
       if (off) cloud.offPhones.add(here);
@@ -874,6 +890,38 @@ expect(find.text('Small Company Plan'), findsOneWidget);
       await snackGone(tester);
       expect(find.text('Kaun se 2 active rahein?'), findsNothing, reason: 'back on the home page with nothing left to choose');
       expect(lockShown, findsNothing);
+      await shutDown(tester, db);
+    });
+
+    testWidgets('an account made before the consent page sees it on open, reads only for now, and agrees from the lock with the password (D-084)', (tester) async {
+      final (db, _) = await restartedPhone(tester, consented: false);
+      expect(find.text('Cloud par kitab'), findsOneWidget, reason: 'asked before anything is sent');
+      expect(find.text('Ijazat ke baghair nayi entry band rahegi. Kitab parhna, papers, Excel aur backup chalte rahenge.'), findsOneWidget);
+      expect(cloud.calls.where((c) => c.path.endsWith('push_book_changes')), isEmpty);
+      await tapAndSettle(tester, find.text('Abhi nahin, sirf kitab dekhni hai'));
+      expect(find.byType(LabourApp), findsOneWidget, reason: 'the books still open, to read');
+      await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
+      await tapAndSettle(tester, find.text('Save karein'));
+      expect(lockShown, findsOneWidget);
+
+      await tapAndSettle(tester, find.text('Hazri lagayein'));
+      expect(find.byType(AttendanceEntryScreen), findsNothing);
+      expect(inDialog(find.text('Cloud par kitab bhejne ki ijazat nahin di. Ijazat dein to nayi entry khul jayegi.')), findsOneWidget);
+      await tapAndSettle(tester, inDialog(find.text('Ijazat dein')));
+      await tapAndSettle(tester, find.text('Haan, ijazat hai'));
+      // This phone keeps no session, so the password comes first; the cloud hears the yes before anything goes.
+      await fill(tester, 'Password', 'pass1234');
+      await tapAndSettle(tester, inDialog(find.text('Haan, ijazat hai')));
+      await until(tester, find.text('Menu'));
+      expect(cloud.consents, {testTenant: 1});
+      await real(tester, () async {
+        for (var i = 0; i < 50 && !cloud.books.keys.any((k) => k.startsWith('tenant_profiles/')); i++) {
+          await Future<void>.delayed(const Duration(milliseconds: 20));
+        }
+      });
+      expect(cloud.books.keys.where((k) => k.startsWith('tenant_profiles/')), hasLength(1), reason: 'the books went once agreed');
+      await tapAndSettle(tester, find.text('Hazri lagayein'));
+      expect(inDialog(find.textContaining('ijazat nahin di')), findsNothing, reason: 'consent is no longer what holds entries');
       await shutDown(tester, db);
     });
 

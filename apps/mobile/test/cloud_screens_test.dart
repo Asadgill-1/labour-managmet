@@ -26,7 +26,7 @@ void main() {
   final opened = <TenantDatabase>[];
 
   setUp(() async {
-    FlutterSecureStorage.setMockInitialValues({});
+    FlutterSecureStorage.setMockInitialValues({'book_consent_$testTenant': '1'});
     cloud = FakeCloud();
     recoveryKey = await publicOf(await testRecoveryPair());
     account = cloud.account(const FlutterSecureStorage(), recoveryKey: recoveryKey);
@@ -93,6 +93,7 @@ void main() {
     await tapAndSettle(tester, find.text('Aage'));
     await fill(tester, 'Company ka qanooni naam', 'Al Noor Labour Supply');
     await tapAndSettle(tester, find.text('Aage'));
+    await tapAndSettle(tester, find.text('Haan, ijazat hai'));
     expect(find.textContaining('Password bhool jaayein to platform ise khol kar aap ko wapas de sakta hai.'), findsOneWidget);
     expect(find.textContaining('end-to-end'), findsNothing);
     await fill(tester, 'Backup password', 'backup123');
@@ -185,6 +186,7 @@ void main() {
   testWidgets('a failed copy says why on the Backup page, and a build without the recovery key says the cloud backup is unavailable', (tester) async {
     cloud.offline = true;
     FlutterSecureStorage.setMockInitialValues({
+      'book_consent_$testTenant': '1',
       backupPasswordKey(testTenant): 'backup123',
       cloudCopyKey(testTenant): jsonEncode({'at': '2026-11-14T05:30:00.000Z', 'mark': '1/x', 'problem': 'offline'}),
     });

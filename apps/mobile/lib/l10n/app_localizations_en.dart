@@ -5143,6 +5143,88 @@ class AppLocalizationsEn extends AppLocalizations {
   String restoreNewPhoneCloud(String date) {
     return 'The cloud holds a copy from $date. Tap to bring it back.';
   }
+
+  @override
+  String get consentTitle => 'Your books in the cloud';
+
+  @override
+  String get consentLead =>
+      'When the phone is online, your company\'s whole books go to the platform\'s cloud. Read this first.';
+
+  @override
+  String get consentWhatHead => 'What goes';
+
+  @override
+  String get consentWhat =>
+      'All of the company\'s records: labour, companies and sites, attendance, payroll, invoices, cash, papers and pictures.';
+
+  @override
+  String get consentWhoHead => 'Who can see it';
+
+  @override
+  String get consentWho =>
+      'Only the owner of this app\'s platform. No other company can see your books.';
+
+  @override
+  String get consentWhyHead => 'Why';
+
+  @override
+  String get consentWhy =>
+      'To run and improve the app, to help you put a mistake right, and to show investors every company\'s totals added together, without your company\'s name.';
+
+  @override
+  String get consentHowLongHead => 'For how long';
+
+  @override
+  String get consentHowLong =>
+      'As long as you have the account. Delete the account and they leave the cloud at once.';
+
+  @override
+  String get consentNeverHead => 'What never goes';
+
+  @override
+  String get consentNever =>
+      'Your password, the phone\'s PIN and the backup password never leave the phone. The company\'s signature and stamp pictures stay on it too.';
+
+  @override
+  String get consentWorkersHead => 'Your labour';
+
+  @override
+  String get consentWorkers =>
+      'Your labour\'s details go too. Telling them that the platform keeps their details is your duty.';
+
+  @override
+  String get consentNeeded => 'The app can\'t be used without this consent.';
+
+  @override
+  String get consentLaterNote =>
+      'Without it, new entries stay on hold. Reading the books, papers, Excel and the backup keep working.';
+
+  @override
+  String get consentAgree => 'Yes, I agree';
+
+  @override
+  String get consentLater => 'Not now, only read the books';
+
+  @override
+  String get consentGiven =>
+      'You agreed. The books go to the cloud by themselves.';
+
+  @override
+  String consentSentAt(String when) {
+    return 'Last reached the cloud: $when';
+  }
+
+  @override
+  String get consentFailed =>
+      'The last try did not go through. It tries again when the app opens.';
+
+  @override
+  String get planNoConsent =>
+      'You have not agreed to send the books to the cloud. Agree, and new entries open.';
+
+  @override
+  String get planGiveConsent => 'Give consent';
 }
 
 /// The translations for English, as used in Pakistan (`en_PK`).
@@ -9969,4 +10051,87 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   String restoreNewPhoneCloud(String date) {
     return 'Cloud mein $date ki copy rakhi hai. Wapas laane ke liye dabaein.';
   }
+
+  @override
+  String get consentTitle => 'Cloud par kitab';
+
+  @override
+  String get consentLead =>
+      'Phone online ho to aap ki company ka saara hisaab platform ke cloud mein jata hai. Pehle ye parh lein.';
+
+  @override
+  String get consentWhatHead => 'Kya jayega';
+
+  @override
+  String get consentWhat =>
+      'Company ke saare record: labour, companies aur sites, hazri, tankhwah, invoice, cash, papers aur tasveerein.';
+
+  @override
+  String get consentWhoHead => 'Kaun dekh sakta hai';
+
+  @override
+  String get consentWho =>
+      'Sirf is app ke platform ka malik. Koi doosri company aap ka hisaab nahin dekh sakti.';
+
+  @override
+  String get consentWhyHead => 'Kis liye';
+
+  @override
+  String get consentWhy =>
+      'App chalane aur behtar banane ke liye, aap ki ghalti theek karne mein madad ke liye, aur investors ko sab companies ka mila hua hisaab dikhane ke liye, aap ki company ke naam ke baghair.';
+
+  @override
+  String get consentHowLongHead => 'Kab tak';
+
+  @override
+  String get consentHowLong =>
+      'Jab tak aap ka account hai. Account delete karein to cloud se usi waqt mit jata hai.';
+
+  @override
+  String get consentNeverHead => 'Kya kabhi nahin jata';
+
+  @override
+  String get consentNever =>
+      'Aap ka password, phone ka PIN aur backup password phone se bahar nahin jaate. Company ke dastakhat aur mohar ki tasveer bhi phone par rehti hai.';
+
+  @override
+  String get consentWorkersHead => 'Aap ke labour';
+
+  @override
+  String get consentWorkers =>
+      'Labour ka data bhi jata hai. Unhein batana aap ki zimmedari hai ke un ka data platform ke paas rehta hai.';
+
+  @override
+  String get consentNeeded =>
+      'Is ijazat ke baghair app istemal nahin ho sakti.';
+
+  @override
+  String get consentLaterNote =>
+      'Ijazat ke baghair nayi entry band rahegi. Kitab parhna, papers, Excel aur backup chalte rahenge.';
+
+  @override
+  String get consentAgree => 'Haan, ijazat hai';
+
+  @override
+  String get consentLater => 'Abhi nahin, sirf kitab dekhni hai';
+
+  @override
+  String get consentGiven =>
+      'Aap ne ijazat di hai. Kitab khud cloud par jaati hai.';
+
+  @override
+  String consentSentAt(String when) {
+    return 'Aakhri baar cloud par gayi: $when';
+  }
+
+  @override
+  String get consentFailed =>
+      'Pichli baar nahin ja saki. App khulne par phir koshish hogi.';
+
+  @override
+  String get planNoConsent =>
+      'Cloud par kitab bhejne ki ijazat nahin di. Ijazat dein to nayi entry khul jayegi.';
+
+  @override
+  String get planGiveConsent => 'Ijazat dein';
 }

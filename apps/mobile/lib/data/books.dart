@@ -67,6 +67,12 @@ class BookSender {
 
   bool get consented => _consent >= consentVersion;
 
+  /// The kept answer was read.
+  bool get loaded => _loaded.isCompleted;
+
+  /// Writes wait for consent, once the answer is known, so a company that agreed is never held up while it is read.
+  bool get refuses => loaded && !consented;
+
   BookView get view => (consented: consented, lastAt: _lastAt, failed: _failed);
 
   /// The view once the kept answer is read, then each change.

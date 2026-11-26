@@ -82,7 +82,7 @@ void main() {
     // Deleting the company takes every copy.
     await File(tenantFile(work, testTenant).path).copy(into.path);
     await File(tenantFile(work, testTenant).path).copy(keptFile(work, testTenant).path);
-    FlutterSecureStorage.setMockInitialValues({});
+    FlutterSecureStorage.setMockInitialValues({'book_consent_$testTenant': '1'});
     await deleteTenant(const FlutterSecureStorage(), work, testTenant);
     expect(work.listSync().where((f) => f.path.contains(testTenant)), isEmpty);
   });
@@ -263,7 +263,7 @@ void main() {
     }
 
     testWidgets("a new phone's empty company offers the old phone's backup, asks about later numbers, and opens it (DATA-05, DATA-06)", (tester) async {
-      FlutterSecureStorage.setMockInitialValues({});
+      FlutterSecureStorage.setMockInitialValues({'book_consent_$testTenant': '1'});
       await setUpPhone(tester);
       // The company opened here with nothing in it yet. Made on the real clock, as drift can't make a file on the fake one.
       await tester.runAsync(() async {
@@ -326,7 +326,7 @@ void main() {
     });
 
     testWidgets('a phone with data but no backup password backs it up with the password that opened the backup (D-071)', (tester) async {
-      FlutterSecureStorage.setMockInitialValues({});
+      FlutterSecureStorage.setMockInitialValues({'book_consent_$testTenant': '1'});
       await setUpPhone(tester);
       await tester.runAsync(() async {
         final db = live();
@@ -361,7 +361,7 @@ void main() {
     });
 
     testWidgets('on the same phone the kept password opens it, the data there is kept aside, and comes back (D-070)', (tester) async {
-      FlutterSecureStorage.setMockInitialValues({backupPasswordKey(testTenant): 'pass1234'});
+      FlutterSecureStorage.setMockInitialValues({backupPasswordKey(testTenant): 'pass1234', 'book_consent_$testTenant': '1'});
       await setUpPhone(tester);
       await tester.runAsync(() async {
         final db = live();

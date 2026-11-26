@@ -13,6 +13,7 @@ import '../../data/plans.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../account/account_screens.dart';
+import '../account/consent_screen.dart';
 import '../account/support_contact.dart';
 import 'plan_screen.dart';
 
@@ -25,8 +26,9 @@ PlanRefused? planBlock(WidgetRef ref, {String entity = '', WriteEffect effect = 
   if (licensing == null || ref.watch(licenceProvider).value == null) return null;
   final workers = (ref.watch(workersProvider).value ?? const <Worker>[]).where((w) => w.active).length;
   final clients = (ref.watch(clientsProvider).value ?? const <Client>[]).where((c) => c.active).length;
+  final consented = ref.watch(bookViewProvider).value?.consented ?? true;
   // The view as of now, since a trial can end while the page is open.
-  return planRefusal(licensing.view, entity: entity, effect: effect, workers: workers, clients: clients);
+  return planRefusal(licensing.view, entity: entity, effect: effect, workers: workers, clients: clients, consented: consented);
 }
 
 /// The platform's hold in words: the owner's own, quoted, and the day it lifts if it does (D-081 (7)).
@@ -40,6 +42,7 @@ String planBlockText(AppLocalizations l10n, PlanRefused refused, AccountProblem?
   return switch (refused.block) {
     PlanBlock.ended => l10n.planEndedNote,
     PlanBlock.held => refused.hold == null ? l10n.planEndedNote : heldNote(l10n, refused.hold!),
+    PlanBlock.noConsent => l10n.planNoConsent,
     PlanBlock.clockBack => l10n.planClockBack,
     PlanBlock.noLicence => unchecked(l10n.planNotChecked),
     PlanBlock.leaseOver => unchecked(l10n.planLeaseOver),
@@ -62,6 +65,10 @@ String planBlockText(AppLocalizations l10n, PlanRefused refused, AccountProblem?
   return switch (refused.block) {
     PlanBlock.ended || PlanBlock.workerLimit || PlanBlock.clientLimit => playStoreBuild ? null : (label: l10n.planTake, run: () => open(PlanScreen(account: account))),
     PlanBlock.held => (label: l10n.planSupport, run: () => showSupportContact(context, account, title: l10n.planSupport)),
+    PlanBlock.noConsent => switch (scope.read(bookSenderProvider)) {
+      final books? => (label: l10n.planGiveConsent, run: () => open(ConsentPage(books: books, account: account))),
+      null => null,
+    },
     PlanBlock.workersOver => (label: l10n.planKeepOpen, run: () => open(const KeepActiveScreen(clients: false))),
     PlanBlock.clientsOver => (label: l10n.planKeepOpen, run: () => open(const KeepActiveScreen(clients: true))),
     PlanBlock.noLicence || PlanBlock.leaseOver || PlanBlock.clockBack =>
