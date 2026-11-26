@@ -332,3 +332,366 @@ END;
 CREATE TRIGGER number_floor_no_delete BEFORE DELETE ON number_floors BEGIN
   SELECT RAISE(ABORT, 'number floors are append-only');
 END;
+
+-- Every change to a book table names its record, so the app sends it to the cloud as it stands, whatever screen
+-- saved it (T22d, D-084). A delete names the version after the record's last.
+
+CREATE TRIGGER book_tenant_profiles_ins AFTER INSERT ON tenant_profiles BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'tenant_profiles', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_tenant_profiles_upd AFTER UPDATE ON tenant_profiles BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'tenant_profiles', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_tenant_profiles_del AFTER DELETE ON tenant_profiles BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'tenant_profiles', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_clients_ins AFTER INSERT ON clients BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'clients', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_clients_upd AFTER UPDATE ON clients BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'clients', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_clients_del AFTER DELETE ON clients BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'clients', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_sites_ins AFTER INSERT ON sites BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'sites', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_sites_upd AFTER UPDATE ON sites BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'sites', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_sites_del AFTER DELETE ON sites BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'sites', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_workers_ins AFTER INSERT ON workers BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'workers', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_workers_upd AFTER UPDATE ON workers BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'workers', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_workers_del AFTER DELETE ON workers BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'workers', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_pay_contracts_ins AFTER INSERT ON pay_contracts BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'pay_contracts', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_pay_contracts_upd AFTER UPDATE ON pay_contracts BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'pay_contracts', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_pay_contracts_del AFTER DELETE ON pay_contracts BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'pay_contracts', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_billing_contracts_ins AFTER INSERT ON billing_contracts BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'billing_contracts', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_billing_contracts_upd AFTER UPDATE ON billing_contracts BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'billing_contracts', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_billing_contracts_del AFTER DELETE ON billing_contracts BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'billing_contracts', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_opening_balances_ins AFTER INSERT ON opening_balances BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'opening_balances', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_opening_balances_upd AFTER UPDATE ON opening_balances BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'opening_balances', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_opening_balances_del AFTER DELETE ON opening_balances BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'opening_balances', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_worker_groups_ins AFTER INSERT ON worker_groups BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'worker_groups', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_worker_groups_upd AFTER UPDATE ON worker_groups BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'worker_groups', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_worker_groups_del AFTER DELETE ON worker_groups BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'worker_groups', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_worker_group_members_ins AFTER INSERT ON worker_group_members BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'worker_group_members', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_worker_group_members_upd AFTER UPDATE ON worker_group_members BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'worker_group_members', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_worker_group_members_del AFTER DELETE ON worker_group_members BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'worker_group_members', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_rooms_ins AFTER INSERT ON rooms BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'rooms', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_rooms_upd AFTER UPDATE ON rooms BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'rooms', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_rooms_del AFTER DELETE ON rooms BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'rooms', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_cash_entries_ins AFTER INSERT ON cash_entries BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'cash_entries', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_cash_entries_upd AFTER UPDATE ON cash_entries BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'cash_entries', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_cash_entries_del AFTER DELETE ON cash_entries BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'cash_entries', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_salary_allocations_ins AFTER INSERT ON salary_allocations BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'salary_allocations', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_salary_allocations_upd AFTER UPDATE ON salary_allocations BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'salary_allocations', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_salary_allocations_del AFTER DELETE ON salary_allocations BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'salary_allocations', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_period_locks_ins AFTER INSERT ON period_locks BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'period_locks', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_period_locks_upd AFTER UPDATE ON period_locks BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'period_locks', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_period_locks_del AFTER DELETE ON period_locks BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'period_locks', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_day_offs_ins AFTER INSERT ON day_offs BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'day_offs', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_day_offs_upd AFTER UPDATE ON day_offs BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'day_offs', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_day_offs_del AFTER DELETE ON day_offs BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'day_offs', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_document_assets_ins AFTER INSERT ON document_assets BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'document_assets', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_document_assets_upd AFTER UPDATE ON document_assets BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'document_assets', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_document_assets_del AFTER DELETE ON document_assets BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'document_assets', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_document_templates_ins AFTER INSERT ON document_templates BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'document_templates', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_document_templates_upd AFTER UPDATE ON document_templates BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'document_templates', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_document_templates_del AFTER DELETE ON document_templates BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'document_templates', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_issued_documents_ins AFTER INSERT ON issued_documents BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'issued_documents', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_issued_documents_upd AFTER UPDATE ON issued_documents BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'issued_documents', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_issued_documents_del AFTER DELETE ON issued_documents BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'issued_documents', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_timesheets_ins AFTER INSERT ON timesheets BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'timesheets', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_timesheets_upd AFTER UPDATE ON timesheets BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'timesheets', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_timesheets_del AFTER DELETE ON timesheets BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'timesheets', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_timesheet_revisions_ins AFTER INSERT ON timesheet_revisions BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'timesheet_revisions', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_timesheet_revisions_upd AFTER UPDATE ON timesheet_revisions BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'timesheet_revisions', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_timesheet_revisions_del AFTER DELETE ON timesheet_revisions BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'timesheet_revisions', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_timesheet_lines_ins AFTER INSERT ON timesheet_lines BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'timesheet_lines', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_timesheet_lines_upd AFTER UPDATE ON timesheet_lines BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'timesheet_lines', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_timesheet_lines_del AFTER DELETE ON timesheet_lines BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'timesheet_lines', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_billed_allocations_ins AFTER INSERT ON billed_allocations BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'billed_allocations', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_billed_allocations_upd AFTER UPDATE ON billed_allocations BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'billed_allocations', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_billed_allocations_del AFTER DELETE ON billed_allocations BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'billed_allocations', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_invoices_ins AFTER INSERT ON invoices BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'invoices', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_invoices_upd AFTER UPDATE ON invoices BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'invoices', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_invoices_del AFTER DELETE ON invoices BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'invoices', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_invoice_lines_ins AFTER INSERT ON invoice_lines BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'invoice_lines', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_invoice_lines_upd AFTER UPDATE ON invoice_lines BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'invoice_lines', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_invoice_lines_del AFTER DELETE ON invoice_lines BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'invoice_lines', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_invoice_allocations_ins AFTER INSERT ON invoice_allocations BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'invoice_allocations', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_invoice_allocations_upd AFTER UPDATE ON invoice_allocations BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'invoice_allocations', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_invoice_allocations_del AFTER DELETE ON invoice_allocations BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'invoice_allocations', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_attendance_batches_ins AFTER INSERT ON attendance_batches BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'attendance_batches', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_attendance_batches_upd AFTER UPDATE ON attendance_batches BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'attendance_batches', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_attendance_batches_del AFTER DELETE ON attendance_batches BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'attendance_batches', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_attendance_entries_ins AFTER INSERT ON attendance_entries BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'attendance_entries', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_attendance_entries_upd AFTER UPDATE ON attendance_entries BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'attendance_entries', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_attendance_entries_del AFTER DELETE ON attendance_entries BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'attendance_entries', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_payroll_runs_ins AFTER INSERT ON payroll_runs BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'payroll_runs', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_payroll_runs_upd AFTER UPDATE ON payroll_runs BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'payroll_runs', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_payroll_runs_del AFTER DELETE ON payroll_runs BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'payroll_runs', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_payroll_lines_ins AFTER INSERT ON payroll_lines BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'payroll_lines', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_payroll_lines_upd AFTER UPDATE ON payroll_lines BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'payroll_lines', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_payroll_lines_del AFTER DELETE ON payroll_lines BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'payroll_lines', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_payroll_items_ins AFTER INSERT ON payroll_items BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'payroll_items', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_payroll_items_upd AFTER UPDATE ON payroll_items BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'payroll_items', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_payroll_items_del AFTER DELETE ON payroll_items BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'payroll_items', OLD.id, OLD.version + 1);
+END;
+
+CREATE TRIGGER book_number_floors_ins AFTER INSERT ON number_floors BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'number_floors', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_number_floors_upd AFTER UPDATE ON number_floors BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, 'number_floors', NEW.id, NEW.version);
+END;
+
+CREATE TRIGGER book_number_floors_del AFTER DELETE ON number_floors BEGIN
+  INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, 'number_floors', OLD.id, OLD.version + 1);
+END;

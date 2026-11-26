@@ -699,3 +699,16 @@ class Outbox extends Table {
   @override
   Set<Column> get primaryKey => {operationId};
 }
+
+/// The records a change touched, named by the database's own triggers on every book table, so no screen's save can
+/// miss one. The app sends those records to the cloud as they stand, then removes the rows it sent (T22d, D-084).
+@DataClassName('BookChange')
+class BookChanges extends Table {
+  IntColumn get seq => integer().autoIncrement()();
+  TextColumn get tenantId => text()();
+  TextColumn get entity => text()();
+  TextColumn get recordId => text()();
+
+  /// The record's version after the change; after a delete, the one after its last.
+  IntColumn get version => integer()();
+}

@@ -85,6 +85,7 @@ String newUuid() {
     NumberFloors,
     AuditEvents,
     Outbox,
+    BookChanges,
   ],
   include: {'triggers.drift'},
 )
@@ -100,7 +101,7 @@ class TenantDatabase extends _$TenantDatabase {
   WriteGuard? guard;
 
   @override
-  int get schemaVersion => 19;
+  int get schemaVersion => 20;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -264,6 +265,13 @@ class TenantDatabase extends _$TenantDatabase {
         await m.createTrigger(schema.numberFloorNoUpdate);
         await m.createTrigger(schema.numberFloorNoDelete);
       },
+      // Every book table names each changed record for the cloud (T22d, D-084). The first send fills the list.
+      from19To20: (m, schema) async {
+        await m.createTable(schema.bookChanges);
+        for (final trigger in schema.entities.whereType<Trigger>()) {
+          if (trigger.entityName.startsWith('book_')) await m.createTrigger(trigger);
+        }
+      },
     ),
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -383,6 +391,16 @@ class TenantDatabase extends _$TenantDatabase {
     });
   }
 }
+
+/// The company's books, every table with the common columns: what goes to the cloud, each named by its triggers
+/// (T22d, D-084). Not the audit log or the outbox, the app's own record of its operations.
+const bookTables = {
+  'tenant_profiles', 'clients', 'sites', 'workers', 'pay_contracts', 'billing_contracts', 'opening_balances', 'worker_groups',
+  'worker_group_members', 'rooms', 'cash_entries', 'salary_allocations', 'period_locks', 'day_offs', 'document_assets',
+  'document_templates', 'issued_documents', 'timesheets', 'timesheet_revisions', 'timesheet_lines', 'billed_allocations',
+  'invoices', 'invoice_lines', 'invoice_allocations', 'attendance_batches', 'attendance_entries', 'payroll_runs',
+  'payroll_lines', 'payroll_items', 'number_floors',
+};
 
 /// One encrypted file per tenant (D-005). The tenant ID becomes a file name, so only a UUID passes.
 File tenantFile(Directory dir, String tenantId) {

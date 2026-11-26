@@ -26194,6 +26194,361 @@ class TenantProfilesCompanion extends UpdateCompanion<TenantProfile> {
   }
 }
 
+class $BookChangesTable extends BookChanges
+    with TableInfo<$BookChangesTable, BookChange> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BookChangesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _seqMeta = const VerificationMeta('seq');
+  @override
+  late final GeneratedColumn<int> seq = GeneratedColumn<int>(
+    'seq',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _tenantIdMeta = const VerificationMeta(
+    'tenantId',
+  );
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+    'tenant_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _entityMeta = const VerificationMeta('entity');
+  @override
+  late final GeneratedColumn<String> entity = GeneratedColumn<String>(
+    'entity',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordIdMeta = const VerificationMeta(
+    'recordId',
+  );
+  @override
+  late final GeneratedColumn<String> recordId = GeneratedColumn<String>(
+    'record_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
+  @override
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    seq,
+    tenantId,
+    entity,
+    recordId,
+    version,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'book_changes';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BookChange> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('seq')) {
+      context.handle(
+        _seqMeta,
+        seq.isAcceptableOrUnknown(data['seq']!, _seqMeta),
+      );
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(
+        _tenantIdMeta,
+        tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('entity')) {
+      context.handle(
+        _entityMeta,
+        entity.isAcceptableOrUnknown(data['entity']!, _entityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityMeta);
+    }
+    if (data.containsKey('record_id')) {
+      context.handle(
+        _recordIdMeta,
+        recordId.isAcceptableOrUnknown(data['record_id']!, _recordIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_recordIdMeta);
+    }
+    if (data.containsKey('version')) {
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_versionMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {seq};
+  @override
+  BookChange map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BookChange(
+      seq: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}seq'],
+      )!,
+      tenantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tenant_id'],
+      )!,
+      entity: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity'],
+      )!,
+      recordId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}record_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+    );
+  }
+
+  @override
+  $BookChangesTable createAlias(String alias) {
+    return $BookChangesTable(attachedDatabase, alias);
+  }
+}
+
+class BookChange extends DataClass implements Insertable<BookChange> {
+  final int seq;
+  final String tenantId;
+  final String entity;
+  final String recordId;
+
+  /// The record's version after the change; after a delete, the one after its last.
+  final int version;
+  const BookChange({
+    required this.seq,
+    required this.tenantId,
+    required this.entity,
+    required this.recordId,
+    required this.version,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['seq'] = Variable<int>(seq);
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['entity'] = Variable<String>(entity);
+    map['record_id'] = Variable<String>(recordId);
+    map['version'] = Variable<int>(version);
+    return map;
+  }
+
+  BookChangesCompanion toCompanion(bool nullToAbsent) {
+    return BookChangesCompanion(
+      seq: Value(seq),
+      tenantId: Value(tenantId),
+      entity: Value(entity),
+      recordId: Value(recordId),
+      version: Value(version),
+    );
+  }
+
+  factory BookChange.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BookChange(
+      seq: serializer.fromJson<int>(json['seq']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      entity: serializer.fromJson<String>(json['entity']),
+      recordId: serializer.fromJson<String>(json['recordId']),
+      version: serializer.fromJson<int>(json['version']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'seq': serializer.toJson<int>(seq),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'entity': serializer.toJson<String>(entity),
+      'recordId': serializer.toJson<String>(recordId),
+      'version': serializer.toJson<int>(version),
+    };
+  }
+
+  BookChange copyWith({
+    int? seq,
+    String? tenantId,
+    String? entity,
+    String? recordId,
+    int? version,
+  }) => BookChange(
+    seq: seq ?? this.seq,
+    tenantId: tenantId ?? this.tenantId,
+    entity: entity ?? this.entity,
+    recordId: recordId ?? this.recordId,
+    version: version ?? this.version,
+  );
+  BookChange copyWithCompanion(BookChangesCompanion data) {
+    return BookChange(
+      seq: data.seq.present ? data.seq.value : this.seq,
+      tenantId: data.tenantId.present ? data.tenantId.value : this.tenantId,
+      entity: data.entity.present ? data.entity.value : this.entity,
+      recordId: data.recordId.present ? data.recordId.value : this.recordId,
+      version: data.version.present ? data.version.value : this.version,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BookChange(')
+          ..write('seq: $seq, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('entity: $entity, ')
+          ..write('recordId: $recordId, ')
+          ..write('version: $version')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(seq, tenantId, entity, recordId, version);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BookChange &&
+          other.seq == this.seq &&
+          other.tenantId == this.tenantId &&
+          other.entity == this.entity &&
+          other.recordId == this.recordId &&
+          other.version == this.version);
+}
+
+class BookChangesCompanion extends UpdateCompanion<BookChange> {
+  final Value<int> seq;
+  final Value<String> tenantId;
+  final Value<String> entity;
+  final Value<String> recordId;
+  final Value<int> version;
+  const BookChangesCompanion({
+    this.seq = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.entity = const Value.absent(),
+    this.recordId = const Value.absent(),
+    this.version = const Value.absent(),
+  });
+  BookChangesCompanion.insert({
+    this.seq = const Value.absent(),
+    required String tenantId,
+    required String entity,
+    required String recordId,
+    required int version,
+  }) : tenantId = Value(tenantId),
+       entity = Value(entity),
+       recordId = Value(recordId),
+       version = Value(version);
+  static Insertable<BookChange> custom({
+    Expression<int>? seq,
+    Expression<String>? tenantId,
+    Expression<String>? entity,
+    Expression<String>? recordId,
+    Expression<int>? version,
+  }) {
+    return RawValuesInsertable({
+      if (seq != null) 'seq': seq,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (entity != null) 'entity': entity,
+      if (recordId != null) 'record_id': recordId,
+      if (version != null) 'version': version,
+    });
+  }
+
+  BookChangesCompanion copyWith({
+    Value<int>? seq,
+    Value<String>? tenantId,
+    Value<String>? entity,
+    Value<String>? recordId,
+    Value<int>? version,
+  }) {
+    return BookChangesCompanion(
+      seq: seq ?? this.seq,
+      tenantId: tenantId ?? this.tenantId,
+      entity: entity ?? this.entity,
+      recordId: recordId ?? this.recordId,
+      version: version ?? this.version,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (seq.present) {
+      map['seq'] = Variable<int>(seq.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (entity.present) {
+      map['entity'] = Variable<String>(entity.value);
+    }
+    if (recordId.present) {
+      map['record_id'] = Variable<String>(recordId.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BookChangesCompanion(')
+          ..write('seq: $seq, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('entity: $entity, ')
+          ..write('recordId: $recordId, ')
+          ..write('version: $version')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $PayContractsTable extends PayContracts
     with TableInfo<$PayContractsTable, PayContract> {
   @override
@@ -31099,14 +31454,375 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     'number_floor_no_delete',
   );
   late final $TenantProfilesTable tenantProfiles = $TenantProfilesTable(this);
+  late final $BookChangesTable bookChanges = $BookChangesTable(this);
+  late final Trigger bookTenantProfilesIns = Trigger(
+    'CREATE TRIGGER book_tenant_profiles_ins AFTER INSERT ON tenant_profiles BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'tenant_profiles\', NEW.id, NEW.version);END',
+    'book_tenant_profiles_ins',
+  );
+  late final Trigger bookTenantProfilesUpd = Trigger(
+    'CREATE TRIGGER book_tenant_profiles_upd AFTER UPDATE ON tenant_profiles BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'tenant_profiles\', NEW.id, NEW.version);END',
+    'book_tenant_profiles_upd',
+  );
+  late final Trigger bookTenantProfilesDel = Trigger(
+    'CREATE TRIGGER book_tenant_profiles_del AFTER DELETE ON tenant_profiles BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'tenant_profiles\', OLD.id, OLD.version + 1);END',
+    'book_tenant_profiles_del',
+  );
+  late final Trigger bookClientsIns = Trigger(
+    'CREATE TRIGGER book_clients_ins AFTER INSERT ON clients BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'clients\', NEW.id, NEW.version);END',
+    'book_clients_ins',
+  );
+  late final Trigger bookClientsUpd = Trigger(
+    'CREATE TRIGGER book_clients_upd AFTER UPDATE ON clients BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'clients\', NEW.id, NEW.version);END',
+    'book_clients_upd',
+  );
+  late final Trigger bookClientsDel = Trigger(
+    'CREATE TRIGGER book_clients_del AFTER DELETE ON clients BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'clients\', OLD.id, OLD.version + 1);END',
+    'book_clients_del',
+  );
+  late final Trigger bookSitesIns = Trigger(
+    'CREATE TRIGGER book_sites_ins AFTER INSERT ON sites BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'sites\', NEW.id, NEW.version);END',
+    'book_sites_ins',
+  );
+  late final Trigger bookSitesUpd = Trigger(
+    'CREATE TRIGGER book_sites_upd AFTER UPDATE ON sites BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'sites\', NEW.id, NEW.version);END',
+    'book_sites_upd',
+  );
+  late final Trigger bookSitesDel = Trigger(
+    'CREATE TRIGGER book_sites_del AFTER DELETE ON sites BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'sites\', OLD.id, OLD.version + 1);END',
+    'book_sites_del',
+  );
+  late final Trigger bookWorkersIns = Trigger(
+    'CREATE TRIGGER book_workers_ins AFTER INSERT ON workers BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'workers\', NEW.id, NEW.version);END',
+    'book_workers_ins',
+  );
+  late final Trigger bookWorkersUpd = Trigger(
+    'CREATE TRIGGER book_workers_upd AFTER UPDATE ON workers BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'workers\', NEW.id, NEW.version);END',
+    'book_workers_upd',
+  );
+  late final Trigger bookWorkersDel = Trigger(
+    'CREATE TRIGGER book_workers_del AFTER DELETE ON workers BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'workers\', OLD.id, OLD.version + 1);END',
+    'book_workers_del',
+  );
   late final $PayContractsTable payContracts = $PayContractsTable(this);
+  late final Trigger bookPayContractsIns = Trigger(
+    'CREATE TRIGGER book_pay_contracts_ins AFTER INSERT ON pay_contracts BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'pay_contracts\', NEW.id, NEW.version);END',
+    'book_pay_contracts_ins',
+  );
+  late final Trigger bookPayContractsUpd = Trigger(
+    'CREATE TRIGGER book_pay_contracts_upd AFTER UPDATE ON pay_contracts BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'pay_contracts\', NEW.id, NEW.version);END',
+    'book_pay_contracts_upd',
+  );
+  late final Trigger bookPayContractsDel = Trigger(
+    'CREATE TRIGGER book_pay_contracts_del AFTER DELETE ON pay_contracts BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'pay_contracts\', OLD.id, OLD.version + 1);END',
+    'book_pay_contracts_del',
+  );
   late final $BillingContractsTable billingContracts = $BillingContractsTable(
     this,
   );
+  late final Trigger bookBillingContractsIns = Trigger(
+    'CREATE TRIGGER book_billing_contracts_ins AFTER INSERT ON billing_contracts BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'billing_contracts\', NEW.id, NEW.version);END',
+    'book_billing_contracts_ins',
+  );
+  late final Trigger bookBillingContractsUpd = Trigger(
+    'CREATE TRIGGER book_billing_contracts_upd AFTER UPDATE ON billing_contracts BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'billing_contracts\', NEW.id, NEW.version);END',
+    'book_billing_contracts_upd',
+  );
+  late final Trigger bookBillingContractsDel = Trigger(
+    'CREATE TRIGGER book_billing_contracts_del AFTER DELETE ON billing_contracts BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'billing_contracts\', OLD.id, OLD.version + 1);END',
+    'book_billing_contracts_del',
+  );
+  late final Trigger bookOpeningBalancesIns = Trigger(
+    'CREATE TRIGGER book_opening_balances_ins AFTER INSERT ON opening_balances BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'opening_balances\', NEW.id, NEW.version);END',
+    'book_opening_balances_ins',
+  );
+  late final Trigger bookOpeningBalancesUpd = Trigger(
+    'CREATE TRIGGER book_opening_balances_upd AFTER UPDATE ON opening_balances BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'opening_balances\', NEW.id, NEW.version);END',
+    'book_opening_balances_upd',
+  );
+  late final Trigger bookOpeningBalancesDel = Trigger(
+    'CREATE TRIGGER book_opening_balances_del AFTER DELETE ON opening_balances BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'opening_balances\', OLD.id, OLD.version + 1);END',
+    'book_opening_balances_del',
+  );
+  late final Trigger bookWorkerGroupsIns = Trigger(
+    'CREATE TRIGGER book_worker_groups_ins AFTER INSERT ON worker_groups BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'worker_groups\', NEW.id, NEW.version);END',
+    'book_worker_groups_ins',
+  );
+  late final Trigger bookWorkerGroupsUpd = Trigger(
+    'CREATE TRIGGER book_worker_groups_upd AFTER UPDATE ON worker_groups BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'worker_groups\', NEW.id, NEW.version);END',
+    'book_worker_groups_upd',
+  );
+  late final Trigger bookWorkerGroupsDel = Trigger(
+    'CREATE TRIGGER book_worker_groups_del AFTER DELETE ON worker_groups BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'worker_groups\', OLD.id, OLD.version + 1);END',
+    'book_worker_groups_del',
+  );
   late final $WorkerGroupMembersTable workerGroupMembers =
       $WorkerGroupMembersTable(this);
+  late final Trigger bookWorkerGroupMembersIns = Trigger(
+    'CREATE TRIGGER book_worker_group_members_ins AFTER INSERT ON worker_group_members BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'worker_group_members\', NEW.id, NEW.version);END',
+    'book_worker_group_members_ins',
+  );
+  late final Trigger bookWorkerGroupMembersUpd = Trigger(
+    'CREATE TRIGGER book_worker_group_members_upd AFTER UPDATE ON worker_group_members BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'worker_group_members\', NEW.id, NEW.version);END',
+    'book_worker_group_members_upd',
+  );
+  late final Trigger bookWorkerGroupMembersDel = Trigger(
+    'CREATE TRIGGER book_worker_group_members_del AFTER DELETE ON worker_group_members BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'worker_group_members\', OLD.id, OLD.version + 1);END',
+    'book_worker_group_members_del',
+  );
+  late final Trigger bookRoomsIns = Trigger(
+    'CREATE TRIGGER book_rooms_ins AFTER INSERT ON rooms BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'rooms\', NEW.id, NEW.version);END',
+    'book_rooms_ins',
+  );
+  late final Trigger bookRoomsUpd = Trigger(
+    'CREATE TRIGGER book_rooms_upd AFTER UPDATE ON rooms BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'rooms\', NEW.id, NEW.version);END',
+    'book_rooms_upd',
+  );
+  late final Trigger bookRoomsDel = Trigger(
+    'CREATE TRIGGER book_rooms_del AFTER DELETE ON rooms BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'rooms\', OLD.id, OLD.version + 1);END',
+    'book_rooms_del',
+  );
+  late final Trigger bookCashEntriesIns = Trigger(
+    'CREATE TRIGGER book_cash_entries_ins AFTER INSERT ON cash_entries BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'cash_entries\', NEW.id, NEW.version);END',
+    'book_cash_entries_ins',
+  );
+  late final Trigger bookCashEntriesUpd = Trigger(
+    'CREATE TRIGGER book_cash_entries_upd AFTER UPDATE ON cash_entries BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'cash_entries\', NEW.id, NEW.version);END',
+    'book_cash_entries_upd',
+  );
+  late final Trigger bookCashEntriesDel = Trigger(
+    'CREATE TRIGGER book_cash_entries_del AFTER DELETE ON cash_entries BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'cash_entries\', OLD.id, OLD.version + 1);END',
+    'book_cash_entries_del',
+  );
+  late final Trigger bookSalaryAllocationsIns = Trigger(
+    'CREATE TRIGGER book_salary_allocations_ins AFTER INSERT ON salary_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'salary_allocations\', NEW.id, NEW.version);END',
+    'book_salary_allocations_ins',
+  );
+  late final Trigger bookSalaryAllocationsUpd = Trigger(
+    'CREATE TRIGGER book_salary_allocations_upd AFTER UPDATE ON salary_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'salary_allocations\', NEW.id, NEW.version);END',
+    'book_salary_allocations_upd',
+  );
+  late final Trigger bookSalaryAllocationsDel = Trigger(
+    'CREATE TRIGGER book_salary_allocations_del AFTER DELETE ON salary_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'salary_allocations\', OLD.id, OLD.version + 1);END',
+    'book_salary_allocations_del',
+  );
+  late final Trigger bookPeriodLocksIns = Trigger(
+    'CREATE TRIGGER book_period_locks_ins AFTER INSERT ON period_locks BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'period_locks\', NEW.id, NEW.version);END',
+    'book_period_locks_ins',
+  );
+  late final Trigger bookPeriodLocksUpd = Trigger(
+    'CREATE TRIGGER book_period_locks_upd AFTER UPDATE ON period_locks BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'period_locks\', NEW.id, NEW.version);END',
+    'book_period_locks_upd',
+  );
+  late final Trigger bookPeriodLocksDel = Trigger(
+    'CREATE TRIGGER book_period_locks_del AFTER DELETE ON period_locks BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'period_locks\', OLD.id, OLD.version + 1);END',
+    'book_period_locks_del',
+  );
+  late final Trigger bookDayOffsIns = Trigger(
+    'CREATE TRIGGER book_day_offs_ins AFTER INSERT ON day_offs BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'day_offs\', NEW.id, NEW.version);END',
+    'book_day_offs_ins',
+  );
+  late final Trigger bookDayOffsUpd = Trigger(
+    'CREATE TRIGGER book_day_offs_upd AFTER UPDATE ON day_offs BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'day_offs\', NEW.id, NEW.version);END',
+    'book_day_offs_upd',
+  );
+  late final Trigger bookDayOffsDel = Trigger(
+    'CREATE TRIGGER book_day_offs_del AFTER DELETE ON day_offs BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'day_offs\', OLD.id, OLD.version + 1);END',
+    'book_day_offs_del',
+  );
+  late final Trigger bookDocumentAssetsIns = Trigger(
+    'CREATE TRIGGER book_document_assets_ins AFTER INSERT ON document_assets BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'document_assets\', NEW.id, NEW.version);END',
+    'book_document_assets_ins',
+  );
+  late final Trigger bookDocumentAssetsUpd = Trigger(
+    'CREATE TRIGGER book_document_assets_upd AFTER UPDATE ON document_assets BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'document_assets\', NEW.id, NEW.version);END',
+    'book_document_assets_upd',
+  );
+  late final Trigger bookDocumentAssetsDel = Trigger(
+    'CREATE TRIGGER book_document_assets_del AFTER DELETE ON document_assets BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'document_assets\', OLD.id, OLD.version + 1);END',
+    'book_document_assets_del',
+  );
   late final $DocumentTemplatesTable documentTemplates =
       $DocumentTemplatesTable(this);
+  late final Trigger bookDocumentTemplatesIns = Trigger(
+    'CREATE TRIGGER book_document_templates_ins AFTER INSERT ON document_templates BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'document_templates\', NEW.id, NEW.version);END',
+    'book_document_templates_ins',
+  );
+  late final Trigger bookDocumentTemplatesUpd = Trigger(
+    'CREATE TRIGGER book_document_templates_upd AFTER UPDATE ON document_templates BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'document_templates\', NEW.id, NEW.version);END',
+    'book_document_templates_upd',
+  );
+  late final Trigger bookDocumentTemplatesDel = Trigger(
+    'CREATE TRIGGER book_document_templates_del AFTER DELETE ON document_templates BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'document_templates\', OLD.id, OLD.version + 1);END',
+    'book_document_templates_del',
+  );
+  late final Trigger bookIssuedDocumentsIns = Trigger(
+    'CREATE TRIGGER book_issued_documents_ins AFTER INSERT ON issued_documents BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'issued_documents\', NEW.id, NEW.version);END',
+    'book_issued_documents_ins',
+  );
+  late final Trigger bookIssuedDocumentsUpd = Trigger(
+    'CREATE TRIGGER book_issued_documents_upd AFTER UPDATE ON issued_documents BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'issued_documents\', NEW.id, NEW.version);END',
+    'book_issued_documents_upd',
+  );
+  late final Trigger bookIssuedDocumentsDel = Trigger(
+    'CREATE TRIGGER book_issued_documents_del AFTER DELETE ON issued_documents BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'issued_documents\', OLD.id, OLD.version + 1);END',
+    'book_issued_documents_del',
+  );
+  late final Trigger bookTimesheetsIns = Trigger(
+    'CREATE TRIGGER book_timesheets_ins AFTER INSERT ON timesheets BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'timesheets\', NEW.id, NEW.version);END',
+    'book_timesheets_ins',
+  );
+  late final Trigger bookTimesheetsUpd = Trigger(
+    'CREATE TRIGGER book_timesheets_upd AFTER UPDATE ON timesheets BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'timesheets\', NEW.id, NEW.version);END',
+    'book_timesheets_upd',
+  );
+  late final Trigger bookTimesheetsDel = Trigger(
+    'CREATE TRIGGER book_timesheets_del AFTER DELETE ON timesheets BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'timesheets\', OLD.id, OLD.version + 1);END',
+    'book_timesheets_del',
+  );
+  late final Trigger bookTimesheetRevisionsIns = Trigger(
+    'CREATE TRIGGER book_timesheet_revisions_ins AFTER INSERT ON timesheet_revisions BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'timesheet_revisions\', NEW.id, NEW.version);END',
+    'book_timesheet_revisions_ins',
+  );
+  late final Trigger bookTimesheetRevisionsUpd = Trigger(
+    'CREATE TRIGGER book_timesheet_revisions_upd AFTER UPDATE ON timesheet_revisions BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'timesheet_revisions\', NEW.id, NEW.version);END',
+    'book_timesheet_revisions_upd',
+  );
+  late final Trigger bookTimesheetRevisionsDel = Trigger(
+    'CREATE TRIGGER book_timesheet_revisions_del AFTER DELETE ON timesheet_revisions BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'timesheet_revisions\', OLD.id, OLD.version + 1);END',
+    'book_timesheet_revisions_del',
+  );
+  late final Trigger bookTimesheetLinesIns = Trigger(
+    'CREATE TRIGGER book_timesheet_lines_ins AFTER INSERT ON timesheet_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'timesheet_lines\', NEW.id, NEW.version);END',
+    'book_timesheet_lines_ins',
+  );
+  late final Trigger bookTimesheetLinesUpd = Trigger(
+    'CREATE TRIGGER book_timesheet_lines_upd AFTER UPDATE ON timesheet_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'timesheet_lines\', NEW.id, NEW.version);END',
+    'book_timesheet_lines_upd',
+  );
+  late final Trigger bookTimesheetLinesDel = Trigger(
+    'CREATE TRIGGER book_timesheet_lines_del AFTER DELETE ON timesheet_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'timesheet_lines\', OLD.id, OLD.version + 1);END',
+    'book_timesheet_lines_del',
+  );
+  late final Trigger bookBilledAllocationsIns = Trigger(
+    'CREATE TRIGGER book_billed_allocations_ins AFTER INSERT ON billed_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'billed_allocations\', NEW.id, NEW.version);END',
+    'book_billed_allocations_ins',
+  );
+  late final Trigger bookBilledAllocationsUpd = Trigger(
+    'CREATE TRIGGER book_billed_allocations_upd AFTER UPDATE ON billed_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'billed_allocations\', NEW.id, NEW.version);END',
+    'book_billed_allocations_upd',
+  );
+  late final Trigger bookBilledAllocationsDel = Trigger(
+    'CREATE TRIGGER book_billed_allocations_del AFTER DELETE ON billed_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'billed_allocations\', OLD.id, OLD.version + 1);END',
+    'book_billed_allocations_del',
+  );
+  late final Trigger bookInvoicesIns = Trigger(
+    'CREATE TRIGGER book_invoices_ins AFTER INSERT ON invoices BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'invoices\', NEW.id, NEW.version);END',
+    'book_invoices_ins',
+  );
+  late final Trigger bookInvoicesUpd = Trigger(
+    'CREATE TRIGGER book_invoices_upd AFTER UPDATE ON invoices BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'invoices\', NEW.id, NEW.version);END',
+    'book_invoices_upd',
+  );
+  late final Trigger bookInvoicesDel = Trigger(
+    'CREATE TRIGGER book_invoices_del AFTER DELETE ON invoices BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'invoices\', OLD.id, OLD.version + 1);END',
+    'book_invoices_del',
+  );
+  late final Trigger bookInvoiceLinesIns = Trigger(
+    'CREATE TRIGGER book_invoice_lines_ins AFTER INSERT ON invoice_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'invoice_lines\', NEW.id, NEW.version);END',
+    'book_invoice_lines_ins',
+  );
+  late final Trigger bookInvoiceLinesUpd = Trigger(
+    'CREATE TRIGGER book_invoice_lines_upd AFTER UPDATE ON invoice_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'invoice_lines\', NEW.id, NEW.version);END',
+    'book_invoice_lines_upd',
+  );
+  late final Trigger bookInvoiceLinesDel = Trigger(
+    'CREATE TRIGGER book_invoice_lines_del AFTER DELETE ON invoice_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'invoice_lines\', OLD.id, OLD.version + 1);END',
+    'book_invoice_lines_del',
+  );
+  late final Trigger bookInvoiceAllocationsIns = Trigger(
+    'CREATE TRIGGER book_invoice_allocations_ins AFTER INSERT ON invoice_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'invoice_allocations\', NEW.id, NEW.version);END',
+    'book_invoice_allocations_ins',
+  );
+  late final Trigger bookInvoiceAllocationsUpd = Trigger(
+    'CREATE TRIGGER book_invoice_allocations_upd AFTER UPDATE ON invoice_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'invoice_allocations\', NEW.id, NEW.version);END',
+    'book_invoice_allocations_upd',
+  );
+  late final Trigger bookInvoiceAllocationsDel = Trigger(
+    'CREATE TRIGGER book_invoice_allocations_del AFTER DELETE ON invoice_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'invoice_allocations\', OLD.id, OLD.version + 1);END',
+    'book_invoice_allocations_del',
+  );
+  late final Trigger bookAttendanceBatchesIns = Trigger(
+    'CREATE TRIGGER book_attendance_batches_ins AFTER INSERT ON attendance_batches BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'attendance_batches\', NEW.id, NEW.version);END',
+    'book_attendance_batches_ins',
+  );
+  late final Trigger bookAttendanceBatchesUpd = Trigger(
+    'CREATE TRIGGER book_attendance_batches_upd AFTER UPDATE ON attendance_batches BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'attendance_batches\', NEW.id, NEW.version);END',
+    'book_attendance_batches_upd',
+  );
+  late final Trigger bookAttendanceBatchesDel = Trigger(
+    'CREATE TRIGGER book_attendance_batches_del AFTER DELETE ON attendance_batches BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'attendance_batches\', OLD.id, OLD.version + 1);END',
+    'book_attendance_batches_del',
+  );
+  late final Trigger bookAttendanceEntriesIns = Trigger(
+    'CREATE TRIGGER book_attendance_entries_ins AFTER INSERT ON attendance_entries BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'attendance_entries\', NEW.id, NEW.version);END',
+    'book_attendance_entries_ins',
+  );
+  late final Trigger bookAttendanceEntriesUpd = Trigger(
+    'CREATE TRIGGER book_attendance_entries_upd AFTER UPDATE ON attendance_entries BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'attendance_entries\', NEW.id, NEW.version);END',
+    'book_attendance_entries_upd',
+  );
+  late final Trigger bookAttendanceEntriesDel = Trigger(
+    'CREATE TRIGGER book_attendance_entries_del AFTER DELETE ON attendance_entries BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'attendance_entries\', OLD.id, OLD.version + 1);END',
+    'book_attendance_entries_del',
+  );
+  late final Trigger bookPayrollRunsIns = Trigger(
+    'CREATE TRIGGER book_payroll_runs_ins AFTER INSERT ON payroll_runs BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'payroll_runs\', NEW.id, NEW.version);END',
+    'book_payroll_runs_ins',
+  );
+  late final Trigger bookPayrollRunsUpd = Trigger(
+    'CREATE TRIGGER book_payroll_runs_upd AFTER UPDATE ON payroll_runs BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'payroll_runs\', NEW.id, NEW.version);END',
+    'book_payroll_runs_upd',
+  );
+  late final Trigger bookPayrollRunsDel = Trigger(
+    'CREATE TRIGGER book_payroll_runs_del AFTER DELETE ON payroll_runs BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'payroll_runs\', OLD.id, OLD.version + 1);END',
+    'book_payroll_runs_del',
+  );
+  late final Trigger bookPayrollLinesIns = Trigger(
+    'CREATE TRIGGER book_payroll_lines_ins AFTER INSERT ON payroll_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'payroll_lines\', NEW.id, NEW.version);END',
+    'book_payroll_lines_ins',
+  );
+  late final Trigger bookPayrollLinesUpd = Trigger(
+    'CREATE TRIGGER book_payroll_lines_upd AFTER UPDATE ON payroll_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'payroll_lines\', NEW.id, NEW.version);END',
+    'book_payroll_lines_upd',
+  );
+  late final Trigger bookPayrollLinesDel = Trigger(
+    'CREATE TRIGGER book_payroll_lines_del AFTER DELETE ON payroll_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'payroll_lines\', OLD.id, OLD.version + 1);END',
+    'book_payroll_lines_del',
+  );
+  late final Trigger bookPayrollItemsIns = Trigger(
+    'CREATE TRIGGER book_payroll_items_ins AFTER INSERT ON payroll_items BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'payroll_items\', NEW.id, NEW.version);END',
+    'book_payroll_items_ins',
+  );
+  late final Trigger bookPayrollItemsUpd = Trigger(
+    'CREATE TRIGGER book_payroll_items_upd AFTER UPDATE ON payroll_items BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'payroll_items\', NEW.id, NEW.version);END',
+    'book_payroll_items_upd',
+  );
+  late final Trigger bookPayrollItemsDel = Trigger(
+    'CREATE TRIGGER book_payroll_items_del AFTER DELETE ON payroll_items BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'payroll_items\', OLD.id, OLD.version + 1);END',
+    'book_payroll_items_del',
+  );
+  late final Trigger bookNumberFloorsIns = Trigger(
+    'CREATE TRIGGER book_number_floors_ins AFTER INSERT ON number_floors BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'number_floors\', NEW.id, NEW.version);END',
+    'book_number_floors_ins',
+  );
+  late final Trigger bookNumberFloorsUpd = Trigger(
+    'CREATE TRIGGER book_number_floors_upd AFTER UPDATE ON number_floors BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'number_floors\', NEW.id, NEW.version);END',
+    'book_number_floors_upd',
+  );
+  late final Trigger bookNumberFloorsDel = Trigger(
+    'CREATE TRIGGER book_number_floors_del AFTER DELETE ON number_floors BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'number_floors\', OLD.id, OLD.version + 1);END',
+    'book_number_floors_del',
+  );
   late final $OutboxTable outbox = $OutboxTable(this);
   late final Index idxCashDate = Index(
     'idx_cash_date',
@@ -31249,10 +31965,101 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
     numberFloorNoUpdate,
     numberFloorNoDelete,
     tenantProfiles,
+    bookChanges,
+    bookTenantProfilesIns,
+    bookTenantProfilesUpd,
+    bookTenantProfilesDel,
+    bookClientsIns,
+    bookClientsUpd,
+    bookClientsDel,
+    bookSitesIns,
+    bookSitesUpd,
+    bookSitesDel,
+    bookWorkersIns,
+    bookWorkersUpd,
+    bookWorkersDel,
     payContracts,
+    bookPayContractsIns,
+    bookPayContractsUpd,
+    bookPayContractsDel,
     billingContracts,
+    bookBillingContractsIns,
+    bookBillingContractsUpd,
+    bookBillingContractsDel,
+    bookOpeningBalancesIns,
+    bookOpeningBalancesUpd,
+    bookOpeningBalancesDel,
+    bookWorkerGroupsIns,
+    bookWorkerGroupsUpd,
+    bookWorkerGroupsDel,
     workerGroupMembers,
+    bookWorkerGroupMembersIns,
+    bookWorkerGroupMembersUpd,
+    bookWorkerGroupMembersDel,
+    bookRoomsIns,
+    bookRoomsUpd,
+    bookRoomsDel,
+    bookCashEntriesIns,
+    bookCashEntriesUpd,
+    bookCashEntriesDel,
+    bookSalaryAllocationsIns,
+    bookSalaryAllocationsUpd,
+    bookSalaryAllocationsDel,
+    bookPeriodLocksIns,
+    bookPeriodLocksUpd,
+    bookPeriodLocksDel,
+    bookDayOffsIns,
+    bookDayOffsUpd,
+    bookDayOffsDel,
+    bookDocumentAssetsIns,
+    bookDocumentAssetsUpd,
+    bookDocumentAssetsDel,
     documentTemplates,
+    bookDocumentTemplatesIns,
+    bookDocumentTemplatesUpd,
+    bookDocumentTemplatesDel,
+    bookIssuedDocumentsIns,
+    bookIssuedDocumentsUpd,
+    bookIssuedDocumentsDel,
+    bookTimesheetsIns,
+    bookTimesheetsUpd,
+    bookTimesheetsDel,
+    bookTimesheetRevisionsIns,
+    bookTimesheetRevisionsUpd,
+    bookTimesheetRevisionsDel,
+    bookTimesheetLinesIns,
+    bookTimesheetLinesUpd,
+    bookTimesheetLinesDel,
+    bookBilledAllocationsIns,
+    bookBilledAllocationsUpd,
+    bookBilledAllocationsDel,
+    bookInvoicesIns,
+    bookInvoicesUpd,
+    bookInvoicesDel,
+    bookInvoiceLinesIns,
+    bookInvoiceLinesUpd,
+    bookInvoiceLinesDel,
+    bookInvoiceAllocationsIns,
+    bookInvoiceAllocationsUpd,
+    bookInvoiceAllocationsDel,
+    bookAttendanceBatchesIns,
+    bookAttendanceBatchesUpd,
+    bookAttendanceBatchesDel,
+    bookAttendanceEntriesIns,
+    bookAttendanceEntriesUpd,
+    bookAttendanceEntriesDel,
+    bookPayrollRunsIns,
+    bookPayrollRunsUpd,
+    bookPayrollRunsDel,
+    bookPayrollLinesIns,
+    bookPayrollLinesUpd,
+    bookPayrollLinesDel,
+    bookPayrollItemsIns,
+    bookPayrollItemsUpd,
+    bookPayrollItemsDel,
+    bookNumberFloorsIns,
+    bookNumberFloorsUpd,
+    bookNumberFloorsDel,
     outbox,
     idxCashDate,
     idxCashWorker,
@@ -31667,6 +32474,636 @@ abstract class _$TenantDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'tenant_profiles',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'tenant_profiles',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'tenant_profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'clients',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'clients',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'clients',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'sites',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'sites',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'sites',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'workers',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'workers',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'workers',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'pay_contracts',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'pay_contracts',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'pay_contracts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'billing_contracts',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'billing_contracts',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'billing_contracts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'opening_balances',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'opening_balances',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'opening_balances',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'worker_groups',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'worker_groups',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'worker_groups',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'worker_group_members',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'worker_group_members',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'worker_group_members',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'rooms',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'rooms',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'rooms',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'cash_entries',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'cash_entries',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'cash_entries',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'salary_allocations',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'salary_allocations',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'salary_allocations',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'period_locks',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'period_locks',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'period_locks',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'day_offs',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'day_offs',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'day_offs',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'document_assets',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'document_assets',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'document_assets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'document_templates',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'document_templates',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'document_templates',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'issued_documents',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'issued_documents',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'issued_documents',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheets',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheets',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_revisions',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_revisions',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_revisions',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_lines',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_lines',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'timesheet_lines',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'billed_allocations',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'billed_allocations',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'billed_allocations',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'invoices',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'invoices',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'invoices',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'invoice_lines',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'invoice_lines',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'invoice_lines',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'invoice_allocations',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'invoice_allocations',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'invoice_allocations',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'attendance_batches',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'attendance_batches',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'attendance_batches',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'attendance_entries',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'attendance_entries',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'attendance_entries',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_runs',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_runs',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_runs',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_lines',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_lines',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_lines',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_items',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_items',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'payroll_items',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'number_floors',
+        limitUpdateKind: UpdateKind.insert,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'number_floors',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'number_floors',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('book_changes', kind: UpdateKind.insert)],
     ),
   ]);
 }
@@ -52942,6 +54379,209 @@ typedef $$TenantProfilesTableProcessedTableManager =
       TenantProfile,
       PrefetchHooks Function()
     >;
+typedef $$BookChangesTableCreateCompanionBuilder =
+    BookChangesCompanion Function({
+      Value<int> seq,
+      required String tenantId,
+      required String entity,
+      required String recordId,
+      required int version,
+    });
+typedef $$BookChangesTableUpdateCompanionBuilder =
+    BookChangesCompanion Function({
+      Value<int> seq,
+      Value<String> tenantId,
+      Value<String> entity,
+      Value<String> recordId,
+      Value<int> version,
+    });
+
+class $$BookChangesTableFilterComposer
+    extends Composer<_$TenantDatabase, $BookChangesTable> {
+  $$BookChangesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get seq => $composableBuilder(
+    column: $table.seq,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get recordId => $composableBuilder(
+    column: $table.recordId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$BookChangesTableOrderingComposer
+    extends Composer<_$TenantDatabase, $BookChangesTable> {
+  $$BookChangesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get seq => $composableBuilder(
+    column: $table.seq,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tenantId => $composableBuilder(
+    column: $table.tenantId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get recordId => $composableBuilder(
+    column: $table.recordId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get version => $composableBuilder(
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$BookChangesTableAnnotationComposer
+    extends Composer<_$TenantDatabase, $BookChangesTable> {
+  $$BookChangesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get seq =>
+      $composableBuilder(column: $table.seq, builder: (column) => column);
+
+  GeneratedColumn<String> get tenantId =>
+      $composableBuilder(column: $table.tenantId, builder: (column) => column);
+
+  GeneratedColumn<String> get entity =>
+      $composableBuilder(column: $table.entity, builder: (column) => column);
+
+  GeneratedColumn<String> get recordId =>
+      $composableBuilder(column: $table.recordId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+}
+
+class $$BookChangesTableTableManager
+    extends
+        RootTableManager<
+          _$TenantDatabase,
+          $BookChangesTable,
+          BookChange,
+          $$BookChangesTableFilterComposer,
+          $$BookChangesTableOrderingComposer,
+          $$BookChangesTableAnnotationComposer,
+          $$BookChangesTableCreateCompanionBuilder,
+          $$BookChangesTableUpdateCompanionBuilder,
+          (
+            BookChange,
+            BaseReferences<_$TenantDatabase, $BookChangesTable, BookChange>,
+          ),
+          BookChange,
+          PrefetchHooks Function()
+        > {
+  $$BookChangesTableTableManager(_$TenantDatabase db, $BookChangesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BookChangesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BookChangesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BookChangesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> seq = const Value.absent(),
+                Value<String> tenantId = const Value.absent(),
+                Value<String> entity = const Value.absent(),
+                Value<String> recordId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+              }) => BookChangesCompanion(
+                seq: seq,
+                tenantId: tenantId,
+                entity: entity,
+                recordId: recordId,
+                version: version,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> seq = const Value.absent(),
+                required String tenantId,
+                required String entity,
+                required String recordId,
+                required int version,
+              }) => BookChangesCompanion.insert(
+                seq: seq,
+                tenantId: tenantId,
+                entity: entity,
+                recordId: recordId,
+                version: version,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$BookChangesTable, BookChange>(table),
+                  BaseReferences<
+                    _$TenantDatabase,
+                    $BookChangesTable,
+                    BookChange
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$BookChangesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$TenantDatabase,
+      $BookChangesTable,
+      BookChange,
+      $$BookChangesTableFilterComposer,
+      $$BookChangesTableOrderingComposer,
+      $$BookChangesTableAnnotationComposer,
+      $$BookChangesTableCreateCompanionBuilder,
+      $$BookChangesTableUpdateCompanionBuilder,
+      (
+        BookChange,
+        BaseReferences<_$TenantDatabase, $BookChangesTable, BookChange>,
+      ),
+      BookChange,
+      PrefetchHooks Function()
+    >;
 typedef $$PayContractsTableCreateCompanionBuilder =
     PayContractsCompanion Function({
       required String id,
@@ -56265,6 +57905,8 @@ class $TenantDatabaseManager {
       $$NumberFloorsTableTableManager(_db, _db.numberFloors);
   $$TenantProfilesTableTableManager get tenantProfiles =>
       $$TenantProfilesTableTableManager(_db, _db.tenantProfiles);
+  $$BookChangesTableTableManager get bookChanges =>
+      $$BookChangesTableTableManager(_db, _db.bookChanges);
   $$PayContractsTableTableManager get payContracts =>
       $$PayContractsTableTableManager(_db, _db.payContracts);
   $$BillingContractsTableTableManager get billingContracts =>

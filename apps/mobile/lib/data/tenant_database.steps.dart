@@ -20901,6 +20901,1845 @@ i1.GeneratedColumn<String> _column_224(String aliasedName) =>
       type: i1.DriftSqlType.string,
       $customConstraints: 'NOT NULL',
     );
+
+final class Schema20 extends i0.VersionedSchema {
+  Schema20({required super.database}) : super(version: 20);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    auditEvents,
+    auditNoUpdate,
+    auditNoDelete,
+    rooms,
+    workers,
+    clients,
+    sites,
+    cashEntries,
+    cashNoUpdate,
+    cashNoDelete,
+    salaryAllocations,
+    allocationNoUpdate,
+    allocationNoDelete,
+    cashVisaNeedsWorker,
+    payrollRuns,
+    payrollRunNoUpdate,
+    payrollRunNoDelete,
+    payrollLines,
+    payrollLineNoEdit,
+    payrollLineStaysReversed,
+    payrollLineNoDelete,
+    payrollItems,
+    postedItemNoEdit,
+    postedItemNoDelete,
+    periodLocks,
+    lockNoDelete,
+    lockNoEdit,
+    lockStaysReopened,
+    oneLivePeriodLock,
+    closedCashNoInsert,
+    issuedDocuments,
+    issuedNoEdit,
+    issuedNoDelete,
+    documentAssets,
+    assetNoEdit,
+    assetNoDelete,
+    dayOffs,
+    closedDayOffNoInsert,
+    workerGroups,
+    attendanceBatches,
+    attendanceEntries,
+    closedEntryNoInsert,
+    closedEntryNoEdit,
+    closedEntryNoDelete,
+    closedItemNoInsert,
+    closedItemNoEdit,
+    closedItemNoDelete,
+    closedLineNoInsert,
+    closedLineNoReverse,
+    openingBalances,
+    closedOpeningNoInsert,
+    closedOpeningNoEdit,
+    oneLivePayrollLine,
+    approvedEntryNoEdit,
+    linkedEntryKeepsState,
+    entryNoDelete,
+    timesheets,
+    timesheetKeepsNumber,
+    timesheetNoDelete,
+    timesheetRevisions,
+    revisionNoRedraft,
+    revisionKeepsAdjustments,
+    revisionAcceptedLocked,
+    revisionNoDelete,
+    timesheetLines,
+    timesheetLineNoEdit,
+    timesheetLineStaysOff,
+    timesheetLineNoDelete,
+    oneLiveTimesheetLine,
+    billedAllocations,
+    billingNoEdit,
+    billingStaysReleased,
+    billingNoDelete,
+    oneLiveBilling,
+    invoices,
+    invoiceKeepsIssue,
+    invoiceStatusForward,
+    invoiceNoDelete,
+    invoiceLines,
+    invoiceLineNoEdit,
+    invoiceLineNoDelete,
+    invoiceAllocations,
+    invoiceAllocationNoUpdate,
+    invoiceAllocationNoDelete,
+    numberFloors,
+    numberFloorNoUpdate,
+    numberFloorNoDelete,
+    tenantProfiles,
+    bookChanges,
+    bookTenantProfilesIns,
+    bookTenantProfilesUpd,
+    bookTenantProfilesDel,
+    bookClientsIns,
+    bookClientsUpd,
+    bookClientsDel,
+    bookSitesIns,
+    bookSitesUpd,
+    bookSitesDel,
+    bookWorkersIns,
+    bookWorkersUpd,
+    bookWorkersDel,
+    payContracts,
+    bookPayContractsIns,
+    bookPayContractsUpd,
+    bookPayContractsDel,
+    billingContracts,
+    bookBillingContractsIns,
+    bookBillingContractsUpd,
+    bookBillingContractsDel,
+    bookOpeningBalancesIns,
+    bookOpeningBalancesUpd,
+    bookOpeningBalancesDel,
+    bookWorkerGroupsIns,
+    bookWorkerGroupsUpd,
+    bookWorkerGroupsDel,
+    workerGroupMembers,
+    bookWorkerGroupMembersIns,
+    bookWorkerGroupMembersUpd,
+    bookWorkerGroupMembersDel,
+    bookRoomsIns,
+    bookRoomsUpd,
+    bookRoomsDel,
+    bookCashEntriesIns,
+    bookCashEntriesUpd,
+    bookCashEntriesDel,
+    bookSalaryAllocationsIns,
+    bookSalaryAllocationsUpd,
+    bookSalaryAllocationsDel,
+    bookPeriodLocksIns,
+    bookPeriodLocksUpd,
+    bookPeriodLocksDel,
+    bookDayOffsIns,
+    bookDayOffsUpd,
+    bookDayOffsDel,
+    bookDocumentAssetsIns,
+    bookDocumentAssetsUpd,
+    bookDocumentAssetsDel,
+    documentTemplates,
+    bookDocumentTemplatesIns,
+    bookDocumentTemplatesUpd,
+    bookDocumentTemplatesDel,
+    bookIssuedDocumentsIns,
+    bookIssuedDocumentsUpd,
+    bookIssuedDocumentsDel,
+    bookTimesheetsIns,
+    bookTimesheetsUpd,
+    bookTimesheetsDel,
+    bookTimesheetRevisionsIns,
+    bookTimesheetRevisionsUpd,
+    bookTimesheetRevisionsDel,
+    bookTimesheetLinesIns,
+    bookTimesheetLinesUpd,
+    bookTimesheetLinesDel,
+    bookBilledAllocationsIns,
+    bookBilledAllocationsUpd,
+    bookBilledAllocationsDel,
+    bookInvoicesIns,
+    bookInvoicesUpd,
+    bookInvoicesDel,
+    bookInvoiceLinesIns,
+    bookInvoiceLinesUpd,
+    bookInvoiceLinesDel,
+    bookInvoiceAllocationsIns,
+    bookInvoiceAllocationsUpd,
+    bookInvoiceAllocationsDel,
+    bookAttendanceBatchesIns,
+    bookAttendanceBatchesUpd,
+    bookAttendanceBatchesDel,
+    bookAttendanceEntriesIns,
+    bookAttendanceEntriesUpd,
+    bookAttendanceEntriesDel,
+    bookPayrollRunsIns,
+    bookPayrollRunsUpd,
+    bookPayrollRunsDel,
+    bookPayrollLinesIns,
+    bookPayrollLinesUpd,
+    bookPayrollLinesDel,
+    bookPayrollItemsIns,
+    bookPayrollItemsUpd,
+    bookPayrollItemsDel,
+    bookNumberFloorsIns,
+    bookNumberFloorsUpd,
+    bookNumberFloorsDel,
+    outbox,
+    idxCashDate,
+    idxCashWorker,
+    idxCashRoom,
+    idxIssuedSubject,
+    idxTimesheetLinesRevision,
+    idxTimesheetLinesTimesheet,
+    idxInvoiceLinesInvoice,
+    idxInvoiceAllocationsClient,
+    idxEntriesWorkerDate,
+    idxEntriesDate,
+    idxPayrollLinesWorker,
+    idxPayrollItemsPeriod,
+  ];
+  late final Shape39 auditEvents = Shape39(
+    source: i0.VersionedTable(
+      entityName: 'audit_events',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_215,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger auditNoUpdate = i1.Trigger(
+    'CREATE TRIGGER audit_no_update BEFORE UPDATE ON audit_events BEGIN SELECT RAISE (ABORT, \'audit events are append-only\');END',
+    'audit_no_update',
+  );
+  final i1.Trigger auditNoDelete = i1.Trigger(
+    'CREATE TRIGGER audit_no_delete BEFORE DELETE ON audit_events BEGIN SELECT RAISE (ABORT, \'audit events are append-only\');END',
+    'audit_no_delete',
+  );
+  late final Shape13 rooms = Shape13(
+    source: i0.VersionedTable(
+      entityName: 'rooms',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_14,
+        _column_24,
+        _column_25,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape21 workers = Shape21(
+    source: i0.VersionedTable(
+      entityName: 'workers',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'UNIQUE(tenant_id, code)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_44,
+        _column_14,
+        _column_17,
+        _column_45,
+        _column_46,
+        _column_47,
+        _column_48,
+        _column_104,
+        _column_130,
+        _column_25,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape1 clients = Shape1(
+    source: i0.VersionedTable(
+      entityName: 'clients',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+        _column_19,
+        _column_20,
+        _column_21,
+        _column_22,
+        _column_23,
+        _column_24,
+        _column_25,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape2 sites = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'sites',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_26,
+        _column_14,
+        _column_27,
+        _column_28,
+        _column_29,
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_25,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape41 cashEntries = Shape41(
+    source: i0.VersionedTable(
+      entityName: 'cash_entries',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'CHECK(kind NOT IN (\'advanceGiven\', \'salaryPaid\', \'advanceReturned\') OR worker_id IS NOT NULL)',
+        'CHECK(kind NOT IN (\'roomRentPaid\', \'roomRentReceived\') OR room_id IS NOT NULL)',
+        'CHECK(kind <> \'clientReceipt\' OR client_id IS NOT NULL)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_105,
+        _column_96,
+        _column_106,
+        _column_81,
+        _column_95,
+        _column_104,
+        _column_34,
+        _column_35,
+        _column_107,
+        _column_108,
+        _column_24,
+        _column_109,
+        _column_133,
+        _column_134,
+        _column_217,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger cashNoUpdate = i1.Trigger(
+    'CREATE TRIGGER cash_no_update BEFORE UPDATE ON cash_entries BEGIN SELECT RAISE (ABORT, \'cash entries are append-only\');END',
+    'cash_no_update',
+  );
+  final i1.Trigger cashNoDelete = i1.Trigger(
+    'CREATE TRIGGER cash_no_delete BEFORE DELETE ON cash_entries BEGIN SELECT RAISE (ABORT, \'cash entries are append-only\');END',
+    'cash_no_delete',
+  );
+  late final Shape25 salaryAllocations = Shape25(
+    source: i0.VersionedTable(
+      entityName: 'salary_allocations',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'UNIQUE(payment_id, month)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_135,
+        _column_136,
+        _column_106,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger allocationNoUpdate = i1.Trigger(
+    'CREATE TRIGGER allocation_no_update BEFORE UPDATE ON salary_allocations BEGIN SELECT RAISE (ABORT, \'salary allocations are append-only\');END',
+    'allocation_no_update',
+  );
+  final i1.Trigger allocationNoDelete = i1.Trigger(
+    'CREATE TRIGGER allocation_no_delete BEFORE DELETE ON salary_allocations BEGIN SELECT RAISE (ABORT, \'salary allocations are append-only\');END',
+    'allocation_no_delete',
+  );
+  final i1.Trigger cashVisaNeedsWorker = i1.Trigger(
+    'CREATE TRIGGER cash_visa_needs_worker BEFORE INSERT ON cash_entries WHEN NEW.kind IN (\'visaPaid\', \'visaReturned\') AND NEW.worker_id IS NULL BEGIN SELECT RAISE (ABORT, \'a visa line needs a worker\');END',
+    'cash_visa_needs_worker',
+  );
+  late final Shape16 payrollRuns = Shape16(
+    source: i0.VersionedTable(
+      entityName: 'payroll_runs',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_110,
+        _column_111,
+        _column_112,
+        _column_81,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger payrollRunNoUpdate = i1.Trigger(
+    'CREATE TRIGGER payroll_run_no_update BEFORE UPDATE ON payroll_runs BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
+    'payroll_run_no_update',
+  );
+  final i1.Trigger payrollRunNoDelete = i1.Trigger(
+    'CREATE TRIGGER payroll_run_no_delete BEFORE DELETE ON payroll_runs BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
+    'payroll_run_no_delete',
+  );
+  late final Shape42 payrollLines = Shape42(
+    source: i0.VersionedTable(
+      entityName: 'payroll_lines',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_113,
+        _column_50,
+        _column_110,
+        _column_114,
+        _column_115,
+        _column_116,
+        _column_117,
+        _column_118,
+        _column_119,
+        _column_120,
+        _column_131,
+        _column_218,
+        _column_219,
+        _column_121,
+        _column_122,
+        _column_123,
+        _column_124,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger payrollLineNoEdit = i1.Trigger(
+    'CREATE TRIGGER payroll_line_no_edit BEFORE UPDATE OF run_id, worker_id, period_from, opening_fils, earned_fils, salary_fils, adjustment_fils, allowances_fils, deductions_fils, recovery_fils, visa_recovery_fils, absence_fils, absent_days, net_fils, payable_fils, paid_before_fils ON payroll_lines BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
+    'payroll_line_no_edit',
+  );
+  final i1.Trigger payrollLineStaysReversed = i1.Trigger(
+    'CREATE TRIGGER payroll_line_stays_reversed BEFORE UPDATE OF reversed ON payroll_lines WHEN OLD.reversed BEGIN SELECT RAISE (ABORT, \'a reversed payroll line stays reversed\');END',
+    'payroll_line_stays_reversed',
+  );
+  final i1.Trigger payrollLineNoDelete = i1.Trigger(
+    'CREATE TRIGGER payroll_line_no_delete BEFORE DELETE ON payroll_lines BEGIN SELECT RAISE (ABORT, \'posted payroll is immutable\');END',
+    'payroll_line_no_delete',
+  );
+  late final Shape18 payrollItems = Shape18(
+    source: i0.VersionedTable(
+      entityName: 'payroll_items',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'CHECK(kind NOT IN (\'deduction\', \'roomCharge\') OR authorized_by IS NOT NULL)',
+        'CHECK(amount_fils > 0 OR kind = \'advanceRecovery\')',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_50,
+        _column_110,
+        _column_96,
+        _column_97,
+        _column_125,
+        _column_126,
+        _column_24,
+        _column_104,
+        _column_127,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger postedItemNoEdit = i1.Trigger(
+    'CREATE TRIGGER posted_item_no_edit BEFORE UPDATE OF worker_id, period_from, kind, amount_fils, reason, authorized_by, room_id ON payroll_items WHEN OLD.line_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'a posted payroll item is immutable\');END',
+    'posted_item_no_edit',
+  );
+  final i1.Trigger postedItemNoDelete = i1.Trigger(
+    'CREATE TRIGGER posted_item_no_delete BEFORE DELETE ON payroll_items WHEN OLD.line_id IS NOT NULL BEGIN SELECT RAISE (ABORT, \'a posted payroll item is immutable\');END',
+    'posted_item_no_delete',
+  );
+  late final Shape27 periodLocks = Shape27(
+    source: i0.VersionedTable(
+      entityName: 'period_locks',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_136,
+        _column_138,
+        _column_139,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger lockNoDelete = i1.Trigger(
+    'CREATE TRIGGER lock_no_delete BEFORE DELETE ON period_locks BEGIN SELECT RAISE (ABORT, \'a period lock stays on record\');END',
+    'lock_no_delete',
+  );
+  final i1.Trigger lockNoEdit = i1.Trigger(
+    'CREATE TRIGGER lock_no_edit BEFORE UPDATE OF month, last_day ON period_locks BEGIN SELECT RAISE (ABORT, \'a period lock stays on record\');END',
+    'lock_no_edit',
+  );
+  final i1.Trigger lockStaysReopened = i1.Trigger(
+    'CREATE TRIGGER lock_stays_reopened BEFORE UPDATE OF reopened ON period_locks WHEN OLD.reopened BEGIN SELECT RAISE (ABORT, \'a reopened lock stays reopened\');END',
+    'lock_stays_reopened',
+  );
+  final i1.Index oneLivePeriodLock = i1.Index(
+    'one_live_period_lock',
+    'CREATE UNIQUE INDEX one_live_period_lock ON period_locks (month) WHERE NOT reopened',
+  );
+  final i1.Trigger closedCashNoInsert = i1.Trigger(
+    'CREATE TRIGGER closed_cash_no_insert BEFORE INSERT ON cash_entries WHEN NEW.entry_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_cash_no_insert',
+  );
+  late final Shape29 issuedDocuments = Shape29(
+    source: i0.VersionedTable(
+      entityName: 'issued_documents',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'UNIQUE(tenant_id, kind, year, seq, revision)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_96,
+        _column_140,
+        _column_141,
+        _column_142,
+        _column_143,
+        _column_144,
+        _column_145,
+        _column_146,
+        _column_147,
+        _column_148,
+        _column_149,
+        _column_150,
+        _column_151,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger issuedNoEdit = i1.Trigger(
+    'CREATE TRIGGER issued_no_edit BEFORE UPDATE ON issued_documents BEGIN SELECT RAISE (ABORT, \'an issued document never changes\');END',
+    'issued_no_edit',
+  );
+  final i1.Trigger issuedNoDelete = i1.Trigger(
+    'CREATE TRIGGER issued_no_delete BEFORE DELETE ON issued_documents BEGIN SELECT RAISE (ABORT, \'an issued document stays on record\');END',
+    'issued_no_delete',
+  );
+  late final Shape30 documentAssets = Shape30(
+    source: i0.VersionedTable(
+      entityName: 'document_assets',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_96,
+        _column_152,
+        _column_153,
+        _column_154,
+        _column_155,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger assetNoEdit = i1.Trigger(
+    'CREATE TRIGGER asset_no_edit BEFORE UPDATE ON document_assets BEGIN SELECT RAISE (ABORT, \'a stored image never changes\');END',
+    'asset_no_edit',
+  );
+  final i1.Trigger assetNoDelete = i1.Trigger(
+    'CREATE TRIGGER asset_no_delete BEFORE DELETE ON document_assets BEGIN SELECT RAISE (ABORT, \'a stored image stays on record\');END',
+    'asset_no_delete',
+  );
+  late final Shape28 dayOffs = Shape28(
+    source: i0.VersionedTable(
+      entityName: 'day_offs',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'UNIQUE(tenant_id, worker_id, work_date)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_50,
+        _column_41,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger closedDayOffNoInsert = i1.Trigger(
+    'CREATE TRIGGER closed_day_off_no_insert BEFORE INSERT ON day_offs WHEN NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_day_off_no_insert',
+  );
+  late final Shape3 workerGroups = Shape3(
+    source: i0.VersionedTable(
+      entityName: 'worker_groups',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_14,
+        _column_34,
+        _column_35,
+        _column_36,
+        _column_37,
+        _column_38,
+        _column_39,
+        _column_40,
+        _column_25,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape4 attendanceBatches = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'attendance_batches',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_41,
+        _column_26,
+        _column_42,
+        _column_43,
+        _column_24,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape40 attendanceEntries = Shape40(
+    source: i0.VersionedTable(
+      entityName: 'attendance_entries',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'CHECK(break_minutes <= clock_minutes)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_49,
+        _column_50,
+        _column_26,
+        _column_42,
+        _column_43,
+        _column_41,
+        _column_51,
+        _column_52,
+        _column_53,
+        _column_54,
+        _column_55,
+        _column_56,
+        _column_57,
+        _column_58,
+        _column_59,
+        _column_60,
+        _column_61,
+        _column_62,
+        _column_63,
+        _column_64,
+        _column_65,
+        _column_66,
+        _column_67,
+        _column_68,
+        _column_69,
+        _column_70,
+        _column_71,
+        _column_72,
+        _column_73,
+        _column_74,
+        _column_75,
+        _column_76,
+        _column_216,
+        _column_128,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger closedEntryNoInsert = i1.Trigger(
+    'CREATE TRIGGER closed_entry_no_insert BEFORE INSERT ON attendance_entries WHEN NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_entry_no_insert',
+  );
+  final i1.Trigger closedEntryNoEdit = i1.Trigger(
+    'CREATE TRIGGER closed_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN(OLD.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened))AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes OR NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils OR NEW.worker_id <> OLD.worker_id OR NEW.client_id <> OLD.client_id OR NEW.site_id <> OLD.site_id OR NEW.work_date <> OLD.work_date OR NEW.superseded <> OLD.superseded OR NEW.attendance_status <> OLD.attendance_status)BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_entry_no_edit',
+  );
+  final i1.Trigger closedEntryNoDelete = i1.Trigger(
+    'CREATE TRIGGER closed_entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.work_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_entry_no_delete',
+  );
+  final i1.Trigger closedItemNoInsert = i1.Trigger(
+    'CREATE TRIGGER closed_item_no_insert BEFORE INSERT ON payroll_items WHEN NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_item_no_insert',
+  );
+  final i1.Trigger closedItemNoEdit = i1.Trigger(
+    'CREATE TRIGGER closed_item_no_edit BEFORE UPDATE ON payroll_items WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_item_no_edit',
+  );
+  final i1.Trigger closedItemNoDelete = i1.Trigger(
+    'CREATE TRIGGER closed_item_no_delete BEFORE DELETE ON payroll_items WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_item_no_delete',
+  );
+  final i1.Trigger closedLineNoInsert = i1.Trigger(
+    'CREATE TRIGGER closed_line_no_insert BEFORE INSERT ON payroll_lines WHEN NEW.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_line_no_insert',
+  );
+  final i1.Trigger closedLineNoReverse = i1.Trigger(
+    'CREATE TRIGGER closed_line_no_reverse BEFORE UPDATE OF reversed ON payroll_lines WHEN OLD.period_from <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_line_no_reverse',
+  );
+  late final Shape10 openingBalances = Shape10(
+    source: i0.VersionedTable(
+      entityName: 'opening_balances',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'UNIQUE(kind, worker_id)',
+        'UNIQUE(kind, client_id)',
+        'CHECK((worker_id IS NULL)<>(client_id IS NULL))',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_96,
+        _column_95,
+        _column_34,
+        _column_97,
+        _column_98,
+        _column_99,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger closedOpeningNoInsert = i1.Trigger(
+    'CREATE TRIGGER closed_opening_no_insert BEFORE INSERT ON opening_balances WHEN NEW.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_opening_no_insert',
+  );
+  final i1.Trigger closedOpeningNoEdit = i1.Trigger(
+    'CREATE TRIGGER closed_opening_no_edit BEFORE UPDATE ON opening_balances WHEN OLD.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) OR NEW.as_of_date <= (SELECT MAX(last_day) FROM period_locks WHERE NOT reopened) BEGIN SELECT RAISE (ABORT, \'period is closed\');END',
+    'closed_opening_no_edit',
+  );
+  final i1.Index oneLivePayrollLine = i1.Index(
+    'one_live_payroll_line',
+    'CREATE UNIQUE INDEX one_live_payroll_line ON payroll_lines (worker_id, period_from) WHERE NOT reversed',
+  );
+  final i1.Trigger approvedEntryNoEdit = i1.Trigger(
+    'CREATE TRIGGER approved_entry_no_edit BEFORE UPDATE ON attendance_entries WHEN OLD.state IN (\'approved\', \'linked\') AND(NEW.clock_minutes <> OLD.clock_minutes OR NEW.break_minutes <> OLD.break_minutes OR(OLD.client_rate_fils IS NOT NULL AND(NEW.client_billable_minutes <> OLD.client_billable_minutes OR NEW.client_rate_fils IS NOT OLD.client_rate_fils OR NEW.client_amount_fils IS NOT OLD.client_amount_fils))OR NEW.worker_payable_minutes <> OLD.worker_payable_minutes OR NEW.worker_rate_fils IS NOT OLD.worker_rate_fils OR NEW.worker_amount_fils IS NOT OLD.worker_amount_fils OR NEW.worker_id <> OLD.worker_id OR NEW.work_date <> OLD.work_date)BEGIN SELECT RAISE (ABORT, \'approved attendance is immutable\');END',
+    'approved_entry_no_edit',
+  );
+  final i1.Trigger linkedEntryKeepsState = i1.Trigger(
+    'CREATE TRIGGER linked_entry_keeps_state BEFORE UPDATE ON attendance_entries WHEN OLD.state = \'linked\' AND NEW.state <> \'linked\' BEGIN SELECT RAISE (ABORT, \'linked attendance is immutable\');END',
+    'linked_entry_keeps_state',
+  );
+  final i1.Trigger entryNoDelete = i1.Trigger(
+    'CREATE TRIGGER entry_no_delete BEFORE DELETE ON attendance_entries WHEN OLD.state NOT IN (\'draft\', \'submitted\') BEGIN SELECT RAISE (ABORT, \'approved attendance cannot be deleted\');END',
+    'entry_no_delete',
+  );
+  late final Shape32 timesheets = Shape32(
+    source: i0.VersionedTable(
+      entityName: 'timesheets',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'UNIQUE(tenant_id, year, seq)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_26,
+        _column_35,
+        _column_167,
+        _column_168,
+        _column_169,
+        _column_170,
+        _column_171,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger timesheetKeepsNumber = i1.Trigger(
+    'CREATE TRIGGER timesheet_keeps_number BEFORE UPDATE OF client_id, site_id, from_date, to_date, year, seq, number ON timesheets WHEN OLD.number IS NOT NULL BEGIN SELECT RAISE (ABORT, \'an approved timesheet keeps its number and dates\');END',
+    'timesheet_keeps_number',
+  );
+  final i1.Trigger timesheetNoDelete = i1.Trigger(
+    'CREATE TRIGGER timesheet_no_delete BEFORE DELETE ON timesheets WHEN OLD.number IS NOT NULL BEGIN SELECT RAISE (ABORT, \'an approved timesheet stays on record\');END',
+    'timesheet_no_delete',
+  );
+  late final Shape33 timesheetRevisions = Shape33(
+    source: i0.VersionedTable(
+      entityName: 'timesheet_revisions',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'UNIQUE(timesheet_id, revision)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_172,
+        _column_142,
+        _column_173,
+        _column_9,
+        _column_174,
+        _column_175,
+        _column_176,
+        _column_177,
+        _column_178,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger revisionNoRedraft = i1.Trigger(
+    'CREATE TRIGGER revision_no_redraft BEFORE UPDATE OF status ON timesheet_revisions WHEN OLD.status <> \'draft\' AND NEW.status = \'draft\' BEGIN SELECT RAISE (ABORT, \'an approved revision stays approved\');END',
+    'revision_no_redraft',
+  );
+  final i1.Trigger revisionKeepsAdjustments = i1.Trigger(
+    'CREATE TRIGGER revision_keeps_adjustments BEFORE UPDATE OF timesheet_id, revision, adjustments ON timesheet_revisions WHEN OLD.status <> \'draft\' BEGIN SELECT RAISE (ABORT, \'an approved revision never changes\');END',
+    'revision_keeps_adjustments',
+  );
+  final i1.Trigger revisionAcceptedLocked = i1.Trigger(
+    'CREATE TRIGGER revision_accepted_locked BEFORE UPDATE ON timesheet_revisions WHEN OLD.status = \'accepted\' BEGIN SELECT RAISE (ABORT, \'an accepted revision is locked\');END',
+    'revision_accepted_locked',
+  );
+  final i1.Trigger revisionNoDelete = i1.Trigger(
+    'CREATE TRIGGER revision_no_delete BEFORE DELETE ON timesheet_revisions WHEN OLD.status <> \'draft\' BEGIN SELECT RAISE (ABORT, \'an approved revision stays on record\');END',
+    'revision_no_delete',
+  );
+  late final Shape34 timesheetLines = Shape34(
+    source: i0.VersionedTable(
+      entityName: 'timesheet_lines',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_172,
+        _column_179,
+        _column_180,
+        _column_181,
+        _column_41,
+        _column_42,
+        _column_182,
+        _column_50,
+        _column_183,
+        _column_184,
+        _column_45,
+        _column_61,
+        _column_185,
+        _column_186,
+        _column_187,
+        _column_85,
+        _column_188,
+        _column_189,
+        _column_190,
+        _column_191,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger timesheetLineNoEdit = i1.Trigger(
+    'CREATE TRIGGER timesheet_line_no_edit BEFORE UPDATE OF timesheet_id, revision_id, entry_id, work_key, work_date, site_id, site_name, worker_id, worker_name, worker_code, trade, attendance_status, clock_minutes, break_minutes, billable_minutes, basis, rate_fils, amount_fils, adjust_reason ON timesheet_lines BEGIN SELECT RAISE (ABORT, \'an approved timesheet line never changes\');END',
+    'timesheet_line_no_edit',
+  );
+  final i1.Trigger timesheetLineStaysOff = i1.Trigger(
+    'CREATE TRIGGER timesheet_line_stays_off BEFORE UPDATE OF live ON timesheet_lines WHEN NOT OLD.live AND NEW.live BEGIN SELECT RAISE (ABORT, \'a replaced timesheet line stays replaced\');END',
+    'timesheet_line_stays_off',
+  );
+  final i1.Trigger timesheetLineNoDelete = i1.Trigger(
+    'CREATE TRIGGER timesheet_line_no_delete BEFORE DELETE ON timesheet_lines BEGIN SELECT RAISE (ABORT, \'an approved timesheet line stays on record\');END',
+    'timesheet_line_no_delete',
+  );
+  final i1.Index oneLiveTimesheetLine = i1.Index(
+    'one_live_timesheet_line',
+    'CREATE UNIQUE INDEX one_live_timesheet_line ON timesheet_lines (work_key) WHERE live',
+  );
+  late final Shape35 billedAllocations = Shape35(
+    source: i0.VersionedTable(
+      entityName: 'billed_allocations',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_192,
+        _column_181,
+        _column_193,
+        _column_97,
+        _column_194,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger billingNoEdit = i1.Trigger(
+    'CREATE TRIGGER billing_no_edit BEFORE UPDATE OF line_id, work_key, invoice_id, amount_fils ON billed_allocations BEGIN SELECT RAISE (ABORT, \'a billed allocation never changes\');END',
+    'billing_no_edit',
+  );
+  final i1.Trigger billingStaysReleased = i1.Trigger(
+    'CREATE TRIGGER billing_stays_released BEFORE UPDATE OF released ON billed_allocations WHEN OLD.released BEGIN SELECT RAISE (ABORT, \'a released allocation stays released\');END',
+    'billing_stays_released',
+  );
+  final i1.Trigger billingNoDelete = i1.Trigger(
+    'CREATE TRIGGER billing_no_delete BEFORE DELETE ON billed_allocations BEGIN SELECT RAISE (ABORT, \'a billed allocation stays on record\');END',
+    'billing_no_delete',
+  );
+  final i1.Index oneLiveBilling = i1.Index(
+    'one_live_billing',
+    'CREATE UNIQUE INDEX one_live_billing ON billed_allocations (work_key) WHERE NOT released',
+  );
+  late final Shape36 invoices = Shape36(
+    source: i0.VersionedTable(
+      entityName: 'invoices',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'UNIQUE(tenant_id, kind, year, seq)',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_26,
+        _column_195,
+        _column_196,
+        _column_173,
+        _column_35,
+        _column_167,
+        _column_168,
+        _column_197,
+        _column_23,
+        _column_198,
+        _column_199,
+        _column_200,
+        _column_19,
+        _column_201,
+        _column_202,
+        _column_169,
+        _column_170,
+        _column_171,
+        _column_203,
+        _column_9,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger invoiceKeepsIssue = i1.Trigger(
+    'CREATE TRIGGER invoice_keeps_issue BEFORE UPDATE OF client_id, kind, credits_invoice_id, site_id, from_date, to_date, draft, po_reference, vat_category, vat_bps, prices_include_vat, vat_registered, due_date, issue_date, year, seq, number, parties, reason ON invoices WHEN OLD.status <> \'draft\' BEGIN SELECT RAISE (ABORT, \'an issued invoice never changes\');END',
+    'invoice_keeps_issue',
+  );
+  final i1.Trigger invoiceStatusForward = i1.Trigger(
+    'CREATE TRIGGER invoice_status_forward BEFORE UPDATE OF status ON invoices WHEN NEW.status <> OLD.status AND NOT((OLD.status = \'draft\' AND NEW.status = \'issued\')OR(OLD.status = \'issued\' AND NEW.status = \'credited\'))BEGIN SELECT RAISE (ABORT, \'an invoice only moves from draft to issued to credited\');END',
+    'invoice_status_forward',
+  );
+  final i1.Trigger invoiceNoDelete = i1.Trigger(
+    'CREATE TRIGGER invoice_no_delete BEFORE DELETE ON invoices WHEN OLD.status <> \'draft\' BEGIN SELECT RAISE (ABORT, \'an issued invoice stays on record\');END',
+    'invoice_no_delete',
+  );
+  late final Shape44 invoiceLines = Shape44(
+    source: i0.VersionedTable(
+      entityName: 'invoice_lines',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_204,
+        _column_205,
+        _column_206,
+        _column_207,
+        _column_85,
+        _column_208,
+        _column_209,
+        _column_97,
+        _column_210,
+        _column_121,
+        _column_211,
+        _column_222,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger invoiceLineNoEdit = i1.Trigger(
+    'CREATE TRIGGER invoice_line_no_edit BEFORE UPDATE ON invoice_lines BEGIN SELECT RAISE (ABORT, \'an invoice line never changes\');END',
+    'invoice_line_no_edit',
+  );
+  final i1.Trigger invoiceLineNoDelete = i1.Trigger(
+    'CREATE TRIGGER invoice_line_no_delete BEFORE DELETE ON invoice_lines BEGIN SELECT RAISE (ABORT, \'an invoice line stays on record\');END',
+    'invoice_line_no_delete',
+  );
+  late final Shape38 invoiceAllocations = Shape38(
+    source: i0.VersionedTable(
+      entityName: 'invoice_allocations',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(id)',
+        'CHECK(payment_id IS NOT NULL OR(invoice_id IS NOT NULL AND reason IS NOT NULL))',
+      ],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_26,
+        _column_212,
+        _column_213,
+        _column_105,
+        _column_214,
+        _column_9,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger invoiceAllocationNoUpdate = i1.Trigger(
+    'CREATE TRIGGER invoice_allocation_no_update BEFORE UPDATE ON invoice_allocations BEGIN SELECT RAISE (ABORT, \'invoice allocations are append-only\');END',
+    'invoice_allocation_no_update',
+  );
+  final i1.Trigger invoiceAllocationNoDelete = i1.Trigger(
+    'CREATE TRIGGER invoice_allocation_no_delete BEFORE DELETE ON invoice_allocations BEGIN SELECT RAISE (ABORT, \'invoice allocations are append-only\');END',
+    'invoice_allocation_no_delete',
+  );
+  late final Shape45 numberFloors = Shape45(
+    source: i0.VersionedTable(
+      entityName: 'number_floors',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_223,
+        _column_140,
+        _column_141,
+        _column_224,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger numberFloorNoUpdate = i1.Trigger(
+    'CREATE TRIGGER number_floor_no_update BEFORE UPDATE ON number_floors BEGIN SELECT RAISE (ABORT, \'number floors are append-only\');END',
+    'number_floor_no_update',
+  );
+  final i1.Trigger numberFloorNoDelete = i1.Trigger(
+    'CREATE TRIGGER number_floor_no_delete BEFORE DELETE ON number_floors BEGIN SELECT RAISE (ABORT, \'number floors are append-only\');END',
+    'number_floor_no_delete',
+  );
+  late final Shape26 tenantProfiles = Shape26(
+    source: i0.VersionedTable(
+      entityName: 'tenant_profiles',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_77,
+        _column_78,
+        _column_15,
+        _column_17,
+        _column_18,
+        _column_19,
+        _column_79,
+        _column_20,
+        _column_80,
+        _column_81,
+        _column_82,
+        _column_83,
+        _column_84,
+        _column_129,
+        _column_137,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape46 bookChanges = Shape46(
+    source: i0.VersionedTable(
+      entityName: 'book_changes',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_225, _column_1, _column_5, _column_6, _column_226],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger bookTenantProfilesIns = i1.Trigger(
+    'CREATE TRIGGER book_tenant_profiles_ins AFTER INSERT ON tenant_profiles BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'tenant_profiles\', NEW.id, NEW.version);END',
+    'book_tenant_profiles_ins',
+  );
+  final i1.Trigger bookTenantProfilesUpd = i1.Trigger(
+    'CREATE TRIGGER book_tenant_profiles_upd AFTER UPDATE ON tenant_profiles BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'tenant_profiles\', NEW.id, NEW.version);END',
+    'book_tenant_profiles_upd',
+  );
+  final i1.Trigger bookTenantProfilesDel = i1.Trigger(
+    'CREATE TRIGGER book_tenant_profiles_del AFTER DELETE ON tenant_profiles BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'tenant_profiles\', OLD.id, OLD.version + 1);END',
+    'book_tenant_profiles_del',
+  );
+  final i1.Trigger bookClientsIns = i1.Trigger(
+    'CREATE TRIGGER book_clients_ins AFTER INSERT ON clients BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'clients\', NEW.id, NEW.version);END',
+    'book_clients_ins',
+  );
+  final i1.Trigger bookClientsUpd = i1.Trigger(
+    'CREATE TRIGGER book_clients_upd AFTER UPDATE ON clients BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'clients\', NEW.id, NEW.version);END',
+    'book_clients_upd',
+  );
+  final i1.Trigger bookClientsDel = i1.Trigger(
+    'CREATE TRIGGER book_clients_del AFTER DELETE ON clients BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'clients\', OLD.id, OLD.version + 1);END',
+    'book_clients_del',
+  );
+  final i1.Trigger bookSitesIns = i1.Trigger(
+    'CREATE TRIGGER book_sites_ins AFTER INSERT ON sites BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'sites\', NEW.id, NEW.version);END',
+    'book_sites_ins',
+  );
+  final i1.Trigger bookSitesUpd = i1.Trigger(
+    'CREATE TRIGGER book_sites_upd AFTER UPDATE ON sites BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'sites\', NEW.id, NEW.version);END',
+    'book_sites_upd',
+  );
+  final i1.Trigger bookSitesDel = i1.Trigger(
+    'CREATE TRIGGER book_sites_del AFTER DELETE ON sites BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'sites\', OLD.id, OLD.version + 1);END',
+    'book_sites_del',
+  );
+  final i1.Trigger bookWorkersIns = i1.Trigger(
+    'CREATE TRIGGER book_workers_ins AFTER INSERT ON workers BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'workers\', NEW.id, NEW.version);END',
+    'book_workers_ins',
+  );
+  final i1.Trigger bookWorkersUpd = i1.Trigger(
+    'CREATE TRIGGER book_workers_upd AFTER UPDATE ON workers BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'workers\', NEW.id, NEW.version);END',
+    'book_workers_upd',
+  );
+  final i1.Trigger bookWorkersDel = i1.Trigger(
+    'CREATE TRIGGER book_workers_del AFTER DELETE ON workers BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'workers\', OLD.id, OLD.version + 1);END',
+    'book_workers_del',
+  );
+  late final Shape43 payContracts = Shape43(
+    source: i0.VersionedTable(
+      entityName: 'pay_contracts',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_85,
+        _column_86,
+        _column_87,
+        _column_88,
+        _column_89,
+        _column_90,
+        _column_91,
+        _column_92,
+        _column_50,
+        _column_35,
+        _column_93,
+        _column_94,
+        _column_220,
+        _column_221,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger bookPayContractsIns = i1.Trigger(
+    'CREATE TRIGGER book_pay_contracts_ins AFTER INSERT ON pay_contracts BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'pay_contracts\', NEW.id, NEW.version);END',
+    'book_pay_contracts_ins',
+  );
+  final i1.Trigger bookPayContractsUpd = i1.Trigger(
+    'CREATE TRIGGER book_pay_contracts_upd AFTER UPDATE ON pay_contracts BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'pay_contracts\', NEW.id, NEW.version);END',
+    'book_pay_contracts_upd',
+  );
+  final i1.Trigger bookPayContractsDel = i1.Trigger(
+    'CREATE TRIGGER book_pay_contracts_del AFTER DELETE ON pay_contracts BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'pay_contracts\', OLD.id, OLD.version + 1);END',
+    'book_pay_contracts_del',
+  );
+  late final Shape9 billingContracts = Shape9(
+    source: i0.VersionedTable(
+      entityName: 'billing_contracts',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_85,
+        _column_86,
+        _column_87,
+        _column_88,
+        _column_89,
+        _column_90,
+        _column_91,
+        _column_92,
+        _column_26,
+        _column_35,
+        _column_95,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger bookBillingContractsIns = i1.Trigger(
+    'CREATE TRIGGER book_billing_contracts_ins AFTER INSERT ON billing_contracts BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'billing_contracts\', NEW.id, NEW.version);END',
+    'book_billing_contracts_ins',
+  );
+  final i1.Trigger bookBillingContractsUpd = i1.Trigger(
+    'CREATE TRIGGER book_billing_contracts_upd AFTER UPDATE ON billing_contracts BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'billing_contracts\', NEW.id, NEW.version);END',
+    'book_billing_contracts_upd',
+  );
+  final i1.Trigger bookBillingContractsDel = i1.Trigger(
+    'CREATE TRIGGER book_billing_contracts_del AFTER DELETE ON billing_contracts BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'billing_contracts\', OLD.id, OLD.version + 1);END',
+    'book_billing_contracts_del',
+  );
+  final i1.Trigger bookOpeningBalancesIns = i1.Trigger(
+    'CREATE TRIGGER book_opening_balances_ins AFTER INSERT ON opening_balances BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'opening_balances\', NEW.id, NEW.version);END',
+    'book_opening_balances_ins',
+  );
+  final i1.Trigger bookOpeningBalancesUpd = i1.Trigger(
+    'CREATE TRIGGER book_opening_balances_upd AFTER UPDATE ON opening_balances BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'opening_balances\', NEW.id, NEW.version);END',
+    'book_opening_balances_upd',
+  );
+  final i1.Trigger bookOpeningBalancesDel = i1.Trigger(
+    'CREATE TRIGGER book_opening_balances_del AFTER DELETE ON opening_balances BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'opening_balances\', OLD.id, OLD.version + 1);END',
+    'book_opening_balances_del',
+  );
+  final i1.Trigger bookWorkerGroupsIns = i1.Trigger(
+    'CREATE TRIGGER book_worker_groups_ins AFTER INSERT ON worker_groups BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'worker_groups\', NEW.id, NEW.version);END',
+    'book_worker_groups_ins',
+  );
+  final i1.Trigger bookWorkerGroupsUpd = i1.Trigger(
+    'CREATE TRIGGER book_worker_groups_upd AFTER UPDATE ON worker_groups BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'worker_groups\', NEW.id, NEW.version);END',
+    'book_worker_groups_upd',
+  );
+  final i1.Trigger bookWorkerGroupsDel = i1.Trigger(
+    'CREATE TRIGGER book_worker_groups_del AFTER DELETE ON worker_groups BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'worker_groups\', OLD.id, OLD.version + 1);END',
+    'book_worker_groups_del',
+  );
+  late final Shape23 workerGroupMembers = Shape23(
+    source: i0.VersionedTable(
+      entityName: 'worker_group_members',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'UNIQUE(group_id, worker_id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_100,
+        _column_50,
+        _column_36,
+        _column_132,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger bookWorkerGroupMembersIns = i1.Trigger(
+    'CREATE TRIGGER book_worker_group_members_ins AFTER INSERT ON worker_group_members BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'worker_group_members\', NEW.id, NEW.version);END',
+    'book_worker_group_members_ins',
+  );
+  final i1.Trigger bookWorkerGroupMembersUpd = i1.Trigger(
+    'CREATE TRIGGER book_worker_group_members_upd AFTER UPDATE ON worker_group_members BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'worker_group_members\', NEW.id, NEW.version);END',
+    'book_worker_group_members_upd',
+  );
+  final i1.Trigger bookWorkerGroupMembersDel = i1.Trigger(
+    'CREATE TRIGGER book_worker_group_members_del AFTER DELETE ON worker_group_members BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'worker_group_members\', OLD.id, OLD.version + 1);END',
+    'book_worker_group_members_del',
+  );
+  final i1.Trigger bookRoomsIns = i1.Trigger(
+    'CREATE TRIGGER book_rooms_ins AFTER INSERT ON rooms BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'rooms\', NEW.id, NEW.version);END',
+    'book_rooms_ins',
+  );
+  final i1.Trigger bookRoomsUpd = i1.Trigger(
+    'CREATE TRIGGER book_rooms_upd AFTER UPDATE ON rooms BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'rooms\', NEW.id, NEW.version);END',
+    'book_rooms_upd',
+  );
+  final i1.Trigger bookRoomsDel = i1.Trigger(
+    'CREATE TRIGGER book_rooms_del AFTER DELETE ON rooms BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'rooms\', OLD.id, OLD.version + 1);END',
+    'book_rooms_del',
+  );
+  final i1.Trigger bookCashEntriesIns = i1.Trigger(
+    'CREATE TRIGGER book_cash_entries_ins AFTER INSERT ON cash_entries BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'cash_entries\', NEW.id, NEW.version);END',
+    'book_cash_entries_ins',
+  );
+  final i1.Trigger bookCashEntriesUpd = i1.Trigger(
+    'CREATE TRIGGER book_cash_entries_upd AFTER UPDATE ON cash_entries BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'cash_entries\', NEW.id, NEW.version);END',
+    'book_cash_entries_upd',
+  );
+  final i1.Trigger bookCashEntriesDel = i1.Trigger(
+    'CREATE TRIGGER book_cash_entries_del AFTER DELETE ON cash_entries BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'cash_entries\', OLD.id, OLD.version + 1);END',
+    'book_cash_entries_del',
+  );
+  final i1.Trigger bookSalaryAllocationsIns = i1.Trigger(
+    'CREATE TRIGGER book_salary_allocations_ins AFTER INSERT ON salary_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'salary_allocations\', NEW.id, NEW.version);END',
+    'book_salary_allocations_ins',
+  );
+  final i1.Trigger bookSalaryAllocationsUpd = i1.Trigger(
+    'CREATE TRIGGER book_salary_allocations_upd AFTER UPDATE ON salary_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'salary_allocations\', NEW.id, NEW.version);END',
+    'book_salary_allocations_upd',
+  );
+  final i1.Trigger bookSalaryAllocationsDel = i1.Trigger(
+    'CREATE TRIGGER book_salary_allocations_del AFTER DELETE ON salary_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'salary_allocations\', OLD.id, OLD.version + 1);END',
+    'book_salary_allocations_del',
+  );
+  final i1.Trigger bookPeriodLocksIns = i1.Trigger(
+    'CREATE TRIGGER book_period_locks_ins AFTER INSERT ON period_locks BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'period_locks\', NEW.id, NEW.version);END',
+    'book_period_locks_ins',
+  );
+  final i1.Trigger bookPeriodLocksUpd = i1.Trigger(
+    'CREATE TRIGGER book_period_locks_upd AFTER UPDATE ON period_locks BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'period_locks\', NEW.id, NEW.version);END',
+    'book_period_locks_upd',
+  );
+  final i1.Trigger bookPeriodLocksDel = i1.Trigger(
+    'CREATE TRIGGER book_period_locks_del AFTER DELETE ON period_locks BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'period_locks\', OLD.id, OLD.version + 1);END',
+    'book_period_locks_del',
+  );
+  final i1.Trigger bookDayOffsIns = i1.Trigger(
+    'CREATE TRIGGER book_day_offs_ins AFTER INSERT ON day_offs BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'day_offs\', NEW.id, NEW.version);END',
+    'book_day_offs_ins',
+  );
+  final i1.Trigger bookDayOffsUpd = i1.Trigger(
+    'CREATE TRIGGER book_day_offs_upd AFTER UPDATE ON day_offs BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'day_offs\', NEW.id, NEW.version);END',
+    'book_day_offs_upd',
+  );
+  final i1.Trigger bookDayOffsDel = i1.Trigger(
+    'CREATE TRIGGER book_day_offs_del AFTER DELETE ON day_offs BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'day_offs\', OLD.id, OLD.version + 1);END',
+    'book_day_offs_del',
+  );
+  final i1.Trigger bookDocumentAssetsIns = i1.Trigger(
+    'CREATE TRIGGER book_document_assets_ins AFTER INSERT ON document_assets BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'document_assets\', NEW.id, NEW.version);END',
+    'book_document_assets_ins',
+  );
+  final i1.Trigger bookDocumentAssetsUpd = i1.Trigger(
+    'CREATE TRIGGER book_document_assets_upd AFTER UPDATE ON document_assets BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'document_assets\', NEW.id, NEW.version);END',
+    'book_document_assets_upd',
+  );
+  final i1.Trigger bookDocumentAssetsDel = i1.Trigger(
+    'CREATE TRIGGER book_document_assets_del AFTER DELETE ON document_assets BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'document_assets\', OLD.id, OLD.version + 1);END',
+    'book_document_assets_del',
+  );
+  late final Shape31 documentTemplates = Shape31(
+    source: i0.VersionedTable(
+      entityName: 'document_templates',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_10,
+        _column_11,
+        _column_3,
+        _column_12,
+        _column_13,
+        _column_156,
+        _column_157,
+        _column_158,
+        _column_159,
+        _column_160,
+        _column_161,
+        _column_162,
+        _column_163,
+        _column_164,
+        _column_165,
+        _column_166,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Trigger bookDocumentTemplatesIns = i1.Trigger(
+    'CREATE TRIGGER book_document_templates_ins AFTER INSERT ON document_templates BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'document_templates\', NEW.id, NEW.version);END',
+    'book_document_templates_ins',
+  );
+  final i1.Trigger bookDocumentTemplatesUpd = i1.Trigger(
+    'CREATE TRIGGER book_document_templates_upd AFTER UPDATE ON document_templates BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'document_templates\', NEW.id, NEW.version);END',
+    'book_document_templates_upd',
+  );
+  final i1.Trigger bookDocumentTemplatesDel = i1.Trigger(
+    'CREATE TRIGGER book_document_templates_del AFTER DELETE ON document_templates BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'document_templates\', OLD.id, OLD.version + 1);END',
+    'book_document_templates_del',
+  );
+  final i1.Trigger bookIssuedDocumentsIns = i1.Trigger(
+    'CREATE TRIGGER book_issued_documents_ins AFTER INSERT ON issued_documents BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'issued_documents\', NEW.id, NEW.version);END',
+    'book_issued_documents_ins',
+  );
+  final i1.Trigger bookIssuedDocumentsUpd = i1.Trigger(
+    'CREATE TRIGGER book_issued_documents_upd AFTER UPDATE ON issued_documents BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'issued_documents\', NEW.id, NEW.version);END',
+    'book_issued_documents_upd',
+  );
+  final i1.Trigger bookIssuedDocumentsDel = i1.Trigger(
+    'CREATE TRIGGER book_issued_documents_del AFTER DELETE ON issued_documents BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'issued_documents\', OLD.id, OLD.version + 1);END',
+    'book_issued_documents_del',
+  );
+  final i1.Trigger bookTimesheetsIns = i1.Trigger(
+    'CREATE TRIGGER book_timesheets_ins AFTER INSERT ON timesheets BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'timesheets\', NEW.id, NEW.version);END',
+    'book_timesheets_ins',
+  );
+  final i1.Trigger bookTimesheetsUpd = i1.Trigger(
+    'CREATE TRIGGER book_timesheets_upd AFTER UPDATE ON timesheets BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'timesheets\', NEW.id, NEW.version);END',
+    'book_timesheets_upd',
+  );
+  final i1.Trigger bookTimesheetsDel = i1.Trigger(
+    'CREATE TRIGGER book_timesheets_del AFTER DELETE ON timesheets BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'timesheets\', OLD.id, OLD.version + 1);END',
+    'book_timesheets_del',
+  );
+  final i1.Trigger bookTimesheetRevisionsIns = i1.Trigger(
+    'CREATE TRIGGER book_timesheet_revisions_ins AFTER INSERT ON timesheet_revisions BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'timesheet_revisions\', NEW.id, NEW.version);END',
+    'book_timesheet_revisions_ins',
+  );
+  final i1.Trigger bookTimesheetRevisionsUpd = i1.Trigger(
+    'CREATE TRIGGER book_timesheet_revisions_upd AFTER UPDATE ON timesheet_revisions BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'timesheet_revisions\', NEW.id, NEW.version);END',
+    'book_timesheet_revisions_upd',
+  );
+  final i1.Trigger bookTimesheetRevisionsDel = i1.Trigger(
+    'CREATE TRIGGER book_timesheet_revisions_del AFTER DELETE ON timesheet_revisions BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'timesheet_revisions\', OLD.id, OLD.version + 1);END',
+    'book_timesheet_revisions_del',
+  );
+  final i1.Trigger bookTimesheetLinesIns = i1.Trigger(
+    'CREATE TRIGGER book_timesheet_lines_ins AFTER INSERT ON timesheet_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'timesheet_lines\', NEW.id, NEW.version);END',
+    'book_timesheet_lines_ins',
+  );
+  final i1.Trigger bookTimesheetLinesUpd = i1.Trigger(
+    'CREATE TRIGGER book_timesheet_lines_upd AFTER UPDATE ON timesheet_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'timesheet_lines\', NEW.id, NEW.version);END',
+    'book_timesheet_lines_upd',
+  );
+  final i1.Trigger bookTimesheetLinesDel = i1.Trigger(
+    'CREATE TRIGGER book_timesheet_lines_del AFTER DELETE ON timesheet_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'timesheet_lines\', OLD.id, OLD.version + 1);END',
+    'book_timesheet_lines_del',
+  );
+  final i1.Trigger bookBilledAllocationsIns = i1.Trigger(
+    'CREATE TRIGGER book_billed_allocations_ins AFTER INSERT ON billed_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'billed_allocations\', NEW.id, NEW.version);END',
+    'book_billed_allocations_ins',
+  );
+  final i1.Trigger bookBilledAllocationsUpd = i1.Trigger(
+    'CREATE TRIGGER book_billed_allocations_upd AFTER UPDATE ON billed_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'billed_allocations\', NEW.id, NEW.version);END',
+    'book_billed_allocations_upd',
+  );
+  final i1.Trigger bookBilledAllocationsDel = i1.Trigger(
+    'CREATE TRIGGER book_billed_allocations_del AFTER DELETE ON billed_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'billed_allocations\', OLD.id, OLD.version + 1);END',
+    'book_billed_allocations_del',
+  );
+  final i1.Trigger bookInvoicesIns = i1.Trigger(
+    'CREATE TRIGGER book_invoices_ins AFTER INSERT ON invoices BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'invoices\', NEW.id, NEW.version);END',
+    'book_invoices_ins',
+  );
+  final i1.Trigger bookInvoicesUpd = i1.Trigger(
+    'CREATE TRIGGER book_invoices_upd AFTER UPDATE ON invoices BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'invoices\', NEW.id, NEW.version);END',
+    'book_invoices_upd',
+  );
+  final i1.Trigger bookInvoicesDel = i1.Trigger(
+    'CREATE TRIGGER book_invoices_del AFTER DELETE ON invoices BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'invoices\', OLD.id, OLD.version + 1);END',
+    'book_invoices_del',
+  );
+  final i1.Trigger bookInvoiceLinesIns = i1.Trigger(
+    'CREATE TRIGGER book_invoice_lines_ins AFTER INSERT ON invoice_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'invoice_lines\', NEW.id, NEW.version);END',
+    'book_invoice_lines_ins',
+  );
+  final i1.Trigger bookInvoiceLinesUpd = i1.Trigger(
+    'CREATE TRIGGER book_invoice_lines_upd AFTER UPDATE ON invoice_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'invoice_lines\', NEW.id, NEW.version);END',
+    'book_invoice_lines_upd',
+  );
+  final i1.Trigger bookInvoiceLinesDel = i1.Trigger(
+    'CREATE TRIGGER book_invoice_lines_del AFTER DELETE ON invoice_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'invoice_lines\', OLD.id, OLD.version + 1);END',
+    'book_invoice_lines_del',
+  );
+  final i1.Trigger bookInvoiceAllocationsIns = i1.Trigger(
+    'CREATE TRIGGER book_invoice_allocations_ins AFTER INSERT ON invoice_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'invoice_allocations\', NEW.id, NEW.version);END',
+    'book_invoice_allocations_ins',
+  );
+  final i1.Trigger bookInvoiceAllocationsUpd = i1.Trigger(
+    'CREATE TRIGGER book_invoice_allocations_upd AFTER UPDATE ON invoice_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'invoice_allocations\', NEW.id, NEW.version);END',
+    'book_invoice_allocations_upd',
+  );
+  final i1.Trigger bookInvoiceAllocationsDel = i1.Trigger(
+    'CREATE TRIGGER book_invoice_allocations_del AFTER DELETE ON invoice_allocations BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'invoice_allocations\', OLD.id, OLD.version + 1);END',
+    'book_invoice_allocations_del',
+  );
+  final i1.Trigger bookAttendanceBatchesIns = i1.Trigger(
+    'CREATE TRIGGER book_attendance_batches_ins AFTER INSERT ON attendance_batches BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'attendance_batches\', NEW.id, NEW.version);END',
+    'book_attendance_batches_ins',
+  );
+  final i1.Trigger bookAttendanceBatchesUpd = i1.Trigger(
+    'CREATE TRIGGER book_attendance_batches_upd AFTER UPDATE ON attendance_batches BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'attendance_batches\', NEW.id, NEW.version);END',
+    'book_attendance_batches_upd',
+  );
+  final i1.Trigger bookAttendanceBatchesDel = i1.Trigger(
+    'CREATE TRIGGER book_attendance_batches_del AFTER DELETE ON attendance_batches BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'attendance_batches\', OLD.id, OLD.version + 1);END',
+    'book_attendance_batches_del',
+  );
+  final i1.Trigger bookAttendanceEntriesIns = i1.Trigger(
+    'CREATE TRIGGER book_attendance_entries_ins AFTER INSERT ON attendance_entries BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'attendance_entries\', NEW.id, NEW.version);END',
+    'book_attendance_entries_ins',
+  );
+  final i1.Trigger bookAttendanceEntriesUpd = i1.Trigger(
+    'CREATE TRIGGER book_attendance_entries_upd AFTER UPDATE ON attendance_entries BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'attendance_entries\', NEW.id, NEW.version);END',
+    'book_attendance_entries_upd',
+  );
+  final i1.Trigger bookAttendanceEntriesDel = i1.Trigger(
+    'CREATE TRIGGER book_attendance_entries_del AFTER DELETE ON attendance_entries BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'attendance_entries\', OLD.id, OLD.version + 1);END',
+    'book_attendance_entries_del',
+  );
+  final i1.Trigger bookPayrollRunsIns = i1.Trigger(
+    'CREATE TRIGGER book_payroll_runs_ins AFTER INSERT ON payroll_runs BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'payroll_runs\', NEW.id, NEW.version);END',
+    'book_payroll_runs_ins',
+  );
+  final i1.Trigger bookPayrollRunsUpd = i1.Trigger(
+    'CREATE TRIGGER book_payroll_runs_upd AFTER UPDATE ON payroll_runs BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'payroll_runs\', NEW.id, NEW.version);END',
+    'book_payroll_runs_upd',
+  );
+  final i1.Trigger bookPayrollRunsDel = i1.Trigger(
+    'CREATE TRIGGER book_payroll_runs_del AFTER DELETE ON payroll_runs BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'payroll_runs\', OLD.id, OLD.version + 1);END',
+    'book_payroll_runs_del',
+  );
+  final i1.Trigger bookPayrollLinesIns = i1.Trigger(
+    'CREATE TRIGGER book_payroll_lines_ins AFTER INSERT ON payroll_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'payroll_lines\', NEW.id, NEW.version);END',
+    'book_payroll_lines_ins',
+  );
+  final i1.Trigger bookPayrollLinesUpd = i1.Trigger(
+    'CREATE TRIGGER book_payroll_lines_upd AFTER UPDATE ON payroll_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'payroll_lines\', NEW.id, NEW.version);END',
+    'book_payroll_lines_upd',
+  );
+  final i1.Trigger bookPayrollLinesDel = i1.Trigger(
+    'CREATE TRIGGER book_payroll_lines_del AFTER DELETE ON payroll_lines BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'payroll_lines\', OLD.id, OLD.version + 1);END',
+    'book_payroll_lines_del',
+  );
+  final i1.Trigger bookPayrollItemsIns = i1.Trigger(
+    'CREATE TRIGGER book_payroll_items_ins AFTER INSERT ON payroll_items BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'payroll_items\', NEW.id, NEW.version);END',
+    'book_payroll_items_ins',
+  );
+  final i1.Trigger bookPayrollItemsUpd = i1.Trigger(
+    'CREATE TRIGGER book_payroll_items_upd AFTER UPDATE ON payroll_items BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'payroll_items\', NEW.id, NEW.version);END',
+    'book_payroll_items_upd',
+  );
+  final i1.Trigger bookPayrollItemsDel = i1.Trigger(
+    'CREATE TRIGGER book_payroll_items_del AFTER DELETE ON payroll_items BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'payroll_items\', OLD.id, OLD.version + 1);END',
+    'book_payroll_items_del',
+  );
+  final i1.Trigger bookNumberFloorsIns = i1.Trigger(
+    'CREATE TRIGGER book_number_floors_ins AFTER INSERT ON number_floors BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'number_floors\', NEW.id, NEW.version);END',
+    'book_number_floors_ins',
+  );
+  final i1.Trigger bookNumberFloorsUpd = i1.Trigger(
+    'CREATE TRIGGER book_number_floors_upd AFTER UPDATE ON number_floors BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (NEW.tenant_id, \'number_floors\', NEW.id, NEW.version);END',
+    'book_number_floors_upd',
+  );
+  final i1.Trigger bookNumberFloorsDel = i1.Trigger(
+    'CREATE TRIGGER book_number_floors_del AFTER DELETE ON number_floors BEGIN INSERT INTO book_changes (tenant_id, entity, record_id, version) VALUES (OLD.tenant_id, \'number_floors\', OLD.id, OLD.version + 1);END',
+    'book_number_floors_del',
+  );
+  late final Shape12 outbox = Shape12(
+    source: i0.VersionedTable(
+      entityName: 'outbox',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(operation_id)'],
+      columns: [
+        _column_8,
+        _column_1,
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_101,
+        _column_102,
+        _column_10,
+        _column_103,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index idxCashDate = i1.Index(
+    'idx_cash_date',
+    'CREATE INDEX idx_cash_date ON cash_entries (entry_date)',
+  );
+  final i1.Index idxCashWorker = i1.Index(
+    'idx_cash_worker',
+    'CREATE INDEX idx_cash_worker ON cash_entries (worker_id)',
+  );
+  final i1.Index idxCashRoom = i1.Index(
+    'idx_cash_room',
+    'CREATE INDEX idx_cash_room ON cash_entries (room_id)',
+  );
+  final i1.Index idxIssuedSubject = i1.Index(
+    'idx_issued_subject',
+    'CREATE INDEX idx_issued_subject ON issued_documents (kind, subject_id, period)',
+  );
+  final i1.Index idxTimesheetLinesRevision = i1.Index(
+    'idx_timesheet_lines_revision',
+    'CREATE INDEX idx_timesheet_lines_revision ON timesheet_lines (revision_id)',
+  );
+  final i1.Index idxTimesheetLinesTimesheet = i1.Index(
+    'idx_timesheet_lines_timesheet',
+    'CREATE INDEX idx_timesheet_lines_timesheet ON timesheet_lines (timesheet_id, live)',
+  );
+  final i1.Index idxInvoiceLinesInvoice = i1.Index(
+    'idx_invoice_lines_invoice',
+    'CREATE INDEX idx_invoice_lines_invoice ON invoice_lines (invoice_id)',
+  );
+  final i1.Index idxInvoiceAllocationsClient = i1.Index(
+    'idx_invoice_allocations_client',
+    'CREATE INDEX idx_invoice_allocations_client ON invoice_allocations (client_id)',
+  );
+  final i1.Index idxEntriesWorkerDate = i1.Index(
+    'idx_entries_worker_date',
+    'CREATE INDEX idx_entries_worker_date ON attendance_entries (worker_id, work_date)',
+  );
+  final i1.Index idxEntriesDate = i1.Index(
+    'idx_entries_date',
+    'CREATE INDEX idx_entries_date ON attendance_entries (work_date)',
+  );
+  final i1.Index idxPayrollLinesWorker = i1.Index(
+    'idx_payroll_lines_worker',
+    'CREATE INDEX idx_payroll_lines_worker ON payroll_lines (worker_id)',
+  );
+  final i1.Index idxPayrollItemsPeriod = i1.Index(
+    'idx_payroll_items_period',
+    'CREATE INDEX idx_payroll_items_period ON payroll_items (period_from)',
+  );
+}
+
+class Shape46 extends i0.VersionedTable {
+  Shape46({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get seq =>
+      columnsByName['seq']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get tenantId =>
+      columnsByName['tenant_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get entity =>
+      columnsByName['entity']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get recordId =>
+      columnsByName['record_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get version =>
+      columnsByName['version']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_225(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'seq',
+      aliasedName,
+      false,
+      hasAutoIncrement: true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL PRIMARY KEY AUTOINCREMENT',
+    );
+i1.GeneratedColumn<int> _column_226(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'version',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
@@ -20920,6 +22759,7 @@ i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema17 schema) from16To17,
   required Future<void> Function(i1.Migrator m, Schema18 schema) from17To18,
   required Future<void> Function(i1.Migrator m, Schema19 schema) from18To19,
+  required Future<void> Function(i1.Migrator m, Schema20 schema) from19To20,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -21013,6 +22853,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from18To19(migrator, schema);
         return 19;
+      case 19:
+        final schema = Schema20(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from19To20(migrator, schema);
+        return 20;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -21038,6 +22883,7 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema17 schema) from16To17,
   required Future<void> Function(i1.Migrator m, Schema18 schema) from17To18,
   required Future<void> Function(i1.Migrator m, Schema19 schema) from18To19,
+  required Future<void> Function(i1.Migrator m, Schema20 schema) from19To20,
 }) => i0.VersionedSchema.stepByStepHelper(
   step: migrationSteps(
     from1To2: from1To2,
@@ -21058,5 +22904,6 @@ i1.OnUpgrade stepByStep({
     from16To17: from16To17,
     from17To18: from17To18,
     from18To19: from18To19,
+    from19To20: from19To20,
   ),
 );

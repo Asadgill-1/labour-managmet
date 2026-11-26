@@ -33,6 +33,24 @@ void main() {
     await db.validateDatabaseSchema();
   });
 
+  test('a phone on version 19 upgrades: its books stay, the change list starts empty, and each change after names its record (T22d)', () async {
+    final old = await verifier.schemaAt(19);
+    old.rawDatabase.execute('''
+      INSERT INTO tenant_profiles (id, $commonColumns, legal_name) VALUES ('p1', $common, 'Labour');
+      INSERT INTO clients (id, $commonColumns, name) VALUES ('c1', $common, 'Fajr');
+    ''');
+
+    final db = TenantDatabase(old.newConnection(), tenantId: 't', deviceId: 'device');
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, db.schemaVersion);
+
+    expect((await db.select(db.clients).getSingle()).name, 'Fajr');
+    expect(await db.select(db.bookChanges).get(), isEmpty);
+    await db.customStatement("UPDATE clients SET name = 'Fajr LLC', version = 2 WHERE id = 'c1'");
+    final change = await db.select(db.bookChanges).getSingle();
+    expect((change.tenantId, change.entity, change.recordId, change.version), ('t', 'clients', 'c1', 2));
+  });
+
   test('a phone on version 18 upgrades: its invoices keep counting, and a floor a restore sets is never changed (DATA-06)', () async {
     final old = await verifier.schemaAt(18);
     old.rawDatabase.execute('''
