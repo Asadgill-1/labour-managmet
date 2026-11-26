@@ -76,7 +76,7 @@ select lives_ok($$ select public.admin_overview(now() - interval '30 days', now(
 reset role;
 -- From here the admin's calls run as postgres with the admin's claims: the functions check the claims, and the
 -- lookups in their arguments must not meet the customers' row level security.
-select ok(has_function_privilege('authenticated', 'public.admin_accept_slip(uuid, bigint, text, date, text, text, text)', 'execute'), 'a signed-in user may call the actions, which check the admin themselves');
+select ok(has_function_privilege('authenticated', 'public.admin_accept_slip(uuid, bigint, text, date, text, text, text, boolean, integer)', 'execute'), 'a signed-in user may call the actions, which check the admin themselves');
 select throws_ok($$ update private.admin_actions set reason = 'changed' $$, 'P0001', 'admin_actions is never changed or deleted', 'the audit log is never changed');
 select throws_ok($$ delete from private.admin_actions $$, 'P0001', 'admin_actions is never changed or deleted', 'nor deleted');
 select throws_ok(
