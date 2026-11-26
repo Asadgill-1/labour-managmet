@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "admin-fake",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["apps/admin/scripts/dev-fake.mjs"],
+      "port": 3100
+    }
+  ]
+}

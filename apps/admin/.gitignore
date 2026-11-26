@@ -1,0 +1,3 @@
+# Made by Next on each build and run
+next-env.d.ts
+*.tsbuildinfo
