@@ -420,3 +420,7 @@ verify_jwt = false
 # The backup function too: Postgres, asked as the user, decides who may send or get a copy (T20d-a).
 [functions.backup]
 verify_jwt = false
+
+# The admin function too: Postgres, asked as the caller, says whether this is a platform admin with a TOTP code (T22c).
+[functions.admin]
+verify_jwt = false
