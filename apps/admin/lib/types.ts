@@ -26,6 +26,33 @@ export type AccountRow = {
   limits: Limits | null;
   slips_waiting: number;
   paid_fils: number;
+  /** From T22d: the consent, when the books last arrived, and this Dubai month's bill and estimate from its summary. */
+  consent_at?: string | null;
+  book_at?: string | null;
+  bill_month?: number | null;
+  estimate_month?: number | null;
+};
+
+/** admin_account_book: one account's books in the cloud (T22d). */
+export type AccountBook = {
+  consent_at: string | null;
+  consent_version: number | null;
+  last_at: string | null;
+  records: number;
+  counts: { workers: number; clients: number; sites: number; invoices: number } | null;
+  firsts: { worker: string | null; attendance: string | null; invoice: string | null } | null;
+  months: import("./book").MonthSummary[];
+};
+
+/** admin_business: every account's books added up (T22d). */
+export type Business = {
+  months: import("./book").MonthSummary[];
+  accounts: { tenant_id: string; name: string; bill: number; wages: number; estimate: number; invoiced: number; workers: number; clients: number; last_at: string | null }[];
+  workers: number;
+  clients: number;
+  with_books: number;
+  consented: number;
+  accounts_total: number;
 };
 
 export type Period = {

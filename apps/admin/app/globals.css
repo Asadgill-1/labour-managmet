@@ -61,7 +61,7 @@ a { color: var(--action); }
 .switch { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink); }
 .switch input { width: 18px; height: 18px; accent-color: var(--action); }
 .fresh { margin-left: auto; font-size: 13px; color: var(--muted); }
-.range input[type="date"] { font-family: var(--face); font-size: 14px; min-height: 32px; padding: 2px 8px; border: 1px solid var(--field-edge); border-radius: var(--radius); background: var(--sheet); color: var(--ink); }
+.range input[type="date"], .range input[type="month"] { font-family: var(--face); font-size: 14px; min-height: 32px; padding: 2px 8px; border: 1px solid var(--field-edge); border-radius: var(--radius); background: var(--sheet); color: var(--ink); }
 
 /* figures on the cover */
 .band { background: var(--cover); color: var(--on-cover); }
@@ -253,7 +253,16 @@ dialog .dialog-body { padding: 4px 20px 20px; }
 .qr img { width: 100%; height: 100%; }
 code.secret { font-size: 14px; overflow-wrap: anywhere; }
 
+/* the customers' books on the page, under its own head (T22d) */
+.range-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 16px; }
+.range-row .src { margin: 0; }
+.figs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px 24px; margin: 16px 0 24px; padding: 16px 0; border-block: 1px solid var(--rule); }
+.figs .fig dt, .figs .fig small { color: var(--muted); }
+.figs .fig dd.late { color: var(--due); }
+table.lines td:first-child { white-space: normal; }
+
 @media (max-width: 60rem) {
+  .figs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .band .cap, .band.four .cap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid2, .grid2.even, .queue, .review { grid-template-columns: minmax(0, 1fr); }
   .statusrow { grid-template-columns: repeat(2, minmax(0, 1fr)); }

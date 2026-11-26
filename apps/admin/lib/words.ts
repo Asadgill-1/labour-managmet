@@ -7,6 +7,7 @@ export const menu = [
   { href: "/", label: "Overview" },
   { href: "/accounts/", label: "Accounts" },
   { href: "/subscriptions/", label: "Subscriptions" },
+  { href: "/business/", label: "Business" },
   { href: "/audit/", label: "Audit log" },
   { href: "/settings/", label: "Settings" },
 ] as const;
@@ -74,6 +75,10 @@ export function storyWord(what: string): string {
     slip_sent: "Slip bheji",
     phone_added: "Phone juda",
     phone_off: "Phone band hua",
+    consent: "Kitab cloud par bhejne ki ijazat di",
+    first_worker: "Pehla mazdoor likha",
+    first_attendance: "Pehli hazri lagi",
+    first_invoice: "Pehli invoice bani",
   };
   if (fixed[what]) return fixed[what];
   if (what.startsWith("admin_")) return `Aap: ${actionWord[what.slice(6)] ?? what.slice(6)}`;

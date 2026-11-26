@@ -7,7 +7,8 @@ import { Shell } from "@/components/Shell";
 import { Fresh, Region } from "@/components/ui";
 import { ago, dubaiDay, rangeOf, showTime, type RangeKey } from "@/lib/dates";
 import { showFils, signedFils } from "@/lib/money";
-import type { AccountRow, AuditRow, Overview, Settings } from "@/lib/types";
+import { addMonths } from "@/lib/book";
+import type { AccountRow, AuditRow, Business, Overview, Settings } from "@/lib/types";
 import { useRpc } from "@/lib/use-rpc";
 import { readQuery, writeQuery } from "@/lib/url";
 import { actionWord, coversWord, months, planShort } from "@/lib/words";
@@ -47,6 +48,7 @@ function OverviewBody() {
   const month = useMemo(() => rangeOf("30d"), []);
   const audit = useRpc<AuditRow[]>("admin_audit", { p_from: month.from, p_to: month.to });
   const settings = useRpc<Settings>("admin_settings", {});
+  const business = useRpc<Business>("admin_business", { p_from: dubaiDay(range.from).slice(0, 7), p_to: dubaiDay(range.to).slice(0, 7), p_include_test: q.test });
   const b = q.compare ? before.data : null;
 
   return (
@@ -96,6 +98,24 @@ function OverviewBody() {
                   <div className="section-head"><h2>Plan kis ke paas</h2><span>aaj, {o.accounts.total} accounts</span></div>
                   <CountBars label="Har plan par kitne accounts" rows={planMix(o)} />
                   <p className="src">Cloud add-on: {o.addon_accounts} {o.addon_accounts === 1 ? "account" : "accounts"}. Zariya: har account ka aaj ka period.</p>
+                  <div className="section-head"><h2>Customers ka business</h2><span>in mahinon mein, un ki kitabon se</span></div>
+                  <Region load={business} lines={3} isEmpty={(b) => b.with_books === 0} empty={{ title: "Abhi kisi ki kitab nahin aayi", body: "Customer ki ijazat ke baad us ki kitab yahan gini jayegi." }}>
+                    {(b) => {
+                      const f = addMonths(b.months);
+                      return (
+                        <>
+                          <table>
+                            <tbody>
+                              <tr><td>Customers ka bill</td><td className="num">AED {showFils(f.bill)}</td></tr>
+                              <tr><td>Andazan nafa, audit shuda nahin</td><td className={`num${f.estimate < 0 ? " late" : ""}`}>AED {showFils(f.estimate)}</td></tr>
+                              <tr><td>Labour, aaj</td><td className="num">{b.workers}</td></tr>
+                            </tbody>
+                          </table>
+                          <p className="src">Ye customers ka business hai, aap ki kamai nahin. <Link href="/business/">Business mein dekhein</Link></p>
+                        </>
+                      );
+                    }}
+                  </Region>
                 </section>
               </div>
 

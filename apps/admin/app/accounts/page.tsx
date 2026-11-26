@@ -20,7 +20,7 @@ const over = (a: AccountRow) =>
   (a.limits?.workers != null && (a.workers ?? 0) > a.limits.workers) || (a.limits?.clients != null && (a.clients ?? 0) > a.limits.clients);
 const offline = (a: AccountRow) => (a.state === "trial" || a.state === "paid") && (!a.last_seen || Date.now() - Date.parse(a.last_seen) > week);
 
-// The saved views (D-081); "in loss" waits for the books in part 2.
+// The saved views (D-081). "In loss" is this month's estimate from the account's own books (T22d).
 const views: { key: string; label: string; keep: (a: AccountRow) => boolean }[] = [
   { key: "sab", label: "Sab", keep: () => true },
   { key: "trial", label: "Trial khatam hone wale", keep: (a) => a.state === "trial" && !!a.plan_ends_at && daysLeft(a.plan_ends_at) <= 5 },
@@ -29,6 +29,7 @@ const views: { key: string; label: string; keep: (a: AccountRow) => boolean }[] 
   { key: "slip", label: "Slip intezar mein", keep: (a) => a.slips_waiting > 0 },
   { key: "held", label: "Ruke hue", keep: (a) => a.state === "held" },
   { key: "ended", label: "Plan khatam", keep: (a) => a.state === "ended" },
+  { key: "loss", label: "Nuqsan mein", keep: (a) => (a.estimate_month ?? 0) < 0 },
 ];
 
 const sorts: Record<string, (a: AccountRow) => string | number> = {
@@ -41,6 +42,8 @@ const sorts: Record<string, (a: AccountRow) => string | number> = {
   workers: (a) => a.workers ?? -1,
   clients: (a) => a.clients ?? -1,
   paid: (a) => a.paid_fils,
+  bill: (a) => a.bill_month ?? -Infinity,
+  estimate: (a) => a.estimate_month ?? -Infinity,
   created: (a) => a.created_at,
 };
 
@@ -136,7 +139,7 @@ function Accounts() {
                     <table>
                       <thead><tr>
                         {head("name", "Account")}{head("state", "Haalat")}{head("ends", "Plan khatam")}{head("phones", "Phone", true)}
-                        {head("seen", "Aakhri baar online")}{head("version", "Version")}{head("workers", "Labour", true)}{head("clients", "Clients", true)}{head("paid", "Diya kul", true)}
+                        {head("seen", "Aakhri baar online")}{head("version", "Version")}{head("workers", "Labour", true)}{head("clients", "Clients", true)}{head("bill", "Bill, is mahina", true)}{head("estimate", "Nafa, is mahina", true)}{head("paid", "Diya kul", true)}
                       </tr></thead>
                       <tbody>
                         {slice.map((a) => (
@@ -149,6 +152,8 @@ function Accounts() {
                             <td>{a.app_version ?? "-"}</td>
                             <td className={`num${a.limits?.workers != null && (a.workers ?? 0) > a.limits.workers ? " late" : ""}`}>{a.workers ?? "-"}{a.limits?.workers != null ? <span className="sub">had {a.limits.workers}</span> : null}</td>
                             <td className="num">{a.clients ?? "-"}</td>
+                            <td className="num">{a.bill_month == null ? (a.consent_at ? "-" : <span className="sub">ijazat nahin</span>) : showFils(a.bill_month)}</td>
+                            <td className={`num${(a.estimate_month ?? 0) < 0 ? " late" : ""}`}>{a.estimate_month == null ? "-" : showFils(a.estimate_month)}</td>
                             <td className="num">{showFils(a.paid_fils)}</td>
                           </tr>
                         ))}
@@ -166,7 +171,7 @@ function Accounts() {
                   <button type="button" className="chip" disabled={page <= 1} onClick={() => set({ page: page - 1 })}>Pichhla</button>
                   <button type="button" className="chip" disabled={page >= pages} onClick={() => set({ page: page + 1 })}>Agla</button>
                 </div>
-                <p className="src">Labour aur clients har phone ke aakhri licence check se. Aakhri baar online wo waqt hai jab phone ne cloud se baat ki; offline phone ka data der se aata hai.</p>
+                <p className="src">Bill aur nafa account ki apni kitab se, is mahine ka andaza, audit shuda nahin. Labour aur clients har phone ke aakhri licence check se. Aakhri baar online wo waqt hai jab phone ne cloud se baat ki; offline phone ka data der se aata hai.</p>
               </>
             );
           }}
@@ -178,11 +183,11 @@ function Accounts() {
 
 function csvRows(rows: AccountRow[]): string[][] {
   return [
-    ["Account", "Tenant id", "Owner email", "Signup", "Haalat", "Plan", "Plan khatam", "Add-on tak", "Phone", "Aakhri baar online", "Version", "Labour", "Labour ki had", "Clients", "Slips intezar", "Diya kul (AED)", "Test"],
+    ["Account", "Tenant id", "Owner email", "Signup", "Haalat", "Plan", "Plan khatam", "Add-on tak", "Phone", "Aakhri baar online", "Version", "Labour", "Labour ki had", "Clients", "Slips intezar", "Bill is mahina (AED)", "Andazan nafa is mahina (AED)", "Diya kul (AED)", "Test"],
     ...rows.map((a) => [
       a.name, a.tenant_id, a.owner_email ?? "", dubaiDay(a.created_at), stateWord[a.state], planShort(a.plan), a.plan_ends_at ? dubaiDay(a.plan_ends_at) : "",
       a.addon_ends_at ? dubaiDay(a.addon_ends_at) : "", String(a.phones_on), a.last_seen ? dubaiDay(a.last_seen) : "", a.app_version ?? "",
-      String(a.workers ?? ""), String(a.limits?.workers ?? ""), String(a.clients ?? ""), String(a.slips_waiting), showFils(a.paid_fils), a.is_test ? "haan" : "",
+      String(a.workers ?? ""), String(a.limits?.workers ?? ""), String(a.clients ?? ""), String(a.slips_waiting), a.bill_month == null ? "" : showFils(a.bill_month), a.estimate_month == null ? "" : showFils(a.estimate_month), showFils(a.paid_fils), a.is_test ? "haan" : "",
     ]),
   ];
 }

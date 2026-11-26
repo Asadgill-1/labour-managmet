@@ -141,6 +141,7 @@ function row(t) {
     limits: p ? { workers: cap(t, "workers", p.max_workers), clients: cap(t, "clients", p.max_clients), managers: cap(t, "managers", p.max_managers) } : null,
     slips_waiting: slips.filter((s) => s.tenant_id === t.tenant_id && s.state === "waiting").length,
     paid_fils: mine.filter((x) => x.source === "slip").reduce((s, x) => s + x.amount_fils, 0) - money.filter((m) => m.tenant_id === t.tenant_id && m.kind === "refund").reduce((s, m) => s + m.amount_fils, 0),
+    ...bookRow(t),
   };
 }
 
@@ -179,7 +180,148 @@ const needCode = (claims) => { if (!(claims.amr ?? []).some((a) => a.method === 
 const why = (r) => { if (!r || r.trim().length < 3) refuse("say why"); };
 const tenantOf = (id) => tenants.find((t) => t.tenant_id === id) ?? refuse("no such account");
 
+// The customers' books as the app sends them (T22d): each month's summary from "Malik ki sheet", and records of each
+// kind. Every name and number is sample data.
+const bookEntities = ["tenant_profiles", "clients", "sites", "workers", "pay_contracts", "billing_contracts", "opening_balances",
+  "worker_groups", "worker_group_members", "rooms", "cash_entries", "salary_allocations", "period_locks", "day_offs",
+  "document_assets", "document_templates", "issued_documents", "timesheets", "timesheet_revisions", "timesheet_lines",
+  "billed_allocations", "invoices", "invoice_lines", "invoice_allocations", "attendance_batches", "attendance_entries",
+  "payroll_runs", "payroll_lines", "payroll_items", "number_floors", "month_summary"];
+const books = new Map();
+const dubaiMonth = (ms = now()) => new Date(ms + 4 * 3_600_000).toISOString().slice(0, 7);
+const monthAdd = (m, n) => {
+  const [y, mo] = m.split("-").map(Number);
+  const i = y * 12 + (mo - 1) + n;
+  return `${Math.floor(i / 12)}-${String((i % 12) + 1).padStart(2, "0")}`;
+};
+const seconds = (ms) => Math.floor(ms / 1000);
+const workerNames = ["Muhammad Asif", "Bilal Ahmed", "Imran Khan", "Sajid Ali", "Rashid Hussain", "Tariq Mehmood", "Zahid Iqbal", "Naveed Akhtar",
+  "Shahid Anwar", "Kamran Saleem", "Faisal Raza", "Arshad Javed", "Waqas Ahmad", "Usman Ghani", "Nadeem Abbas", "Irfan Haider", "Asad Mahmood",
+  "Junaid Akram", "Salman Tariq", "Danish Ali", "Adnan Qureshi", "Fahad Iqbal", "Hamza Yousaf", "Kashif Nawaz", "Rizwan Ahmed", "Yasir Hameed",
+  "Zubair Khan", "Shoaib Malik"];
+const clientNames = ["Sharjah Ports Co", "Al Qasba Hotel", "Sahara Mall FM", "Hamriyah Steel", "Jebel Ali Logistics", "Marina Towers FM", "Dubai South Works"];
+
+function sampleBooks(t, { months, base, consentDaysAgo, lossMonth = -1, lastHoursAgo = 3, records = true }) {
+  const b = { consent_at: ago(consentDaysAgo), consent_version: 1, last_at: null, rows: new Map(), months: [] };
+  books.set(t.tenant_id, b);
+  if (!records) return;
+  b.last_at = iso(now() - lastHoursAgo * 3_600_000);
+  const put = (entity, id, data, at = b.last_at) => {
+    if (!b.rows.has(entity)) b.rows.set(entity, []);
+    b.rows.get(entity).push({ id, version: 1, at, data: { id, tenant_id: t.tenant_id, ...data } });
+  };
+  const made = Date.parse(t.created_at_utc);
+  const clients = clientNames.slice(0, t.clients).map((name, i) => ({ id: randomUUID(), name, i }));
+  clients.forEach((c) => put("clients", c.id, { name: c.name, phone: `+971 6 55${c.i} 0${c.i}10`, trn: c.i % 2 ? null : `10023456780000${c.i}`, active: 1, created_at_utc: seconds(made + (c.i + 1) * day) }));
+  clients.forEach((c) => put("sites", randomUUID(), { client_id: c.id, name: c.i % 2 ? "Main yard" : "Tower B", location: "Sharjah", active: 1, created_at_utc: seconds(made + (c.i + 1) * day) }));
+  const workers = workerNames.slice(0, t.workers).map((name, i) => ({ id: randomUUID(), name, i }));
+  workers.forEach((w) => put("workers", w.id, { code: `W${String(w.i + 1).padStart(3, "0")}`, name: w.name, trade: ["Helper", "Mason", "Driver", "Cleaner"][w.i % 4],
+    phone: `+971 50 ${String(1000000 + w.i * 7919).slice(0, 7)}`, joining_date: dateOnly(made + 2 * day), active: w.i === t.workers - 1 ? 0 : 1, created_at_utc: seconds(made + 2 * day + w.i * 60_000) }));
+  const cur = dubaiMonth();
+  const today = Number(dateOnly(now() + 4 * 3_600_000).slice(8, 10));
+  for (let n = months - 1; n >= 0; n--) {
+    const month = monthAdd(cur, -n);
+    const share = n === 0 ? Math.max(1, today) / 30 : 1;
+    const bill = Math.round(base * share * (0.85 + ((n * 37) % 10) / 33)) * 100;
+    const wages = Math.round((bill * 0.66) / 100) * 100;
+    const [salaries, allowances, cuts, room_in, room_out] = [250000, 60000, 20000, 150000, n === lossMonth ? 600000 : 300000];
+    const expenses = n === lossMonth ? Math.round(bill * 0.25 / 100) * 100 : 155000;
+    const estimate = bill - wages - salaries - allowances + cuts + room_in - room_out - expenses;
+    const invoices = n === 0 ? 0 : clients.length * 2;
+    const invoiced = n === 0 ? 0 : Math.round((bill * 0.97) / 100) * 100;
+    b.months.push({ month, bill, wages, salaries, allowances, cuts, room_in, room_out, expenses, estimate, days: Math.round(t.workers * 26 * share),
+      workers: t.workers - 1, no_rate: 0, invoices, invoiced, credited: n === lossMonth ? 500000 : 0 });
+    if (n > 0) {
+      clients.forEach((c, k) => put("invoices", randomUUID(), { number: `INV-${month.slice(0, 4)}-${String(100 + (months - n) * 10 + k).padStart(4, "0")}`, kind: "invoice", status: "issued",
+        client_id: c.id, from_date: `${month}-01`, to_date: `${month}-28`, issue_date: `${monthAdd(month, 1)}-01`, created_at_utc: seconds(Date.parse(`${monthAdd(month, 1)}-01T08:00:00Z`)) }));
+    }
+  }
+  const lastMonth = monthAdd(cur, -1);
+  workers.slice(0, -1).forEach((w) => put("payroll_lines", randomUUID(), { worker_id: w.id, period_from: `${lastMonth}-01`, earned_fils: 180000 + w.i * 1500, net_fils: 165000 + w.i * 1500,
+    payable_fils: 160000 + w.i * 1500, reversed: 0, created_at_utc: seconds(Date.parse(`${cur}-03T10:00:00Z`)) }));
+  for (let d = 1; d <= Math.min(today, 6); d++) {
+    workers.slice(0, 5).forEach((w, k) => put("attendance_entries", randomUUID(), { work_date: `${cur}-${String(d).padStart(2, "0")}`, worker_id: w.id, client_id: clients[k % clients.length].id,
+      attendance_status: d % 6 === 5 && k === 2 ? "absent" : "present", client_billable_minutes: 480 + (k % 2) * 60, client_amount_fils: 13500 + (k % 2) * 1700, worker_amount_fils: 9000,
+      deleted: 0, superseded: 0, created_at_utc: seconds(Date.parse(`${cur}-${String(d).padStart(2, "0")}T14:00:00Z`)) }));
+  }
+  [["expense", 45000, "Diesel"], ["roomRentPaid", 300000, "Room ka kiraya"], ["expense", 12000, "Mobile card"]].forEach(([kind, amount_fils, note], i) =>
+    put("cash_entries", randomUUID(), { entry_date: `${cur}-0${i + 2}`, kind, amount_fils, note, worker_id: null, client_id: null, created_at_utc: seconds(Date.parse(`${cur}-0${i + 2}T09:00:00Z`)) }));
+}
+
+sampleBooks(noor, { months: 3, base: 36000, consentDaysAgo: 2, lossMonth: 1, lastHoursAgo: 15 });
+sampleBooks(gulf, { months: 1, base: 52000, consentDaysAgo: 22, lastHoursAgo: 1 });
+sampleBooks(fajr, { months: 2, base: 61000, consentDaysAgo: 2, lastHoursAgo: 9 });
+sampleBooks(hands, { months: 2, base: 24000, consentDaysAgo: 2, lossMonth: 0, lastHoursAgo: 30 });
+sampleBooks(bright, { months: 2, base: 28000, consentDaysAgo: 2, lastHoursAgo: 19 * 24 });
+sampleBooks(sahil, { months: 0, base: 0, consentDaysAgo: 1, records: false });
+sampleBooks(test, { months: 1, base: 9000, consentDaysAgo: 30 });
+
+function bookOf(t) {
+  const b = books.get(t.tenant_id);
+  const live = (entity) => (b?.rows.get(entity) ?? []).filter((r) => r.data);
+  const active = (entity) => live(entity).filter((r) => r.data.active !== 0).length;
+  const first = (entity, keep = () => true) => {
+    const at = live(entity).filter((r) => keep(r.data)).map((r) => r.data.created_at_utc).sort((x, y) => x - y)[0];
+    return at === undefined ? null : iso(at * 1000);
+  };
+  const issued = (d) => ["issued", "credited"].includes(d.status);
+  return {
+    consent_at: b?.consent_at ?? null,
+    consent_version: b?.consent_version ?? null,
+    last_at: b?.last_at ?? null,
+    records: b ? [...b.rows.values()].reduce((s, r) => s + r.length, 0) + b.months.length : 0,
+    counts: { workers: active("workers"), clients: active("clients"), sites: active("sites"), invoices: live("invoices").filter((r) => r.data.kind === "invoice" && issued(r.data)).length },
+    firsts: { worker: first("workers"), attendance: first("attendance_entries"), invoice: first("invoices", issued) },
+    months: b?.months ?? [],
+  };
+}
+
+const figureKeys = ["bill", "wages", "salaries", "allowances", "cuts", "room_in", "room_out", "expenses", "estimate", "days", "invoices", "invoiced", "credited"];
+function business(from, to, includeTest) {
+  if (!/^\d{4}-\d{2}$/.test(from) || !/^\d{4}-\d{2}$/.test(to)) refuse("months are YYYY-MM");
+  const kept = tenants.filter((t) => includeTest || !t.is_test);
+  const withBooks = kept.filter((t) => books.get(t.tenant_id)?.last_at);
+  const byMonth = new Map();
+  const accounts = [];
+  for (const t of withBooks) {
+    const b = bookOf(t);
+    const ms = b.months.filter((m) => m.month >= from && m.month <= to);
+    for (const m of ms) {
+      const sum = byMonth.get(m.month) ?? { month: m.month, accounts: 0, ...Object.fromEntries(figureKeys.map((k) => [k, 0])) };
+      sum.accounts += 1;
+      for (const k of figureKeys) sum[k] += m[k] ?? 0;
+      byMonth.set(m.month, sum);
+    }
+    const total = (k) => ms.reduce((s, m) => s + (m[k] ?? 0), 0);
+    accounts.push({ tenant_id: t.tenant_id, name: t.name, bill: total("bill"), wages: total("wages"), estimate: total("estimate"), invoiced: total("invoiced"),
+      workers: b.counts.workers, clients: b.counts.clients, last_at: b.last_at });
+  }
+  return {
+    months: [...byMonth.values()].sort((a, b) => a.month.localeCompare(b.month)),
+    accounts: accounts.sort((a, b) => b.bill - a.bill),
+    workers: accounts.reduce((s, a) => s + a.workers, 0),
+    clients: accounts.reduce((s, a) => s + a.clients, 0),
+    with_books: withBooks.length,
+    consented: kept.filter((t) => books.get(t.tenant_id)?.consent_at).length,
+    accounts_total: kept.length,
+  };
+}
+
+// What private.account_row gains from the books (T22d).
+function bookRow(t) {
+  const b = books.get(t.tenant_id);
+  const month = b?.months.find((m) => m.month === dubaiMonth());
+  return { consent_at: b?.consent_at ?? null, book_at: b?.last_at ?? null, bill_month: month?.bill ?? null, estimate_month: month?.estimate ?? null };
+}
+
 const rpcs = {
+  admin_account_book: ({ p_tenant }) => bookOf(tenantOf(p_tenant)),
+  admin_book: ({ p_tenant, p_entity }) => {
+    const t = tenantOf(p_tenant);
+    if (!bookEntities.includes(p_entity)) refuse(`unknown record type: ${p_entity}`);
+    return [...(books.get(t.tenant_id)?.rows.get(p_entity) ?? [])].sort((a, b) => b.at.localeCompare(a.at) || a.id.localeCompare(b.id));
+  },
+  admin_business: ({ p_from, p_to, p_include_test }) => business(p_from, p_to, p_include_test),
   admin_accounts: ({ p_include_test }) => tenants.filter((t) => p_include_test || !t.is_test).map(row).sort((a, b) => b.created_at.localeCompare(a.created_at)),
   admin_account: ({ p_tenant }) => {
     const t = tenantOf(p_tenant);

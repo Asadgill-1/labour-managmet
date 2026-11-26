@@ -3,19 +3,22 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { AccountActions, type Ask } from "@/components/account/actions";
+import { BookSummary, bookStory, Kitab } from "@/components/account/book";
 import { Backups, Khulasa, Money, Notes, Phones, Settings, Story } from "@/components/account/tabs";
 import { Shell } from "@/components/Shell";
 import { Fresh, Region, Tag } from "@/components/ui";
 import { ago, showDate } from "@/lib/dates";
 import { showFils } from "@/lib/money";
-import type { Account, Settings as Platform } from "@/lib/types";
+import type { Account, AccountBook, Settings as Platform } from "@/lib/types";
 import { useRpc } from "@/lib/use-rpc";
 import { planShort, stateTag, stateWord } from "@/lib/words";
 
 const tabs = [
+  { key: "book", label: "Business khulasa" },
   { key: "khulasa", label: "Khulasa" },
   { key: "plan", label: "Plan aur paise" },
   { key: "phone", label: "Phone" },
+  { key: "kitab", label: "Kitab" },
   { key: "backup", label: "Backup" },
   { key: "timeline", label: "Timeline" },
   { key: "account", label: "Account" },
@@ -29,10 +32,11 @@ export default function AccountPage() {
 function AccountBody() {
   const params = useSearchParams();
   const id = params.get("id") ?? "";
-  const tab = tabs.find((t) => t.key === params.get("tab"))?.key ?? "khulasa";
+  const tab = tabs.find((t) => t.key === params.get("tab"))?.key ?? "book";
   const ok = /^[0-9a-f-]{36}$/i.test(id);
   const load = useRpc<Account>("admin_account", { p_tenant: id }, !ok);
   const settings = useRpc<Platform>("admin_settings", {}, !ok);
+  const book = useRpc<AccountBook>("admin_account_book", { p_tenant: id }, !ok);
   const [ask, setAsk] = useState<Ask | null>(null);
 
   if (!ok) {
@@ -43,7 +47,10 @@ function AccountBody() {
     <main className="sheet-page">
       <div className="cap page">
         <Region load={load} lines={8}>
-          {(a) => (
+          {(loaded) => {
+            // The books' firsts and the consent join the account's story (MET-05).
+            const a = { ...loaded, story: [...loaded.story, ...bookStory(book.data)].sort((x, y) => y.at.localeCompare(x.at)) };
+            return (
             <>
               <div className="crumbs"><Link href="/accounts/">Accounts</Link> / {a.name}</div>
               <div className="head">
@@ -64,24 +71,27 @@ function AccountBody() {
                 </div>
               </div>
               <Status a={a} />
-              <p className="src">Kitab ka khulasa (clients ka bill, labour ki tankhwah, nafa ya nuqsan) hissa 2 mein aayega, jab customer ki ijazat se kitab cloud par aayegi. <Fresh at={load.fetchedAt} /></p>
+              <p className="src"><Fresh at={load.fetchedAt} /></p>
               <nav className="tabs" aria-label="Account ke hisse">
                 {tabs.map((t) => (
-                  <Link key={t.key} href={`/account/?id=${id}${t.key === "khulasa" ? "" : `&tab=${t.key}`}`} aria-current={tab === t.key ? "page" : undefined} scroll={false}>
+                  <Link key={t.key} href={`/account/?id=${id}${t.key === "book" ? "" : `&tab=${t.key}`}`} aria-current={tab === t.key ? "page" : undefined} scroll={false}>
                     {t.label}{t.key === "notes" && a.notes.length ? ` ${a.notes.length}` : ""}
                   </Link>
                 ))}
               </nav>
+              {tab === "book" ? <BookSummary load={book} /> : null}
               {tab === "khulasa" ? <Khulasa a={a} act={setAsk} /> : null}
               {tab === "plan" ? <Money a={a} act={setAsk} plans={settings.data?.plans ?? []} /> : null}
               {tab === "phone" ? <div style={{ marginTop: 16 }}><Phones a={a} act={setAsk} /></div> : null}
+              {tab === "kitab" ? <Kitab tenant={id} name={a.name} consented={Boolean(book.data?.consent_at ?? a.consent_at)} /> : null}
               {tab === "backup" ? <Backups a={a} act={setAsk} /> : null}
               {tab === "timeline" ? <div style={{ marginTop: 24 }}><Story events={a.story} /></div> : null}
               {tab === "account" ? <div style={{ marginTop: 16 }}><Settings a={a} act={setAsk} /></div> : null}
               {tab === "notes" ? <Notes a={a} act={setAsk} /> : null}
               <AccountActions a={a} ask={ask} close={() => setAsk(null)} done={load.reload} />
             </>
-          )}
+            );
+          }}
         </Region>
       </div>
     </main>
