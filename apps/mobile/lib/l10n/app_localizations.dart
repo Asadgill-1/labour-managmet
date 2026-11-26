@@ -7747,6 +7747,24 @@ abstract class AppLocalizations {
   /// **'The plan has ended. Everything entered can still be seen, printed and exported. New entries need a plan.'**
   String get planEndedNote;
 
+  /// No description provided for @planHeldNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The platform has paused your account: “{told}”. Everything entered can still be seen, printed and exported.'**
+  String planHeldNote(String told);
+
+  /// No description provided for @planHeldUntilNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The platform has paused your account until {date}: “{told}”. Everything entered can still be seen, printed and exported.'**
+  String planHeldUntilNote(String date, String told);
+
+  /// No description provided for @planSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact support'**
+  String get planSupport;
+
   /// No description provided for @planCheckOffline.
   ///
   /// In en, this message translates to:

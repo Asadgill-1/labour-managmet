@@ -7,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:supabase/supabase.dart';
 
+import '../app/version.dart';
 import 'backup.dart' show backupMime, backupPasswordKey;
 import 'cloud_copy.dart';
 import 'licence.dart';
@@ -233,7 +234,7 @@ class Account {
       final (:workers, :clients) = await counts();
       final response = await _client.functions.invoke(
         'licence',
-        body: {'tenant_id': tenantId, 'device_id': deviceId, 'active_workers': workers, 'active_clients': clients},
+        body: {'tenant_id': tenantId, 'device_id': deviceId, 'active_workers': workers, 'active_clients': clients, 'app_version': appVersion},
       );
       final m = response.data as Map<String, dynamic>;
       return (payload: m['payload'] as String, sig: m['sig'] as String);

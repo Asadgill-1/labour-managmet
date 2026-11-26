@@ -16,6 +16,9 @@ typedef SignedLicence = ({String payload, String sig});
 const clockSlack = Duration(minutes: 10);
 
 /// What the cloud's signed licence says for one company on one phone (T21, D-074).
+/// The platform's hold on the account (D-081 (7)): suspend or block, when it lifts if it does, and the owner's words.
+typedef LicenceHold = ({String kind, DateTime? until, String told});
+
 class Licence {
   const Licence({
     required this.tenantId,
@@ -28,6 +31,7 @@ class Licence {
     this.startsAt,
     this.endsAt,
     this.addonUntil,
+    this.hold,
     this.workers,
     this.clients,
     this.managers,
@@ -52,6 +56,9 @@ class Licence {
 
   /// The end of the cloud add-on that covers today, or null without one (T20d-a).
   final DateTime? addonUntil;
+
+  /// The platform's hold while it lasts, with the state 'none', so entries lock as with an ended plan (T22a).
+  final LicenceHold? hold;
 
   /// Active workers, client companies, managers and phones the plan allows. Null is unlimited.
   final int? workers;
@@ -101,6 +108,14 @@ Future<Licence?> verifyLicence(SignedLicence signed, String publicKey, {required
       startsAt: at('starts_at'),
       endsAt: at('ends_at'),
       addonUntil: at('addon_until'),
+      hold: switch (m['hold']) {
+        final Map<String, dynamic> h => (
+          kind: h['kind'] as String,
+          until: h['until'] == null ? null : DateTime.parse(h['until'] as String).toUtc(),
+          told: h['told'] as String,
+        ),
+        _ => null,
+      },
       workers: limits['workers'] as int?,
       clients: limits['clients'] as int?,
       managers: limits['managers'] as int?,

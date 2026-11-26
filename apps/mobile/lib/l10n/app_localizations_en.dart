@@ -4678,6 +4678,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'The plan has ended. Everything entered can still be seen, printed and exported. New entries need a plan.';
 
   @override
+  String planHeldNote(String told) {
+    return 'The platform has paused your account: “$told”. Everything entered can still be seen, printed and exported.';
+  }
+
+  @override
+  String planHeldUntilNote(String date, String told) {
+    return 'The platform has paused your account until $date: “$told”. Everything entered can still be seen, printed and exported.';
+  }
+
+  @override
+  String get planSupport => 'Contact support';
+
+  @override
   String get planCheckOffline => 'No internet, so the plan was not checked.';
 
   @override
@@ -9490,6 +9503,19 @@ class AppLocalizationsEnPk extends AppLocalizationsEn {
   @override
   String get planEndedNote =>
       'Plan khatam ho gaya. Jo likha hai wo dekh, chhap aur export kar sakte hain. Nayi entry ke liye plan lein.';
+
+  @override
+  String planHeldNote(String told) {
+    return 'Platform ne aap ka account rok diya hai: “$told”. Jo likha hai wo dekh, chhap aur export kar sakte hain.';
+  }
+
+  @override
+  String planHeldUntilNote(String date, String told) {
+    return 'Platform ne aap ka account $date tak rok diya hai: “$told”. Jo likha hai wo dekh, chhap aur export kar sakte hain.';
+  }
+
+  @override
+  String get planSupport => 'Support se rabta';
 
   @override
   String get planCheckOffline =>

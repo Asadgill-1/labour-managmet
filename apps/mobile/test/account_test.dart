@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:labour_app/app/version.dart';
 import 'package:labour_app/data/account.dart';
 import 'package:labour_app/data/licence.dart';
 import 'package:labour_app/data/tenant_database.dart';
@@ -320,7 +321,7 @@ void main() {
       expect(licensing.view.status, LicenceStatus.active);
       expect(licensing.view.licence?.planName, 'Trial');
       final call = cloud.calls.lastWhere((c) => c.path == '/functions/v1/licence').body;
-      expect(call, {'tenant_id': company, 'device_id': await thisDeviceId(storage), 'active_workers': 3, 'active_clients': 1});
+      expect(call, {'tenant_id': company, 'device_id': await thisDeviceId(storage), 'active_workers': 3, 'active_clients': 1, 'app_version': appVersion});
     });
 
     test('an expired kept session renews; one the cloud no longer takes is forgotten, and the licence asks for the password', () async {

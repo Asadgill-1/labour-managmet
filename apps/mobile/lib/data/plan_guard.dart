@@ -12,6 +12,9 @@ enum PlanBlock {
   /// The trial or the plan ended, or there never was one.
   ended,
 
+  /// The platform's owner holds the account: suspended or blocked (D-081 (7)).
+  held,
+
   /// Seven days, or the plan's end, passed since the last check online.
   leaseOver,
 
@@ -33,12 +36,15 @@ enum PlanBlock {
 
 /// The plan refused a write. Nothing was written (T21c).
 class PlanRefused implements Exception {
-  const PlanRefused(this.block, {this.limit});
+  const PlanRefused(this.block, {this.limit, this.hold});
 
   final PlanBlock block;
 
   /// The plan's number, when a number is the reason.
   final int? limit;
+
+  /// The platform's hold, when it is the reason, with the owner's words.
+  final LicenceHold? hold;
 
   @override
   String toString() => 'PlanRefused(${block.name}${limit == null ? '' : ', $limit'})';
@@ -55,11 +61,11 @@ PlanRefused? planRefusal(LicenceView view, {required String entity, required Wri
   final block = switch (view.status) {
     LicenceStatus.active => null,
     LicenceStatus.none => PlanBlock.noLicence,
-    LicenceStatus.ended => PlanBlock.ended,
+    LicenceStatus.ended => view.licence?.hold == null ? PlanBlock.ended : PlanBlock.held,
     LicenceStatus.leaseOver => PlanBlock.leaseOver,
     LicenceStatus.clockBack => PlanBlock.clockBack,
   };
-  if (block != null) return PlanRefused(block);
+  if (block != null) return PlanRefused(block, hold: view.licence?.hold);
   final licence = view.licence!;
   if (licence.workers case final limit? when workers > limit) return PlanRefused(PlanBlock.workersOver, limit: limit);
   if (licence.clients case final limit? when clients > limit) return PlanRefused(PlanBlock.clientsOver, limit: limit);

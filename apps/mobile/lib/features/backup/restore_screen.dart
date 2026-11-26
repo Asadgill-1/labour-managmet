@@ -15,6 +15,7 @@ import '../../data/restore.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../account/account_screens.dart';
+import '../account/support_contact.dart';
 import 'backup_screen.dart';
 import 'cloud_copies_screen.dart';
 
@@ -128,29 +129,9 @@ class _RestoreScreenState extends ConsumerState<RestoreScreen> {
   }
 
   /// Only the cloud's copy carries the platform's lock, so only there can a forgotten password be helped (D-072).
-  Future<void> _forgot() async {
+  Future<void> _forgot() {
     final l10n = AppLocalizations.of(context);
-    final contact = await ref.read(accountProvider)!.account.supportContact();
-    if (!mounted) return;
-    await showDialog<void>(
-      context: context,
-      builder: (dialog) => AlertDialog(
-        title: Text(l10n.restoreForgot),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(l10n.restoreForgotBody),
-            fieldGap,
-            if (contact == null)
-              Text(l10n.restoreForgotNoContact, style: const TextStyle(color: muted))
-            else
-              SelectableText(l10n.restoreForgotContact(contact), style: const TextStyle(fontWeight: FontWeight.w600, color: ink)),
-          ],
-        ),
-        actions: [TextButton(onPressed: () => Navigator.of(dialog).pop(), child: Text(l10n.cancel))],
-      ),
-    );
+    return showSupportContact(context, ref.read(accountProvider)!.account, title: l10n.restoreForgot, body: l10n.restoreForgotBody);
   }
 
   Future<void> _take(Uint8List bytes) async {

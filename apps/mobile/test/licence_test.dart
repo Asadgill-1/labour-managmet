@@ -74,6 +74,19 @@ void main() {
       expect(licence.addonUntil, until);
     });
 
+    test("the platform's hold reads from the licence, with or without an end (T22b)", () async {
+      final held = (await check(await sign(key, {
+        ...facts(),
+        'state': 'none',
+        'hold': {'kind': 'suspend', 'until': '2026-12-01T00:00:00+00:00', 'told': 'Support se rabta karein'},
+      })))!;
+      expect(held.hold, (kind: 'suspend', until: DateTime.utc(2026, 12), told: 'Support se rabta karein'));
+      final open = (await check(await sign(key, {...facts(), 'state': 'none', 'hold': {'kind': 'block', 'until': null, 'told': 'Band'}})))!;
+      expect(open.hold, (kind: 'block', until: null, told: 'Band'));
+      expect((await check(await sign(key, {...facts(), 'hold': null})))!.hold, isNull, reason: 'no hold');
+      expect((await check(await sign(key, facts())))!.hold, isNull, reason: 'a licence from before holds');
+    });
+
     test('Postgres timestamps with an offset and microseconds read', () async {
       final body = facts()
         ..['iat'] = '2026-11-11T10:00:00.123456+00:00'

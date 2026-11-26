@@ -11,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:labour_app/app/app.dart';
 import 'package:labour_app/app/root.dart';
 import 'package:labour_app/app/settings.dart';
+import 'package:labour_app/app/version.dart';
 import 'package:labour_app/app/theme.dart';
 import 'package:labour_app/data/account.dart';
 import 'package:labour_app/data/masters.dart';
@@ -766,6 +767,30 @@ expect(find.text('Small Company Plan'), findsOneWidget);
       expect(refused, isA<PlanRefused>().having((e) => e.block, 'block', PlanBlock.ended));
       expect(await real(tester, () => db.select(db.workers).get()), isEmpty);
       await shutDown(tester, db);
+    });
+
+    testWidgets("a held account shows the owner's words on the home page, in the lock and in Settings, leads to support, and sends the app's version (T22b)", (tester) async {
+      cloud
+        ..licenceState = 'none'
+        ..licenceHold = {'kind': 'suspend', 'until': '2026-12-01T00:00:00+00:00', 'told': 'Slip ka masla, support se baat karein'}
+        ..bank['support_contact'] = 'WhatsApp +971 50 000 0000';
+      await loggedIn(tester);
+      expect(cloud.lastAppVersion, appVersion, reason: "the licence check tells the cloud the app's version");
+      final words = find.textContaining('\u201cSlip ka masla, support se baat karein\u201d');
+      expect(words, findsOneWidget, reason: 'the home page says why, in the owner\'s words');
+      expect(find.textContaining('01-12-2026 tak rok diya hai'), findsOneWidget, reason: 'and until when');
+      expect(lockShown, findsOneWidget);
+
+      await tapAndSettle(tester, find.text('Hazri lagayein'));
+      expect(find.byType(AttendanceEntryScreen), findsNothing);
+      expect(inDialog(words), findsOneWidget, reason: 'the lock says why');
+      await tapAndSettle(tester, inDialog(find.text('Support se rabta')));
+      expect(inDialog(find.text('Support se rabta karein: WhatsApp +971 50 000 0000')), findsOneWidget);
+      await tapAndSettle(tester, inDialog(find.text('Wapas')));
+
+      await goTo(tester, 'Settings');
+      expect(find.textContaining('rok diya hai'), findsWidgets, reason: 'Settings says it too');
+      await shutDown(tester, opened.single);
     });
 
     testWidgets('on Small the 16th worker is refused from the list with the number, and so is bringing one back from the archive (T21c)', (tester) async {

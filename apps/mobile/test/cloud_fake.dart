@@ -62,6 +62,10 @@ class FakeCloud {
   /// The end of the cloud add-on that covers today, as the licence carries it and the download asks (T20d).
   DateTime? addonUntil;
 
+  /// The platform's hold the licence carries, with the state 'none' (T22b), and the app version the last request sent.
+  Map<String, dynamic>? licenceHold;
+  String? lastAppVersion;
+
   /// The kept session's refresh token is no longer taken.
   bool refreshRefused = false;
 
@@ -284,6 +288,7 @@ class FakeCloud {
       case '/functions/v1/licence':
         if (caller == null) return _json({'error': 'sign_in'}, status: 401);
         if (licenceRefusal case final refusal?) return _json({'error': refusal}, status: 403);
+        lastAppVersion = body['app_version'] as String?;
         final now = DateTime.now().toUtc();
         final lease = now.add(const Duration(days: 7));
         final none = licenceState == 'none';
@@ -294,6 +299,7 @@ class FakeCloud {
           'starts_at': none ? null : now.toIso8601String(), 'ends_at': licenceEnds.toIso8601String(),
           'lease_until': (none || lease.isBefore(licenceEnds) ? lease : licenceEnds).toIso8601String(),
           'addon_until': addonUntil?.toIso8601String(),
+          'hold': licenceHold,
           'limits': {'workers': none ? 0 : licenceWorkers, 'clients': none ? 0 : licenceClients, 'managers': none ? 0 : null, 'devices': 1},
         };
         final bytes = utf8.encode(jsonEncode(facts));

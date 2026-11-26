@@ -1,3 +1,4 @@
+import 'package:domain/dates.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +13,7 @@ import '../../data/plans.dart';
 import '../../data/tenant_database.dart';
 import '../../l10n/app_localizations.dart';
 import '../account/account_screens.dart';
+import '../account/support_contact.dart';
 import 'plan_screen.dart';
 
 /// Why the plan would hold back a write from this screen now, or null (T21c). The write path's own rule, read here so
@@ -27,12 +29,17 @@ PlanRefused? planBlock(WidgetRef ref, {String entity = '', WriteEffect effect = 
   return planRefusal(licensing.view, entity: entity, effect: effect, workers: workers, clients: clients);
 }
 
+/// The platform's hold in words: the owner's own, quoted, and the day it lifts if it does (D-081 (7)).
+String heldNote(AppLocalizations l10n, LicenceHold hold) =>
+    hold.until == null ? l10n.planHeldNote(hold.told) : l10n.planHeldUntilNote(showDate(dubaiToday(hold.until!)), hold.told);
+
 /// The reason in words (UX-04). [problem] is why the last check online failed, which says more than "not checked".
 /// [workers] and [clients] are the active counts, for a company over its plan.
 String planBlockText(AppLocalizations l10n, PlanRefused refused, AccountProblem? problem, {int workers = 0, int clients = 0}) {
   String unchecked(String plain) => problem == null || problem == AccountProblem.offline ? plain : accountProblemText(l10n, AccountRefused(problem));
   return switch (refused.block) {
     PlanBlock.ended => l10n.planEndedNote,
+    PlanBlock.held => refused.hold == null ? l10n.planEndedNote : heldNote(l10n, refused.hold!),
     PlanBlock.clockBack => l10n.planClockBack,
     PlanBlock.noLicence => unchecked(l10n.planNotChecked),
     PlanBlock.leaseOver => unchecked(l10n.planLeaseOver),
@@ -54,6 +61,7 @@ String planBlockText(AppLocalizations l10n, PlanRefused refused, AccountProblem?
   Future<void> open(Widget screen) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
   return switch (refused.block) {
     PlanBlock.ended || PlanBlock.workerLimit || PlanBlock.clientLimit => playStoreBuild ? null : (label: l10n.planTake, run: () => open(PlanScreen(account: account))),
+    PlanBlock.held => (label: l10n.planSupport, run: () => showSupportContact(context, account, title: l10n.planSupport)),
     PlanBlock.workersOver => (label: l10n.planKeepOpen, run: () => open(const KeepActiveScreen(clients: false))),
     PlanBlock.clientsOver => (label: l10n.planKeepOpen, run: () => open(const KeepActiveScreen(clients: true))),
     PlanBlock.noLicence || PlanBlock.leaseOver || PlanBlock.clockBack =>

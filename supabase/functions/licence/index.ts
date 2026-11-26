@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
     const auth = req.headers.get("Authorization");
     if (!auth?.startsWith("Bearer ")) return reply({ error: "sign_in" }, 401);
     const body = await req.json().catch(() => null);
-    const { tenant_id, device_id, active_workers, active_clients } = body ?? {};
+    const { tenant_id, device_id, active_workers, active_clients, app_version } = body ?? {};
     if (!uuid.test(String(tenant_id)) || !uuid.test(String(device_id)) ||
       !Number.isInteger(active_workers) || !Number.isInteger(active_clients)) {
       return reply({ error: "bad_request" }, 400);
@@ -53,6 +53,8 @@ Deno.serve(async (req) => {
       p_device_id: device_id,
       p_active_workers: active_workers,
       p_active_clients: active_clients,
+      // The app's version for the owner's dashboard (T22a); an app that sends none is served as before.
+      ...(typeof app_version === "string" && app_version.length >= 1 && app_version.length <= 40 ? { p_app_version: app_version } : {}),
     });
     if (facts.error) {
       const refusal = refusals[facts.error.message];

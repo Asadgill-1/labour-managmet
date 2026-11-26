@@ -67,6 +67,30 @@ void main() {
       }
     });
 
+    test("a held account refuses every entry as held, carrying the owner's words, and lets the safe rows through (T22b)", () {
+      const hold = (kind: 'suspend', until: null, told: 'Support se rabta karein');
+      final held = (
+        licence: Licence(
+          tenantId: testTenant,
+          deviceId: 'device-1',
+          state: 'none',
+          issuedAt: _now,
+          leaseUntil: _now.add(const Duration(days: 7)),
+          hold: hold,
+        ),
+        status: LicenceStatus.ended,
+        problem: null,
+      );
+      for (final entity in _entries) {
+        expect(ask(held, entity)?.block, PlanBlock.held, reason: entity);
+        expect(ask(held, entity)?.hold, hold, reason: entity);
+      }
+      for (final entity in _alwaysAllowed) {
+        expect(ask(held, entity), isNull, reason: entity);
+      }
+      expect(ask(held, 'workers', effect: WriteEffect.archives), isNull, reason: 'archiving is never held back');
+    });
+
     test('a plan that ended, a lease past its end, a clock moved back and no licence each refuse every entry, saying which', () {
       final states = {
         LicenceStatus.ended: PlanBlock.ended,

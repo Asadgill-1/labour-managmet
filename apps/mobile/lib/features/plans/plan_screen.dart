@@ -10,6 +10,7 @@ import '../../app/form_bits.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../data/account.dart';
+import 'plan_lock.dart' show heldNote;
 import '../../data/licence.dart';
 import '../../data/plans.dart';
 import '../../data/tenant_database.dart';
@@ -489,7 +490,7 @@ String? planWarning(AppLocalizations l10n, LicenceView view) {
   return switch (view.status) {
     LicenceStatus.active => null,
     LicenceStatus.none => l10n.planNotChecked,
-    LicenceStatus.ended => l10n.planEndedNote,
+    LicenceStatus.ended => view.licence?.hold == null ? l10n.planEndedNote : heldNote(l10n, view.licence!.hold!),
     LicenceStatus.leaseOver => l10n.planLeaseOver,
     LicenceStatus.clockBack => l10n.planClockBack,
   };
