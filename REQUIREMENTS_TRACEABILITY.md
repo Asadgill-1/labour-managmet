@@ -113,7 +113,7 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | TEAM-01 | 15 | Invite | T24 | NOT_STARTED | - | - |
 | TEAM-02 | 15 | Permission presets | T24 | NOT_STARTED | - | - |
 | TEAM-03 | 15 | Payload isolation | T24 | NOT_STARTED | TC-007 | - |
-| TEAM-04 | 15 | Sync | T25 | IN_PROGRESS | TC-008, TC-209 | `docs/audit/BUG_REGISTER.md` |
+| TEAM-04 | 15 | Sync | T25 | IN_PROGRESS | TC-008, TC-209, TC-225 | `docs/audit/BUG_REGISTER.md`; the books go to the cloud by a change list the database fills, newest version kept (D-084, CI run 45880969660, TC-225) |
 | TEAM-05 | 15 | Conflicts | T25 | NOT_STARTED | TC-048 | - |
 | TEAM-06 | 15 | Revocation | T25 | NOT_STARTED | TC-048 | - |
 | TEAM-07 | 15 | Team downgrade | T25 | NOT_STARTED | - | - |
@@ -127,14 +127,14 @@ Status values (AI-02): NOT_STARTED, IN_PROGRESS, BLOCKED, IMPLEMENTED_UNVERIFIED
 | DATA-07 | 16 | Key recovery | T20 | IMPLEMENTED_UNVERIFIED | TC-159, TC-161, TC-165, TC-195, TC-198, TC-201, TC-211 | `apps/mobile/test/backup_test.dart`, `apps/mobile/test/restore_test.dart`, `apps/mobile/test/recovery_test.dart`, `apps/mobile/tool/recovery_key.dart`, `apps/mobile/test/cloud_restore_test.dart`, `docs/audit/BUG_REGISTER.md` |
 | DATA-08 | 16 | Retention | T20 | IMPLEMENTED_UNVERIFIED | TC-191, TC-194, TC-195, TC-196, TC-197, TC-199, TC-201, TC-204 | `docs/DATA_MODEL.md` Retention, D-066, D-069, D-070, `supabase/tests/database/cloud_backup.test.sql`, D-072, D-075, D-076, D-077, `apps/mobile/test/cloud_copy_test.dart`, `apps/mobile/test/cloud_screens_test.dart`, `apps/mobile/test/cloud_restore_test.dart`, D-078 |
 | ADMIN-01 | 17 | Navigation | T22 | IN_PROGRESS | TC-220 | `apps/admin`, CI run 45838390057 (TC-220): every page says when its data was fetched and keeps its filters in the URL; the live run waits for TC-223 |
-| ADMIN-02 | 17 | Customer register | T22 | IN_PROGRESS | TC-217 | `supabase/tests/database/admin.test.sql`, CI run 45451896062 (TC-217): `admin_accounts` and `admin_account`; D-081 (2) changes what the register may hold |
+| ADMIN-02 | 17 | Customer register | T22 | IN_PROGRESS | TC-217, TC-224 | `supabase/tests/database/admin.test.sql`, CI run 45451896062 (TC-217): `admin_accounts` and `admin_account`; D-081 (2) changes what the register may hold; each account's books with its consent, `books.test.sql`, CI run 45880969660 (TC-224) |
 | ADMIN-03 | 17 | Subscription operations | T22 | IN_PROGRESS | TC-217, TC-218 | `supabase/tests/database/admin.test.sql`, CI run 45451896062 (TC-217); the app's hold in `apps/mobile/test/account_flow_test.dart`; the web pages and plans changed from now in `apps/admin` and `plan_from_now.test.sql`, CI runs 45838390057 and 45838390057 (TC-220, TC-222) |
-| ADMIN-04 | 17 | Product funnel | T23 | NOT_STARTED | TC-011 | - |
+| ADMIN-04 | 17 | Product funnel | T22, T23 | IN_PROGRESS | TC-011, TC-226, TC-227 | The account's story shows the consent and its first worker, hazri and invoice from its books (`admin_account_book`, CI run 45880969660, TC-227); Play installs and the funnel page wait for T23 |
 | ADMIN-05 | 17 | Offline visibility | T22, T23 | IN_PROGRESS | TC-220 | `apps/admin` (TC-220): last online by the Dubai day on Accounts and each account, and the Overview's 7-day offline list; health checks wait for T23 |
 | ADMIN-06 | 17 | Health | T23 | NOT_STARTED | - | - |
 | ADMIN-07 | 17 | Support | T23 | NOT_STARTED | - | - |
 | ADMIN-08 | 17 | Access | T22 | IN_PROGRESS | TC-217 | `supabase/tests/database/admin.test.sql`, CI run 45451896062 (TC-217): admin row and `aal2` checked in every function; one role until T23 |
-| MET-01 | 18 | Dashboard fancy totals ke bajaye reproducible data de. Trial | T23 | NOT_STARTED | TC-011 | - |
+| MET-01 | 18 | Dashboard fancy totals ke bajaye reproducible data de. Trial | T22, T23 | IN_PROGRESS | TC-011, TC-224, TC-227 | The Business page adds up each account's own month summaries, always apart from the platform's income (D-084, CI run 45880969660); the investor pack waits for T23 |
 | MET-02 | 18 | Manual renewals | T23 | NOT_STARTED | - | - |
 | MET-03 | 18 | MRR bridge | T22, T23 | IN_PROGRESS | TC-217, TC-220, TC-222 | `admin_overview`'s bridge adds up on sample data (TC-217) and keeps a plan cut from now (TC-222); shown on the Overview (TC-220) |
 | MET-04 | 18 | Costs | T23 | NOT_STARTED | - | - |

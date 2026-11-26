@@ -10,7 +10,12 @@ Everything promised for a later task, in one place, so nothing is lost between s
 
 ## T22: the owner's dashboard
 
-- The design is `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081). Part 1 is built: the cloud side (T22a, D-082), the app's holds (T22b) and the web dashboard with the `admin` function and plans changed from now (T22c, D-083). Next is part 2, the books in the cloud: the consent page, `push_book_changes`, the month summaries and the Business page. Part 3, crash and error records, waits until the app is complete; part 4, fixing a customer's books with the customer's yes, comes with T25's sync.
+- The design is `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081). Part 1 is built: the cloud side (T22a, D-082), the app's holds (T22b) and the web dashboard with the `admin` function and plans changed from now (T22c, D-083). Part 2 is built: the consent page, the books in the cloud and the Business page (T22d, D-084). Part 3, crash and error records, waits until the app is complete; part 4, fixing a customer's books with the customer's yes, comes with T25's sync.
+- The books' pictures: the logo, header and footer bytes to a private `book-files/<tenant>/<asset id>` bucket through a signed upload, removed with the account; the signature and stamp never (D-084 (5)).
+- The month summary by client company, and money owed by clients, owed to workers and advances out, for the Business khulasa's tables (mockup 2a); today the summary carries the sheet's totals only (D-084 (8)).
+- An emirate for the company or its sites in the app, so the Business page and Accounts can split by emirate (D-084 (7)).
+- Accounts' filters by bill and profit or loss; today the columns, sorting and the "Nuqsan mein" view.
+- `admin_book` in pages, once one company's attendance passes about 50,000 days.
 - Accounts: choosing columns, saving a view of one's own, selecting rows for a note or CSV, and the filters the design lists that need more than today's rows: signup date and last-online ranges, labour from and to, phones, backup age and a refused slip this month.
 - Subscriptions: a receipt PDF for an accepted slip, and the accountant's ledger as an Excel file (today a CSV, which Excel opens).
 - Replacing the licence signing key: a button that makes a new pair, keeps the old public half valid until every phone has the new one, and shows the new public half for the next app build.
