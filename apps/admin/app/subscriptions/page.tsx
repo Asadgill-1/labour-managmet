@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Fragment, Suspense, useEffect, useMemo, useState, type FormEvent } from "react";
+import { Fragment, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Shell } from "@/components/Shell";
 import { Fresh, Region, Tag } from "@/components/ui";
 import { SlipThumb } from "@/components/account/tabs";
@@ -76,10 +76,15 @@ function Subscriptions() {
 
 function Queue({ waiting, slips, plans, chosen, choose, reload }: { waiting: SlipFull[]; slips: SlipFull[]; plans: Plan[]; chosen: string; choose: (id: string) => void; reload: () => void }) {
   const [files, setFiles] = useState<Record<string, boolean>>({});
-  // Whether each waiting slip's file arrived: a link can be made only for a file that is there.
+  const asked = useRef(new Set<string>());
+  // Whether each waiting slip's file arrived: a link can be made only for a file that is there. Asked once per slip.
   useEffect(() => {
-    for (const s of waiting) if (!(s.id in files)) slipLink(s.file_path).then((l) => setFiles((f) => ({ ...f, [s.id]: l !== null })));
-  }, [waiting, files]);
+    for (const s of waiting) {
+      if (asked.current.has(s.id)) continue;
+      asked.current.add(s.id);
+      slipLink(s.file_path).then((l) => setFiles((f) => ({ ...f, [s.id]: l !== null })));
+    }
+  }, [waiting]);
   if (waiting.length === 0) {
     return <div className="empty"><b>Koi slip intezar mein nahin</b><p>Nayi slip aate hi yahan aur Overview par dikhegi.</p></div>;
   }
