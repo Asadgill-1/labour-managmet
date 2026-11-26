@@ -118,7 +118,9 @@ export function Money({ a, act, plans }: Props & { plans: Plan[] }) {
                 <tr key={p.id}>
                   <td>{slip ? <SlipThumb path={slip.file_path} /> : "-"}</td>
                   <td>{kindWord[p.kind]}, {planShort(p.plan_code)}<span className="sub">{p.anchor_months ? months(p.anchor_months) : ""}</span></td>
-                  <td>{showDate(p.starts_at_utc)} se {showDate(p.cut_at ?? p.ends_at_utc)}{p.cut_at ? <span className="sub">pehle {showDate(p.ends_at_utc)} tak tha</span> : null}</td>
+                  <td>{p.cut_at && p.cut_at <= p.starts_at_utc
+                    ? <>Chala hi nahin<span className="sub">{showDate(p.starts_at_utc)} se {showDate(p.ends_at_utc)} tha, {showDate(p.cut_at)} ko khatam</span></>
+                    : <>{showDate(p.starts_at_utc)} se {showDate(p.cut_at ?? p.ends_at_utc)}{p.cut_at ? <span className="sub">pehle {showDate(p.ends_at_utc)} tak tha</span> : null}</>}</td>
                   <td>{sourceWord[p.source]}{p.note ? <span className="sub">{p.note}</span> : null}</td>
                   <td>{p.bank_reference ?? "-"}</td>
                   <td>{p.received_on ? showDate(p.received_on) : "-"}</td>

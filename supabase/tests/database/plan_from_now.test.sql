@@ -63,7 +63,7 @@ select is((select count(*)::integer from private.period_cuts), 0, 'a refused cha
 -- The change: both Small periods end now, as cuts of their own; the rows as written stay.
 select lives_ok($$ select public.admin_change_plan('eeeeeeee-0000-0000-0000-000000000003', 'mid', 10, 'Customer ne Mid manga, bache din ka credit') $$, 'the admin moves the account to Mid');
 select results_eq(
-  $$ select p.ends_at_utc = greatest(p.starts_at_utc, now()), s.ends_at_utc > now() from private.periods p join public.subscriptions s using (id)
+  $$ select p.ends_at_utc = now() and p.starts_at_utc <= now(), s.ends_at_utc > now() from private.periods p join public.subscriptions s using (id)
      where p.tenant_id = 'eeeeeeee-0000-0000-0000-000000000003' and p.source = 'slip' order by p.starts_at_utc $$,
   $$ values (true, true), (true, true) $$,
   'the running Small period ends now and its renewal never runs, while both rows stay as written'

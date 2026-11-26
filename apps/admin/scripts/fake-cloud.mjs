@@ -111,7 +111,7 @@ void palm; void test;
 
 // Account rows as private.account_row builds them.
 function live(t) { return holds.find((h) => h.tenant_id === t.tenant_id && !h.lifted_at_utc && (!h.until_utc || Date.parse(h.until_utc) > now())) ?? null; }
-function end(p) { return p.cut_at && p.cut_at < p.ends_at_utc ? (p.cut_at < p.starts_at_utc ? p.starts_at_utc : p.cut_at) : p.ends_at_utc; }
+function end(p) { return p.cut_at && p.cut_at < p.ends_at_utc ? p.cut_at : p.ends_at_utc; }
 function current(t) {
   const n = iso(now());
   return periods.filter((p) => p.tenant_id === t.tenant_id && p.kind === "plan" && !p.revoked_at_utc && p.starts_at_utc <= n && end(p) > n)

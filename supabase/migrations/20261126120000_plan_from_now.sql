@@ -16,11 +16,12 @@ create index period_cuts_by_tenant on private.period_cuts (tenant_id);
 create trigger period_cuts_never_changed before update on private.period_cuts
   for each statement execute function private.refuse_change();
 
--- The periods as they run: a cut period ends at its cut, and one cut before it began never runs. Same columns, in
--- the same order, as public.subscriptions.
+-- The periods as they run: a cut period ends at its cut, and one cut before it began starts and ends at the cut, so it
+-- never runs and never looks still to come. Same columns, in the same order, as public.subscriptions.
 create view private.periods as
-  select s.id, s.tenant_id, s.plan_code, s.plan_version, s.source, s.slip_id, s.starts_at_utc,
-    case when c.cut_at_utc is null then s.ends_at_utc else greatest(s.starts_at_utc, least(s.ends_at_utc, c.cut_at_utc)) end as ends_at_utc,
+  select s.id, s.tenant_id, s.plan_code, s.plan_version, s.source, s.slip_id,
+    case when c.cut_at_utc is null then s.starts_at_utc else least(s.starts_at_utc, c.cut_at_utc) end as starts_at_utc,
+    case when c.cut_at_utc is null then s.ends_at_utc else least(s.ends_at_utc, c.cut_at_utc) end as ends_at_utc,
     s.anchor_at_utc, s.anchor_months, s.amount_fils, s.bank_reference, s.received_on, s.note, s.revoked_at_utc, s.revoke_reason,
     s.created_at_utc, s.kind
   from public.subscriptions s
