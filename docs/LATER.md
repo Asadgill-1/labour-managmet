@@ -10,7 +10,9 @@ Everything promised for a later task, in one place, so nothing is lost between s
 
 ## T22: the owner's dashboard
 
-- The design is `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081): part 1, the dashboard on today's cloud data, then part 2, the books in the cloud. The lines below are what it must cover.
+- The design is `docs/superpowers/specs/2026-11-22-t22-owner-dashboard-design.md` (D-081): part 1, the dashboard on today's cloud data, then part 2, the books in the cloud. The lines below are what it must cover. The cloud side and the app's holds are built (T22a, T22b, D-082); the web pages are T22c.
+- With T22c, the `admin` Edge Function (it holds the service-role key on the server and checks `aal2` and the admin row itself): changing a login email with a code to both addresses, and banning a blocked account's users in Supabase Auth until the block is lifted (D-082 (8)).
+- With T22c, changing a plan from now: the current period ends early by a new row that says from when, read by `licence_facts`, with the rest credited or not as the owner chooses (D-082 (8)).
 - Slips: a list of waiting slips with the file, accept with amount, bank reference, received date and a note, or refuse with a reason. Until then the prepared SQL in `docs/RUNBOOK.md` (BILL-01, ADMIN-03).
 - Every accept, refuse, revoke, refund and correction with actor, time and reason in an audit log; a finance change never overwrites the first entry (ADMIN-03, BILL-04).
 - Upgrading mid-period: today an accepted Mid slip starts after the current Small period ends. The dashboard should offer starting it at once, with the rest of the old period credited or not, as the owner decides then.
