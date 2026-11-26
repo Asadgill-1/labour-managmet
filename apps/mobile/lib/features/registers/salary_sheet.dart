@@ -24,11 +24,22 @@ class _Line {
   var noRate = 0;
 }
 
-/// The month the owner reads and nobody else sees: what each company brought in against what its workers earned, at
-/// which rates, then how each worker's account stands. An estimate from attendance, and it says so (REP-03). A monthly
-/// contract counts its amount for the month (D-055). Monthly salaries stay outside the companies, because no way of
-/// splitting them across companies has been chosen.
-Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, String month) async {
+/// The month's figures on "Malik ki sheet": its two summary blocks, the days worked and who worked them. The cloud gets
+/// them as the month's summary, so the dashboard shows the sheet's own numbers and never works them out (T22d, D-084).
+typedef OwnerMonth = ({int bill, int wages, int salaries, int allowances, int cuts, int roomIn, int roomOut, int expenses, int days, int workers, int noRate});
+
+/// What the sheet calls "Andazan nafa, audit shuda nahin": the bill less the wages, then everything else.
+int estimateOf(OwnerMonth m) => m.bill - m.wages - m.salaries - m.allowances + m.cuts + m.roomIn - m.roomOut - m.expenses;
+
+typedef _Contract = ({String company, String basis, int rateFils, int workers, int amount});
+
+/// The month worked out once, for the sheet and for its summary.
+typedef _Month = ({List<WorkerStatement> statements, Map<String, String> clients, Map<String, String> sites, List<_Line> lines, List<_Contract> contracts, OwnerMonth figures});
+
+/// [month]'s figures, as the owner's sheet shows them.
+Future<OwnerMonth> ownerMonth(TenantDatabase db, String month) async => (await _work(db, month)).figures;
+
+Future<_Month> _work(TenantDatabase db, String month) async {
   final statements = await db.statementsFor(month);
   // Keyed by a label unique to each company, so two companies with one name never share a group or a bill.
   final clients = companyLabels(await db.select(db.clients).get());
@@ -68,12 +79,7 @@ Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, 
       return bySite != 0 ? bySite : a.statement.worker.name.compareTo(b.statement.worker.name);
     });
 
-  final byCompany = <String, List<_Line>>{};
-  for (final l in lines) {
-    (byCompany[company(l)] ??= []).add(l);
-  }
   int sum(Iterable<_Line> rows, int Function(_Line) of) => rows.fold(0, (total, l) => total + of(l));
-  int people(Iterable<_Line> rows) => rows.map((l) => l.statement.worker.id).toSet().length;
   final contractLines = [
     for (final MapEntry(key: (clientId, basis, rate), value: workers) in contracts.entries)
       (
@@ -84,7 +90,6 @@ Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, 
         amount: clientMonthlyCharge(RateBasis.values.byName(basis), rateFils: rate, workerCount: workers.length),
       ),
   ];
-  int contractBill(String? company) => contractLines.where((c) => company == null || c.company == company).fold(0, (total, c) => total + c.amount);
 
   final cash = await (db.select(db.cashEntries)..where((c) => c.kind.isIn([CashKind.roomRentReceived.name, CashKind.roomRentPaid.name, CashKind.expense.name]))).get();
   final undone = {for (final c in cash) ?c.reversesEntryId};
@@ -93,20 +98,48 @@ Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, 
       .fold(0, (total, c) => total + c.amountFils);
   int of(int Function(WorkerStatement) figure) => statements.fold(0, (total, s) => total + figure(s));
 
-  final bill = sum(lines, (l) => l.bill) + contractBill(null);
-  final wages = sum(lines, (l) => l.pay);
+  final figures = (
+    bill: sum(lines, (l) => l.bill) + contractLines.fold<int>(0, (total, c) => total + c.amount),
+    wages: sum(lines, (l) => l.pay),
+    salaries: of((s) => s.salaryFils),
+    allowances: of((s) => s.allowanceFils),
+    cuts: of((s) => s.otherFils),
+    roomIn: of((s) => s.roomFils) + cashOf(CashKind.roomRentReceived),
+    roomOut: cashOf(CashKind.roomRentPaid),
+    expenses: cashOf(CashKind.expense),
+    days: sum(lines, (l) => l.days),
+    workers: lines.map((l) => l.statement.worker.id).toSet().length,
+    noRate: sum(lines, (l) => l.noRate),
+  );
+  return (statements: statements, clients: clients, sites: sites, lines: lines, contracts: contractLines, figures: figures);
+}
+
+/// The month the owner reads and nobody else sees: what each company brought in against what its workers earned, at
+/// which rates, then how each worker's account stands. An estimate from attendance, and it says so (REP-03). A monthly
+/// contract counts its amount for the month (D-055). Monthly salaries stay outside the companies, because no way of
+/// splitting them across companies has been chosen.
+Future<RegisterData> buildSalarySheet(TenantDatabase db, AppLocalizations l10n, String month) async {
+  final (:statements, :clients, :sites, :lines, contracts: contractLines, figures: f) = await _work(db, month);
+  String company(_Line l) => clients[l.clientId] ?? '';
+  final byCompany = <String, List<_Line>>{};
+  for (final l in lines) {
+    (byCompany[company(l)] ??= []).add(l);
+  }
+  int sum(Iterable<_Line> rows, int Function(_Line) of) => rows.fold(0, (total, l) => total + of(l));
+  int people(Iterable<_Line> rows) => rows.map((l) => l.statement.worker.id).toSet().length;
+  int contractBill(String? company) => contractLines.where((c) => company == null || c.company == company).fold(0, (total, c) => total + c.amount);
 
   // First what the work itself left, then the estimate after everything else, kept apart as REP-03 asks. VAT is never
   // in the bill, and advances and visa money are not costs, since workers pay them back (REP-02).
-  final contributionRows = [(l10n.sheetBill, bill), (l10n.sheetWages, -wages)];
+  final contributionRows = [(l10n.sheetBill, f.bill), (l10n.sheetWages, -f.wages)];
   final summaryRows = [
-    (l10n.sheetContribution, bill - wages),
-    (l10n.sheetSalaries, -of((s) => s.salaryFils)),
-    (l10n.sheetAllowances, -of((s) => s.allowanceFils)),
-    (l10n.sheetCuts, of((s) => s.otherFils)),
-    (l10n.sheetRoomIn, of((s) => s.roomFils) + cashOf(CashKind.roomRentReceived)),
-    (l10n.sheetRoomOut, -cashOf(CashKind.roomRentPaid)),
-    (l10n.sheetExpenses, -cashOf(CashKind.expense)),
+    (l10n.sheetContribution, f.bill - f.wages),
+    (l10n.sheetSalaries, -f.salaries),
+    (l10n.sheetAllowances, -f.allowances),
+    (l10n.sheetCuts, f.cuts),
+    (l10n.sheetRoomIn, f.roomIn),
+    (l10n.sheetRoomOut, -f.roomOut),
+    (l10n.sheetExpenses, -f.expenses),
   ];
 
   final rollups = [
